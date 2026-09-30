@@ -1,48 +1,58 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { quantili, INDICATORI } from '../../js/core/indicatori.js';
+import { existsSync } from 'node:fs';
+import { INDICATORI } from '../../js/core/indicatori.js';
+import { leggiJson } from './dati.mjs';
 
-test('quantili: cinque classi su 1..10', () => {
-  assert.deepEqual(quantili([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5), [3, 5, 7, 9]);
+const ORIGINALE = new URL('../../../palermo_popolazione/js/topics.js', import.meta.url);
+
+test('indicatori disponibili: solo quelli con una rampa originale', () => {
+  assert.deepEqual(Object.keys(INDICATORI), ['densita', 'vecchiaia']);
+  assert.equal(INDICATORI.densita.rampa, 'popolazione');
+  assert.equal(INDICATORI.vecchiaia.rampa, 'vecchiaia');
 });
 
-test('quantili: valori ripetuti non producono soglie duplicate', () => {
-  assert.deepEqual(quantili([1, 1, 1, 1, 1, 1, 1, 1, 1, 2], 5), [1]);
+test('densità: ab/ha da Area in m²', () => {
+  assert.equal(INDICATORI.densita.calcola({ P1: 50, Area: 10000 }), 50);
+  assert.equal(INDICATORI.densita.calcola({ P1: 0, Area: 10000 }), 0);
 });
 
-test('quantili: nessun valore valido', () => {
-  assert.deepEqual(quantili([], 5), []);
-  assert.deepEqual(quantili([NaN, Infinity], 5), []);
-});
-
-test('residenti: P1 nullo o assente = senza dato', () => {
-  assert.equal(INDICATORI.residenti.calcola({ P1: null }), null);
-  assert.equal(INDICATORI.residenti.calcola({}), null);
-  assert.equal(INDICATORI.residenti.calcola({ P1: '' }), null);
-});
-
-test('residenti: P1 = 0 è un dato valido', () => {
-  assert.equal(INDICATORI.residenti.calcola({ P1: 0 }), 0);
-});
-
-test('percentuali: P1 nullo o zero = senza dato, mai NaN', () => {
-  for (const k of ['under15', 'over74']) {
-    assert.equal(INDICATORI[k].calcola({ P1: 0, P14: 0, P15: 0, P16: 0, P29: 0 }), null);
-    assert.equal(INDICATORI[k].calcola({ P1: null, P14: 1, P15: 1, P16: 1, P29: 1 }), null);
+test('densità: P1 nullo/assente/vuoto o Area nulla/zero = senza dato, mai NaN', () => {
+  for (const r of [{ P1: null, Area: 10000 }, { Area: 10000 }, { P1: '', Area: 10000 },
+                   { P1: 50, Area: 0 }, { P1: 50, Area: null }, { P1: 50 }]) {
+    assert.equal(INDICATORI.densita.calcola(r), null, JSON.stringify(r));
   }
 });
 
-test('percentuali: componente mancante = senza dato', () => {
-  assert.equal(INDICATORI.under15.calcola({ P1: 100, P14: 5, P15: null, P16: 5 }), null);
+const SOTTO = ['P30', 'P31', 'P32', 'P67', 'P68', 'P69'];
+const SOPRA = ['P43', 'P44', 'P45', 'P80', 'P81', 'P82'];
+const rec = (sotto, sopra) => ({
+  ...Object.fromEntries(SOTTO.map(k => [k, sotto])),
+  ...Object.fromEntries(SOPRA.map(k => [k, sopra])),
 });
 
-test('under15 e over74', () => {
-  assert.equal(INDICATORI.under15.calcola({ P1: 100, P14: 5, P15: 5, P16: 5 }), 15);
-  assert.equal(INDICATORI.over74.calcola({ P1: 200, P29: 50 }), 25);
+test('vecchiaia: over65 ogni 100 under15, un decimale', () => {
+  assert.equal(INDICATORI.vecchiaia.calcola(rec(10, 25)), 250);
+  assert.equal(INDICATORI.vecchiaia.calcola({ ...rec(3, 1), P30: 4 }), 31.6); // 6/19 = 31.58
 });
 
-test('densità: ab/ha da Area in m²; Area nulla o zero = senza dato', () => {
-  assert.equal(INDICATORI.densita.calcola({ P1: 50, Area: 10000 }), 50);
-  assert.equal(INDICATORI.densita.calcola({ P1: 50, Area: 0 }), null);
-  assert.equal(INDICATORI.densita.calcola({ P1: null, Area: 10000 }), null);
+test('vecchiaia: nessun under15 (o campi mancanti) = senza dato, mai Infinity', () => {
+  assert.equal(INDICATORI.vecchiaia.calcola(rec(0, 25)), null);
+  assert.equal(INDICATORI.vecchiaia.calcola({}), null);
+  assert.equal(INDICATORI.vecchiaia.calcola({ P43: 5 }), null);
 });
+
+for (const file of ['sezioni_indicatori.json', 'sezioni_indicatori_2023.json']) {
+  test(`vecchiaia: identica a computeVecchiaiaById dell'app originale (${file})`,
+    { skip: !existsSync(ORIGINALE) }, async () => {
+      const { computeVecchiaiaById } = await import(ORIGINALE.href);
+      const dati = await leggiJson(`popolazione/${file}`);
+      const attesi = computeVecchiaiaById(dati);
+      let confrontati = 0;
+      for (const r of dati) {
+        assert.equal(INDICATORI.vecchiaia.calcola(r), attesi.get(r.SEZ21_ID), `sezione ${r.SEZ21_ID}`);
+        confrontati++;
+      }
+      assert.ok(confrontati > 3000);
+    });
+}

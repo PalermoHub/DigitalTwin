@@ -1,5 +1,12 @@
 # Dati del Digital Twin di Palermo
 
+> **Aggiornamento 2026-10-01:** i file già pubblicati su GitHub Pages **non sono più copiati qui**: nel
+> `MANIFEST.tsv` hanno la colonna `url` e il viewer li legge dal link (risolto da `catalogo.json`).
+> Prima di cancellare ogni copia ho verificato che hash SHA-256 e dimensione fossero identici al file
+> online: 81 file (268 MB) rimossi. Restano in locale solo i file senza un link (80 file, ≈ 350 MB) e
+> `verde/04_foto.csv`, che online ha lo stesso peso ma contenuto diverso.
+> Le sezioni qui sotto descrivono il contenuto *logico* di ogni cartella, indipendentemente da dove sta il file.
+
 Copia di lavoro (605 MB, 161 file) dei dati indicati nel piano `../docs/PIANO_DigitalTwin_Palermo.md`.
 Copiati il 2026-09-30 **senza modifiche**. `MANIFEST.tsv` riporta per ogni file percorso, dimensione, SHA-256 e sorgente originale.
 Le copie sono state verificate per dimensione contro l'origine. Non sono ancora validate nei contenuti (CRS, attributi, copertura).

@@ -5,3 +5,4 @@ node_modules/
 .superpowers/
 # i dati pesanti non vanno in git: restano MANIFEST, README e catalogo
 dati/*/
+.cache/

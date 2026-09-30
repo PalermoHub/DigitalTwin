@@ -1,40 +1,28 @@
 // Logica pura sugli indicatori di popolazione: nessuna dipendenza dal browser.
+// Restano solo gli indicatori che hanno già una rampa di colori nell'app originale
+// (palermo_popolazione/js/palette.js): `rampa` è la chiave per densityStops().
 
 const num = v => (v === null || v === undefined || v === '' || !Number.isFinite(Number(v))) ? null : Number(v);
 
-function quota(r, campi) {
-  const p = num(r.P1);
-  if (!p) return null; // null o 0 residenti: nessuna percentuale
-  let somma = 0;
-  for (const c of campi) {
-    const v = num(r[c]);
-    if (v === null) return null;
-    somma += v;
-  }
-  return 100 * somma / p;
-}
+// Campi ISTAT come in palermo_popolazione/js/topics.js (AGE_BANDS): 0-14 e 65+, maschi e femmine.
+const SOTTO_15 = ['P30', 'P31', 'P32', 'P67', 'P68', 'P69'];
+const SOPRA_64 = ['P43', 'P44', 'P45', 'P80', 'P81', 'P82'];
+const somma = (r, campi) => campi.reduce((s, c) => s + (typeof r[c] === 'number' ? r[c] : 0), 0);
 
 export const INDICATORI = {
-  residenti: { etichetta: 'Residenti', unita: 'ab.', calcola: r => num(r.P1) },
   densita: {
-    etichetta: 'Densità', unita: 'ab/ha',
+    etichetta: 'Densità', unita: 'ab/ha', rampa: 'popolazione',
     calcola: r => {
       const p = num(r.P1), a = num(r.Area);
       return p !== null && a ? p / (a / 10000) : null;
     },
   },
-  under15: { etichetta: 'Under 15', unita: '%', calcola: r => quota(r, ['P14', 'P15', 'P16']) },
-  over74: { etichetta: 'Over 74', unita: '%', calcola: r => quota(r, ['P29']) },
+  vecchiaia: {
+    etichetta: 'Indice di vecchiaia', unita: '', rampa: 'vecchiaia',
+    // stessa formula di computeVecchiaiaById: 65+ ogni 100 residenti 0-14, un decimale
+    calcola: r => {
+      const sotto = somma(r, SOTTO_15);
+      return sotto > 0 ? Math.round(somma(r, SOPRA_64) / sotto * 1000) / 10 : null;
+    },
+  },
 };
-
-// Soglie interne (n-1) per n classi a quantili, crescenti e senza duplicati.
-export function quantili(valori, n) {
-  const v = valori.filter(Number.isFinite).sort((a, b) => a - b);
-  if (!v.length) return [];
-  const soglie = [];
-  for (let i = 1; i < n; i++) {
-    const s = v[Math.floor(i * v.length / n)];
-    if (!soglie.length || s > soglie[soglie.length - 1]) soglie.push(s);
-  }
-  return soglie;
-}

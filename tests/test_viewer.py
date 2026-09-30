@@ -1,12 +1,13 @@
 import json
 
 from conftest import ROOT
+from valida_dati import leggi_json
 
 def test_carica_senza_errori(apri):
     v = apri()
     v.attendi_pronto()
     assert v.errori == []
-    assert v.js("window.dt.map.getLayer('osm') !== undefined")
+    assert v.js("window.dt.map.getLayer('sfondo') !== undefined")
 
 
 def test_strato_non_caricabile_mostra_avviso_e_il_viewer_resta_vivo(apri):
@@ -22,7 +23,7 @@ def test_strato_non_caricabile_mostra_avviso_e_il_viewer_resta_vivo(apri):
         "document.getElementById('avvisi').textContent.includes('prova-catasto')", timeout=30000
     )
     assert v.js("window.dt.pronto") is True
-    assert v.js("window.dt.map.getLayer('osm') !== undefined")
+    assert v.js("window.dt.map.getLayer('sfondo') !== undefined")
 
 
 def test_crediti_mostrano_fonti_e_avvisi(apri):
@@ -38,42 +39,55 @@ def test_crediti_mostrano_fonti_e_avvisi(apri):
 
 
 def test_base_cartografica_irraggiungibile_non_blocca_il_viewer(apri):
-    v = apri(blocca="https://tile.openstreetmap.org/**")
+    v = apri(blocca="https://tiles.openfreemap.org/styles/positron")
     v.attendi_pronto()
+    v.page.wait_for_function(
+        "document.getElementById('avvisi').textContent.includes('Base cartografica non disponibile')",
+        timeout=30000,
+    )
     assert v.js("window.dt.pronto") is True
-    assert v.js("window.dt.map.getLayer('osm') !== undefined")
-
-
-POP = ROOT / "dati" / "popolazione"
+    # i nostri strati sono stati aggiunti comunque, sullo sfondo di ripiego
+    assert v.js("window.dt.map.getLayer('pop-fill') !== undefined")
+    assert v.js("window.dt.map.getLayer('sfondo') !== undefined")
 
 
 def _righe(nome):
-    return json.loads((POP / nome).read_text(encoding="utf-8"))
+    # copia locale se c'è, altrimenti dal link registrato nel manifesto (con cache in .cache/)
+    return leggi_json(f"popolazione/{nome}")
 
 
-def _n_residenti(righe):
-    return sum(1 for r in righe if r.get("P1") not in (None, ""))
+SOTTO_15 = ["P30", "P31", "P32", "P67", "P68", "P69"]
+SOPRA_64 = ["P43", "P44", "P45", "P80", "P81", "P82"]
+
+
+def _n_validi(righe, indicatore):
+    """Quante sezioni hanno un valore per l'indicatore (stessa regola dell'app originale)."""
+    if indicatore == "densita":
+        return sum(1 for r in righe if r.get("P1") not in (None, "") and (r.get("Area") or 0) > 0)
+    num = lambda r, campi: sum(r[c] for c in campi if isinstance(r.get(c), (int, float)))
+    return sum(1 for r in righe if num(r, SOTTO_15) > 0)
 
 
 def test_popolazione_2021_poi_2023(apri):
     v = apri()
     v.attendi_pronto()
     s = v.js("window.dt.moduli.popolazione.stato()")
-    assert s["anno"] == 2021 and s["indicatore"] == "residenti"
-    assert s["nValori"] == _n_residenti(_righe("sezioni_indicatori.json"))
+    assert s["anno"] == 2021 and s["indicatore"] == "densita"
+    assert s["nValori"] == _n_validi(_righe("sezioni_indicatori.json"), "densita")
 
     v.js("window.dt.moduli.popolazione.imposta({anno: 2023})")
     v.page.wait_for_function(
         "window.dt.moduli.popolazione.stato().anno === 2023 && window.dt.moduli.popolazione.stato().nValori > 0"
     )
     s = v.js("window.dt.moduli.popolazione.stato()")
-    assert s["nValori"] == _n_residenti(_righe("sezioni_indicatori_2023.json"))
+    assert s["nValori"] == _n_validi(_righe("sezioni_indicatori_2023.json"), "densita")
 
 
 def test_sezione_2021_senza_dato_2023_resta_senza_valore(apri):
     r21, r23 = _righe("sezioni_indicatori.json"), _righe("sezioni_indicatori_2023.json")
     ids23 = {r["SEZ21_ID"] for r in r23}
-    solo21 = next(r["SEZ21_ID"] for r in r21 if r["SEZ21_ID"] not in ids23 and r.get("P1"))
+    solo21 = next(r["SEZ21_ID"] for r in r21
+                  if r["SEZ21_ID"] not in ids23 and r.get("P1") and r.get("Area"))
     v = apri()
     v.attendi_pronto()
     stato21 = v.js(
@@ -92,13 +106,12 @@ def test_cambi_rapidi_finiscono_nell_ultimo_stato(apri):
     v.attendi_pronto()
     v.js(
         """() => { const p = window.dt.moduli.popolazione;
-            p.imposta({anno: 2023}); p.imposta({anno: 2021, indicatore: 'densita'}); }"""
+            p.imposta({anno: 2023}); p.imposta({anno: 2021, indicatore: 'vecchiaia'}); }"""
     )
-    r21 = _righe("sezioni_indicatori.json")
-    atteso = sum(1 for r in r21 if r.get("P1") not in (None, "") and (r.get("Area") or 0) > 0)
+    atteso = _n_validi(_righe("sezioni_indicatori.json"), "vecchiaia")
     v.page.wait_for_function(
         f"(() => {{ const s = window.dt.moduli.popolazione.stato();"
-        f" return s.anno === 2021 && s.indicatore === 'densita' && s.nValori === {atteso}; }})()",
+        f" return s.anno === 2021 && s.indicatore === 'vecchiaia' && s.nValori === {atteso}; }})()",
         timeout=30000,
     )
 
@@ -129,10 +142,50 @@ def test_territorio_strati_e_sorgenti(apri):
     v.attendi_pronto()
     for sorgente in ["catasto", "prg", "omi", "immobili", "civici"]:
         assert v.js(f"window.dt.map.getSource('{sorgente}') !== undefined"), sorgente
-    for layer in ["catasto", "prg-zto", "prg-va", "prg-vl", "omi", "immobili", "civici",
-                  "catasto-hit", "prg-zto-hit", "prg-va-hit", "omi-hit", "immobili-hit"]:
+    for layer in ["catasto", "prg-zto", "prg-ppe", "prg-va", "prg-vl", "omi", "omi-line", "immobili", "civici",
+                  "catasto-hit", "prg-zto-hit", "prg-ns-hit", "prg-cs-hit", "prg-va-hit", "omi-hit",
+                  "immobili-hit"]:
         assert v.js(f"window.dt.map.getLayer('{layer}') !== undefined"), layer
     assert v.js("window.dt.map.getLayer('catasto').minzoom") == 15
+
+
+def test_stili_fedeli_alle_app_originali(apri):
+    v = apri()
+    v.attendi_pronto()
+    r = v.js(
+        """async () => {
+            const pal = await import('./js/core/palette.js');
+            const omi = await import('./js/layers/stile-omi.js');
+            const m = window.dt.map, J = JSON.stringify;
+            const tiles = id => m.getSource(id).tiles[0];
+            return {
+                omi: J(m.getPaintProperty('omi', 'fill-color')) === J(omi.STILE_OMI),
+                omiOpacita: m.getPaintProperty('omi', 'fill-opacity'),
+                omiContorno: [m.getPaintProperty('omi-line', 'line-color'), m.getPaintProperty('omi-line', 'line-width')],
+                circoscrizioni: m.getPaintProperty('confini-circoscrizioni', 'line-color') === pal.confiniStyle('circoscrizioni', false).color,
+                upl: J(m.getPaintProperty('confini-upl', 'line-dasharray')) === J(pal.confiniStyle('upl', false).dash),
+                edifici: m.getPaintProperty('edifici-3d', 'fill-extrusion-color') === pal.EDIFICATO_NEUTRAL,
+                rampaDensita: J(m.getPaintProperty('pop-fill', 'fill-color')).includes(J(pal.densityStops('popolazione', false).flat()).slice(1, -1)),
+                catasto: [m.getPaintProperty('catasto', 'fill-color'), m.getPaintProperty('catasto', 'fill-opacity'), m.getPaintProperty('catasto', 'fill-outline-color')],
+                civici: [m.getLayer('civici').type, m.getPaintProperty('civici', 'text-color'), m.getPaintProperty('civici', 'text-halo-color')],
+                raster: ['prg-zto', 'prg-ppe', 'prg-va', 'prg-vl'].map(id => m.getLayer(id).type),
+                tile: [tiles('prg-zto-r'), tiles('prg-ppe-r'), tiles('prg-va-r'), tiles('prg-vl-r')],
+                hitTrasparenti: ['catasto-hit', 'prg-zto-hit', 'prg-ns-hit', 'prg-cs-hit', 'prg-va-hit', 'omi-hit', 'immobili-hit', 'pop-hit', 'edifici-hit']
+                    .every(id => m.getPaintProperty(id, 'fill-opacity') === 0),
+            };
+        }"""
+    )
+    assert r["omi"] is True
+    assert r["omiOpacita"] == 0.15
+    assert r["omiContorno"] == ["#232323", 0.5]
+    assert r["circoscrizioni"] and r["upl"] and r["edifici"] and r["rampaDensita"]
+    assert r["catasto"] == ["#ffffff", 0.6, "#000"]
+    assert r["civici"] == ["symbol", "#c0392b", "#ffffff"]
+    # vestizione PRG/PPE/vincoli = tile raster pubblicati; i poligoni vettoriali restano trasparenti
+    assert r["raster"] == ["raster"] * 4
+    base = "https://palermohub.github.io/PRG2004/"
+    assert r["tile"] == [f"{base}{n}/{{z}}/{{x}}/{{y}}.png" for n in ("ZTO", "ppe", "VA", "VL")]
+    assert r["hitTrasparenti"] is True
 
 
 def test_catasto_carica_particelle_a_zoom_17(apri):
@@ -233,3 +286,20 @@ def test_scheda_si_chiude(apri):
     v.page.wait_for_selector("#scheda:not([hidden])")
     v.page.click("#scheda button")
     v.page.wait_for_selector("#scheda", state="hidden")
+
+
+def test_senza_catalogo_il_viewer_resta_vivo_e_avvisa(apri):
+    v = apri(blocca="**/dati/catalogo.json")
+    v.attendi_pronto()
+    v.page.wait_for_function(
+        "document.getElementById('avvisi').textContent.includes('Catalogo dati non disponibile')",
+        timeout=30000,
+    )
+    assert v.js("window.dt.pronto") is True
+
+
+def test_le_sorgenti_remote_arrivano_dal_catalogo(apri):
+    v = apri()
+    v.attendi_pronto()
+    url = v.js("window.dt.map.getSource('catasto').url")
+    assert url == "pmtiles://https://palermohub.github.io/PRG2004/particelle/particelle.pmtiles"

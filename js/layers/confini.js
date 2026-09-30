@@ -1,13 +1,9 @@
 import { pmt } from '../core/config.js';
+import { CONFINI_LEVEL_KEYS, confiniStyle, sezioniColors } from '../core/palette.js';
 
 export const SRC_SEZIONI = 'sezioni';
 
-// [sorgente-layer, colore, spessore, attivo]
-const LINEE = [
-  ['circoscrizioni', '#1f3a5f', 2.2, true],
-  ['quartieri', '#4a6fa5', 1.2, false],
-  ['upl', '#7d93b8', 1, false],
-];
+const ATTIVI = { circoscrizioni: true, quartieri: false, upl: false };
 
 export default {
   id: 'confini',
@@ -21,17 +17,21 @@ export default {
     });
   },
   aggiungiLayer(map) {
-    for (const [id, colore, spessore, attivo] of LINEE) {
+    // stessi colori, spessori e tratti dell'app palermo_popolazione (tema chiaro);
+    // l'ordine delle chiavi è l'ordine dei layer (l'ultimo sta sopra)
+    for (const livello of CONFINI_LEVEL_KEYS) {
+      const stile = confiniStyle(livello, false);
+      const paint = { 'line-color': stile.color, 'line-width': stile.width };
+      if (stile.dash) paint['line-dasharray'] = stile.dash;
       map.addLayer({
-        id: `confini-${id}`, type: 'line', source: 'confini', 'source-layer': id,
-        layout: { visibility: attivo ? 'visible' : 'none' },
-        paint: { 'line-color': colore, 'line-width': spessore },
+        id: `confini-${livello}`, type: 'line', source: 'confini', 'source-layer': livello,
+        layout: { visibility: ATTIVI[livello] ? 'visible' : 'none' }, paint,
       });
     }
     map.addLayer({
       id: 'confini-sezioni', type: 'line', source: SRC_SEZIONI, 'source-layer': 'sezioni', minzoom: 13,
       layout: { visibility: 'none' },
-      paint: { 'line-color': '#888', 'line-width': 0.6 },
+      paint: { 'line-color': sezioniColors(false).border, 'line-width': 0.5 },
     });
   },
   strati: [

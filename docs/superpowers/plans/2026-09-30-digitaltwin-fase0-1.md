@@ -2187,7 +2187,39 @@ git commit -q -m "feat: place inspector combining parcel, building, census secti
 
 ---
 
-### Task 9: Ricerca per civico
+### Task 9: Tematizzazione fedele alle app originali (aggiunto dopo la revisione dell'utente)
+
+**Perché:** ogni dato aggiunto aveva già una sua tematizzazione nelle app di origine; i Task 5–7 avevano usato palette inventate. Questo task sostituisce gli stili con quelli esistenti, **riusandoli da file**, non ricopiandoli a mano.
+
+**Fonti degli stili (verificate):**
+- Base cartografica: `https://tiles.openfreemap.org/styles/positron` (da `pmtiles/js/catasto_script.js`); porta anche i font per i numeri civici.
+- PRG/PPE/vincoli: **tile raster** per la vestizione — `https://palermohub.github.io/PRG2004/{ZTO,ppe,VA,VL}/{z}/{x}/{y}.png` (z12–19, 1,6 GB e 414.000 file: non copiabili in `dati/`); i poligoni vettoriali restano **trasparenti** e servono solo ai dati (tooltip e scheda).
+- Zone OMI: `omiColorMatch` in `catasto_script.js` (da `zone_omi.sld`, per campo `Zona_OMI`), riempimento opacità 0,15, contorno `#232323` 0,5.
+- Particelle: riempimento `#ffffff` opacità 0,6, contorno `#000`. Civici: layer `symbol` con testo `Civico[/Esponente]`, colore `#c0392b`, alone bianco 1,5, da zoom 14.
+- Popolazione/confini/sezioni/edifici: `palermo_popolazione/js/palette.js` (rampe `densityStops`, `CONFINI_LEVELS`, `sezioniColors`, `EDIFICATO_NEUTRAL`); indice di vecchiaia da `topics.js` (P30–P32 + P67–P69 sotto i 15 anni; P43–P45 + P80–P82 sopra i 65).
+- Immobili comunali: nessuno stile originale trovato (l'app `00_immobili_pa_2024_00.html` non lo definisce): resta lo stile provvisorio, dichiarato in `docs/STILI.md`.
+
+**Decisioni (ruling):**
+- I raster PRG si leggono dagli URL pubblicati, in un'unica costante `RASTER_PRG` in `js/core/config.js`; se servirà l'uso offline si sostituisce con PMTiles raster locali. Nei test le richieste sono intercettate.
+- Solo tema chiaro per la mappa (positron è chiaro): si usano le varianti `light` delle rampe.
+- Gli indicatori della scheda/coropletico restano solo quelli con una tematizzazione esistente: `densita` (rampa `popolazione`) e `vecchiaia` (rampa `vecchiaia`); `residenti`, `under15`, `over74` e la funzione `quantili` (senza rampa originale) vengono rimossi.
+- Se lo stile base non si carica la mappa passa a uno stile vuoto con avviso (il viewer non deve restare morto).
+
+**Files:**
+- Create: `js/core/palette.js` (copia identica di `palermo_popolazione/js/palette.js`), `js/layers/stile-omi.js` (generato da `scripts/estrai_stile_omi.mjs`), `docs/STILI.md`
+- Modify: `js/core/config.js`, `js/core/mappa.js`, `js/core/indicatori.js`, `js/layers/{confini,popolazione,territorio,edifici}.js`, `scripts/valida_dati.py` (`Zona_OMI` tra i campi attesi), `tests/conftest.py`, `tests/test_viewer.py`, `tests/js/indicatori.test.mjs`
+- Test: `tests/js/stile-omi.test.mjs`, `tests/js/indicatori.test.mjs`, `tests/test_viewer.py`
+
+- [ ] **Step 1: palette.js** — copiare il file originale senza modifiche; il test confronta `densityStops('popolazione', false)` con i valori attesi.
+- [ ] **Step 2: stile OMI** — script che legge `omiColorMatch` dal sorgente originale e lo scrive in `js/layers/stile-omi.js`; test: espressione `match` su `['get','Zona_OMI']`, coppie chiave/colore esadecimale, ≥ 40 zone, ultimo elemento = colore di riserva.
+- [ ] **Step 3: indicatori** — `densita` e `vecchiaia` (formula di `computeVecchiaiaById`, `Math.round(over/under*1000)/10`, `null` se `under == 0`), con test che confronta i risultati con quelli del modulo originale `topics.js` quando importabile.
+- [ ] **Step 4: base cartografica** — test che blocca `tiles.openfreemap.org`: il viewer deve diventare `pronto` e mostrare l'avviso «Base cartografica non disponibile»; poi `creaMappa` con positron e ripiego.
+- [ ] **Step 5: layer** — raster PRG/PPE/VA/VL come vestizione; layer vettoriali `*-hit` trasparenti; OMI, catasto, civici, confini, sezioni, edifici e coropletico con gli stili originali; test nel browser che confrontano `getPaintProperty` con i valori esportati da `palette.js` / `stile-omi.js`.
+- [ ] **Step 6: documenti e chiusura** — `docs/STILI.md` (per ogni layer: file e riga dello stile originale, oppure «nessuno trovato»), suite completa, commit.
+
+---
+
+### Task 10: Ricerca per civico
 
 **Files:**
 - Create: `js/core/ricerca.js`
@@ -2320,7 +2352,7 @@ git commit -q -m "feat: address search by street and house number" -m "Co-Author
 
 ---
 
-### Task 10: Verifica finale, documentazione e rilascio locale
+### Task 11: Verifica finale, documentazione e rilascio locale
 
 **Files:**
 - Create: `README.md`

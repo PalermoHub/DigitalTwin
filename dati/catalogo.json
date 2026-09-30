@@ -5,6 +5,7 @@
   "formato": "pmtiles",
   "byte": 39989293,
   "sha256": "93b0631873d17ad87eb29e91d7de5da8bd9c95a4643fa023ac9607d723d6915b",
+  "url": "https://palermohub.github.io/PRG2004/particelle/particelle.pmtiles",
   "layers": [
    {
     "nome": "particelle",
@@ -26,6 +27,7 @@
   "formato": "pmtiles",
   "byte": 9202547,
   "sha256": "d5f0097d95cba7346bf407145d64f9d2560f06b4bc1b7adf006515196dab33ef",
+  "url": "https://palermohub.github.io/PRG2004/particelle/prg.pmtiles",
   "layers": [
    {
     "nome": "cs",
@@ -275,6 +277,7 @@
   "formato": "pmtiles",
   "byte": 6773850,
   "sha256": "27da2bda2e1a1ac4a9a6e6a0ce4cde495a87708b3399b2625b0577854a537d0f",
+  "url": "https://palermohub.github.io/PRG2004/civici/civici_0226.pmtiles",
   "layers": [
    {
     "nome": "civici_wgs84",
@@ -301,6 +304,7 @@
   "formato": "pmtiles",
   "byte": 4886206,
   "sha256": "bedfdf20105363e4c5409698c756b6fdffb6dc55fad0d5baf381bc8575e0267b",
+  "url": "https://palermohub.github.io/PRG2004/civici/Zone_OMI_2025_II.pmtiles",
   "layers": [
    {
     "nome": "Zone_OMI_2025_II",
@@ -344,6 +348,7 @@
   "formato": "pmtiles",
   "byte": 4217822,
   "sha256": "c7b149f5de5a4e9a2061bbcabd1bb516ae3eb4f2dea464eba10f688d1de82fae",
+  "url": "https://palermohub.github.io/PRG2004/immobili/immobili_comunali_2024.pmtiles",
   "layers": [
    {
     "nome": "immobili_comunali_2024",
@@ -404,6 +409,7 @@
   "formato": "pmtiles",
   "byte": 29291993,
   "sha256": "61854375834fa155353c4d6df1e029ff472a40ceabeee03ed5ccbe478bfe04ec",
+  "url": "https://siciliahub.github.io/palermohub/carto/buildings_wgs84.pmtiles",
   "layers": [
    {
     "nome": "buildings",
@@ -429,6 +435,7 @@
   "formato": "pmtiles",
   "byte": 20042288,
   "sha256": "c8399b5017fdc6d6b6ba9f0ff2c1217b657af6f6012fdce42ab7c7ae88a134bd",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/edificato.pmtiles",
   "layers": [
    {
     "nome": "edificato",
@@ -566,6 +573,7 @@
   "formato": "tif",
   "byte": 57031678,
   "sha256": "564a8b5749e6ba0eaa81fe1a21afb246ee47415a01b58a8b4b4abd06dee86a11",
+  "url": "https://palermohub.github.io/Palerm-DTM-5m/dati/palermo_dtm5m.tif",
   "dimensioni": [
    3680,
    3871
@@ -656,6 +664,7 @@
   "formato": "pmtiles",
   "byte": 178539,
   "sha256": "8d5cc9e9ab9eebaf37116b2af8093813c1da0297f983b3774c650aff4d8bcadd",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/confini_amministrativi.pmtiles",
   "layers": [
    {
     "nome": "circoscrizioni",
@@ -697,6 +706,7 @@
   "formato": "pmtiles",
   "byte": 7078181,
   "sha256": "c2fd840f30cb155218419a75b296d455a7f3b7849edfb2bb46b9e392ba5e92b8",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/geo_sezioni_2021.pmtiles",
   "layers": [
    {
     "nome": "sezioni",
@@ -857,6 +867,7 @@
   "formato": "pmtiles",
   "byte": 1111444,
   "sha256": "d458ba8c23cab4d1c1f3eee6289bbd26684c174a98693bf462edad4afd6133ee",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/punti_pop_10.pmtiles",
   "layers": [
    {
     "nome": "punti",
@@ -875,6 +886,7 @@
   "formato": "pmtiles",
   "byte": 8185107,
   "sha256": "2e6baac2780700afbfe0b19153557e6cd644ce4457dc3cfa05641d1936d04b96",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/punti_pop_1.pmtiles",
   "layers": [
    {
     "nome": "punti",
@@ -892,14 +904,16 @@
   "tema": "popolazione",
   "formato": "json",
   "byte": 1068611,
-  "sha256": "a638e05aca1a80e5a316d026284699c086dc683dc12c67aaafe3e3f361cda630"
+  "sha256": "a638e05aca1a80e5a316d026284699c086dc683dc12c67aaafe3e3f361cda630",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/confini_zone.json"
  },
  {
   "percorso": "popolazione/edifici_zona.json",
   "tema": "popolazione",
   "formato": "json",
   "byte": 2465804,
-  "sha256": "1c08a41ec8915c8e83e5936baddac52e37f9565c561aa1fe4734e52645a15df5"
+  "sha256": "1c08a41ec8915c8e83e5936baddac52e37f9565c561aa1fe4734e52645a15df5",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/edifici_zona.json"
  },
  {
   "percorso": "popolazione/sezioni_indicatori_2023.json",
@@ -907,6 +921,7 @@
   "formato": "json",
   "byte": 4498043,
   "sha256": "9259a9d605ebc3537ecb7dd5136e43297feb6b341ad89c2a7147f2654c6218a6",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/sezioni_indicatori_2023.json",
   "fonte": "ISTAT — Censimento permanente 2023 (stime campionarie), via Cruscotto Statistico Comunale",
   "data": "2023",
   "licenza": "CC BY 4.0"
@@ -917,6 +932,7 @@
   "formato": "json",
   "byte": 6133553,
   "sha256": "4e104901ea41d7c8fe22cfaa00a350224676747599a5b11f511145ab4ae813c8",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/sezioni_indicatori.json",
   "fonte": "ISTAT — Censimento permanente della popolazione e delle abitazioni 2021",
   "data": "2021"
  },
@@ -1522,105 +1538,120 @@
   "tema": "clima",
   "formato": "json",
   "byte": 825126,
-  "sha256": "04f68976006f36a2ed707b1a9e488478d6bf28ce28494d745f3ef817cf9b22ec"
+  "sha256": "04f68976006f36a2ed707b1a9e488478d6bf28ce28494d745f3ef817cf9b22ec",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/dtm_zonal_sezioni.json"
  },
  {
   "percorso": "clima/geo_search.json",
   "tema": "clima",
   "formato": "json",
   "byte": 18548,
-  "sha256": "3869c70c0b4fbe1387852c9a94a20212e62e02946b33de5c5df6fd0cbc12f14d"
+  "sha256": "3869c70c0b4fbe1387852c9a94a20212e62e02946b33de5c5df6fd0cbc12f14d",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo_search.json"
  },
  {
   "percorso": "clima/lst_densvia_config.json",
   "tema": "clima",
   "formato": "json",
   "byte": 586,
-  "sha256": "7bf038ec18e4ed477e7b93f736dafc78fca429801849720aa32789da3fd3316c"
+  "sha256": "7bf038ec18e4ed477e7b93f736dafc78fca429801849720aa32789da3fd3316c",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/lst_densvia_config.json"
  },
  {
   "percorso": "clima/lst_densvia_stats.json",
   "tema": "clima",
   "formato": "json",
   "byte": 737341,
-  "sha256": "60af01f0f8954262a58727733348c35c1f2b6f669c37f9d18c460534b3735066"
+  "sha256": "60af01f0f8954262a58727733348c35c1f2b6f669c37f9d18c460534b3735066",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/lst_densvia_stats.json"
  },
  {
   "percorso": "clima/lst_palermo_config.json",
   "tema": "clima",
   "formato": "json",
   "byte": 580,
-  "sha256": "fad4322b08521548cbe85d2520b2cca99e6ce18c343548edc89a6a5c3b51ce97"
+  "sha256": "fad4322b08521548cbe85d2520b2cca99e6ce18c343548edc89a6a5c3b51ce97",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/lst_palermo_config.json"
  },
  {
   "percorso": "clima/lst_palermo_stats.json",
   "tema": "clima",
   "formato": "json",
   "byte": 546965,
-  "sha256": "cb747f2a6b1a69b4cd77babba8e6d032dbcb63b7d7342087dcea5927daa037f1"
+  "sha256": "cb747f2a6b1a69b4cd77babba8e6d032dbcb63b7d7342087dcea5927daa037f1",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/lst_palermo_stats.json"
  },
  {
   "percorso": "clima/lst_trend.json",
   "tema": "clima",
   "formato": "json",
   "byte": 214904,
-  "sha256": "b227f3e27b581aee9c52afdade483ed0b4abdc4db9d2d9ad61e15c10cb3efbdf"
+  "sha256": "b227f3e27b581aee9c52afdade483ed0b4abdc4db9d2d9ad61e15c10cb3efbdf",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/lst_trend.json"
  },
  {
   "percorso": "clima/lst_years_stats.json",
   "tema": "clima",
   "formato": "json",
   "byte": 177109,
-  "sha256": "2964b6b5e2e44daaf4638dc9f6ec8e95f03a04b5b819f0f8c8657c6cf4ad98ff"
+  "sha256": "2964b6b5e2e44daaf4638dc9f6ec8e95f03a04b5b819f0f8c8657c6cf4ad98ff",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/lst_years_stats.json"
  },
  {
   "percorso": "clima/regressione_lst_residui.json",
   "tema": "clima",
   "formato": "json",
   "byte": 1135139,
-  "sha256": "f47c65aa40ebf967b463c3edd1168e6457a4a859ae64bb54e77776549e965606"
+  "sha256": "f47c65aa40ebf967b463c3edd1168e6457a4a859ae64bb54e77776549e965606",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/regressione_lst_residui.json"
  },
  {
   "percorso": "clima/residui_stats.json",
   "tema": "clima",
   "formato": "json",
   "byte": 89114,
-  "sha256": "eb0040941adc5ab92edb33d02a1684a88bf29e24bb457ca6d2949a3efe612315"
+  "sha256": "eb0040941adc5ab92edb33d02a1684a88bf29e24bb457ca6d2949a3efe612315",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/residui_stats.json"
  },
  {
   "percorso": "clima/sezioni_stats.json",
   "tema": "clima",
   "formato": "json",
   "byte": 173732,
-  "sha256": "b7b773b61da2690776c67f4c7aee2ce427e52795bf55ef5e93f17ff8b2f3087d"
+  "sha256": "b7b773b61da2690776c67f4c7aee2ce427e52795bf55ef5e93f17ff8b2f3087d",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/sezioni_stats.json"
  },
  {
   "percorso": "clima/STstats_Palermo.json",
   "tema": "clima",
   "formato": "json",
   "byte": 1619706,
-  "sha256": "e5a49cc149137164a98b47b3acb60fb944f042660524ad87c16ac82fd48b6480"
+  "sha256": "e5a49cc149137164a98b47b3acb60fb944f042660524ad87c16ac82fd48b6480",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/STstats_Palermo.json"
  },
  {
   "percorso": "clima/viabilita_zonal_sezioni.json",
   "tema": "clima",
   "formato": "json",
   "byte": 673705,
-  "sha256": "1ed9f91fdd6c2f1f85f9553c1ad15668ce9d6785ef922b01e08f19629e44612a"
+  "sha256": "1ed9f91fdd6c2f1f85f9553c1ad15668ce9d6785ef922b01e08f19629e44612a",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/viabilita_zonal_sezioni.json"
  },
  {
   "percorso": "clima/lst_densvia_source.csv",
   "tema": "clima",
   "formato": "csv",
   "byte": 61545,
-  "sha256": "45cf8e7da798daf4ce52a69aed7a254eee31fb8a53a90922ddb2ae7aa791f045"
+  "sha256": "45cf8e7da798daf4ce52a69aed7a254eee31fb8a53a90922ddb2ae7aa791f045",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/lst_densvia_source.csv"
  },
  {
   "percorso": "clima/lst_palermo.csv",
   "tema": "clima",
   "formato": "csv",
   "byte": 328440,
-  "sha256": "a188ecb16b770f04e7ce6bafaafdb44c3a3f8c5eb5e40e64375a5e0037158f4d"
+  "sha256": "a188ecb16b770f04e7ce6bafaafdb44c3a3f8c5eb5e40e64375a5e0037158f4d",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/lst_palermo.csv"
  },
  {
   "percorso": "clima/aggregati_lst_densvia.pmtiles",
@@ -1628,6 +1659,7 @@
   "formato": "pmtiles",
   "byte": 210772,
   "sha256": "334a10289e8c6dfd1f39caba68e5ef910ec4ac557cf4a51412a8d685186a1c84",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/aggregati_lst_densvia.pmtiles",
   "layers": [
    {
     "nome": "circoscrizioni",
@@ -1678,6 +1710,7 @@
   "formato": "pmtiles",
   "byte": 210127,
   "sha256": "b1decbc05649221263f36ac6f73dd1fca04951fce8410285eb3be5608a22794a",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/aggregati_lst_palermo.pmtiles",
   "layers": [
    {
     "nome": "circoscrizioni",
@@ -1728,6 +1761,7 @@
   "formato": "pmtiles",
   "byte": 509251,
   "sha256": "cf3cf4ce2bdfce18dac9759312e89e68879bb759d773c6582dba1c9270e4dc81",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/aggregati_lst_years.pmtiles",
   "layers": [
    {
     "nome": "circoscrizioni",
@@ -1849,6 +1883,7 @@
   "formato": "geojson",
   "byte": 287456,
   "sha256": "c15427046eb5829037d636492a1ac2316e83aa4565a896eb58ba22f3093cf70d",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/circoscrizioni.geojson",
   "layers": [
    {
     "nome": "SELECT",
@@ -1868,6 +1903,7 @@
   "formato": "geojson",
   "byte": 288291,
   "sha256": "f0318c3d2a14fbab052a4aba2c7d556ad1e0adcae1b26d5de3f66a1224ed3707",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/circoscrizioni_lst_densvia.geojson",
   "layers": [
    {
     "nome": "circoscrizioni_lst_densvia",
@@ -1892,6 +1928,7 @@
   "formato": "geojson",
   "byte": 288284,
   "sha256": "b9d6f204085742328521c8676a835480684e66870f8ec964cdae6b598b65a688",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/circoscrizioni_lst_palermo.geojson",
   "layers": [
    {
     "nome": "circoscrizioni_lst_palermo",
@@ -1916,6 +1953,7 @@
   "formato": "geojson",
   "byte": 293420,
   "sha256": "ddf7ecc26e9ee3c8965d1f13fd3ee81283d3606700f4be6959ed5e71d39ec075",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/circoscrizioni_lst_years.geojson",
   "layers": [
    {
     "nome": "circoscrizioni_lst_years",
@@ -1964,6 +2002,7 @@
   "formato": "geojson",
   "byte": 404468,
   "sha256": "8d542a8f31b80a1bcfffe014e9855a85757e15f6072cbb71fb7d5a560b50eb09",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/quartieri.geojson",
   "layers": [
    {
     "nome": "SELECT",
@@ -1984,6 +2023,7 @@
   "formato": "geojson",
   "byte": 407015,
   "sha256": "e4195cbddaffea564f4ee0819bf9e7e67dfd32fe51270acd2864c37971252fbc",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/quartieri_lst_densvia.geojson",
   "layers": [
    {
     "nome": "quartieri_lst_densvia",
@@ -2009,6 +2049,7 @@
   "formato": "geojson",
   "byte": 406997,
   "sha256": "97827a2ca4120ced7a86625ef19c9101702bbff06f7883c92f43ef4c6f139158",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/quartieri_lst_palermo.geojson",
   "layers": [
    {
     "nome": "quartieri_lst_palermo",
@@ -2034,6 +2075,7 @@
   "formato": "geojson",
   "byte": 422761,
   "sha256": "cd65572f5d11ea45a773a57602f19b758b40a16c741e87124f244ad789905e95",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/quartieri_lst_years.geojson",
   "layers": [
    {
     "nome": "quartieri_lst_years",
@@ -2083,6 +2125,7 @@
   "formato": "geojson",
   "byte": 4566287,
   "sha256": "310fb0100d7dab8a4431d71d317532319b60de54205415cb2a11f19590ef2db1",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/sezioni.geojson",
   "layers": [
    {
     "nome": "SELECT",
@@ -2106,6 +2149,7 @@
   "formato": "geojson",
   "byte": 4924248,
   "sha256": "bf059d39214a2479ff026f74f3591b57947987bda62d656ed683a4142ec0ab5b",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/sezioni_lst_densvia.geojson",
   "layers": [
    {
     "nome": "sezioni_lst_densvia",
@@ -2135,6 +2179,7 @@
   "formato": "pmtiles",
   "byte": 1849477,
   "sha256": "e07f986ea802a3f1a5cfdfcc5bc54a88afa2a59e67b6272c65a3afe72c73ad47",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/sezioni_lst_densvia.pmtiles",
   "layers": [
    {
     "nome": "sezioni",
@@ -2162,6 +2207,7 @@
   "formato": "geojson",
   "byte": 4925431,
   "sha256": "99428f767751f13e4a5c93ef7bc74b19f3f3193252c134eb926216d287b9ed38",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/sezioni_lst_palermo.geojson",
   "layers": [
    {
     "nome": "sezioni_lst_palermo",
@@ -2191,6 +2237,7 @@
   "formato": "pmtiles",
   "byte": 1747738,
   "sha256": "0b01b9fc6781fa800355092cca3241db2f0f9a6588f3646f468ba7975c1ae14d",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/sezioni_lst_palermo.pmtiles",
   "layers": [
    {
     "nome": "sezioni",
@@ -2218,6 +2265,7 @@
   "formato": "geojson",
   "byte": 4918566,
   "sha256": "66ba8c2944e671202729dfd8e09f35c3d31f4acc847295e980e7c40f5bc89240",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/sezioni_lst_years.geojson",
   "layers": [
    {
     "nome": "sezioni_lst_years",
@@ -2247,6 +2295,7 @@
   "formato": "pmtiles",
   "byte": 1736618,
   "sha256": "0ef0b62a491c4386ae19a225e1158927c380fa3cdc9d6124c8271719e852be3f",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/sezioni_lst_years.pmtiles",
   "layers": [
    {
     "nome": "sezioni",
@@ -2274,6 +2323,7 @@
   "formato": "geojson",
   "byte": 5384867,
   "sha256": "57805f8cbd9de1cd98437a44a5948ac4c93f181a8b41086a970e6d9f8cc780d6",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/sezioni_residui.geojson",
   "layers": [
    {
     "nome": "sezioni_residui",
@@ -2306,6 +2356,7 @@
   "formato": "pmtiles",
   "byte": 8794404,
   "sha256": "dbdb5301acd9ed940898350ac68f467ee4d46caa1539f90eadbba99c76721f2c",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/sezioni_residui.pmtiles",
   "layers": [
    {
     "nome": "sezioni",
@@ -2336,6 +2387,7 @@
   "formato": "geojson",
   "byte": 516868,
   "sha256": "84790d951b7f6ce0fdc1822ed636df940d4ee7d9b9e998f5b14eaf1b316812a7",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/upl.geojson",
   "layers": [
    {
     "nome": "SELECT",
@@ -2355,6 +2407,7 @@
   "formato": "geojson",
   "byte": 524291,
   "sha256": "ac1157233db87e58fbc7705969c2c2a536450bd7e40c917a97536a439cb7b92a",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/upl_lst_densvia.geojson",
   "layers": [
    {
     "nome": "upl_lst_densvia",
@@ -2380,6 +2433,7 @@
   "formato": "geojson",
   "byte": 524247,
   "sha256": "cd3d4419064350dfedae1e23c78366e0b207f24457074798dc191fa4e03ecef6",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/upl_lst_palermo.geojson",
   "layers": [
    {
     "nome": "upl_lst_palermo",
@@ -2405,6 +2459,7 @@
   "formato": "geojson",
   "byte": 556748,
   "sha256": "16fc2333fc7d834ddcc78e8d19f70c350a5560cc62c62cfd0b4db99086670cdf",
+  "url": "https://palermohub.github.io/isole_di_calore/dati/geo/upl_lst_years.geojson",
   "layers": [
    {
     "nome": "upl_lst_years",
@@ -2893,7 +2948,8 @@
   "tema": "verde",
   "formato": "csv",
   "byte": 57364,
-  "sha256": "8387415c323f18597f7146f086ec5ab402c885c75368991553ad3fe5ff650e49"
+  "sha256": "8387415c323f18597f7146f086ec5ab402c885c75368991553ad3fe5ff650e49",
+  "url": "https://palermohub.github.io/Verde_Urbano/dati/02_quadrante.csv"
  },
  {
   "percorso": "verde/03_tavole.csv",
@@ -2914,7 +2970,8 @@
   "tema": "verde",
   "formato": "csv",
   "byte": 13621,
-  "sha256": "465b98d977988dd07398a210e198c5853e15c83e4ccb162679c35983a7135290"
+  "sha256": "465b98d977988dd07398a210e198c5853e15c83e4ccb162679c35983a7135290",
+  "url": "https://palermohub.github.io/Verde_Urbano/dati/05_specie_arboree_palermo.csv"
  },
  {
   "percorso": "verde/06_elenco_prezzi_2024.csv",
@@ -2928,7 +2985,8 @@
   "tema": "verde",
   "formato": "csv",
   "byte": 2511,
-  "sha256": "a5f199a7995c95e65ac50263a6b3636901b2934e3b0871218c0971bd5fdd77d9"
+  "sha256": "a5f199a7995c95e65ac50263a6b3636901b2934e3b0871218c0971bd5fdd77d9",
+  "url": "https://palermohub.github.io/Verde_Urbano/dati/07_specie.csv"
  },
  {
   "percorso": "verde/08_cpc.csv",
@@ -2949,35 +3007,40 @@
   "tema": "verde",
   "formato": "csv",
   "byte": 2272,
-  "sha256": "075d3a7d583d3b6932f6ab2b3a2bf7ba929603716f6d42437debb4876a570d95"
+  "sha256": "075d3a7d583d3b6932f6ab2b3a2bf7ba929603716f6d42437debb4876a570d95",
+  "url": "https://palermohub.github.io/Verde_Urbano/dati/10_o2_co2.csv"
  },
  {
   "percorso": "verde/11_sito_impianto.csv",
   "tema": "verde",
   "formato": "csv",
   "byte": 123,
-  "sha256": "cd040d5811fa18564ff2bc67b26470ea90d126ddf8a6845b785a382207ed1d5e"
+  "sha256": "cd040d5811fa18564ff2bc67b26470ea90d126ddf8a6845b785a382207ed1d5e",
+  "url": "https://palermohub.github.io/Verde_Urbano/dati/11_sito_impianto.csv"
  },
  {
   "percorso": "verde/12_altezza_diametro.csv",
   "tema": "verde",
   "formato": "csv",
   "byte": 21,
-  "sha256": "a91c0ca9d4cc1d5c6930685369e41f409b8a135240d4a42a63844da99834302d"
+  "sha256": "a91c0ca9d4cc1d5c6930685369e41f409b8a135240d4a42a63844da99834302d",
+  "url": "https://palermohub.github.io/Verde_Urbano/dati/12_altezza_diametro.csv"
  },
  {
   "percorso": "verde/13_altezza.csv",
   "tema": "verde",
   "formato": "csv",
   "byte": 21,
-  "sha256": "a91c0ca9d4cc1d5c6930685369e41f409b8a135240d4a42a63844da99834302d"
+  "sha256": "a91c0ca9d4cc1d5c6930685369e41f409b8a135240d4a42a63844da99834302d",
+  "url": "https://palermohub.github.io/Verde_Urbano/dati/13_altezza.csv"
  },
  {
   "percorso": "verde/14_co2_diametro.csv",
   "tema": "verde",
   "formato": "csv",
   "byte": 21,
-  "sha256": "a91c0ca9d4cc1d5c6930685369e41f409b8a135240d4a42a63844da99834302d"
+  "sha256": "a91c0ca9d4cc1d5c6930685369e41f409b8a135240d4a42a63844da99834302d",
+  "url": "https://palermohub.github.io/Verde_Urbano/dati/14_co2_diametro.csv"
  },
  {
   "percorso": "verde/15_num_foglie.csv",
@@ -2991,7 +3054,8 @@
   "tema": "verde",
   "formato": "csv",
   "byte": 3895,
-  "sha256": "be61950e793cffd82176057259d37d9091fbf5e022388cee5370d5dcc833cc50"
+  "sha256": "be61950e793cffd82176057259d37d9091fbf5e022388cee5370d5dcc833cc50",
+  "url": "https://palermohub.github.io/Verde_Urbano/dati/16_tot_foglie.csv"
  },
  {
   "percorso": "verde/17_query_web.csv",
@@ -3006,6 +3070,7 @@
   "formato": "pmtiles",
   "byte": 316732,
   "sha256": "fe4e1ef41525c1c7fd1b0d766ef30a82a8edf50e512828f20f1ef3420f52013a",
+  "url": "https://palermohub.github.io/fontanelle_pa/geo/copertura_10min.pmtiles",
   "layers": [
    {
     "nome": "copertura_10min",
@@ -3024,6 +3089,7 @@
   "formato": "pmtiles",
   "byte": 205771,
   "sha256": "facc1cd0e733a5414c80ad505bf0ea3a737f54a94c462e58d82aa5e2932a6430",
+  "url": "https://palermohub.github.io/fontanelle_pa/geo/copertura_5min.pmtiles",
   "layers": [
    {
     "nome": "copertura_5min",
@@ -3042,6 +3108,7 @@
   "formato": "geojson",
   "byte": 47859,
   "sha256": "eb01d714c38786a2c78c721c396d738b25a280e8bd0641ecdafe0b6bb5956517",
+  "url": "https://palermohub.github.io/fontanelle_pa/geo/fontanelle.geojson",
   "layers": [
    {
     "nome": "fontanelle",
@@ -3069,6 +3136,7 @@
   "formato": "pmtiles",
   "byte": 41019,
   "sha256": "62c1bfad23e2f110074a4fa2e2aadf4177d7418f1372d53e5a91a2a79eab75a5",
+  "url": "https://palermohub.github.io/fontanelle_pa/geo/fontanelle.pmtiles",
   "layers": [
    {
     "nome": "fontanelle",
@@ -3094,6 +3162,7 @@
   "formato": "pmtiles",
   "byte": 316084,
   "sha256": "efb04fa63323e1687e9ce6a073b40a0372a33f185d2f7801e141f24a9966a914",
+  "url": "https://palermohub.github.io/fontanelle_pa/geo/isocrone_10min.pmtiles",
   "layers": [
    {
     "nome": "isocrone_10min",
@@ -3112,6 +3181,7 @@
   "formato": "pmtiles",
   "byte": 205256,
   "sha256": "2dd17c2a3cd9385af4a5cc14aed6b214fc5c5d8539a7e52722eb3b797165a597",
+  "url": "https://palermohub.github.io/fontanelle_pa/geo/isocrone_5min.pmtiles",
   "layers": [
    {
     "nome": "isocrone_5min",
@@ -3129,14 +3199,16 @@
   "tema": "servizi",
   "formato": "json",
   "byte": 8101386,
-  "sha256": "b8a7f4cd9ee6ae3250bdaefe8f7bee61bffadd9bc1a7ea1a146b3e67068c3732"
+  "sha256": "b8a7f4cd9ee6ae3250bdaefe8f7bee61bffadd9bc1a7ea1a146b3e67068c3732",
+  "url": "https://palermohub.github.io/fontanelle_pa/geo/rete_stradale.json"
  },
  {
   "percorso": "servizi/stats.json",
   "tema": "servizi",
   "formato": "json",
   "byte": 837,
-  "sha256": "aedcfb3937185734b074448693232de8ae3623761911709711acef10624466d8"
+  "sha256": "aedcfb3937185734b074448693232de8ae3623761911709711acef10624466d8",
+  "url": "https://palermohub.github.io/fontanelle_pa/geo/stats.json"
  },
  {
   "percorso": "servizi/peba.geojson",
@@ -3144,6 +3216,7 @@
   "formato": "geojson",
   "byte": 148204,
   "sha256": "94ee0a25fddb3930a6f224b0591ba5aec62f9a8f3de9737bbdea77543b6eeb75",
+  "url": "https://palermohub.github.io/peba/dati/peba.geojson",
   "layers": [
    {
     "nome": "peba",
@@ -3188,6 +3261,7 @@
   "formato": "geojson",
   "byte": 57865,
   "sha256": "328749919e989d5f0edbd40b8218f13fd31fb79341c2e3e660b49b71ac31874d",
+  "url": "https://palermohub.github.io/peba/dati/peba_edifici.geojson",
   "layers": [
    {
     "nome": "peba_edifici",
@@ -3215,6 +3289,7 @@
   "formato": "geojson",
   "byte": 15244,
   "sha256": "5b2d190d3650cfcc4ddcd5cb217b90a06250297cd84441465424be38fbeb07a7",
+  "url": "https://palermohub.github.io/peba/dati/peba_aree_verdi.geojson",
   "layers": [
    {
     "nome": "peba_aree_verdi",
@@ -3242,21 +3317,24 @@
   "tema": "servizi",
   "formato": "json",
   "byte": 115525,
-  "sha256": "b0380172ffcba1483daf7796e2cabc62fd2fe5219f3eeff406f8b37167a3ac19"
+  "sha256": "b0380172ffcba1483daf7796e2cabc62fd2fe5219f3eeff406f8b37167a3ac19",
+  "url": "https://palermohub.github.io/peba/dati/schede_completo.json"
  },
  {
   "percorso": "servizi/costi_per_scheda.md",
   "tema": "servizi",
   "formato": "md",
   "byte": 14941,
-  "sha256": "98de2c6a10f8f9c7ab569b8ae99b7cdc2e8e3d4f1464c84362d0c2b84b833509"
+  "sha256": "98de2c6a10f8f9c7ab569b8ae99b7cdc2e8e3d4f1464c84362d0c2b84b833509",
+  "url": "https://palermohub.github.io/peba/dati/costi_per_scheda.md"
  },
  {
   "percorso": "servizi/indice_peba.md",
   "tema": "servizi",
   "formato": "md",
   "byte": 2665,
-  "sha256": "dc9d35c529d61f0560f273a155868ae8f8c1d796eec53f5da0a557a805affa90"
+  "sha256": "dc9d35c529d61f0560f273a155868ae8f8c1d796eec53f5da0a557a805affa90",
+  "url": "https://palermohub.github.io/peba/dati/indice_peba.md"
  },
  {
   "percorso": "servizi/metodologia_estrazione.md",
@@ -3270,14 +3348,16 @@
   "tema": "servizi",
   "formato": "md",
   "byte": 19871,
-  "sha256": "8033f8480bd240cfc4ceca0e2f0f89c1f8466804ca31314c7aae005c507ede86"
+  "sha256": "8033f8480bd240cfc4ceca0e2f0f89c1f8466804ca31314c7aae005c507ede86",
+  "url": "https://palermohub.github.io/peba/dati/priorita_schede.md"
  },
  {
   "percorso": "servizi/procedura_edifici_osm.md",
   "tema": "servizi",
   "formato": "md",
   "byte": 6687,
-  "sha256": "060cb61cae5270af41786819f1c1be92fcc09edb296cd98949e3dba27220d755"
+  "sha256": "060cb61cae5270af41786819f1c1be92fcc09edb296cd98949e3dba27220d755",
+  "url": "https://palermohub.github.io/peba/dati/procedura_edifici_osm.md"
  },
  {
   "percorso": "verde/aree_verdi.geojson",
@@ -3326,6 +3406,7 @@
   "formato": "json",
   "byte": 4492134,
   "sha256": "9a766c3b6f8d5bdec9e967b5264a9944fd458239c3470d6350e2c02d5015b158",
+  "url": "https://siciliahub.github.io/palermohub/pmtiles/civici_index.json",
   "fonte": "Comune di Palermo — numeri civici (indice per la ricerca)",
   "data": "2026-02"
  }

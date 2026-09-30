@@ -1,4 +1,5 @@
 import { pmt } from '../core/config.js';
+import { EDIFICATO_NEUTRAL } from '../core/palette.js';
 
 const val = v => (v == null || v === '' ? '—' : String(v));
 
@@ -13,8 +14,8 @@ export default {
       id: 'edifici-3d', type: 'fill-extrusion', source: 'edificato', 'source-layer': 'edificato', minzoom: 14,
       layout: { visibility: 'none' },
       paint: {
-        'fill-extrusion-color': '#b8b8c8',
-        'fill-extrusion-height': ['max', ['coalesce', ['get', 'altezza'], 3], 3],
+        'fill-extrusion-color': EDIFICATO_NEUTRAL,
+        'fill-extrusion-height': ['coalesce', ['get', 'altezza'], 0],
         'fill-extrusion-base': 0,
         'fill-extrusion-opacity': 0.85,
       },

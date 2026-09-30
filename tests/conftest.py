@@ -1,3 +1,5 @@
+import json
+import re
 import socket
 import subprocess
 import sys
@@ -54,6 +56,16 @@ def _png_1x1():
 
 
 PNG_1X1 = _png_1x1()
+
+# Stile di base minimale al posto di https://tiles.openfreemap.org/styles/positron (i test non
+# dipendono da quel servizio), con i font per il testo dei numeri civici.
+STILE_BASE_STUB = json.dumps({
+    "version": 8,
+    "glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+    "sources": {},
+    "layers": [{"id": "sfondo", "type": "background", "paint": {"background-color": "#f2f2f2"}}],
+})
+RASTER_PRG = re.compile(r"https://palermohub\.github\.io/PRG2004/(ZTO|ppe|VA|VL)/.*\.png")
 
 
 class Pagina:
@@ -123,7 +135,7 @@ def _browser():
 
 @pytest.fixture
 def apri(server, _browser):
-    """apri(blocca=None) -> Pagina. `blocca` è un pattern di URL da far fallire."""
+    """apri(blocca=None) -> Pagina. `blocca` è un pattern di URL da far fallire (vince sugli stub)."""
     contesti = []
 
     def _apri(blocca=None):
@@ -134,9 +146,14 @@ def apri(server, _browser):
         page.on("console", lambda m: errori.append(m.text) if m.type == "error" else None)
         page.on("pageerror", lambda e: errori.append(str(e)))
         page.route(
-            "https://tile.openstreetmap.org/**",
-            lambda r: r.fulfill(status=200, content_type="image/png", body=PNG_1X1),
+            "https://tiles.openfreemap.org/styles/positron",
+            lambda r: r.fulfill(status=200, content_type="application/json", body=STILE_BASE_STUB),
         )
+        page.route(
+            "https://tiles.openfreemap.org/fonts/**",
+            lambda r: r.fulfill(status=200, content_type="application/x-protobuf", body=b""),
+        )
+        page.route(RASTER_PRG, lambda r: r.fulfill(status=200, content_type="image/png", body=PNG_1X1))
         if blocca:
             page.route(blocca, lambda r: r.abort())
         page.goto(server + "/index.html")

@@ -6,6 +6,8 @@ import json
 import shutil
 import subprocess
 import sys
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from osgeo import gdal, ogr, osr
@@ -18,6 +20,7 @@ ogr.UseExceptions()
 ROOT = Path(__file__).resolve().parents[1]
 DATI = ROOT / "dati"
 DOCS = ROOT / "docs"
+CACHE = ROOT / ".cache" / "dati"
 
 MAX_BYTE = 100 * 1024 * 1024
 ESTENSIONI_VETTORIALI = {".gpkg", ".geojson"}
@@ -49,7 +52,7 @@ LAYER_ATTESI = {
     },
     "edifici/edificato_pop.pmtiles": {"edificato": {"altezza", "pop_stim", "SEZ21_ID", "occupancy"}},
     "civici-omi/civici_0226.pmtiles": {"civici_wgs84": {"Odonimo", "Civico"}},
-    "civici-omi/Zone_OMI_2025_II.pmtiles": {"Zone_OMI_2025_II": {"Zona", "Fascia"}},
+    "civici-omi/Zone_OMI_2025_II.pmtiles": {"Zone_OMI_2025_II": {"Zona", "Zona_OMI", "Fascia"}},
     "civici-omi/immobili_comunali_2024.pmtiles": {
         "immobili_comunali_2024": {"TIPO", "INDIRIZZO"}
     },
@@ -69,28 +72,67 @@ def leggi_manifest(dati: Path = DATI) -> list[dict]:
         return list(csv.DictReader(f, delimiter="\t"))
 
 
+def _lunghezza_remota(url: str) -> int:
+    req = urllib.request.Request(url, method="HEAD")
+    with urllib.request.urlopen(req, timeout=20) as r:
+        return int(r.headers["Content-Length"])
+
+
+def _verifica_riga(dati: Path, r: dict) -> str | None:
+    rel = r["percorso_dest"]
+    p = dati / rel
+    url = r.get("url") or ""
+    if p.is_file():
+        if p.stat().st_size != int(r["dimensione_byte"]):
+            return f"dimensione diversa: {rel}"
+        if sha256_file(p) != r["sha256"]:
+            return f"hash diverso: {rel}"
+    elif url:
+        try:
+            dimensione = _lunghezza_remota(url)
+        except Exception:
+            return f"remoto non raggiungibile: {rel}"
+        if dimensione != int(r["dimensione_byte"]):
+            return f"dimensione remota diversa: {rel}"
+    else:
+        return f"manca: {rel}"
+    return None
+
+
 def verifica_manifest(dati: Path = DATI) -> list[str]:
-    errori = []
-    for r in leggi_manifest(dati):
-        rel = r["percorso_dest"]
-        p = dati / rel
-        if not p.is_file():
-            errori.append(f"manca: {rel}")
-        elif p.stat().st_size != int(r["dimensione_byte"]):
-            errori.append(f"dimensione diversa: {rel}")
-        elif sha256_file(p) != r["sha256"]:
-            errori.append(f"hash diverso: {rel}")
-    return errori
+    """Un file senza copia locale è valido se il suo link risponde con la dimensione attesa."""
+    righe = leggi_manifest(dati)
+    with ThreadPoolExecutor(16) as ex:
+        esiti = list(ex.map(lambda r: _verifica_riga(dati, r), righe))
+    return [e for e in esiti if e]
 
 
-def _ids(path: Path) -> list:
-    return [r["SEZ21_ID"] for r in json.loads(path.read_text(encoding="utf-8"))]
+def leggi_json(rel: str, dati: Path = DATI, cache: Path = CACHE):
+    """JSON di dati/<rel>: dalla copia locale se c'è, altrimenti dal link (con cache in .cache/)."""
+    locale = dati / rel
+    if locale.is_file():
+        return json.loads(locale.read_text(encoding="utf-8"))
+    riga = next((r for r in leggi_manifest(dati) if r["percorso_dest"] == rel and r.get("url")), None)
+    if riga is None:
+        raise FileNotFoundError(rel)
+    copia = cache / rel
+    if not copia.is_file() or sha256_file(copia) != riga["sha256"]:
+        copia.parent.mkdir(parents=True, exist_ok=True)
+        with urllib.request.urlopen(riga["url"], timeout=60) as resp:
+            copia.write_bytes(resp.read())
+        if sha256_file(copia) != riga["sha256"]:
+            raise ValueError(f"contenuto remoto diverso dal manifesto: {rel}")
+    return json.loads(copia.read_text(encoding="utf-8"))
+
+
+def _ids(dati: Path, rel: str) -> list:
+    return [r["SEZ21_ID"] for r in leggi_json(rel, dati)]
 
 
 def controlla_sezioni(dati: Path = DATI) -> list[str]:
     errori = []
-    a = _ids(dati / "popolazione" / "sezioni_indicatori.json")
-    b = _ids(dati / "popolazione" / "sezioni_indicatori_2023.json")
+    a = _ids(dati, "popolazione/sezioni_indicatori.json")
+    b = _ids(dati, "popolazione/sezioni_indicatori_2023.json")
     for nome, ids in (("2021", a), ("2023", b)):
         if len(ids) != len(set(ids)):
             errori.append(f"SEZ21_ID duplicati nel {nome}")
@@ -100,7 +142,23 @@ def controlla_sezioni(dati: Path = DATI) -> list[str]:
     return errori
 
 
-def info_pmtiles(path: Path) -> dict:
+def sorgente(rel: str, dati: Path = DATI):
+    """Copia locale (Path) se c'è, altrimenti il link (str) registrato nel manifesto."""
+    locale = dati / rel
+    if locale.is_file():
+        return locale
+    for r in leggi_manifest(dati):
+        if r["percorso_dest"] == rel and r.get("url"):
+            return r["url"]
+    raise FileNotFoundError(rel)
+
+
+def _gdal(src) -> str:
+    """Percorso leggibile da GDAL/OGR: i link passano da /vsicurl/."""
+    return f"/vsicurl/{src}" if str(src).startswith("http") else str(src)
+
+
+def info_pmtiles(path) -> dict:
     exe = shutil.which("pmtiles") or str(Path.home() / ".local/bin/pmtiles")
     out = subprocess.run(
         [exe, "show", str(path), "--metadata"], capture_output=True, text=True, check=True
@@ -133,8 +191,8 @@ def epsg_di(srs) -> int | None:
     return int(code) if code else None
 
 
-def info_vettoriale(path: Path) -> dict:
-    ds = ogr.Open(str(path))
+def info_vettoriale(path) -> dict:
+    ds = ogr.Open(_gdal(path))
     layers = []
     for i in range(ds.GetLayerCount()):
         lyr = ds.GetLayerByIndex(i)
@@ -151,8 +209,8 @@ def info_vettoriale(path: Path) -> dict:
     return {"layers": layers, "epsg": layers[0]["epsg"] if layers else None}
 
 
-def info_raster(path: Path) -> dict:
-    ds = gdal.Open(str(path))
+def info_raster(path) -> dict:
+    ds = gdal.Open(_gdal(path))
     gt = ds.GetGeoTransform()
     return {
         "dimensioni": [ds.RasterXSize, ds.RasterYSize],
@@ -167,6 +225,7 @@ def costruisci_catalogo(dati: Path = DATI) -> list[dict]:
     for r in leggi_manifest(dati):
         rel = r["percorso_dest"]
         p = dati / rel
+        url = r.get("url") or ""
         suffisso = p.suffix.lower()
         voce = {
             "percorso": rel,
@@ -175,12 +234,15 @@ def costruisci_catalogo(dati: Path = DATI) -> list[dict]:
             "byte": int(r["dimensione_byte"]),
             "sha256": r["sha256"],
         }
+        if url:
+            voce["url"] = url
+        src = p if p.is_file() else url
         if suffisso == ".pmtiles":
-            voce.update(info_pmtiles(p))
+            voce.update(info_pmtiles(src))
         elif suffisso in ESTENSIONI_VETTORIALI:
-            voce.update(info_vettoriale(p))
+            voce.update(info_vettoriale(src))
         elif suffisso == ".tif":
-            voce.update(info_raster(p))
+            voce.update(info_raster(src))
         voce.update(FONTI.get(rel, {}))
         voci.append(voce)
     return voci
