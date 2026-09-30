@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Twin Palermo</title>
+<link rel="stylesheet" href="css/vendor/maplibre-gl.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="mappa"></div>
+
+<aside id="pannello" aria-label="Strati della mappa">
+  <h1>Digital Twin Palermo</h1>
+  <div id="strati"></div>
+  <button id="apri-crediti" type="button">Fonti e avvisi</button>
+</aside>
+
+<form id="cerca" role="search" autocomplete="off">
+  <input id="cerca-testo" type="search" placeholder="Via e civico, es. via Maqueda 100" aria-label="Cerca indirizzo">
+  <ul id="cerca-risultati" hidden></ul>
+</form>
+
+<aside id="scheda" hidden aria-live="polite"></aside>
+<div id="avvisi" role="status"></div>
+<dialog id="crediti"></dialog>
+
+<script src="js/vendor/maplibre-gl.js"></script>
+<script src="js/vendor/pmtiles.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

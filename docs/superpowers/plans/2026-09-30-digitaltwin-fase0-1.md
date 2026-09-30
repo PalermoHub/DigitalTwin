@@ -1176,6 +1176,7 @@ def test_crediti_mostrano_fonti_e_avvisi(apri):
     v = apri()
     v.attendi_pronto()
     v.page.click("#apri-crediti")
+    v.page.wait_for_selector("#crediti[open]")  # il dialog si apre dopo il fetch del catalogo
     testo = v.page.inner_text("#crediti")
     assert "valore legale" in testo
     assert "stime campionarie" in testo

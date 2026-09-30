@@ -1,0 +1,40 @@
+:root { --bg: #fff; --fg: #1b1f24; --muted: #5b6570; --bordo: #d0d7de; --acc: #0b5fff; --avviso: #fff4ce; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #161b22; --fg: #e6edf3; --muted: #9aa4af; --bordo: #30363d; --acc: #58a6ff; --avviso: #3d3318; }
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; font: 14px/1.4 system-ui, sans-serif; color: var(--fg); background: var(--bg); }
+#mappa { position: absolute; inset: 0; }
+#pannello, #scheda, #cerca, #avvisi {
+  position: absolute; z-index: 2; background: var(--bg); border: 1px solid var(--bordo); border-radius: 8px;
+}
+#pannello { top: 8px; left: 8px; width: 280px; max-height: calc(100% - 16px); overflow: auto; padding: 10px; }
+#pannello h1 { font-size: 16px; margin: 0 0 8px; }
+fieldset { border: 1px solid var(--bordo); border-radius: 6px; margin: 0 0 8px; padding: 6px 8px; }
+legend { font-weight: 600; padding: 0 4px; }
+label { display: block; padding: 2px 0; }
+select { width: 100%; margin: 2px 0 6px; }
+.legenda div { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.legenda i { width: 14px; height: 14px; border: 1px solid var(--bordo); display: inline-block; }
+button { cursor: pointer; }
+#cerca { top: 8px; left: 300px; width: 320px; padding: 4px; }
+#cerca input { width: 100%; padding: 6px; }
+#cerca-risultati { list-style: none; margin: 4px 0 0; padding: 0; max-height: 240px; overflow: auto; }
+#cerca-risultati button { width: 100%; text-align: left; border: 0; background: none; color: var(--fg); padding: 6px; }
+#cerca-risultati button:hover, #cerca-risultati button:focus { background: var(--bordo); }
+#scheda { top: 8px; right: 8px; width: 300px; max-height: calc(100% - 16px); overflow: auto; padding: 10px; }
+#scheda h2 { font-size: 15px; margin: 0 0 6px; }
+#scheda h3 { font-size: 13px; margin: 10px 0 2px; color: var(--muted); }
+#scheda dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; }
+#scheda dt { color: var(--muted); }
+#scheda dd { margin: 0; }
+#avvisi { bottom: 8px; left: 50%; transform: translateX(-50%); padding: 0; border: 0; background: none; display: flex; flex-direction: column; gap: 4px; }
+#avvisi div { background: var(--avviso); border: 1px solid var(--bordo); border-radius: 6px; padding: 4px 10px; }
+dialog { max-width: 640px; width: calc(100% - 32px); background: var(--bg); color: var(--fg); border: 1px solid var(--bordo); border-radius: 8px; }
+dialog li { margin: 4px 0; }
+@media (max-width: 720px) {
+  #pannello { width: calc(100% - 16px); max-height: 38%; }
+  #cerca { top: auto; bottom: 8px; left: 8px; right: 8px; width: auto; }
+  #scheda { top: auto; bottom: 64px; right: 8px; left: 8px; width: auto; max-height: 35%; }
+  #avvisi { bottom: 110px; }
+}
