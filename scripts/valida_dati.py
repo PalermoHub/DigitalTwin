@@ -36,6 +36,8 @@ LAYER_ATTESI = {
         "zto": {"ZTO", "DESCRIZION"},
         "va": {"tipo", "descrizone"},
         "vl": {"TIPO"},
+        "ns": {"ZTO", "DESCRIZION"},
+        "cs": {"Comune"},
     },
     "popolazione/geo_sezioni_2021.pmtiles": {
         "sezioni": {"SEZ21_ID", "POP21", "FAM21", "ABI21", "Quartiere", "UPL", "Circoscrizione"}

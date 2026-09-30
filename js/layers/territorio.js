@@ -30,6 +30,10 @@ export default {
       layout: nascosto, paint: { 'fill-color': COLORI_OMI, 'fill-opacity': 0.45 } });
     map.addLayer({ id: 'prg-zto', type: 'fill', source: 'prg', 'source-layer': 'zto',
       layout: nascosto, paint: { 'fill-color': COLORI_ZTO, 'fill-opacity': 0.5 } });
+    map.addLayer({ id: 'prg-ns', type: 'fill', source: 'prg', 'source-layer': 'ns',
+      layout: nascosto, paint: { 'fill-color': COLORI_ZTO, 'fill-opacity': 0.5 } });
+    map.addLayer({ id: 'prg-cs', type: 'line', source: 'prg', 'source-layer': 'cs',
+      layout: nascosto, paint: { 'line-color': '#d95f02', 'line-width': 2, 'line-dasharray': [3, 2] } });
     map.addLayer({ id: 'prg-va', type: 'fill', source: 'prg', 'source-layer': 'va',
       layout: nascosto, paint: { 'fill-color': '#b2182b', 'fill-opacity': 0.35 } });
     map.addLayer({ id: 'prg-vl', type: 'line', source: 'prg', 'source-layer': 'vl',
@@ -43,20 +47,22 @@ export default {
     // sempre presenti e invisibili: servono alla scheda del luogo
     map.addLayer({ id: 'catasto-hit', type: 'fill', source: 'catasto', 'source-layer': 'particelle', minzoom: 15, paint: vuoto });
     map.addLayer({ id: 'prg-zto-hit', type: 'fill', source: 'prg', 'source-layer': 'zto', paint: vuoto });
+    map.addLayer({ id: 'prg-ns-hit', type: 'fill', source: 'prg', 'source-layer': 'ns', paint: vuoto });
+    map.addLayer({ id: 'prg-cs-hit', type: 'fill', source: 'prg', 'source-layer': 'cs', paint: vuoto });
     map.addLayer({ id: 'prg-va-hit', type: 'fill', source: 'prg', 'source-layer': 'va', paint: vuoto });
     map.addLayer({ id: 'omi-hit', type: 'fill', source: 'omi', 'source-layer': 'Zone_OMI_2025_II', paint: vuoto });
     map.addLayer({ id: 'immobili-hit', type: 'fill', source: 'immobili', 'source-layer': 'immobili_comunali_2024', paint: vuoto });
   },
   strati: [
     { id: 'catasto', etichetta: 'Catasto: particelle (da zoom 15)', layers: ['catasto'], attivo: false },
-    { id: 'prg', etichetta: 'PRG 2004: zonizzazione', layers: ['prg-zto'], attivo: false },
+    { id: 'prg', etichetta: 'PRG 2004: zonizzazione e centro storico', layers: ['prg-zto', 'prg-ns', 'prg-cs'], attivo: false },
     { id: 'vincoli', etichetta: 'PRG 2004: vincoli', layers: ['prg-va', 'prg-vl'], attivo: false },
     { id: 'omi', etichetta: 'Zone OMI 2025', layers: ['omi'], attivo: false },
     { id: 'immobili', etichetta: 'Immobili comunali', layers: ['immobili'], attivo: false },
     { id: 'civici', etichetta: 'Numeri civici (da zoom 17)', layers: ['civici'], attivo: false },
   ],
   scheda: {
-    layers: ['catasto-hit', 'prg-zto-hit', 'prg-va-hit', 'omi-hit', 'immobili-hit'],
+    layers: ['catasto-hit', 'prg-zto-hit', 'prg-ns-hit', 'prg-cs-hit', 'prg-va-hit', 'omi-hit', 'immobili-hit'],
     voce(f) {
       const p = f.properties;
       switch (f.layer.id) {
@@ -64,6 +70,12 @@ export default {
           return { peso: 10, titolo: 'Particella catastale', righe: [['Foglio', val(p.Foglio)], ['Particella', val(p.Paricella)]] };
         case 'prg-zto-hit':
           return { peso: 40, titolo: 'Zona PRG 2004', righe: [['Zona', val(p.ZTO)], ['Descrizione', val(p.DESCRIZION)]] };
+        case 'prg-ns-hit':
+          return { peso: 41, titolo: 'Netto storico (PRG 2004)', righe: [['Zona', val(p.ZTO)], ['Descrizione', val(p.DESCRIZION)]] };
+        case 'prg-cs-hit':
+          return { peso: 45, titolo: 'Centro storico (PRG 2004)', righe: [
+            ['Perimetro', 'il punto ricade nel perimetro del centro storico'],
+            ['Zonizzazione di dettaglio', 'non presente in questo strato: verificare con gli uffici']] };
         case 'prg-va-hit':
           return { peso: 50, titolo: 'Vincolo (PRG 2004)', righe: [['Tipo', val(p.tipo)], ['Descrizione', val(p.descrizone)]] };
         case 'omi-hit':

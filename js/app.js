@@ -1,6 +1,7 @@
 import { creaMappa } from './core/mappa.js';
 import { costruisciPannello, segnala } from './core/pannello.js';
 import { caricaCatalogo, apriCrediti } from './core/catalogo.js';
+import { collegaScheda } from './core/scheda.js';
 import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
 import territorio from './layers/territorio.js';
@@ -21,6 +22,7 @@ map.on('load', async () => {
   for (const m of MODULI) m.aggiungiSorgenti(map);
   for (const m of MODULI) m.aggiungiLayer(map);
   costruisciPannello(map, MODULI, document.getElementById('strati'));
+  collegaScheda(map, MODULI, document.getElementById('scheda'));
 
   const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia).map(m => m.avvia(map)));
   esiti.forEach(e => { if (e.status === 'rejected') segnala(`Strato non caricato: ${e.reason?.message ?? e.reason}`); });

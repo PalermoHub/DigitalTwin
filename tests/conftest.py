@@ -78,6 +78,28 @@ class Pagina:
             [lon, lat, zoom],
         )
 
+    def punto_in(self, sorgente, strato, layer_hit):
+        """Coordinate di un punto che la mappa, così com'è, riconosce dentro `layer_hit`.
+
+        Prende i vertici medi delle feature già caricate di `sorgente/strato` e tiene il primo
+        punto per cui queryRenderedFeatures restituisce davvero `layer_hit`.
+        """
+        return self.js(
+            f"""() => {{
+                const m = window.dt.map;
+                const feats = m.querySourceFeatures('{sorgente}', {{ sourceLayer: '{strato}' }});
+                for (const f of feats.slice(0, 200)) {{
+                    const g = f.geometry;
+                    const anello = g.type === 'Polygon' ? g.coordinates[0] : g.coordinates[0][0];
+                    const n = anello.length - 1;
+                    const c = anello.slice(0, n).reduce((a, q) => [a[0] + q[0] / n, a[1] + q[1] / n], [0, 0]);
+                    const hit = m.queryRenderedFeatures(m.project(c), {{ layers: ['{layer_hit}'] }});
+                    if (hit.length) return c;
+                }}
+                return null;
+            }}"""
+        )
+
     def clic(self, lon, lat):
         x, y = self.js(
             f"""(() => {{

@@ -171,3 +171,65 @@ def test_edifici_3d_inclinano_la_mappa_e_hanno_altezza(apri):
     assert any(isinstance(a, (int, float)) and a > 0 for a in feats)
     v.page.uncheck("#strato-edifici3d")
     v.page.wait_for_function("window.dt.map.getPitch() < 5")
+
+
+def _scheda_su(v, sorgente, strato, layer_hit, zoom, centro=(13.3568, 38.1204)):
+    """Porta la mappa al centro, sceglie un punto davvero dentro `layer_hit` e clicca."""
+    v.vai(*centro, zoom)
+    punto = v.punto_in(sorgente, strato, layer_hit)
+    assert punto is not None, f"nessuna feature di {sorgente}/{strato} interrogabile"
+    v.vai(punto[0], punto[1], zoom)
+    v.clic(punto[0], punto[1])
+    v.page.wait_for_selector("#scheda:not([hidden])")
+    return v.page.inner_text("#scheda")
+
+
+def test_scheda_su_una_particella(apri):
+    v = apri()
+    v.attendi_pronto()
+    testo = _scheda_su(v, "catasto", "particelle", "catasto-hit", 17)
+    assert "Particella catastale" in testo
+    assert "Foglio" in testo
+    assert "Sezione di censimento" in testo
+
+
+def test_scheda_zona_prg(apri):
+    v = apri()
+    v.attendi_pronto()
+    testo = _scheda_su(v, "prg", "zto", "prg-zto-hit", 15)
+    assert "Zona PRG 2004" in testo
+
+
+def test_scheda_netto_storico(apri):
+    v = apri()
+    v.attendi_pronto()
+    testo = _scheda_su(v, "prg", "ns", "prg-ns-hit", 15)
+    assert "Netto storico" in testo
+
+
+def test_scheda_centro_storico_non_resta_senza_prg(apri):
+    v = apri()
+    v.attendi_pronto()
+    # piazza Verdi ricade nel perimetro del centro storico, non in una zona di `zto`
+    testo = _scheda_su(v, "prg", "cs", "prg-cs-hit", 15)
+    assert "Centro storico" in testo
+
+
+def test_scheda_fuori_copertura_non_resta_vuota(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.vai(13.30, 38.30, 9)  # mare a nord, zoom sotto la copertura dei tile
+    v.clic(13.30, 38.30)
+    v.page.wait_for_selector("#scheda:not([hidden])")
+    assert "Nessun dato in questo punto" in v.page.inner_text("#scheda")
+    assert v.errori == []
+
+
+def test_scheda_si_chiude(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.vai(13.30, 38.30, 9)
+    v.clic(13.30, 38.30)
+    v.page.wait_for_selector("#scheda:not([hidden])")
+    v.page.click("#scheda button")
+    v.page.wait_for_selector("#scheda", state="hidden")
