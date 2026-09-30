@@ -153,3 +153,21 @@ def test_prg_carica_zonizzazione_a_zoom_15(apri):
     v.vai(13.3568, 38.1204, 15)
     n = v.js("window.dt.map.querySourceFeatures('prg', {sourceLayer: 'zto'}).length")
     assert n > 0
+
+
+def test_edifici_3d_inclinano_la_mappa_e_hanno_altezza(apri):
+    v = apri()
+    v.attendi_pronto()
+    assert v.js("window.dt.map.getSource('edificato') !== undefined")
+    v.page.check("#strato-edifici3d")
+    v.page.wait_for_function("window.dt.map.getPitch() > 40")
+    assert v.js("window.dt.map.getLayoutProperty('edifici-3d', 'visibility')") == "visible"
+    v.vai(13.3568, 38.1204, 16)
+    feats = v.js(
+        "window.dt.map.querySourceFeatures('edificato', {sourceLayer: 'edificato'})"
+        ".slice(0, 50).map(f => f.properties.altezza)"
+    )
+    assert len(feats) > 0
+    assert any(isinstance(a, (int, float)) and a > 0 for a in feats)
+    v.page.uncheck("#strato-edifici3d")
+    v.page.wait_for_function("window.dt.map.getPitch() < 5")

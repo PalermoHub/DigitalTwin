@@ -4,9 +4,10 @@ import { caricaCatalogo, apriCrediti } from './core/catalogo.js';
 import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
 import territorio from './layers/territorio.js';
+import edifici from './layers/edifici.js';
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [popolazione, territorio, confini];
+const MODULI = [popolazione, territorio, edifici, confini];
 
 const map = creaMappa('mappa');
 window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false };
