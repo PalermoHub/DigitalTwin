@@ -1,8 +1,11 @@
 import { creaMappa } from './core/mappa.js';
 import { costruisciPannello, segnala } from './core/pannello.js';
 import { caricaCatalogo, apriCrediti } from './core/catalogo.js';
+import confini from './layers/confini.js';
+import popolazione from './layers/popolazione.js';
 
-const MODULI = [];
+// ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
+const MODULI = [popolazione, confini];
 
 const map = creaMappa('mappa');
 window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false };
