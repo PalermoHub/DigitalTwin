@@ -3,9 +3,10 @@ import { costruisciPannello, segnala } from './core/pannello.js';
 import { caricaCatalogo, apriCrediti } from './core/catalogo.js';
 import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
+import territorio from './layers/territorio.js';
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [popolazione, confini];
+const MODULI = [popolazione, territorio, confini];
 
 const map = creaMappa('mappa');
 window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false };

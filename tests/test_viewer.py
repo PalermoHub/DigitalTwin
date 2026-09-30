@@ -122,3 +122,34 @@ def test_strati_iniziali_e_attivabili(apri):
             f"window.dt.map.getLayoutProperty('{s['layers'][0]}', 'visibility') !== 'none'"
         )
         assert nuova == (not s["attivo"]), s["id"]
+
+
+def test_territorio_strati_e_sorgenti(apri):
+    v = apri()
+    v.attendi_pronto()
+    for sorgente in ["catasto", "prg", "omi", "immobili", "civici"]:
+        assert v.js(f"window.dt.map.getSource('{sorgente}') !== undefined"), sorgente
+    for layer in ["catasto", "prg-zto", "prg-va", "prg-vl", "omi", "immobili", "civici",
+                  "catasto-hit", "prg-zto-hit", "prg-va-hit", "omi-hit", "immobili-hit"]:
+        assert v.js(f"window.dt.map.getLayer('{layer}') !== undefined"), layer
+    assert v.js("window.dt.map.getLayer('catasto').minzoom") == 15
+
+
+def test_catasto_carica_particelle_a_zoom_17(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.check("#strato-catasto")
+    v.vai(13.3568, 38.1204, 17)  # piazza Verdi, Teatro Massimo
+    n = v.js(
+        "window.dt.map.querySourceFeatures('catasto', {sourceLayer: 'particelle'}).length"
+    )
+    assert n > 0
+
+
+def test_prg_carica_zonizzazione_a_zoom_15(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.check("#strato-prg")
+    v.vai(13.3568, 38.1204, 15)
+    n = v.js("window.dt.map.querySourceFeatures('prg', {sourceLayer: 'zto'}).length")
+    assert n > 0
