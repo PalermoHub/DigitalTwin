@@ -1,0 +1,3332 @@
+[
+ {
+  "percorso": "catasto/particelle.pmtiles",
+  "tema": "catasto",
+  "formato": "pmtiles",
+  "byte": 39989293,
+  "sha256": "93b0631873d17ad87eb29e91d7de5da8bd9c95a4643fa023ac9607d723d6915b",
+  "layers": [
+   {
+    "nome": "particelle",
+    "campi": [
+     "Foglio",
+     "Paricella",
+     "fid"
+    ],
+    "minzoom": 12,
+    "maxzoom": 18
+   }
+  ],
+  "fonte": "S.I.T.R. Regione Siciliana e Agenzia delle Entrate — particelle catastali",
+  "data": "2026-09"
+ },
+ {
+  "percorso": "prg-vincoli/prg.pmtiles",
+  "tema": "prg-vincoli",
+  "formato": "pmtiles",
+  "byte": 9202547,
+  "sha256": "d5f0097d95cba7346bf407145d64f9d2560f06b4bc1b7adf006515196dab33ef",
+  "layers": [
+   {
+    "nome": "cs",
+    "campi": [
+     "Circoscriz",
+     "Cod_Cat",
+     "Cod_ISTAT",
+     "Comune",
+     "Popolazion",
+     "Superficie",
+     "fid"
+    ],
+    "minzoom": 12,
+    "maxzoom": 17
+   },
+   {
+    "nome": "ns",
+    "campi": [
+     "DESCRIZION",
+     "ID1",
+     "ZTO",
+     "fid"
+    ],
+    "minzoom": 12,
+    "maxzoom": 17
+   },
+   {
+    "nome": "va",
+    "campi": [
+     "descrizone",
+     "fid",
+     "id1",
+     "note",
+     "ogc_fid",
+     "tipo"
+    ],
+    "minzoom": 12,
+    "maxzoom": 17
+   },
+   {
+    "nome": "vl",
+    "campi": [
+     "DESCRIZION",
+     "ID1",
+     "NOTE",
+     "TIPO",
+     "fid",
+     "id"
+    ],
+    "minzoom": 12,
+    "maxzoom": 17
+   },
+   {
+    "nome": "zto",
+    "campi": [
+     "DESCRIZION",
+     "ID",
+     "NOTE",
+     "ZTO",
+     "fid"
+    ],
+    "minzoom": 12,
+    "maxzoom": 17
+   }
+  ],
+  "fonte": "Comune di Palermo — Variante generale al PRG 2004: zonizzazione e vincoli",
+  "data": "2004"
+ },
+ {
+  "percorso": "prg-vincoli/Variente_Generale_PRG_2004.gpkg",
+  "tema": "prg-vincoli",
+  "formato": "gpkg",
+  "byte": 14225408,
+  "sha256": "12dcb9fd578d89e0ed774b3a32505fd9a18444de857aacf107320bc8b8da0d8d",
+  "layers": [
+   {
+    "nome": "Centro Storico",
+    "geometria": "Polygon",
+    "n": 1,
+    "epsg": 4326,
+    "campi": [
+     "Comune",
+     "Circoscriz",
+     "Superficie",
+     "Popolazion",
+     "Cod_Cat",
+     "Cod_ISTAT"
+    ]
+   },
+   {
+    "nome": "Netto Storico",
+    "geometria": "Polygon",
+    "n": 6032,
+    "epsg": 4326,
+    "campi": [
+     "ID1",
+     "ZTO",
+     "DESCRIZION"
+    ]
+   },
+   {
+    "nome": "Zonizzazione",
+    "geometria": "Polygon",
+    "n": 5880,
+    "epsg": 4326,
+    "campi": [
+     "ID",
+     "ZTO",
+     "DESCRIZION",
+     "NOTE"
+    ]
+   },
+   {
+    "nome": "Vincoli lineari",
+    "geometria": "Line String",
+    "n": 99,
+    "epsg": 4326,
+    "campi": [
+     "id",
+     "ID1",
+     "TIPO",
+     "DESCRIZION",
+     "NOTE"
+    ]
+   },
+   {
+    "nome": "Vincoli areali",
+    "geometria": "Polygon",
+    "n": 662,
+    "epsg": 4326,
+    "campi": [
+     "ogc_fid",
+     "id1",
+     "tipo",
+     "descrizone",
+     "note"
+    ]
+   },
+   {
+    "nome": "layer_styles",
+    "geometria": "None",
+    "n": 5,
+    "epsg": null,
+    "campi": [
+     "f_table_catalog",
+     "f_table_schema",
+     "f_table_name",
+     "f_geometry_column",
+     "styleName",
+     "styleQML",
+     "styleSLD",
+     "useAsDefault",
+     "description",
+     "owner",
+     "ui",
+     "update_time"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "prg-vincoli/Vincoli areali.geojson",
+  "tema": "prg-vincoli",
+  "formato": "geojson",
+  "byte": 12627071,
+  "sha256": "7d2d6d4f99ed9177e48a1363e421ab18c1499a2b7762e10bbf18a9e00bbff4ff",
+  "layers": [
+   {
+    "nome": "Vincoli areali",
+    "geometria": "Polygon",
+    "n": 662,
+    "epsg": 4326,
+    "campi": [
+     "ogc_fid",
+     "id1",
+     "tipo",
+     "descrizone",
+     "note"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "prg-vincoli/Vincoli lineari.geojson",
+  "tema": "prg-vincoli",
+  "formato": "geojson",
+  "byte": 550390,
+  "sha256": "28f8418bbb3216f31542206cacd4a4403f7e7e0dda5afc04143a10caeb14bbca",
+  "layers": [
+   {
+    "nome": "Vincoli lineari",
+    "geometria": "Line String",
+    "n": 99,
+    "epsg": 4326,
+    "campi": [
+     "id",
+     "ID1",
+     "TIPO",
+     "DESCRIZION",
+     "NOTE"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "prg-vincoli/parcheggi_prg_2004.geojson",
+  "tema": "prg-vincoli",
+  "formato": "geojson",
+  "byte": 351505,
+  "sha256": "2529208b2610eb9c30860a8fb79fdc4fad5066453d91c0dcf9823066c36ed620",
+  "layers": [
+   {
+    "nome": "parcheggi_prg_2004",
+    "geometria": "Polygon",
+    "n": 434,
+    "epsg": 4326,
+    "campi": [
+     "ID",
+     "ZTO",
+     "DESCRIZION",
+     "NOTE"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "prg-vincoli/vincoli_arichitettonici_palermo.csv",
+  "tema": "prg-vincoli",
+  "formato": "csv",
+  "byte": 136811,
+  "sha256": "17a0e2704cf689c6e3e9ebfd3faaeb1754356de7572d4f369a122e9faa8d1112"
+ },
+ {
+  "percorso": "prg-vincoli/ListaVincoli.csv",
+  "tema": "prg-vincoli",
+  "formato": "csv",
+  "byte": 17002,
+  "sha256": "40f7f332b46d28267887847f41dfd78018ea21bfc0adbac6ae327a7d215e082d"
+ },
+ {
+  "percorso": "civici-omi/civici_0226.pmtiles",
+  "tema": "civici-omi",
+  "formato": "pmtiles",
+  "byte": 6773850,
+  "sha256": "27da2bda2e1a1ac4a9a6e6a0ce4cde495a87708b3399b2625b0577854a537d0f",
+  "layers": [
+   {
+    "nome": "civici_wgs84",
+    "campi": [
+     "Circoscrizione",
+     "Civico",
+     "Esponente",
+     "Odonimo",
+     "PROGRESSIVO_SNC",
+     "Quartiere",
+     "UPL",
+     "fid"
+    ],
+    "minzoom": 12,
+    "maxzoom": 18
+   }
+  ],
+  "fonte": "Comune di Palermo — numeri civici",
+  "data": "2026-02"
+ },
+ {
+  "percorso": "civici-omi/Zone_OMI_2025_II.pmtiles",
+  "tema": "civici-omi",
+  "formato": "pmtiles",
+  "byte": 4886206,
+  "sha256": "bedfdf20105363e4c5409698c756b6fdffb6dc55fad0d5baf381bc8575e0267b",
+  "layers": [
+   {
+    "nome": "Zone_OMI_2025_II",
+    "campi": [
+     "Anno_Semestre",
+     "Cod_Tip",
+     "Cod_tip_prev",
+     "Compr_max",
+     "Compr_min",
+     "Descr_Tipologia",
+     "Descr_tip_prev",
+     "Fasce",
+     "Fascia",
+     "Fascia_Descr",
+     "LinkZona",
+     "LinkZona_2",
+     "Loc_max",
+     "Loc_min",
+     "Microzona",
+     "Name",
+     "Stato",
+     "Stato_prev",
+     "Stato_prev_2",
+     "Sup_NL_compr",
+     "Sup_NL_loc",
+     "Zona",
+     "Zona_Descr",
+     "Zona_OMI",
+     "fid"
+    ],
+    "minzoom": 12,
+    "maxzoom": 18
+   }
+  ],
+  "fonte": "Agenzia delle Entrate — Osservatorio del Mercato Immobiliare, zone OMI",
+  "data": "2025-S2"
+ },
+ {
+  "percorso": "civici-omi/immobili_comunali_2024.pmtiles",
+  "tema": "civici-omi",
+  "formato": "pmtiles",
+  "byte": 4217822,
+  "sha256": "c7b149f5de5a4e9a2061bbcabd1bb516ae3eb4f2dea464eba10f688d1de82fae",
+  "layers": [
+   {
+    "nome": "immobili_comunali_2024",
+    "campi": [
+     "CATEGORIA",
+     "FOGLIO",
+     "INDIRIZZO",
+     "MATCH_TYPE",
+     "NUMERO_CIVICO",
+     "PLLA",
+     "PT_LAT",
+     "PT_LON",
+     "Quartiere",
+     "SUB",
+     "SUBTIPO",
+     "TIPO",
+     "UPL_nome",
+     "circoscrizione",
+     "fid"
+    ],
+    "minzoom": 11,
+    "maxzoom": 18
+   }
+  ],
+  "fonte": "Comune di Palermo — immobili comunali",
+  "data": "2024"
+ },
+ {
+  "percorso": "edifici/edificato.gpkg",
+  "tema": "edifici",
+  "formato": "gpkg",
+  "byte": 50462720,
+  "sha256": "384ef4b1a243b139b81da84a1bb8ebe407b08c9100b16a037fa854fb80f58be8",
+  "layers": [
+   {
+    "nome": "edificato",
+    "geometria": "3D Multi Polygon",
+    "n": 111844,
+    "epsg": 4326,
+    "campi": [
+     "source",
+     "altezza",
+     "occupancy",
+     "quota_gronda",
+     "quota_piede",
+     "area_mq",
+     "volume_mc",
+     "floorspace",
+     "n_vertici"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "edifici/buildings_wgs84.pmtiles",
+  "tema": "edifici",
+  "formato": "pmtiles",
+  "byte": 29291993,
+  "sha256": "61854375834fa155353c4d6df1e029ff472a40ceabeee03ed5ccbe478bfe04ec",
+  "layers": [
+   {
+    "nome": "buildings",
+    "campi": [
+     "AREA",
+     "ID",
+     "ID_UN_VOL",
+     "QUOTA_GRON",
+     "QUOTA_PIED",
+     "VOLUME",
+     "height",
+     "theme",
+     "type"
+    ],
+    "minzoom": 12,
+    "maxzoom": 17
+   }
+  ]
+ },
+ {
+  "percorso": "edifici/edificato_pop.pmtiles",
+  "tema": "edifici",
+  "formato": "pmtiles",
+  "byte": 20042288,
+  "sha256": "c8399b5017fdc6d6b6ba9f0ff2c1217b657af6f6012fdce42ab7c7ae88a134bd",
+  "layers": [
+   {
+    "nome": "edificato",
+    "campi": [
+     "COP_EDIF_PCT",
+     "SEZ21_ID",
+     "altezza",
+     "dens_das",
+     "dens_pop_ha",
+     "occupancy",
+     "pop_stim"
+    ],
+    "minzoom": 10,
+    "maxzoom": 16
+   }
+  ],
+  "fonte": "Comune di Palermo — unità volumetriche CTC; popolazione per edificio: stima",
+  "data": "2026"
+ },
+ {
+  "percorso": "edifici/aggregati_strutturali_palermo.gpkg",
+  "tema": "edifici",
+  "formato": "gpkg",
+  "byte": 56766464,
+  "sha256": "c476d7ab2c4f27128d60caafaa05f74596dd3676b7762a48fe0905dc1ed86b25",
+  "layers": [
+   {
+    "nome": "DPC_aggregati-strutturali_palermo",
+    "geometria": "Multi Polygon",
+    "n": 46852,
+    "epsg": 7794,
+    "campi": [
+     "IDAG",
+     "Label",
+     "Comune",
+     "id_quartieri",
+     "cod_asc",
+     "UPL",
+     "sez2011",
+     "UPL_nome",
+     "Quartiere",
+     "circoscrizione"
+    ]
+   },
+   {
+    "nome": "aggregati_strutturali_con_pop_2022",
+    "geometria": "Multi Polygon",
+    "n": 46852,
+    "epsg": 7794,
+    "campi": [
+     "IDAG",
+     "Label",
+     "Comune",
+     "id_quartieri",
+     "cod_asc",
+     "sez2011",
+     "UPL",
+     "Quartiere",
+     "circoscrizione",
+     "sez",
+     "area_agg",
+     "pop_ripartita",
+     "densita_pop",
+     "Italiani",
+     "Stranieri",
+     "Totale",
+     "area_sezione",
+     "area_tot_sez"
+    ]
+   },
+   {
+    "nome": "aggregati_strutturali_con_pop_2022_PAI",
+    "geometria": "Multi Polygon",
+    "n": 46852,
+    "epsg": 7794,
+    "campi": [
+     "IDAG",
+     "Label",
+     "Comune",
+     "id_quartieri",
+     "cod_asc",
+     "sez2011",
+     "UPL",
+     "Quartiere",
+     "circoscrizione",
+     "sez",
+     "area_agg",
+     "pop_ripartita",
+     "carico_insediativo",
+     "Italiani",
+     "Stranieri",
+     "Totale",
+     "area_sezione",
+     "area_tot_sez",
+     "SA_Idraul",
+     "RISCHIO_Idraul",
+     "PERICOLO_Idraul",
+     "SA_geomorf",
+     "PERICOLO_geomorf",
+     "Dissesti_Tipolog_geomorf",
+     "Dissesti_Attib_geomorf",
+     "RISCHIO_geomorf",
+     "Category"
+    ]
+   },
+   {
+    "nome": "Statistiche per categoria",
+    "geometria": "None",
+    "n": 2798,
+    "epsg": null,
+    "campi": [
+     "sez",
+     "count",
+     "unique",
+     "min",
+     "max",
+     "range",
+     "area_tot_sez",
+     "mean",
+     "median",
+     "stddev",
+     "minority",
+     "majority",
+     "q1",
+     "q3",
+     "iqr"
+    ]
+   }
+  ],
+  "epsg": 7794
+ },
+ {
+  "percorso": "terreno/palermo_dtm5m.tif",
+  "tema": "terreno",
+  "formato": "tif",
+  "byte": 57031678,
+  "sha256": "564a8b5749e6ba0eaa81fe1a21afb246ee47415a01b58a8b4b4abd06dee86a11",
+  "dimensioni": [
+   3680,
+   3871
+  ],
+  "epsg": 6875,
+  "passo": [
+   5.0,
+   5.0
+  ],
+  "nodata": -9999.0
+ },
+ {
+  "percorso": "terreno/palermo_dtm5m.tif.aux.xml",
+  "tema": "terreno",
+  "formato": "xml",
+  "byte": 418,
+  "sha256": "c814eb82d5e525af6908a3aa8f03cf830f3779f8f9250b410ef403761c0f480f"
+ },
+ {
+  "percorso": "terreno/dsm.tif",
+  "tema": "terreno",
+  "formato": "tif",
+  "byte": 16875024,
+  "sha256": "a85e82adce25542d4225df490f501ebc927bbde3ef92f9c800197ff54d2e4ca5",
+  "dimensioni": [
+   3680,
+   3871
+  ],
+  "epsg": 6875,
+  "passo": [
+   5.0,
+   5.0
+  ],
+  "nodata": null
+ },
+ {
+  "percorso": "terreno/analisi_per_zona.json",
+  "tema": "terreno",
+  "formato": "json",
+  "byte": 118351,
+  "sha256": "f1aaa33b290a41bdef633785ba67f64c1aedcabd75910e84a35118bf47949519"
+ },
+ {
+  "percorso": "terreno/elevazione_per_zona.json",
+  "tema": "terreno",
+  "formato": "json",
+  "byte": 19810,
+  "sha256": "2bbb9bb0009efedc31b788f0588e38ff522d4766992bedf89387685101c4dc64"
+ },
+ {
+  "percorso": "terreno/new_layers_per_zona.json",
+  "tema": "terreno",
+  "formato": "json",
+  "byte": 65692,
+  "sha256": "6e58b2f8884c387607a652e53a35f0237915ac47056a0165673079557aae6990"
+ },
+ {
+  "percorso": "terreno/tutti_layer_per_zona.json",
+  "tema": "terreno",
+  "formato": "json",
+  "byte": 127477,
+  "sha256": "9890381e33e63e53946b0fb8485450e41bc4c50d32b116daa23657d304e5c021"
+ },
+ {
+  "percorso": "terreno/verifica_risultati.json",
+  "tema": "terreno",
+  "formato": "json",
+  "byte": 228382,
+  "sha256": "5f3c53068a90122154a198687de00d357c4628de6147661324ba87c65c6f6ec8"
+ },
+ {
+  "percorso": "terreno/dtm5m_palermo.md",
+  "tema": "terreno",
+  "formato": "md",
+  "byte": 5618,
+  "sha256": "aa2522887e8c380f4abfccfe83f432179f9c7d55832726dd5676a6ff09a2fc0b"
+ },
+ {
+  "percorso": "terreno/edifici_unificati_post.md",
+  "tema": "terreno",
+  "formato": "md",
+  "byte": 5492,
+  "sha256": "c8c844518e82dd40ec5504b666c6ddee072c7c7575edfc39ab6559729f86fe78"
+ },
+ {
+  "percorso": "popolazione/confini_amministrativi.pmtiles",
+  "tema": "popolazione",
+  "formato": "pmtiles",
+  "byte": 178539,
+  "sha256": "8d5cc9e9ab9eebaf37116b2af8093813c1da0297f983b3774c650aff4d8bcadd",
+  "layers": [
+   {
+    "nome": "circoscrizioni",
+    "campi": [
+     "Area",
+     "Circoscrizione"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   },
+   {
+    "nome": "quartieri",
+    "campi": [
+     "Area",
+     "Circoscrizione",
+     "Quartiere"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   },
+   {
+    "nome": "upl",
+    "campi": [
+     "Area",
+     "Circoscrizione",
+     "Quartiere",
+     "UPL"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   }
+  ],
+  "fonte": "ISTAT / Comune di Palermo — circoscrizioni, quartieri, UPL",
+  "data": "2021"
+ },
+ {
+  "percorso": "popolazione/geo_sezioni_2021.pmtiles",
+  "tema": "popolazione",
+  "formato": "pmtiles",
+  "byte": 7078181,
+  "sha256": "c2fd840f30cb155218419a75b296d455a7f3b7849edfb2bb46b9e392ba5e92b8",
+  "layers": [
+   {
+    "nome": "sezioni",
+    "campi": [
+     "A2",
+     "A3",
+     "A8",
+     "ABI21",
+     "Area",
+     "CIT_10_NGA",
+     "CIT_1_BGD",
+     "CIT_2_LKA",
+     "CIT_3_ROU",
+     "CIT_4_GHA",
+     "CIT_5_PHL",
+     "CIT_6_MAR",
+     "CIT_7_TUN",
+     "CIT_8_CHN",
+     "CIT_9_MUS",
+     "COP_EDIF_PCT",
+     "Circoscrizione",
+     "E3",
+     "EDI21",
+     "FAM21",
+     "IT1",
+     "IT10",
+     "IT11",
+     "IT12",
+     "IT2",
+     "IT3",
+     "IT4",
+     "IT5",
+     "IT6",
+     "IT7",
+     "IT8",
+     "IT9",
+     "P1",
+     "P100",
+     "P101",
+     "P102",
+     "P103",
+     "P14",
+     "P15",
+     "P16",
+     "P17",
+     "P18",
+     "P19",
+     "P2",
+     "P20",
+     "P21",
+     "P22",
+     "P23",
+     "P24",
+     "P25",
+     "P26",
+     "P27",
+     "P28",
+     "P29",
+     "P3",
+     "P30",
+     "P31",
+     "P32",
+     "P33",
+     "P34",
+     "P35",
+     "P36",
+     "P37",
+     "P38",
+     "P39",
+     "P40",
+     "P41",
+     "P42",
+     "P43",
+     "P44",
+     "P45",
+     "P67",
+     "P68",
+     "P69",
+     "P70",
+     "P71",
+     "P72",
+     "P73",
+     "P74",
+     "P75",
+     "P76",
+     "P77",
+     "P78",
+     "P79",
+     "P80",
+     "P81",
+     "P82",
+     "P83",
+     "P84",
+     "P85",
+     "P86",
+     "P87",
+     "P88",
+     "P89",
+     "P90",
+     "P91",
+     "P92",
+     "P93",
+     "P94",
+     "P95",
+     "P96",
+     "P97",
+     "P98",
+     "P99",
+     "PF1",
+     "PF3",
+     "PF4",
+     "PF5",
+     "PF6",
+     "PF7",
+     "PF8",
+     "POP21",
+     "PRO_COM",
+     "Pop_2022",
+     "Quartiere",
+     "SEZ21",
+     "SEZ21_ID",
+     "ST1",
+     "ST16",
+     "ST17",
+     "ST18",
+     "ST19",
+     "ST2",
+     "ST20",
+     "ST21",
+     "ST22",
+     "ST23",
+     "ST24",
+     "ST25",
+     "ST26",
+     "ST27",
+     "ST28",
+     "ST29",
+     "ST2_B",
+     "ST3",
+     "ST30",
+     "ST31",
+     "ST32",
+     "ST33",
+     "ST4",
+     "ST5",
+     "UPL"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   }
+  ],
+  "fonte": "ISTAT — sezioni di censimento 2021",
+  "data": "2021"
+ },
+ {
+  "percorso": "popolazione/punti_pop_10.pmtiles",
+  "tema": "popolazione",
+  "formato": "pmtiles",
+  "byte": 1111444,
+  "sha256": "d458ba8c23cab4d1c1f3eee6289bbd26684c174a98693bf462edad4afd6133ee",
+  "layers": [
+   {
+    "nome": "punti",
+    "campi": [
+     "SEZ21_ID",
+     "straniero"
+    ],
+    "minzoom": 10,
+    "maxzoom": 13
+   }
+  ]
+ },
+ {
+  "percorso": "popolazione/punti_pop_1.pmtiles",
+  "tema": "popolazione",
+  "formato": "pmtiles",
+  "byte": 8185107,
+  "sha256": "2e6baac2780700afbfe0b19153557e6cd644ce4457dc3cfa05641d1936d04b96",
+  "layers": [
+   {
+    "nome": "punti",
+    "campi": [
+     "SEZ21_ID",
+     "straniero"
+    ],
+    "minzoom": 14,
+    "maxzoom": 16
+   }
+  ]
+ },
+ {
+  "percorso": "popolazione/confini_zone.json",
+  "tema": "popolazione",
+  "formato": "json",
+  "byte": 1068611,
+  "sha256": "a638e05aca1a80e5a316d026284699c086dc683dc12c67aaafe3e3f361cda630"
+ },
+ {
+  "percorso": "popolazione/edifici_zona.json",
+  "tema": "popolazione",
+  "formato": "json",
+  "byte": 2465804,
+  "sha256": "1c08a41ec8915c8e83e5936baddac52e37f9565c561aa1fe4734e52645a15df5"
+ },
+ {
+  "percorso": "popolazione/sezioni_indicatori_2023.json",
+  "tema": "popolazione",
+  "formato": "json",
+  "byte": 4498043,
+  "sha256": "9259a9d605ebc3537ecb7dd5136e43297feb6b341ad89c2a7147f2654c6218a6",
+  "fonte": "ISTAT — Censimento permanente 2023 (stime campionarie), via Cruscotto Statistico Comunale",
+  "data": "2023",
+  "licenza": "CC BY 4.0"
+ },
+ {
+  "percorso": "popolazione/sezioni_indicatori.json",
+  "tema": "popolazione",
+  "formato": "json",
+  "byte": 6133553,
+  "sha256": "4e104901ea41d7c8fe22cfaa00a350224676747599a5b11f511145ab4ae813c8",
+  "fonte": "ISTAT — Censimento permanente della popolazione e delle abitazioni 2021",
+  "data": "2021"
+ },
+ {
+  "percorso": "popolazione/geo_circoscrizioni.geojson",
+  "tema": "popolazione",
+  "formato": "geojson",
+  "byte": 336859,
+  "sha256": "d2918db1726199179da64c33bdbe7871a698c2d57ff625575f1072edb707cd72",
+  "layers": [
+   {
+    "nome": "geo_circoscrizioni",
+    "geometria": "Multi Polygon",
+    "n": 8,
+    "epsg": 32632,
+    "campi": [
+     "Circoscrizione",
+     "Area"
+    ]
+   }
+  ],
+  "epsg": 32632
+ },
+ {
+  "percorso": "popolazione/geo_quartieri.geojson",
+  "tema": "popolazione",
+  "formato": "geojson",
+  "byte": 474004,
+  "sha256": "941dd9fe93f6207a50b6e62c8dc5e98d9ae0ed174aa53a36af5077fa524e301c",
+  "layers": [
+   {
+    "nome": "geo_quartieri",
+    "geometria": "Multi Polygon",
+    "n": 25,
+    "epsg": 32632,
+    "campi": [
+     "Circoscrizione",
+     "Quartiere",
+     "Area"
+    ]
+   }
+  ],
+  "epsg": 32632
+ },
+ {
+  "percorso": "popolazione/geo_sezioni_2021.geojson",
+  "tema": "popolazione",
+  "formato": "geojson",
+  "byte": 11741996,
+  "sha256": "b1e37c1dd27dacbebac2ec981c0fd5dfd1c358002f4be4556fc9889e250e168f",
+  "layers": [
+   {
+    "nome": "geo_sezioni_2021",
+    "geometria": "Multi Polygon",
+    "n": 3600,
+    "epsg": 32632,
+    "campi": [
+     "PRO_COM",
+     "SEZ21",
+     "SEZ21_ID",
+     "POP21",
+     "FAM21",
+     "ABI21",
+     "EDI21",
+     "Circoscrizione",
+     "Quartiere",
+     "UPL",
+     "Pop_2022",
+     "Area",
+     "P1",
+     "P2",
+     "P3",
+     "P14",
+     "P15",
+     "P16",
+     "P17",
+     "P18",
+     "P19",
+     "P20",
+     "P21",
+     "P22",
+     "P23",
+     "P24",
+     "P25",
+     "P26",
+     "P27",
+     "P28",
+     "P29",
+     "P30",
+     "P31",
+     "P32",
+     "P33",
+     "P34",
+     "P35",
+     "P36",
+     "P37",
+     "P38",
+     "P39",
+     "P40",
+     "P41",
+     "P42",
+     "P43",
+     "P44",
+     "P45",
+     "P67",
+     "P68",
+     "P69",
+     "P70",
+     "P71",
+     "P72",
+     "P73",
+     "P74",
+     "P75",
+     "P76",
+     "P77",
+     "P78",
+     "P79",
+     "P80",
+     "P81",
+     "P82",
+     "P83",
+     "P84",
+     "P85",
+     "P86",
+     "P87",
+     "P88",
+     "P89",
+     "P90",
+     "P91",
+     "P92",
+     "P93",
+     "P94",
+     "P95",
+     "P96",
+     "P97",
+     "P98",
+     "P99",
+     "P100",
+     "P101",
+     "P102",
+     "P103",
+     "IT1",
+     "IT2",
+     "IT3",
+     "IT4",
+     "IT5",
+     "IT6",
+     "IT7",
+     "IT8",
+     "IT9",
+     "IT10",
+     "IT11",
+     "IT12",
+     "ST1",
+     "ST2",
+     "ST2_B",
+     "ST3",
+     "ST4",
+     "ST5",
+     "ST16",
+     "ST17",
+     "ST18",
+     "ST19",
+     "ST20",
+     "ST21",
+     "ST22",
+     "ST23",
+     "ST24",
+     "ST25",
+     "ST26",
+     "ST27",
+     "ST28",
+     "ST29",
+     "ST30",
+     "ST31",
+     "ST32",
+     "ST33",
+     "PF1",
+     "PF3",
+     "PF4",
+     "PF5",
+     "PF6",
+     "PF7",
+     "PF8",
+     "A2",
+     "A3",
+     "A8",
+     "E3",
+     "CIT_1_BGD",
+     "CIT_2_LKA",
+     "CIT_3_ROU",
+     "CIT_4_GHA",
+     "CIT_5_PHL",
+     "CIT_6_MAR",
+     "CIT_7_TUN",
+     "CIT_8_CHN",
+     "CIT_9_MUS",
+     "CIT_10_NGA",
+     "COP_EDIF_PCT"
+    ]
+   }
+  ],
+  "epsg": 32632
+ },
+ {
+  "percorso": "popolazione/geo_upl.geojson",
+  "tema": "popolazione",
+  "formato": "geojson",
+  "byte": 609417,
+  "sha256": "cb31a3db9af885a8a84fa240d384b76796ec36c082ecec95f2789880ddbb10a4",
+  "layers": [
+   {
+    "nome": "geo_upl",
+    "geometria": "Multi Polygon",
+    "n": 55,
+    "epsg": 32632,
+    "campi": [
+     "Circoscrizione",
+     "Quartiere",
+     "UPL",
+     "Area"
+    ]
+   }
+  ],
+  "epsg": 32632
+ },
+ {
+  "percorso": "popolazione/Palermo_2021_base.gpkg",
+  "tema": "popolazione",
+  "formato": "gpkg",
+  "byte": 3805184,
+  "sha256": "08953d2681da07329bdb6588a40e7c75668d165be10c9d0cf3312c27a92e0783",
+  "layers": [
+   {
+    "nome": "sezioni",
+    "geometria": "Multi Polygon",
+    "n": 3600,
+    "epsg": 32632,
+    "campi": [
+     "PRO_COM",
+     "SEZ21",
+     "SEZ21_ID",
+     "POP21",
+     "FAM21",
+     "ABI21",
+     "EDI21",
+     "Circoscrizione",
+     "Quartiere",
+     "UPL",
+     "Pop_2022",
+     "Area",
+     "P1",
+     "P2",
+     "P3",
+     "P14",
+     "P15",
+     "P16",
+     "P17",
+     "P18",
+     "P19",
+     "P20",
+     "P21",
+     "P22",
+     "P23",
+     "P24",
+     "P25",
+     "P26",
+     "P27",
+     "P28",
+     "P29",
+     "P30",
+     "P31",
+     "P32",
+     "P33",
+     "P34",
+     "P35",
+     "P36",
+     "P37",
+     "P38",
+     "P39",
+     "P40",
+     "P41",
+     "P42",
+     "P43",
+     "P44",
+     "P45",
+     "P67",
+     "P68",
+     "P69",
+     "P70",
+     "P71",
+     "P72",
+     "P73",
+     "P74",
+     "P75",
+     "P76",
+     "P77",
+     "P78",
+     "P79",
+     "P80",
+     "P81",
+     "P82",
+     "P83",
+     "P84",
+     "P85",
+     "P86",
+     "P87",
+     "P88",
+     "P89",
+     "P90",
+     "P91",
+     "P92",
+     "P93",
+     "P94",
+     "P95",
+     "P96",
+     "P97",
+     "P98",
+     "P99",
+     "P100",
+     "P101",
+     "P102",
+     "P103",
+     "IT1",
+     "IT2",
+     "IT3",
+     "IT4",
+     "IT5",
+     "IT6",
+     "IT7",
+     "IT8",
+     "IT9",
+     "IT10",
+     "IT11",
+     "IT12",
+     "ST1",
+     "ST2",
+     "ST2_B",
+     "ST3",
+     "ST4",
+     "ST5",
+     "ST16",
+     "ST17",
+     "ST18",
+     "ST19",
+     "ST20",
+     "ST21",
+     "ST22",
+     "ST23",
+     "ST24",
+     "ST25",
+     "ST26",
+     "ST27",
+     "ST28",
+     "ST29",
+     "ST30",
+     "ST31",
+     "ST32",
+     "ST33",
+     "PF1",
+     "PF3",
+     "PF4",
+     "PF5",
+     "PF6",
+     "PF7",
+     "PF8",
+     "A2",
+     "A3",
+     "A8",
+     "E3",
+     "CIT_1_BGD",
+     "CIT_2_LKA",
+     "CIT_3_ROU",
+     "CIT_4_GHA",
+     "CIT_5_PHL",
+     "CIT_6_MAR",
+     "CIT_7_TUN",
+     "CIT_8_CHN",
+     "CIT_9_MUS",
+     "CIT_10_NGA"
+    ]
+   },
+   {
+    "nome": "quartieri",
+    "geometria": "Multi Polygon",
+    "n": 25,
+    "epsg": 32632,
+    "campi": [
+     "Circoscrizione",
+     "Quartiere",
+     "Area"
+    ]
+   },
+   {
+    "nome": "circoscrizioni",
+    "geometria": "Multi Polygon",
+    "n": 8,
+    "epsg": 32632,
+    "campi": [
+     "Circoscrizione",
+     "Area"
+    ]
+   },
+   {
+    "nome": "upl",
+    "geometria": "Multi Polygon",
+    "n": 55,
+    "epsg": 32632,
+    "campi": [
+     "Circoscrizione",
+     "Quartiere",
+     "UPL",
+     "Area"
+    ]
+   }
+  ],
+  "epsg": 32632
+ },
+ {
+  "percorso": "popolazione/Palermo_indicatori_2021_sezioni.csv",
+  "tema": "popolazione",
+  "formato": "csv",
+  "byte": 1194466,
+  "sha256": "346a10f13b0329ec852981e3153b9a6bd1aacb50fd8809bcf8e6b70ccb951c1a"
+ },
+ {
+  "percorso": "popolazione/Palermo_indicatori_2021_sezioni_dizionario.csv",
+  "tema": "popolazione",
+  "formato": "csv",
+  "byte": 8292,
+  "sha256": "c06a29ff7aa6d8135286d2605a1567e090226fe229a7fcdefdc331d3fcdb2720"
+ },
+ {
+  "percorso": "popolazione/Palermo_2023_sezioni.xlsx",
+  "tema": "popolazione",
+  "formato": "xlsx",
+  "byte": 1974599,
+  "sha256": "efef757cd296cdfe25bddb99dbd595ea3d9c93c8054e53660227cbc02c367338"
+ },
+ {
+  "percorso": "popolazione/popolazione_maschi_femmine_correnti.csv",
+  "tema": "popolazione",
+  "formato": "csv",
+  "byte": 657813,
+  "sha256": "85211ce91366783f59720377da8d3819b6edd451cec4524f52512adfea888766"
+ },
+ {
+  "percorso": "popolazione/popolazione_storica_comuni.csv",
+  "tema": "popolazione",
+  "formato": "csv",
+  "byte": 3334916,
+  "sha256": "8bd33ae125ee04d705d4571f05ef802e6a3a493f860e50cf49206932f83b49d6"
+ },
+ {
+  "percorso": "societa/dispersione_scolastica_metadata.csv",
+  "tema": "societa",
+  "formato": "csv",
+  "byte": 563,
+  "sha256": "6abf835be6f6bd882908155388a1a16233ec38a3024f9830ae78f6f1f6af6c80"
+ },
+ {
+  "percorso": "societa/dispersione_scolastica_regioni_2000_2025.csv",
+  "tema": "societa",
+  "formato": "csv",
+  "byte": 72868,
+  "sha256": "8a514ce83cc71d4e5879294601ae439d352768ab9c4354386f453aa4223cf8f1"
+ },
+ {
+  "percorso": "societa/dispersione_stranieri_source.csv",
+  "tema": "societa",
+  "formato": "csv",
+  "byte": 111816,
+  "sha256": "ad99c1840bce4fd313ee287f6cc149f2d05bc2ce8c2fcf9d2446d33c2d0b5735"
+ },
+ {
+  "percorso": "societa/dispersione_scolastica_regioni.yaml",
+  "tema": "societa",
+  "formato": "yaml",
+  "byte": 472,
+  "sha256": "d9691bd58ee19a9c0a2dd1edf0e0f1d7949b639ec1981162d3fa9b61f1dba530"
+ },
+ {
+  "percorso": "societa/dispersione_stranieri_config.json",
+  "tema": "societa",
+  "formato": "json",
+  "byte": 693,
+  "sha256": "9d667800a2428044dd6bcb9d7aa88c4743b80bafc334bf51fefe5bb01ad52b92"
+ },
+ {
+  "percorso": "societa/dispersione_stranieri_stats.json",
+  "tema": "societa",
+  "formato": "json",
+  "byte": 374238,
+  "sha256": "0d53a977b9018abf9a0152b81f897444a693a0bf009d14a63b0fc4f4c9813f47"
+ },
+ {
+  "percorso": "societa/sezioni_stats.json",
+  "tema": "societa",
+  "formato": "json",
+  "byte": 5514,
+  "sha256": "4f3c51577919fba1b2e0a029ddfd35ef3b718690072dd0286d9e5579af85cfa4"
+ },
+ {
+  "percorso": "societa/dispersione_scolastica_README.md",
+  "tema": "societa",
+  "formato": "md",
+  "byte": 5086,
+  "sha256": "8e1845ad8c38fa8a1c9bc7a89a01429b7bc181829d4f123b387726f2f9780f71"
+ },
+ {
+  "percorso": "societa/confronto_omi_nic_province.geoparquet",
+  "tema": "societa",
+  "formato": "geoparquet",
+  "byte": 2078161,
+  "sha256": "b2d31e6f5caa76e02f9713d7b22ed0da6d88c14bdf80dcde747ca3e5de59f456"
+ },
+ {
+  "percorso": "societa/mef_redditi_2023.parquet",
+  "tema": "societa",
+  "formato": "parquet",
+  "byte": 322459,
+  "sha256": "61cfadf29a4f2b914c02488b3ae93b26548e20e83cc2128138fa48c88379bdee"
+ },
+ {
+  "percorso": "societa/mef_redditi_2024.parquet",
+  "tema": "societa",
+  "formato": "parquet",
+  "byte": 322339,
+  "sha256": "38eea8040927bff00adf29dee4e0beeef7a94ac785da256c720e7a45496bf6b5"
+ },
+ {
+  "percorso": "societa/nic_capoluoghi_2026-07.parquet",
+  "tema": "societa",
+  "formato": "parquet",
+  "byte": 3326,
+  "sha256": "5e06a06b4f05f1ab83196a55924d34f28b2bcb09c946ea8fd6fde6d73f38296e"
+ },
+ {
+  "percorso": "societa/omi_indice_20252.parquet",
+  "tema": "societa",
+  "formato": "parquet",
+  "byte": 198210,
+  "sha256": "4f16731a953af4f9581f07dea4510eac3b61aa8fb69307e96cc030f62ebc7cf9"
+ },
+ {
+  "percorso": "societa/popolazione_2021.parquet",
+  "tema": "societa",
+  "formato": "parquet",
+  "byte": 27349,
+  "sha256": "e53348f941e286a0dbf2bac20b0d7201a9e4c160f74f470fa519b91c9f517557"
+ },
+ {
+  "percorso": "societa/popolazione_2025.parquet",
+  "tema": "societa",
+  "formato": "parquet",
+  "byte": 28826,
+  "sha256": "8f800885ab8edc2e91ad329b3ca1ca6e3bd7b8e0b88c34db983b294b079fa972"
+ },
+ {
+  "percorso": "societa/potere_acquisto_bivariata.geoparquet",
+  "tema": "societa",
+  "formato": "geoparquet",
+  "byte": 11770832,
+  "sha256": "1d3f7bf81ae5cffdf0038db81aa918dc5a8847175b09070e9b175658df1e5348"
+ },
+ {
+  "percorso": "societa/potere_acquisto_bivariata_omi.geoparquet",
+  "tema": "societa",
+  "formato": "geoparquet",
+  "byte": 11752391,
+  "sha256": "a7fb4c222a8f324953f6f3592089af18d45a45ff5acd15dbd2ec951a2f1379e2"
+ },
+ {
+  "percorso": "societa/potere_acquisto_bivariata_reddito.geoparquet",
+  "tema": "societa",
+  "formato": "geoparquet",
+  "byte": 11750933,
+  "sha256": "a231d7978436d2b03d9dbb365ac6283863a69faab9eee069ab6472ab14a35ae8"
+ },
+ {
+  "percorso": "societa/potere_acquisto_comuni.geoparquet",
+  "tema": "societa",
+  "formato": "geoparquet",
+  "byte": 11789535,
+  "sha256": "fb70b11f3813625a26b68eef25dd1d475c5e5ca086107d5cf8d7a67600d2b7c3"
+ },
+ {
+  "percorso": "societa/potere_acquisto_province.geoparquet",
+  "tema": "societa",
+  "formato": "geoparquet",
+  "byte": 2078102,
+  "sha256": "e0aceeee6b06b21253358568bef11db2b1e25577bb9dc62b25034a150a601cb1"
+ },
+ {
+  "percorso": "societa/palermo_censimento_2021.csv",
+  "tema": "societa",
+  "formato": "csv",
+  "byte": 1132349,
+  "sha256": "3cf1fe1ceacc1e80a5e0ae3094a02fb15c84682b309003466cf13de71dd29ff4"
+ },
+ {
+  "percorso": "clima/dtm_zonal_sezioni.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 825126,
+  "sha256": "04f68976006f36a2ed707b1a9e488478d6bf28ce28494d745f3ef817cf9b22ec"
+ },
+ {
+  "percorso": "clima/geo_search.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 18548,
+  "sha256": "3869c70c0b4fbe1387852c9a94a20212e62e02946b33de5c5df6fd0cbc12f14d"
+ },
+ {
+  "percorso": "clima/lst_densvia_config.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 586,
+  "sha256": "7bf038ec18e4ed477e7b93f736dafc78fca429801849720aa32789da3fd3316c"
+ },
+ {
+  "percorso": "clima/lst_densvia_stats.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 737341,
+  "sha256": "60af01f0f8954262a58727733348c35c1f2b6f669c37f9d18c460534b3735066"
+ },
+ {
+  "percorso": "clima/lst_palermo_config.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 580,
+  "sha256": "fad4322b08521548cbe85d2520b2cca99e6ce18c343548edc89a6a5c3b51ce97"
+ },
+ {
+  "percorso": "clima/lst_palermo_stats.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 546965,
+  "sha256": "cb747f2a6b1a69b4cd77babba8e6d032dbcb63b7d7342087dcea5927daa037f1"
+ },
+ {
+  "percorso": "clima/lst_trend.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 214904,
+  "sha256": "b227f3e27b581aee9c52afdade483ed0b4abdc4db9d2d9ad61e15c10cb3efbdf"
+ },
+ {
+  "percorso": "clima/lst_years_stats.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 177109,
+  "sha256": "2964b6b5e2e44daaf4638dc9f6ec8e95f03a04b5b819f0f8c8657c6cf4ad98ff"
+ },
+ {
+  "percorso": "clima/regressione_lst_residui.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 1135139,
+  "sha256": "f47c65aa40ebf967b463c3edd1168e6457a4a859ae64bb54e77776549e965606"
+ },
+ {
+  "percorso": "clima/residui_stats.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 89114,
+  "sha256": "eb0040941adc5ab92edb33d02a1684a88bf29e24bb457ca6d2949a3efe612315"
+ },
+ {
+  "percorso": "clima/sezioni_stats.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 173732,
+  "sha256": "b7b773b61da2690776c67f4c7aee2ce427e52795bf55ef5e93f17ff8b2f3087d"
+ },
+ {
+  "percorso": "clima/STstats_Palermo.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 1619706,
+  "sha256": "e5a49cc149137164a98b47b3acb60fb944f042660524ad87c16ac82fd48b6480"
+ },
+ {
+  "percorso": "clima/viabilita_zonal_sezioni.json",
+  "tema": "clima",
+  "formato": "json",
+  "byte": 673705,
+  "sha256": "1ed9f91fdd6c2f1f85f9553c1ad15668ce9d6785ef922b01e08f19629e44612a"
+ },
+ {
+  "percorso": "clima/lst_densvia_source.csv",
+  "tema": "clima",
+  "formato": "csv",
+  "byte": 61545,
+  "sha256": "45cf8e7da798daf4ce52a69aed7a254eee31fb8a53a90922ddb2ae7aa791f045"
+ },
+ {
+  "percorso": "clima/lst_palermo.csv",
+  "tema": "clima",
+  "formato": "csv",
+  "byte": 328440,
+  "sha256": "a188ecb16b770f04e7ce6bafaafdb44c3a3f8c5eb5e40e64375a5e0037158f4d"
+ },
+ {
+  "percorso": "clima/aggregati_lst_densvia.pmtiles",
+  "tema": "clima",
+  "formato": "pmtiles",
+  "byte": 210772,
+  "sha256": "334a10289e8c6dfd1f39caba68e5ef910ec4ac557cf4a51412a8d685186a1c84",
+  "layers": [
+   {
+    "nome": "circoscrizioni",
+    "campi": [
+     "bivar_lbl_modale",
+     "circoscrizione",
+     "col_modale",
+     "n_sezioni",
+     "val_x",
+     "val_y"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   },
+   {
+    "nome": "quartieri",
+    "campi": [
+     "Quartiere",
+     "bivar_lbl_modale",
+     "circoscrizione",
+     "col_modale",
+     "n_sezioni",
+     "val_x",
+     "val_y"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   },
+   {
+    "nome": "upl",
+    "campi": [
+     "UPL",
+     "UPL_nome",
+     "bivar_lbl_modale",
+     "col_modale",
+     "n_sezioni",
+     "val_x",
+     "val_y"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   }
+  ]
+ },
+ {
+  "percorso": "clima/aggregati_lst_palermo.pmtiles",
+  "tema": "clima",
+  "formato": "pmtiles",
+  "byte": 210127,
+  "sha256": "b1decbc05649221263f36ac6f73dd1fca04951fce8410285eb3be5608a22794a",
+  "layers": [
+   {
+    "nome": "circoscrizioni",
+    "campi": [
+     "bivar_lbl_modale",
+     "circoscrizione",
+     "col_modale",
+     "n_sezioni",
+     "val_x",
+     "val_y"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   },
+   {
+    "nome": "quartieri",
+    "campi": [
+     "Quartiere",
+     "bivar_lbl_modale",
+     "circoscrizione",
+     "col_modale",
+     "n_sezioni",
+     "val_x",
+     "val_y"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   },
+   {
+    "nome": "upl",
+    "campi": [
+     "UPL",
+     "UPL_nome",
+     "bivar_lbl_modale",
+     "col_modale",
+     "n_sezioni",
+     "val_x",
+     "val_y"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   }
+  ]
+ },
+ {
+  "percorso": "clima/aggregati_lst_years.pmtiles",
+  "tema": "clima",
+  "formato": "pmtiles",
+  "byte": 509251,
+  "sha256": "cf3cf4ce2bdfce18dac9759312e89e68879bb759d773c6582dba1c9270e4dc81",
+  "layers": [
+   {
+    "nome": "circoscrizioni",
+    "campi": [
+     "LST_2019",
+     "LST_2019_max",
+     "LST_2019_median",
+     "LST_2019_min",
+     "LST_2020",
+     "LST_2020_max",
+     "LST_2020_median",
+     "LST_2020_min",
+     "LST_2021",
+     "LST_2021_max",
+     "LST_2021_median",
+     "LST_2021_min",
+     "LST_2022",
+     "LST_2022_max",
+     "LST_2022_median",
+     "LST_2022_min",
+     "LST_2023",
+     "LST_2023_max",
+     "LST_2023_median",
+     "LST_2023_min",
+     "LST_2024",
+     "LST_2024_max",
+     "LST_2024_median",
+     "LST_2024_min",
+     "LST_2025",
+     "LST_2025_max",
+     "LST_2025_median",
+     "LST_2025_min",
+     "circoscrizione",
+     "n_sezioni"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   },
+   {
+    "nome": "quartieri",
+    "campi": [
+     "LST_2019",
+     "LST_2019_max",
+     "LST_2019_median",
+     "LST_2019_min",
+     "LST_2020",
+     "LST_2020_max",
+     "LST_2020_median",
+     "LST_2020_min",
+     "LST_2021",
+     "LST_2021_max",
+     "LST_2021_median",
+     "LST_2021_min",
+     "LST_2022",
+     "LST_2022_max",
+     "LST_2022_median",
+     "LST_2022_min",
+     "LST_2023",
+     "LST_2023_max",
+     "LST_2023_median",
+     "LST_2023_min",
+     "LST_2024",
+     "LST_2024_max",
+     "LST_2024_median",
+     "LST_2024_min",
+     "LST_2025",
+     "LST_2025_max",
+     "LST_2025_median",
+     "LST_2025_min",
+     "Quartiere",
+     "circoscrizione",
+     "n_sezioni"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   },
+   {
+    "nome": "upl",
+    "campi": [
+     "LST_2019",
+     "LST_2019_max",
+     "LST_2019_median",
+     "LST_2019_min",
+     "LST_2020",
+     "LST_2020_max",
+     "LST_2020_median",
+     "LST_2020_min",
+     "LST_2021",
+     "LST_2021_max",
+     "LST_2021_median",
+     "LST_2021_min",
+     "LST_2022",
+     "LST_2022_max",
+     "LST_2022_median",
+     "LST_2022_min",
+     "LST_2023",
+     "LST_2023_max",
+     "LST_2023_median",
+     "LST_2023_min",
+     "LST_2024",
+     "LST_2024_max",
+     "LST_2024_median",
+     "LST_2024_min",
+     "LST_2025",
+     "LST_2025_max",
+     "LST_2025_median",
+     "LST_2025_min",
+     "UPL",
+     "n_sezioni"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   }
+  ]
+ },
+ {
+  "percorso": "clima/circoscrizioni.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 287456,
+  "sha256": "c15427046eb5829037d636492a1ac2316e83aa4565a896eb58ba22f3093cf70d",
+  "layers": [
+   {
+    "nome": "SELECT",
+    "geometria": "Multi Polygon",
+    "n": 8,
+    "epsg": 4326,
+    "campi": [
+     "circoscrizione"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/circoscrizioni_lst_densvia.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 288291,
+  "sha256": "f0318c3d2a14fbab052a4aba2c7d556ad1e0adcae1b26d5de3f66a1224ed3707",
+  "layers": [
+   {
+    "nome": "circoscrizioni_lst_densvia",
+    "geometria": "Multi Polygon",
+    "n": 8,
+    "epsg": 4326,
+    "campi": [
+     "circoscrizione",
+     "n_sezioni",
+     "val_x",
+     "val_y",
+     "bivar_lbl_modale",
+     "col_modale"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/circoscrizioni_lst_palermo.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 288284,
+  "sha256": "b9d6f204085742328521c8676a835480684e66870f8ec964cdae6b598b65a688",
+  "layers": [
+   {
+    "nome": "circoscrizioni_lst_palermo",
+    "geometria": "Multi Polygon",
+    "n": 8,
+    "epsg": 4326,
+    "campi": [
+     "circoscrizione",
+     "n_sezioni",
+     "val_x",
+     "val_y",
+     "bivar_lbl_modale",
+     "col_modale"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/circoscrizioni_lst_years.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 293420,
+  "sha256": "ddf7ecc26e9ee3c8965d1f13fd3ee81283d3606700f4be6959ed5e71d39ec075",
+  "layers": [
+   {
+    "nome": "circoscrizioni_lst_years",
+    "geometria": "Multi Polygon",
+    "n": 8,
+    "epsg": 4326,
+    "campi": [
+     "circoscrizione",
+     "LST_2019",
+     "LST_2020",
+     "LST_2021",
+     "LST_2022",
+     "LST_2023",
+     "LST_2024",
+     "LST_2025",
+     "LST_2019_min",
+     "LST_2019_max",
+     "LST_2019_median",
+     "LST_2020_min",
+     "LST_2020_max",
+     "LST_2020_median",
+     "LST_2021_min",
+     "LST_2021_max",
+     "LST_2021_median",
+     "LST_2022_min",
+     "LST_2022_max",
+     "LST_2022_median",
+     "LST_2023_min",
+     "LST_2023_max",
+     "LST_2023_median",
+     "LST_2024_min",
+     "LST_2024_max",
+     "LST_2024_median",
+     "LST_2025_min",
+     "LST_2025_max",
+     "LST_2025_median",
+     "n_sezioni"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/quartieri.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 404468,
+  "sha256": "8d542a8f31b80a1bcfffe014e9855a85757e15f6072cbb71fb7d5a560b50eb09",
+  "layers": [
+   {
+    "nome": "SELECT",
+    "geometria": "Multi Polygon",
+    "n": 25,
+    "epsg": 4326,
+    "campi": [
+     "Quartiere",
+     "circoscrizione"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/quartieri_lst_densvia.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 407015,
+  "sha256": "e4195cbddaffea564f4ee0819bf9e7e67dfd32fe51270acd2864c37971252fbc",
+  "layers": [
+   {
+    "nome": "quartieri_lst_densvia",
+    "geometria": "Multi Polygon",
+    "n": 25,
+    "epsg": 4326,
+    "campi": [
+     "Quartiere",
+     "n_sezioni",
+     "val_x",
+     "val_y",
+     "bivar_lbl_modale",
+     "col_modale",
+     "circoscrizione"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/quartieri_lst_palermo.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 406997,
+  "sha256": "97827a2ca4120ced7a86625ef19c9101702bbff06f7883c92f43ef4c6f139158",
+  "layers": [
+   {
+    "nome": "quartieri_lst_palermo",
+    "geometria": "Multi Polygon",
+    "n": 25,
+    "epsg": 4326,
+    "campi": [
+     "Quartiere",
+     "n_sezioni",
+     "val_x",
+     "val_y",
+     "bivar_lbl_modale",
+     "col_modale",
+     "circoscrizione"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/quartieri_lst_years.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 422761,
+  "sha256": "cd65572f5d11ea45a773a57602f19b758b40a16c741e87124f244ad789905e95",
+  "layers": [
+   {
+    "nome": "quartieri_lst_years",
+    "geometria": "Multi Polygon",
+    "n": 25,
+    "epsg": 4326,
+    "campi": [
+     "Quartiere",
+     "circoscrizione",
+     "LST_2019",
+     "LST_2020",
+     "LST_2021",
+     "LST_2022",
+     "LST_2023",
+     "LST_2024",
+     "LST_2025",
+     "LST_2019_min",
+     "LST_2019_max",
+     "LST_2019_median",
+     "LST_2020_min",
+     "LST_2020_max",
+     "LST_2020_median",
+     "LST_2021_min",
+     "LST_2021_max",
+     "LST_2021_median",
+     "LST_2022_min",
+     "LST_2022_max",
+     "LST_2022_median",
+     "LST_2023_min",
+     "LST_2023_max",
+     "LST_2023_median",
+     "LST_2024_min",
+     "LST_2024_max",
+     "LST_2024_median",
+     "LST_2025_min",
+     "LST_2025_max",
+     "LST_2025_median",
+     "n_sezioni"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/sezioni.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 4566287,
+  "sha256": "310fb0100d7dab8a4431d71d317532319b60de54205415cb2a11f19590ef2db1",
+  "layers": [
+   {
+    "nome": "SELECT",
+    "geometria": "Multi Polygon",
+    "n": 3600,
+    "epsg": 4326,
+    "campi": [
+     "sez",
+     "circoscrizione",
+     "Quartiere",
+     "UPL_nome",
+     "area_km2"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/sezioni_lst_densvia.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 4924248,
+  "sha256": "bf059d39214a2479ff026f74f3591b57947987bda62d656ed683a4142ec0ab5b",
+  "layers": [
+   {
+    "nome": "sezioni_lst_densvia",
+    "geometria": "Multi Polygon",
+    "n": 3600,
+    "epsg": 4326,
+    "campi": [
+     "sez",
+     "circoscrizione",
+     "Quartiere",
+     "UPL_nome",
+     "area_km2",
+     "val_x",
+     "val_y",
+     "cls_x",
+     "cls_y",
+     "bivar_lbl",
+     "bivar_cls"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/sezioni_lst_densvia.pmtiles",
+  "tema": "clima",
+  "formato": "pmtiles",
+  "byte": 1849477,
+  "sha256": "e07f986ea802a3f1a5cfdfcc5bc54a88afa2a59e67b6272c65a3afe72c73ad47",
+  "layers": [
+   {
+    "nome": "sezioni",
+    "campi": [
+     "Quartiere",
+     "UPL_nome",
+     "area_km2",
+     "bivar_cls",
+     "bivar_lbl",
+     "circoscrizione",
+     "cls_x",
+     "cls_y",
+     "sez",
+     "val_x",
+     "val_y"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   }
+  ]
+ },
+ {
+  "percorso": "clima/sezioni_lst_palermo.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 4925431,
+  "sha256": "99428f767751f13e4a5c93ef7bc74b19f3f3193252c134eb926216d287b9ed38",
+  "layers": [
+   {
+    "nome": "sezioni_lst_palermo",
+    "geometria": "Multi Polygon",
+    "n": 3600,
+    "epsg": 4326,
+    "campi": [
+     "sez",
+     "circoscrizione",
+     "Quartiere",
+     "UPL_nome",
+     "area_km2",
+     "val_x",
+     "val_y",
+     "cls_x",
+     "cls_y",
+     "bivar_lbl",
+     "bivar_cls"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/sezioni_lst_palermo.pmtiles",
+  "tema": "clima",
+  "formato": "pmtiles",
+  "byte": 1747738,
+  "sha256": "0b01b9fc6781fa800355092cca3241db2f0f9a6588f3646f468ba7975c1ae14d",
+  "layers": [
+   {
+    "nome": "sezioni",
+    "campi": [
+     "Quartiere",
+     "UPL_nome",
+     "area_km2",
+     "bivar_cls",
+     "bivar_lbl",
+     "circoscrizione",
+     "cls_x",
+     "cls_y",
+     "sez",
+     "val_x",
+     "val_y"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   }
+  ]
+ },
+ {
+  "percorso": "clima/sezioni_lst_years.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 4918566,
+  "sha256": "66ba8c2944e671202729dfd8e09f35c3d31f4acc847295e980e7c40f5bc89240",
+  "layers": [
+   {
+    "nome": "sezioni_lst_years",
+    "geometria": "Multi Polygon",
+    "n": 3600,
+    "epsg": 4326,
+    "campi": [
+     "sez",
+     "circoscrizione",
+     "Quartiere",
+     "UPL_nome",
+     "LST_2019",
+     "LST_2020",
+     "LST_2021",
+     "LST_2022",
+     "LST_2023",
+     "LST_2024",
+     "LST_2025"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/sezioni_lst_years.pmtiles",
+  "tema": "clima",
+  "formato": "pmtiles",
+  "byte": 1736618,
+  "sha256": "0ef0b62a491c4386ae19a225e1158927c380fa3cdc9d6124c8271719e852be3f",
+  "layers": [
+   {
+    "nome": "sezioni",
+    "campi": [
+     "LST_2019",
+     "LST_2020",
+     "LST_2021",
+     "LST_2022",
+     "LST_2023",
+     "LST_2024",
+     "LST_2025",
+     "Quartiere",
+     "UPL_nome",
+     "circoscrizione",
+     "sez"
+    ],
+    "minzoom": 0,
+    "maxzoom": 14
+   }
+  ]
+ },
+ {
+  "percorso": "clima/sezioni_residui.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 5384867,
+  "sha256": "57805f8cbd9de1cd98437a44a5948ac4c93f181a8b41086a970e6d9f8cc780d6",
+  "layers": [
+   {
+    "nome": "sezioni_residui",
+    "geometria": "Multi Polygon",
+    "n": 3600,
+    "epsg": 4326,
+    "campi": [
+     "sez",
+     "circoscrizione",
+     "Quartiere",
+     "UPL_nome",
+     "LST_2025",
+     "LST_predetta",
+     "residuo_lst",
+     "quota_media",
+     "pendenza_media",
+     "svf_medio",
+     "aspetto_medio_deg",
+     "densita_viaria_km_kmq",
+     "area_impermeabile_stradale_pct",
+     "dist_strada_piu_vicina_m"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/sezioni_residui.pmtiles",
+  "tema": "clima",
+  "formato": "pmtiles",
+  "byte": 8794404,
+  "sha256": "dbdb5301acd9ed940898350ac68f467ee4d46caa1539f90eadbba99c76721f2c",
+  "layers": [
+   {
+    "nome": "sezioni",
+    "campi": [
+     "LST_2025",
+     "LST_predetta",
+     "Quartiere",
+     "UPL_nome",
+     "area_impermeabile_stradale_pct",
+     "aspetto_medio_deg",
+     "circoscrizione",
+     "densita_viaria_km_kmq",
+     "dist_strada_piu_vicina_m",
+     "pendenza_media",
+     "quota_media",
+     "residuo_lst",
+     "sez",
+     "svf_medio"
+    ],
+    "minzoom": 9,
+    "maxzoom": 17
+   }
+  ]
+ },
+ {
+  "percorso": "clima/upl.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 516868,
+  "sha256": "84790d951b7f6ce0fdc1822ed636df940d4ee7d9b9e998f5b14eaf1b316812a7",
+  "layers": [
+   {
+    "nome": "SELECT",
+    "geometria": "Multi Polygon",
+    "n": 55,
+    "epsg": 4326,
+    "campi": [
+     "UPL"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/upl_lst_densvia.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 524291,
+  "sha256": "ac1157233db87e58fbc7705969c2c2a536450bd7e40c917a97536a439cb7b92a",
+  "layers": [
+   {
+    "nome": "upl_lst_densvia",
+    "geometria": "Multi Polygon",
+    "n": 55,
+    "epsg": 4326,
+    "campi": [
+     "UPL",
+     "UPL_nome",
+     "n_sezioni",
+     "val_x",
+     "val_y",
+     "bivar_lbl_modale",
+     "col_modale"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/upl_lst_palermo.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 524247,
+  "sha256": "cd3d4419064350dfedae1e23c78366e0b207f24457074798dc191fa4e03ecef6",
+  "layers": [
+   {
+    "nome": "upl_lst_palermo",
+    "geometria": "Multi Polygon",
+    "n": 55,
+    "epsg": 4326,
+    "campi": [
+     "UPL",
+     "UPL_nome",
+     "n_sezioni",
+     "val_x",
+     "val_y",
+     "bivar_lbl_modale",
+     "col_modale"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "clima/upl_lst_years.geojson",
+  "tema": "clima",
+  "formato": "geojson",
+  "byte": 556748,
+  "sha256": "16fc2333fc7d834ddcc78e8d19f70c350a5560cc62c62cfd0b4db99086670cdf",
+  "layers": [
+   {
+    "nome": "upl_lst_years",
+    "geometria": "Multi Polygon",
+    "n": 55,
+    "epsg": 4326,
+    "campi": [
+     "UPL",
+     "LST_2019",
+     "LST_2020",
+     "LST_2021",
+     "LST_2022",
+     "LST_2023",
+     "LST_2024",
+     "LST_2025",
+     "LST_2019_min",
+     "LST_2019_max",
+     "LST_2019_median",
+     "LST_2020_min",
+     "LST_2020_max",
+     "LST_2020_median",
+     "LST_2021_min",
+     "LST_2021_max",
+     "LST_2021_median",
+     "LST_2022_min",
+     "LST_2022_max",
+     "LST_2022_median",
+     "LST_2023_min",
+     "LST_2023_max",
+     "LST_2023_median",
+     "LST_2024_min",
+     "LST_2024_max",
+     "LST_2024_median",
+     "LST_2025_min",
+     "LST_2025_max",
+     "LST_2025_median",
+     "n_sezioni"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "mobilita/082053_Palermo-2026-07-01T09Z.gpkg",
+  "tema": "mobilita",
+  "formato": "gpkg",
+  "byte": 40812544,
+  "sha256": "0c7ca7cf4f007d7472694847cbd2fc63d56c9acb76bceb300f2fe9a58340536b",
+  "layers": [
+   {
+    "nome": "points",
+    "geometria": "Point",
+    "n": 20290,
+    "epsg": 4326,
+    "campi": [
+     "osm_id",
+     "name",
+     "barrier",
+     "highway",
+     "ref",
+     "address",
+     "is_in",
+     "place",
+     "man_made",
+     "other_tags"
+    ]
+   },
+   {
+    "nome": "lines",
+    "geometria": "Line String",
+    "n": 18314,
+    "epsg": 4326,
+    "campi": [
+     "osm_id",
+     "name",
+     "highway",
+     "waterway",
+     "aerialway",
+     "barrier",
+     "man_made",
+     "railway",
+     "z_order",
+     "other_tags",
+     "road_class",
+     "is_road",
+     "road_class_it"
+    ]
+   },
+   {
+    "nome": "multilinestrings",
+    "geometria": "Multi Line String",
+    "n": 171,
+    "epsg": 4326,
+    "campi": [
+     "osm_id",
+     "name",
+     "type",
+     "other_tags",
+     "road_class",
+     "is_road",
+     "road_class_it"
+    ]
+   },
+   {
+    "nome": "multipolygons",
+    "geometria": "Multi Polygon",
+    "n": 80901,
+    "epsg": 4326,
+    "campi": [
+     "osm_id",
+     "osm_way_id",
+     "name",
+     "type",
+     "aeroway",
+     "amenity",
+     "admin_level",
+     "barrier",
+     "boundary",
+     "building",
+     "craft",
+     "geological",
+     "historic",
+     "land_area",
+     "landuse",
+     "leisure",
+     "man_made",
+     "military",
+     "natural",
+     "office",
+     "place",
+     "shop",
+     "sport",
+     "tourism",
+     "other_tags"
+    ]
+   },
+   {
+    "nome": "other_relations",
+    "geometria": "Geometry Collection",
+    "n": 237,
+    "epsg": 4326,
+    "campi": [
+     "osm_id",
+     "name",
+     "type",
+     "other_tags"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "mobilita/assi_stradali_gb.gpkg",
+  "tema": "mobilita",
+  "formato": "gpkg",
+  "byte": 77918208,
+  "sha256": "da3e7caea5435e8914b9230eaf0c140f816b51a96d726d49cb32f28dfa8d01e9",
+  "layers": [
+   {
+    "nome": "Numeri_civici",
+    "geometria": "Point",
+    "n": 141958,
+    "epsg": 4326,
+    "campi": [
+     "LABEL_INDIRIZZO",
+     "CEN_CIV_NUMSEZIONE",
+     "UPL",
+     "QUARTIERE",
+     "CIRCOSCRIZIONE",
+     "TCI_NUMCAP",
+     "SEZ_CODELETTORALE",
+     "CEN_VIA_COD",
+     "ID",
+     "CEN_CIV_COD",
+     "CEN_CIV_NUMCIVICO",
+     "CEN_CIV_DESBARRATO",
+     "DBT_CIVICO_T_FLAG",
+     "DBT_TRO_ID",
+     "DBT_ID_EDIFC",
+     "AREA_CIRCOLAZIONE",
+     "ODONIMO",
+     "LABEL_VIARIO",
+     "LABEL_CIVICO",
+     "CIR_COD",
+     "RIO_COD",
+     "QUA_COD",
+     "SEZ_CODCENSIMENTO"
+    ]
+   },
+   {
+    "nome": "assi_stradali",
+    "geometria": "Multi Line String",
+    "n": 5039,
+    "epsg": 3857,
+    "campi": [
+     "ID",
+     "LABEL_INDIRIZZO",
+     "LUNGHEZZA",
+     "UFF_CODVIA",
+     "TIP_DES",
+     "UFF_DENOMINAZIONE"
+    ]
+   },
+   {
+    "nome": "Assi stradali_tratti-upl",
+    "geometria": "Multi Line String",
+    "n": 6562,
+    "epsg": 3857,
+    "campi": [
+     "ID",
+     "LABEL_INDIRIZZO",
+     "LUNGHEZZA",
+     "UFF_CODVIA",
+     "TIP_DES",
+     "UFF_DENOMINAZIONE",
+     "Circoscrizione",
+     "Quartiere",
+     "UPL"
+    ]
+   },
+   {
+    "nome": "Istat_sez_cens_2021- light",
+    "geometria": "Multi Polygon",
+    "n": 3600,
+    "epsg": 32632,
+    "campi": [
+     "PRO_COM",
+     "SEZ21",
+     "SEZ21_ID",
+     "POP21",
+     "FAM21",
+     "ABI21",
+     "EDI21",
+     "Circoscrizione",
+     "Quartiere",
+     "UPL",
+     "Pop_2022",
+     "Area"
+    ]
+   },
+   {
+    "nome": "UPL",
+    "geometria": "Multi Polygon",
+    "n": 55,
+    "epsg": 32632,
+    "campi": [
+     "Circoscrizione",
+     "Quartiere",
+     "UPL",
+     "Area"
+    ]
+   },
+   {
+    "nome": "Civici - ANNCSU - gb",
+    "geometria": "Point",
+    "n": 165027,
+    "epsg": 4326,
+    "campi": [
+     "CODICE_COMUNE",
+     "CODICE_ISTAT",
+     "PROGRESSIVO_NAZIONALE",
+     "CODICE_COMUNALE",
+     "ODONIMO",
+     "LOCALITA'",
+     "DIZIONE_LINGUA1",
+     "DIZIONE_LINGUA2",
+     "PROGRESSIVO_ACCESSO",
+     "CODICE_COMUNALE_ACCESSO",
+     "CIVICO",
+     "ESPONENTE",
+     "SPECIFICITA",
+     "METRICO",
+     "PROGRESSIVO_SNC",
+     "COORD_X_COMUNE",
+     "COORD_Y_COMUNE",
+     "QUOTA",
+     "METODO",
+     "circoscrizione",
+     "Quartiere",
+     "UPL"
+    ]
+   },
+   {
+    "nome": "Viario Elettorale-base",
+    "geometria": "None",
+    "n": 10894,
+    "epsg": null,
+    "campi": [
+     "CODICE_VIA",
+     "DUG",
+     "DESCRIZIONE",
+     "NUM_CIV_DA",
+     "NUM_BARRATO_DA",
+     "NUMCIV_A",
+     "NUMBARRATO_A",
+     "SEZIONE",
+     "CIRCOSCRIZIONE"
+    ]
+   },
+   {
+    "nome": "viario_elettorale_gb",
+    "geometria": "None",
+    "n": 10894,
+    "epsg": null,
+    "campi": [
+     "CODICE_VIA",
+     "DUG",
+     "DESCRIZIONE",
+     "NUM_CIV_DA",
+     "NUM_BARRATO_DA",
+     "NUMCIV_A",
+     "NUMBARRATO_A",
+     "Civici",
+     "seggi_lng",
+     "seggi_lat",
+     "Scuola",
+     "Indirizzo",
+     "Disabili",
+     "Disabili2",
+     "Sezione",
+     "Nome_sez",
+     "Nome_breve_sez",
+     "Circoscrizione",
+     "Quartiere",
+     "UPL"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "mobilita/ztl.geojson",
+  "tema": "mobilita",
+  "formato": "geojson",
+  "byte": 8227,
+  "sha256": "664ec0ac91ef97340e10ce79b72740b26d6007261b697bba261bcab262295ca0",
+  "layers": [
+   {
+    "nome": "ztl",
+    "geometria": "Polygon",
+    "n": 1,
+    "epsg": 4326,
+    "campi": [
+     "id",
+     "Nome",
+     "Descrizione",
+     "Limiti",
+     "Veicoli autorizzati",
+     "Veicoli non autorizzati",
+     "Info",
+     "name",
+     "_umap_options"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "mobilita/matrix_pendoLAVORO_2021.txt",
+  "tema": "mobilita",
+  "formato": "txt",
+  "byte": 13244132,
+  "sha256": "0d75d25a87e2010a3ae610b0aabf94a4a86ab3a7b21e630aced92319befeb10c"
+ },
+ {
+  "percorso": "mobilita/Pop_res_dal_2018_al_2021.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 315536,
+  "sha256": "72bbfed34003d8e79116c958a50869457363145a4c9e21d8ec7890bd2cc1f1e1"
+ },
+ {
+  "percorso": "mobilita/leggimi_file_matrix_pendoLAVORO_2021.doc",
+  "tema": "mobilita",
+  "formato": "doc",
+  "byte": 48128,
+  "sha256": "7974cbfaf6d67fcdbe05dae350f5f7e0f69f35fcae80b111d6cb82f2c6457fda"
+ },
+ {
+  "percorso": "mobilita/incidenti_2015.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 292594,
+  "sha256": "55fcd2dbf5e1dc70de031d8d626c9ef79dc66882eaa597367bfc0e0bf914a550"
+ },
+ {
+  "percorso": "mobilita/incidenti_2016.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 330194,
+  "sha256": "577df18762fb64f2c9165f5fff6db59219330a5eb71a60ea94129d7d1f224585"
+ },
+ {
+  "percorso": "mobilita/incidenti_2017.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 430634,
+  "sha256": "eb49d9b38acb68f4a393397ba9a5a3d9ced93cd66237aa8452aba043e16032c0"
+ },
+ {
+  "percorso": "mobilita/incidenti_2018.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 282842,
+  "sha256": "619f8e2260a9970795b2edc099dc86d7176c1667b8a7ed3b62ff395af2b70e27"
+ },
+ {
+  "percorso": "mobilita/incidenti_2019.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 220301,
+  "sha256": "5b1def8ff0ba4a3ef441f5466dd15498a5e1dca5ee53e8cb8fbe95c906caa95f"
+ },
+ {
+  "percorso": "mobilita/incidenti_2020.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 209015,
+  "sha256": "34b7decc8ef7169b6391c0ff455386fec82b379627399c13eaf74d8dff074799"
+ },
+ {
+  "percorso": "mobilita/incidenti_2021.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 251329,
+  "sha256": "84622aeea0ba90d4635c7e561006545a6fbd00e70a0e2ae3ccc98864546783a0"
+ },
+ {
+  "percorso": "mobilita/incidenti_2022_1.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 467460,
+  "sha256": "f9c67fb2902400f72e1686dace6ad6c0120be9adbc433257853ba35de94bb6d8"
+ },
+ {
+  "percorso": "mobilita/incidenti_2022.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 264974,
+  "sha256": "48423b94d1603ee659f72894cabe4cedf7fabf061a5a05dd304f951b6f0a2853"
+ },
+ {
+  "percorso": "mobilita/incidenti_2023.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 274614,
+  "sha256": "0a762d6d605ec7e4e83ebba090f953cbd27c65410521901b8636e2df6e7e8ffd"
+ },
+ {
+  "percorso": "mobilita/quartieri_sup.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 1319,
+  "sha256": "c8bccb292a1d5125ebce1677d09088097b739d07218e18b314adec591e8eaf35"
+ },
+ {
+  "percorso": "mobilita/residenti_quartieri.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 795,
+  "sha256": "a58d52f5bd3340c30a22b55c1993c4067887100ef0458cba5e4dd7c598292df9"
+ },
+ {
+  "percorso": "mobilita/Sinistri_Palermo_2022_dati_grezzi.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 276664,
+  "sha256": "c7d5d2d92f150db238b17a48d7cc5d07997d3842af0e6ed8a93b57abd034eb80"
+ },
+ {
+  "percorso": "mobilita/Palermo _ Incidenti stradali 2022 - Dati_ter.csv",
+  "tema": "mobilita",
+  "formato": "csv",
+  "byte": 539687,
+  "sha256": "8d8a408fef65f29fe6cf0a1f6ade7e5ff56cb5f23da6f518e12ec70c800883a3"
+ },
+ {
+  "percorso": "verde/01_query_rilievo_semplificato.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 359915,
+  "sha256": "a0aace84497255eb13defaf171c0c955f81afbaf62b7e6ddaae9a0b5e9b76993"
+ },
+ {
+  "percorso": "verde/02_quadrante.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 57364,
+  "sha256": "8387415c323f18597f7146f086ec5ab402c885c75368991553ad3fe5ff650e49"
+ },
+ {
+  "percorso": "verde/03_tavole.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 720,
+  "sha256": "6caf5f48c2a7536f0849f94501d42f3f7926d9a8f996429243cfb0575b94d95e"
+ },
+ {
+  "percorso": "verde/04_foto.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 7066,
+  "sha256": "b6bc989b5d437ffe5a9d0c2b272c00f53afa3887868ca3c04e62e7d10befd83e"
+ },
+ {
+  "percorso": "verde/05_specie_arboree_palermo.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 13621,
+  "sha256": "465b98d977988dd07398a210e198c5853e15c83e4ccb162679c35983a7135290"
+ },
+ {
+  "percorso": "verde/06_elenco_prezzi_2024.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 2890,
+  "sha256": "17daf03595ba2043e80ad9f8cf08c8b7a1e329f28451f3469bc3dfff969913dc"
+ },
+ {
+  "percorso": "verde/07_specie.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 2511,
+  "sha256": "a5f199a7995c95e65ac50263a6b3636901b2934e3b0871218c0971bd5fdd77d9"
+ },
+ {
+  "percorso": "verde/08_cpc.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 4675,
+  "sha256": "431e16435cba2e213298c60265c2a0bc8fa938051f761a391a29f2f87961e802"
+ },
+ {
+  "percorso": "verde/09_costo_lavori_vie.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 3851,
+  "sha256": "b242d8e64100c27f2dbaca2405ef78ae77dfec9e86edfc63bd1390d6d80b1f3a"
+ },
+ {
+  "percorso": "verde/10_o2_co2.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 2272,
+  "sha256": "075d3a7d583d3b6932f6ab2b3a2bf7ba929603716f6d42437debb4876a570d95"
+ },
+ {
+  "percorso": "verde/11_sito_impianto.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 123,
+  "sha256": "cd040d5811fa18564ff2bc67b26470ea90d126ddf8a6845b785a382207ed1d5e"
+ },
+ {
+  "percorso": "verde/12_altezza_diametro.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 21,
+  "sha256": "a91c0ca9d4cc1d5c6930685369e41f409b8a135240d4a42a63844da99834302d"
+ },
+ {
+  "percorso": "verde/13_altezza.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 21,
+  "sha256": "a91c0ca9d4cc1d5c6930685369e41f409b8a135240d4a42a63844da99834302d"
+ },
+ {
+  "percorso": "verde/14_co2_diametro.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 21,
+  "sha256": "a91c0ca9d4cc1d5c6930685369e41f409b8a135240d4a42a63844da99834302d"
+ },
+ {
+  "percorso": "verde/15_num_foglie.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 110921,
+  "sha256": "514f21397d35a9a8858d5001b14fc84a67b4f3f82b2c7e5727e92024d6a0d9d3"
+ },
+ {
+  "percorso": "verde/16_tot_foglie.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 3895,
+  "sha256": "be61950e793cffd82176057259d37d9091fbf5e022388cee5370d5dcc833cc50"
+ },
+ {
+  "percorso": "verde/17_query_web.csv",
+  "tema": "verde",
+  "formato": "csv",
+  "byte": 446258,
+  "sha256": "a027e4de14a87e5d7e3d172b087ed2a633c7877b8a0fd4321a2d69ccb999ce0a"
+ },
+ {
+  "percorso": "servizi/copertura_10min.pmtiles",
+  "tema": "servizi",
+  "formato": "pmtiles",
+  "byte": 316732,
+  "sha256": "fe4e1ef41525c1c7fd1b0d766ef30a82a8edf50e512828f20f1ef3420f52013a",
+  "layers": [
+   {
+    "nome": "copertura_10min",
+    "campi": [
+     "fontanella_ids",
+     "nro"
+    ],
+    "minzoom": 0,
+    "maxzoom": 16
+   }
+  ]
+ },
+ {
+  "percorso": "servizi/copertura_5min.pmtiles",
+  "tema": "servizi",
+  "formato": "pmtiles",
+  "byte": 205771,
+  "sha256": "facc1cd0e733a5414c80ad505bf0ea3a737f54a94c462e58d82aa5e2932a6430",
+  "layers": [
+   {
+    "nome": "copertura_5min",
+    "campi": [
+     "fontanella_ids",
+     "nro"
+    ],
+    "minzoom": 0,
+    "maxzoom": 16
+   }
+  ]
+ },
+ {
+  "percorso": "servizi/fontanelle.geojson",
+  "tema": "servizi",
+  "formato": "geojson",
+  "byte": 47859,
+  "sha256": "eb01d714c38786a2c78c721c396d738b25a280e8bd0641ecdafe0b6bb5956517",
+  "layers": [
+   {
+    "nome": "fontanelle",
+    "geometria": "Point",
+    "n": 150,
+    "epsg": 4326,
+    "campi": [
+     "id",
+     "tipo_ubicazione",
+     "denominazione",
+     "civico",
+     "note",
+     "indirizzo",
+     "upl",
+     "quartiere",
+     "circoscrizione"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "servizi/fontanelle.pmtiles",
+  "tema": "servizi",
+  "formato": "pmtiles",
+  "byte": 41019,
+  "sha256": "62c1bfad23e2f110074a4fa2e2aadf4177d7418f1372d53e5a91a2a79eab75a5",
+  "layers": [
+   {
+    "nome": "fontanelle",
+    "campi": [
+     "circoscrizione",
+     "civico",
+     "denominazione",
+     "id",
+     "indirizzo",
+     "note",
+     "quartiere",
+     "tipo_ubicazione",
+     "upl"
+    ],
+    "minzoom": 0,
+    "maxzoom": 8
+   }
+  ]
+ },
+ {
+  "percorso": "servizi/isocrone_10min.pmtiles",
+  "tema": "servizi",
+  "formato": "pmtiles",
+  "byte": 316084,
+  "sha256": "efb04fa63323e1687e9ce6a073b40a0372a33f185d2f7801e141f24a9966a914",
+  "layers": [
+   {
+    "nome": "isocrone_10min",
+    "campi": [
+     "fontanella_ids",
+     "nro"
+    ],
+    "minzoom": 0,
+    "maxzoom": 16
+   }
+  ]
+ },
+ {
+  "percorso": "servizi/isocrone_5min.pmtiles",
+  "tema": "servizi",
+  "formato": "pmtiles",
+  "byte": 205256,
+  "sha256": "2dd17c2a3cd9385af4a5cc14aed6b214fc5c5d8539a7e52722eb3b797165a597",
+  "layers": [
+   {
+    "nome": "isocrone_5min",
+    "campi": [
+     "fontanella_ids",
+     "nro"
+    ],
+    "minzoom": 0,
+    "maxzoom": 16
+   }
+  ]
+ },
+ {
+  "percorso": "servizi/rete_stradale.json",
+  "tema": "servizi",
+  "formato": "json",
+  "byte": 8101386,
+  "sha256": "b8a7f4cd9ee6ae3250bdaefe8f7bee61bffadd9bc1a7ea1a146b3e67068c3732"
+ },
+ {
+  "percorso": "servizi/stats.json",
+  "tema": "servizi",
+  "formato": "json",
+  "byte": 837,
+  "sha256": "aedcfb3937185734b074448693232de8ae3623761911709711acef10624466d8"
+ },
+ {
+  "percorso": "servizi/peba.geojson",
+  "tema": "servizi",
+  "formato": "geojson",
+  "byte": 148204,
+  "sha256": "94ee0a25fddb3930a6f224b0591ba5aec62f9a8f3de9737bbdea77543b6eeb75",
+  "layers": [
+   {
+    "nome": "peba",
+    "geometria": "Point",
+    "n": 209,
+    "epsg": 4326,
+    "campi": [
+     "Codice",
+     "Nome/Localizzazione",
+     "Gruppo",
+     "Categoria",
+     "Contesto urbano",
+     "Elemento",
+     "Latitudine",
+     "Longitudine",
+     "Indirizzo",
+     "Punteggio",
+     "Livello accessibilita",
+     "Rilevanza",
+     "Non valutabile",
+     "N. foto rilievo",
+     "Criticità Rilevate",
+     "Nome Immobile",
+     "Circoscrizione",
+     "Quartiere",
+     "UPL"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "servizi/peba.csv",
+  "tema": "servizi",
+  "formato": "csv",
+  "byte": 61336,
+  "sha256": "c88137fae2544fbd6433a4fecf82bc0b0c961dcd7a3a98d244a24d389b340b02"
+ },
+ {
+  "percorso": "servizi/peba_edifici.geojson",
+  "tema": "servizi",
+  "formato": "geojson",
+  "byte": 57865,
+  "sha256": "328749919e989d5f0edbd40b8218f13fd31fb79341c2e3e660b49b71ac31874d",
+  "layers": [
+   {
+    "nome": "peba_edifici",
+    "geometria": "Unknown (any)",
+    "n": 81,
+    "epsg": 4326,
+    "campi": [
+     "Codice",
+     "Gruppo",
+     "altezza",
+     "occupancy",
+     "osm_id",
+     "name",
+     "fonte",
+     "quota",
+     "tetto"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "servizi/peba_aree_verdi.geojson",
+  "tema": "servizi",
+  "formato": "geojson",
+  "byte": 15244,
+  "sha256": "5b2d190d3650cfcc4ddcd5cb217b90a06250297cd84441465424be38fbeb07a7",
+  "layers": [
+   {
+    "nome": "peba_aree_verdi",
+    "geometria": "Polygon",
+    "n": 21,
+    "epsg": 4326,
+    "campi": [
+     "Codice",
+     "osm_id",
+     "name"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "servizi/schede_completo.csv",
+  "tema": "servizi",
+  "formato": "csv",
+  "byte": 41842,
+  "sha256": "f698a9b031f96a7f6ed88cf40cd30c7b828ed52dca78ee675f775d49f452280a"
+ },
+ {
+  "percorso": "servizi/schede_completo.json",
+  "tema": "servizi",
+  "formato": "json",
+  "byte": 115525,
+  "sha256": "b0380172ffcba1483daf7796e2cabc62fd2fe5219f3eeff406f8b37167a3ac19"
+ },
+ {
+  "percorso": "servizi/costi_per_scheda.md",
+  "tema": "servizi",
+  "formato": "md",
+  "byte": 14941,
+  "sha256": "98de2c6a10f8f9c7ab569b8ae99b7cdc2e8e3d4f1464c84362d0c2b84b833509"
+ },
+ {
+  "percorso": "servizi/indice_peba.md",
+  "tema": "servizi",
+  "formato": "md",
+  "byte": 2665,
+  "sha256": "dc9d35c529d61f0560f273a155868ae8f8c1d796eec53f5da0a557a805affa90"
+ },
+ {
+  "percorso": "servizi/metodologia_estrazione.md",
+  "tema": "servizi",
+  "formato": "md",
+  "byte": 4124,
+  "sha256": "fa92dd837e82d6813b066c600da1c4c36798c7eb989375d455f478475f3ab450"
+ },
+ {
+  "percorso": "servizi/priorita_schede.md",
+  "tema": "servizi",
+  "formato": "md",
+  "byte": 19871,
+  "sha256": "8033f8480bd240cfc4ceca0e2f0f89c1f8466804ca31314c7aae005c507ede86"
+ },
+ {
+  "percorso": "servizi/procedura_edifici_osm.md",
+  "tema": "servizi",
+  "formato": "md",
+  "byte": 6687,
+  "sha256": "060cb61cae5270af41786819f1c1be92fcc09edb296cd98949e3dba27220d755"
+ },
+ {
+  "percorso": "verde/aree_verdi.geojson",
+  "tema": "verde",
+  "formato": "geojson",
+  "byte": 1915415,
+  "sha256": "fa1339180532ab202a4ea3b73102889337325226296d846ffae65de7b6b32acf",
+  "layers": [
+   {
+    "nome": "aree_verdi",
+    "geometria": "3D Multi Polygon",
+    "n": 2089,
+    "epsg": 25833,
+    "campi": [
+     "ID",
+     "TIPO"
+    ]
+   }
+  ],
+  "epsg": 25833
+ },
+ {
+  "percorso": "verde/osm_verde_palermo.geojson",
+  "tema": "verde",
+  "formato": "geojson",
+  "byte": 346802,
+  "sha256": "83f48186d8c0be024c61199a8218506e53779ba41ed65c7baaf0db69abe8f79e",
+  "layers": [
+   {
+    "nome": "osm_verde_palermo",
+    "geometria": "Unknown (any)",
+    "n": 118,
+    "epsg": 4326,
+    "campi": [
+     "name",
+     "size_label",
+     "area_sqm"
+    ]
+   }
+  ],
+  "epsg": 4326
+ },
+ {
+  "percorso": "civici-omi/civici_index.json",
+  "tema": "civici-omi",
+  "formato": "json",
+  "byte": 4492134,
+  "sha256": "9a766c3b6f8d5bdec9e967b5264a9944fd458239c3470d6350e2c02d5015b158",
+  "fonte": "Comune di Palermo — numeri civici (indice per la ricerca)",
+  "data": "2026-02"
+ }
+]

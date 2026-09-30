@@ -74,3 +74,68 @@ def test_dati_reali_manifest_integro():
 
 def test_dati_reali_sezioni_coerenti():
     assert v.controlla_sezioni() == []
+
+
+import pytest
+from pathlib import Path
+
+DATI_REALI = Path(v.DATI)
+
+
+@pytest.fixture(scope="session")
+def catalogo():
+    return v.costruisci_catalogo()
+
+
+def test_raster_dtm():
+    info = v.info_raster(DATI_REALI / "terreno" / "palermo_dtm5m.tif")
+    assert info["epsg"] == 6875
+    assert info["dimensioni"] == [3680, 3871]
+    assert abs(info["passo"][0] - 5.0) < 0.01
+    assert info["nodata"] == -9999
+
+
+def test_pmtiles_catasto():
+    info = v.info_pmtiles(DATI_REALI / "catasto" / "particelle.pmtiles")
+    layer = {l["nome"]: l for l in info["layers"]}["particelle"]
+    assert {"Foglio", "Paricella"} <= set(layer["campi"])
+    assert layer["minzoom"] == 12 and layer["maxzoom"] == 18
+
+
+def test_vettoriale_edifici():
+    info = v.info_vettoriale(DATI_REALI / "edifici" / "edificato.gpkg")
+    assert info["epsg"] == 4326
+    assert info["layers"][0]["n"] == 111844
+
+
+def test_catalogo_reale_rispetta_le_regole(catalogo):
+    assert v.controlla_regole(catalogo) == []
+
+
+def test_catalogo_non_contiene_percorsi_locali(catalogo):
+    assert "/mnt/" not in json.dumps(catalogo)
+
+
+def _voce(percorso, **extra):
+    return {"percorso": percorso, "byte": 10, **extra}
+
+
+def test_regole_segnala_crs_sbagliato():
+    cat = [_voce("edifici/edificato.gpkg", epsg=3857)]
+    errori = v.controlla_regole(cat)
+    assert "edifici/edificato.gpkg: EPSG 3857 invece di 4326" in errori
+
+
+def test_regole_segnala_layer_e_campi_mancanti():
+    cat = [
+        _voce("catasto/particelle.pmtiles", layers=[{"nome": "altro", "campi": []}]),
+        _voce("prg-vincoli/prg.pmtiles", layers=[{"nome": "zto", "campi": ["ZTO"]}]),
+    ]
+    errori = v.controlla_regole(cat)
+    assert "catasto/particelle.pmtiles: layer particelle assente" in errori
+    assert "prg-vincoli/prg.pmtiles/zto: campi mancanti ['DESCRIZION']" in errori
+
+
+def test_regole_segnala_file_oltre_100mb():
+    cat = [_voce("x/grande.bin", byte=101 * 1024 * 1024)]
+    assert "x/grande.bin: oltre 100 MB" in v.controlla_regole(cat)
