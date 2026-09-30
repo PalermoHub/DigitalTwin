@@ -409,7 +409,7 @@
   "formato": "pmtiles",
   "byte": 29291993,
   "sha256": "61854375834fa155353c4d6df1e029ff472a40ceabeee03ed5ccbe478bfe04ec",
-  "url": "https://siciliahub.github.io/palermohub/carto/buildings_wgs84.pmtiles",
+  "url": "https://palermohub.opendatasicilia.it/carto/buildings_wgs84.pmtiles",
   "layers": [
    {
     "nome": "buildings",
@@ -3406,7 +3406,7 @@
   "formato": "json",
   "byte": 4492134,
   "sha256": "9a766c3b6f8d5bdec9e967b5264a9944fd458239c3470d6350e2c02d5015b158",
-  "url": "https://siciliahub.github.io/palermohub/pmtiles/civici_index.json",
+  "url": "https://palermohub.opendatasicilia.it/pmtiles/civici_index.json",
   "fonte": "Comune di Palermo — numeri civici (indice per la ricerca)",
   "data": "2026-02"
  },

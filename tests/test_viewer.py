@@ -402,3 +402,35 @@ def test_scheda_terreno_sceglie_il_punto_di_griglia_piu_vicino(apri):
     quota_b = f"{b['quota']:.1f}".replace(".", ",")
     assert f"{quota_a} m" in testo
     assert f"{quota_b} m" not in testo
+
+
+def _via_reale():
+    indice = leggi_json("civici-omi/civici_index.json")  # dal link, con cache
+    via = "VIA MAQUEDA" if "VIA MAQUEDA" in indice else next(iter(indice))
+    civico, (lon, lat) = next(iter(indice[via].items()))
+    return via, civico, lon, lat
+
+
+def test_ricerca_porta_la_mappa_sul_civico(apri):
+    via, civico, lon, lat = _via_reale()
+    v = apri()
+    v.attendi_pronto()
+    v.page.fill("#cerca-testo", f"{via.lower()} {civico}")
+    v.page.wait_for_selector("#cerca-risultati button")
+    v.page.press("#cerca-testo", "Enter")
+    v.page.wait_for_function(
+        f"!window.dt.map.isMoving() && Math.abs(window.dt.map.getCenter().lng - {lon}) < 1e-3"
+        f" && Math.abs(window.dt.map.getCenter().lat - {lat}) < 1e-3",
+        timeout=30000,
+    )
+    assert v.js("window.dt.map.getZoom()") > 17
+
+
+def test_ricerca_input_scomodi_non_rompono_nulla(apri):
+    v = apri()
+    v.attendi_pronto()
+    for testo in ["", "   ", "100", "xyzxyzxyz", "via"]:
+        v.page.fill("#cerca-testo", testo)
+        v.page.wait_for_timeout(200)
+    assert v.errori == []
+    assert v.js("window.dt.pronto") is True

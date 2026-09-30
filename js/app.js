@@ -3,6 +3,7 @@ import { impostaCatalogo } from './core/config.js';
 import { costruisciPannello, segnala } from './core/pannello.js';
 import { caricaCatalogo, apriCrediti } from './core/catalogo.js';
 import { collegaScheda } from './core/scheda.js';
+import { collegaRicerca } from './core/ricerca.js';
 import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
 import territorio from './layers/territorio.js';
@@ -33,6 +34,8 @@ map.once('style.load', async () => {
   for (const m of MODULI) m.aggiungiLayer(map);
   costruisciPannello(map, MODULI, document.getElementById('strati'));
   collegaScheda(map, MODULI, document.getElementById('scheda'));
+  collegaRicerca(map, document.getElementById('cerca'),
+    document.getElementById('cerca-testo'), document.getElementById('cerca-risultati'));
 
   const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia).map(m => m.avvia(map)));
   esiti.forEach(e => { if (e.status === 'rejected') segnala(`Strato non caricato: ${e.reason?.message ?? e.reason}`); });

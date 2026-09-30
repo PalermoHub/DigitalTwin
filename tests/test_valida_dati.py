@@ -49,16 +49,39 @@ def test_manifest_hash_diverso_a_parita_di_dimensione(tmp_path):
     assert v.verifica_manifest(tmp_path) == ["hash diverso: t/a.txt"]
 
 
+def _server(tmp_path, cors):
+    www = tmp_path / "www"
+    www.mkdir(exist_ok=True)
+
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, directory=str(www), **kwargs)
+
+        def end_headers(self):
+            if cors:
+                self.send_header("Access-Control-Allow-Origin", "*")
+            super().end_headers()
+
+        def log_message(self, *args):
+            pass
+
+    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv, www, f"http://127.0.0.1:{srv.server_address[1]}"
+
+
 @pytest.fixture
 def web(tmp_path):
-    """Piccolo server HTTP locale: (cartella servita, url base)."""
-    www = tmp_path / "www"
-    www.mkdir()
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(www))
-    handler.log_message = lambda *a, **k: None
-    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
-    threading.Thread(target=srv.serve_forever, daemon=True).start()
-    yield www, f"http://127.0.0.1:{srv.server_address[1]}"
+    """Piccolo server HTTP locale con CORS: (cartella servita, url base)."""
+    srv, www, base = _server(tmp_path, cors=True)
+    yield www, base
+    srv.shutdown()
+
+
+@pytest.fixture
+def web_senza_cors(tmp_path):
+    srv, www, base = _server(tmp_path, cors=False)
+    yield www, base
     srv.shutdown()
 
 
@@ -74,6 +97,22 @@ def test_manifest_remoto_dimensione_diversa(tmp_path, web):
     (www / "a.txt").write_bytes(b"ciaoo")
     _manifest(tmp_path, [("t/a.txt", 4, _sha(b"ciao"), "x", f"{base}/a.txt")])
     assert v.verifica_manifest(tmp_path) == ["dimensione remota diversa: t/a.txt"]
+
+
+def test_manifest_remoto_senza_cors_non_e_leggibile_dal_browser(tmp_path, web_senza_cors):
+    www, base = web_senza_cors
+    (www / "a.txt").write_bytes(b"ciao")
+    _manifest(tmp_path, [("t/a.txt", 4, _sha(b"ciao"), "x", f"{base}/a.txt")])
+    assert v.verifica_manifest(tmp_path) == ["CORS assente: t/a.txt"]
+
+
+def test_manifest_remoto_con_redirect_non_e_accettato(tmp_path, web):
+    www, base = web
+    (www / "dir").mkdir()
+    (www / "dir" / "a.txt").write_bytes(b"ciao")
+    # SimpleHTTPRequestHandler risponde 301 a /dir (senza slash finale)
+    _manifest(tmp_path, [("t/a.txt", 4, _sha(b"ciao"), "x", f"{base}/dir")])
+    assert v.verifica_manifest(tmp_path) == ["remoto non raggiungibile: t/a.txt"]
 
 
 def test_manifest_remoto_non_raggiungibile(tmp_path, web):

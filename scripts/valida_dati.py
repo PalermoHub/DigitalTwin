@@ -6,6 +6,7 @@ import json
 import shutil
 import subprocess
 import sys
+import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -72,10 +73,27 @@ def leggi_manifest(dati: Path = DATI) -> list[dict]:
         return list(csv.DictReader(f, delimiter="\t"))
 
 
+class _SenzaRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):
+        return None  # un redirect non porta l'intestazione CORS: il browser non potrebbe leggere il file
+
+
+def _sonda(url: str) -> tuple[int, int, str | None]:
+    """HEAD come la farebbe il browser da un'altra origine: (stato, byte, Access-Control-Allow-Origin)."""
+    req = urllib.request.Request(url, method="HEAD", headers={"Origin": "http://127.0.0.1"})
+    try:
+        r = urllib.request.build_opener(_SenzaRedirect).open(req, timeout=20)
+        stato, h = r.status, r.headers
+    except urllib.error.HTTPError as e:
+        stato, h = e.code, e.headers
+    return stato, int(h.get("Content-Length") or -1), h.get("Access-Control-Allow-Origin")
+
+
 def _lunghezza_remota(url: str) -> int:
-    req = urllib.request.Request(url, method="HEAD")
-    with urllib.request.urlopen(req, timeout=20) as r:
-        return int(r.headers["Content-Length"])
+    stato, byte, _ = _sonda(url)
+    if stato != 200:
+        raise OSError(f"HTTP {stato}")
+    return byte
 
 
 def _verifica_riga(dati: Path, r: dict) -> str | None:
@@ -89,9 +107,13 @@ def _verifica_riga(dati: Path, r: dict) -> str | None:
             return f"hash diverso: {rel}"
     elif url:
         try:
-            dimensione = _lunghezza_remota(url)
+            stato, dimensione, acao = _sonda(url)
         except Exception:
             return f"remoto non raggiungibile: {rel}"
+        if stato != 200:
+            return f"remoto non raggiungibile: {rel}"
+        if acao not in ("*", "http://127.0.0.1"):
+            return f"CORS assente: {rel}"
         if dimensione != int(r["dimensione_byte"]):
             return f"dimensione remota diversa: {rel}"
     else:

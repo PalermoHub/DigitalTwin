@@ -2262,7 +2262,7 @@ def test_ricerca_porta_la_mappa_sul_civico(apri):
     v.page.wait_for_selector("#cerca-risultati button")
     v.page.press("#cerca-testo", "Enter")
     v.page.wait_for_function(
-        f"Math.abs(window.dt.map.getCenter().lng - {lon}) < 1e-3"
+        f"!window.dt.map.isMoving() && Math.abs(window.dt.map.getCenter().lng - {lon}) < 1e-3"
         f" && Math.abs(window.dt.map.getCenter().lat - {lat}) < 1e-3",
         timeout=30000,
     )
