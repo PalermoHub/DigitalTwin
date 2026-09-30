@@ -1069,11 +1069,22 @@ git commit -q -m "feat: pure logic for indicators, quantiles and address search"
 
 Aggiungere in coda a `tests/conftest.py`:
 ```python
-import base64
+import struct
+import zlib
 
-PNG_1X1 = base64.b64decode(
-    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg=="
-)
+
+def _png_1x1():
+    """PNG 1x1 grigio valido, con CRC corretti (un PNG malformato fa fallire le tile in modo intermittente)."""
+    def blocco(tipo, dati):
+        crc = zlib.crc32(tipo + dati) & 0xFFFFFFFF
+        return struct.pack(">I", len(dati)) + tipo + dati + struct.pack(">I", crc)
+
+    ihdr = struct.pack(">IIBBBBB", 1, 1, 8, 0, 0, 0, 0)  # 1x1, 8 bit, scala di grigi
+    idat = zlib.compress(b"\x00\x80")  # filtro 0 + un pixel grigio
+    return b"\x89PNG\r\n\x1a\n" + blocco(b"IHDR", ihdr) + blocco(b"IDAT", idat) + blocco(b"IEND", b"")
+
+
+PNG_1X1 = _png_1x1()
 
 
 class Pagina:

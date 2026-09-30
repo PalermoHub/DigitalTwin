@@ -31,3 +31,10 @@ def test_crediti_mostrano_fonti_e_avvisi(apri):
     assert "stime campionarie" in testo
     assert "ISTAT" in testo
     assert "S.I.T.R." in testo
+
+
+def test_base_cartografica_irraggiungibile_non_blocca_il_viewer(apri):
+    v = apri(blocca="https://tile.openstreetmap.org/**")
+    v.attendi_pronto()
+    assert v.js("window.dt.pronto") is True
+    assert v.js("window.dt.map.getLayer('osm') !== undefined")
