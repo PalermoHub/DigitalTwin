@@ -2391,9 +2391,9 @@ git commit -q -m "feat: address search by street and house number" -m "Co-Author
 - [ ] **Step 1: Esegui tutta la suite**
 
 ```bash
-python -m pytest -q
+python3 -m pytest -q
 node --test tests/js/*.test.mjs
-python scripts/valida_dati.py
+python3 scripts/valida_dati.py
 ```
 Expected: pytest tutti verdi, node 0 fail, `valida_dati.py` stampa `162 file catalogati, 0 errori`.
 

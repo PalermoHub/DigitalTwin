@@ -1,0 +1,7 @@
+aggiungere:
+
+monumenti
+scuole
+seggi elettorali
+fontanelle
+gtfs

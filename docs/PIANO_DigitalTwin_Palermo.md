@@ -198,8 +198,8 @@ Principi:
 
 | Fase | Contenuto | Esito verificabile |
 |---|---|---|
-| 0 | Catalogo dati, deduplicazione, CRS unico, scelta chiavi, scheletro `DigitalTwin/` (le cartelle esistono già, vuote); censimento dei PMTiles già pronti in `SiciliaHub/PRG2004` (catasto 0926, PRG, civici, OMI, immobili) e scelta di dove ospitarli; valutazione dei prototipi 3D esistenti. GTFS escluso | `catalogo.md` + script di validazione che passa |
-| 1 | Viewer base: confini + sezioni + edifici 3D + terreno + ricerca + selezione punto/area | demo online con selezione che restituisce valori |
+| 0 | Catalogo dati, deduplicazione, CRS unico, scelta chiavi, scheletro `DigitalTwin/` (le cartelle esistono già, vuote); censimento dei PMTiles già pronti in `SiciliaHub/PRG2004` (catasto 0926, PRG, civici, OMI, immobili) e scelta di dove ospitarli; valutazione dei prototipi 3D esistenti. GTFS escluso | `catalogo.md` + script di validazione che passa. **Fatta (2026-10-01):** 169 voci (162 file + 7 tileset), 0 errori; i file già su GitHub Pages sono link, non copie |
+| 1 | Viewer base: confini + sezioni + edifici 3D + terreno + ricerca + selezione punto/area | demo online con selezione che restituisce valori. **Fatta in locale (2026-10-01):** catasto, PRG 2004 + PPE + vincoli, OMI, popolazione 2021/2023, edifici 3D, rilievo 3D, elevazione, civici, ricerca e scheda del luogo strutturata; manca la pubblicazione |
 | 2 | Clima: ombre live, LST, rischio caldo, SVF | slider ora/data funzionante, layer LST confrontabile |
 | 3 | Popolazione e società + bivariate a scelta | profilo di un'area con ≥10 indicatori |
 | 4 | Mobilità: isocrone, pendolarismo, ZTL | isocrona da punto arbitrario |
@@ -247,3 +247,5 @@ Ordine suggerito: 0 → 1 → 2 → 3, poi le altre in base alle priorità.
 4. 3D solo estruso (MapLibre) o serve anche fotorealismo (Cesium)?
 5. Dove pubblicare: GitHub Pages, Cloudflare (Pages/R2 per i file grandi)?
 6. Copertura: solo comune di Palermo o anche area metropolitana?
+
+Esito fasi 0–1: `docs/catalogo.md`, `docs/STILI.md`, `docs/superpowers/plans/2026-09-30-digitaltwin-fase0-1.md` (Task 0–13, incluse le aggiunte su richiesta: tematizzazione fedele, terreno/elevazione/griglia, scheda strutturata).
