@@ -96,7 +96,7 @@ cat > package.json <<'EOF'
   "name": "digitaltwin-palermo",
   "private": true,
   "type": "module",
-  "scripts": { "test:js": "node --test tests/js/" }
+  "scripts": { "test:js": "node --test tests/js/*.test.mjs" }
 }
 EOF
 cat > pytest.ini <<'EOF'
@@ -936,7 +936,7 @@ test('rispetta il numero massimo di risultati', () => {
 
 - [ ] **Step 2: Verifica che falliscano**
 
-Run: `node --test tests/js/`
+Run: `node --test tests/js/*.test.mjs`
 Expected: FAIL `ERR_MODULE_NOT_FOUND` per `js/core/indicatori.js` e `indirizzi.js`.
 
 - [ ] **Step 3: Implementa `js/core/indicatori.js`**
@@ -1026,7 +1026,7 @@ export function cerca(voci, testo, max = 8) {
 
 - [ ] **Step 5: Verifica che passino**
 
-Run: `node --test tests/js/`
+Run: `node --test tests/js/*.test.mjs`
 Expected: PASS (tutti i test, 0 fail).
 
 - [ ] **Step 6: Commit**
@@ -2318,7 +2318,7 @@ git commit -q -m "feat: address search by street and house number" -m "Co-Author
 
 ```bash
 python -m pytest -q
-node --test tests/js/
+node --test tests/js/*.test.mjs
 python scripts/valida_dati.py
 ```
 Expected: pytest tutti verdi, node 0 fail, `valida_dati.py` stampa `162 file catalogati, 0 errori`.
@@ -2362,7 +2362,7 @@ python scripts/serve.py 8000      # server con HTTP Range (necessario ai PMTiles
 
 ```bash
 python -m pytest -q       # dati + viewer (Playwright/Chromium)
-node --test tests/js/     # logica pura (indicatori, indirizzi)
+node --test tests/js/*.test.mjs     # logica pura (indicatori, indirizzi)
 python scripts/valida_dati.py   # rigenera dati/catalogo.json e docs/catalogo.md
 ```
 

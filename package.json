@@ -2,5 +2,5 @@
   "name": "digitaltwin-palermo",
   "private": true,
   "type": "module",
-  "scripts": { "test:js": "node --test tests/js/" }
+  "scripts": { "test:js": "node --test tests/js/*.test.mjs" }
 }
