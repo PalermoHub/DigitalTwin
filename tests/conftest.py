@@ -102,9 +102,15 @@ class Pagina:
                 const feats = m.querySourceFeatures('{sorgente}', {{ sourceLayer: '{strato}' }});
                 for (const f of feats.slice(0, 200)) {{
                     const g = f.geometry;
-                    const anello = g.type === 'Polygon' ? g.coordinates[0] : g.coordinates[0][0];
-                    const n = anello.length - 1;
-                    const c = anello.slice(0, n).reduce((a, q) => [a[0] + q[0] / n, a[1] + q[1] / n], [0, 0]);
+                    let c;
+                    if (g.type === 'Point') c = g.coordinates;
+                    else if (g.type === 'LineString') c = g.coordinates[Math.floor(g.coordinates.length / 2)];
+                    else if (g.type === 'MultiLineString') c = g.coordinates[0][Math.floor(g.coordinates[0].length / 2)];
+                    else {{
+                        const anello = g.type === 'Polygon' ? g.coordinates[0] : g.coordinates[0][0];
+                        const n = anello.length - 1;
+                        c = anello.slice(0, n).reduce((a, q) => [a[0] + q[0] / n, a[1] + q[1] / n], [0, 0]);
+                    }}
                     const hit = m.queryRenderedFeatures(m.project(c), {{ layers: ['{layer_hit}'] }});
                     if (hit.length) return c;
                 }}

@@ -1,7 +1,4 @@
-:root { --bg: #fff; --fg: #1b1f24; --muted: #5b6570; --bordo: #d0d7de; --acc: #0b5fff; --avviso: #fff4ce; }
-@media (prefers-color-scheme: dark) {
-  :root { --bg: #161b22; --fg: #e6edf3; --muted: #9aa4af; --bordo: #30363d; --acc: #58a6ff; --avviso: #3d3318; }
-}
+:root { color-scheme: light; --bg: #fff; --fg: #1b1f24; --muted: #5b6570; --bordo: #d0d7de; --acc: #0b5fff; --avviso: #fff4ce; }
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; font: 14px/1.4 system-ui, sans-serif; color: var(--fg); background: var(--bg); }
 #mappa { position: absolute; inset: 0; }
@@ -38,3 +35,72 @@ dialog li { margin: 4px 0; }
   #scheda { top: auto; bottom: 64px; right: 8px; left: 8px; width: auto; max-height: 35%; }
   #avvisi { bottom: 110px; }
 }
+
+/* Interfaccia sempre chiara (come la base cartografica): sfondo chiaro, testo scuro a contrasto */
+/* ---- scheda del luogo strutturata ---- */
+:root {
+  --c1-bg: #dcfce7; --c1-fg: #166534; --c1-bd: #86efac;
+  --c2-bg: #ecfccb; --c2-fg: #3a5a0a; --c2-bd: #a3e635;
+  --c3-bg: #fef9c3; --c3-fg: #854d0e; --c3-bd: #fde047;
+  --c4-bg: #ffedd5; --c4-fg: #9a3412; --c4-bd: #fdba74;
+  --c5-bg: #fee2e2; --c5-fg: #991b1b; --c5-bd: #fca5a5;
+  --marca: #d9731a;
+}
+#scheda { width: 330px; }
+#scheda h2 { display: inline; }
+.scheda-coordinate { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+.scheda-contesto { margin: 6px 0 4px; padding: 6px 8px; background: var(--avviso); border-radius: 6px; font-size: 12px; font-weight: 600; }
+.scheda-chiudi { float: right; }
+.scheda-sez { border-top: 1px solid var(--bordo); margin-top: 10px; padding-top: 6px; }
+.scheda-sez > summary { cursor: pointer; }
+.scheda-sez h3 { display: inline; font-size: 15px; font-weight: 700; color: var(--fg); margin: 0; }
+.scheda-icona { color: var(--marca); margin-right: 8px; width: 1.15em; text-align: center; }
+.scheda-link .scheda-icona { color: inherit; margin-right: 6px; }
+.scheda-acc > summary .scheda-icona { margin-right: 6px; }
+.scheda-tag { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--marca); color: #1a1206; font-size: 11px; font-weight: 700; text-transform: none; letter-spacing: 0; }
+.scheda-gruppo { margin-top: 6px; }
+.scheda-gruppo h4 { margin: 8px 0 2px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.scheda-riga { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; }
+.scheda-et { color: var(--muted); }
+.scheda-val { text-align: right; font-weight: 600; }
+.scheda-badge { padding: 1px 8px; border: 1px solid transparent; border-radius: 999px; font-size: 12px; }
+.scheda-badge-num { display: inline-block; min-width: 14px; margin-right: 4px; font-weight: 800; }
+.scheda-badge--c1 { background: var(--c1-bg); color: var(--c1-fg); border-color: var(--c1-bd); }
+.scheda-badge--c2 { background: var(--c2-bg); color: var(--c2-fg); border-color: var(--c2-bd); }
+.scheda-badge--c3 { background: var(--c3-bg); color: var(--c3-fg); border-color: var(--c3-bd); }
+.scheda-badge--c4 { background: var(--c4-bg); color: var(--c4-fg); border-color: var(--c4-bd); }
+.scheda-badge--c5 { background: var(--c5-bg); color: var(--c5-fg); border-color: var(--c5-bd); }
+.scheda-griglia { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 4px; }
+.scheda-cella { text-align: center; padding: 6px 2px; border: 1px solid var(--bordo); border-radius: 8px; }
+.scheda-cella-val { font-weight: 700; }
+.scheda-cella-chiave { font-size: 11px; color: var(--muted); }
+.scheda-link { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 8px; padding: 7px 10px; border-radius: 8px; background: #2f5fc7; color: #fff; text-decoration: none; font-weight: 600; }
+.scheda-link-et { padding: 1px 8px; border-radius: 6px; background: rgba(255, 255, 255, .2); font-size: 11px; }
+.scheda-acc { margin-top: 6px; }
+.scheda-acc > summary { cursor: pointer; padding: 6px 8px; background: var(--avviso); border-radius: 6px; font-weight: 600; }
+.scheda-tipo { border-bottom: 1px solid var(--bordo); padding: 4px 0 4px 8px; }
+.scheda-tipo > summary { cursor: pointer; display: flex; gap: 6px; align-items: baseline; }
+.scheda-tipo-nome { font-weight: 600; flex: 1; }
+.scheda-tipo-stato { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+.scheda-tipo-anteprima { color: var(--marca); font-weight: 700; font-size: 12px; white-space: nowrap; }
+.scheda-nota { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+
+/* Parti espandibili: chevron che ruota, cursore e evidenziazione, così si capisce che si possono aprire */
+.scheda-acc > summary, .scheda-tipo > summary, details.scheda-sez > summary {
+  list-style: none; cursor: pointer; border-radius: 6px;
+}
+.scheda-acc > summary::-webkit-details-marker, .scheda-tipo > summary::-webkit-details-marker,
+details.scheda-sez > summary::-webkit-details-marker { display: none; }
+.scheda-acc > summary::before, .scheda-tipo > summary::before, details.scheda-sez > summary::before {
+  content: '▸'; display: inline-block; width: 1em; margin-right: 4px; color: var(--marca); font-weight: 700;
+}
+.scheda-acc[open] > summary::before, .scheda-tipo[open] > summary::before, details.scheda-sez[open] > summary::before {
+  transform: rotate(90deg);
+}
+.scheda-acc > summary:hover, .scheda-tipo > summary:hover, details.scheda-sez > summary:hover {
+  background: rgba(217, 115, 26, .10);
+}
+.scheda-acc > summary:focus-visible, .scheda-tipo > summary:focus-visible, details.scheda-sez > summary:focus-visible {
+  outline: 2px solid var(--marca); outline-offset: 1px;
+}
+.scheda-suggerimento { margin: 4px 0 2px 4px; font-size: 12px; color: var(--muted); font-style: italic; }

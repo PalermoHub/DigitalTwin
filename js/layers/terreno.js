@@ -1,12 +1,12 @@
 import { urlTileset } from '../core/config.js';
 import { ELEVATION_STOPS, HILLSHADE_COLORS } from '../core/palette.js';
+import { piuVicino } from '../core/scheda-util.js';
+import { voceTerreno } from './scheda-terreno.js';
 
 // Come nell'app palermo_popolazione (map.js): rilievo in codifica Terrarium per il 3D con
 // ombreggiatura, raster di elevazione già colorato (legenda = ELEVATION_STOPS) e, dalla griglia
 // DTM a passo 50 m, i punti con gli indici morfologici. I tile sono letti dai link del catalogo.
 
-const fmt1 = v => Number(v).toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const val = v => (v == null || v === '' ? '—' : String(v));
 let legenda = null;
 
 export default {
@@ -80,29 +80,9 @@ export default {
   scheda: {
     layers: ['griglia-hit'],
     // il punto di griglia più vicino al clic (i cerchi si sovrappongono)
-    scegli(trovati, { lng, lat }) {
-      const punti = trovati.filter(f => f.layer.id === 'griglia-hit');
-      if (!punti.length) return [];
-      const k = Math.cos(lat * Math.PI / 180);
-      const d2 = f => ((f.geometry.coordinates[0] - lng) * k) ** 2 + (f.geometry.coordinates[1] - lat) ** 2;
-      return [punti.reduce((migliore, f) => (d2(f) < d2(migliore) ? f : migliore))];
-    },
-    voce(f) {
-      const p = f.properties;
-      return {
-        peso: 5,
-        titolo: 'Terreno (DTM 5 m)',
-        righe: [
-          ['Punto di griglia', 'il più vicino, passo 50 m'],
-          ['Quota', p.quota != null ? `${fmt1(p.quota)} m` : '—'],
-          ['Pendenza', p.slope_deg != null ? `${fmt1(p.slope_deg)}°` : '—'],
-          ['Esposizione', val(p.aspetto_nome)],
-          ['Geomorfologia', val(p.geomorf_nome)],
-          ['Costruibilità', val(p.costr_nome)],
-          ['Stabilità', val(p.stabilita_nome)],
-          ['TWI', p.twi != null ? fmt1(p.twi) : '—'],
-        ],
-      };
+    voci(trovati, lngLat) {
+      const f = piuVicino(trovati, 'griglia-hit', lngLat);
+      return f ? [voceTerreno(f.properties)] : [];
     },
   },
 };

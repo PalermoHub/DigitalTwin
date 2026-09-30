@@ -252,7 +252,7 @@ def test_scheda_zona_prg(apri):
     v = apri()
     v.attendi_pronto()
     testo = _scheda_su(v, "prg", "zto", "prg-zto-hit", 15)
-    assert "Zona PRG 2004" in testo
+    assert "Zonizzazione (PRG 2004)" in testo
 
 
 def test_scheda_netto_storico(apri):
@@ -268,6 +268,7 @@ def test_scheda_centro_storico_non_resta_senza_prg(apri):
     # piazza Verdi ricade nel perimetro del centro storico, non in una zona di `zto`
     testo = _scheda_su(v, "prg", "cs", "prg-cs-hit", 15)
     assert "Centro storico" in testo
+    assert "PPE" in testo  # come nell'app originale: il layer `cs` è il piano urbanistico PPE
 
 
 def test_scheda_fuori_copertura_non_resta_vuota(apri):
@@ -286,7 +287,7 @@ def test_scheda_si_chiude(apri):
     v.vai(13.30, 38.30, 9)
     v.clic(13.30, 38.30)
     v.page.wait_for_selector("#scheda:not([hidden])")
-    v.page.click("#scheda button")
+    v.page.click("#scheda .scheda-chiudi")
     v.page.wait_for_selector("#scheda", state="hidden")
 
 
@@ -375,7 +376,7 @@ def test_scheda_terreno_sceglie_il_punto_di_griglia_piu_vicino(apri):
     coppia = v.js(
         """() => {
             const m = window.dt.map;
-            const pt = f => ({ lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], quota: f.properties.quota });
+            const pt = f => ({ lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], quota: f.properties.quota, pendenza: f.properties.slope_deg });
             const px = p => m.project([p.lon, p.lat]);
             // solo punti nell'area centrale: ai bordi ci sono il pannello, la ricerca e la scheda
             const centrale = p => { const q = px(p); return q.x > 400 && q.x < 900 && q.y > 150 && q.y < 650; };
@@ -383,7 +384,7 @@ def test_scheda_terreno_sceglie_il_punto_di_griglia_piu_vicino(apri):
             for (const a of punti.slice(0, 400)) {
                 for (const b of punti) {
                     const d = Math.hypot(px(a).x - px(b).x, px(a).y - px(b).y);
-                    if (d > 22 && d < 30 && Math.abs(a.quota - b.quota) > 0.5 && a.quota < 900 && b.quota < 900) return { a, b };
+                    if (d > 22 && d < 30 && Math.abs(a.pendenza - b.pendenza) > 0.5 && a.quota < 900 && b.quota < 900) return { a, b };
                 }
             }
             return null;
@@ -398,10 +399,10 @@ def test_scheda_terreno_sceglie_il_punto_di_griglia_piu_vicino(apri):
     v.page.wait_for_selector("#scheda:not([hidden])")
     testo = v.page.inner_text("#scheda")
     assert "Terreno (DTM 5 m)" in testo
-    quota_a = f"{a['quota']:.1f}".replace(".", ",")
-    quota_b = f"{b['quota']:.1f}".replace(".", ",")
-    assert f"{quota_a} m" in testo
-    assert f"{quota_b} m" not in testo
+    gradi_a, gradi_b = f"{a['pendenza']:.1f}°", f"{b['pendenza']:.1f}°"
+    assert gradi_a in testo
+    assert gradi_b not in testo
+    assert f"{round(a['quota'])} m s.l.m." in testo
 
 
 def _via_reale():
@@ -434,3 +435,187 @@ def test_ricerca_input_scomodi_non_rompono_nulla(apri):
         v.page.wait_for_timeout(200)
     assert v.errori == []
     assert v.js("window.dt.pronto") is True
+
+
+def _sezioni_scheda(v):
+    return v.js(
+        """() => [...document.querySelectorAll('#scheda .scheda-sez')].map(s => ({
+            chiave: s.dataset.chiave, titolo: s.dataset.titolo,
+            etichette: [...s.querySelectorAll('.scheda-gruppo .scheda-riga .scheda-et')].map(e => e.textContent),
+        }))"""
+    )
+
+
+def test_scheda_e_strutturata_e_non_ripete_le_informazioni(apri):
+    v = apri()
+    v.attendi_pronto()
+    _scheda_su(v, "catasto", "particelle", "catasto-hit", 17)
+    sezioni = _sezioni_scheda(v)
+    chiavi = [s["chiave"] for s in sezioni]
+    # ordine fisso: dal luogo al territorio
+    peso = {"indirizzo": 10, "particella": 20, "edificio": 30, "zonizzazione": 40, "vincoli": 50,
+            "immobile": 55, "sezione": 70, "terreno": 80}
+    assert chiavi == sorted(chiavi, key=lambda c: 60 if c.startswith("omi-") else peso[c])
+    assert "particella" in chiavi and "sezione" in chiavi
+    # nessuna etichetta ripetuta dentro una sezione
+    for s in sezioni:
+        assert len(s["etichette"]) == len(set(s["etichette"])), s
+    testo = v.page.inner_text("#scheda")
+    # il contesto amministrativo compare una sola volta, nell'intestazione
+    assert testo.count("Circoscrizione") == 1
+    assert v.page.locator("#scheda .scheda-contesto").count() == 1
+    assert "Circoscrizione" in v.page.inner_text("#scheda .scheda-contesto")
+    # «Sezione» non si ripete: titolo una volta, nessuna riga con quella etichetta
+    assert testo.count("Sezione di censimento") == 1
+    assert all("Sezione" not in s["etichette"] for s in sezioni)
+
+
+def test_scheda_particella_ha_il_link_a_sister(apri):
+    v = apri()
+    v.attendi_pronto()
+    _scheda_su(v, "catasto", "particelle", "catasto-hit", 17)
+    link = v.page.locator("#scheda .scheda-sez[data-chiave='particella'] a.scheda-link")
+    assert link.count() == 1
+    assert link.get_attribute("href") == "https://sister3.agenziaentrate.gov.it/"
+    assert "Visura su SISTER" in link.inner_text()
+    assert link.get_attribute("rel") == "noopener noreferrer"
+    assert "Fg." in link.inner_text() and "P." in link.inner_text()
+
+
+def test_scheda_quotazioni_omi_a_fisarmonica(apri):
+    v = apri()
+    v.attendi_pronto()
+    testo = _scheda_su(v, "omi", "Zone_OMI_2025_II", "omi-hit", 15)
+    assert "Quotazioni OMI" in testo
+    assert "Zona " in testo and "Fascia" in testo
+    assert "Tipo prevalente:" in testo
+    assert "Fonte: Agenzia delle Entrate" in testo
+    assert v.page.locator("#scheda details.scheda-tipo").count() >= 1
+
+
+def test_scheda_indirizzo_dal_civico_piu_vicino(apri):
+    v = apri()
+    v.attendi_pronto()
+    testo = _scheda_su(v, "civici", "civici_wgs84", "civici-hit", 17)
+    sezioni = _sezioni_scheda(v)
+    indirizzo = next(s for s in sezioni if s["chiave"] == "indirizzo")
+    assert indirizzo["etichette"] == ["Via", "Civico"]
+    assert "Indirizzo" in testo
+
+
+def test_scheda_vincoli(apri):
+    v = apri()
+    v.attendi_pronto()
+    testo = _scheda_su(v, "prg", "va", "prg-va-hit", 15)
+    assert "Vincoli" in testo
+    assert "vincolo areale" in testo.lower()  # i sottotitoli sono in maiuscoletto via CSS
+
+
+def test_scheda_terreno_ha_i_gruppi_dell_app_originale(apri):
+    v = apri()
+    v.attendi_pronto()
+    _scheda_su(v, "griglia", "griglia", "griglia-hit", 15)
+    terreno = v.page.locator("#scheda .scheda-sez[data-chiave='terreno']")
+    titoli = terreno.locator("h4").all_text_contents()
+    assert titoli[:4] == ["Pendenza", "Morfologia", "Rischio versanti", "Indici morfometrici"]
+    assert terreno.locator(".scheda-badge").count() >= 1  # classi di stabilità/costruibilità
+    assert terreno.locator(".scheda-griglia .scheda-cella").count() == 4
+
+
+def _rgb(colore):
+    import re
+    r, g, b = (int(x) for x in re.findall(r"\d+", colore)[:3])
+    return r, g, b
+
+
+def _luminanza(rgb):
+    def canale(c):
+        c /= 255
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    r, g, b = (canale(c) for c in rgb)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def _contrasto(a, b):
+    la, lb = sorted((_luminanza(_rgb(a)), _luminanza(_rgb(b))), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def test_pannello_e_scheda_hanno_sfondo_chiaro_e_testo_a_contrasto_anche_con_sistema_scuro(apri):
+    v = apri()
+    v.page.emulate_media(color_scheme="dark")  # il sistema dell'utente è in tema scuro
+    v.attendi_pronto()
+    v.vai(13.30, 38.30, 9)
+    v.clic(13.30, 38.30)
+    v.page.wait_for_selector("#scheda:not([hidden])")
+    colori = v.js(
+        """() => Object.fromEntries(['pannello', 'scheda', 'cerca'].map(id => {
+            const s = getComputedStyle(document.getElementById(id));
+            return [id, { bg: s.backgroundColor, fg: s.color }];
+        }))"""
+    )
+    for nome, c in colori.items():
+        assert _luminanza(_rgb(c["bg"])) > 0.8, f"{nome}: sfondo non chiaro {c['bg']}"
+        assert _contrasto(c["fg"], c["bg"]) >= 7, f"{nome}: contrasto insufficiente {c}"
+    # anche le etichette secondarie della scheda restano leggibili (almeno AA, 4.5)
+    sfondo = colori["scheda"]["bg"]
+    secondario = v.js("getComputedStyle(document.querySelector('#scheda .scheda-coordinate')).color")
+    assert _contrasto(secondario, sfondo) >= 4.5
+
+
+def test_le_sezioni_hanno_le_icone_font_awesome_dell_app_originale(apri):
+    v = apri()
+    v.attendi_pronto()
+    # stessa libreria dell'app originale (Font Awesome 6.0.0 da cdnjs)
+    href = v.js("document.querySelector('link[href*=\"font-awesome\"]')?.href")
+    assert href == "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    _scheda_su(v, "catasto", "particelle", "catasto-hit", 17)
+    icona = lambda chiave: v.js(
+        f"document.querySelector('#scheda .scheda-sez[data-chiave=\"{chiave}\"] h3 i.fas')?.className"
+    )
+    assert "fa-table-cells" in icona("particella")
+    assert "fa-users" in icona("sezione")
+    assert "fa-mountain" in icona("terreno")
+    assert v.js("document.querySelector('#scheda .scheda-sez[data-chiave=\"particella\"] a.scheda-link i.fas')?.className").count("fa-external-link-alt") == 1
+    # le icone sono decorative: nascoste alle tecnologie assistive
+    assert v.js("document.querySelector('#scheda .scheda-sez h3 i.fas').getAttribute('aria-hidden')") == "true"
+
+
+def test_icone_delle_altre_sezioni(apri):
+    v = apri()
+    v.attendi_pronto()
+    _scheda_su(v, "omi", "Zone_OMI_2025_II", "omi-hit", 15)
+    classe = lambda sel: v.js(f"document.querySelector('{sel}')?.className")
+    assert "fa-euro-sign" in classe("#scheda .scheda-sez[data-chiave^=\"omi-\"] h3 i.fas")
+    assert "fa-home" in classe("#scheda .scheda-acc > summary i.fas")
+    v2 = apri()
+    v2.attendi_pronto()
+    _scheda_su(v2, "civici", "civici_wgs84", "civici-hit", 17)
+    assert "fa-map-marker-alt" in v2.js("document.querySelector('#scheda .scheda-sez[data-chiave=\"indirizzo\"] h3 i.fas')?.className")
+    v3 = apri()
+    v3.attendi_pronto()
+    _scheda_su(v3, "prg", "va", "prg-va-hit", 15)
+    assert "fa-shield-alt" in v3.js("document.querySelector('#scheda .scheda-sez[data-chiave=\"vincoli\"] h3 i.fas')?.className")
+
+
+def test_le_parti_espandibili_si_riconoscono_come_cliccabili(apri):
+    v = apri()
+    v.attendi_pronto()
+    _scheda_su(v, "omi", "Zone_OMI_2025_II", "omi-hit", 15)
+    stile = lambda sel: v.js(
+        f"""() => {{ const e = document.querySelector('{sel}');
+            const s = getComputedStyle(e), b = getComputedStyle(e, '::before');
+            return {{ cursore: s.cursor, marcatore: s.listStyleType, contenuto: b.content, trasformazione: b.transform }}; }}"""
+    )
+    for sel in ("#scheda .scheda-acc > summary", "#scheda .scheda-tipo > summary"):
+        r = stile(sel)
+        assert r["cursore"] == "pointer", sel
+        assert r["marcatore"] == "none", sel  # niente triangolino nativo: c'è il nostro chevron
+        assert "▸" in r["contenuto"], sel
+        assert r["trasformazione"] == "none", sel  # chiuso: chevron a destra
+    # aperto, il chevron ruota verso il basso e compare il suggerimento
+    v.page.click("#scheda .scheda-acc > summary")
+    assert "Seleziona una tipologia" in v.page.inner_text("#scheda")
+    v.page.click("#scheda .scheda-tipo > summary")
+    assert stile("#scheda .scheda-tipo > summary")["trasformazione"] != "none"
+    assert stile("#scheda .scheda-tipo > summary")["contenuto"].count("▸") == 1

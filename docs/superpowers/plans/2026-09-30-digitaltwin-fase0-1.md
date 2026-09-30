@@ -2366,7 +2366,23 @@ git commit -q -m "feat: address search by street and house number" -m "Co-Author
 
 ---
 
-### Task 12: Verifica finale, documentazione e rilascio locale
+### Task 12: Scheda del luogo strutturata, senza ripetizioni (richiesta dell'utente dopo la prova)
+
+**Perché:** nella prova la scheda ripeteva le informazioni («Sezione» due volte, Circoscrizione/Quartiere/UPL in più punti) ed era una lista piatta. Gli screenshot delle app originali mostrano l'impianto voluto: terreno a gruppi (Pendenza, Morfologia, Rischio versanti, Indici morfometrici, Idrologia, Energia e clima, Accessibilità ed erosione) con quota in evidenza; catasto con sezioni a schede (Numero civico, Particella + «Visura su SISTER», Zonizzazione, Quotazioni OMI a fisarmonica per tipologia).
+
+**Modello:** ogni modulo restituisce `voci(trovati, lngLat)`; una *voce* è `{chiave, peso, titolo, badge?, contesto?, gruppi:[{titolo?, righe:[{etichetta, valore, classe?}], griglia?}], accordion?, link?, nota?, collassabile?}`. `js/core/scheda-modello.js` (puro) **unisce** le voci con la stessa `chiave`, scarta le righe con la stessa etichetta nella stessa sezione, **porta nell'intestazione** il contesto amministrativo (Circoscrizione · Quartiere · UPL, una volta sola) e ordina per `peso`. Formati ed etichette riusano `palermo_popolazione/js/punto.js` (terreno) e `catasto_script.js` (civico, particella, zonizzazione, OMI).
+
+**Ordine delle sezioni:** Indirizzo 10 · Particella 20 · Edificio 30 · Zonizzazione 40 · Vincoli 50 · Immobile comunale 55 · Quotazioni OMI 60 · Sezione di censimento 70 · Terreno 80.
+
+- [ ] **Step 1:** `scheda-modello.js` + test Node (unione, dedupe nella sezione, contesto in intestazione, ordine, sezioni vuote scartate).
+- [ ] **Step 2:** `scheda-terreno.js` e `scheda-omi.js` (puri) + test Node con i valori degli screenshot originali.
+- [ ] **Step 3:** `scheda.js` (rendering strutturato) e CSS; i moduli passano al protocollo `voci()`; nuovi layer trasparenti `civici-hit` e `prg-vl-hit`.
+- [ ] **Step 4:** test nel browser: titoli e ordine, nessuna etichetta ripetuta, contesto una sola volta, link SISTER.
+- [ ] **Step 5:** `docs/STILI.md`, suite completa, commit.
+
+---
+
+### Task 13: Verifica finale, documentazione e rilascio locale
 
 **Files:**
 - Create: `README.md`

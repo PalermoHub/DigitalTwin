@@ -1,7 +1,6 @@
 import { pmt } from '../core/config.js';
 import { EDIFICATO_NEUTRAL } from '../core/palette.js';
-
-const val = v => (v == null || v === '' ? '—' : String(v));
+import { primo, righe } from '../core/scheda-util.js';
 
 export default {
   id: 'edifici',
@@ -31,18 +30,21 @@ export default {
   }],
   scheda: {
     layers: ['edifici-hit'],
-    voce(f) {
+    voci(trovati) {
+      const f = primo(trovati, 'edifici-hit');
+      if (!f) return [];
       const p = f.properties;
-      return {
-        peso: 20,
+      return [{
+        chiave: 'edificio',
+        peso: 30,
         titolo: 'Edificio',
-        righe: [
-          ['Altezza', p.altezza != null ? `${Number(p.altezza).toFixed(1)} m` : '—'],
-          ['Uso', val(p.occupancy)],
-          ['Residenti (stima)', p.pop_stim != null ? String(Math.round(p.pop_stim)) : '—'],
-          ['Sezione', val(p.SEZ21_ID)],
-        ],
-      };
+        icona: 'fa-building',
+        gruppi: [{ righe: righe([
+          ['Altezza', p.altezza != null ? `${Number(p.altezza).toFixed(1)} m` : null],
+          ['Uso', p.occupancy],
+          ['Residenti (stima)', p.pop_stim != null ? Math.round(p.pop_stim) : null],
+        ]) }],
+      }];
     },
   },
 };

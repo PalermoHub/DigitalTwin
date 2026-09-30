@@ -1,5 +1,7 @@
 import { pmt, urlTileset } from '../core/config.js';
+import { piuVicino, presente, primo, righe, tutti } from '../core/scheda-util.js';
 import { STILE_OMI } from './stile-omi.js';
+import { vociOmi } from './scheda-omi.js';
 
 // Come nell'app originale (catasto-app): la vestizione di PRG, PPE e vincoli è fatta di tile
 // raster già pubblicati; i poligoni vettoriali restano trasparenti e servono solo ai dati
@@ -8,7 +10,6 @@ import { STILE_OMI } from './stile-omi.js';
 const ATTRIBUZIONE_PRG = 'Comune di Palermo - Variante Generale al P.R.G. 2004 - Rielaborazione di OpenDataSicilia';
 const vuoto = { 'fill-opacity': 0 };
 const nascosto = { visibility: 'none' };
-const val = v => (v == null || v === '' ? '—' : String(v));
 
 // id dei tileset nel catalogo (stesso id del layer), dal più basso al più alto
 const RASTER = ['prg-zto', 'prg-ppe', 'prg-vl', 'prg-va'];
@@ -51,6 +52,11 @@ export default {
     map.addLayer({ id: 'prg-ns-hit', type: 'fill', source: 'prg', 'source-layer': 'ns', paint: vuoto });
     map.addLayer({ id: 'prg-cs-hit', type: 'fill', source: 'prg', 'source-layer': 'cs', paint: vuoto });
     map.addLayer({ id: 'prg-va-hit', type: 'fill', source: 'prg', 'source-layer': 'va', paint: vuoto });
+    map.addLayer({ id: 'prg-vl-hit', type: 'line', source: 'prg', 'source-layer': 'vl', paint: { 'line-width': 12, 'line-opacity': 0 } });
+    map.addLayer({
+      id: 'civici-hit', type: 'circle', source: 'civici', 'source-layer': 'civici_wgs84', minzoom: 16,
+      paint: { 'circle-radius': ['interpolate', ['exponential', 2], ['zoom'], 16, 12, 19, 96], 'circle-opacity': 0 },
+    });
     map.addLayer({ id: 'omi-hit', type: 'fill', source: 'omi', 'source-layer': 'Zone_OMI_2025_II', paint: vuoto });
     map.addLayer({ id: 'immobili-hit', type: 'fill', source: 'immobili', 'source-layer': 'immobili_comunali_2024', paint: vuoto });
     // numeri civici: testo come nell'app originale (font forniti dallo stile della base)
@@ -81,27 +87,70 @@ export default {
     { id: 'civici', etichetta: 'Numeri civici (da zoom 14)', layers: ['civici'], attivo: false },
   ],
   scheda: {
-    layers: ['catasto-hit', 'prg-zto-hit', 'prg-ns-hit', 'prg-cs-hit', 'prg-va-hit', 'omi-hit', 'immobili-hit'],
-    voce(f) {
-      const p = f.properties;
-      switch (f.layer.id) {
-        case 'catasto-hit':
-          return { peso: 10, titolo: 'Particella catastale', righe: [['Foglio', val(p.Foglio)], ['Particella', val(p.Paricella)]] };
-        case 'prg-zto-hit':
-          return { peso: 40, titolo: 'Zona PRG 2004', righe: [['Zona', val(p.ZTO)], ['Descrizione', val(p.DESCRIZION)]] };
-        case 'prg-ns-hit':
-          return { peso: 41, titolo: 'Netto storico (PRG 2004)', righe: [['Zona', val(p.ZTO)], ['Descrizione', val(p.DESCRIZION)]] };
-        case 'prg-cs-hit':
-          return { peso: 45, titolo: 'Centro storico (PRG 2004)', righe: [
-            ['Perimetro', 'il punto ricade nel perimetro del centro storico'],
-            ['Zonizzazione di dettaglio', 'vedi lo strato «PRG 2004: zonizzazione e PPE»']] };
-        case 'prg-va-hit':
-          return { peso: 50, titolo: 'Vincolo (PRG 2004)', righe: [['Tipo', val(p.tipo)], ['Descrizione', val(p.descrizone)]] };
-        case 'omi-hit':
-          return { peso: 60, titolo: 'Zona OMI', righe: [['Zona', val(p.Zona_OMI ?? p.Zona)], ['Fascia', val(p.Fascia_Descr ?? p.Fascia)]] };
-        default:
-          return { peso: 70, titolo: 'Immobile comunale', righe: [['Tipo', val(p.TIPO)], ['Categoria', val(p.CATEGORIA)], ['Indirizzo', val(p.INDIRIZZO)]] };
+    layers: ['catasto-hit', 'prg-zto-hit', 'prg-ns-hit', 'prg-cs-hit', 'prg-va-hit', 'prg-vl-hit',
+             'omi-hit', 'immobili-hit', 'civici-hit'],
+    voci(trovati, lngLat) {
+      const voci = [];
+
+      const civico = piuVicino(trovati, 'civici-hit', lngLat);
+      if (civico) {
+        const p = civico.properties;
+        const numero = presente(p.Esponente) ? `${p.Civico}/${p.Esponente}` : p.Civico;
+        voci.push({ chiave: 'indirizzo', peso: 10, titolo: 'Indirizzo', icona: 'fa-map-marker-alt', gruppi: [{ righe: righe([['Via', p.Odonimo], ['Civico', numero]]) }] });
       }
+
+      const particella = primo(trovati, 'catasto-hit');
+      if (particella) {
+        const p = particella.properties;
+        voci.push({
+          chiave: 'particella', peso: 20, titolo: 'Particella catastale', icona: 'fa-table-cells',
+          gruppi: [{ righe: righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]) }],
+          link: {
+            testo: 'Visura su SISTER', icona: 'fa-external-link-alt', url: 'https://sister3.agenziaentrate.gov.it/', etichetta: `Fg.${p.Foglio} · P.${p.Paricella}`,
+            suggerimento: `Accedi a SISTER con SPID — inserisci Foglio ${p.Foglio} e Particella ${p.Paricella}`,
+          },
+        });
+      }
+
+      // Zonizzazione: una sola sezione (zona, ambito, strumento) invece di tre carte separate
+      const zto = primo(trovati, 'prg-zto-hit'), ns = primo(trovati, 'prg-ns-hit'), cs = primo(trovati, 'prg-cs-hit');
+      if (zto || ns || cs) {
+        const zona = (zto ?? ns)?.properties;
+        const gruppo = zona ? righe([['Zona', zona.ZTO], ['Descrizione', zona.DESCRIZION]]) : [];
+        if (ns) gruppo.push({ etichetta: 'Ambito', valore: 'Netto storico' });
+        if (cs) gruppo.push({ etichetta: 'Ambito', valore: 'Centro storico' }, { etichetta: 'Strumento', valore: 'PPE' });
+        voci.push({ chiave: 'zonizzazione', peso: 40, titolo: 'Zonizzazione (PRG 2004)', icona: 'fa-map', gruppi: [{ righe: gruppo }] });
+      }
+
+      // Vincoli: un gruppo per vincolo (areali e lineari)
+      const vincoli = [
+        ...tutti(trovati, 'prg-va-hit').map(f => ['Vincolo areale', righe([['Tipo', f.properties.tipo], ['Descrizione', f.properties.descrizone], ['Note', f.properties.note]])]),
+        ...tutti(trovati, 'prg-vl-hit').map(f => ['Vincolo lineare', righe([['Tipo', f.properties.TIPO], ['Descrizione', f.properties.DESCRIZION], ['Note', f.properties.NOTE]])]),
+      ];
+      const visti = new Set();
+      const gruppi = [];
+      for (const [nome, rr] of vincoli) {
+        const chiave = nome + JSON.stringify(rr);
+        if (visti.has(chiave)) continue; // la stessa feature può arrivare da più tile
+        visti.add(chiave);
+        gruppi.push({ nome, righe: rr });
+      }
+      if (gruppi.length) {
+        voci.push({
+          chiave: 'vincoli', peso: 50, titolo: 'Vincoli', icona: 'fa-shield-alt',
+          gruppi: gruppi.map((g, i) => ({ titolo: gruppi.length > 1 ? `${g.nome} ${i + 1}` : g.nome, righe: g.righe })),
+        });
+      }
+
+      const immobile = primo(trovati, 'immobili-hit');
+      if (immobile) {
+        const p = immobile.properties;
+        voci.push({ chiave: 'immobile', peso: 55, titolo: 'Immobile comunale', icona: 'fa-landmark',
+          gruppi: [{ righe: righe([['Tipo', p.TIPO], ['Categoria', p.CATEGORIA], ['Indirizzo', p.INDIRIZZO]]) }] });
+      }
+
+      voci.push(...vociOmi(tutti(trovati, 'omi-hit').map(f => f.properties)));
+      return voci;
     },
   },
 };

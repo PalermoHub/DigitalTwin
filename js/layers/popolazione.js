@@ -1,6 +1,7 @@
 import { urlDati } from '../core/config.js';
 import { INDICATORI } from '../core/indicatori.js';
 import { EDIFICATO_NEUTRAL, densityLegendStops, densityStops } from '../core/palette.js';
+import { primo, righe } from '../core/scheda-util.js';
 import { SRC_SEZIONI } from './confini.js';
 
 const FILE = { 2021: 'popolazione/sezioni_indicatori.json', 2023: 'popolazione/sezioni_indicatori_2023.json' };
@@ -107,20 +108,26 @@ export default {
   stato: () => stato,
   scheda: {
     layers: ['pop-hit'],
-    voce(f) {
+    voci(trovati) {
+      const f = primo(trovati, 'pop-hit');
+      if (!f) return [];
       const p = f.properties;
-      const righe = [
-        ['Sezione', String(p.SEZ21_ID)],
-        ['Quartiere', p.Quartiere ?? '—'],
-        ['UPL', p.UPL ?? '—'],
-        ['Circoscrizione', p.Circoscrizione ?? '—'],
-        ['Residenti 2021', p.POP21 != null ? fmt(p.POP21) : '—'],
-        ['Famiglie 2021', p.FAM21 != null ? fmt(p.FAM21) : '—'],
-        ['Abitazioni 2021', p.ABI21 != null ? fmt(p.ABI21) : '—'],
-      ];
       const r23 = indici[2023]?.get(p.SEZ21_ID);
-      if (r23 && r23.P1 != null) righe.push(['Residenti 2023 (stima)', fmt(Number(r23.P1))]);
-      return { peso: 30, titolo: 'Sezione di censimento', righe };
+      return [{
+        chiave: 'sezione',
+        peso: 70,
+        titolo: 'Sezione di censimento',
+        icona: 'fa-users',
+        // circoscrizione, quartiere e UPL vanno nell'intestazione della scheda, una volta sola
+        contesto: { circoscrizione: p.Circoscrizione, quartiere: p.Quartiere, upl: p.UPL },
+        gruppi: [{ righe: righe([
+          ['Codice ISTAT', p.SEZ21_ID],
+          ['Residenti 2021', p.POP21 != null ? fmt(p.POP21) : null],
+          ['Famiglie 2021', p.FAM21 != null ? fmt(p.FAM21) : null],
+          ['Abitazioni 2021', p.ABI21 != null ? fmt(p.ABI21) : null],
+          ['Residenti 2023 (stima)', r23 && r23.P1 != null ? fmt(Number(r23.P1)) : null],
+        ]) }],
+      }];
     },
   },
 };

@@ -20,6 +20,15 @@ e dai test Node (`palette`, `stile-omi`, `indicatori`).
 | Griglia DTM (scheda «Terreno») | punti a passo 50 m (MVT z8–15, layer `griglia`) letti come cerchi trasparenti da zoom 15; la scheda mostra il più vicino | `palermo_popolazione/js/griglia.js`, `config.js` (`GRIGLIA_TILES_URL`) |
 | **Immobili comunali** | **nessuno stile originale trovato**: aspetto provvisorio (viola `#6a3d9a`, 0,5) | — |
 
+## Scheda del luogo (click sulla mappa)
+
+Impianto e formati dalle schede originali: terreno a gruppi (`palermo_popolazione/js/punto.js`: Pendenza, Morfologia,
+Rischio versanti con badge di classe 1–5, Indici morfometrici a griglia, Idrologia, Energia e clima, Accessibilità ed
+erosione); catasto a schede con icone Font Awesome 6.0.0 (`catasto_script.js`: civico, particella con «Visura su SISTER»,
+zonizzazione, quotazioni OMI a fisarmonica per tipologia). Regole: il contesto amministrativo (Circoscrizione · Quartiere · UPL)
+sta **una sola volta** nell'intestazione; le voci con la stessa chiave si fondono e le righe identiche non si ripetono
+(`js/core/scheda-modello.js`); le parti espandibili hanno chevron, cursore e suggerimento. Interfaccia sempre chiara.
+
 ## Non riprodotto (scelte consapevoli)
 
 - Dalla griglia DTM solo 7 indici nella scheda (quota, pendenza, esposizione, geomorfologia, costruibilità, stabilità, TWI); gli altri 26 campi restano nei tile.
