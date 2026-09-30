@@ -5,15 +5,22 @@ export const ZOOM = 12;
 // Stile della base cartografica delle app originali (porta con sé i font dei numeri civici).
 export const STILE_BASE = 'https://tiles.openfreemap.org/styles/positron';
 
-// Vestizione PRG/PPE/vincoli: tile raster già pubblicati (1,6 GB e 414.000 file: non si copiano).
-export const RASTER_PRG = 'https://palermohub.github.io/PRG2004/';
-
 // Percorso in dati/ -> link pubblicato (dal catalogo). Chi non ha un link si legge da dati/.
 const remoti = new Map();
+// Tileset pubblicati (cartelle z/x/y, non copiabili): id -> modello di URL, sempre dal catalogo.
+const tileset = new Map();
 
 export function impostaCatalogo(voci) {
   remoti.clear();
-  for (const v of voci) if (v.url) remoti.set(v.percorso, v.url);
+  tileset.clear();
+  for (const v of voci) {
+    if (v.tipo === 'tileset') tileset.set(v.id, v.url);
+    else if (v.url) remoti.set(v.percorso, v.url);
+  }
+}
+
+export function urlTileset(id) {
+  return tileset.get(id) ?? null;
 }
 
 export function urlDati(rel) {

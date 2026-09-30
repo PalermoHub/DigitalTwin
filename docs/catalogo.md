@@ -166,3 +166,10 @@ Generato da `scripts/valida_dati.py`. Non modificare a mano.
 | `verde/aree_verdi.geojson` | 1.9 | aree_verdi (2089) |  |
 | `verde/osm_verde_palermo.geojson` | 0.3 | osm_verde_palermo (118) |  |
 | `civici-omi/civici_index.json` | 4.5 |  | Comune di Palermo — numeri civici (indice per la ricerca) |
+| `tileset/prg-zto` | (link) | https://palermohub.github.io/PRG2004/ZTO/{z}/{x}/{y}.png | Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): zonizzazione |
+| `tileset/prg-ppe` | (link) | https://palermohub.github.io/PRG2004/ppe/{z}/{x}/{y}.png | Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): PPE |
+| `tileset/prg-va` | (link) | https://palermohub.github.io/PRG2004/VA/{z}/{x}/{y}.png | Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): vincoli areali |
+| `tileset/prg-vl` | (link) | https://palermohub.github.io/PRG2004/VL/{z}/{x}/{y}.png | Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): vincoli lineari |
+| `tileset/terrain-dem` | (link) | https://gbvitrano.github.io/palermo_popolazione/data/terrain/{z}/{x}/{y}.png | HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub: rilievo 3D (codifica Terrarium) |
+| `tileset/elevazione` | (link) | https://gbvitrano.github.io/palermo_popolazione/data/elevazione/{z}/{x}/{y}.png | HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub: raster di elevazione |
+| `tileset/griglia` | (link) | https://gbvitrano.github.io/palermo_popolazione/data/griglia_pbf/{z}/{x}/{y}.pbf | HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub: griglia di punti a passo 50 m con indici morfologici |

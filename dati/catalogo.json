@@ -3409,5 +3409,71 @@
   "url": "https://siciliahub.github.io/palermohub/pmtiles/civici_index.json",
   "fonte": "Comune di Palermo — numeri civici (indice per la ricerca)",
   "data": "2026-02"
+ },
+ {
+  "tipo": "tileset",
+  "id": "prg-zto",
+  "percorso": "tileset/prg-zto",
+  "url": "https://palermohub.github.io/PRG2004/ZTO/{z}/{x}/{y}.png",
+  "esempio": "https://palermohub.github.io/PRG2004/ZTO/14/8794/6306.png",
+  "fonte": "Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): zonizzazione",
+  "data": "2004"
+ },
+ {
+  "tipo": "tileset",
+  "id": "prg-ppe",
+  "percorso": "tileset/prg-ppe",
+  "url": "https://palermohub.github.io/PRG2004/ppe/{z}/{x}/{y}.png",
+  "esempio": "https://palermohub.github.io/PRG2004/ppe/14/8800/6312.png",
+  "fonte": "Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): PPE",
+  "data": "2004"
+ },
+ {
+  "tipo": "tileset",
+  "id": "prg-va",
+  "percorso": "tileset/prg-va",
+  "url": "https://palermohub.github.io/PRG2004/VA/{z}/{x}/{y}.png",
+  "esempio": "https://palermohub.github.io/PRG2004/VA/14/8794/6306.png",
+  "fonte": "Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): vincoli areali",
+  "data": "2004"
+ },
+ {
+  "tipo": "tileset",
+  "id": "prg-vl",
+  "percorso": "tileset/prg-vl",
+  "url": "https://palermohub.github.io/PRG2004/VL/{z}/{x}/{y}.png",
+  "esempio": "https://palermohub.github.io/PRG2004/VL/14/8794/6306.png",
+  "fonte": "Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): vincoli lineari",
+  "data": "2004"
+ },
+ {
+  "tipo": "tileset",
+  "id": "terrain-dem",
+  "percorso": "tileset/terrain-dem",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/terrain/{z}/{x}/{y}.png",
+  "esempio": "https://gbvitrano.github.io/palermo_popolazione/data/terrain/tilejson.json",
+  "fonte": "HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub: rilievo 3D (codifica Terrarium)",
+  "data": "2026",
+  "licenza": "CC BY 4.0"
+ },
+ {
+  "tipo": "tileset",
+  "id": "elevazione",
+  "percorso": "tileset/elevazione",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/elevazione/{z}/{x}/{y}.png",
+  "esempio": "https://gbvitrano.github.io/palermo_popolazione/data/elevazione/14/8802/10069.png",
+  "fonte": "HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub: raster di elevazione",
+  "data": "2026",
+  "licenza": "CC BY 4.0"
+ },
+ {
+  "tipo": "tileset",
+  "id": "griglia",
+  "percorso": "tileset/griglia",
+  "url": "https://gbvitrano.github.io/palermo_popolazione/data/griglia_pbf/{z}/{x}/{y}.pbf",
+  "esempio": "https://gbvitrano.github.io/palermo_popolazione/data/griglia_pbf/metadata.json",
+  "fonte": "HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub: griglia di punti a passo 50 m con indici morfologici",
+  "data": "2026",
+  "licenza": "CC BY 4.0"
  }
 ]

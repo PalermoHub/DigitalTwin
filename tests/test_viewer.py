@@ -36,6 +36,8 @@ def test_crediti_mostrano_fonti_e_avvisi(apri):
     assert "stime campionarie" in testo
     assert "ISTAT" in testo
     assert "S.I.T.R." in testo
+    assert "HR-DTM-5m" in testo and "CC BY 4.0" in testo
+    assert "OpenStreetMap" in testo
 
 
 def test_base_cartografica_irraggiungibile_non_blocca_il_viewer(apri):
@@ -296,6 +298,9 @@ def test_senza_catalogo_il_viewer_resta_vivo_e_avvisa(apri):
         timeout=30000,
     )
     assert v.js("window.dt.pronto") is True
+    # senza catalogo non si conoscono gli URL dei tileset: i raster PRG non vengono aggiunti
+    assert v.js("window.dt.map.getLayer('prg-zto') === undefined")
+    assert v.js("window.dt.map.getLayer('pop-fill') !== undefined")
 
 
 def test_le_sorgenti_remote_arrivano_dal_catalogo(apri):
@@ -303,3 +308,97 @@ def test_le_sorgenti_remote_arrivano_dal_catalogo(apri):
     v.attendi_pronto()
     url = v.js("window.dt.map.getSource('catasto').url")
     assert url == "pmtiles://https://palermohub.github.io/PRG2004/particelle/particelle.pmtiles"
+
+
+def test_terreno_sorgenti_e_layer_come_nell_app_originale(apri):
+    v = apri()
+    v.attendi_pronto()
+    r = v.js(
+        """async () => {
+            const pal = await import('./js/core/palette.js');
+            const m = window.dt.map, s = id => m.getSource(id), p = (l, k) => m.getPaintProperty(l, k);
+            return {
+                dem: [s('terrain-dem').type, s('terrain-dem').encoding, s('terrain-dem').minzoom, s('terrain-dem').maxzoom, s('terrain-dem').tiles[0]],
+                elev: [s('elevazione').type, s('elevazione').scheme, s('elevazione').minzoom, s('elevazione').maxzoom, s('elevazione').tiles[0]],
+                griglia: [s('griglia').type, s('griglia').minzoom, s('griglia').maxzoom, s('griglia').tiles[0]],
+                ombra: [m.getLayer('hillshade-layer').type, p('hillshade-layer', 'hillshade-exaggeration'),
+                        p('hillshade-layer', 'hillshade-shadow-color') === pal.HILLSHADE_COLORS.shadow,
+                        p('hillshade-layer', 'hillshade-highlight-color') === pal.HILLSHADE_COLORS.highlight,
+                        p('hillshade-layer', 'hillshade-accent-color') === pal.HILLSHADE_COLORS.accent,
+                        p('hillshade-layer', 'hillshade-illumination-direction'), p('hillshade-layer', 'hillshade-illumination-anchor')],
+                opacitaElevazione: p('elevazione-raster', 'raster-opacity'),
+                grigliaTrasparente: p('griglia-hit', 'circle-opacity'),
+            };
+        }"""
+    )
+    base = "https://gbvitrano.github.io/palermo_popolazione/data/"
+    assert r["dem"] == ["raster-dem", "terrarium", 8, 15, base + "terrain/{z}/{x}/{y}.png"]
+    assert r["elev"] == ["raster", "tms", 8, 15, base + "elevazione/{z}/{x}/{y}.png"]
+    assert r["griglia"] == ["vector", 8, 15, base + "griglia_pbf/{z}/{x}/{y}.pbf"]
+    assert r["ombra"] == ["hillshade", 0.35, True, True, True, 180, "map"]
+    assert r["opacitaElevazione"] == 0.7
+    assert r["grigliaTrasparente"] == 0
+
+
+def test_rilievo_3d_attiva_terreno_e_ombreggiatura(apri):
+    v = apri()
+    v.attendi_pronto()
+    assert v.js("window.dt.map.getTerrain()") is None
+    v.page.check("#strato-rilievo3d")
+    v.page.wait_for_function("window.dt.map.getTerrain() !== null && window.dt.map.getPitch() > 40")
+    t = v.js("window.dt.map.getTerrain()")
+    assert t["source"] == "terrain-dem" and t["exaggeration"] == 1.5
+    assert v.js("window.dt.map.getLayoutProperty('hillshade-layer', 'visibility')") == "visible"
+    v.page.uncheck("#strato-rilievo3d")
+    v.page.wait_for_function("window.dt.map.getTerrain() === null && window.dt.map.getPitch() < 5")
+    assert v.js("window.dt.map.getLayoutProperty('hillshade-layer', 'visibility')") == "none"
+
+
+def test_elevazione_mostra_raster_e_legenda(apri):
+    v = apri()
+    v.attendi_pronto()
+    assert v.js("window.dt.map.getLayoutProperty('elevazione-raster', 'visibility')") == "none"
+    assert not v.page.is_visible(".legenda-elevazione")
+    v.page.check("#strato-elevazione")
+    assert v.js("window.dt.map.getLayoutProperty('elevazione-raster', 'visibility')") == "visible"
+    assert v.page.is_visible(".legenda-elevazione")
+    assert "0 – 50 m" in v.page.inner_text(".legenda-elevazione")
+    # come nell'app originale, il raster sale in cima quando si accende
+    ordine = v.js("window.dt.map.getStyle().layers.map(l => l.id)")
+    assert ordine[-1] == "elevazione-raster"
+
+
+def test_scheda_terreno_sceglie_il_punto_di_griglia_piu_vicino(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.vai(13.3568, 38.1204, 15)
+    coppia = v.js(
+        """() => {
+            const m = window.dt.map;
+            const pt = f => ({ lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], quota: f.properties.quota });
+            const px = p => m.project([p.lon, p.lat]);
+            // solo punti nell'area centrale: ai bordi ci sono il pannello, la ricerca e la scheda
+            const centrale = p => { const q = px(p); return q.x > 400 && q.x < 900 && q.y > 150 && q.y < 650; };
+            const punti = m.querySourceFeatures('griglia', { sourceLayer: 'griglia' }).map(pt).filter(centrale);
+            for (const a of punti.slice(0, 400)) {
+                for (const b of punti) {
+                    const d = Math.hypot(px(a).x - px(b).x, px(a).y - px(b).y);
+                    if (d > 22 && d < 30 && Math.abs(a.quota - b.quota) > 0.5 && a.quota < 900 && b.quota < 900) return { a, b };
+                }
+            }
+            return null;
+        }"""
+    )
+    assert coppia is not None, "nessuna coppia di punti di griglia adatta nei tile caricati"
+    a, b = coppia["a"], coppia["b"]
+    # clic al 45% del segmento A→B (~27 px tra i punti): i cerchi di A e B si sovrappongono, ma A è più vicino
+    lon = a["lon"] + 0.45 * (b["lon"] - a["lon"])
+    lat = a["lat"] + 0.45 * (b["lat"] - a["lat"])
+    v.clic(lon, lat)
+    v.page.wait_for_selector("#scheda:not([hidden])")
+    testo = v.page.inner_text("#scheda")
+    assert "Terreno (DTM 5 m)" in testo
+    quota_a = f"{a['quota']:.1f}".replace(".", ",")
+    quota_b = f"{b['quota']:.1f}".replace(".", ",")
+    assert f"{quota_a} m" in testo
+    assert f"{quota_b} m" not in testo

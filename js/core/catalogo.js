@@ -28,6 +28,9 @@ export function apriCrediti(dialog, catalogo) {
     li.textContent = `${v.fonte} (${v.data})` + (v.licenza ? ` — ${v.licenza}` : ' — licenza da verificare');
     fonti.append(li);
   }
+  const base = document.createElement('li');
+  base.textContent = 'Base cartografica: OpenFreeMap, © OpenMapTiles, dati © OpenStreetMap contributors';
+  fonti.append(base);
   const chiudi = document.createElement('button');
   chiudi.type = 'button';
   chiudi.textContent = 'Chiudi';

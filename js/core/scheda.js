@@ -33,6 +33,11 @@ function mostra(el, lngLat, voci) {
   el.hidden = false;
 }
 
+function unoPerLayer(trovati) {
+  const visti = new Set();
+  return trovati.filter(f => !visti.has(f.layer.id) && visti.add(f.layer.id));
+}
+
 export function collegaScheda(map, moduli, el) {
   const conScheda = moduli.filter(m => m.scheda);
   map.on('click', e => {
@@ -46,12 +51,9 @@ export function collegaScheda(map, moduli, el) {
         const box = [[e.point.x - R, e.point.y - R], [e.point.x + R, e.point.y + R]];
         trovati = trovati.concat(map.queryRenderedFeatures(box, { layers: mancanti }));
       }
-      const visti = new Set();
-      for (const f of trovati) {
-        if (visti.has(f.layer.id)) continue;
-        visti.add(f.layer.id);
-        voci.push(m.scheda.voce(f));
-      }
+      // di norma una voce per layer; un modulo può scegliere diversamente (es. il punto più vicino)
+      const scelti = m.scheda.scegli ? m.scheda.scegli(trovati, e.lngLat) : unoPerLayer(trovati);
+      for (const f of scelti) voci.push(m.scheda.voce(f));
     }
     voci.sort((a, b) => a.peso - b.peso);
     mostra(el, e.lngLat, voci);

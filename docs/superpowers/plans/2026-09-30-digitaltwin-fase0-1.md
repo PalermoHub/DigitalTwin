@@ -2219,7 +2219,21 @@ git commit -q -m "feat: place inspector combining parcel, building, census secti
 
 ---
 
-### Task 10: Ricerca per civico
+### Task 10: Terreno, elevazione e griglia DTM (aggiunto su richiesta dell'utente)
+
+**Perché:** `palermo_popolazione/data` contiene anche `terrain/` (rilievo in codifica Terrarium per il 3D), `elevazione/` (raster colorato) e `griglia_pbf/` (punti a passo 50 m con gli indici morfologici del DTM 5 m); la copia iniziale aveva preso solo i file. Tutto è già pubblicato su `https://gbvitrano.github.io/palermo_popolazione/data/…` (terrain 116 MB, griglia 30 MB): **nessuna copia**.
+
+**Ambito:** nel catalogo entrano i *tileset* (PRG ZTO/ppe/VA/VL e terreno) come voci `tipo: "tileset"` con `url` a modello `{z}/{x}/{y}`, `fonte`, `data`, `licenza` (HR-DTM-5m: CC BY 4.0) e un tile d'esempio per il controllo di raggiungibilità; il viewer prende gli URL dal catalogo (un solo posto). Nuovo modulo `js/layers/terreno.js`: rilievo 3D con ombreggiatura (`setTerrain` + `hillshade`, parametri di `map.js` originale), raster di elevazione con la sua legenda (`ELEVATION_STOPS`), punti della griglia come layer trasparente per la scheda del luogo («Terreno»: quota, pendenza, esposizione, geomorfologia, costruibilità, stabilità, TWI, SVF), scegliendo il punto **più vicino** al clic.
+
+- [ ] **Step 1:** test e implementazione dei tileset nel catalogo e del loro controllo di salute (`controlla_tileset`).
+- [ ] **Step 2:** `config.js` legge i tileset dal catalogo (`urlTileset`); `territorio.js` li usa al posto di `RASTER_PRG`.
+- [ ] **Step 3:** `scheda.js` accetta `scheda.scegli(trovati, lngLat)`; test del punto più vicino.
+- [ ] **Step 4:** `terreno.js` e test (sorgenti/layer/parametri originali, 3D, legenda, scheda).
+- [ ] **Step 5:** `docs/STILI.md`, crediti (HR-DTM-5m), suite completa, commit.
+
+---
+
+### Task 11: Ricerca per civico
 
 **Files:**
 - Create: `js/core/ricerca.js`
@@ -2352,7 +2366,7 @@ git commit -q -m "feat: address search by street and house number" -m "Co-Author
 
 ---
 
-### Task 11: Verifica finale, documentazione e rilascio locale
+### Task 12: Verifica finale, documentazione e rilascio locale
 
 **Files:**
 - Create: `README.md`

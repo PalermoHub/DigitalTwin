@@ -1,4 +1,4 @@
-import { pmt, RASTER_PRG } from '../core/config.js';
+import { pmt, urlTileset } from '../core/config.js';
 import { STILE_OMI } from './stile-omi.js';
 
 // Come nell'app originale (catasto-app): la vestizione di PRG, PPE e vincoli è fatta di tile
@@ -10,8 +10,8 @@ const vuoto = { 'fill-opacity': 0 };
 const nascosto = { visibility: 'none' };
 const val = v => (v == null || v === '' ? '—' : String(v));
 
-// [id, cartella dei tile]
-const RASTER = [['prg-zto', 'ZTO'], ['prg-ppe', 'ppe'], ['prg-vl', 'VL'], ['prg-va', 'VA']];
+// id dei tileset nel catalogo (stesso id del layer), dal più basso al più alto
+const RASTER = ['prg-zto', 'prg-ppe', 'prg-vl', 'prg-va'];
 
 export default {
   id: 'territorio',
@@ -22,17 +22,18 @@ export default {
     map.addSource('omi', { type: 'vector', url: pmt('civici-omi/Zone_OMI_2025_II.pmtiles') });
     map.addSource('immobili', { type: 'vector', url: pmt('civici-omi/immobili_comunali_2024.pmtiles') });
     map.addSource('civici', { type: 'vector', url: pmt('civici-omi/civici_0226.pmtiles') });
-    for (const [id, cartella] of RASTER) {
+    for (const id of RASTER) {
+      const url = urlTileset(id);
+      if (!url) continue; // senza catalogo non si conosce il link: lo strato manca, il resto funziona
       map.addSource(`${id}-r`, {
-        type: 'raster', tiles: [`${RASTER_PRG}${cartella}/{z}/{x}/{y}.png`], tileSize: 256,
-        minzoom: 12, maxzoom: 19, attribution: ATTRIBUZIONE_PRG,
+        type: 'raster', tiles: [url], tileSize: 256, minzoom: 12, maxzoom: 19, attribution: ATTRIBUZIONE_PRG,
       });
     }
   },
   aggiungiLayer(map) {
     // vestizione raster (sotto ai vettoriali)
-    for (const [id] of RASTER) {
-      map.addLayer({ id, type: 'raster', source: `${id}-r`, layout: nascosto });
+    for (const id of RASTER) {
+      if (map.getSource(`${id}-r`)) map.addLayer({ id, type: 'raster', source: `${id}-r`, layout: nascosto });
     }
     // vettoriali con stile proprio
     map.addLayer({ id: 'omi', type: 'fill', source: 'omi', 'source-layer': 'Zone_OMI_2025_II',

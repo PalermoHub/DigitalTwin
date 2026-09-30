@@ -12,7 +12,7 @@ from pathlib import Path
 
 from osgeo import gdal, ogr, osr
 
-from fonti import FONTI
+from fonti import FONTI, TILESET
 
 gdal.UseExceptions()
 ogr.UseExceptions()
@@ -245,14 +245,31 @@ def costruisci_catalogo(dati: Path = DATI) -> list[dict]:
             voce.update(info_raster(src))
         voce.update(FONTI.get(rel, {}))
         voci.append(voce)
+    for id_, info in TILESET.items():
+        voci.append({"tipo": "tileset", "id": id_, "percorso": f"tileset/{id_}", **info})
     return voci
+
+
+def controlla_tileset(catalogo: list[dict]) -> list[str]:
+    """Ogni tileset deve rispondere sul suo tile d'esempio (solo HEAD, nessun download)."""
+    tileset = [v for v in catalogo if v.get("tipo") == "tileset"]
+
+    def prova(voce):
+        try:
+            _lunghezza_remota(voce["esempio"])
+            return None
+        except Exception:
+            return f"tileset non raggiungibile: {voce['id']}"
+
+    with ThreadPoolExecutor(8) as ex:
+        return [e for e in ex.map(prova, tileset) if e]
 
 
 def controlla_regole(catalogo: list[dict]) -> list[str]:
     per_percorso = {v["percorso"]: v for v in catalogo}
     errori = []
     for voce in catalogo:
-        if voce["byte"] > MAX_BYTE:
+        if voce.get("byte", 0) > MAX_BYTE:
             errori.append(f"{voce['percorso']}: oltre 100 MB")
     for rel, epsg in CRS_ATTESI.items():
         voce = per_percorso.get(rel)
@@ -294,6 +311,9 @@ def scrivi_report(catalogo: list[dict], percorso: Path = DOCS / "catalogo.md") -
         "|---|---:|---|---|",
     ]
     for v in catalogo:
+        if v.get("tipo") == "tileset":
+            righe.append(f"| `{v['percorso']}` | (link) | {v['url']} | {v.get('fonte', '')} |")
+            continue
         righe.append(
             f"| `{v['percorso']}` | {v['byte'] / 1e6:.1f} | {_dettagli(v)} | {v.get('fonte', '')} |"
         )
@@ -303,7 +323,7 @@ def scrivi_report(catalogo: list[dict], percorso: Path = DOCS / "catalogo.md") -
 def main() -> int:
     errori = verifica_manifest() + controlla_sezioni()
     catalogo = costruisci_catalogo()
-    errori += controlla_regole(catalogo)
+    errori += controlla_regole(catalogo) + controlla_tileset(catalogo)
     (DATI / "catalogo.json").write_text(
         json.dumps(catalogo, ensure_ascii=False, indent=1), encoding="utf-8"
     )

@@ -205,3 +205,31 @@ def test_regole_segnala_layer_e_campi_mancanti():
 def test_regole_segnala_file_oltre_100mb():
     cat = [_voce("x/grande.bin", byte=101 * 1024 * 1024)]
     assert "x/grande.bin: oltre 100 MB" in v.controlla_regole(cat)
+
+
+ID_TILESET = {"prg-zto", "prg-ppe", "prg-va", "prg-vl", "terrain-dem", "elevazione", "griglia"}
+
+
+def test_tileset_nel_catalogo(catalogo):
+    tileset = {voce["id"]: voce for voce in catalogo if voce.get("tipo") == "tileset"}
+    assert ID_TILESET <= set(tileset)
+    for voce in tileset.values():
+        assert "{z}/{x}/{y}" in voce["url"], voce["id"]
+        assert voce["url"].startswith("https://"), voce["id"]
+        assert voce.get("fonte") and voce.get("esempio"), voce["id"]
+    assert tileset["terrain-dem"]["licenza"] == "CC BY 4.0"
+
+
+def test_tileset_reali_raggiungibili(catalogo):
+    assert v.controlla_tileset(catalogo) == []
+
+
+def test_controllo_tileset_segnala_quelli_irraggiungibili(web):
+    www, base = web
+    (www / "ok.png").write_bytes(b"x")
+    cat = [
+        {"tipo": "tileset", "id": "bello", "esempio": f"{base}/ok.png"},
+        {"tipo": "tileset", "id": "rotto", "esempio": f"{base}/manca.png"},
+        {"percorso": "altro/file.bin", "byte": 1},  # non è un tileset: ignorato
+    ]
+    assert v.controlla_tileset(cat) == ["tileset non raggiungibile: rotto"]

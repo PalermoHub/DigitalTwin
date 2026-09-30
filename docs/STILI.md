@@ -15,9 +15,14 @@ e dai test Node (`palette`, `stile-omi`, `indicatori`).
 | Sezioni (contorno) | `sezioniColors().border`, 0,5 | `palette.js` |
 | Popolazione per sezione | rampa lineare `densityStops('popolazione')` per la densità e `densityStops('vecchiaia')` per l'indice di vecchiaia, opacità 0,55, neutro `#8a94a8` senza dato | `palermo_popolazione/js/map.js` (`vecchiaiaExpression`), `palette.js`, `topics.js` (formula) |
 | Edifici 3D | colore neutro `EDIFICATO_NEUTRAL`, altezza = `altezza`, opacità 0,85 | `palermo_popolazione/js/map.js` |
+| Rilievo 3D e ombreggiatura | `terrain-dem` (Terrarium, z8–15), `setTerrain` con esagerazione 1,5; `hillshade` con esagerazione 0,35, colori `HILLSHADE_COLORS`, luce da 180° | `palermo_popolazione/js/map.js` (~r. 115–140, 350) + `palette.js` |
+| Elevazione | raster già colorato (schema `tms`, z8–15), opacità 0,7, in cima allo stack quando si accende; legenda = `ELEVATION_STOPS` | `palermo_popolazione/js/map.js` (~r. 141–155, 459), `palette.js` |
+| Griglia DTM (scheda «Terreno») | punti a passo 50 m (MVT z8–15, layer `griglia`) letti come cerchi trasparenti da zoom 15; la scheda mostra il più vicino | `palermo_popolazione/js/griglia.js`, `config.js` (`GRIGLIA_TILES_URL`) |
 | **Immobili comunali** | **nessuno stile originale trovato**: aspetto provvisorio (viola `#6a3d9a`, 0,5) | — |
 
 ## Non riprodotto (scelte consapevoli)
+
+- Dalla griglia DTM solo 7 indici nella scheda (quota, pendenza, esposizione, geomorfologia, costruibilità, stabilità, TWI); gli altri 26 campi restano nei tile.
 
 - Tema scuro della mappa (positron è chiaro: si usano solo le varianti `light`).
 - Modalità «edifici colorati per densità/copertura/dasimetria», punti dasimetrici, zone A/B di confronto.

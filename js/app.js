@@ -7,9 +7,10 @@ import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
 import territorio from './layers/territorio.js';
 import edifici from './layers/edifici.js';
+import terreno from './layers/terreno.js';
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [popolazione, territorio, edifici, confini];
+const MODULI = [terreno, popolazione, territorio, edifici, confini];
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
 
