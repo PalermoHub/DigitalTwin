@@ -1,6 +1,6 @@
 import { creaMappa } from './core/mappa.js';
 import { impostaCatalogo } from './core/config.js';
-import { costruisciPannello, segnala } from './core/pannello.js';
+import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js';
 import { caricaCatalogo, apriCrediti } from './core/catalogo.js';
 import { collegaScheda } from './core/scheda.js';
 import { collegaRicerca } from './core/ricerca.js';
@@ -18,9 +18,15 @@ const catalogoPromessa = caricaCatalogo().catch(() => null);
 const map = creaMappa('mappa', () => segnala('Base cartografica non disponibile: mappa semplificata'));
 window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false };
 
-// Un errore su una sorgente disattiva solo quello strato e lo segnala.
+// Un errore su una sorgente disattiva solo gli strati che la usano e li nomina nell'avviso
+// (con l'etichetta del pannello, non con l'id tecnico).
+const STRATI = MODULI.flatMap(m => m.strati);
 map.on('error', e => {
-  if (e.sourceId) segnala(`Strato non caricato: ${e.sourceId}`);
+  if (!e.sourceId) return;
+  const colpiti = STRATI.filter(s => s.layers.some(id => map.getLayer(id)?.source === e.sourceId));
+  if (!colpiti.length) return segnala(`Strato non caricato: ${e.sourceId}`);
+  segnala(`Strato non caricato: ${colpiti.map(s => s.etichetta).join(', ')}`);
+  colpiti.forEach(s => disattivaStrato(map, s));
 });
 
 // Gli strati si aggiungono appena lo stile è pronto, senza aspettare i tile della base:

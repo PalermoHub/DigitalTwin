@@ -37,3 +37,13 @@ export function costruisciPannello(map, moduli, contenitore) {
     contenitore.append(gruppo);
   }
 }
+
+// Disattiva uno strato il cui dato non si è caricato: nascosto, casella spenta e non cliccabile.
+export function disattivaStrato(map, strato) {
+  imposta(map, strato.layers, false);
+  const casella = document.getElementById(`strato-${strato.id}`);
+  if (!casella) return;
+  casella.checked = false;
+  casella.disabled = true;
+  casella.title = 'Dato non disponibile';
+}

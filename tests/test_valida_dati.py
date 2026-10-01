@@ -99,6 +99,23 @@ def test_manifest_remoto_dimensione_diversa(tmp_path, web):
     assert v.verifica_manifest(tmp_path) == ["dimensione remota diversa: t/a.txt"]
 
 
+def test_manifest_remoto_stesso_peso_ma_contenuto_diverso(tmp_path, web):
+    www, base = web
+    (www / "a.txt").write_bytes(b"ciau")  # 4 byte come "ciao", ma contenuto diverso
+    _manifest(tmp_path, [("t/a.txt", 4, _sha(b"ciao"), "x", f"{base}/a.txt")])
+    # il controllo veloce guarda solo la dimensione: non se ne accorge
+    assert v.verifica_manifest(tmp_path) == []
+    # il controllo completo scarica e confronta l'hash
+    assert v.verifica_manifest(tmp_path, completo=True) == ["contenuto remoto diverso: t/a.txt"]
+
+
+def test_manifest_remoto_completo_ok_se_il_contenuto_coincide(tmp_path, web):
+    www, base = web
+    (www / "a.txt").write_bytes(b"ciao")
+    _manifest(tmp_path, [("t/a.txt", 4, _sha(b"ciao"), "x", f"{base}/a.txt")])
+    assert v.verifica_manifest(tmp_path, completo=True) == []
+
+
 def test_manifest_remoto_senza_cors_non_e_leggibile_dal_browser(tmp_path, web_senza_cors):
     www, base = web_senza_cors
     (www / "a.txt").write_bytes(b"ciao")

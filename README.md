@@ -29,6 +29,7 @@ Serve la rete: base cartografica (OpenFreeMap), tile PRG/terreno e PMTiles sono 
 python3 -m pytest -q                # dati + viewer (Playwright/Chromium): ~10 minuti, usa la rete
 node --test tests/js/*.test.mjs     # logica pura (indicatori, indirizzi, scheda, terreno, OMI, stili)
 python3 scripts/valida_dati.py      # rigenera dati/catalogo.json e docs/catalogo.md; controlla link, CORS e tileset
+python3 scripts/valida_dati.py --completo   # in più scarica i file remoti e ne verifica l'hash (≈ 270 MB)
 ```
 
 ## Avvisi

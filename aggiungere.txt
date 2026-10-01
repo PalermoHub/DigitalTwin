@@ -1,5 +1,8 @@
 aggiungere:
 
+catasto, come nell'app originale
+
+tootips nei poligoni dei confini, come nella app palermo_popolazione
 monumenti
 scuole
 seggi elettorali

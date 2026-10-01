@@ -1,0 +1,352 @@
+{
+  "dati/catalogo.json": {
+    "mtime": 1790809669.0327518,
+    "ast_hash": "0f9d8ca3953f23993a2c7015d508a809",
+    "semantic_hash": ""
+  },
+  "js/app.js": {
+    "mtime": 1790809464.7514381,
+    "ast_hash": "003738ce6a2351fb413c1bccea9385ab",
+    "semantic_hash": ""
+  },
+  "js/core/catalogo.js": {
+    "mtime": 1790809008.0179744,
+    "ast_hash": "6fc1d5acd2d006c383d0594a2f8929a8",
+    "semantic_hash": ""
+  },
+  "js/core/config.js": {
+    "mtime": 1790808628.7531044,
+    "ast_hash": "f24f7dd5abebcc88d9c17e3206eccf38",
+    "semantic_hash": ""
+  },
+  "js/core/indicatori.js": {
+    "mtime": 1790806915.1399672,
+    "ast_hash": "16ff6cde2d5a205e555bbedf3ddcd178",
+    "semantic_hash": ""
+  },
+  "js/core/indirizzi.js": {
+    "mtime": 1790804109.2759848,
+    "ast_hash": "c71c9609c23559b6a28dd2d307ccb101",
+    "semantic_hash": ""
+  },
+  "js/core/mappa.js": {
+    "mtime": 1790807636.0110698,
+    "ast_hash": "acb0ce0d3ef017e4a660ba5fc732a2dc",
+    "semantic_hash": ""
+  },
+  "js/core/palette.js": {
+    "mtime": 1790806869.9291592,
+    "ast_hash": "6194242dc365e0daf28e27d87fb55391",
+    "semantic_hash": ""
+  },
+  "js/core/pannello.js": {
+    "mtime": 1790804353.7344253,
+    "ast_hash": "7737b16c217264ed83aa83c774b41a7a",
+    "semantic_hash": ""
+  },
+  "js/core/ricerca.js": {
+    "mtime": 1790809464.728317,
+    "ast_hash": "d1e768cb2ae2176e4537bb8609d2021a",
+    "semantic_hash": ""
+  },
+  "js/core/scheda-modello.js": {
+    "mtime": 1790810285.101127,
+    "ast_hash": "1b5b858404d6719ba53277137c733aa1",
+    "semantic_hash": ""
+  },
+  "js/core/scheda-util.js": {
+    "mtime": 1790810697.8805058,
+    "ast_hash": "e970f2933a348dff15035eb51a2d25d8",
+    "semantic_hash": ""
+  },
+  "js/core/scheda.js": {
+    "mtime": 1790811699.9714482,
+    "ast_hash": "ce1ba56cfc5cf50a4cc001852e279b66",
+    "semantic_hash": ""
+  },
+  "js/layers/confini.js": {
+    "mtime": 1790807636.0144289,
+    "ast_hash": "7616e5a3563a92d00c640bdc5e05871a",
+    "semantic_hash": ""
+  },
+  "js/layers/edifici.js": {
+    "mtime": 1790811300.753763,
+    "ast_hash": "0477379d912434258e266e887e9a6e9a",
+    "semantic_hash": ""
+  },
+  "js/layers/popolazione.js": {
+    "mtime": 1790811300.7533183,
+    "ast_hash": "32a1d9531c67b920284ba0c086d18a8e",
+    "semantic_hash": ""
+  },
+  "js/layers/scheda-omi.js": {
+    "mtime": 1790811699.9712117,
+    "ast_hash": "6edf3b915dedf68a73592c7dcf6c4abe",
+    "semantic_hash": ""
+  },
+  "js/layers/scheda-terreno.js": {
+    "mtime": 1790811300.7521784,
+    "ast_hash": "c169057d776d7065387b11bf501bbfdb",
+    "semantic_hash": ""
+  },
+  "js/layers/stile-omi.js": {
+    "mtime": 1790806888.151439,
+    "ast_hash": "fb831b1ee59209e84879035afe69831a",
+    "semantic_hash": ""
+  },
+  "js/layers/terreno.js": {
+    "mtime": 1790810697.9226644,
+    "ast_hash": "89f66835705b8b555a9ebfc434aab3fb",
+    "semantic_hash": ""
+  },
+  "js/layers/territorio.js": {
+    "mtime": 1790811300.7561805,
+    "ast_hash": "d5dd7b81411b3c7a9c20d7cea685c783",
+    "semantic_hash": ""
+  },
+  "js/vendor/maplibre-gl.js": {
+    "mtime": 1790803928.616738,
+    "ast_hash": "6ea6d232e156e699ea38efe706c1fa5e",
+    "semantic_hash": ""
+  },
+  "js/vendor/pmtiles.js": {
+    "mtime": 1790803923.2701964,
+    "ast_hash": "a3c1b0db2c47f08ef35409fc405b0689",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1790804122.773643,
+    "ast_hash": "aefa2deaba8a437efb05302eaf709fc4",
+    "semantic_hash": ""
+  },
+  "scripts/estrai_stile_omi.mjs": {
+    "mtime": 1790806888.1047223,
+    "ast_hash": "cf9e74491c053ea8d4e780348253a6f8",
+    "semantic_hash": ""
+  },
+  "scripts/fonti.py": {
+    "mtime": 1790808558.171438,
+    "ast_hash": "1155c97709c27ec42063f4cf8f95053c",
+    "semantic_hash": ""
+  },
+  "scripts/serve.py": {
+    "mtime": 1790803950.4006608,
+    "ast_hash": "7898c166376a5b4b0dfac0e52e1b0570",
+    "semantic_hash": ""
+  },
+  "scripts/valida_dati.py": {
+    "mtime": 1790809592.7491436,
+    "ast_hash": "31acc98afe8dbe90ee53b8f55a0fb560",
+    "semantic_hash": ""
+  },
+  "tests/conftest.py": {
+    "mtime": 1790810411.3714747,
+    "ast_hash": "362c4728598136422620db1be1fe13aa",
+    "semantic_hash": ""
+  },
+  "tests/js/dati.mjs": {
+    "mtime": 1790807690.3699713,
+    "ast_hash": "8b0a99e26181bbf5aed4a9653a0807ad",
+    "semantic_hash": ""
+  },
+  "tests/js/indicatori.test.mjs": {
+    "mtime": 1790807690.3915591,
+    "ast_hash": "6871046c6d212b851a957613b977d807",
+    "semantic_hash": ""
+  },
+  "tests/js/indirizzi.test.mjs": {
+    "mtime": 1790804099.9030986,
+    "ast_hash": "4519b6c5ac91d04b786b5a2299b74dc6",
+    "semantic_hash": ""
+  },
+  "tests/js/palette.test.mjs": {
+    "mtime": 1790806864.6169515,
+    "ast_hash": "7d6531a00f6d38d16fe2ad5a6fc18222",
+    "semantic_hash": ""
+  },
+  "tests/js/scheda-modello.test.mjs": {
+    "mtime": 1790811284.6034095,
+    "ast_hash": "8cff00506a4c18e7c1f28845497a9c81",
+    "semantic_hash": ""
+  },
+  "tests/js/scheda-omi.test.mjs": {
+    "mtime": 1790811649.4854388,
+    "ast_hash": "43818b398476eff577821566b7a60802",
+    "semantic_hash": ""
+  },
+  "tests/js/scheda-terreno.test.mjs": {
+    "mtime": 1790810351.8392122,
+    "ast_hash": "08bc1722416edbef8fd705cb823c791c",
+    "semantic_hash": ""
+  },
+  "tests/js/stile-omi.test.mjs": {
+    "mtime": 1790806881.0775259,
+    "ast_hash": "7020fe6db7c97eeea349382f1c62373f",
+    "semantic_hash": ""
+  },
+  "tests/test_server.py": {
+    "mtime": 1790807324.3369558,
+    "ast_hash": "408f6906ddc942120184abfeac85096e",
+    "semantic_hash": ""
+  },
+  "tests/test_valida_dati.py": {
+    "mtime": 1790809547.4378438,
+    "ast_hash": "43481fdb8b5ba7771d563d5c7e77e921",
+    "semantic_hash": ""
+  },
+  "tests/test_viewer.py": {
+    "mtime": 1790811649.4858513,
+    "ast_hash": "427241ed0b1049ff2d50e4b4dcadbdd0",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1790812363.0805492,
+    "ast_hash": "a56062b027c4f230473cf82b37046237",
+    "semantic_hash": ""
+  },
+  "aggiungere.txt": {
+    "mtime": 1790812538.701338,
+    "ast_hash": "f0080d66cda4fed7bbaad2e6ef217b5f",
+    "semantic_hash": ""
+  },
+  "dati/README.md": {
+    "mtime": 1790809023.252699,
+    "ast_hash": "89b488379f53c7d90c4cfb649978b331",
+    "semantic_hash": ""
+  },
+  "docs/PIANO_DigitalTwin_Palermo.md": {
+    "mtime": 1790812570.0100162,
+    "ast_hash": "43a7082a700a3863c3fceecb6554451e",
+    "semantic_hash": ""
+  },
+  "docs/STILI.md": {
+    "mtime": 1790811769.7980354,
+    "ast_hash": "4d918f45830f32280d173979db794f33",
+    "semantic_hash": ""
+  },
+  "docs/catalogo.md": {
+    "mtime": 1790809669.0338128,
+    "ast_hash": "f49df8457b6dacd2a247b91846707e4c",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-09-30-digitaltwin-fase0-1.md": {
+    "mtime": 1790812570.0151358,
+    "ast_hash": "5185ad0c7adec4b2afdb1bc98478163d",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-09-30-digitaltwin-fase0-1-design.md": {
+    "mtime": 1790803186.565047,
+    "ast_hash": "96239e3336b10b2cf2dcf11639cd3b21",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1790811300.7494774,
+    "ast_hash": "514f737e8d65fae0cc825b8ab55a1104",
+    "semantic_hash": ""
+  },
+  "docs/schermata-fase1.png": {
+    "mtime": 1790812549.8455806,
+    "ast_hash": "f91cbf6a1e8214bff6ad0ca6e1635891",
+    "semantic_hash": ""
+  },
+  "img/favicon.png": {
+    "mtime": 1782920695.0609212,
+    "ast_hash": "891bdcb52af1d261640d6e5b0d36d7dd",
+    "semantic_hash": ""
+  },
+  "img/guida/area.webp": {
+    "mtime": 1790265304.6631894,
+    "ast_hash": "8427449e35eb3499c65a93af7ed1fa24",
+    "semantic_hash": ""
+  },
+  "img/guida/argomenti.webp": {
+    "mtime": 1790265306.8591893,
+    "ast_hash": "fad2299c1b9023292762eae95b87c888",
+    "semantic_hash": ""
+  },
+  "img/guida/classifica.webp": {
+    "mtime": 1790496119.0212426,
+    "ast_hash": "56618ef3959f7df85fc16b89859b4ba5",
+    "semantic_hash": ""
+  },
+  "img/guida/confronto.webp": {
+    "mtime": 1790265305.7871892,
+    "ast_hash": "f6c4dadcad8a9a4fd7b0912b6c822665",
+    "semantic_hash": ""
+  },
+  "img/guida/dtm.webp": {
+    "mtime": 1790265306.9671893,
+    "ast_hash": "efdb056c9b1d7f714761fe9e84774b40",
+    "semantic_hash": ""
+  },
+  "img/guida/elevazione.webp": {
+    "mtime": 1790265306.8191893,
+    "ast_hash": "1ce77bf35c1b031427fdc03551cf8071",
+    "semantic_hash": ""
+  },
+  "img/guida/grafici.webp": {
+    "mtime": 1790265306.9031892,
+    "ast_hash": "2d42fc9b3ec92a2874f46dc86a3bfb27",
+    "semantic_hash": ""
+  },
+  "img/guida/livelli.webp": {
+    "mtime": 1790265306.3391893,
+    "ast_hash": "dc74e555ad5c13d7df0f150b7b023c47",
+    "semantic_hash": ""
+  },
+  "img/guida/maniglie.webp": {
+    "mtime": 1790265304.8871894,
+    "ast_hash": "aac2f34a6886365dafa201f017baad59",
+    "semantic_hash": ""
+  },
+  "img/guida/menu.webp": {
+    "mtime": 1790265307.0671892,
+    "ast_hash": "ac00fc10a0321b25afaed4f11fc5c993",
+    "semantic_hash": ""
+  },
+  "img/guida/mobile.webp": {
+    "mtime": 1790265307.1991892,
+    "ast_hash": "c312dedfc2041a6c57f9cb5b430a030e",
+    "semantic_hash": ""
+  },
+  "img/guida/poligono-disegno.webp": {
+    "mtime": 1790265305.1351893,
+    "ast_hash": "73cbcc457390b57e51bff5fa0f0d349f",
+    "semantic_hash": ""
+  },
+  "img/guida/poligono.webp": {
+    "mtime": 1790265305.3591893,
+    "ast_hash": "5d29636ee9a81300f62c1d459dddd703",
+    "semantic_hash": ""
+  },
+  "img/guida/scheda-info.webp": {
+    "mtime": 1790265306.9311893,
+    "ast_hash": "d9c4e58266bcb40c2af1bd8677d83869",
+    "semantic_hash": ""
+  },
+  "img/guida/strumenti.webp": {
+    "mtime": 1790264703.3991911,
+    "ast_hash": "85f3fc36c7b0a1c8d8002dd0fca37411",
+    "semantic_hash": ""
+  },
+  "img/guida/tendenza.webp": {
+    "mtime": 1790496042.069247,
+    "ast_hash": "73843dad70ba3c49840c98e8eee6e90e",
+    "semantic_hash": ""
+  },
+  "img/guida/territorio.webp": {
+    "mtime": 1790496042.1866522,
+    "ast_hash": "f26dc07bbef44cab411acdf137394e2b",
+    "semantic_hash": ""
+  },
+  "img/opendatasicilia.png": {
+    "mtime": 1782920695.0630183,
+    "ast_hash": "31f6d083875faf789c0ca187436a8dc7",
+    "semantic_hash": ""
+  },
+  "img/social_card.jpg": {
+    "mtime": 1790261879.3449142,
+    "ast_hash": "3f990d27a0976b3a069bb99a20b13493",
+    "semantic_hash": ""
+  }
+}

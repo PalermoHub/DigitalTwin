@@ -8,6 +8,7 @@ import { vociOmi } from './scheda-omi.js';
 // (scheda del luogo). Zone OMI, particelle e civici sono invece vettoriali con il loro stile.
 
 const ATTRIBUZIONE_PRG = 'Comune di Palermo - Variante Generale al P.R.G. 2004 - Rielaborazione di OpenDataSicilia';
+const NOTA_LEGALE = 'Dato informativo, senza valore legale: per usi legali servono visure e certificato di destinazione urbanistica.';
 const vuoto = { 'fill-opacity': 0 };
 const nascosto = { visibility: 'none' };
 
@@ -105,6 +106,7 @@ export default {
         voci.push({
           chiave: 'particella', peso: 20, titolo: 'Particella catastale', icona: 'fa-table-cells',
           gruppi: [{ righe: righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]) }],
+          nota: NOTA_LEGALE,
           link: {
             testo: 'Visura su SISTER', icona: 'fa-external-link-alt', url: 'https://sister3.agenziaentrate.gov.it/', etichetta: `Fg.${p.Foglio} · P.${p.Paricella}`,
             suggerimento: `Accedi a SISTER con SPID — inserisci Foglio ${p.Foglio} e Particella ${p.Paricella}`,
@@ -119,7 +121,8 @@ export default {
         const gruppo = zona ? righe([['Zona', zona.ZTO], ['Descrizione', zona.DESCRIZION]]) : [];
         if (ns) gruppo.push({ etichetta: 'Ambito', valore: 'Netto storico' });
         if (cs) gruppo.push({ etichetta: 'Ambito', valore: 'Centro storico' }, { etichetta: 'Strumento', valore: 'PPE' });
-        voci.push({ chiave: 'zonizzazione', peso: 40, titolo: 'Zonizzazione (PRG 2004)', icona: 'fa-map', gruppi: [{ righe: gruppo }] });
+        voci.push({ chiave: 'zonizzazione', peso: 40, titolo: 'Zonizzazione (PRG 2004)', icona: 'fa-map', gruppi: [{ righe: gruppo }],
+          nota: `${NOTA_LEGALE} Il PRG vigente è la Variante generale 2004: varianti successive potrebbero non essere incluse.` });
       }
 
       // Vincoli: un gruppo per vincolo (areali e lineari)
@@ -137,7 +140,7 @@ export default {
       }
       if (gruppi.length) {
         voci.push({
-          chiave: 'vincoli', peso: 50, titolo: 'Vincoli', icona: 'fa-shield-alt',
+          chiave: 'vincoli', peso: 50, titolo: 'Vincoli', icona: 'fa-shield-alt', nota: NOTA_LEGALE,
           gruppi: gruppi.map((g, i) => ({ titolo: gruppi.length > 1 ? `${g.nome} ${i + 1}` : g.nome, righe: g.righe })),
         });
       }

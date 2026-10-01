@@ -405,18 +405,17 @@ def test_scheda_terreno_sceglie_il_punto_di_griglia_piu_vicino(apri):
     assert f"{round(a['quota'])} m s.l.m." in testo
 
 
-def _via_reale():
+def _civico_reale(con_lettera=False):
     indice = leggi_json("civici-omi/civici_index.json")  # dal link, con cache
-    via = "VIA MAQUEDA" if "VIA MAQUEDA" in indice else next(iter(indice))
-    civico, (lon, lat) = next(iter(indice[via].items()))
-    return via, civico, lon, lat
+    for via, civici in indice.items():
+        for civico, (lon, lat) in civici.items():
+            if civico.isdigit() != con_lettera:
+                return via, civico, lon, lat
+    raise AssertionError("nessun civico adatto nell'indice")
 
 
-def test_ricerca_porta_la_mappa_sul_civico(apri):
-    via, civico, lon, lat = _via_reale()
-    v = apri()
-    v.attendi_pronto()
-    v.page.fill("#cerca-testo", f"{via.lower()} {civico}")
+def _cerca_e_vai(v, testo, lon, lat):
+    v.page.fill("#cerca-testo", testo)
     v.page.wait_for_selector("#cerca-risultati button")
     v.page.press("#cerca-testo", "Enter")
     v.page.wait_for_function(
@@ -425,6 +424,36 @@ def test_ricerca_porta_la_mappa_sul_civico(apri):
         timeout=30000,
     )
     assert v.js("window.dt.map.getZoom()") > 17
+
+
+def test_ricerca_porta_la_mappa_sul_civico(apri):
+    via, civico, lon, lat = _civico_reale()
+    v = apri()
+    v.attendi_pronto()
+    _cerca_e_vai(v, f"{via.lower()} {civico}", lon, lat)
+
+
+def test_ricerca_trova_i_civici_con_lettera(apri):
+    # il 21% dei civici reali ha la lettera («4A»): scritti come «4A», «4/A» o «4 A»
+    via, civico, lon, lat = _civico_reale(con_lettera=True)
+    numero, lettera = civico[:-1], civico[-1]
+    v = apri()
+    v.attendi_pronto()
+    _cerca_e_vai(v, f"{via.lower()} {numero}/{lettera.lower()}", lon, lat)
+    assert civico in v.page.input_value("#cerca-testo")
+
+
+def test_ricerca_civico_inesistente_lo_dice_e_nessun_risultato_e_esplicito(apri):
+    via, civico, lon, lat = _civico_reale()
+    v = apri()
+    v.attendi_pronto()
+    v.page.fill("#cerca-testo", f"{via.lower()} 99999")
+    v.page.wait_for_selector("#cerca-risultati button")
+    assert "civico 99999 non trovato" in v.page.inner_text("#cerca-risultati")
+    v.page.fill("#cerca-testo", "xyzxyzxyz")
+    v.page.wait_for_selector("#cerca-risultati .cerca-vuoto")
+    assert "Nessun risultato" in v.page.inner_text("#cerca-risultati")
+    assert v.page.locator("#cerca-risultati button").count() == 0
 
 
 def test_ricerca_input_scomodi_non_rompono_nulla(apri):
@@ -619,3 +648,86 @@ def test_le_parti_espandibili_si_riconoscono_come_cliccabili(apri):
     v.page.click("#scheda .scheda-tipo > summary")
     assert stile("#scheda .scheda-tipo > summary")["trasformazione"] != "none"
     assert stile("#scheda .scheda-tipo > summary")["contenuto"].count("▸") == 1
+
+
+def test_avviso_sul_valore_legale_e_sempre_visibile(apri):
+    v = apri()
+    v.attendi_pronto()
+    avviso = v.page.locator("#pannello .avviso-fisso")
+    assert avviso.is_visible()
+    assert "senza valore legale" in avviso.inner_text()
+
+
+def test_le_schede_di_catasto_prg_e_vincoli_ripetono_l_avviso(apri):
+    v = apri()
+    v.attendi_pronto()
+    _scheda_su(v, "catasto", "particelle", "catasto-hit", 17)
+    assert "valore legale" in v.page.locator("#scheda .scheda-sez[data-chiave='particella'] .scheda-nota").inner_text()
+    _scheda_su(v, "prg", "zto", "prg-zto-hit", 15)
+    assert "valore legale" in v.page.locator("#scheda .scheda-sez[data-chiave='zonizzazione'] .scheda-nota").inner_text()
+    _scheda_su(v, "prg", "va", "prg-va-hit", 15)
+    assert "valore legale" in v.page.locator("#scheda .scheda-sez[data-chiave='vincoli'] .scheda-nota").inner_text()
+
+
+def test_la_legenda_dichiara_che_il_2023_e_una_stima(apri):
+    v = apri()
+    v.attendi_pronto()
+    assert v.page.locator(".legenda .nota-stime").count() == 0  # 2021: dato censuario
+    v.page.select_option("#pop-anno", "2023")
+    v.page.wait_for_selector(".legenda .nota-stime")
+    assert "stime campionarie" in v.page.inner_text(".legenda .nota-stime")
+    v.page.select_option("#pop-anno", "2021")
+    v.page.wait_for_function("document.querySelectorAll('.legenda .nota-stime').length === 0")
+
+
+def test_se_il_2023_non_si_carica_resta_il_2021_e_lo_dice(apri):
+    v = apri(blocca="**/sezioni_indicatori_2023.json")
+    v.attendi_pronto()
+    prima = v.js("window.dt.moduli.popolazione.stato()")
+    assert prima["anno"] == 2021 and prima["nValori"] > 0
+    v.page.select_option("#pop-anno", "2023")
+    v.page.wait_for_function(
+        "document.getElementById('avvisi').textContent.includes('Popolazione 2023 non disponibile')", timeout=30000
+    )
+    # il menu, lo stato e la mappa dicono tutti la stessa cosa: si è rimasti sul 2021
+    assert v.page.input_value("#pop-anno") == "2021"
+    assert v.js("window.dt.moduli.popolazione.stato()") == prima
+    assert "stime campionarie" not in v.page.inner_text("#pannello")
+
+
+def test_la_scheda_della_sezione_mostra_gli_indicatori_dell_anno_attivo(apri):
+    v = apri()
+    v.attendi_pronto()
+    # il 2023 si scarica in background: la scheda non deve dipendere da cosa si è cliccato prima
+    v.page.wait_for_function("window.dt.moduli.popolazione.stato().anniDisponibili.length === 2", timeout=60000)
+    _scheda_su(v, "catasto", "particelle", "catasto-hit", 17)
+    etichette = v.page.locator("#scheda .scheda-sez[data-chiave='sezione'] .scheda-et").all_text_contents()
+    assert "Densità 2021 (ab/ha)" in etichette
+    assert "Indice di vecchiaia 2021" in etichette
+    assert "Residenti 2023 (stima)" in etichette  # valore o «senza dato», ma sempre presente
+    v.page.select_option("#pop-anno", "2023")
+    v.page.wait_for_function("window.dt.moduli.popolazione.stato().anno === 2023")
+    v.page.locator("#scheda .scheda-chiudi").click()
+    v.clic(*v.js("(() => { const c = window.dt.map.getCenter(); return [c.lng, c.lat]; })()"))
+    v.page.wait_for_selector("#scheda:not([hidden])")
+    etichette = v.page.locator("#scheda .scheda-sez[data-chiave='sezione'] .scheda-et").all_text_contents()
+    assert "Densità 2023 (ab/ha)" in etichette
+    assert "Indice di vecchiaia 2023" in etichette
+
+
+def test_se_un_pmtiles_non_si_carica_l_avviso_nomina_lo_strato_e_lo_disattiva(apri):
+    # blocco il vero file del catasto (non una sorgente di prova)
+    v = apri(blocca="**/PRG2004/particelle/particelle.pmtiles")
+    v.attendi_pronto()
+    v.page.wait_for_function(
+        "document.getElementById('avvisi').textContent.includes('Catasto: particelle')", timeout=30000
+    )
+    avviso = v.page.inner_text("#avvisi")
+    assert "Strato non caricato: Catasto: particelle" in avviso
+    assert "catasto" not in avviso.replace("Catasto", "")  # niente id tecnico della sorgente
+    casella = v.page.locator("#strato-catasto")
+    assert casella.is_disabled() and not casella.is_checked()
+    # gli altri strati restano utilizzabili
+    assert v.page.locator("#strato-prg").is_enabled()
+    v.page.check("#strato-prg")
+    assert v.js("window.dt.map.getLayoutProperty('prg-zto', 'visibility')") == "visible"

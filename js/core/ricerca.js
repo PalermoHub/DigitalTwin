@@ -2,15 +2,18 @@ import { urlDati } from './config.js';
 import { preparaIndice, cerca } from './indirizzi.js';
 import { segnala } from './pannello.js';
 
-let voci = null;
+let promessa = null;
 
-async function indice() {
-  if (!voci) {
-    const r = await fetch(urlDati('civici-omi/civici_index.json'));
-    if (!r.ok) throw new Error('indice civici non disponibile');
-    voci = preparaIndice(await r.json());
-  }
-  return voci;
+// l'indice (4,5 MB) si scarica una volta sola, anche se si digita prima che arrivi
+function indice() {
+  promessa ??= fetch(urlDati('civici-omi/civici_index.json'))
+    .then(r => {
+      if (!r.ok) throw new Error('indice civici non disponibile');
+      return r.json();
+    })
+    .then(preparaIndice)
+    .catch(err => { promessa = null; throw err; }); // un errore non resta in cache: si riprova
+  return promessa;
 }
 
 export function collegaRicerca(map, form, input, lista) {
@@ -33,16 +36,24 @@ export function collegaRicerca(map, form, input, lista) {
       segnala(`Ricerca non disponibile: ${err.message}`);
       return [];
     }
+    if (!risultati.length) {
+      const vuoto = document.createElement('li');
+      vuoto.className = 'cerca-vuoto';
+      vuoto.textContent = 'Nessun risultato';
+      lista.replaceChildren(vuoto);
+      lista.hidden = false;
+      return risultati;
+    }
     lista.replaceChildren(...risultati.map(r => {
       const li = document.createElement('li');
       const b = document.createElement('button');
       b.type = 'button';
-      b.textContent = r.etichetta;
+      b.textContent = r.nota ? `${r.etichetta} — ${r.nota}` : r.etichetta;
       b.addEventListener('click', () => vai(r));
       li.append(b);
       return li;
     }));
-    lista.hidden = !risultati.length;
+    lista.hidden = false;
     return risultati;
   }
 

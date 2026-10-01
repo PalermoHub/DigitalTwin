@@ -96,7 +96,15 @@ def _lunghezza_remota(url: str) -> int:
     return byte
 
 
-def _verifica_riga(dati: Path, r: dict) -> str | None:
+def _hash_remoto(url: str) -> str:
+    h = hashlib.sha256()
+    with urllib.request.urlopen(url, timeout=120) as r:
+        for blocco in iter(lambda: r.read(1 << 20), b""):
+            h.update(blocco)
+    return h.hexdigest()
+
+
+def _verifica_riga(dati: Path, r: dict, completo: bool = False) -> str | None:
     rel = r["percorso_dest"]
     p = dati / rel
     url = r.get("url") or ""
@@ -116,16 +124,26 @@ def _verifica_riga(dati: Path, r: dict) -> str | None:
             return f"CORS assente: {rel}"
         if dimensione != int(r["dimensione_byte"]):
             return f"dimensione remota diversa: {rel}"
+        if completo:
+            try:
+                if _hash_remoto(url) != r["sha256"]:
+                    return f"contenuto remoto diverso: {rel}"
+            except Exception:
+                return f"remoto non raggiungibile: {rel}"
     else:
         return f"manca: {rel}"
     return None
 
 
-def verifica_manifest(dati: Path = DATI) -> list[str]:
-    """Un file senza copia locale è valido se il suo link risponde con la dimensione attesa."""
+def verifica_manifest(dati: Path = DATI, completo: bool = False) -> list[str]:
+    """Un file senza copia locale è valido se il suo link risponde con la dimensione attesa.
+
+    Con `completo=True` si scarica anche ogni file remoto e se ne confronta l'hash: la sola dimensione
+    non basta (un file ripubblicato con lo stesso peso ma contenuto diverso passerebbe).
+    """
     righe = leggi_manifest(dati)
     with ThreadPoolExecutor(16) as ex:
-        esiti = list(ex.map(lambda r: _verifica_riga(dati, r), righe))
+        esiti = list(ex.map(lambda r: _verifica_riga(dati, r, completo), righe))
     return [e for e in esiti if e]
 
 
@@ -343,7 +361,8 @@ def scrivi_report(catalogo: list[dict], percorso: Path = DOCS / "catalogo.md") -
 
 
 def main() -> int:
-    errori = verifica_manifest() + controlla_sezioni()
+    completo = "--completo" in sys.argv  # scarica i file remoti e ne verifica l'hash (lento: ≈ 270 MB)
+    errori = verifica_manifest(completo=completo) + controlla_sezioni()
     catalogo = costruisci_catalogo()
     errori += controlla_regole(catalogo) + controlla_tileset(catalogo)
     (DATI / "catalogo.json").write_text(
