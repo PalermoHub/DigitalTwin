@@ -30,6 +30,7 @@ Registrato in `MODULI` di `js/app.js`, strati spenti di default, legenda nel sot
 1. **Tasso incidenti/km**: linee in 4 classi di colore (quartili del tasso sugli archi affidabili, calcolati dallo script e salvati nel campo `classe`). Da zoom 12.
 2. **Hotspot**: celle 250 m colorate per livello di confidenza (90/95/99%) della statistica sulla gravità pesata; il livello sul conteggio resta nella scheda.
 3. **Incidenti**: punti da zoom 14, colore per gravità (M/R/F/C), filtro anno (2015–2018, 2020–2023).
+4. **Le 20 strade più pericolose**: archi delle vie con più gravità pesata per km (soglie: via ≥ 3 km e ≥ 30 incidenti; archi senza nome esclusi), campi `via_*` calcolati dallo script, strato rosso scuro sopra il tasso, posto in classifica nel tooltip e nella scheda.
 Layer «hit» trasparenti sempre presenti (da zoom 13) per la scheda anche a strato spento, come per trasporto/scuole.
 
 ## Scheda (`js/layers/scheda-sicurezza.js`)

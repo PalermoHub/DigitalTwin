@@ -5,7 +5,8 @@
                                           archi.pmtiles, hotspot.pmtiles, incidenti.pmtiles (+ i GeoJSON ridotti)
 
 archi:     tutti gli archi con i campi usati dal viewer; `classe` (0-3) = quartile del tasso incidenti/km, solo per archi con
-           tasso affidabile (>= 20 m) e almeno un incidente
+           tasso affidabile (>= 20 m) e almeno un incidente; `via_*` = posto in classifica e dati della via (le 20 più pericolose:
+           gravità pesata per km, vie di almeno 3 km e 30 incidenti; gli archi senza nome in OSM restano fuori)
 hotspot:   solo celle Gi* significative (90/95/99%), con il livello numerico
 incidenti: punti con snap affidabile (<= 60 m), con l'anno ricavato dalla data
 """
@@ -23,6 +24,7 @@ CAMPI_ARCHI = ["arco_id", "nome", "highway", "lunghezza_m", "n_incidenti", "tass
                "pendenza_media_pct", "accessibilita", "Quartiere", "Circoscrizione", "UPL",
                "rischio_geomorf_label", "rischio_idraul_label", "priorita_geomorf", "priorita_idraul"]
 CAMPI_INCIDENTI = ["Tipologia", "feriti_n", "Luogo", "arco_id"]
+PESI_GRAVITA = {"M": 5, "R": 3, "F": 1, "C": 0.2}  # come per gli hotspot Gi* dello studio
 
 
 def _fc(features):
@@ -37,7 +39,36 @@ def _con_tasso(p):
     return bool(p.get("tasso_affidabile")) and (p.get("n_incidenti") or 0) > 0
 
 
-def ridotti_archi(fc):
+def classifica_vie(archi, incidenti, top=20, min_km=3, min_incidenti=30):
+    """{nome via: {rango, gravita_km, mortali, incidenti, km}} per le `top` vie con più gravità pesata per km.
+
+    Le vie sono gli archi con lo stesso nome; contano solo gli incidenti con snap affidabile. Restano fuori gli archi
+    senza nome e le vie sotto soglia (corte o con pochi incidenti: il rapporto sarebbe instabile).
+    """
+    nome_di, km = {}, {}
+    for f in archi["features"]:
+        p = f["properties"]
+        if p.get("nome"):
+            nome_di[p["arco_id"]] = p["nome"]
+            km[p["nome"]] = km.get(p["nome"], 0) + p["lunghezza_m"] / 1000
+    gravita, conteggio, mortali = {}, {}, {}
+    for f in incidenti["features"]:
+        p = f["properties"]
+        nome = nome_di.get(p.get("arco_id"))
+        if not nome or not p.get("snap_affidabile"):
+            continue
+        gravita[nome] = gravita.get(nome, 0) + PESI_GRAVITA.get(p.get("Tipologia"), 0)
+        conteggio[nome] = conteggio.get(nome, 0) + 1
+        mortali[nome] = mortali.get(nome, 0) + (p.get("Tipologia") == "M")
+    ammesse = [n for n in conteggio if km[n] >= min_km and conteggio[n] >= min_incidenti]
+    ammesse.sort(key=lambda n: (-gravita[n] / km[n], n))
+    return {n: {"rango": i, "gravita_km": round(gravita[n] / km[n], 1), "mortali": mortali[n],
+                "incidenti": conteggio[n], "km": round(km[n], 1)}
+            for i, n in enumerate(ammesse[:top], 1)}
+
+
+def ridotti_archi(fc, classifica=None):
+    classifica = classifica or {}
     validi = [f["properties"]["tasso_km"] for f in fc["features"] if _con_tasso(f["properties"])]
     soglie = statistics.quantiles(validi, n=4, method="inclusive") if len(validi) >= 2 else []
     out = []
@@ -46,6 +77,9 @@ def ridotti_archi(fc):
         props = _tiene(p, CAMPI_ARCHI)
         if _con_tasso(p) and soglie:
             props["classe"] = sum(p["tasso_km"] > t for t in soglie)
+        via = classifica.get(p.get("nome"))
+        if via:
+            props.update({f"via_{k}": v for k, v in via.items()})
         out.append({"type": "Feature", "properties": props, "geometry": f["geometry"]})
     return _fc(out)
 
@@ -96,11 +130,14 @@ def _pmtiles(geojson, pmtiles, strato, zoom_min, zoom_max):
 
 def scrivi(src=SRC, out=OUT):
     out.mkdir(parents=True, exist_ok=True)
-    lavori = [("archi", "rete_rischio", ridotti_archi, 10, 16), ("hotspot", "hotspot_griglia", ridotti_hotspot, 10, 15),
+    leggi = lambda nome: json.loads((src / f"{nome}.geojson").read_text(encoding="utf-8"))
+    classifica = classifica_vie(leggi("rete_rischio"), leggi("incidenti_snap"))
+    lavori = [("archi", "rete_rischio", lambda fc: ridotti_archi(fc, classifica), 10, 16),
+              ("hotspot", "hotspot_griglia", ridotti_hotspot, 10, 15),
               ("incidenti", "incidenti_snap", ridotti_incidenti, 12, 16)]
     n = {}
     for nome, sorgente, riduci, zmin, zmax in lavori:
-        fc = riduci(json.loads((src / f"{sorgente}.geojson").read_text(encoding="utf-8")))
+        fc = riduci(leggi(sorgente))
         ridotto = out / f"{nome}.geojson"
         ridotto.write_text(json.dumps(fc, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         _pmtiles(ridotto, out / f"{nome}.pmtiles", nome, zmin, zmax)

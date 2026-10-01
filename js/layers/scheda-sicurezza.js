@@ -4,6 +4,11 @@ import { righe } from '../core/scheda-util.js';
 export const NOTA_DATI = 'Incidenti 2015–2023 del Comune di Palermo, agganciati alla rete stradale di OpenStreetMap: il 2019 non è nel dataset pulito '
   + 'e la posizione di alcuni incidenti è approssimata. Il tasso per km vale solo per tratti di almeno 20 m. Indicatore di supporto, non una graduatoria ufficiale.';
 
+export const NOTA_CLASSIFICA = 'Classifica delle 20 vie con più gravità per km (mortali 5, prognosi riservata 3, feriti 1, solo cose 0,2), tra le vie di almeno 3 km e 30 incidenti. '
+  + 'Le strade senza nome in OpenStreetMap (circa un tratto su tre) non entrano nella classifica.';
+
+export const TOP_VIE = 20;
+
 export const GRAVITA = {
   M: { nome: 'Mortale', colore: '#7f0000' },
   R: { nome: 'Feriti con prognosi riservata', colore: '#d7301f' },
@@ -26,11 +31,22 @@ function rigaTasso(p) {
   return ['Incidenti per km', p.tasso_affidabile ? num(p.tasso_km) : 'non significativo (tratto < 20 m)'];
 }
 
+function gruppoVia(p) {
+  if (!ha(p.via_rango)) return [];
+  return [{ titolo: 'Via tra le più pericolose', righe: righe([
+    ['Classifica vie pericolose', `${p.via_rango}° su ${TOP_VIE}`],
+    ['Gravità per km (via)', ha(p.via_gravita_km) ? num(p.via_gravita_km) : null],
+    ['Incidenti sulla via', ha(p.via_incidenti) ? `${num(p.via_incidenti, 0)} su ${num(p.via_km)} km` : null],
+    ['Mortali sulla via', ha(p.via_mortali) ? num(p.via_mortali, 0) : null],
+  ]) }];
+}
+
 export function voceArco(p) {
   return {
     chiave: `arco-${p.arco_id}`, peso: 8, titolo: p.nome || 'Strada senza nome', icona: 'strada', badge: 'Tratto stradale', sempre: true,
     contesto: { Quartiere: p.Quartiere, Circoscrizione: p.Circoscrizione, UPL: p.UPL },
     gruppi: [
+      ...gruppoVia(p),
       { titolo: 'Sicurezza', righe: righe([rigaIncidenti(p), rigaTasso(p)]) },
       { titolo: 'Tratto', righe: righe([
         ['Lunghezza', ha(p.lunghezza_m) ? `${num(p.lunghezza_m, 0)} m` : null],
@@ -42,7 +58,7 @@ export function voceArco(p) {
         ['Rischio alluvioni', pai(p.rischio_idraul_label)], ['Priorità alluvioni', pai(p.priorita_idraul)],
       ]) },
     ],
-    nota: NOTA_DATI,
+    nota: ha(p.via_rango) ? `${NOTA_CLASSIFICA} ${NOTA_DATI}` : NOTA_DATI,
   };
 }
 
@@ -69,7 +85,8 @@ export function voceIncidente(p) {
 }
 
 export function tooltipArco(p) {
-  const titolo = p.nome || 'Strada senza nome';
+  const nome = p.nome || 'Strada senza nome';
+  const titolo = ha(p.via_rango) ? `#${p.via_rango} · ${nome}` : nome;
   if (senzaIncidenti(p)) return { titolo, dettaglio: 'Nessun incidente registrato' };
   const n = Number(p.n_incidenti);
   const inc = `${num(n, 0)} ${n === 1 ? 'incidente' : 'incidenti'}`;

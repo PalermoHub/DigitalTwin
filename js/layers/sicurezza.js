@@ -10,9 +10,10 @@ const ZOOM_MIN_PUNTI = 14;
 const ANNI = [2015, 2016, 2017, 2018, 2020, 2021, 2022, 2023];
 const COLORI_TASSO = ['#fee08b', '#fdae61', '#f46d43', '#a50026']; // classe 0-3 = quartili del tasso (in scripts/sicurezza_stradale.py)
 const ETICHETTE_TASSO = ['basso', 'medio-basso', 'medio-alto', 'alto'];
+const COLORE_PERICOLOSE = '#67000d';
 const COLORI_HOTSPOT = [['#a50026', '99%'], ['#f46d43', '95%'], ['#fdae61', '90%']];
 const L = {
-  archi: 'sicurezza-archi', hotspot: 'sicurezza-hotspot', incidenti: 'sicurezza-incidenti',
+  archi: 'sicurezza-archi', pericolose: 'sicurezza-pericolose', hotspot: 'sicurezza-hotspot', incidenti: 'sicurezza-incidenti',
   hitArchi: 'sicurezza-hit-archi', hitHotspot: 'sicurezza-hit-hotspot', hitIncidenti: 'sicurezza-hit-incidenti',
 };
 
@@ -26,9 +27,10 @@ function el(tag, classe, testo) {
 function creaLegenda(gruppo, map) {
   const box = el('div', 'legenda legenda-sicurezza');
   const riga = (simbolo, testo) => { const r = el('div', 'sicurezza-legenda-riga'); r.append(simbolo, testo); box.append(r); };
-  const tratto = colore => { const i = el('i', 'sicurezza-tratto'); i.style.background = colore; return i; };
+  const tratto = (colore, extra = '') => { const i = el('i', `sicurezza-tratto ${extra}`.trim()); i.style.background = colore; return i; };
   box.append(el('div', 'sicurezza-legenda-titolo', 'Incidenti per km (tratti ≥ 20 m)'));
   COLORI_TASSO.forEach((c, i) => riga(tratto(c), `Tasso ${ETICHETTE_TASSO[i]}`));
+  riga(tratto(COLORE_PERICOLOSE, 'sicurezza-tratto--spesso'), 'Le 20 vie più pericolose (gravità per km)');
   box.append(el('div', 'sicurezza-legenda-titolo', 'Hotspot (confidenza)'));
   COLORI_HOTSPOT.forEach(([c, t]) => riga(tratto(c), t));
   box.append(el('div', 'sicurezza-legenda-titolo', 'Incidenti (da zoom 14)'));
@@ -59,7 +61,7 @@ function collegaTooltip(map) {
     if (mioCursore) { map.getCanvas().style.cursor = ''; mioCursore = false; }
   };
   map.on('mousemove', e => {
-    if (map.getLayoutProperty(L.archi, 'visibility') !== 'visible') return nascondi();
+    if (![L.archi, L.pericolose].some(id => map.getLayoutProperty(id, 'visibility') === 'visible')) return nascondi();
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];
     const f = map.queryRenderedFeatures(riquadro, { layers: [L.hitArchi] })[0];
     if (!f) return nascondi();
@@ -88,6 +90,12 @@ export default {
       filter: ['has', 'classe'], layout: { ...nascosto, 'line-cap': 'round', 'line-join': 'round' },
       paint: { 'line-color': ['match', ['get', 'classe'], 0, COLORI_TASSO[0], 1, COLORI_TASSO[1], 2, COLORI_TASSO[2], COLORI_TASSO[3]], 'line-width': spessore(1.2, 5), 'line-opacity': 0.9 },
     });
+    // le vie della classifica: sopra il tasso, in rosso scuro e più spesse, così si leggono anche a strato archi spento
+    map.addLayer({
+      id: L.pericolose, type: 'line', source: 'sicurezza-archi', 'source-layer': 'archi', minzoom: 10,
+      filter: ['has', 'via_rango'], layout: { ...nascosto, 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': COLORE_PERICOLOSE, 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2, 14, 4, 17, 8], 'line-opacity': 0.95 },
+    });
     map.addLayer({
       id: L.hotspot, type: 'fill', source: 'sicurezza-hotspot', 'source-layer': 'hotspot', minzoom: 10, layout: nascosto,
       paint: {
@@ -110,6 +118,7 @@ export default {
   },
   strati: [
     { id: 'sicurezza-archi', etichetta: 'Incidenti per km sulle strade', layers: [L.archi], attivo: false },
+    { id: 'sicurezza-pericolose', etichetta: 'Le 20 strade più pericolose', layers: [L.pericolose], attivo: false },
     { id: 'sicurezza-hotspot', etichetta: 'Hotspot degli incidenti', layers: [L.hotspot], attivo: false },
     { id: 'sicurezza-incidenti', etichetta: 'Incidenti (da zoom 14)', layers: [L.incidenti], attivo: false },
   ],

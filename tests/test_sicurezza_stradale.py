@@ -75,3 +75,66 @@ def test_scrivi_produce_tre_pmtiles(tmp_path):
     assert n == {"archi": 2, "hotspot": 1, "incidenti": 1}
     for nome in ("archi", "hotspot", "incidenti"):
         assert (out / f"{nome}.pmtiles").stat().st_size > 0
+
+
+def _arco_via(i, nome, lunghezza_m=1000.0):
+    f = _arco(i, 10, 1)
+    f["properties"]["nome"] = nome
+    f["properties"]["lunghezza_m"] = lunghezza_m
+    if nome is None:
+        del f["properties"]["nome"]
+    return f
+
+
+def _inc_su(arco_id, tip="F", aff=True):
+    f = _inc("01/01/2016", aff=aff, tip=tip)
+    f["properties"]["arco_id"] = arco_id
+    return f
+
+
+def test_classifica_vie_per_gravita_al_km_con_soglie_e_senza_nome():
+    archi = _fc(_arco_via(0, "Via A", 2000), _arco_via(1, "Via A", 2000),   # 4 km
+                _arco_via(2, "Via B", 4000),                                # 4 km
+                _arco_via(3, "Via C", 500),                                 # troppo corta
+                _arco_via(4, None, 5000))                                   # senza nome
+    inc = _fc(*[_inc_su(0, "M")] * 2, *[_inc_su(1)] * 10,                  # A: 12 inc, gravità 20
+              *[_inc_su(2)] * 12,                                           # B: 12 inc, gravità 12
+              *[_inc_su(3, "M")] * 12, *[_inc_su(4, "M")] * 12)
+    c = s.classifica_vie(archi, inc, top=20, min_km=3, min_incidenti=10)
+    assert list(c) == ["Via A", "Via B"]                       # C <3 km e senza nome esclusi; A prima di B
+    assert c["Via A"] == {"rango": 1, "gravita_km": 5.0, "mortali": 2, "incidenti": 12, "km": 4.0}
+    assert c["Via B"]["rango"] == 2 and c["Via B"]["gravita_km"] == 3.0
+
+
+def test_classifica_vie_ignora_incidenti_non_affidabili_e_rispetta_top():
+    archi = _fc(*[_arco_via(i, f"Via {i}", 4000) for i in range(3)])
+    inc = _fc(*[_inc_su(0)] * 12, *[_inc_su(1)] * 11, *[_inc_su(2)] * 30)
+    inc["features"] += [_inc_su(2, aff=False)] * 50
+    c = s.classifica_vie(archi, inc, top=2, min_km=3, min_incidenti=10)
+    assert list(c) == ["Via 2", "Via 0"]
+    assert c["Via 2"]["incidenti"] == 30
+
+
+def test_classifica_vie_vuota_se_nessuna_via_supera_le_soglie():
+    assert s.classifica_vie(_fc(_arco_via(0, "Via A", 1000)), _fc(_inc_su(0)), min_km=3, min_incidenti=10) == {}
+
+
+def test_archi_delle_vie_in_classifica_hanno_rango_e_dati_della_via():
+    fc = _fc(_arco_via(0, "Via A", 4000), _arco_via(1, "Via Z", 4000))
+    cl = {"Via A": {"rango": 1, "gravita_km": 5.0, "mortali": 2, "incidenti": 12, "km": 4.0}}
+    a, z = [f["properties"] for f in s.ridotti_archi(fc, cl)["features"]]
+    assert (a["via_rango"], a["via_gravita_km"], a["via_mortali"], a["via_incidenti"], a["via_km"]) == (1, 5.0, 2, 12, 4.0)
+    assert "via_rango" not in z
+
+
+def test_scrivi_marca_gli_archi_delle_vie_pericolose(tmp_path):
+    src = tmp_path / "src"
+    src.mkdir()
+    archi = _fc(_arco_via(0, "Via A", 4000), _arco_via(1, "Via B", 4000))
+    (src / "rete_rischio.geojson").write_text(json.dumps(archi))
+    (src / "hotspot_griglia.geojson").write_text(json.dumps(_fc(_cella(0, "hotspot 95%"))))
+    (src / "incidenti_snap.geojson").write_text(json.dumps(_fc(*[_inc_su(0, "M")] * 40, *[_inc_su(1)] * 3)))
+    out = tmp_path / "out"
+    s.scrivi(src, out)
+    ridotti = json.loads((out / "archi.geojson").read_text())["features"]
+    assert [f["properties"].get("via_rango") for f in ridotti] == [1, None]
