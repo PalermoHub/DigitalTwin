@@ -21,15 +21,15 @@ Fuori: centralità/assi strategici, ZTL, densità di rete, routing, viewer origi
   - `hotspot.pmtiles`: `n_incidenti, gravita_tot, hotspot_count, hotspot_gravita` (solo celle con hotspot, scarto coldspot/non significative).
   - `incidenti.pmtiles`: `anno` (derivato da `Data`), `Tipologia`, `feriti_n`, `Luogo`, `snap_affidabile`.
 - Aggiornare `MANIFEST.tsv`, `catalogo.json`/`docs/catalogo.md`, `dati/README.md`, crediti (fonte incidenti: Comune di Palermo; elaborazione PalermoHub / OpenDataSicilia).
-- Qualità: esclusi dal tasso gli archi con `tasso_affidabile = false` (<20 m); incidenti con snap >60 m marcati non affidabili e non mostrati. Nota esplicita su geocoding e 2019 (11,3% senza coordinate).
+- Qualità: esclusi dal tasso gli archi con `tasso_affidabile = false` (<20 m); incidenti con snap >60 m marcati non affidabili e non mostrati. Nota esplicita su geocoding; il 2019 non è nel dataset pulito (anni presenti: 2015–2018 e 2020–2023).
 
 ## Layer (`js/layers/sicurezza.js`)
 
 Registrato in `MODULI` di `js/app.js`, strati spenti di default, legenda nel sotto-pannello del gruppo.
 
-1. **Tasso incidenti/km**: linee in 4 classi di colore (soglie per quantili sugli archi affidabili, calcolate dallo script e salvate in `config`), spessore per classe stradale. Da zoom 12.
-2. **Hotspot**: celle 250 m; selettore Conteggio / Gravità; colore per livello di confidenza (90/95/99%).
-3. **Incidenti**: punti da zoom 14, colore per gravità (M/R/F/C), filtro anno (2015–2023).
+1. **Tasso incidenti/km**: linee in 4 classi di colore (quartili del tasso sugli archi affidabili, calcolati dallo script e salvati nel campo `classe`). Da zoom 12.
+2. **Hotspot**: celle 250 m colorate per livello di confidenza (90/95/99%) della statistica sulla gravità pesata; il livello sul conteggio resta nella scheda.
+3. **Incidenti**: punti da zoom 14, colore per gravità (M/R/F/C), filtro anno (2015–2018, 2020–2023).
 Layer «hit» trasparenti sempre presenti (da zoom 13) per la scheda anche a strato spento, come per trasporto/scuole.
 
 ## Scheda (`js/layers/scheda-sicurezza.js`)
