@@ -20,12 +20,13 @@ Il feed ha 1.668 fermate, 71 linee (67 bus `route_type=3`, 4 tram `route_type=0`
 
 Stima `orari.json`: 2–3 MB (≈1 MB gzip). Caricato una sola volta, alla prima apertura di una fermata o linea.
 
-Vincoli: coordinate a 6 decimali; `Zone.Identifier` ignorati; `catalogo.json`, `MANIFEST.tsv`, `README` dati e crediti aggiornati con AMAT e la validità del feed.
+Vincoli: coordinate a 6 decimali; `Zone.Identifier` ignorati; `README` dati e crediti (`js/core/catalogo.js`) aggiornati con AMAT e la validità del feed. I file generati in `dati/trasporto/` non stanno in git (come `dati/scuole/`: `dati/*/` è ignorato) e non entrano nel `MANIFEST.tsv`; `fermate.geojson` porta il membro `validita` per l'avviso di feed scaduto senza scaricare `orari.json`.
 
 ## Viewer
 
 - **Modulo `js/layers/trasporto.js`** registrato in `MODULI` (`js/app.js`), tre strati: «Linee bus», «Linee tram», «Fermate». Spenti di default, con le fermate visibili da zoom ≥ 14. Colore linea = `route_color` AMAT; tram con tratto più spesso.
 - **Pannello di destra: le voci dei tre strati sono sempre visibili, anche con lo strato spento.** Checkbox e legenda (colori, bus/tram, simbolo fermata) restano nel pannello a prescindere dallo stato; nessuna legenda viene nascosta allo spegnimento. L'accensione mostra solo il layer in mappa.
+- **Scheda del luogo (pannello di destra) anche a strato spento:** come per scuole e seggi, layer trasparenti sempre presenti (`trasporto-hit-fermate`, `trasporto-hit-linee`, da zoom ≥ 13) fanno comparire fermata e linea nella scheda a prescindere dall'interruttore dello strato. Vale insieme alla regola sulle voci del pannello a barra, qui sopra.
 - **Scheda fermata** (`scheda-trasporto.js`, stesso schema di `scheda-scuole.js`): nome, linee con colore, accessibilità, selettore giorno (default oggi; se oggi è fuori da `validita`, il primo giorno valido, con avviso), prossime partenze da ora per linea e direzione, orari completi espandibili.
 - **Scheda linea:** numero, nome, capolinea, tracciato evidenziato con `evidenza.js`, fermate in sequenza, primo/ultimo passaggio e frequenza media.
 - **Ricerca** (`ricerca.js`): linee per numero o nome, fermate per nome.
