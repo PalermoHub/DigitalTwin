@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { unisci } from '../../js/core/scheda-modello.js';
-import { voceFermata, raggruppaLinee, voceLinee } from '../../js/layers/scheda-trasporto.js';
+import { voceFermata, raggruppaLinee, voceLinee, tooltipFermata, tooltipLinee } from '../../js/layers/scheda-trasporto.js';
 
 const dinamico = () => 'nodo';
 const fermata = { id: 'S1', nome: 'Piazza Indipendenza', linee: ['100', 'TRAM1'], accessibile: 'Sì' };
@@ -55,4 +55,17 @@ test('unisci: le sezioni senza righe restano e conservano il hook dinamico', () 
   assert.equal(sezioni[0].dinamico, dinamico);
   assert.equal(sezioni[1].dinamico(), 'nodo');
   assert.deepEqual(sezioni.map(s => s.badges[0]), ['Fermata', 'Bus']);
+});
+
+test('tooltip fermata: nome e linee; senza linee lo dice', () => {
+  assert.deepEqual(tooltipFermata(fermata), { titolo: 'Piazza Indipendenza', dettaglio: 'Linee 100, TRAM1' });
+  assert.equal(tooltipFermata({ ...fermata, linee: [] }).dettaglio, 'Nessuna corsa nel feed');
+});
+
+test('tooltip linee: una per linea (le due direzioni insieme), al massimo `max`, con il conteggio delle altre', () => {
+  const tutte = ['100', '101', '102'].flatMap(r => [{ ...linea(r, 0), colore: '#111111' }, { ...linea(r, 1), colore: '#111111' }]);
+  assert.deepEqual(tooltipLinee(tutte.slice(0, 2)), { linee: [{ numero: '100', nome: 'Nome 100', colore: '#111111' }], altre: 0 });
+  const t = tooltipLinee(tutte, 2);
+  assert.deepEqual(t.linee.map(l => l.numero), ['100', '101']);
+  assert.equal(t.altre, 1);
 });

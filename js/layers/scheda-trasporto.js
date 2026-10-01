@@ -35,3 +35,17 @@ export function voceLinee(linee, costruisci) {
     dinamico: () => costruisci(gruppi),
   };
 }
+
+// Tooltip al passaggio del mouse: stesse informazioni essenziali della scheda.
+export function tooltipFermata(p) {
+  return { titolo: p.nome, dettaglio: p.linee.length ? `Linee ${p.linee.join(', ')}` : 'Nessuna corsa nel feed' };
+}
+
+// Una riga per linea (le due direzioni insieme), al massimo `max`: su una strada principale ne passano molte.
+export function tooltipLinee(linee, max = 4) {
+  const gruppi = raggruppaLinee(linee);
+  return {
+    linee: gruppi.slice(0, max).map(g => ({ numero: g.numero, nome: g.nome, colore: g.direzioni[0].colore })),
+    altre: Math.max(0, gruppi.length - max),
+  };
+}

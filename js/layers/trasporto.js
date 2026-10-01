@@ -1,8 +1,8 @@
 import { urlDati } from '../core/config.js';
 import { segnala } from '../core/pannello.js';
-import { voceFermata, voceLinee } from './scheda-trasporto.js';
+import { voceFermata, voceLinee, tooltipFermata, tooltipLinee } from './scheda-trasporto.js';
 import { orariFermata, elencoLinee } from './trasporto-ui.js';
-import { giornoIniziale, oggiISO } from './trasporto-orari.js';
+import { giornoIniziale, oggiISO, colorePerTesto } from './trasporto-orari.js';
 
 // Linee bus/tram e fermate AMAT (GTFS). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
 // (da zoom 13) così la scheda di destra mostra fermate e linee anche a strato spento, come per scuole e seggi.
@@ -54,6 +54,41 @@ function creaLegenda(gruppo) {
   gruppo.append(box);
 }
 
+// Tooltip al passaggio del mouse, solo sugli strati accesi (a strato spento sulla mappa non c'è nulla da indicare).
+// Sta sotto il cursore: quello dei confini sta sopra e i due possono comparire insieme.
+function collegaTooltip(map) {
+  let popup = null;
+  const nascondi = () => { popup?.remove(); popup = null; map.getCanvas().style.cursor = ''; };
+  const acceso = id => map.getLayoutProperty(id, 'visibility') === 'visible';
+  map.on('mousemove', e => {
+    const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];
+    const fermata = acceso(L.fermate) ? map.queryRenderedFeatures(riquadro, { layers: [L.hitFermate] })[0] : null;
+    const sotto = fermata ? [] : map.queryRenderedFeatures(riquadro, { layers: [L.hitLinee] })
+      .map(f => linee.get(f.properties.id)).filter(l => l && acceso(l.tipo === 'tram' ? L.tram : L.bus));
+    if (!fermata && !sotto.length) return nascondi();
+    map.getCanvas().style.cursor = 'pointer';
+    const html = el('div', 'trasporto-tooltip-corpo');
+    if (fermata) {
+      const t = tooltipFermata(fermate.get(fermata.properties.id) ?? { ...fermata.properties, linee: [] });
+      html.append(el('strong', null, t.titolo), el('div', null, t.dettaglio));
+    } else {
+      const t = tooltipLinee(sotto);
+      for (const l of t.linee) {
+        const riga = el('div', 'trasporto-tooltip-linea');
+        const chip = el('span', 'trasporto-chip', l.numero);
+        chip.style.background = l.colore;
+        chip.style.color = colorePerTesto(l.colore);
+        riga.append(chip, ` ${l.nome}`);
+        html.append(riga);
+      }
+      if (t.altre) html.append(el('div', 'trasporto-tooltip-altre', `+ altre ${t.altre} linee`));
+    }
+    popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'trasporto-tooltip', anchor: 'top', offset: 14 });
+    popup.setLngLat(e.lngLat).setDOMContent(html).addTo(map);
+  });
+  map.on('mouseout', nascondi);
+}
+
 export default {
   id: 'trasporto',
   titolo: 'Trasporto pubblico',
@@ -77,6 +112,7 @@ export default {
     // strati trasparenti sempre presenti: la scheda mostra i dati anche a strato spento
     map.addLayer({ id: L.hitLinee, type: 'line', source: 'trasporto-linee', minzoom: ZOOM_MIN, paint: { 'line-width': 12, 'line-opacity': 0 } });
     map.addLayer({ id: L.hitFermate, type: 'circle', source: 'trasporto-fermate', minzoom: ZOOM_MIN, paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
+    collegaTooltip(map);
   },
   async avvia() {
     const [f, l] = await Promise.all(['fermate', 'linee'].map(async n => {
