@@ -19,6 +19,7 @@
 - Coordinate a 6 decimali. File `*:Zone.Identifier` ignorati.
 - Strati spenti di default; voci del pannello a barra sempre visibili anche a strato spento (legenda inclusa); scheda del luogo (pannello di destra) attiva anche a strato spento, con layer hit da zoom ≥ 13.
 - Feed AMAT: validità 2026-08-25 → 2026-10-31; manca `calendar.txt` (solo `calendar_dates`, `exception_type` 1 = attivo, 2 = rimosso). Orari in minuti dalla mezzanotte del giorno di servizio; > 1440 = dopo la mezzanotte.
+- **Albero di lavoro già sporco (lavoro dell'utente non committato):** `js/app.js`, `js/core/{pannello,scheda,ricerca,catalogo,scheda-modello}.js`, `css/app.css`, `tests/test_viewer.py`, `dati/README.md` sono già modificati; `js/core/{evidenza,luoghi}.js`, `js/layers/{scuole,scheda-scuole,monumenti}.js`, `tests/js/{evidenza,luoghi}.test.mjs` sono non tracciati. Perciò **ogni commit di questo piano include solo i file creati dal piano** (`scripts/gtfs.py`, `tests/test_gtfs.py`, `js/layers/trasporto*.js`, `js/layers/scheda-trasporto.js`, `tests/js/trasporto-orari.test.mjs`, `tests/js/scheda-trasporto.test.mjs`). Le modifiche ai file condivisi restano nell'albero di lavoro per il commit dell'utente: non usare `git add` su di essi né `git add -A`/`-a`. Alla fine si elencano all'utente.
 - Dopo la modifica del codice: `graphify update .` (CLAUDE.md del progetto).
 - Esecuzione test: `python3 -m pytest -q tests/test_gtfs.py` (pytest.ini ha `pythonpath = scripts`), `npm run test:js`, browser `python3 -m pytest -q tests/test_viewer.py -k trasporto`.
 
@@ -29,6 +30,7 @@
 - Giorno o fermata senza corse: messaggio «Nessuna corsa in questa data.», nessuna eccezione. Testato in Task 2 (lista vuota) e Task 3 (modello).
 - Fermata senza linee (`linee: []`) o senza accessibilità: la scheda mostra solo ciò che c'è. Testato in Task 1 e Task 3.
 - `orari.json` non scaricabile: la scheda mostra «Orari non disponibili: …» e il viewer resta vivo. Testato in Task 4 (browser).
+- Clic su una strada dove passano molte linee (71 linee, due direzioni): una sola voce «Linee (N)» con le linee raggruppate e chiuse; gli orari di una linea si scaricano solo quando la si apre. Testato in Task 3 (`raggruppaLinee`, `voceLinee`).
 - Ricerca numerica «100»: oggi `cercaLuoghi` la tratta come numero di sezione elettorale e non trova linee. Testato in Task 5.
 
 ---
@@ -291,10 +293,10 @@ def costruisci(src=SRC):
         orari_fermate[stop][route].append({"d": d, "s": s, "t": sorted(tempi)})
 
     fermate = {"type": "FeatureCollection", "validita": validita, "features": [
-        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [float(s["stop_lon"]), float(s["stop_lat"])]},
+        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [round(float(s["stop_lon"]), 6), round(float(s["stop_lat"]), 6)]},
          "properties": {"id": sid, "nome": nome(s["stop_name"]), "linee": sorted(passano.get(sid, ()), key=ordine_linea),
                         "accessibile": ACCESSIBILE.get(s["wheelchair_boarding"], ""),
-                        "lon": float(s["stop_lon"]), "lat": float(s["stop_lat"])}}
+                        "lon": round(float(s["stop_lon"]), 6), "lat": round(float(s["stop_lat"]), 6)}}
         for sid, s in stops.items()]}
 
     elementi = []
@@ -550,7 +552,8 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 - Consumes: `unisci` di `js/core/scheda-modello.js` (copia i campi sconosciuti della voce in `resto`, quindi `dinamico` sopravvive).
 - Produces:
   - `voceFermata(p, dinamico) -> voce` con `p = { id, nome, linee[], accessibile }`; `badge: 'Fermata'`, `peso: 6`, `sempre: true`, `dinamico`.
-  - `voceLinea(p, dinamico) -> voce` con `p = { id, numero, nome, tipo, da, a, fermate[] }`; `badge: 'Tram' | 'Bus'`, `peso: 7`, `sempre: true`, `dinamico`.
+  - `raggruppaLinee(linee) -> [{ route_id, numero, nome, tipo, direzioni: [linea] }]`: una voce per `route_id` (le due direzioni insieme, ordinate per `direzione`), nell'ordine in cui compaiono; `linea = { id, route_id, numero, nome, tipo, direzione, da, a, fermate[] }`.
+  - `voceLinee(linee, costruisci) -> voce`: **una sola** voce per tutte le linee sotto il clic (`chiave: 'linee'`, `peso: 7`, `sempre: true`, `gruppi: []`); `titolo` «Linea 100» se è una sola linea, altrimenti «Linee (N)»; `badge` «Bus»/«Tram» solo se è una sola linea; `dinamico = () => costruisci(raggruppaLinee(linee))`.
   - Nuovo campo di voce `dinamico?: () => Node`, aggiunto da `scheda.js` al corpo della sezione.
 
 - [ ] **Step 1: Scrivere il test**
@@ -559,11 +562,13 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { unisci } from '../../js/core/scheda-modello.js';
-import { voceFermata, voceLinea } from '../../js/layers/scheda-trasporto.js';
+import { voceFermata, raggruppaLinee, voceLinee } from '../../js/layers/scheda-trasporto.js';
 
 const dinamico = () => 'nodo';
 const fermata = { id: 'S1', nome: 'Piazza Indipendenza', linee: ['100', 'TRAM1'], accessibile: 'Sì' };
-const linea = { id: 'linea-100-0', numero: '100', nome: 'John Lennon - Oreto', tipo: 'bus', da: 'Stazione Centrale', a: 'Oreto', fermate: ['S1', 'S2', 'S3'] };
+const linea = (route_id, direzione, tipo = 'bus') => ({
+  id: `linea-${route_id}-${direzione}`, route_id, numero: route_id, nome: `Nome ${route_id}`, tipo, direzione, da: 'A', a: 'B', fermate: ['S1', 'S2'],
+});
 
 test('fermata: titolo, badge, righe e hook dinamico', () => {
   const v = voceFermata(fermata, dinamico);
@@ -582,22 +587,34 @@ test('fermata senza linee né accessibilità: nessuna riga vuota', () => {
   assert.equal(v.sempre, true);
 });
 
-test('linea bus e tram: badge, percorso, direzione e numero di fermate', () => {
-  const v = voceLinea(linea, dinamico);
-  assert.equal(v.titolo, 'Linea 100');
-  assert.equal(v.badge, 'Bus');
-  assert.deepEqual(v.gruppi[0].righe, [
-    { etichetta: 'Percorso', valore: 'John Lennon - Oreto' },
-    { etichetta: 'Direzione', valore: 'Stazione Centrale → Oreto' },
-    { etichetta: 'Fermate', valore: '3' },
-  ]);
-  assert.equal(voceLinea({ ...linea, tipo: 'tram' }, dinamico).badge, 'Tram');
+test('raggruppaLinee: una voce per linea con le due direzioni in ordine, senza duplicati', () => {
+  const g = raggruppaLinee([linea('101', 1), linea('100', 1), linea('100', 0), linea('100', 0)]);
+  assert.deepEqual(g.map(x => x.route_id), ['101', '100']); // ordine di comparsa
+  assert.deepEqual(g[1].direzioni.map(d => d.direzione), [0, 1]);
+  assert.equal(g[1].numero, '100');
 });
 
-test('unisci: la sezione senza righe resta e conserva il hook dinamico', () => {
-  const { sezioni } = unisci([voceFermata({ id: 'S4', nome: 'Fermata orfana', linee: [], accessibile: '' }, dinamico), voceLinea(linea, dinamico)]);
+test('voceLinee: una sola linea → titolo con numero e badge del tipo', () => {
+  const v = voceLinee([linea('100', 0), linea('100', 1)], gruppi => gruppi);
+  assert.equal(v.titolo, 'Linea 100');
+  assert.equal(v.badge, 'Bus');
+  assert.equal(voceLinee([linea('TRAM1', 0, 'tram')], gruppi => gruppi).badge, 'Tram');
+});
+
+test('voceLinee: tante linee sotto il clic → una sola voce «Linee (N)», senza badge, che raggruppa quando si disegna', () => {
+  const tutte = ['100', '101', '102', '103'].flatMap(r => [linea(r, 0), linea(r, 1)]); // 8 tracciati sulla stessa strada
+  const v = voceLinee(tutte, gruppi => gruppi.length);
+  assert.equal(v.titolo, 'Linee (4)');
+  assert.equal(v.badge, undefined);
+  assert.equal(v.chiave, 'linee');
+  assert.equal(v.dinamico(), 4);
+});
+
+test('unisci: le sezioni senza righe restano e conservano il hook dinamico', () => {
+  const { sezioni } = unisci([voceFermata({ id: 'S4', nome: 'Fermata orfana', linee: [], accessibile: '' }, dinamico), voceLinee([linea('100', 0)], () => 'nodo')]);
   assert.equal(sezioni.length, 2);
   assert.equal(sezioni[0].dinamico, dinamico);
+  assert.equal(sezioni[1].dinamico(), 'nodo');
   assert.deepEqual(sezioni.map(s => s.badges[0]), ['Fermata', 'Bus']);
 });
 ```
@@ -625,12 +642,28 @@ export function voceFermata(p, dinamico) {
   };
 }
 
-export function voceLinea(p, dinamico) {
-  const tram = p.tipo === 'tram';
+// Le linee sotto un clic possono essere decine (una strada principale ne ha molte): le due direzioni di una linea
+// stanno insieme e tutte le linee in una sola voce, da aprire una per volta.
+export function raggruppaLinee(linee) {
+  const perRotta = new Map();
+  for (const l of linee) {
+    if (!perRotta.has(l.route_id)) perRotta.set(l.route_id, { route_id: l.route_id, numero: l.numero, nome: l.nome, tipo: l.tipo, direzioni: [] });
+    const g = perRotta.get(l.route_id);
+    if (!g.direzioni.some(d => d.direzione === l.direzione)) g.direzioni.push(l);
+  }
+  const gruppi = [...perRotta.values()];
+  for (const g of gruppi) g.direzioni.sort((a, b) => a.direzione - b.direzione);
+  return gruppi;
+}
+
+// `costruisci(gruppi)` disegna l'elenco delle linee (accordion con gli orari caricati all'apertura).
+export function voceLinee(linee, costruisci) {
+  const gruppi = raggruppaLinee(linee);
+  const una = gruppi.length === 1 ? gruppi[0] : null;
   return {
-    chiave: p.id, peso: 7, titolo: `Linea ${p.numero}`, icona: tram ? 'fa-train' : 'fa-bus', badge: tram ? 'Tram' : 'Bus', sempre: true,
-    gruppi: [{ righe: righe([['Percorso', p.nome], ['Direzione', `${p.da} → ${p.a}`], ['Fermate', String(p.fermate.length)]]) }],
-    dinamico,
+    chiave: 'linee', peso: 7, titolo: una ? `Linea ${una.numero}` : `Linee (${gruppi.length})`, icona: una?.tipo === 'tram' ? 'fa-train' : 'fa-bus',
+    badge: una ? (una.tipo === 'tram' ? 'Tram' : 'Bus') : undefined, sempre: true, gruppi: [],
+    dinamico: () => costruisci(gruppi),
   };
 }
 ```
@@ -651,8 +684,8 @@ Expected: tutti PASS (inclusi i test esistenti).
 - [ ] **Step 6: Commit**
 
 ```bash
-git add js/layers/scheda-trasporto.js js/core/scheda.js tests/js/scheda-trasporto.test.mjs
-git commit -m "feat: modello scheda trasporto e hook dinamico nelle sezioni della scheda
+git add js/layers/scheda-trasporto.js tests/js/scheda-trasporto.test.mjs   # scheda.js è un file già sporco dell'utente: resta fuori dal commit
+git commit -m "feat: modello scheda trasporto (fermata e linee raggruppate) con hook dinamico
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
@@ -671,9 +704,9 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 - Test: `tests/test_viewer.py` (in coda), `tests/js/evidenza.test.mjs` (un test)
 
 **Interfaces:**
-- Consumes: `voceFermata`, `voceLinea` (Task 3); `giornoIniziale, oggiISO, minutoAdesso, partenzeFermata, prossime, riepilogoLinea, formatoOra, colorePerTesto` (Task 2); `urlDati` (`js/core/config.js`); `segnala` (`js/core/pannello.js`); dati del Task 1.
+- Consumes: `voceFermata`, `voceLinee` (Task 3); `giornoIniziale, oggiISO, minutoAdesso, partenzeFermata, prossime, riepilogoLinea, formatoOra, colorePerTesto` (Task 2); `urlDati` (`js/core/config.js`); `segnala` (`js/core/pannello.js`); dati del Task 1.
 - Produces:
-  - `trasporto-ui.js`: `orariFermata(stopId, ctx) -> () => Node` e `orariLinea(linea, ctx) -> () => Node`, con `ctx = { orari: () => Promise<orari>, info: (route, dir) => { numero, colore, a }, nomeFermata: id => string }`.
+  - `trasporto-ui.js`: `orariFermata(stopId, ctx) -> () => Node`, `orariLinea(linea, ctx) -> () => Node` e `elencoLinee(gruppi, ctx) -> Node` (accordion di `raggruppaLinee`; gli orari di una linea si costruiscono — e scaricano — solo alla prima apertura), con `ctx = { orari: () => Promise<orari>, info: (route, dir) => { numero, colore, a }, nomeFermata: id => string }`.
   - `trasporto.js` (default export, id `trasporto`): strati `trasporto-bus`, `trasporto-tram`, `trasporto-fermate` (checkbox `#strato-<id>`, spenti); layer hit `trasporto-hit-linee` e `trasporto-hit-fermate`; gruppo del pannello `#gruppo-trasporto` con legenda `.legenda-trasporto` sempre visibile.
   - `evidenza.js`: `FONTI['trasporto-hit-fermate']` e `FONTI['trasporto-hit-linee']`.
 
@@ -708,7 +741,7 @@ In `js/core/evidenza.js`, dentro `FONTI`, prima di `'griglia-hit'`:
 Run: `node --test tests/js/evidenza.test.mjs`
 Expected: PASS.
 
-- [ ] **Step 3: Scrivere i test browser (RED)**
+- [ ] **Step 3: Scrivere i test browser (RED)** (poi eseguirli: devono fallire)
 
 In coda a `tests/test_viewer.py`:
 
@@ -767,8 +800,26 @@ def test_trasporto_scheda_fermata_anche_a_strato_spento(apri):
     v.page.wait_for_selector("#scheda:not([hidden])")
     assert p["nome"].lower() in v.page.inner_text("#scheda").lower()
     v.page.wait_for_selector("#scheda .trasporto-orari input[type=date]")  # orari scaricati e selettore del giorno disegnato
-    assert v.page.input_value("#scheda .trasporto-orari input[type=date]")
+    assert v.page.locator("#scheda .trasporto-orari input[type=date]").first.input_value()  # più input se c'è anche una linea: basta il primo
     assert v.js("window.dt.map.getLayoutProperty('trasporto-fermate', 'visibility')") == "none"
+
+
+def test_trasporto_clic_su_strada_con_molte_linee_una_sola_voce_e_orari_solo_all_apertura(apri):
+    base = _dati_trasporto()
+    linee = json.loads((base / "linee.geojson").read_text(encoding="utf-8"))["features"]
+    lon, lat = linee[0]["properties"]["lon"], linee[0]["properties"]["lat"]
+    v = apri()
+    v.vai(lon, lat, 16)
+    v.page.wait_for_function("window.dt.map.queryRenderedFeatures({layers: ['trasporto-hit-linee']}).length > 0")
+    richieste = []
+    v.page.on("request", lambda r: richieste.append(r.url) if r.url.endswith("orari.json") else None)
+    v.clic(lon, lat)
+    v.page.wait_for_selector("#scheda:not([hidden])")
+    assert v.page.locator("#scheda [data-chiave='linee']").count() == 1  # una sola sezione «Linee», non una per tracciato
+    if v.page.locator("#scheda [data-chiave='linee'] details.trasporto-linea").count() > 1:
+        assert richieste == []  # più linee: chiuse, nessun download degli orari finché non se ne apre una
+        v.page.click("#scheda [data-chiave='linee'] details.trasporto-linea >> nth=0 >> summary")
+        v.page.wait_for_selector("#scheda [data-chiave='linee'] .trasporto-orari")
 
 
 def test_trasporto_orari_non_scaricabili_lo_dicono_e_il_viewer_resta_vivo(apri):
@@ -785,7 +836,7 @@ def test_trasporto_orari_non_scaricabili_lo_dicono_e_il_viewer_resta_vivo(apri):
 Run: `python3 -m pytest -q tests/test_viewer.py -k trasporto`
 Expected: FAIL (strati inesistenti).
 
-- [ ] **Step 5: Implementare `trasporto-ui.js`**
+- [ ] **Step 4: Implementare `trasporto-ui.js`**
 
 ```js
 import {
@@ -911,15 +962,38 @@ export function orariLinea(linea, ctx) {
     return radice;
   };
 }
+
+// Tutte le linee sotto il clic: un accordion per linea (aperto solo se è l'unica). Direzioni e orari si costruiscono
+// alla prima apertura, così `orari.json` non si scarica per decine di linee che nessuno ha aperto.
+export function elencoLinee(gruppi, ctx) {
+  const radice = el('div', 'trasporto-linee');
+  for (const g of gruppi) {
+    const linea = el('details', 'scheda-acc trasporto-linea');
+    const titolo = el('summary');
+    titolo.append(chip({ numero: g.numero, colore: ctx.info(g.route_id, g.direzioni[0].direzione).colore }), ` ${g.nome}`);
+    const corpo = el('div');
+    linea.append(titolo, corpo);
+    const riempi = () => {
+      if (corpo.hasChildNodes()) return; // già costruito
+      for (const d of g.direzioni) {
+        corpo.append(el('h4', null, `${d.da} → ${d.a}`), orariLinea(d, ctx)());
+      }
+    };
+    linea.addEventListener('toggle', () => { if (linea.open) riempi(); });
+    if (gruppi.length === 1) { linea.open = true; riempi(); }
+    radice.append(linea);
+  }
+  return radice;
+}
 ```
 
-- [ ] **Step 6: Implementare `trasporto.js`**
+- [ ] **Step 5: Implementare `trasporto.js`**
 
 ```js
 import { urlDati } from '../core/config.js';
 import { segnala } from '../core/pannello.js';
-import { voceFermata, voceLinea } from './scheda-trasporto.js';
-import { orariFermata, orariLinea } from './trasporto-ui.js';
+import { voceFermata, voceLinee } from './scheda-trasporto.js';
+import { orariFermata, elencoLinee } from './trasporto-ui.js';
 import { giornoIniziale, oggiISO } from './trasporto-orari.js';
 
 // Linee bus/tram e fermate AMAT (GTFS). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
@@ -1018,23 +1092,26 @@ export default {
     layers: [L.hitFermate, L.hitLinee],
     voci(trovati) {
       const visti = new Set();
-      return trovati.flatMap(f => {
+      const voci = [];
+      const sotto = [];
+      for (const f of trovati) {
         const id = f.properties.id;
-        if (visti.has(id)) return [];
+        if (visti.has(id)) continue; // i tile spezzano i tracciati in più frammenti
         visti.add(id);
         if (f.layer.id === L.hitFermate) {
           const p = fermate.get(id) ?? { ...f.properties, linee: [] };
-          return [voceFermata(p, orariFermata(id, ctx))];
-        }
-        const p = linee.get(id);
-        return p ? [voceLinea(p, orariLinea(p, ctx))] : [];
-      });
+          voci.push(voceFermata(p, orariFermata(id, ctx)));
+        } else if (linee.has(id)) sotto.push(linee.get(id));
+      }
+      // tutte le linee del clic in una sola voce: su una strada principale sono decine
+      if (sotto.length) voci.push(voceLinee(sotto, gruppi => elencoLinee(gruppi, ctx)));
+      return voci;
     },
   },
 };
 ```
 
-- [ ] **Step 7: Registrare il modulo, icona e CSS**
+- [ ] **Step 6: Registrare il modulo, icona e CSS**
 
 `js/app.js`: aggiungere `import trasporto from './layers/trasporto.js';` dopo l'import di `scuole` e cambiare `MODULI` in
 `[base, terreno, popolazione, territorio, edifici, monumenti, scuole, trasporto, confini]`.
@@ -1060,19 +1137,19 @@ e in `ETICHETTE` aggiungere `trasporto: 'Bus'`.
 .legenda i.trasporto-pallino { width: 10px; height: 10px; border: 2px solid #364fc7; border-radius: 50%; background: #fff; }
 ```
 
-- [ ] **Step 8: Eseguire i test**
+- [ ] **Step 7: Eseguire i test**
 
 Run: `npm run test:js && python3 -m pytest -q tests/test_viewer.py -k trasporto`
 Expected: tutti PASS. Se un test fallisce per cause di temporizzazione, rieseguirlo una volta; se fallisce di nuovo, indagare (non aggiungere sleep).
 
-- [ ] **Step 9: Verifica visiva**
+- [ ] **Step 8: Verifica visiva**
 
 Avviare `python3 scripts/serve.py 8000`, aprire `http://127.0.0.1:8000`, accendere i tre strati, zoomare a 15 su Palermo, cliccare una fermata e una linea. Controllare: colori linee, chip leggibili (TRAM2 giallo con testo nero), scheda con orari e selettore del giorno, legenda visibile con strati spenti. Riportare ciò che si è visto davvero; se il browser non è disponibile, dirlo.
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 9: Commit**
 
 ```bash
-git add js/layers/trasporto.js js/layers/trasporto-ui.js js/app.js js/core/pannello.js js/core/evidenza.js css/app.css tests/test_viewer.py tests/js/evidenza.test.mjs
+git add js/layers/trasporto.js js/layers/trasporto-ui.js   # app.js, pannello.js, evidenza.js, css/app.css, test_viewer.py, evidenza.test.mjs sono file già sporchi dell'utente: restano fuori dal commit
 git commit -m "feat: layer trasporto pubblico con schede di fermata e linea, orari per giorno
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
@@ -1187,13 +1264,16 @@ def test_ricerca_trova_fermata_e_linea_e_accende_lo_strato(apri):
     _cerca_e_vai(v, fermata["nome"].lower(), fermata["lon"], fermata["lat"])
     assert v.js("document.getElementById('strato-trasporto-fermate').checked")
 
-    linea = json.loads((base / "linee.geojson").read_text(encoding="utf-8"))["features"][0]["properties"]
-    strato = "trasporto-tram" if linea["tipo"] == "tram" else "trasporto-bus"
-    v.page.fill("#cerca-testo", f"linea {linea['numero']}".lower())
+    # una linea tram, se c'è: lo strato da accendere dipende dal tipo e il test deve poterlo distinguere
+    linee = [f["properties"] for f in json.loads((base / "linee.geojson").read_text(encoding="utf-8"))["features"]]
+    linea = next((p for p in linee if p["tipo"] == "tram"), linee[0])
+    strato, altro = ("trasporto-tram", "trasporto-bus") if linea["tipo"] == "tram" else ("trasporto-bus", "trasporto-tram")
+    v.page.fill("#cerca-testo", f"linea {linea['numero']} {linea['nome']}".lower())  # nome completo: il primo risultato è questa linea (o l'altra sua direzione)
     v.page.wait_for_selector("#cerca-risultati button")
-    assert f"Linea {linea['numero']}" in v.page.inner_text("#cerca-risultati")
+    assert f"Linea {linea['numero']}" in v.page.inner_text("#cerca-risultati button >> nth=0")
     v.page.click("#cerca-risultati button >> nth=0")
-    assert v.js(f"document.getElementById('strato-{strato}').checked") or v.js("document.getElementById('strato-trasporto-bus').checked || document.getElementById('strato-trasporto-tram').checked")
+    assert v.js(f"document.getElementById('strato-{strato}').checked")
+    assert not v.js(f"document.getElementById('strato-{altro}').checked")
 ```
 
 Verificare prima la firma di `_cerca_e_vai(v, testo, lon, lat)` in `tests/test_viewer.py` (grep) e adattare la chiamata se è diversa. Run: `python3 -m pytest -q tests/test_viewer.py -k "ricerca and (fermata or luoghi or scuole)"`.
@@ -1202,8 +1282,9 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add js/core/luoghi.js js/core/ricerca.js tests/js/luoghi.test.mjs tests/test_viewer.py
-git commit -m "feat: ricerca di linee e fermate (strato dinamico, zoom per linea, numeri puri)
+# luoghi.js, ricerca.js, luoghi.test.mjs, test_viewer.py sono già sporchi/non tracciati per il lavoro dell'utente: nessun add, nessun commit.
+# Verificare con `git diff --stat` che le modifiche siano solo quelle del piano e riferirle all'utente a fine lavoro.
+git status --short js/core tests
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
@@ -1256,8 +1337,8 @@ Expected: terminato senza errori.
 Aggiungere in `docs/RIPARTENZA.md`, nella sezione di stato, una riga: «Trasporto pubblico AMAT (GTFS): layer, schede, orari e ricerca implementati; dati da rigenerare con `python3 scripts/gtfs.py` (feed valido fino al 31/10/2026)». Poi:
 
 ```bash
-git add js/core/catalogo.js dati/README.md docs/RIPARTENZA.md
-git commit -m "docs: crediti AMAT, README dati e stato per il trasporto pubblico
+git add docs/RIPARTENZA.md   # catalogo.js e dati/README.md sono già sporchi dell'utente: restano fuori dal commit
+git commit -m "docs: stato del trasporto pubblico in RIPARTENZA
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
