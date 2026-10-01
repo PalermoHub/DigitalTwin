@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { unisci } from '../../js/core/scheda-modello.js';
 import {
-  tipoSezione, applicaPreferenze, registraVisti, elencoPannello, commutaSezione, commutaRiga, azzera, nessunaPreferenza,
+  tipoSezione, applicaPreferenze, registraVisti, elencoPannello, commutaSezione, commutaRiga, azzera, nascondiTutto, tuttoNascosto, nessunaPreferenza,
   leggiPreferenze, salvaPreferenze, CHIAVE_STORAGE,
 } from '../../js/core/scheda-preferenze.js';
 
@@ -132,4 +132,34 @@ test('storage: assente, rotto o con dati malformati → preferenze vuote, mai un
   assert.deepEqual(leggiPreferenze(rotto), vuote());
   assert.equal(salvaPreferenze(rotto, vuote()), false);
   assert.equal(salvaPreferenze(null, vuote()), false);
+});
+
+test('nascondiTutto: nasconde ogni sezione vista, conserva le righe già nascoste e non muta', () => {
+  const base = commutaRiga(registraVisti(vuote(), dati().sezioni), 'arco', 'Pendenza media', false);
+  const p = nascondiTutto(base);
+  assert.deepEqual([...p.nascoste.sezioni].sort(), ['arco', 'fermata', 'indirizzo']);
+  assert.deepEqual(p.nascoste.righe, ['arco/Pendenza media']);
+  assert.deepEqual(base.nascoste.sezioni, []);
+  assert.deepEqual(applicaPreferenze(dati(), p).sezioni, []);
+});
+
+test('nascondiTutto: senza sezioni viste non fa nulla; una sezione già nascosta non si duplica', () => {
+  assert.deepEqual(nascondiTutto(vuote()), vuote());
+  const p = nascondiTutto(commutaSezione(registraVisti(vuote(), dati().sezioni), 'arco', false));
+  assert.equal(p.nascoste.sezioni.filter(t => t === 'arco').length, 1);
+});
+
+test('tuttoNascosto: vero solo se ogni sezione vista è nascosta (e ce n\'è almeno una)', () => {
+  const viste = registraVisti(vuote(), dati().sezioni);
+  assert.equal(tuttoNascosto(vuote()), false);
+  assert.equal(tuttoNascosto(viste), false);
+  assert.equal(tuttoNascosto(commutaSezione(viste, 'arco', false)), false);
+  assert.equal(tuttoNascosto(nascondiTutto(viste)), true);
+  assert.equal(tuttoNascosto(commutaSezione(nascondiTutto(viste), 'arco', true)), false);
+});
+
+test('seleziona tutto = azzera: tutte le sezioni e tutte le righe tornano visibili', () => {
+  const p = azzera(commutaRiga(nascondiTutto(registraVisti(vuote(), dati().sezioni)), 'arco', 'Pendenza media', false));
+  assert.equal(nessunaPreferenza(p), true);
+  assert.equal(applicaPreferenze(dati(), p).sezioni.length, 3);
 });

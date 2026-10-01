@@ -77,6 +77,17 @@ export function commutaRiga(preferenze, tipo, etichetta, visibile) {
 
 export const azzera = preferenze => ({ ...preferenze, nascoste: { sezioni: [], righe: [] } });
 
+// «Deseleziona tutto»: nasconde ogni sezione vista finora (le righe già nascoste restano tali, per quando si rimostra una sezione).
+export const nascondiTutto = preferenze => ({
+  ...preferenze,
+  nascoste: { ...preferenze.nascoste, sezioni: [...new Set([...preferenze.nascoste.sezioni, ...Object.keys(preferenze.visti)])] },
+});
+
+export const tuttoNascosto = preferenze => {
+  const tipi = Object.keys(preferenze.visti);
+  return tipi.length > 0 && tipi.every(t => preferenze.nascoste.sezioni.includes(t));
+};
+
 // `storage` = window.localStorage o null: se manca, è bloccato o contiene dati non validi la scheda funziona lo stesso, senza memoria.
 export function leggiPreferenze(storage) {
   try {
