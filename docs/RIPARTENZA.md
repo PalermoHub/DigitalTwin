@@ -32,7 +32,7 @@ REGOLE CHE L'UTENTE HA FISSATO (non violarle):
 - Gli stili si RIUSANO dalle app originali (docs/STILI.md), mai inventati. L'interfaccia è sempre chiara.
 - Non copiare dati già pubblicati su GitHub: usa i link (dati/MANIFEST.tsv colonna url, dati/catalogo.json).
   I tileset (PRG, terreno, elevazione, griglia) sono voci "tileset" del catalogo. Non copiare i tile raster.
-- GTFS escluso per ora (si aggiunge in seguito, feed 2026). Il PRG vigente è il 2004.
+- GTFS AMAT 2026 aggiunto: layer «Trasporto pubblico» (linee, fermate, orari, ricerca, tooltip); i dati in dati/trasporto/ si rigenerano con `python3 scripts/gtfs.py` (feed valido fino al 31/10/2026). Il PRG vigente è il 2004.
 - Metodo: TDD, un test visto fallire prima di ogni modifica. Nessun codice prima dell'approvazione per le cose nuove.
 
 PROSSIMI PASSI POSSIBILI DOPO LA CHIUSURA (chiedi all'utente quale):
