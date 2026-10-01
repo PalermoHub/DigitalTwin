@@ -64,3 +64,11 @@ export function colorePerTesto(esadecimale) {
   const [r, g, b] = [1, 3, 5].map(i => parseInt(esadecimale.slice(i, i + 2), 16));
   return 0.299 * r + 0.587 * g + 0.114 * b > 160 ? '#000000' : '#ffffff';
 }
+
+// Ordine dei numeri di linea: prima i numerici (9 prima di 101), poi le sigle (N1, TRAM1).
+export function ordineLinea(a, b) {
+  const na = /^\d+$/.test(a);
+  const nb = /^\d+$/.test(b);
+  if (na && nb) return Number(a) - Number(b);
+  return na === nb ? a.localeCompare(b) : na ? -1 : 1;
+}

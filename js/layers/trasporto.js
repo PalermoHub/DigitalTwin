@@ -13,6 +13,7 @@ const L = { bus: 'trasporto-bus', tram: 'trasporto-tram', fermate: 'trasporto-fe
 
 const fermate = new Map(); // id -> proprietà complete (le feature di MapLibre trasformano gli array in testo)
 const linee = new Map();
+const limitiRotta = new Map(); // route_id -> [[o, s], [e, n]] per l'inquadratura del filtro Linea
 
 // orari.json (≈ 1 MB compresso) si scarica alla prima scheda aperta e poi resta in memoria
 let promessaOrari = null;
@@ -121,7 +122,12 @@ export default {
       return r.json();
     }));
     for (const x of f.features) fermate.set(x.properties.id, x.properties);
-    for (const x of l.features) linee.set(x.properties.id, x.properties);
+    for (const x of l.features) {
+      linee.set(x.properties.id, x.properties);
+      const [o, s, e, n] = x.geometry.coordinates.reduce(([o, s, e, n], [lon, lat]) => [Math.min(o, lon), Math.min(s, lat), Math.max(e, lon), Math.max(n, lat)], [Infinity, Infinity, -Infinity, -Infinity]);
+      const prima = limitiRotta.get(x.properties.route_id);
+      limitiRotta.set(x.properties.route_id, prima ? [[Math.min(prima[0][0], o), Math.min(prima[0][1], s)], [Math.max(prima[1][0], e), Math.max(prima[1][1], n)]] : [[o, s], [e, n]]);
+    }
     if (giornoIniziale({ validita: f.validita }, oggiISO()).fuori) {
       segnala(`Orari del trasporto pubblico validi dal ${f.validita.da} al ${f.validita.a}: oggi sono fuori validità`);
     }
@@ -132,6 +138,8 @@ export default {
     { id: 'trasporto-fermate', etichetta: 'Fermate', layers: [L.fermate], attivo: false },
   ],
   pannello: creaLegenda,
+  // per il filtro Linea del pannello Filtri (valido dopo `avvia`)
+  filtro: () => ({ linee: [...linee.values()], limiti: id => limitiRotta.get(id) }),
   scheda: {
     layers: [L.hitFermate, L.hitLinee],
     voci(trovati) {
