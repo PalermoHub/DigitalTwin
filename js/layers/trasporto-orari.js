@@ -1,0 +1,66 @@
+// Logica pura degli orari del trasporto pubblico (nessun DOM): giorni di servizio, partenze di una fermata, riepilogo di una linea.
+// Gli orari sono minuti dalla mezzanotte del giorno di servizio: oltre 1440 sono corse dopo la mezzanotte.
+
+const due = n => String(n).padStart(2, '0');
+
+export function formatoOra(minuti) {
+  const ora = `${due(Math.floor(minuti / 60) % 24)}:${due(minuti % 60)}`;
+  return minuti >= 1440 ? `${ora} (+1)` : ora;
+}
+
+export function oggiISO(d = new Date()) {
+  return `${d.getFullYear()}-${due(d.getMonth() + 1)}-${due(d.getDate())}`;
+}
+
+export function minutoAdesso(d = new Date()) {
+  return d.getHours() * 60 + d.getMinutes();
+}
+
+// Oggi se rientra nella validità del feed, altrimenti il primo giorno valido (`fuori` fa mostrare l'avviso).
+export function giornoIniziale({ validita }, oggi) {
+  return oggi >= validita.da && oggi <= validita.a ? { data: oggi, fuori: false } : { data: validita.da, fuori: true };
+}
+
+export function serviziAttivi({ servizi }, data) {
+  return new Set(Object.entries(servizi).filter(([, date]) => date.includes(data)).map(([indice]) => Number(indice)));
+}
+
+function giornoPrima(data) {
+  const d = new Date(`${data}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+// Partenze di una fermata nel giorno `data`, ordinate. Le corse di ieri che finiscono dopo la mezzanotte
+// (orario ≥ 1440) partono di fatto al mattino di oggi e si aggiungono con l'orario riportato a 0–1439.
+export function partenzeFermata(orari, stopId, data) {
+  const oggi = serviziAttivi(orari, data);
+  const ieri = serviziAttivi(orari, giornoPrima(data));
+  const partenze = [];
+  for (const [route, gruppi] of Object.entries(orari.fermate[stopId] ?? {})) {
+    for (const g of gruppi) {
+      if (oggi.has(g.s)) for (const t of g.t) partenze.push({ route, dir: g.d, t });
+      if (ieri.has(g.s)) for (const t of g.t) if (t >= 1440) partenze.push({ route, dir: g.d, t: t - 1440 });
+    }
+  }
+  return partenze.sort((a, b) => a.t - b.t || a.route.localeCompare(b.route));
+}
+
+export function prossime(partenze, minuto, n = 8) {
+  return partenze.filter(p => p.t >= minuto).slice(0, n);
+}
+
+// Corse, primo e ultimo passaggio e frequenza media (minuti) misurati alla prima fermata della linea.
+export function riepilogoLinea(orari, linea, data) {
+  const p = partenzeFermata(orari, linea.fermate[0], data).filter(x => x.route === linea.route_id && x.dir === linea.direzione);
+  if (!p.length) return null;
+  const primo = p[0].t;
+  const ultimo = p[p.length - 1].t;
+  return { n: p.length, primo, ultimo, frequenza: p.length > 1 ? Math.round((ultimo - primo) / (p.length - 1)) : null };
+}
+
+// Testo nero o bianco, a seconda della luminosità dello sfondo (i colori delle linee vanno dal giallo al viola scuro).
+export function colorePerTesto(esadecimale) {
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(esadecimale.slice(i, i + 2), 16));
+  return 0.299 * r + 0.587 * g + 0.114 * b > 160 ? '#000000' : '#ffffff';
+}
