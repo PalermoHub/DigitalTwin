@@ -138,3 +138,43 @@ def test_scrivi_marca_gli_archi_delle_vie_pericolose(tmp_path):
     s.scrivi(src, out)
     ridotti = json.loads((out / "archi.geojson").read_text())["features"]
     assert [f["properties"].get("via_rango") for f in ridotti] == [1, None]
+
+
+def test_incidenti_portano_il_nome_della_via_dall_arco():
+    archi = _fc(_arco_via(0, "Via A"), _arco_via(1, None))
+    out = s.ridotti_incidenti(_fc(_inc_su(0), _inc_su(1), _inc_su(99)), archi)["features"]
+    assert [f["properties"].get("via") for f in out] == ["Via A", None, None]
+
+
+def _arco_in(i, nome, lunghezza_m, coords):
+    f = _arco_via(i, nome, lunghezza_m)
+    f["geometry"] = {"type": "LineString", "coordinates": coords}
+    return f
+
+
+def test_vie_una_riga_per_via_con_conteggi_punto_e_riquadro():
+    archi = _fc(_arco_in(0, "Via A", 1000, [[13.30, 38.10], [13.31, 38.11]]),
+                _arco_in(1, "Via A", 1000, [[13.31, 38.11], [13.32, 38.12]]),
+                _arco_in(2, "Via B", 500, [[13.40, 38.20], [13.41, 38.20]]),
+                _arco_in(3, None, 500, [[13.5, 38.3], [13.51, 38.3]]))
+    inc = _fc(_inc_su(0, "M"), _inc_su(1), _inc_su(1), _inc_su(2, aff=False), _inc_su(3))
+    vie = s.vie(archi, inc, {"Via A": {"rango": 1, "gravita_km": 7.5}})
+    assert [v["nome"] for v in vie] == ["Via A", "Via B"]            # senza nome escluse, ordine per nome
+    a, b = vie
+    assert (a["incidenti"], a["mortali"], a["km"]) == (3, 1, 2.0)
+    assert a["rango"] == 1 and a["gravita_km"] == 7.5
+    assert a["bbox"] == [13.30, 38.10, 13.32, 38.12]
+    assert 13.30 <= a["lon"] <= 13.32 and 38.10 <= a["lat"] <= 38.12
+    assert b["incidenti"] == 0 and "rango" not in b                   # l'incidente non affidabile non conta
+
+
+def test_scrivi_produce_vie_json(tmp_path):
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "rete_rischio.geojson").write_text(json.dumps(_fc(_arco_in(0, "Via A", 4000, [[13.3, 38.1], [13.31, 38.1]]))))
+    (src / "hotspot_griglia.geojson").write_text(json.dumps(_fc(_cella(0, "hotspot 95%"))))
+    (src / "incidenti_snap.geojson").write_text(json.dumps(_fc(_inc_su(0))))
+    out = tmp_path / "out"
+    s.scrivi(src, out)
+    vie = json.loads((out / "vie.json").read_text())
+    assert vie[0]["nome"] == "Via A" and vie[0]["incidenti"] == 1

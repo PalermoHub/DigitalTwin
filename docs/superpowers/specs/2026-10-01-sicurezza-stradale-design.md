@@ -31,6 +31,7 @@ Registrato in `MODULI` di `js/app.js`, strati spenti di default, legenda nel sot
 2. **Hotspot**: celle 250 m colorate per livello di confidenza (90/95/99%) della statistica sulla gravità pesata; il livello sul conteggio resta nella scheda.
 3. **Incidenti**: punti da zoom 14, colore per gravità (M/R/F/C), filtro anno (2015–2018, 2020–2023).
 4. **Le 20 strade più pericolose**: archi delle vie con più gravità pesata per km (soglie: via ≥ 3 km e ≥ 30 incidenti; archi senza nome esclusi), campi `via_*` calcolati dallo script, strato rosso scuro sopra il tasso, posto in classifica nel tooltip e nella scheda.
+5. **Ricerca e filtri sugli incidenti**: nella barra una riga per via («Via della Libertà — 243 incidenti, 3 mortali (#4 …)», filtra gli incidenti su quella via) e, con «incidente»/«sinistro» (+ gravità, anno, parole del luogo), una riga per incidente; nel pannello Filtri i menu Anno e Gravità (in AND con la via), chip con ✕, e gli incidenti visibili da zoom 12 invece di 14 finché un filtro è attivo. Il menu Anno non sta più nella legenda. Il filtro riguarda solo i punti: tasso/km e hotspot restano su tutti gli anni. Moduli: `js/core/ricerca-incidenti.js` (puro), `js/layers/sicurezza-filtro.js`, `js/layers/sicurezza-ricerca.js`; dati: `vie.json`.
 Layer «hit» trasparenti sempre presenti (da zoom 13) per la scheda anche a strato spento, come per trasporto/scuole.
 
 ## Scheda (`js/layers/scheda-sicurezza.js`)

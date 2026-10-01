@@ -1,13 +1,13 @@
 import { pmt } from '../core/config.js';
 import { primo, tutti } from '../core/scheda-util.js';
 import { voceArco, voceHotspot, voceIncidente, tooltipArco, GRAVITA } from './scheda-sicurezza.js';
+import { ZOOM_BASE } from './sicurezza-filtro.js';
 
 // Sicurezza stradale (studio «Rete stradale», fase 2): tasso di incidenti per km sugli archi, hotspot Gi* a griglia da 250 m
 // e incidenti puntuali 2015–2023 (il 2019 non è nel dataset pulito). Strati spenti di default; i layer «hit» sono sempre
 // presenti così la scheda di destra mostra i dati anche a strato spento, come per trasporto, scuole e monumenti.
 const ZOOM_MIN_ARCHI = 12;
-const ZOOM_MIN_PUNTI = 14;
-const ANNI = [2015, 2016, 2017, 2018, 2020, 2021, 2022, 2023];
+const ZOOM_MIN_PUNTI = ZOOM_BASE; // con un filtro attivo scende a 12 (sicurezza-filtro.js)
 const COLORI_TASSO = ['#fee08b', '#fdae61', '#f46d43', '#a50026']; // classe 0-3 = quartili del tasso (in scripts/sicurezza_stradale.py)
 const ETICHETTE_TASSO = ['basso', 'medio-basso', 'medio-alto', 'alto'];
 const COLORE_PERICOLOSE = '#67000d';
@@ -16,6 +16,8 @@ const L = {
   archi: 'sicurezza-archi', pericolose: 'sicurezza-pericolose', hotspot: 'sicurezza-hotspot', incidenti: 'sicurezza-incidenti',
   hitArchi: 'sicurezza-hit-archi', hitHotspot: 'sicurezza-hit-hotspot', hitIncidenti: 'sicurezza-hit-incidenti',
 };
+// gli strati dei punti, per il filtro Incidenti del pannello Filtri
+export const STRATI_INCIDENTI = [L.incidenti, L.hitIncidenti];
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -24,7 +26,7 @@ function el(tag, classe, testo) {
   return e;
 }
 
-function creaLegenda(gruppo, map) {
+function creaLegenda(gruppo) {
   const box = el('div', 'legenda legenda-sicurezza');
   const riga = (simbolo, testo) => { const r = el('div', 'sicurezza-legenda-riga'); r.append(simbolo, testo); box.append(r); };
   const tratto = (colore, extra = '') => { const i = el('i', `sicurezza-tratto ${extra}`.trim()); i.style.background = colore; return i; };
@@ -33,21 +35,12 @@ function creaLegenda(gruppo, map) {
   riga(tratto(COLORE_PERICOLOSE, 'sicurezza-tratto--spesso'), 'Le 20 vie più pericolose (gravità per km)');
   box.append(el('div', 'sicurezza-legenda-titolo', 'Hotspot (confidenza)'));
   COLORI_HOTSPOT.forEach(([c, t]) => riga(tratto(c), t));
-  box.append(el('div', 'sicurezza-legenda-titolo', 'Incidenti (da zoom 14)'));
+  box.append(el('div', 'sicurezza-legenda-titolo', 'Incidenti (da zoom 14; per anno, gravità o via: pannello Filtri)'));
   for (const g of Object.values(GRAVITA)) {
     const p = el('i', 'sicurezza-pallino');
     p.style.background = g.colore;
     riga(p, g.nome);
   }
-  const sel = el('select', 'sicurezza-anno');
-  sel.id = 'sicurezza-anno';
-  sel.setAttribute('aria-label', 'Anno degli incidenti');
-  sel.append(new Option('Tutti gli anni', ''), ...ANNI.map(a => new Option(String(a), String(a))));
-  sel.addEventListener('change', () => {
-    const filtro = sel.value ? ['==', ['get', 'anno'], Number(sel.value)] : null;
-    for (const id of [L.incidenti, L.hitIncidenti]) map.setFilter(id, filtro);
-  });
-  box.append(el('div', 'sicurezza-legenda-titolo', 'Anno'), sel);
   gruppo.append(box);
 }
 

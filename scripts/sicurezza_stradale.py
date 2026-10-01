@@ -8,7 +8,8 @@ archi:     tutti gli archi con i campi usati dal viewer; `classe` (0-3) = quarti
            tasso affidabile (>= 20 m) e almeno un incidente; `via_*` = posto in classifica e dati della via (le 20 più pericolose:
            gravità pesata per km, vie di almeno 3 km e 30 incidenti; gli archi senza nome in OSM restano fuori)
 hotspot:   solo celle Gi* significative (90/95/99%), con il livello numerico
-incidenti: punti con snap affidabile (<= 60 m), con l'anno ricavato dalla data
+incidenti: punti con snap affidabile (<= 60 m), con l'anno ricavato dalla data e la via (nome dell'arco) per il filtro
+vie.json:  una riga per via con nome (conteggi, punto, riquadro, posto in classifica) per la ricerca del viewer
 """
 import json
 import statistics
@@ -106,7 +107,8 @@ def ridotti_hotspot(fc):
     return _fc(out)
 
 
-def ridotti_incidenti(fc):
+def ridotti_incidenti(fc, archi=None):
+    nome_di = {f["properties"]["arco_id"]: f["properties"].get("nome") for f in (archi or _fc([]))["features"]}
     out = []
     for f in fc["features"]:
         p = f["properties"]
@@ -116,8 +118,49 @@ def ridotti_incidenti(fc):
             anno = int(str(p["Data"])[-4:])
         except (KeyError, ValueError):
             continue
-        out.append({"type": "Feature", "properties": {"anno": anno, **_tiene(p, CAMPI_INCIDENTI)}, "geometry": f["geometry"]})
+        props = {"anno": anno, **_tiene(p, CAMPI_INCIDENTI)}
+        if nome_di.get(p.get("arco_id")):
+            props["via"] = nome_di[p["arco_id"]]
+        out.append({"type": "Feature", "properties": props, "geometry": f["geometry"]})
     return _fc(out)
+
+
+def _vertici(geometria):
+    c = geometria["coordinates"]
+    return c if geometria["type"] == "LineString" else [v for linea in c for v in linea]
+
+
+def vie(archi, incidenti, classifica):
+    """Una riga per via con nome: incidenti (solo snap affidabile), mortali, km, punto centrale, riquadro e, per le prime
+    della classifica, rango e gravità per km. Ordinate per nome."""
+    per_via, nome_di = {}, {}
+    for f in archi["features"]:
+        p = f["properties"]
+        if not p.get("nome"):
+            continue
+        nome_di[p["arco_id"]] = p["nome"]
+        v = per_via.setdefault(p["nome"], {"km": 0.0, "incidenti": 0, "mortali": 0, "vertici": [], "piu_lungo": (0, None)})
+        v["km"] += p["lunghezza_m"] / 1000
+        v["vertici"] += _vertici(f["geometry"])
+        if p["lunghezza_m"] > v["piu_lungo"][0]:
+            v["piu_lungo"] = (p["lunghezza_m"], _vertici(f["geometry"]))
+    for f in incidenti["features"]:
+        p = f["properties"]
+        nome = nome_di.get(p.get("arco_id"))
+        if nome and p.get("snap_affidabile"):
+            per_via[nome]["incidenti"] += 1
+            per_via[nome]["mortali"] += p.get("Tipologia") == "M"
+    out = []
+    for nome in sorted(per_via):
+        v = per_via[nome]
+        lon, lat = v["piu_lungo"][1][len(v["piu_lungo"][1]) // 2]
+        xs, ys = [c[0] for c in v["vertici"]], [c[1] for c in v["vertici"]]
+        riga = {"nome": nome, "incidenti": v["incidenti"], "mortali": v["mortali"], "km": round(v["km"], 1),
+                "lon": round(lon, 6), "lat": round(lat, 6), "bbox": [round(min(xs), 6), round(min(ys), 6), round(max(xs), 6), round(max(ys), 6)]}
+        if nome in classifica:
+            riga["rango"], riga["gravita_km"] = classifica[nome]["rango"], classifica[nome]["gravita_km"]
+        out.append(riga)
+    return out
 
 
 def _pmtiles(geojson, pmtiles, strato, zoom_min, zoom_max):
@@ -131,10 +174,11 @@ def _pmtiles(geojson, pmtiles, strato, zoom_min, zoom_max):
 def scrivi(src=SRC, out=OUT):
     out.mkdir(parents=True, exist_ok=True)
     leggi = lambda nome: json.loads((src / f"{nome}.geojson").read_text(encoding="utf-8"))
-    classifica = classifica_vie(leggi("rete_rischio"), leggi("incidenti_snap"))
+    archi_grezzi, incidenti_grezzi = leggi("rete_rischio"), leggi("incidenti_snap")
+    classifica = classifica_vie(archi_grezzi, incidenti_grezzi)
     lavori = [("archi", "rete_rischio", lambda fc: ridotti_archi(fc, classifica), 10, 16),
               ("hotspot", "hotspot_griglia", ridotti_hotspot, 10, 15),
-              ("incidenti", "incidenti_snap", ridotti_incidenti, 12, 16)]
+              ("incidenti", "incidenti_snap", lambda fc: ridotti_incidenti(fc, archi_grezzi), 12, 16)]
     n = {}
     for nome, sorgente, riduci, zmin, zmax in lavori:
         fc = riduci(leggi(sorgente))
@@ -142,6 +186,8 @@ def scrivi(src=SRC, out=OUT):
         ridotto.write_text(json.dumps(fc, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         _pmtiles(ridotto, out / f"{nome}.pmtiles", nome, zmin, zmax)
         n[nome] = len(fc["features"])
+    elenco = vie(archi_grezzi, incidenti_grezzi, classifica)
+    (out / "vie.json").write_text(json.dumps(elenco, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     return n
 
 
