@@ -41,3 +41,7 @@ stime campionarie (censimento permanente).
 
 `js/core/` nucleo (mappa, catalogo, pannello, scheda, ricerca) · `js/layers/` un modulo per tema · `scripts/` validazione dei
 dati e server · `tests/` · `docs/` piano, spec, catalogo e stili. Piano generale: `docs/PIANO_DigitalTwin_Palermo.md`.
+
+## Licenza
+
+Codice sotto [EUPL-1.2](LICENSE). Dati e documentazione prodotti dal progetto sotto [CC BY 4.0](LICENSE-DATA.md). I dati di terzi mantengono la licenza della fonte: vedi [NOTICE.md](NOTICE.md).
