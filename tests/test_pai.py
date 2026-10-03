@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 pai = pytest.importorskip("pai")
 PAI = ROOT / "dati" / "pai"
+LAVORO = ROOT / "lavoro" / "pai"
 
 
 def test_data_iso():
@@ -43,9 +44,8 @@ def test_manifest_coerente_con_i_file():
     m = json.loads((PAI / "pai.json").read_text(encoding="utf-8"))
     assert (PAI / "pai.pmtiles").stat().st_size > 0
     for d in m["dataset"]:
-        f = PAI / f"{d['id']}.geojson"
-        assert f.exists() == (d["n"] > 0)
-        if not d["n"]:
+        f = LAVORO / f"{d['id']}.geojson"
+        if not LAVORO.exists() or not d["n"]:
             continue
         feats = json.loads(f.read_text(encoding="utf-8"))["features"]
         assert len(feats) == d["n"]

@@ -11,6 +11,8 @@ dati/*/
 !dati/incedi/
 # eccezione: PAI (rigenerato dal workflow «Aggiorna PAI»)
 !dati/pai/
+# dati di lavoro degli script (non servono alla webapp)
+lavoro/
 dati/uffici/grezzo.json
 .cache/
 dati/delete/

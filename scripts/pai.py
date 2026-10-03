@@ -7,11 +7,11 @@ Fonte: https://map.sitr.regione.sicilia.it/gis/rest/services/pai  (un servizio M
 Si tengono solo gli elementi del comune di Palermo (campo «comune» del servizio oppure geometria dentro il confine comunale).
 La tematizzazione è quella del server (colori, bordi, spessori, retini dei dissesti): viaggia nel manifest e dentro ogni feature.
 
-Scrive in dati/pai/:
-  <dataset>.geojson        elementi di Palermo di un tema (WGS84, campi con nome breve)
-  confine_comunale.geojson confine del Comune (copia, serve anche al workflow)
+Scrive in dati/pai/ (usati dalla webapp):
   pai.json                 manifest: per tema i campi, le classi con simbologia del server, numero di elementi
   pai.pmtiles              tutti i temi, un solo file con uno strato per dataset, zoom 12–18
+Scrive in lavoro/pai/ (non versionato):
+  <dataset>.geojson        elementi di Palermo di un tema (WGS84, campi con nome breve)
 """
 import base64
 import json
@@ -25,8 +25,9 @@ from pathlib import Path
 
 BASE = "https://map.sitr.regione.sicilia.it/gis/rest/services/pai"
 RADICE = Path(__file__).resolve().parent.parent
-OUT = RADICE / "dati" / "pai"
-CONFINE = OUT / "confine_comunale.geojson"
+OUT = RADICE / "dati" / "pai"  # solo ciò che serve alla webapp: pai.json e pai.pmtiles
+LAVORO = RADICE / "lavoro" / "pai"  # dati di lavoro (un GeoJSON per tema): non versionati
+CONFINE = RADICE / "dati" / "incedi" / "confine_comunale.geojson"  # confine del Comune, già versionato con gli incendi
 ZOOM_MIN, ZOOM_MAX = 12, 18
 MARGINE = 0.0006  # ~60 m in gradi: il confine ha +50 m di tolleranza, gli elementi dei comuni vicini lo sfiorano soltanto
 PAGINA = 1000
@@ -273,6 +274,7 @@ def servizi_nuovi():
 def main():
     senza_pmtiles = "--senza-pmtiles" in sys.argv
     OUT.mkdir(parents=True, exist_ok=True)
+    LAVORO.mkdir(parents=True, exist_ok=True)
     palermo = confine()
     nucleo = palermo.buffer(-MARGINE)
     busta = ",".join(str(x) for x in palermo.bounds)
@@ -281,7 +283,7 @@ def main():
     manifest, presenti = [], []
     for ds in DATASETS:
         feats, descr, fuori = costruisci(ds, palermo, nucleo, busta)
-        file = OUT / f"{ds['id']}.geojson"
+        file = LAVORO / f"{ds['id']}.geojson"
         if not feats:
             file.unlink(missing_ok=True)
             print(f"{ds['id']}: nessun elemento a Palermo ({fuori} dei comuni vicini scartati)")

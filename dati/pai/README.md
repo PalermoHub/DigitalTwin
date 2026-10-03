@@ -5,10 +5,10 @@ Generato da `scripts/pai.py` (o dal workflow manuale **Aggiorna PAI**).
 
 | File | Contenuto |
 |---|---|
-| `<tema>.geojson` | Elementi di Palermo di un tema, WGS84, campi con nome breve (`cls_<tema>`, `col_<tema>`, `bor_<tema>` = classe e colori del server) |
 | `pai.json` | Manifest: per tema i campi (con etichetta italiana), le classi con la simbologia del server e il numero di elementi |
-| `pai.pmtiles` | Tutti i temi, uno strato per dataset, zoom 12–18 |
-| `confine_comunale.geojson` | Confine del Comune, per riconoscere gli elementi di Palermo |
+| `pai.pmtiles` | Tutti i temi, uno strato per dataset, zoom 12–18 (ogni feature porta `cls_<tema>`, `col_<tema>`, `bor_<tema>`: classe e colori del server) |
+
+Solo questi due file servono alla webapp e sono versionati. I dati di lavoro (un GeoJSON per tema) stanno in `lavoro/pai/`, non versionato; il confine del Comune è `dati/incedi/confine_comunale.geojson`.
 
 ## Temi
 

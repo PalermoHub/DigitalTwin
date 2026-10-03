@@ -2056,7 +2056,10 @@ def test_scheda_incendi_anche_a_strato_spento(apri):
 def _pai(dataset="idraulica_pericolosita"):
     """Un elemento del PAI di Palermo e un punto sicuramente dentro il suo perimetro (il più grande: resta visibile a zoom 15)."""
     shapely_geometry = pytest.importorskip("shapely.geometry")
-    feats = json.loads((ROOT / "dati" / "pai" / f"{dataset}.geojson").read_text(encoding="utf-8"))["features"]
+    sorgente = ROOT / "lavoro" / "pai" / f"{dataset}.geojson"
+    if not sorgente.exists():
+        pytest.skip("dati di lavoro PAI non scaricati (python3 scripts/pai.py)")
+    feats = json.loads(sorgente.read_text(encoding="utf-8"))["features"]
     f = max(feats, key=lambda f: f["properties"].get("sup_ha", 0))
     p = shapely_geometry.shape(f["geometry"]).representative_point()
     return (p.x, p.y), f["properties"]

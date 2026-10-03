@@ -72,7 +72,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dati-pai
-          path: dati/pai/
+          path: |
+            dati/pai/
+            lavoro/pai/
 
       - name: Salva nel repository
         if: ${{ inputs.committa }}
