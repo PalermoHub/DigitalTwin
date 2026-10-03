@@ -49,4 +49,5 @@ Codice sotto [EUPL-1.2](LICENSE). Dati e documentazione prodotti dal progetto so
 ## Rigenerare la guida
 1. Rivedi i testi in `js/core/guida-contenuti.js`.
 2. `python3 scripts/guida_screenshot.py` (immagini in `img/guida/passi/`; serve la rete per la base cartografica).
-3. `python3 scripts/guida_video.py` (video, audio e sottotitoli in `media/guida/`; richiede `ffmpeg`, `piper-tts` e il modello vocale: `python3 -m piper.download_voices it_IT-paola-medium --data-dir ~/.cache/piper`).
+3. `python3 scripts/guida_video.py` (video, audio, sottotitoli e la versione ridotta per gli stati WhatsApp, sotto i 9 MB, in `media/guida/`; richiede `ffmpeg`, `piper-tts` e il modello vocale: `python3 -m piper.download_voices it_IT-paola-medium --data-dir ~/.cache/piper`).
+   Per rifare solo la versione WhatsApp: `python3 scripts/guida_video.py --whatsapp`.

@@ -62,3 +62,11 @@ def test_video_e_1280x720_h264_aac():
         ["ffprobe", "-v", "error", "-show_entries", "stream=codec_name,width,height", "-of", "csv=p=0", str(MEDIA / "guida.mp4")],
         capture_output=True, text=True, check=True).stdout.split()
     assert "h264,1280,720" in out and any(r.startswith("aac") for r in out)
+
+
+def test_versione_whatsapp_sotto_i_nove_mega_con_la_stessa_durata():
+    f = MEDIA / "guida-whatsapp.mp4"
+    assert f.exists(), "manca: esegui scripts/guida_video.py --whatsapp"
+    assert f.stat().st_size < 9 * 1024 * 1024
+    assert f.stat().st_size > 4 * 1024 * 1024  # non tagliare la qualità più del necessario
+    assert abs(_durata(f) - _durata(MEDIA / "guida.mp4")) < 1.0

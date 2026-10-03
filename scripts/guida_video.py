@@ -70,10 +70,31 @@ def _segmento(passo, wav, durata_audio, dest):
     ], check=True)
 
 
+def comprimi_whatsapp(src, dest, mb=8.5):
+    """Ricodifica `src` in `dest` a 960x540 con due passate, puntando a `mb` megabyte (limite degli stati WhatsApp: 10)."""
+    audio = 48_000
+    bitrate = int(mb * 1024 * 1024 * 8 * 0.97 / _durata(src)) - audio  # 3% di margine per il contenitore
+    comune = ["-vf", "scale=960:540", "-c:v", "libx264", "-preset", "slow", "-b:v", str(bitrate), "-pix_fmt", "yuv420p", "-r", str(FPS)]
+    with tempfile.TemporaryDirectory() as tmp:
+        log = str(Path(tmp) / "passata")
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), *comune, "-pass", "1", "-passlogfile", log, "-an", "-f", "null", "/dev/null"], check=True)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), *comune, "-pass", "2", "-passlogfile", log,
+                        "-c:a", "aac", "-b:a", str(audio), "-ac", "1", "-movflags", "+faststart", str(dest)], check=True)
+    print(f"{dest.name}: {dest.stat().st_size / 1024 / 1024:.1f} MB")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--voce", default="it_IT-paola-medium")
+    ap.add_argument("--whatsapp", action="store_true", help="solo la versione ridotta per gli stati WhatsApp, da media/guida/guida.mp4")
     args = ap.parse_args(argv)
+    if args.whatsapp:
+        for exe in ("ffmpeg", "ffprobe"):
+            if not shutil.which(exe):
+                sys.exit(f"manca {exe}: installalo (es. sudo apt install ffmpeg)")
+        if not (OUT / "guida.mp4").exists():
+            sys.exit("manca media/guida/guida.mp4: esegui prima scripts/guida_video.py")
+        return comprimi_whatsapp(OUT / "guida.mp4", OUT / "guida-whatsapp.mp4")
     modello = controlla_requisiti(args.voce)
     elenco = passi()
     mancanti = [p["immagine"]["file"] for p in elenco if not (ROOT / p["immagine"]["file"]).exists()]
@@ -97,7 +118,8 @@ def main(argv=None):
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lista), "-c", "copy", "-movflags", "+faststart", str(mp4)], check=True)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(mp4), "-vn", "-c:a", "libmp3lame", "-q:a", "4", str(OUT / "guida.mp3")], check=True)
     (OUT / "guida.vtt").write_text(formatta_vtt(durate, [p["narrazione"] for p in elenco]), encoding="utf-8")
-    print("scritti", *(OUT / n for n in ("guida.mp4", "guida.mp3", "guida.vtt")))
+    comprimi_whatsapp(OUT / "guida.mp4", OUT / "guida-whatsapp.mp4")
+    print("scritti", *(OUT / n for n in ("guida.mp4", "guida.mp3", "guida.vtt", "guida-whatsapp.mp4")))
 
 
 if __name__ == "__main__":
