@@ -139,6 +139,8 @@ def _salva_webp(png, destinazione):
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--solo")
+    ap.add_argument("--scala", type=float, default=1, help="device scale factor; con --dest per sorgenti ad alta risoluzione")
+    ap.add_argument("--dest", help="cartella dove salvare <id>.png a piena risoluzione (invece dei WebP della guida)")
     args = ap.parse_args(argv)
     controlla_requisiti()
     elenco = [p for p in passi() if args.solo in (None, p["id"])]
@@ -151,13 +153,18 @@ def main(argv=None):
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             for p in elenco:
-                ctx = browser.new_context(viewport=VIEWPORT, device_scale_factor=1)
+                ctx = browser.new_context(viewport=VIEWPORT, device_scale_factor=args.scala)
                 page = ctx.new_page()
                 page.goto(url + "/index.html")
                 page.wait_for_function("window.dt && window.dt.pronto === true", timeout=60000)
                 _prepara(page, p["scena"])
                 png = page.screenshot()
-                _salva_webp(png, ROOT / p["immagine"]["file"])
+                if args.dest:
+                    dest = Path(args.dest)
+                    dest.mkdir(parents=True, exist_ok=True)
+                    (dest / f"{p['id']}.png").write_bytes(png)
+                else:
+                    _salva_webp(png, ROOT / p["immagine"]["file"])
                 print("ok", p["id"])
                 ctx.close()
             browser.close()

@@ -54,3 +54,6 @@ Codice sotto [EUPL-1.2](LICENSE). Dati e documentazione prodotti dal progetto so
 
 ## Carosello social
 `python3 scripts/guida_carosello.py` genera 11 slide 1080×1350 in `social/carosello/` dagli screenshot della guida (rigenerali prima con `guida_screenshot.py` se la mappa è cambiata). I testi brevi sono in `SLIDES` nello script. Il link riportato nelle slide è `palermodigitaltwin.opendatasicilia.it` (costante `LINK`).
+
+### Secondo carosello (stile notturno)
+`python3 scripts/guida_carosello2.py` genera 11 slide 1080×1350 in `social/carosello-2/`: un panorama continuo della mappa, numeri dai nostri dati (monumenti, uffici, strati), screenshot ritagliati con annotazioni. Le sorgenti ad alta risoluzione (screenshot a doppia scala e panorama) vanno in `lavoro/carosello/` (non versionato); `--rigenera` le rifà.

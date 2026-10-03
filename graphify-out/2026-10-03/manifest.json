@@ -10,7 +10,7 @@
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
-    "mtime": 1791044145.024024,
+    "mtime": 1791048664.4493654,
     "ast_hash": "9ae8f3855afd16c5cba338e6ca73cd2d",
     "semantic_hash": ""
   },
@@ -195,13 +195,13 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791044121.5697725,
-    "ast_hash": "bec96c9b36bf910d041f192ba035f53d",
+    "mtime": 1791048664.5295694,
+    "ast_hash": "7eaec23bccec81ecb03e332f4a953ad3",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1791030365.7823036,
-    "ast_hash": "83492ebc5f36ec8e72849bee2e8db26d",
+    "mtime": 1791048781.992048,
+    "ast_hash": "1901755faf86ed5f2152fbf98d12d97d",
     "semantic_hash": ""
   },
   "aggiungere.txt": {
@@ -775,13 +775,13 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791043938.0431142,
-    "ast_hash": "b8cea632b1702b6e75a3baeecef683a5",
+    "mtime": 1791048664.4495218,
+    "ast_hash": "7e483aa715d81f3dcc927638e25bf459",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
-    "mtime": 1791044145.0078409,
-    "ast_hash": "2997ec614b7e9e6f0b4dd9ec1f079df8",
+    "mtime": 1791048863.812874,
+    "ast_hash": "119ee8292f9e39e78498b86a3fe4cab3",
     "semantic_hash": ""
   },
   "js/layers/ricerca-territorio.js": {
@@ -790,18 +790,18 @@
     "semantic_hash": ""
   },
   "scripts/guida_screenshot.py": {
-    "mtime": 1791043938.0435672,
-    "ast_hash": "0c9b7eb17a0dde859912781cab3f1cba",
+    "mtime": 1791048863.8131347,
+    "ast_hash": "96537d7ad521e824bb3a9ca67448ccf9",
     "semantic_hash": ""
   },
   "tests/js/guida.test.mjs": {
-    "mtime": 1791044121.5466366,
-    "ast_hash": "9631f58ab11a19d3118b5d325792daeb",
+    "mtime": 1791048832.7447224,
+    "ast_hash": "60f7baa863e205501bf14124cf68d1fc",
     "semantic_hash": ""
   },
   "tests/test_guida_media.py": {
-    "mtime": 1791043613.5878174,
-    "ast_hash": "faad293a440762b9eb953a9c5c684134",
+    "mtime": 1791048863.813781,
+    "ast_hash": "b804551dd9a4059dcbe054caa4b02f07",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-03-guida-professionale.md": {
@@ -815,38 +815,148 @@
     "semantic_hash": ""
   },
   "img/guida/passi/avvertenze.webp": {
-    "mtime": 1791043992.8746378,
+    "mtime": 1791048664.4455462,
     "ast_hash": "f755b4033c14e609f7e8ccd7eecdac80",
     "semantic_hash": ""
   },
   "img/guida/passi/clic.webp": {
-    "mtime": 1791043772.7946382,
+    "mtime": 1791048664.4459512,
     "ast_hash": "494574f0d9341c18a5ea64376362799a",
     "semantic_hash": ""
   },
   "img/guida/passi/cos-e.webp": {
-    "mtime": 1791043707.0786393,
+    "mtime": 1791048664.446265,
     "ast_hash": "31097b1fdd7020808cfa7625c94b5504",
     "semantic_hash": ""
   },
   "img/guida/passi/dati.webp": {
-    "mtime": 1791043714.9266393,
+    "mtime": 1791048664.4465806,
     "ast_hash": "f23c406b81b2b17ecf31e3217322496d",
     "semantic_hash": ""
   },
   "img/guida/passi/filtri.webp": {
-    "mtime": 1791043830.610638,
+    "mtime": 1791048664.446757,
     "ast_hash": "3ad2325930ec9b3957e1721dc87fd5da",
     "semantic_hash": ""
   },
   "img/guida/passi/scheda.webp": {
-    "mtime": 1791043975.1546378,
+    "mtime": 1791048664.4481554,
     "ast_hash": "eb63e308aa3c3e83e7e64315ad2a2bfc",
     "semantic_hash": ""
   },
   "img/guida/passi/strati.webp": {
-    "mtime": 1791043908.0626373,
+    "mtime": 1791048664.448625,
     "ast_hash": "5a326fac8274864b880edd13024668f6",
+    "semantic_hash": ""
+  },
+  "scripts/guida_carosello.py": {
+    "mtime": 1791048769.1698127,
+    "ast_hash": "368d555bc1b4e26c2fe32dfa21dd7763",
+    "semantic_hash": ""
+  },
+  "scripts/guida_video.py": {
+    "mtime": 1791048863.8134506,
+    "ast_hash": "8e5fc3ee87cc276747637c18afdfab61",
+    "semantic_hash": ""
+  },
+  "tests/test_guida_carosello.py": {
+    "mtime": 1791048726.2427843,
+    "ast_hash": "a63da538fb311d7760085c331cc2aecf",
+    "semantic_hash": ""
+  },
+  "tests/test_guida_requisiti.py": {
+    "mtime": 1791048832.7451198,
+    "ast_hash": "53203165b0f5f94c4b26ee199a802875",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/incendi.webp": {
+    "mtime": 1791048664.44706,
+    "ast_hash": "b1b0551284b1314bbf5be8677947d962",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/monumenti.webp": {
+    "mtime": 1791048664.447377,
+    "ast_hash": "ec024ad3c14c7b1737b6578dbe688ce8",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/pai.webp": {
+    "mtime": 1791048664.4477034,
+    "ast_hash": "789e9076e6f7d84f3189ce43c7b8e021",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/uffici.webp": {
+    "mtime": 1791048664.4489803,
+    "ast_hash": "10425e72c901fa0dab2f5a08ac8db5db",
+    "semantic_hash": ""
+  },
+  "social/carosello/01.png": {
+    "mtime": 1791048770.2802954,
+    "ast_hash": "a034d376ad1fdb236504d99c736abc22",
+    "semantic_hash": ""
+  },
+  "social/carosello/02.png": {
+    "mtime": 1791048770.5865252,
+    "ast_hash": "49925e5fbe7f34186f6a6583baccda68",
+    "semantic_hash": ""
+  },
+  "social/carosello/03.png": {
+    "mtime": 1791048770.8672814,
+    "ast_hash": "a27a7a41a920b1babac19cacdf418cdd",
+    "semantic_hash": ""
+  },
+  "social/carosello/04.png": {
+    "mtime": 1791048771.2822943,
+    "ast_hash": "d8d5ff7e7089e080b4c936f6a6ab5747",
+    "semantic_hash": ""
+  },
+  "social/carosello/05.png": {
+    "mtime": 1791048771.5984821,
+    "ast_hash": "4308aee250f416c6d8adbbac41548597",
+    "semantic_hash": ""
+  },
+  "social/carosello/06.png": {
+    "mtime": 1791048771.9364555,
+    "ast_hash": "323137877f9b02a057b1838ba4af75c9",
+    "semantic_hash": ""
+  },
+  "social/carosello/07.png": {
+    "mtime": 1791048772.2420905,
+    "ast_hash": "60d45d9f815798cdb2809d30d51e39ca",
+    "semantic_hash": ""
+  },
+  "social/carosello/08.png": {
+    "mtime": 1791048772.5422494,
+    "ast_hash": "4c432f4aedbb1b5ff4060e40b094a238",
+    "semantic_hash": ""
+  },
+  "social/carosello/09.png": {
+    "mtime": 1791048772.8220277,
+    "ast_hash": "31cc3077b1b0c9728e5996b6860deb49",
+    "semantic_hash": ""
+  },
+  "social/carosello/10.png": {
+    "mtime": 1791048773.0963006,
+    "ast_hash": "f30667e9c942c6b06fa9a35302bb07f1",
+    "semantic_hash": ""
+  },
+  "social/carosello/11.png": {
+    "mtime": 1791048773.314482,
+    "ast_hash": "912ba86c273417bdd35b7b68829a39de",
+    "semantic_hash": ""
+  },
+  "media/guida/guida-whatsapp.mp4": {
+    "mtime": 1791049041.2384198,
+    "ast_hash": "ecff60ead6fb247277832275483c7e5a",
+    "semantic_hash": ""
+  },
+  "media/guida/guida.mp3": {
+    "mtime": 1791048959.0744386,
+    "ast_hash": "c0343a2d87f3feb9c02a381813a71b64",
+    "semantic_hash": ""
+  },
+  "media/guida/guida.mp4": {
+    "mtime": 1791048955.4807389,
+    "ast_hash": "63f4ae0c0b58d75c4ecbc7e15d09070e",
     "semantic_hash": ""
   }
 }
