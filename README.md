@@ -51,3 +51,6 @@ Codice sotto [EUPL-1.2](LICENSE). Dati e documentazione prodotti dal progetto so
 2. `python3 scripts/guida_screenshot.py` (immagini in `img/guida/passi/`; serve la rete per la base cartografica).
 3. `python3 scripts/guida_video.py` (video, audio, sottotitoli e la versione ridotta per gli stati WhatsApp, sotto i 9 MB, in `media/guida/`; richiede `ffmpeg`, `piper-tts` e il modello vocale: `python3 -m piper.download_voices it_IT-paola-medium --data-dir ~/.cache/piper`).
    Per rifare solo la versione WhatsApp: `python3 scripts/guida_video.py --whatsapp`.
+
+## Carosello social
+`python3 scripts/guida_carosello.py` genera 11 slide 1080×1350 in `social/carosello/` dagli screenshot della guida (rigenerali prima con `guida_screenshot.py` se la mappa è cambiata). I testi brevi sono in `SLIDES` nello script.
