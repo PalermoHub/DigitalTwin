@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { dataIt, durata, modelloPopup, voceIncendio } from '../../js/layers/scheda-incendi.js';
+import { dataIt, durata, modelloPopup, voceIncendio, vociIncendi } from '../../js/layers/scheda-incendi.js';
 
 const recente = {
   anno: 2025, id: 33540, data: '2025-05-23', localita: 'Monte Pellegrino', sup_ha: 0.1868, sup_boscata_ha: 0.0196, sup_non_boscata_ha: 0,
@@ -42,4 +42,15 @@ test('scheda: un anno vecchio con pochi campi mostra solo quelli che ha', () => 
   const r = righeDi(voceIncendio(antico));
   assert.deepEqual(Object.keys(r), ['Data', 'Località', 'Superficie totale']);
   assert.equal(voceIncendio({ anno: 2008, id: 1 }).titolo, 'Incendio 2008');
+});
+
+test('incendi sovrapposti: una sola sezione a fisarmonica; uno solo resta completo', () => {
+  assert.equal(vociIncendi([recente])[0].chiave, 'incendio-2025-33540');
+  const v = vociIncendi([recente, antico]);
+  assert.equal(v.length, 1);
+  assert.equal(v[0].chiave, 'incendio:gruppo');
+  assert.equal(v[0].accordion.riassunto, '2 incendi sovrapposti · dal 2007 al 2025');
+  assert.equal(v[0].accordion.elementi[0].titolo, 'Incendio a Monte Pellegrino');
+  assert.equal(v[0].accordion.elementi[0].anteprima, '23/05/2025');
+  assert.ok(v[0].accordion.elementi[0].righe.length > 3);
 });

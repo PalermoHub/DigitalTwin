@@ -9,6 +9,8 @@ dati/*/
 !dati/uffici/
 # eccezione: incendi (piccoli, rigenerati dal workflow «Aggiorna incendi»)
 !dati/incedi/
+# eccezione: PAI (rigenerato dal workflow «Aggiorna PAI»)
+!dati/pai/
 dati/uffici/grezzo.json
 .cache/
 dati/delete/

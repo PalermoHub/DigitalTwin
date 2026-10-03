@@ -1,0 +1,88 @@
+name: Aggiorna PAI
+
+# Avvio manuale: ri-scarica i vincoli del PAI (Piano di Assetto Idrogeologico) del Comune di Palermo dal SITR della Regione Siciliana
+# (pericolosità e rischio idraulico e geomorfologico, dissesti, siti di attenzione, erosione costiera, con la simbologia del server)
+# e rigenera dati/pai/ con il PMTiles a zoom 12-18. Un servizio nuovo sul server compare come avviso nel log: va aggiunto a scripts/pai.py.
+on:
+  workflow_dispatch:
+    inputs:
+      committa:
+        description: "Salva i dati aggiornati nel repository (altrimenti solo artefatto scaricabile)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-pai
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa shapely
+        run: pip install shapely
+
+      - name: Cache di tippecanoe
+        id: cache-tippecanoe
+        uses: actions/cache@v4
+        with:
+          path: ~/tippecanoe-bin
+          key: tippecanoe-2.53.0-${{ runner.os }}
+
+      - name: Compila tippecanoe
+        if: steps.cache-tippecanoe.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libsqlite3-dev zlib1g-dev
+          git clone --depth 1 --branch 2.53.0 https://github.com/felt/tippecanoe.git /tmp/tippecanoe
+          make -C /tmp/tippecanoe -j"$(nproc)"
+          make -C /tmp/tippecanoe install PREFIX="$HOME/tippecanoe-bin"
+
+      - name: Scarica i vincoli PAI di Palermo e costruisci il PMTiles
+        run: |
+          export PATH="$HOME/tippecanoe-bin/bin:$PATH"
+          python3 scripts/pai.py
+
+      - name: Riepilogo
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, os
+          m = json.load(open("dati/pai/pai.json"))
+          print("## Vincoli PAI aggiornati")
+          print(f"- Aggiornato al {m['aggiornato']} · PMTiles: {os.path.getsize('dati/pai/pai.pmtiles') / 1e6:.1f} MB")
+          print("")
+          print("| Tema | Gruppo | Elementi | Superficie / lunghezza |")
+          print("|---|---|---|---|")
+          for d in m["dataset"]:
+              misura = f"{d['sup_ha']} ha" if d["geometria"] == "poligono" else f"{d['lung_km']} km"
+              print(f"| {d['titolo']} | {d['gruppo']} | {d['n']} | {misura if d['n'] else '–'} |")
+          PY
+
+      - name: Artefatto
+        uses: actions/upload-artifact@v4
+        with:
+          name: dati-pai
+          path: dati/pai/
+
+      - name: Salva nel repository
+        if: ${{ inputs.committa }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dati/pai/
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione nei dati."
+          else
+            git commit -m "dati: aggiornamento PAI ($(date -u +%F))"
+            git push
+          fi

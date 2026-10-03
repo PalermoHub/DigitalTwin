@@ -53,3 +53,19 @@ export function voceIncendio(p) {
     fonte: FONTE,
   };
 }
+
+// Più incendi sovrapposti nello stesso punto: una sola sezione a fisarmonica, dal più recente; con uno solo resta la sezione completa.
+export function vociIncendi(lista) {
+  if (lista.length <= 1) return lista.map(voceIncendio);
+  const anni = [...new Set(lista.map(p => p.anno))];
+  return [{
+    chiave: 'incendio:gruppo', peso: 7, titolo: 'Incendi', icona: 'incendio', badge: `${lista.length} incendi`, sempre: true,
+    gruppi: [],
+    accordion: {
+      icona: 'incendio', suggerimento: 'Seleziona un incendio per vedere i dettagli',
+      riassunto: `${lista.length} incendi sovrapposti · ${anni.length > 1 ? `dal ${Math.min(...anni)} al ${Math.max(...anni)}` : anni[0]}`,
+      elementi: lista.map(p => ({ titolo: titoloIncendio(p), anteprima: dataIt(p.data) ?? String(p.anno), righe: voceIncendio(p).gruppi.flatMap(g => g.righe) })),
+    },
+    fonte: FONTE,
+  }];
+}

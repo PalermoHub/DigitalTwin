@@ -1,0 +1,1317 @@
+{
+ "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai",
+ "aggiornato": "2026-10-03",
+ "dataset": [
+  {
+   "id": "idraulica_pericolosita",
+   "gruppo": "Idraulica",
+   "titolo": "Pericolosità idraulica",
+   "geometria": "poligono",
+   "n": 11052,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Idraulica_Pericolosita/MapServer/0",
+   "campi": [
+    {
+     "k": "bcn_nmr",
+     "label": "Numero bacino"
+    },
+    {
+     "k": "data_dpr",
+     "label": "Data del decreto",
+     "data": true
+    },
+    {
+     "k": "data_gurs",
+     "label": "Data GURS",
+     "data": true
+    },
+    {
+     "k": "codice",
+     "label": "Codice"
+    },
+    {
+     "k": "comune",
+     "label": "Comune"
+    },
+    {
+     "k": "provincia",
+     "label": "Provincia"
+    },
+    {
+     "k": "n_dsg",
+     "label": "Numero decreto segretario AdB"
+    },
+    {
+     "k": "data_dsg",
+     "label": "Data decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_dsg",
+     "label": "Numero GURS decreto segretario AdB"
+    },
+    {
+     "k": "dgurs_dsg",
+     "label": "Data GURS decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "n_adsg",
+     "label": "Numero decreto di adozione del segretario AdB"
+    },
+    {
+     "k": "data_adsg",
+     "label": "Data decreto di adozione del segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_adsg",
+     "label": "Numero GURS del decreto di adozione del segretario AdB"
+    },
+    {
+     "k": "dgurs_adsg",
+     "label": "Data GURS del decreto di adozione del segretario AdB",
+     "data": true
+    }
+   ],
+   "temi": [
+    {
+     "id": "idraulica_pericolosita",
+     "titolo": "Pericolosità idraulica",
+     "campo": "PERICOLO",
+     "riga": "Pericolosità",
+     "classi": [
+      {
+       "label": "P1",
+       "colore": "#73dfff",
+       "opacita": 1.0,
+       "bordo": "#73dfff",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "P1"
+       ],
+       "n": 4443
+      },
+      {
+       "label": "P2",
+       "colore": "#00a9e6",
+       "opacita": 1.0,
+       "bordo": "#00a9e6",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "P2"
+       ],
+       "n": 4210
+      },
+      {
+       "label": "P3",
+       "colore": "#0084a8",
+       "opacita": 1.0,
+       "bordo": "#0084a8",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "P3"
+       ],
+       "n": 2056
+      },
+      {
+       "label": "P4",
+       "colore": "#002673",
+       "opacita": 1.0,
+       "bordo": "#002673",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "P4"
+       ],
+       "n": 343
+      }
+     ]
+    }
+   ],
+   "sup_ha": 1241.71
+  },
+  {
+   "id": "idraulica_rischio",
+   "gruppo": "Idraulica",
+   "titolo": "Rischio idraulico",
+   "geometria": "poligono",
+   "n": 7561,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Idraulica_Rischio/MapServer/0",
+   "campi": [
+    {
+     "k": "bcn_nmr",
+     "label": "Numero bacino"
+    },
+    {
+     "k": "data_dpr",
+     "label": "Data del decreto",
+     "data": true
+    },
+    {
+     "k": "data_gurs",
+     "label": "Data GURS",
+     "data": true
+    },
+    {
+     "k": "comune",
+     "label": "Comune"
+    },
+    {
+     "k": "codice",
+     "label": "Codice"
+    },
+    {
+     "k": "n_dsg",
+     "label": "Numero decreto segretario AdB"
+    },
+    {
+     "k": "data_dsg",
+     "label": "Data decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_dsg",
+     "label": "Numero GURS decreto segretario AdB"
+    },
+    {
+     "k": "dgurs_dsg",
+     "label": "Data GURS decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "provincia",
+     "label": "Provincia"
+    },
+    {
+     "k": "ctr",
+     "label": "Numero/i CTR"
+    },
+    {
+     "k": "n_adsg",
+     "label": "Numero decreto di adozione del segretario AdB"
+    },
+    {
+     "k": "data_adsg",
+     "label": "Data decreto di adozione del segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_adsg",
+     "label": "Numero GURS del decreto di adozione del segretario AdB"
+    },
+    {
+     "k": "dgurs_adsg",
+     "label": "Data GURS del decreto di adozione del segretario AdB",
+     "data": true
+    }
+   ],
+   "temi": [
+    {
+     "id": "idraulica_rischio",
+     "titolo": "Rischio idraulico",
+     "campo": "RISCHIO",
+     "riga": "Rischio",
+     "classi": [
+      {
+       "label": "R1",
+       "colore": "#ffff00",
+       "opacita": 1.0,
+       "bordo": "#ffff00",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "R1"
+       ],
+       "n": 1088
+      },
+      {
+       "label": "R2",
+       "colore": "#e6e600",
+       "opacita": 1.0,
+       "bordo": "#e6e600",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "R2"
+       ],
+       "n": 3715
+      },
+      {
+       "label": "R3",
+       "colore": "#e69800",
+       "opacita": 1.0,
+       "bordo": "#e69800",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "R3"
+       ],
+       "n": 2418
+      },
+      {
+       "label": "R4",
+       "colore": "#e60000",
+       "opacita": 1.0,
+       "bordo": "#e60000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "R4"
+       ],
+       "n": 340
+      }
+     ]
+    }
+   ],
+   "sup_ha": 1375.76
+  },
+  {
+   "id": "idraulica_siti",
+   "gruppo": "Idraulica",
+   "titolo": "Siti di attenzione idraulica",
+   "geometria": "poligono",
+   "n": 38,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Idraulica_SitiAttenzione/MapServer/0",
+   "campi": [
+    {
+     "k": "bcn_nmr",
+     "label": "Numero bacino"
+    },
+    {
+     "k": "pericolo",
+     "label": "Pericolo"
+    },
+    {
+     "k": "data_dpr",
+     "label": "Data del decreto",
+     "data": true
+    },
+    {
+     "k": "data_gurs",
+     "label": "Data GURS",
+     "data": true
+    },
+    {
+     "k": "codice",
+     "label": "Codice"
+    },
+    {
+     "k": "comune",
+     "label": "Comune"
+    },
+    {
+     "k": "provincia",
+     "label": "Provincia"
+    },
+    {
+     "k": "n_adsg",
+     "label": "Numero decreto di adozione del segretario AdB"
+    },
+    {
+     "k": "data_adsg",
+     "label": "Data decreto di adozione del segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_adsg",
+     "label": "Numero GURS del decreto di adozione del segretario AdB"
+    },
+    {
+     "k": "dgurs_adsg",
+     "label": "Data GURS del decreto di adozione del segretario AdB",
+     "data": true
+    },
+    {
+     "k": "n_dsg",
+     "label": "Numero decreto segretario AdB"
+    },
+    {
+     "k": "data_dsg",
+     "label": "Data decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_dsg",
+     "label": "Numero GURS decreto segretario AdB"
+    }
+   ],
+   "temi": [
+    {
+     "id": "idraulica_siti",
+     "titolo": "Siti di attenzione idraulica",
+     "campo": null,
+     "riga": null,
+     "classi": [
+      {
+       "valore": null,
+       "label": "Siti di attenzione idraulica",
+       "colore": "#9eaad7",
+       "opacita": 1.0,
+       "bordo": "#bed2ff",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "n": 38
+      }
+     ]
+    }
+   ],
+   "sup_ha": 154.94
+  },
+  {
+   "id": "idraulica_esondazioni_manovra",
+   "gruppo": "Idraulica",
+   "titolo": "Esondazioni: manovra di scarico",
+   "geometria": "poligono",
+   "n": 0,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Idraulica_Esondazioni/MapServer/0",
+   "campi": [],
+   "temi": [
+    {
+     "id": "idraulica_esondazioni_manovra",
+     "titolo": "Esondazioni: manovra di scarico",
+     "campo": null,
+     "riga": null,
+     "classi": [
+      {
+       "valore": null,
+       "label": "Esondazioni: manovra di scarico",
+       "colore": "#00a884",
+       "opacita": 0.8,
+       "bordo": "#002673",
+       "opacita_bordo": 0.8,
+       "spessore_bordo": 1,
+       "n": 0
+      }
+     ]
+    }
+   ],
+   "sup_ha": 0
+  },
+  {
+   "id": "idraulica_esondazioni_collasso",
+   "gruppo": "Idraulica",
+   "titolo": "Esondazioni: collasso",
+   "geometria": "poligono",
+   "n": 0,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Idraulica_Esondazioni/MapServer/1",
+   "campi": [],
+   "temi": [
+    {
+     "id": "idraulica_esondazioni_collasso",
+     "titolo": "Esondazioni: collasso",
+     "campo": null,
+     "riga": null,
+     "classi": [
+      {
+       "valore": null,
+       "label": "Esondazioni: collasso",
+       "colore": "#0070ff",
+       "opacita": 0.8,
+       "bordo": "#000000",
+       "opacita_bordo": 0.8,
+       "spessore_bordo": 1,
+       "n": 0
+      }
+     ]
+    }
+   ],
+   "sup_ha": 0
+  },
+  {
+   "id": "geo_pericolosita",
+   "gruppo": "Geomorfologia",
+   "titolo": "Pericolosità geomorfologica",
+   "geometria": "poligono",
+   "n": 721,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Geomorfologia_Pericolosita/MapServer/0",
+   "campi": [
+    {
+     "k": "pai_nmr",
+     "label": "Numero PAI"
+    },
+    {
+     "k": "bacino",
+     "label": "Bacino"
+    },
+    {
+     "k": "provincia",
+     "label": "Provincia"
+    },
+    {
+     "k": "comune",
+     "label": "Comune"
+    },
+    {
+     "k": "localita",
+     "label": "Località"
+    },
+    {
+     "k": "coll_diss",
+     "label": "Dissesto collegato"
+    },
+    {
+     "k": "sigla_p",
+     "label": "Sigla"
+    },
+    {
+     "k": "n_dpr",
+     "label": "Decreto del Presidente della Regione n."
+    },
+    {
+     "k": "data_dpr",
+     "label": "Data del decreto",
+     "data": true
+    },
+    {
+     "k": "ngurs",
+     "label": "Numero GURS"
+    },
+    {
+     "k": "dgurs",
+     "label": "Data GURS",
+     "data": true
+    },
+    {
+     "k": "n_dsg",
+     "label": "Numero decreto segretario AdB"
+    },
+    {
+     "k": "data_dsg",
+     "label": "Data decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_dsg",
+     "label": "Numero GURS decreto segretario AdB"
+    },
+    {
+     "k": "dgurs_dsg",
+     "label": "Data GURS decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "altri_comu",
+     "label": "Altro comune"
+    },
+    {
+     "k": "altri_com2",
+     "label": "Altro comune (2)"
+    },
+    {
+     "k": "ctr",
+     "label": "Numero/i CTR"
+    },
+    {
+     "k": "n_adsg",
+     "label": "Numero decreto di adozione del segretario AdB"
+    },
+    {
+     "k": "ngurs_adsg",
+     "label": "Numero GURS del decreto di adozione del segretario AdB"
+    }
+   ],
+   "temi": [
+    {
+     "id": "geo_pericolosita",
+     "titolo": "Pericolosità geomorfologica",
+     "campo": "PERICOLO",
+     "riga": "Pericolosità",
+     "classi": [
+      {
+       "label": "P1",
+       "colore": "#ffff73",
+       "opacita": 1.0,
+       "bordo": "#ffff73",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "1"
+       ],
+       "n": 19
+      },
+      {
+       "label": "P2",
+       "colore": "#e6e600",
+       "opacita": 1.0,
+       "bordo": "#e6e600",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "2"
+       ],
+       "n": 6
+      },
+      {
+       "label": "P3",
+       "colore": "#e69800",
+       "opacita": 1.0,
+       "bordo": "#e69800",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "3"
+       ],
+       "n": 85
+      },
+      {
+       "label": "P4",
+       "colore": "#a80000",
+       "opacita": 1.0,
+       "bordo": "#a80000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "4",
+        "5",
+        "9"
+       ],
+       "n": 598
+      }
+     ]
+    }
+   ],
+   "sup_ha": 5377.85
+  },
+  {
+   "id": "geo_rischio",
+   "gruppo": "Geomorfologia",
+   "titolo": "Rischio geomorfologico",
+   "geometria": "poligono",
+   "n": 735,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Geomorfologia_Rischio/MapServer/0",
+   "campi": [
+    {
+     "k": "bacino",
+     "label": "Bacino"
+    },
+    {
+     "k": "provincia",
+     "label": "Provincia"
+    },
+    {
+     "k": "comune",
+     "label": "Comune"
+    },
+    {
+     "k": "coll_diss",
+     "label": "Dissesto collegato"
+    },
+    {
+     "k": "sigla_p",
+     "label": "Sigla"
+    },
+    {
+     "k": "elemento_r",
+     "label": "Elemento a rischio"
+    },
+    {
+     "k": "e",
+     "label": "Classe dell'elemento a rischio"
+    },
+    {
+     "k": "n_dpr",
+     "label": "Decreto del Presidente della Regione n."
+    },
+    {
+     "k": "data_dpr",
+     "label": "Data del decreto",
+     "data": true
+    },
+    {
+     "k": "n_bac",
+     "label": "Numero bacino"
+    },
+    {
+     "k": "ngurs",
+     "label": "Numero GURS"
+    },
+    {
+     "k": "dgurs",
+     "label": "Data GURS",
+     "data": true
+    },
+    {
+     "k": "n_dsg",
+     "label": "Numero decreto segretario AdB"
+    },
+    {
+     "k": "data_dsg",
+     "label": "Data decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_dsg",
+     "label": "Numero GURS decreto segretario AdB"
+    },
+    {
+     "k": "dgurs_dsg",
+     "label": "Data GURS decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "altri_comu",
+     "label": "Altro comune"
+    },
+    {
+     "k": "ctr",
+     "label": "Numero/i CTR"
+    },
+    {
+     "k": "n_adsg",
+     "label": "Numero decreto di adozione del segretario AdB"
+    },
+    {
+     "k": "ngurs_adsg",
+     "label": "Numero GURS del decreto di adozione del segretario AdB"
+    }
+   ],
+   "temi": [
+    {
+     "id": "geo_rischio",
+     "titolo": "Rischio geomorfologico",
+     "campo": "RISCHIO",
+     "riga": "Rischio",
+     "classi": [
+      {
+       "label": "R1",
+       "colore": "#ffffbe",
+       "opacita": 1.0,
+       "bordo": "#ffffbe",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "1"
+       ],
+       "n": 6
+      },
+      {
+       "label": "R2",
+       "colore": "#ffff00",
+       "opacita": 1.0,
+       "bordo": "#ffff00",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "2"
+       ],
+       "n": 7
+      },
+      {
+       "label": "R3",
+       "colore": "#ffaa00",
+       "opacita": 1.0,
+       "bordo": "#ffaa00",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "3"
+       ],
+       "n": 388
+      },
+      {
+       "label": "R4",
+       "colore": "#e60000",
+       "opacita": 1.0,
+       "bordo": "#e60000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "4"
+       ],
+       "n": 334
+      }
+     ]
+    }
+   ],
+   "sup_ha": 1554.62
+  },
+  {
+   "id": "geo_siti",
+   "gruppo": "Geomorfologia",
+   "titolo": "Siti di attenzione geomorfologica",
+   "geometria": "poligono",
+   "n": 10,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Geomorfologia_SitiAttenzione/MapServer/0",
+   "campi": [
+    {
+     "k": "bacino",
+     "label": "Bacino"
+    },
+    {
+     "k": "provincia",
+     "label": "Provincia"
+    },
+    {
+     "k": "comune",
+     "label": "Comune"
+    },
+    {
+     "k": "localita",
+     "label": "Località"
+    },
+    {
+     "k": "sigla",
+     "label": "Sigla"
+    },
+    {
+     "k": "tipologia",
+     "label": "Tipologia"
+    },
+    {
+     "k": "nuova_sigl",
+     "label": "Nuova sigla"
+    },
+    {
+     "k": "modificato",
+     "label": "Modificato"
+    },
+    {
+     "k": "n_dpr",
+     "label": "Decreto del Presidente della Regione n."
+    },
+    {
+     "k": "n_dsg",
+     "label": "Numero decreto segretario AdB"
+    },
+    {
+     "k": "data_dsg",
+     "label": "Data decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_dsg",
+     "label": "Numero GURS decreto segretario AdB"
+    },
+    {
+     "k": "dgurs_dsg",
+     "label": "Data GURS decreto segretario AdB",
+     "data": true
+    }
+   ],
+   "temi": [
+    {
+     "id": "geo_siti",
+     "titolo": "Siti di attenzione geomorfologica",
+     "campo": null,
+     "riga": null,
+     "classi": [
+      {
+       "valore": null,
+       "label": "Siti di attenzione geomorfologica",
+       "colore": "#bee8ff",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "n": 10
+      }
+     ]
+    }
+   ],
+   "sup_ha": 1005.64
+  },
+  {
+   "id": "geo_fascia_p3p4",
+   "gruppo": "Geomorfologia",
+   "titolo": "Fascia di rispetto P3 e P4",
+   "geometria": "poligono",
+   "n": 0,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Geomorfologia_FasciaRispettoP3P4/MapServer/0",
+   "campi": [],
+   "temi": [
+    {
+     "id": "geo_fascia_p3p4",
+     "titolo": "Fascia di rispetto P3 e P4",
+     "campo": null,
+     "riga": null,
+     "classi": [
+      {
+       "valore": null,
+       "label": "Fascia di rispetto P3 e P4",
+       "colore": "#d3fad2",
+       "opacita": 1.0,
+       "bordo": "#6e6e6e",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "n": 0
+      }
+     ]
+    }
+   ],
+   "sup_ha": 0
+  },
+  {
+   "id": "dissesti",
+   "gruppo": "Geomorfologia",
+   "titolo": "Dissesti",
+   "geometria": "poligono",
+   "n": 457,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Geomorfologia_Dissesti/MapServer/0",
+   "campi": [
+    {
+     "k": "pai_nmr",
+     "label": "Numero PAI"
+    },
+    {
+     "k": "bacino",
+     "label": "Bacino"
+    },
+    {
+     "k": "provincia",
+     "label": "Provincia"
+    },
+    {
+     "k": "comune",
+     "label": "Comune"
+    },
+    {
+     "k": "altri_comu",
+     "label": "Altro comune"
+    },
+    {
+     "k": "localita",
+     "label": "Località"
+    },
+    {
+     "k": "sigla",
+     "label": "Sigla"
+    },
+    {
+     "k": "n_dpr",
+     "label": "Decreto del Presidente della Regione n."
+    },
+    {
+     "k": "data_dpr",
+     "label": "Data del decreto",
+     "data": true
+    },
+    {
+     "k": "pericolo",
+     "label": "Pericolo"
+    },
+    {
+     "k": "ngurs",
+     "label": "Numero GURS"
+    },
+    {
+     "k": "dgurs",
+     "label": "Data GURS",
+     "data": true
+    },
+    {
+     "k": "n_dsg",
+     "label": "Numero decreto segretario AdB"
+    },
+    {
+     "k": "data_dsg",
+     "label": "Data decreto segretario AdB",
+     "data": true
+    },
+    {
+     "k": "ngurs_dsg",
+     "label": "Numero GURS decreto segretario AdB"
+    },
+    {
+     "k": "dgurs_dsg",
+     "label": "Data GURS decreto segretario AdB",
+     "data": true
+    }
+   ],
+   "temi": [
+    {
+     "id": "dissesti_attivita",
+     "titolo": "Dissesti per attività",
+     "campo": "COD_ATT",
+     "riga": "Attività",
+     "classi": [
+      {
+       "label": "Attivo",
+       "colore": "#ff0000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "1"
+       ],
+       "n": 455
+      },
+      {
+       "label": "Inattivo",
+       "colore": "#e69800",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "2"
+       ],
+       "n": 1
+      },
+      {
+       "label": "Quiescente",
+       "colore": "#ffff00",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "3"
+       ],
+       "n": 0
+      },
+      {
+       "label": "Stabilizzato artificialmente o naturalmente",
+       "colore": "#ffffbe",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "4"
+       ],
+       "n": 1
+      }
+     ]
+    },
+    {
+     "id": "dissesti_tipologia",
+     "titolo": "Dissesti per tipologia",
+     "campo": "COD_TIP",
+     "riga": "Tipologia",
+     "classi": [
+      {
+       "label": "Crollo e/o ribaltamento",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADWElEQVR4nO1ay3LDMAikM/7/X05P9igKsLuAmks5dRyJRQjxKpf16WVmP87faD2zdhr/tX+4COYGmHqCMGsyJSi4qjLXda9MAetNIVIEYPiZaQdj5Vx5vszsJ1JAVaOTa+/1ihJknpECJt7oxBuf8hM7PTyzJ8CalUcTjs7b68nTUhByghXmrKOr4r45MUKGlJACqqRYTtXjZxEEKf7BvLyPQAhkhsptK5Fm5Y8On617w9wtgDVZxgwRdfyDlOxkmN4TQEpgzJChyWxw5SlhegpgLWBC+E6kGcHcFXAqAcr8y4k4j8i1ANb5qQJXHN00friPDYPVQ0xXfDs+UgqUm1EAW+V5gvxFSo3CXUqMApTQ6K3rmj+D762h5GafQKXc3L97NFXuRnzgvksUApHaF5godxnrCPddjhDViqty+Jt3Fb9dad4WkDFmTb8iBMPvVKL01AKZ5z7V1GAd2nH8kx2hFVzlxexhngrERx2hDnUbI6pj9JIkiL/6gGqKGQkUrYn4qPjMU4H4axSoCJjdgBI5OvhZDgDx1UQoyrQq/kKtPDsHDfGVnmAl3azeHouPCOJHeUDErHID6Pa6+IhSfC8PmASnhPgmPlsNdulUA3THiNaX8oAOIAU+SFk0SfGzf45atnH5HXWQI/5TSlHwPxSUdYVZ56R6ZyZ0KslRJZo8OJ2ucGWPkh6rvQK1YePmAdXbVEgpb1UlyDyz/wxNAXb2nHKgVDn8bYo6vTu1ZFXCoAI+kbgwv7W7RWoewIBPdnM8fKYEZnITM9PmA1RwNtTtGIgYfIT7+Dk1CjA3q3r57r51P1L+x7fqfIAiWLZ2+rkgJX5gVecDpmg6I1Qwzaw3HzBF1Fs9hXlyPqATs6eLpRD79HxAx8lNKAHKPTUf4FHXySGFI4ukMLvzAUruUKFOP4LCnpgP6ITNCTNnlBDiT80HVG56KgdA+9MnMjUfUD38zbuKX1XeWz8AASLv3REiIgZ/IkK05wMYITwe7HOaDIUufmc+gDHV6kH+DL87H5CZqlIafw2/Mx/AmCqT/X0Vf2I+IIvBiJgU+yh+Zz5AAXLBhb3H8LvzAQzIvbfL7wj+xHwAok6qehz/fz6A3JwR48VPVoSMHKU8QCEUiqIEZYqyaJJi/QKXI2+NguKIvwAAAABJRU5ErkJggg==",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "1"
+       ],
+       "n": 441
+      },
+      {
+       "label": "Colamento rapido",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADSElEQVR4nM1b25LsIAgkVfn/X855OZlyWJAGWp1+2p1RUIJcOs4tHDwichl//yreNT43QZAItnnEMM/wtx6bNexs/PXq8gyALjazoHGsNVd/po2b9apo/CXiGwBR9rFicl5HPgNfhq4cgVEA66zvjBtfeioGYB+NFYDXgBigc9Y7qBoydWy0AawovGND43m/grEz+VpWuJ5bf+AIZACKysY6RnjfVQw2zQLvAMuSq8/4TDZd72uAzKZOBzgLkdu7++tWgiwwvKrkOfcwwAoiR3Lzf1QDYVRxfmH0AHYz05VTmavnhDWLdQS6Vq/KYQLNJBcjBqAdHtsgUV0xW8dn7opK0Jq7oqnptMYfIyAGYDw5q7rrcgcoprJmlSATlgdsLXg8WFmgA8/VWPJRvSO83oJCiVnKkM8YcSXSob/XvKWI7K0EWURK15PSjBDLhU/3EOZRiAxguc2JjczSaIusyWSB07z/rLgpY5YFVmyU0eCMqLJHH2SDIMLnz4CM2+phCCMUlbLsaq5T4qaxshdgcondAFxmhFbGhcrRYb2JCrvBHT3+aa8SEZ8UPV20bMPICZ7EsSKL3Qt08jxa1EQ6MncW6AbIpjA9BzEgomNM4TArvBoeVzAu9HHGVnWEyBggorAkUO5llSxbFCFlBMsA2RTYvSDVrec1z/BI/LCmfACVcAAxC4Jol+r9Px1/CzcFdSjwFcchxC09932RfifnYHcd8Gg+oHzRQM4yRjNML1Uw+IAX6MZX9/v6QcB1AKsIibBq81YFGOobg+AvAvWW2buCsBSO6updZ7rywqOj5xLgzdAKeorFNTAyDeV+gCXYw9j5dZ8uxTt2X5LSROvq4wXdEcoupDN+pa4UD/BCB0GUbEChyQ6rHc52kNG4VEGmjwCSESppc2d1mGKy0RjQibjTUrQg00Mpu2Rej6MKo7GreoaSPOT1+Ch8NEb2fFY2vrxvQAshxu2OX2iP/zRKaAyIgt+pOwMZmOk4Uwgx0pW3IHR8Rdd0nvWTmV1PckcxBVWC1UXtQKa6y9Byn/S8qxdgX42xYLXScC9gCegsRqNTRHXlWPgKgkh5i7gdK34wUu4L7QV/9ql/MtNhhL2mJ4vOXI9Vctf1D2TR73SE1n57AAAAAElFTkSuQmCC",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "2"
+       ],
+       "n": 0
+      },
+      {
+       "label": "Sprofondamento",
+       "pattern": "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",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#6e6e6e",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 1,
+       "valori": [
+        "3"
+       ],
+       "n": 1
+      },
+      {
+       "label": "Scorrimento",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABOElEQVR4nO3ZwWqDQAAG4S34/q/cXhTE1MYyB1fyzaXUTi5/dsEyy0BiOfz+Pcb4uvCMu7K8E9Znx79xV/d4AvFPtgHPVt/Yr8/d/XQCI8t4v/rGlW/o49zl4of2H+buXFc4YsCIASNX/hM5e84drwNO+8Y/q+sKR34bcMo3/lldJzByNuB0b/yzun+dwKne+Gd1XeGIASMGjGgi0dVENJF70USi6wRGNJHoaiLRdYUjBowYMKKJaCKayKPRRKLrBEY0kehqItF1hSMGjBgwYsCIqBRdUUlUuhdRKbpOYERUiq6oFF1XOGLAiAEjopKoJCo9GlEpuk5gRFSKrqgUXVc4YsCIASOaSHQ1EU3kXjSR6DqBEU0kuppIdF3hiAEjBoxoIpqIJvJoNJHoOoERTSS6mkh0XeHIDybTljCjSWItAAAAAElFTkSuQmCC",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "4"
+       ],
+       "n": 2
+      },
+      {
+       "label": "Frana complessa",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAADQAAAA0CAYAAADFeBvrAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA6klEQVRoge2WQQrDMAwEbdD/v+xeGnBdWRYioLW9e0lJNSQiyTJSftO+x1r+M/sPipHhpDb8pCpzcMyz0ArQAslI4CIVmZH1zF45dqHWnbMecZv8hmFEGdLq0apMKEZ75caq9HyYMIz1DUG32Yw5thSOibVQ647e1yGdGRfqG8Mrh1AM5bQLJEM5Rc+xC0GKZoShnE4Cw1BO0XPVQumiGWEop8McHEM5LQDVbDFXtdyWoZwubiCdoZw6Lkg5fTNXLZQumhGGcjrMwTGU0wJQzRZzVcttGcrp4gbSGcqp44KU0zdz1ULpohlhPujg8P0gMGfNAAAAAElFTkSuQmCC",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "5"
+       ],
+       "n": 0
+      },
+      {
+       "label": "Espansione laterale o deformazione gravitativa (DGPV)",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADyElEQVR4nOVbWY7sMAjEUt//yp6vRA7NUmzpJz1+ZpLYgLEplqQ/9J/Tx3i2hXurSa7Eu5M/rINkgEu5CWUmeUdpEX0bYNO8cm8s/jxhS7i+yXIBjfFi/6vME5R1O64Dn7PY2Pv6wx54Qk5Gi/2VxnjEZfK5G+AZlXlt2pcLSEw6d1fjYfHlpw3lieixiWh5USDKHB0fBcMx3IhiQBf9C1GAiHoNIIEiUXyxGSCUUN+bs4hoVw0gYQQHxYgrSWM1cLbwCY5OlgE6/HMKOBHeJ4CqYyonYCJpmsIGVdcJEJQwAMWFrFEt/pL8m7oNoC0g6k6IwTQfD+FOxQBvHVdtQRY2wAaUiiHOqILgEl9NIY3HlKG/UuE3hGf5RYwbkjPdEOlIeTf7e43TeHtF3YOkYiii9LkzSLyOGiRTBIU2KdIQiZwIPvbXnaC2hggajroW6vUBkHHXc9GVJBDMuoA1ZoJOl0WLn5M2FYshaWGS8RADZdpe5/8ZI6vVYLS9lJkfUTiDH6hRl9cSI/aco34md5/oNFnlsDm3CoIdzQ5+vysZg8J6dzEEHbvEM6QzrPEwDTHRErMITV68Pr80/wxzLakwV0azpHXEqk0TZNd57pFOhTUhPJWtoDwCTOiLkMWuPSpjQKbZkQmT0WhUoe2Vw4hgzwW0Z8hzRDcvalinONUURZSWKsAK8bgecSEzf/EMIAnWujtWqqopGNn5kUoycwIqdXjXIqzOc6kfIFEUbStUSZMjSdR9/auXoxchwHuOve55QKfx+BrPi6FMC0plzu5pfJAulLZoiWd7JthBWpZ2GV3z3wmXe+jADcBRPqOAB0hamMrIOXlK9zV5N1UbIhppwFl1L4lK7fE3qsFK9Djnem5ivX1SdchUgxHyfDzSVK3WECJ1fh+gRREvE5zoBsHU8YkM4uMWoaciC85mSY98K2wBmnW8PaVOsqJC9FRENqX8kZQXwhCX0Phe86sG1kByE/VEARTEkLFR3ugctVKNGMBLlU9hkvtwRSSF0JaZN0aS5YZBtNfmKSBlguhOer0F615mTOrFCN/NiVAlYcAIeR9KSjtRCUHWOC47Kgulx8Z57wazCmiFisY3ksdHynJ3fsdPZjr8tWNOikfHj6as3UZA7Y1Wm0qZctgykBb2LJ5e/yCjB0yRFyMXeWEyo5RX8p6UXbjYjer+vQCUfBjE6wttTIbEE9v5rXCXL1d5lJqiXofW8+Uo/RQAieS2+GbXkzvS4TannPB8qyss+WG0skPSWC8J6mqZSeNDn8m9ldBMl8yPcvgPS8wZlpsUljkAAAAASUVORK5CYII=",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "6"
+       ],
+       "n": 0
+      },
+      {
+       "label": "Colamento lento",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAAFQAAABUCAYAAAAcaxDBAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABRUlEQVR4nO3VQWrDUBAFQQV0/ysnu6xiQoaeHxnqLQVqazOu+7J093Vdn4P3Pl48f2qr7r1s3b98RPUB/92qey9bd/gjdv188u92zpNW3ftu/eXkn3rOj/prcPLxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/Vc/LxKD/rUT7uUf7UKN/0KL/V+wKPto3PuZwj1AAAAABJRU5ErkJggg==",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "7"
+       ],
+       "n": 0
+      },
+      {
+       "label": "Area a franosità diffusa",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABJklEQVRYhe2WQY6DMAxFH1Lv1fRkmJPVPVlnEVsxLqiTdKarfCkCQpz/iAP4Qr8KsAIboAPxO10GYtx0TddfA3DT1ZpSV2UIphcgGj1oqwBwp6ZF/hNAgWcyEuv31qWRFGy0pb/SVmJoU44AiB1XWkoeI+a9ACUYwh+YAyUD3G1CORisyehoTJZQ03Q7ua8ZYDOIbDYqsfmEE+AMoOw3WbF2GPxL5YfawThANBLqq+byd70XwufS4KHUlDyBJQKoUXrgZoNu4f6I3Gixc7H+zQfEFMRBV1oqRn86YvFuquw/Xi8ATia0lHR/WpMW6soWu34Qnj4CRBPP+Se/Wzno03Q8BTgKjiq8T827OV4AeuSmsx6Y9YAy64EPzZn1ALMemPXArAfgB2Krmf1sqTTWAAAAAElFTkSuQmCC",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "8"
+       ],
+       "n": 0
+      },
+      {
+       "label": "Deformazione superficiale lenta",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAAE4AAABOCAYAAACOqiAdAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABQ0lEQVR4nO3ZwU7CQAAG4TXp+78yHm0MtHYCsqXfXDyQQRlTspt/GY+5jTG+Nl6/tLfM9MecybsX7vbr5/jjL7mUdy9c+U9cznv0qGIH4SLCRYSLCBcRLiJcZBk/B7sjh8A1l/SWrRd33uTIteXjvOXAm6453d3y2V75jpvuQ7zDq99xp7qQv8I7+qie8kL+Cs9xJCJcRLiIcBHhIsJFhItsrVxrprhYz+TtrVxTXaxn8rYe1SnviLN4lvzoWfKjZ8mPnuNIRLiIcBHhIsJFhIsIF7HkR8+SHz1LfvQs+dGz5EfPkh89x5GIcBHhIsJFhIsIFxEuYsmPniXfkv+/niU/epb86Fnyo+c4EhEuIlxEuIhwEeEiwkUs+dGz5EfPkh89S370LPnRs+RHz3EkIlxEuIhwEeEiwkWEi1jyo2fJj943qTDNWms1HVoAAAAASUVORK5CYII=",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "9"
+       ],
+       "n": 1
+      },
+      {
+       "label": "Calanco",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAF7klEQVR4nL2c3ZbbMAiElXPy/q/cXrTrOjIw34BSrjaSQJjfkZzse/2hX2ut1+pRxHsfc2RP9DghY+fNZF3j778DFtP2d7T2lfyt9sgcUTlk/1wZTzl7n8tkXePvYrJSjHi4etDqISJdqr2VLo6zK11CehcMThRGMrLPZO3JNMzkkOdWEbveJgOJSJpilZEyfvI3NRhxUKTHx9iewjQS6aYVP20yxGmuMTKiTr3GfgxIu081R2S46dtJZYe/E5UffFEXjj5nKRKNR6HuKFg9kJvCyoEdh3/wRV04IiusoRJ0PpPdiRxaKrDcuwFtEAlJyZw0jG7ZcGWk6+4whj6YE01ujXEbBmlYaqzb9K4aOOlgykAU3nQiR+niNMaMZNPbayDpYDQad6oUUVGyZ4kD3Ct5maxKrzuVODDbwIE3Jy4Hoj2dSFPGnuj8qo5y+wadE4bbhJyj4r7v/XPnZJLJK3XJamAnRdR4hQ8jXgevUR2cNQhbZjjQafuUTqTyLoc2pg4WRfpGBjxdMxyDu9iT6nkiYkOKgPSkIP/MO3XQOSZmOlD5LsqQe1RAegVj1JMO/CG11G0KJBJpDc+C6LUWbyInIAqpR05n3NefqrFq71YTST2wjUXk3ICc6rZRqjqpjIOjukzIxlSEEHxYySIyla7R/k4q46x0auDEwPdxJzoymU6aU6JOkTXQqUNON4x4VHRMavHuHNdJaKx6rZmR0/7dmrav7TzkznvCSSmRszAt9KrLqgJeddSu0wgRfvssfF9IC3005pxqOg2FGJqmcBWJqZ7VOxEKS6pxFZVKRrdzRw/vdl4bxuwbZ+OdFKY1x3kIR05FTg18rN1roIIgZNyNoG69mxi7q89eCl70nQhRZprCqua6Bjp1zCsNrN4LT4FyxFMezpN1DoarHFHJacEZdZSjUZPxdOYjAxAYFc3va5wSgPS8G7AT5oqnA5EcPUhaO0FAs+PaW91Id45OlSIkXbukmky2ttuY1lr/DEgFVkKJItMGUTnJqWddZz1AefbtrIyRjqs5R26nFlI00D2RXPPf+HYWmZtAlmq9G3kkw0pdsi7cjSzl0UkNJPqpfU5S2YW79UN51Im4al/lACcto89kTdqFdzpVH2lH70SPC6eOpbIC0iuZ75yfaUefNqvuzY+7rkxh5x7vhEKK9xsdlzqkDBD6WpPQRKEOlMjWZjKnBguJwhgKZh9As1BocsWk5pyUdwz2kJv9TmQn2g0jo9Ha2S0BCiZ1j3gRPZ7D+bWmIpJKldEozHBrs5MBxPEf65xfayrqOOFECjtESku0Z7qWvlSiNVDxZjyOsyhsIXeF7t4POlkDJ93QiV4anVSmk3HoNqbrEVeGG70k8ukZOSKn8aEaOCHycG6NJLxOXaPGLGXS38q5ODCam8AHRZ37yk4dfjxf9U6EeN+FFJ2mkxGBQCdQRCbvqoHdw3hGBMNNa9G+LuN3dMtklJEavVifprHTdbvdPyKSxifw5QePOgt30ngtjvUcCBERORo6cp0z9FrLuw90yI26fY42qsp5p6FY6CByH9jpwNUYUdItCXdZtLu6gD2cJ/eBnQ5sKTEg0nHdZmUR+YqvosnZlMqhV2JdHZx9yy7cSVeaYsrI1WenG1MdCK8qL+gX69HGjnfdOujQ5Hw83XutrYl0aFKDsnlllPJkYO6vGo40sDqJKIFOTUMKAfk0YjrRZWeaOom4EEJF5CR13eg4nbYhTOqmMMFv1Xp3bbSeZo2Sk/GgbMsMOEldtd55wA4470CodqnIrvRPR4uac+R00m+azmlA0S9YZsJI2riNw5HxjX0tjEr+awdJX7qePJRTLynEUfLJXiGRdyJTKFDNOcaqeCgv1SEal9dZlBwYMGkYnfo61aEaT7uwi4sccDzBbZTXLTnTuokvE8jnXUEnvRzHRc0qu/9zGwe9oI345b9BnipH11JjOliUyp480/gyoSLn6NU9VRAeN/KtkrbXQDeFnZTt8FHDOpGpDKrS+OPvvQa6Kdyta/8rfYn8yd6v37iQe83FR4DUAAAAAElFTkSuQmCC",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "10"
+       ],
+       "n": 0
+      },
+      {
+       "label": "Dissesti dovuti ad erosione accelerata",
+       "pattern": "iVBORw0KGgoAAAANSUhEUgAAAFQAAABUCAYAAAAcaxDBAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABL0lEQVR4nO3VsQrCQBQF0RX2/385NgqiiBGmeOKZJiHsTpXL7IWUfXsea63Lw/fj5P37nePE+19499OH5wNnuZx4/wvv/nwG37DX62/9s3Ob4N3r/W/9c3Ob4DX5GJVX+dlek49R+dir8rHX5GNUXuVne00+RuVjr8rHXpOPUXmVn+01+RiVj70qH3tNPkblVX621+RjVD72qnzsNfkYlVf52V6Tj1H52KvysdfkY1Re5Wd7TT5G5WOvysdek49ReZWf7TX5GJWPvSofe00+RuVVfrbX5GNUPvaqfOw1+RiVV/nZXpOPUfnYq/Kx1+RjVF7lZ3tNPkblY6/Kx16Tj1F5lZ/tNfkYlY+9Kh97TT5G5VV+ttfkY1Q+9qp87DX5GJVX+dlek49R+dir8rH3CmKywwQ2K1zHAAAAAElFTkSuQmCC",
+       "colore": "#000000",
+       "opacita": 1.0,
+       "bordo": "#000000",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0.4,
+       "valori": [
+        "11"
+       ],
+       "n": 12
+      }
+     ]
+    }
+   ],
+   "sup_ha": 619.63
+  },
+  {
+   "id": "coste_pericolosita",
+   "gruppo": "Erosione costiera",
+   "titolo": "Pericolosità erosione costiera",
+   "geometria": "poligono",
+   "n": 4,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Erosione_Costa_Pericolosita/MapServer/0",
+   "campi": [
+    {
+     "k": "comune",
+     "label": "Comune"
+    },
+    {
+     "k": "uf",
+     "label": "Unità fisiografica"
+    },
+    {
+     "k": "confini_uf",
+     "label": "Confini dell'unità fisiografica"
+    },
+    {
+     "k": "fenomeno",
+     "label": "Fenomeno"
+    },
+    {
+     "k": "magnitudo",
+     "label": "Magnitudo"
+    },
+    {
+     "k": "localita",
+     "label": "Località"
+    }
+   ],
+   "temi": [
+    {
+     "id": "coste_pericolosita",
+     "titolo": "Pericolosità erosione costiera",
+     "campo": "PERICOLO",
+     "riga": "Pericolosità",
+     "classi": [
+      {
+       "label": "P0 - Area a pericolosità bassa",
+       "colore": "#b2b2b2",
+       "opacita": 1.0,
+       "bordo": "#6e6e6e",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0,
+       "valori": [
+        "0"
+       ],
+       "n": 0
+      },
+      {
+       "label": "P1 - Area a pericolosità moderata",
+       "colore": "#ffff00",
+       "opacita": 1.0,
+       "bordo": "#6e6e6e",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0,
+       "valori": [
+        "1"
+       ],
+       "n": 0
+      },
+      {
+       "label": "P2 - Area a pericolosità media",
+       "colore": "#4ce600",
+       "opacita": 1.0,
+       "bordo": "#6e6e6e",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0,
+       "valori": [
+        "2"
+       ],
+       "n": 0
+      },
+      {
+       "label": "P3 - Area a pericolosità elevata",
+       "colore": "#00c5ff",
+       "opacita": 1.0,
+       "bordo": "#6e6e6e",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0,
+       "valori": [
+        "3"
+       ],
+       "n": 4
+      },
+      {
+       "label": "P4 - Area a pericolosità molto elevata",
+       "colore": "#0070ff",
+       "opacita": 1.0,
+       "bordo": "#6e6e6e",
+       "opacita_bordo": 1.0,
+       "spessore_bordo": 0,
+       "valori": [
+        "4"
+       ],
+       "n": 0
+      }
+     ]
+    }
+   ],
+   "sup_ha": 14.58
+  },
+  {
+   "id": "coste_rischio",
+   "gruppo": "Erosione costiera",
+   "titolo": "Rischio erosione costiera",
+   "geometria": "linea",
+   "n": 7,
+   "servizio": "https://map.sitr.regione.sicilia.it/gis/rest/services/pai/PAI_Erosione_Costa_Rischio/MapServer/0",
+   "campi": [
+    {
+     "k": "uf",
+     "label": "Unità fisiografica"
+    },
+    {
+     "k": "confini_uf",
+     "label": "Confini dell'unità fisiografica"
+    },
+    {
+     "k": "comune",
+     "label": "Comune"
+    },
+    {
+     "k": "localita",
+     "label": "Località"
+    }
+   ],
+   "temi": [
+    {
+     "id": "coste_rischio",
+     "titolo": "Rischio erosione costiera",
+     "campo": "RISCHIO",
+     "riga": "Rischio",
+     "classi": [
+      {
+       "label": "R1 - Rischio bassso",
+       "colore": "#ffd37f",
+       "opacita": 1.0,
+       "spessore": 1.2,
+       "valori": [
+        "1"
+       ],
+       "n": 0
+      },
+      {
+       "label": "R2 - Rischio moderato",
+       "colore": "#ff7f7f",
+       "opacita": 1.0,
+       "spessore": 1.5,
+       "valori": [
+        "2"
+       ],
+       "n": 0
+      },
+      {
+       "label": "R3 - Rischio elevato",
+       "colore": "#e60000",
+       "opacita": 1.0,
+       "spessore": 2,
+       "valori": [
+        "3"
+       ],
+       "n": 7
+      },
+      {
+       "label": "R4 - Rischio molto elevato",
+       "colore": "#730000",
+       "opacita": 1.0,
+       "spessore": 2,
+       "valori": [
+        "4"
+       ],
+       "n": 0
+      }
+     ]
+    }
+   ],
+   "lung_km": 0.95
+  }
+ ]
+}

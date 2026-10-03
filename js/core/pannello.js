@@ -29,7 +29,7 @@ function imposta(map, ids, visibile) {
   }
 }
 
-const ETICHETTE = { base: 'Mappa', popolazione: 'Abitanti', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti' };
+const ETICHETTE = { base: 'Mappa', popolazione: 'Abitanti', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'PAI' };
 
 function bottoneGruppo(id, titolo) {
   const b = document.createElement('button');

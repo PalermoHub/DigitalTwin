@@ -1,7 +1,7 @@
 import { urlDati, pmt } from '../core/config.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
-import { modelloPopup, voceIncendio } from './scheda-incendi.js';
+import { modelloPopup, vociIncendi } from './scheda-incendi.js';
 
 // Incendi nel Comune di Palermo dal Censimento Incendi della Regione Siciliana (un layer per anno sul server, un solo PMTiles qui, zoom 12–18).
 // Colori e trasparenza di ogni anno sono quelli della simbologia del server e viaggiano dentro ogni feature (`colore`, `bordo`, `opacita`):
@@ -123,7 +123,7 @@ export default {
   },
   scheda: {
     layers: [HIT],
-    voci: trovati => distinti(tutti(trovati, HIT)).slice(0, MAX_NELLA_SCHEDA).map(f => voceIncendio(f.properties)),
+    voci: trovati => vociIncendi(distinti(tutti(trovati, HIT)).slice(0, MAX_NELLA_SCHEDA).map(f => f.properties)),
   },
   strati: [{
     id: 'incendi', etichetta: 'Incendi (da zoom 12)', layers: [FILL, BORDO], attivo: false,

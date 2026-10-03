@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791023848.5341432,
-    "ast_hash": "d321348a5e6b23cd54eaac0c5a32c8ac",
+    "mtime": 1791028668.214192,
+    "ast_hash": "aa904178dbbdfc9a0d6ac1acd042e87b",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791026715.0293148,
-    "ast_hash": "f9e38781635619c08579f28537f08dee",
+    "mtime": 1791028714.741646,
+    "ast_hash": "51cd5e538eb12a88ad326c8edf03b5fc",
     "semantic_hash": ""
   },
   "README.md": {
@@ -550,8 +550,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791020375.0421743,
-    "ast_hash": "b2071ea93b0ae7e9ffa9eda145c36802",
+    "mtime": 1791028649.13243,
+    "ast_hash": "462b97f0567953ca1b4f1f2b5028a7c5",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -600,8 +600,8 @@
     "semantic_hash": ""
   },
   "js/core/scheda-preferenze.js": {
-    "mtime": 1791025411.2349482,
-    "ast_hash": "33f38ead8896733c01cfa78117ce02cd",
+    "mtime": 1791028649.1332088,
+    "ast_hash": "8af8b516de4504614b8f8f4e0c32f547",
     "semantic_hash": ""
   },
   "js/layers/sicurezza-filtro.js": {
@@ -620,8 +620,8 @@
     "semantic_hash": ""
   },
   "tests/js/scheda-preferenze.test.mjs": {
-    "mtime": 1791023848.5441837,
-    "ast_hash": "71c2ac42ccc9bb3b5a4abada1feafdb6",
+    "mtime": 1791028701.0698774,
+    "ast_hash": "43d93c7b45c38abd3063dfbce4a99e59",
     "semantic_hash": ""
   },
   "tests/js/sicurezza-filtro.test.mjs": {
@@ -772,6 +772,41 @@
   "2026-10-03_13h40_26.png": {
     "mtime": 1791027626.324109,
     "ast_hash": "c5ac29bbba9a82ba365e9f45ab33e638",
+    "semantic_hash": ""
+  },
+  "dati/incedi/anni.json": {
+    "mtime": 1791028911.1657295,
+    "ast_hash": "8c8932e74251b789b1a860323defeb35",
+    "semantic_hash": ""
+  },
+  "js/layers/incendi.js": {
+    "mtime": 1791028668.2018933,
+    "ast_hash": "a89b7b83976de7ccfa7aa53841ead7be",
+    "semantic_hash": ""
+  },
+  "js/layers/scheda-incendi.js": {
+    "mtime": 1791028649.1194646,
+    "ast_hash": "409bd377125f2be298d01252c6c6e3b7",
+    "semantic_hash": ""
+  },
+  "scripts/incendi.py": {
+    "mtime": 1791028898.7638838,
+    "ast_hash": "47e20f92868edc022ed5886ca4571a3a",
+    "semantic_hash": ""
+  },
+  "tests/js/scheda-incendi.test.mjs": {
+    "mtime": 1791028694.4634042,
+    "ast_hash": "780746453f6e0100397b494ba65fc09f",
+    "semantic_hash": ""
+  },
+  ".github/workflows/aggiorna-incendi.yml": {
+    "mtime": 1791028898.7680523,
+    "ast_hash": "951d45b5a8d0998626c62863cf7439a1",
+    "semantic_hash": ""
+  },
+  "dati/incedi/README.md": {
+    "mtime": 1791028898.7695894,
+    "ast_hash": "7797718d0bdc603fbd40bb9b49b45b29",
     "semantic_hash": ""
   }
 }

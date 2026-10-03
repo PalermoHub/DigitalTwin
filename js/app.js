@@ -14,6 +14,7 @@ import monumenti from './layers/monumenti.js';
 import scuole from './layers/scuole.js';
 import uffici from './layers/uffici.js';
 import incendi from './layers/incendi.js';
+import pai from './layers/pai.js';
 import trasporto from './layers/trasporto.js';
 import sicurezza, { STRATI_INCIDENTI, legendaSicurezza } from './layers/sicurezza.js';
 import { collegaFiltroIncidenti } from './layers/sicurezza-filtro.js';
@@ -23,7 +24,7 @@ import terreno from './layers/terreno.js';
 import base from './layers/base.js';
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [base, terreno, popolazione, territorio, edifici, monumenti, scuole, uffici, trasporto, sicurezza, incendi, confini];
+const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, scuole, uffici, trasporto, sicurezza, incendi, confini];
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
 

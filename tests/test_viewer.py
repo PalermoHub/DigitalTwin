@@ -2048,6 +2048,72 @@ def test_scheda_incendi_anche_a_strato_spento(apri):
     v.clic(lon, lat)
     v.page.wait_for_selector("#scheda:not([hidden]) [data-chiave^='incendio-']")
     sez = v.page.locator("#scheda [data-chiave^='incendio-']").first
-    assert "Incendio 2023" in sez.inner_text()
-    assert "Superficie totale" in sez.inner_text()
+    # più incendi sovrapposti: una sola sezione a fisarmonica; uno solo: sezione completa
+    assert "Incendio 2023" in sez.inner_text() or "incendi sovrapposti" in sez.inner_text()
     assert v.js("window.dt.map.getLayoutProperty('incendi-fill', 'visibility')") == "none"
+
+
+def _pai(dataset="idraulica_pericolosita"):
+    """Un elemento del PAI di Palermo e un punto sicuramente dentro il suo perimetro (il più grande: resta visibile a zoom 15)."""
+    shapely_geometry = pytest.importorskip("shapely.geometry")
+    feats = json.loads((ROOT / "dati" / "pai" / f"{dataset}.geojson").read_text(encoding="utf-8"))["features"]
+    f = max(feats, key=lambda f: f["properties"].get("sup_ha", 0))
+    p = shapely_geometry.shape(f["geometry"]).representative_point()
+    return (p.x, p.y), f["properties"]
+
+
+def test_strato_pai_popup_e_legenda(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.mostra("#strato-idraulica_pericolosita")
+    assert not v.page.is_checked("#strato-idraulica_pericolosita")
+    assert not v.page.is_visible("#legende .legenda-pai")
+    v.page.check("#strato-idraulica_pericolosita")
+    (lon, lat), p = _pai()
+    v.vai(lon, lat, 15)
+    v.page.wait_for_function("window.dt.map.queryRenderedFeatures({layers: ['pai-idraulica_pericolosita-fill']}).length > 0")
+    assert v.page.is_visible("#legende .legenda-pai")
+    assert "Pericolosità idraulica" in v.page.inner_text("#legende .legenda-pai")
+    v.clic(lon, lat)
+    v.page.wait_for_selector(".pai-popup")
+    assert p["cls_idraulica_pericolosita"] in v.page.inner_text(".pai-popup")
+    assert not any("pai" in e.lower() for e in v.errori)
+
+
+def test_legenda_pai_filtra_per_classe(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.mostra("#strato-idraulica_pericolosita")
+    v.page.check("#strato-idraulica_pericolosita")
+    v.page.click("#legende .legenda-pai label:has-text('P4')")  # solo P4
+    assert v.js("window.dt.map.getFilter('pai-idraulica_pericolosita-fill')") == ["in", ["get", "cls_idraulica_pericolosita"], ["literal", ["P4"]]]
+    v.page.click("#legende .legenda-pai label:has-text('P4')")  # di nuovo tutte
+    assert v.js("window.dt.map.getFilter('pai-idraulica_pericolosita-fill')") is None
+
+
+def test_scheda_pai_anche_a_strato_spento(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.mostra("#strato-idraulica_pericolosita")
+    assert not v.page.is_checked("#strato-idraulica_pericolosita")
+    (lon, lat), p = _pai()
+    v.vai(lon, lat, 15)
+    v.page.wait_for_function("window.dt.map.queryRenderedFeatures({layers: ['pai-idraulica_pericolosita-hit']}).length > 0")
+    v.clic(lon, lat)
+    v.page.wait_for_selector("#scheda:not([hidden]) [data-chiave^='pai:']")
+    sez = v.page.locator("#scheda [data-chiave^='pai:']").first
+    # più vincoli sovrapposti: una sola sezione a fisarmonica; uno solo: sezione completa
+    assert "Pericolosità idraulica" in sez.inner_text() or "vincoli sovrapposti" in sez.inner_text()
+    assert v.js("window.dt.map.getLayoutProperty('pai-idraulica_pericolosita-fill', 'visibility')") == "none"
+
+
+def test_pai_dissesti_per_tipologia_usano_i_retini_del_server(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.mostra("#strato-dissesti_tipologia")
+    v.page.check("#strato-dissesti_tipologia")
+    (lon, lat), _ = _pai("dissesti")
+    v.vai(lon, lat, 16)
+    v.page.wait_for_function("window.dt.map.queryRenderedFeatures({layers: ['pai-dissesti_tipologia-fill']}).length > 0")
+    assert v.js("window.dt.map.hasImage('pai-dissesti_tipologia-0')")
+    assert not any("pai" in e.lower() for e in v.errori)
