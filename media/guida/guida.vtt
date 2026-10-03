@@ -1,34 +1,34 @@
 WEBVTT
 
-00:00:00.000 --> 00:00:16.506
-Benvenuto nel Digital Twin di Palermo. È una mappa interattiva che riunisce in un solo posto i dati aperti sulla città: catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale. Serve a leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.
+00:00:00.000 --> 00:00:19.965
+Benvenuti nel Digital Twin di Palermo, realizzato da Open Data Sicilia: una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città. Qui trovi insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale, e puoi leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.
 
-00:00:16.506 --> 00:00:33.824
+00:00:19.965 --> 00:00:37.156
 I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap. L'elenco completo, con data e licenza di ogni fonte, si trova nella scheda Fonti e avvisi.
 
-00:00:33.824 --> 00:00:53.488
+00:00:37.156 --> 00:00:56.634
 Gli strati sono i temi che si sovrappongono alla mappa. La barra a sinistra li raggruppa: rilievo, popolazione, territorio, edifici, trasporti e sicurezza. Scegli un gruppo per vedere l'elenco dei suoi strati e accendili con la casella. Gli strati accesi compaiono come etichette in alto, e la legenda in basso ne spiega i colori. Puoi accenderne più di uno per confrontarli.
 
-00:00:53.488 --> 00:01:01.007
+00:00:56.634 --> 00:01:03.979
 Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono. Il punto scelto viene evidenziato e si apre la scheda del luogo.
 
-00:01:01.007 --> 00:01:19.336
+00:01:03.979 --> 00:01:22.145
 La scheda è divisa in sezioni, che scegli dalle linguette in alto: luogo, catasto, vincoli, mercato, popolazione e altre. La prima riassume ciò che c'è nel punto scelto: l'indirizzo, i monumenti, il rischio di incidenti e le fermate vicine. La sezione catasto mostra la particella, e ogni sezione indica la fonte dei dati.
 
-00:01:19.336 --> 00:01:35.342
+00:01:22.145 --> 00:01:38.128
 Lo strato Monumenti mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane e teatri. Dove è stato possibile, anche l'edificio è colorato sulla mappa. Un clic su un monumento apre la sua scheda, con foto, descrizione e il collegamento al Portale del Turismo del Comune di Palermo.
 
-00:01:35.342 --> 00:01:47.273
+00:01:38.128 --> 00:01:50.373
 Lo strato Uffici comunali mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede. La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando sono pubblicati.
 
-00:01:47.273 --> 00:02:06.647
+00:01:50.373 --> 00:02:09.839
 Il gruppo Piano P A I riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti ed erosione costiera, con la simbologia ufficiale. Un clic su un'area apre la scheda: nella sezione vincoli trovi il riquadro dei vincoli P A I, con la classe più grave. Sono dati informativi.
 
-00:02:06.647 --> 00:02:20.285
+00:02:09.839 --> 00:02:23.396
 Lo strato Incendi mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l'anno. La scheda di un incendio riporta data, località e superfici bruciate.
 
-00:02:20.285 --> 00:02:38.381
+00:02:23.396 --> 00:02:41.458
 La barra in basso permette di cercare una via, un civico, un quartiere o una particella. Il pulsante dei filtri apre il pannello per limitare la ricerca a una circoscrizione, a un quartiere o a una zona. Per esempio, scegli una circoscrizione e scrivi Maqueda: i risultati si restringono, e un clic su uno di essi porta la mappa sul posto.
 
-00:02:38.381 --> 00:02:52.774
+00:02:41.458 --> 00:02:55.769
 Un'ultima avvertenza: catasto, zonizzazione e vincoli hanno valore solo informativo, e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. I dati del censimento sono stime. Per usi legali rivolgiti sempre agli uffici competenti.
