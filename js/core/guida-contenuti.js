@@ -3,6 +3,8 @@
 // `scena` dice allo script degli screenshot come preparare la mappa (vedi scripts/guida_screenshot.py).
 const PUNTO_CLIC = [13.3586, 38.1203];
 const CENTRO = [13.3615, 38.1157];
+const TEATRO = [13.3571944, 38.1201711]; // Teatro Massimo (strato Monumenti)
+const PALAGONIA = [13.370036, 38.1167363]; // Palazzo Palagonia, sede comunale (strato Uffici)
 
 export const PASSI = [
   {
@@ -58,6 +60,50 @@ export const PASSI = [
     immagine: { file: 'img/guida/passi/scheda.webp', alt: 'La scheda del luogo aperta sulla sezione Catasto, con i dati della particella.', didascalia: 'La scheda del luogo, qui sulla sezione «Catasto».' },
     narrazione: 'La scheda è divisa in sezioni, che scegli dalle linguette in alto: luogo, catasto, vincoli, mercato, popolazione e altre. La prima riassume ciò che c\'è nel punto scelto: l\'indirizzo, i monumenti, il rischio di incidenti e le fermate vicine. La sezione catasto mostra la particella, e ogni sezione indica la fonte dei dati.',
     scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Catasto' },
+  },
+  {
+    id: 'monumenti',
+    titolo: 'Monumenti e luoghi storici',
+    paragrafi: [
+      'Lo strato «Monumenti» (gruppo Territorio) mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane, teatri. Dove è stato possibile abbinarli, anche l\'edificio è colorato sulla mappa.',
+      'Un clic su un monumento apre la sua scheda, con foto, descrizione, categoria e il collegamento al Portale del Turismo del Comune di Palermo, da cui provengono i testi.',
+    ],
+    immagine: { file: 'img/guida/passi/monumenti.webp', alt: 'Lo strato Monumenti acceso e la scheda del Teatro Massimo aperta, con foto, categoria e descrizione.', didascalia: 'La scheda di un monumento: il Teatro Massimo.' },
+    narrazione: 'Lo strato Monumenti mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane e teatri. Dove è stato possibile, anche l\'edificio è colorato sulla mappa. Un clic su un monumento apre la sua scheda, con foto, descrizione e il collegamento al Portale del Turismo del Comune di Palermo.',
+    scena: { strati: ['monumenti'], centro: TEATRO, zoom: 16.5, clic: TEATRO },
+  },
+  {
+    id: 'uffici',
+    titolo: 'Uffici comunali',
+    paragrafi: [
+      'Lo strato «Uffici comunali (sedi)» mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede.',
+      'La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando pubblicati. I dati provengono dal sito istituzionale del Comune.',
+    ],
+    immagine: { file: 'img/guida/passi/uffici.webp', alt: 'Lo strato Uffici comunali acceso e la scheda di Palazzo Palagonia, con l\'elenco di aree e uffici della sede.', didascalia: 'La scheda di una sede comunale: Palazzo Palagonia.' },
+    narrazione: 'Lo strato Uffici comunali mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede. La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando sono pubblicati.',
+    scena: { strati: ['uffici'], centro: PALAGONIA, zoom: 16.5, clic: PALAGONIA, schedaApri: 'Uffici e responsabili' },
+  },
+  {
+    id: 'pai',
+    titolo: 'Pericolosità e rischio idrogeologico (PAI)',
+    paragrafi: [
+      'Il gruppo «Piano PAI» riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti, siti di attenzione ed erosione costiera, con la simbologia ufficiale.',
+      'Un clic su un\'area apre la scheda: nella sezione «Vincoli» compare il riquadro «Vincoli PAI», con la classe più grave tra quelle sovrapposte, accanto alla zonizzazione e ai vincoli del piano regolatore. Sono dati informativi: per usi legali vale la cartografia ufficiale dell\'Autorità di Bacino.',
+    ],
+    immagine: { file: 'img/guida/passi/pai.webp', alt: 'Lo strato Pericolosità idraulica acceso sulla mappa e, nella scheda, la sezione Vincoli con zonizzazione, vincoli e il riquadro Vincoli PAI.', didascalia: 'Clic su un\'area PAI: la scheda, sezione «Vincoli».' },
+    narrazione: 'Il gruppo Piano P A I riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti ed erosione costiera, con la simbologia ufficiale. Un clic su un\'area apre la scheda: nella sezione vincoli trovi il riquadro dei vincoli P A I, con la classe più grave. Sono dati informativi.',
+    scena: { strati: ['idraulica_pericolosita'], centro: [13.40, 38.08], zoom: 13, clicSu: { layer: 'pai-idraulica_pericolosita-hit' }, schedaTab: 'Vincoli' },
+  },
+  {
+    id: 'incendi',
+    titolo: 'Incendi',
+    paragrafi: [
+      'Lo strato «Incendi» mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l\'anno.',
+      'La scheda di un incendio riporta data, località, superficie totale e boscata e, quando disponibili, le squadre intervenute. Se più incendi si sovrappongono, la scheda li elenca tutti.',
+    ],
+    immagine: { file: 'img/guida/passi/incendi.webp', alt: 'Lo strato Incendi acceso, con le aree bruciate colorate per anno, e la scheda di un incendio con data, località e superfici.', didascalia: 'La scheda di un incendio: Bellolampo, duemilaventitré.' },
+    narrazione: 'Lo strato Incendi mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l\'anno. La scheda di un incendio riporta data, località e superfici bruciate.',
+    scena: { strati: ['incendi'], centro: [13.33, 38.10], zoom: 12, clicSu: { layer: 'incendi-hit', filtro: { anno: 2023 } } },
   },
   {
     id: 'filtri',

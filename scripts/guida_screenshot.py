@@ -6,6 +6,7 @@ Richiede rete (base cartografica OpenFreeMap) e Chromium di Playwright.
 """
 import argparse
 import json
+import re
 import socket
 import subprocess
 import sys
@@ -53,6 +54,23 @@ def _imposta_strati(page, voluti):
     )
 
 
+def _punto_su(page, layer, filtro):
+    """Coordinate dello schermo di un punto della mappa dove il layer ha un elemento con le proprietà `filtro`."""
+    return page.evaluate(
+        """([layer, filtro]) => {
+            const m = window.dt.map, r = m.getCanvas().getBoundingClientRect();
+            for (let y = 80; y < r.height - 80; y += 24)
+                for (let x = 120; x < r.width - 380; x += 24) {
+                    const hit = m.queryRenderedFeatures([x, y], { layers: [layer] })
+                        .find(f => Object.entries(filtro).every(([k, v]) => f.properties[k] === v));
+                    if (hit) return [r.left + x, r.top + y];
+                }
+            return null;
+        }""",
+        [layer, filtro],
+    )
+
+
 def _prepara(page, scena):
     page.evaluate("document.getElementById('crediti')?.open && document.getElementById('crediti').close()")
     _imposta_strati(page, scena["strati"])
@@ -61,6 +79,16 @@ def _prepara(page, scena):
     page.wait_for_function("window.dt.map.loaded()", timeout=30000)
     if "gruppo" in scena:  # apre un gruppo della barra strati
         page.locator("#barra-gruppi").get_by_text(scena["gruppo"], exact=True).first.click()
+    if "clicSu" in scena:
+        page.wait_for_timeout(4000)  # tile del layer
+        c = scena["clicSu"]
+        punto = _punto_su(page, c["layer"], c.get("filtro", {}))
+        if punto is None:
+            raise RuntimeError(f"nessun elemento di {c['layer']} {c.get('filtro')} in vista")
+        page.mouse.click(*punto)
+        page.wait_for_selector("#scheda:not([hidden])", timeout=15000)
+        if "schedaTab" in scena:
+            page.locator("#scheda").get_by_text(re.compile(rf"^{scena['schedaTab']}\d*$")).first.click()
     if "clic" in scena:
         x, y = page.evaluate(
             """([lon, lat]) => { const m = window.dt.map, p = m.project([lon, lat]), r = m.getCanvas().getBoundingClientRect(); return [r.left + p.x, r.top + p.y]; }""",
@@ -70,6 +98,9 @@ def _prepara(page, scena):
         page.wait_for_selector("#scheda:not([hidden])", timeout=15000)
         if "schedaTab" in scena:
             page.locator("#scheda").get_by_text(scena["schedaTab"], exact=True).first.click()
+    if "schedaApri" in scena:  # apre un blocco comprimibile della scheda (il clic lo porta anche in vista)
+        page.locator("#scheda").get_by_text(re.compile(scena["schedaApri"], re.I)).first.click()
+        page.wait_for_timeout(300)
     if "ricerca" in scena:
         r = scena["ricerca"]
         if r.get("apriFiltri"):

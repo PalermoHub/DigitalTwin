@@ -1174,7 +1174,7 @@ def test_tab_guida_mostra_i_passi_con_le_immagini(apri):
     v.page.wait_for_selector("#crediti[open]")
     v.page.click("#tab-guida")
     assert "provvisorio" not in v.page.inner_text("#tabpanel-guida")
-    assert v.js("document.querySelectorAll('#tabpanel-guida .guida-passo').length") == 7
+    assert v.js("document.querySelectorAll('#tabpanel-guida .guida-passo').length") == 11
     v.js("document.querySelectorAll('#tabpanel-guida img').forEach(i => i.loading = 'eager')")
     v.page.wait_for_function("[...document.querySelectorAll('#tabpanel-guida img')].every(i => i.complete && i.naturalWidth > 0)", timeout=15000)
     # l'indice porta al passo

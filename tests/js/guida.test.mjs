@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PASSI } from '../../js/core/guida-contenuti.js';
 
-test('sette passi nell\'ordine previsto', () => {
-  assert.deepEqual(PASSI.map(p => p.id), ['cos-e', 'dati', 'strati', 'clic', 'scheda', 'filtri', 'avvertenze']);
+test('undici passi nell\'ordine previsto', () => {
+  assert.deepEqual(PASSI.map(p => p.id), ['cos-e', 'dati', 'strati', 'clic', 'scheda', 'monumenti', 'uffici', 'pai', 'incendi', 'filtri', 'avvertenze']);
 });
 
 test('id univoci e validi come ancora', () => {
