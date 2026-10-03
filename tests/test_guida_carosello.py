@@ -30,3 +30,11 @@ def test_png_1080x1350(n):
         ["ffprobe", "-v", "error", "-show_entries", "stream=width,height", "-of", "csv=p=0", str(f)],
         capture_output=True, text=True, check=True).stdout.strip()
     assert out == "1080,1350"
+
+
+def test_il_link_della_webapp_compare_in_ogni_slide_e_in_chiusura():
+    link = "palermodigitaltwin.opendatasicilia.it"
+    assert "palermodigditaltwin" not in html_slide(SLIDES[0], 1, 11)  # il refuso non deve tornare
+    for i, s in enumerate(SLIDES, 1):
+        assert link in html_slide(s, i, len(SLIDES)), s["titolo"]
+    assert html_slide(SLIDES[-1], 11, 11).count(link) == 1  # in chiusura una volta sola, in evidenza

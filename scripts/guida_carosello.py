@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "social" / "carosello"
 LOGO = "img/opendatasicilia.png"
+LINK = "palermodigitaltwin.opendatasicilia.it"
 P = "img/guida/passi/"
 
 SLIDES = [
@@ -49,7 +50,8 @@ p{position:absolute;left:56px;right:56px;top:950px;font-size:44px;line-height:1.
 .copertina .piede{color:#e6e9ee}
 .chiusura h1{top:260px;font-size:140px}
 .chiusura p{top:560px;font-size:52px}
-.chiusura .logo-grande{position:absolute;left:56px;top:960px;height:210px;width:auto}
+.chiusura .link{position:absolute;left:56px;right:56px;top:880px;font-size:50px;font-weight:800;color:#b45309}
+.chiusura .logo-grande{position:absolute;left:56px;top:1010px;height:210px;width:auto}
 """
 
 
@@ -70,9 +72,10 @@ def html_slide(slide, n, tot):
         corpo.append(f'<div class="scheda"><img src="{_uri(slide["immagine"])}" alt=""></div>')
     corpo.append(f"<p>{e(slide['testo'])}</p>")
     if slide.get("chiusura"):
+        corpo.append(f'<div class="link">{LINK}</div>')
         corpo.append(f'<img class="logo-grande" src="{_uri(LOGO)}" alt="Open Data Sicilia">')
     else:
-        corpo.append(f'<div class="piede"><span>opendatasicilia.it</span><img src="{_uri(LOGO)}" alt="Open Data Sicilia"></div>')
+        corpo.append(f'<div class="piede"><span>{LINK}</span><img src="{_uri(LOGO)}" alt="Open Data Sicilia"></div>')
     return f'<!doctype html><html lang="it"><meta charset="utf-8"><style>{CSS}</style><body class="{classe}">{"".join(corpo)}</body></html>'
 
 
