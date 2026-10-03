@@ -231,6 +231,15 @@ dialog li { margin: 4px 0; }
 .argomento h3 { margin: 0 0 2px; font-size: 14px; }
 .argomento p { margin: 0 0 6px; color: var(--text-muted); font-size: 13px; }
 .argomento label { display: block; padding: 2px 0; }
+.guida-indice { margin: 0 0 16px; }
+.guida-indice ol { margin: 0; padding-left: 20px; }
+.guida-indice a { color: var(--text); }
+.guida-passo { margin: 0 0 24px; scroll-margin-top: 8px; }
+.guida-passo h3 { margin: 0 0 6px; font-size: var(--fs-md); }
+.guida-passo p { margin: 0 0 8px; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+.guida-figura { margin: 10px 0 0; }
+.guida-figura img { display: block; width: 100%; height: auto; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
+.guida-figura figcaption { margin-top: 4px; color: var(--text-muted); font-size: 12px; }
 #crediti button { padding: 6px 14px; border: 0; border-radius: var(--r-sm); background: var(--accent); color: var(--accent-ink); font-weight: 600; }
 #crediti .crediti-linguetta { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); width: 64px; height: 22px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 10px 10px 0 0; background: var(--surface); color: var(--text-muted); border: 1px solid var(--border-ui); border-bottom: 0; box-shadow: 0 -4px 12px rgba(0, 0, 0, .1); }
 #crediti .in-cima { position: absolute; right: 24px; bottom: 16px; box-shadow: var(--ombra); }

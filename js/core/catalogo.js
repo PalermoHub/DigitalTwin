@@ -1,5 +1,6 @@
 import { urlDati } from './config.js';
 import { schedaArgomenti } from './argomenti.js';
+import { schedaGuida } from './guida.js';
 
 const AVVISI = [
   'Catasto, zonizzazione PRG e vincoli sono solo informativi e non hanno valore legale: per usi legali servono il certificato di destinazione urbanistica e le visure ufficiali.',
@@ -14,11 +15,6 @@ export async function caricaCatalogo() {
   return r.json();
 }
 
-const GUIDA = [
-  'Testo provvisorio: qui comparirà la guida all\'uso del Digital Twin di Palermo.',
-  'Usa le icone della barra in alto per scegliere cartografia e strati; cerca un indirizzo, un quartiere o una particella dalla barra in basso.',
-  'Clicca sulla mappa per aprire la scheda del luogo.',
-];
 const CREDITS = [
   'Testo provvisorio: progetto a cura di Open Data Sicilia.',
   'Realizzazione, dati e licenze: da completare.',
@@ -52,10 +48,11 @@ export function apriCrediti(dialog, catalogo, moduli = []) {
     'Monumenti: Portale del Turismo del Comune di Palermo (testi, foto e link) e «Mappa monumentale di Palermo e dell\'Agro Palermitano» di Marcello Petrucci (posizioni, testi e foto) — condizioni d\'uso da verificare',
   ]);
   const argomenti = schedaArgomenti(moduli);
+  const guida = schedaGuida();
   const schede = [
     ['fonti', 'Fonti e avvisi', [Object.assign(document.createElement('h2'), { textContent: 'Fonti e avvisi' }), elenco(AVVISI), fonti]],
     ['argomenti', 'Argomenti', [argomenti.elemento]],
-    ['guida', 'Guida', [Object.assign(document.createElement('h2'), { textContent: 'Guida' }), elenco(GUIDA)]],
+    ['guida', 'Guida', [guida]],
     ['credits', 'Credits', [Object.assign(document.createElement('h2'), { textContent: 'Credits' }), elenco(CREDITS)]],
   ];
 

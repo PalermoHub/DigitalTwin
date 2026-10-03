@@ -40,3 +40,39 @@ test('la scena ha centro dentro Palermo e zoom nel range della mappa', () => {
     assert.ok(p.scena.zoom >= 12 && p.scena.zoom <= 18, `${p.id}: zoom`);
   }
 });
+
+import { schedaGuida } from '../../js/core/guida.js';
+
+function elementoFinto(tag) {
+  return {
+    tag, children: [], attrs: {}, dataset: {}, className: '', textContent: '', hidden: false,
+    append(...f) { this.children.push(...f); },
+    setAttribute(k, v) { this.attrs[k] = v; },
+    set href(v) { this.attrs.href = v; }, get href() { return this.attrs.href; },
+    set src(v) { this.attrs.src = v; }, get src() { return this.attrs.src; },
+    set alt(v) { this.attrs.alt = v; }, get alt() { return this.attrs.alt; },
+    set loading(v) { this.attrs.loading = v; }, get loading() { return this.attrs.loading; },
+    set id(v) { this.attrs.id = v; }, get id() { return this.attrs.id; },
+  };
+}
+const doc = { createElement: elementoFinto };
+const tutti = (n, tag, acc = []) => { if (n.tag === tag) acc.push(n); n.children?.forEach(c => tutti(c, tag, acc)); return acc; };
+
+test('schedaGuida: una sezione per passo con id ancora, e un link nell\'indice per ciascuno', () => {
+  const radice = schedaGuida(doc);
+  const sezioni = tutti(radice, 'section');
+  assert.deepEqual(sezioni.map(s => s.id), PASSI.map(p => `guida-${p.id}`));
+  const link = tutti(radice, 'a').map(a => a.href);
+  assert.deepEqual(link, PASSI.map(p => `#guida-${p.id}`));
+});
+
+test('schedaGuida: ogni immagine è lazy, ha alt e didascalia', () => {
+  const imgs = tutti(schedaGuida(doc), 'img');
+  assert.equal(imgs.length, PASSI.length);
+  imgs.forEach((img, i) => {
+    assert.equal(img.loading, 'lazy');
+    assert.equal(img.alt, PASSI[i].immagine.alt);
+    assert.equal(img.src, PASSI[i].immagine.file);
+  });
+  assert.equal(tutti(schedaGuida(doc), 'figcaption').length, PASSI.length);
+});

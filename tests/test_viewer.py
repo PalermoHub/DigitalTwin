@@ -1167,6 +1167,32 @@ def test_modale_info_ha_i_tab_fonti_guida_credits(apri):
     assert "provvisorio" in v.page.inner_text("#tabpanel-credits")
 
 
+def test_tab_guida_mostra_i_passi_con_le_immagini(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.click("#apri-crediti")
+    v.page.wait_for_selector("#crediti[open]")
+    v.page.click("#tab-guida")
+    assert "provvisorio" not in v.page.inner_text("#tabpanel-guida")
+    assert v.js("document.querySelectorAll('#tabpanel-guida .guida-passo').length") == 7
+    v.js("document.querySelectorAll('#tabpanel-guida img').forEach(i => i.loading = 'eager')")
+    v.page.wait_for_function("[...document.querySelectorAll('#tabpanel-guida img')].every(i => i.complete && i.naturalWidth > 0)", timeout=15000)
+    # l'indice porta al passo
+    v.page.click("#tabpanel-guida .guida-indice a[href='#guida-filtri']")
+    v.page.wait_for_timeout(400)
+    assert v.js("document.getElementById('guida-filtri').getBoundingClientRect().top < innerHeight")
+
+
+def test_tab_guida_non_causa_scroll_orizzontale_su_mobile(apri):
+    v = apri()
+    v.page.set_viewport_size({"width": 390, "height": 800})
+    v.attendi_pronto()
+    v.page.click("#apri-crediti")
+    v.page.wait_for_selector("#crediti[open]")
+    v.page.click("#tab-guida")
+    assert v.js("(() => { const c = document.querySelector('#crediti .tab-corpo'); return c.scrollWidth <= c.clientWidth + 1; })()")
+
+
 def test_tab_argomenti_accende_gli_strati_e_resta_aperta(apri):
     v = apri()
     v.attendi_pronto()
