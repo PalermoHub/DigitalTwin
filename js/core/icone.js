@@ -36,6 +36,8 @@ export const ICONE = {
   uffici: 'M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10z',
 };
 
+ICONE.monumenti = ICONE.monumento; ICONE.scuole = ICONE.scuola; ICONE.incendi = ICONE.incendio;
+
 // Markup di un'icona decorativa (nascosta ai lettori di schermo); nome sconosciuto: stringa vuota.
 export function svgIcona(nome, dimensione = 16) {
   const d = ICONE[nome];

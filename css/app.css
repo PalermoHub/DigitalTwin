@@ -35,7 +35,7 @@
   --c5-bg: #fee2e2; --c5-fg: #991b1b; --c5-bd: #fca5a5;
 
   /* tipografia (rem: 1rem = 16px) */
-  --fs-2xs: .6875rem; /* 11 */
+  --fs-2xs: .75rem;   /* 12 */
   --fs-xs: .75rem;    /* 12 */
   --fs-sm: .8125rem;  /* 13 */
   --fs-base: .875rem; /* 14 */
@@ -454,3 +454,199 @@ dialog li { margin: 4px 0; }
 .legenda-pai i.pai-campione--linea { border: 0; border-radius: 1px; }
 .pai-popup-voce + .pai-popup-voce { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--border); }
 .legenda-uffici .uffici-nota { margin: 0 0 4px; font-size: var(--fs-2xs); color: var(--text-muted); }
+
+
+/* ==========================================================================
+   Proposta 1c (desktop) e 1e (mobile): barra strati verticale con etichette, strumenti separati,
+   legenda riducibile, scheda con indice, sezioni con riassunto, piede fisso e bottom sheet a tre altezze
+   ========================================================================== */
+.barra-sep { display: none !important; }
+#apri-strati, #chiudi-strati, .scheda-maniglia { display: none; }
+
+#barra-strati {
+  position: fixed; z-index: var(--z-barra); top: 12px; left: 12px; bottom: 12px; width: 92px;
+  display: flex; flex-direction: column; gap: 2px; padding: 8px 6px; overflow-x: hidden; overflow-y: auto; scrollbar-width: thin;
+  background: var(--surface); border: 1px solid var(--border-ui); border-radius: 16px; box-shadow: var(--ombra);
+}
+.barra-titolo { margin: 0; padding: 0 0 4px; text-align: center; font-size: var(--fs-2xs); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+#barra-gruppi { display: flex; flex-direction: column; gap: 2px; }
+#barra-gruppi button {
+  position: relative; width: 100%; height: auto; min-height: 56px; padding: 6px 2px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  background: transparent; border: 0; border-radius: var(--r-md); color: var(--text); font-size: var(--fs-xs); font-weight: 600; line-height: 1.1;
+}
+#barra-gruppi button:hover { background: var(--surface-hover); }
+#barra-gruppi button[aria-expanded="true"] { background: var(--accent); color: var(--accent-ink); }
+#barra-gruppi .et { display: block; text-align: center; }
+#barra-gruppi button[data-attivo="true"]::after {
+  content: attr(data-n); position: absolute; top: 2px; right: calc(50% - 28px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: var(--r-pill);
+  background: var(--text); color: #fff; font-size: var(--fs-2xs); font-weight: 700; line-height: 18px; text-align: center;
+}
+
+#barra-strumenti {
+  position: fixed; z-index: var(--z-barra); top: 12px; left: auto; right: calc(var(--scheda-l) + 12px); transform: none; max-width: none; overflow: visible;
+  display: flex; align-items: center; gap: 4px; padding: 5px 6px;
+}
+#barra-strumenti button { width: 40px; height: 40px; border: 0; }
+
+#legende-box { position: fixed; z-index: var(--z-mappa-ui); left: 112px; bottom: 28px; width: 260px; max-width: calc(100% - 120px); background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
+#legende-box:not(:has(#legende > :not([hidden]))) { display: none; }
+#legende-riduci { width: 100%; padding: 8px 10px; border: 0; background: none; text-align: left; font-size: var(--fs-xs); font-weight: 700; color: var(--text); }
+#legende-box.ridotta #legende { display: none; }
+#legende { position: static; max-width: none; padding: 0 10px 8px; }
+#legende .legenda { padding: 0; border: 0; box-shadow: none; background: none; }
+#logo-ods { bottom: 96px; }
+.avviso-fisso { left: 112px; }
+
+.scheda-intestazione { padding-bottom: 0; }
+.scheda-indice { display: flex; gap: 2px; margin: 8px -18px 0; padding: 0 14px; overflow-x: auto; scrollbar-width: none; }
+.scheda-indice[hidden] { display: none; }
+.scheda-indice button { flex: 1 0 auto; max-width: none; min-height: 40px; padding: 8px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 0; border-bottom: 3px solid transparent; background: none; color: var(--text-muted); font-size: var(--fs-sm); }
+.scheda-indice button[aria-current="true"] { border-bottom-color: var(--accent); color: var(--text); font-weight: 700; }
+.scheda-sez { margin-top: 0; padding-top: 0; }
+details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 4px 0; }
+.scheda-riassunto { margin-left: auto; padding-left: 12px; color: var(--text-muted); font-weight: 400; font-size: var(--fs-sm); text-align: right; }
+.scheda-sez > :not(summary) { margin-left: 1.4em; }
+.scheda-piede { flex: none; padding: 10px 18px 12px; background: var(--surface); border-top: 1px solid var(--border); }
+.scheda-piede[hidden] { display: none; }
+.scheda-piede .scheda-link { margin-top: 0; min-height: 44px; }
+.scheda-piede .scheda-legale { margin: 8px 0 0; padding: 0; border: 0; }
+
+@media (min-width: 721px) {
+  #pannello { left: 112px; top: 12px; transform: none; max-height: calc(100% - 24px); }
+  #area-ricerca { left: calc(104px + (100% - 104px - var(--scheda-l)) / 2); }
+}
+@media (min-width: 721px) and (max-width: 1320px) { #legende-box { bottom: 100px; } }
+
+@media (max-width: 720px) {
+  #barra-strati { display: none; }
+  body.strati-aperti #barra-strati { display: flex; top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 70%; z-index: var(--z-foglio); padding: 12px; border-radius: 16px 16px 0 0; border-width: 1px 0 0; }
+  body.strati-aperti #barra-gruppi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+  body.strati-aperti #barra-gruppi button { border: 1px solid var(--border-ui); min-height: 64px; }
+  body.strati-aperti #barra-gruppi button[aria-expanded="true"] { border-color: var(--accent); }
+  body.strati-aperti .barra-titolo { text-align: left; padding: 0 0 8px; font-size: var(--fs-xs); }
+  #chiudi-strati { display: block; margin-top: 10px; min-height: 44px; border: 0; border-radius: var(--r-sm); background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  #apri-strati {
+    position: fixed; z-index: var(--z-barra); top: 12px; left: 12px; height: 44px; padding: 0 14px; display: flex; align-items: center; gap: 6px;
+    background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-pill); box-shadow: var(--ombra); color: var(--text); font-weight: 600; font-size: var(--fs-sm);
+  }
+  #pannello { top: 64px; bottom: auto; left: 8px; right: 8px; width: auto; transform: none; max-height: 45%; z-index: calc(var(--z-foglio) + 1); }
+  #barra-strumenti { top: 12px; right: 12px; left: auto; max-height: none; flex-direction: row; align-items: center; gap: 8px; padding: 0; overflow: visible; background: none; border: 0; border-radius: 0; box-shadow: none; }
+  #barra-strumenti > button { width: 44px; height: 44px; min-height: 44px; padding: 0; flex-direction: row; background: var(--surface); border: 1px solid var(--border-ui); border-radius: 50%; box-shadow: var(--ombra); }
+  #barra-strumenti .et { display: none; }
+  #legende-box { left: 8px; bottom: 72px; width: 220px; }
+  .avviso-fisso { left: 8px; top: 64px; }
+  #scheda:not([hidden]) ~ #logo-ods { display: none; }
+  #logo-ods { bottom: 72px; }
+
+  #scheda { top: auto; bottom: 64px; left: 0; right: 0; width: auto; max-height: none; border-width: 1px 0 0; border-radius: 16px 16px 0 0; box-shadow: 0 -8px 32px rgba(0, 0, 0, .2); }
+  #scheda[data-altezza="peek"] { height: 168px; }
+  #scheda[data-altezza="meta"] { height: 55%; }
+  #scheda.scheda-piena { height: auto; border-radius: 0; }
+  #scheda[data-altezza="peek"] .scheda-corpo, #scheda[data-altezza="peek"] .scheda-indice, #scheda[data-altezza="peek"] .scheda-piede { display: none; }
+  .scheda-maniglia { flex: none; width: 100%; height: 28px; padding: 0; display: flex; align-items: center; justify-content: center; border: 0; background: none; touch-action: none; cursor: grab; }
+  .scheda-maniglia i { width: 40px; height: 4px; border-radius: 2px; background: var(--border); }
+  .scheda-x, .scheda-personalizza { width: 44px; height: 44px; margin: -8px -6px 0 0; }
+  .scheda-espandi { display: none; }
+}
+
+.scheda-piede { display: flex; flex-direction: column; gap: 8px; }
+.scheda-piede .scheda-link { margin-top: 0; }
+.scheda-piede .scheda-legale { margin: 0; }
+
+.scheda-tabs { display: flex; align-items: stretch; margin: 8px -18px 0; border-top: 1px solid var(--border); }
+.scheda-tabs[hidden] { display: none; }
+.scheda-tabs-freccia { flex: none; width: 32px; padding: 0; border: 0; background: var(--surface-alt); color: var(--text); font-size: 22px; line-height: 1; }
+.scheda-tabs-freccia:hover:not(:disabled) { background: var(--surface-hover); }
+.scheda-tabs-freccia:disabled { opacity: .3; cursor: default; }
+.scheda-tabs-freccia[hidden] { display: none; }
+.scheda-indice { position: relative; flex: 1; min-width: 0; margin: 0; padding: 0 4px; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.scheda-indice button { flex: none; max-width: none; padding: 8px 12px; }
+.scheda-indice button[aria-selected="true"] { border-bottom-color: var(--accent); color: var(--text); font-weight: 700; }
+.scheda-sez[hidden] { display: none; }
+@media (max-width: 720px) {
+  #scheda[data-altezza="peek"] .scheda-tabs { display: none; }
+}
+
+/* zoom: slider verticale compatto in basso a destra (solo desktop; su mobile c'è il pinch) */
+#zoom-box { position: fixed; z-index: var(--z-mappa-ui); right: calc(var(--scheda-l) + 12px); bottom: 168px; width: 44px; padding: 8px 0 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: 22px; box-shadow: var(--ombra); transition: right .15s; }
+#zoom-box .zoom-wrap { display: block; position: relative; width: 24px; height: 140px; }
+#zoom-box #zoom-slider { position: absolute; left: 50%; top: 50%; width: 140px; margin: 0; transform: translate(-50%, -50%) rotate(-90deg); }
+@media (max-width: 720px) { #zoom-box { display: none; } }
+
+/* linguetta delle informazioni: sempre visibile in basso al centro della mappa libera, a foglio chiuso */
+@media (min-width: 721px) {
+  #linguetta-info { left: calc(104px + (100% - 104px - var(--scheda-l)) / 2); width: 72px; height: 22px; }
+}
+#linguetta-info:hover { background: var(--surface-hover); color: var(--text); }
+#barra-gruppi .et { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .01em; }
+.scheda-et { font-size: var(--fs-base); }
+.scheda-riassunto { font-size: var(--fs-sm); }
+.scheda-nota, .scheda-dettaglio, .scheda-coordinate, .scheda-contesto { font-size: var(--fs-sm); }
+.legenda div, .legenda .nota-stime, .legenda .nota-omi { font-size: var(--fs-sm); }
+
+/* bersagli di tocco: almeno 36 px su desktop, 44 px con puntatore grossolano (touch) e su mobile */
+.scheda-x, .scheda-personalizza { width: 36px; height: 36px; }
+.scheda-tabs-freccia { min-height: 40px; }
+#legende-riduci { min-height: 36px; }
+#avvisi button { width: 32px; height: 32px; }
+#cerca-risultati button { min-height: 40px; padding-top: 8px; padding-bottom: 8px; }
+.legenda i.catasto-etichetta { font-size: var(--fs-2xs); }
+@media (pointer: coarse), (max-width: 720px) {
+  .scheda-x, .scheda-personalizza, .scheda-espandi { width: 44px; height: 44px; }
+  .scheda-indice button, .scheda-tabs-freccia { min-height: 44px; }
+  .scheda-tabs-freccia { width: 40px; }
+  #legende-riduci, #cerca-risultati button, #cerca-particella input, #cerca-particella button, .sotto-pannello select, #pannello-filtri select { min-height: 44px; }
+  #avvisi button { width: 44px; height: 44px; }
+  #cerca-filtri { width: 44px; height: 44px; margin-right: 2px; }
+  #barra-strumenti button { width: 44px; height: 44px; }
+  .sotto-pannello label, #pannello-filtri label { min-height: 36px; display: flex; align-items: center; gap: 8px; }
+  .sotto-pannello input[type=checkbox], .sotto-pannello input[type=radio] { width: 20px; height: 20px; }
+  #crediti button, #crediti .tabs button { min-height: 44px; }
+  #crediti .crediti-x { width: 44px; height: 44px; }
+}
+
+.scheda-sunto { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 6px; margin: 12px 0 4px; }
+.scheda-sunto > div { padding: 8px 6px; border-radius: var(--r-sm); background: var(--accent-soft); text-align: center; overflow-wrap: anywhere; }
+.scheda-sunto b { display: block; font-size: var(--fs-md); }
+.scheda-sunto span { font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* schermi stretti con scheda aperta: ricerca mai sopra i controlli a destra, scheda più stretta, logo nascosto */
+@media (min-width: 721px) {
+  #area-ricerca { width: clamp(220px, calc(100vw - var(--scheda-l) - 104px - 150px), 400px); }
+}
+@media (min-width: 721px) and (max-width: 1000px) {
+  :root { --scheda-w: 340px; }
+  body:has(#scheda:not([hidden])) #logo-ods { display: none; }
+  body:has(#scheda:not([hidden])) #zoom-box { bottom: 100px; }
+}
+
+/* campo di ricerca negli strati e chip degli strati accesi */
+.strato-cerca { display: block; width: 100%; margin: 0 0 8px; padding: 8px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; font-size: var(--fs-sm); }
+.sotto-pannello label[hidden] { display: none; }
+#strati-chip { position: fixed; z-index: var(--z-mappa-ui); top: 14px; left: 112px; right: calc(var(--scheda-l) + 240px); display: flex; flex-wrap: nowrap; gap: 6px; overflow: hidden; pointer-events: none; }
+#strati-chip:empty { display: none; }
+.strato-chip { pointer-events: auto; flex: none; max-width: 180px; height: 32px; padding: 0 8px 0 12px; display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-pill); box-shadow: var(--ombra); color: var(--text); font-size: var(--fs-sm); font-weight: 600; white-space: nowrap; }
+.strato-chip span { overflow: hidden; text-overflow: ellipsis; }
+.strato-chip i { font-style: normal; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 16px; line-height: 1; }
+button.strato-chip:hover { background: var(--surface-hover); }
+button.strato-chip:hover i { color: var(--text); }
+.strato-chip--altri { padding: 0 12px; color: var(--text-muted); pointer-events: none; }
+@media (max-width: 720px) { #strati-chip { display: none; } }
+
+/* azioni della scheda, contatore sui tab, stampa */
+.scheda-azione { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--text-muted); }
+.scheda-azione:hover { background: var(--surface-hover); color: var(--text); }
+@media (pointer: coarse), (max-width: 720px) { .scheda-azione { width: 44px; height: 44px; } }
+.scheda-tab-n { display: inline-block; min-width: 18px; margin-left: 6px; padding: 0 5px; border-radius: var(--r-pill); background: var(--accent-soft); color: var(--accent-strong); font-size: var(--fs-2xs); font-weight: 700; line-height: 18px; text-align: center; }
+@media print {
+  html, body { height: auto; overflow: visible; background: #fff; }
+  #mappa, #barra-strati, #barra-strumenti, #zoom-box, #strati-chip, #legende-box, #area-ricerca, #logo-ods, #linguetta-info, .avviso-fisso, #apri-strati, #avvisi, #pannello,
+  .scheda-azioni, .scheda-tabs, .scheda-maniglia, .scheda-pref { display: none !important; }
+  #scheda { position: static !important; width: auto !important; height: auto !important; max-height: none !important; box-shadow: none !important; border: 0 !important; display: block !important; }
+  .scheda-corpo { overflow: visible !important; }
+  .scheda-sez[hidden] { display: block !important; }
+  .scheda-intestazione { background: #fff; }
+  .scheda-sez { break-inside: avoid; }
+  .scheda-piede { border-top: 1px solid #999; }
+}

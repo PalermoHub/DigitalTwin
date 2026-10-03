@@ -1,5 +1,6 @@
 import { unisci, testoContesto, titoloScheda, separaMancanti, dividiDettaglio, valoreLungo, NOTA_LEGALE } from './scheda-modello.js';
 import { svgIcona } from './icone.js';
+import { segnala } from './pannello.js';
 import {
   applicaPreferenze, registraVisti, elencoPannello, commutaSezione, commutaRiga, azzera, nascondiTutto, tuttoNascosto, nessunaPreferenza,
   leggiPreferenze, salvaPreferenze,
@@ -103,7 +104,20 @@ function disegnaLink(l) {
   return a;
 }
 
-function disegnaSezione(s) {
+const BREVI = [[/^Particella catastale/i, 'Catasto'], [/^Zonizzazione/i, 'PRG'], [/^Quotazioni OMI/i, 'OMI'], [/^Sezione di censimento/i, 'Censimento'], [/^Terreno/i, 'Terreno']];
+function titoloBreve(t) {
+  const m = BREVI.find(([re]) => re.test(t));
+  return m ? m[1] : t.replace(/\s*\(.*\)\s*$/, '');
+}
+
+function riassunto(s) {
+  const r = s.gruppi.flatMap(g => g.righe).find(x => x.valore && x.valore !== 'senza dato');
+  if (!r) return '';
+  const v = String(r.valore);
+  return v.length > 26 ? v.slice(0, 25) + '…' : v;
+}
+
+function disegnaSezione(s, i) {
   const titolo = el('h3');
   if (s.icona) titolo.append(icona(s.icona));
   titolo.append(s.titolo);
@@ -125,17 +139,14 @@ function disegnaSezione(s) {
   if (s.nota) corpo.push(el('p', 'scheda-nota', s.nota));
   for (const f of s.fonte?.split('\n') ?? []) corpo.push(el('p', 'scheda-nota scheda-fonte', f));
 
-  let sezione;
-  if (s.collassabile) {
-    sezione = el('details', 'scheda-sez');
-    sezione.open = s.aperta !== false;
-    const sommario = el('summary');
-    sommario.append(titolo);
-    sezione.append(sommario, ...corpo);
-  } else {
-    sezione = el('section', 'scheda-sez');
-    sezione.append(titolo, ...corpo);
-  }
+  const sezione = el('details', 'scheda-sez');
+  sezione.open = s.aperta !== false;
+  sezione.dataset.peso = s.peso;
+  const sommario = el('summary');
+  sommario.append(titolo);
+  const sunto = riassunto(s);
+  if (sunto) sommario.append(el('span', 'scheda-riassunto', sunto));
+  sezione.append(sommario, ...corpo);
   sezione.dataset.chiave = s.chiave;
   sezione.dataset.titolo = s.titolo;
   return sezione;
@@ -238,6 +249,33 @@ function creaPannelloPreferenze(pref, aggiorna) {
   return pannello;
 }
 
+// Indirizzo condivisibile: la posizione cliccata e la scheda attiva stanno nella query (la vista della mappa è già nell'hash).
+function aggiornaUrl(lngLat, tab) {
+  try {
+    const u = new URL(location.href);
+    if (lngLat) {
+      u.searchParams.set('scheda', `${lngLat.lat.toFixed(5)},${lngLat.lng.toFixed(5)}`);
+      if (tab) u.searchParams.set('tab', tab);
+    } else { u.searchParams.delete('scheda'); u.searchParams.delete('tab'); }
+    history.replaceState(history.state, '', u);
+  } catch { /* contesti senza history: nessun link condivisibile */ }
+}
+
+const ICONA_COPIA = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>';
+const ICONA_OK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+const ICONA_STAMPA = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>';
+
+function copiaTesto(testo) {
+  if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(testo);
+  const t = document.createElement('textarea');
+  t.value = testo;
+  document.body.append(t);
+  t.select();
+  document.execCommand('copy');
+  t.remove();
+  return Promise.resolve();
+}
+
 function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
   const { contesto, sezioni, legale } = dati;
   const titoloTesto = titoloScheda(sezioni);
@@ -251,23 +289,117 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
   // su mobile la scheda è un foglio basso: il pulsante la porta a tutto schermo per leggerla meglio
   const espandi = el('button', 'scheda-espandi');
   espandi.type = 'button';
-  const imposta = piena => {
-    contenitore.classList.toggle('scheda-piena', piena);
-    espandi.innerHTML = piena ? ICONA_RIDUCI : ICONA_ESPANDI;
-    espandi.title = piena ? 'Riduci la scheda' : 'Schermo intero';
-    espandi.setAttribute('aria-label', espandi.title);
-    espandi.setAttribute('aria-pressed', String(piena));
-  };
-  imposta(false);
-  espandi.addEventListener('click', () => { imposta(!contenitore.classList.contains('scheda-piena')); adattaVista(); });
+  const ALT = ['peek', 'meta', 'pieno'];
+  const maniglia = el('button', 'scheda-maniglia');
+  maniglia.type = 'button';
+  maniglia.setAttribute('aria-label', 'Cambia l\u2019altezza della scheda');
+  maniglia.append(el('i'));
+  const imposta = alt => { contenitore.dataset.altezza = alt; contenitore.classList.toggle('scheda-piena', alt === 'pieno'); };
+  imposta('meta');
+  let y0 = 0, mosso = false;
+  maniglia.addEventListener('pointerdown', e => { y0 = e.clientY; mosso = false; });
+  maniglia.addEventListener('pointerup', e => {
+    const dy = e.clientY - y0;
+    if (Math.abs(dy) < 30) return;
+    mosso = true;
+    imposta(ALT[Math.max(0, Math.min(2, ALT.indexOf(contenitore.dataset.altezza) + (dy < 0 ? 1 : -1)))]);
+    adattaVista();
+  });
+  maniglia.addEventListener('click', () => {
+    if (mosso) { mosso = false; return; }
+    imposta(ALT[(ALT.indexOf(contenitore.dataset.altezza) + 1) % 3]);
+    adattaVista();
+  });
   // il pannello conosce anche le sezioni di questa scheda: le registra prima di elencarle
   pref.scrivi(registraVisti(pref.leggi(), sezioni));
+  const piede = el('footer', 'scheda-piede');
+  // Schede (tab) per argomento: l'ordine è la gerarchia delle informazioni, dal luogo cliccato ai dati di contesto.
+  const SCHEDE = [['luogo', 'Luogo'], ['catasto', 'Catasto'], ['vincoli', 'Vincoli'], ['mercato', 'Mercato'], ['popolazione', 'Popolazione'], ['terreno', 'Terreno']];
+  const tabDi = (p, chiave = '') => (p === 20 ? 'catasto' : p === 40 || p === 50 || String(chiave).startsWith('pai:') ? 'vincoli' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : 'luogo');
+  const tabs = el('div', 'scheda-tabs');
+  const prev = el('button', 'scheda-tabs-freccia', '\u2039');
+  const next = el('button', 'scheda-tabs-freccia', '\u203a');
+  prev.type = next.type = 'button';
+  prev.setAttribute('aria-label', 'Scorri le schede a sinistra');
+  next.setAttribute('aria-label', 'Scorri le schede a destra');
+  const indice = el('nav', 'scheda-indice');
+  indice.setAttribute('role', 'tablist');
+  indice.setAttribute('aria-label', 'Argomenti della scheda');
+  tabs.append(prev, indice, next);
+  const frecce = () => {
+    const troppo = indice.scrollWidth > indice.clientWidth + 1;
+    prev.hidden = next.hidden = !troppo;
+    prev.disabled = indice.scrollLeft <= 0;
+    next.disabled = indice.scrollLeft + indice.clientWidth >= indice.scrollWidth - 1;
+  };
+  prev.addEventListener('click', () => indice.scrollBy({ left: -140, behavior: 'smooth' }));
+  next.addEventListener('click', () => indice.scrollBy({ left: 140, behavior: 'smooth' }));
+  indice.addEventListener('scroll', frecce);
+  indice.addEventListener('wheel', e => {
+    if (indice.scrollWidth <= indice.clientWidth || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    indice.scrollLeft += e.deltaY;
+    e.preventDefault();
+  }, { passive: false });
   const corpo = el('div', 'scheda-corpo');
+  let attiva = new URLSearchParams(location.search).get('tab');
+  let sunti = new Map(); // riepilogo in testa a certe schede: id -> celle { valore, chiave }
+  const mostraTab = id => {
+    attiva = id;
+    aggiornaUrl(lngLat, id);
+    for (const sz of corpo.querySelectorAll('.scheda-sez')) sz.hidden = sz.dataset.tab !== id;
+    for (const b of indice.children) {
+      b.setAttribute('aria-selected', String(b.dataset.tab === id));
+      if (b.dataset.tab === id) indice.scrollTo({ left: Math.max(0, b.offsetLeft - 24), behavior: 'smooth' });
+    }
+    corpo.querySelector('.scheda-sunto')?.remove();
+    const celle = sunti.get(id);
+    if (celle) {
+      const box = el('div', 'scheda-sunto');
+      for (const c of celle) {
+        const cella = el('div');
+        cella.append(el('b', null, c.valore), el('span', null, c.chiave));
+        box.append(cella);
+      }
+      corpo.prepend(box);
+    }
+    corpo.scrollTop = 0;
+  };
   const aggiorna = () => {
     const visibili = applicaPreferenze(dati, pref.leggi());
     corpo.replaceChildren(...visibili.sezioni.map(disegnaSezione));
-    if (!visibili.sezioni.length) corpo.append(el('p', 'scheda-vuota', 'Tutte le informazioni di questa scheda sono nascoste: apri «Personalizza» per mostrarle.'));
-    if (visibili.legale) corpo.append(el('p', 'scheda-nota scheda-legale', NOTA_LEGALE));
+    if (!visibili.sezioni.length) corpo.append(el('p', 'scheda-vuota', 'Tutte le informazioni di questa scheda sono nascoste: apri \u00abPersonalizza\u00bb per mostrarle.'));
+    piede.replaceChildren(...corpo.querySelectorAll('.scheda-link'));
+    if (visibili.legale) piede.append(el('p', 'scheda-nota scheda-legale', NOTA_LEGALE));
+    piede.hidden = !piede.children.length;
+    // riepilogo in testa a Mercato, Popolazione e Terreno: tre valori chiave della prima sezione
+    sunti = new Map();
+    for (const sez of visibili.sezioni) {
+      const id = tabDi(sez.peso, sez.chiave);
+      if (!['mercato', 'popolazione', 'terreno'].includes(id) || sunti.has(id)) continue;
+      const daAccordion = sez.accordion?.elementi?.filter(x => x.anteprima).slice(0, 3).map(x => ({ valore: x.anteprima, chiave: x.titolo }));
+      const celle = daAccordion?.length ? daAccordion
+        : sez.gruppi.flatMap(g => g.righe).filter(r => r.valore && r.valore !== 'senza dato' && String(r.valore).length <= 10 && !/codice|^id\b|sezione/i.test(r.etichetta))
+          .slice(0, 3).map(r => ({ valore: String(r.valore), chiave: r.etichetta }));
+      if (celle.length) sunti.set(id, celle);
+    }
+    for (const sz of [...corpo.querySelectorAll('.scheda-sez')]) if (String(sz.dataset.chiave).startsWith('pai:')) corpo.append(sz); // vincoli PAI in coda al tab Vincoli
+    const sezioni = [...corpo.querySelectorAll('.scheda-sez')];
+    for (const sz of sezioni) sz.dataset.tab = tabDi(+sz.dataset.peso, sz.dataset.chiave);
+    const presenti = SCHEDE.filter(([id]) => sezioni.some(sz => sz.dataset.tab === id));
+    indice.replaceChildren(...presenti.map(([id, nome]) => {
+      const b = el('button', null, nome);
+      const n = sezioni.filter(sz => sz.dataset.tab === id).length;
+      if (n > 1) b.append(el('span', 'scheda-tab-n', String(n)));
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.dataset.tab = id;
+      b.addEventListener('click', () => mostraTab(id));
+      return b;
+    }));
+    tabs.hidden = presenti.length < 2;
+    if (presenti.length < 2) sezioni.forEach(sz => { sz.hidden = false; });
+    else mostraTab(presenti.some(([id]) => id === attiva) ? attiva : presenti[0][0]);
+    requestAnimationFrame(frecce);
   };
   const pannelloPref = creaPannelloPreferenze(pref, aggiorna);
   const personalizza = el('button', 'scheda-personalizza');
@@ -280,21 +412,42 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
     pannelloPref.hidden = !pannelloPref.hidden;
     personalizza.setAttribute('aria-expanded', String(!pannelloPref.hidden));
   });
+  const annuncio = el('p', 'solo-lettori', `Scheda aperta: ${titoloTesto}`);
+  annuncio.setAttribute('role', 'status');
   const azioni = el('div', 'scheda-azioni');
-  azioni.append(personalizza, espandi, x);
+  const azione = (classe, titolo, icona, fn) => {
+    const b = el('button', 'scheda-azione ' + classe);
+    b.type = 'button';
+    b.title = titolo;
+    b.setAttribute('aria-label', titolo);
+    b.innerHTML = icona;
+    b.addEventListener('click', () => fn(b));
+    return b;
+  };
+  const copia = azione('scheda-copia', 'Copia indirizzo e riferimenti catastali', ICONA_COPIA, async b => {
+    const part = sezioni.find(sz => sz.chiave === 'particella')?.gruppi.flatMap(g => g.righe) ?? [];
+    const v = nome => part.find(r => r.etichetta === nome)?.valore;
+    const righe = [titoloTesto, `${lngLat.lat.toFixed(5)}, ${lngLat.lng.toFixed(5)}`];
+    if (v('Foglio') && v('Particella')) righe.push(`Foglio ${v('Foglio')}, particella ${v('Particella')}`);
+    await copiaTesto(righe.join('\n'));
+    b.innerHTML = ICONA_OK;
+    b.title = 'Copiato';
+    annuncio.textContent = 'Copiato negli appunti';
+    setTimeout(() => { b.innerHTML = ICONA_COPIA; b.title = 'Copia indirizzo e riferimenti catastali'; annuncio.textContent = ''; }, 1600);
+  });
+  const stampa = azione('scheda-stampa', 'Stampa la scheda', ICONA_STAMPA, () => window.print());
+  azioni.append(copia, stampa, personalizza, x);
   const testata = el('header', 'scheda-intestazione');
   const riga = el('div', 'scheda-testata');
   riga.append(titolo, azioni);
   testata.append(riga, el('p', 'scheda-coordinate', `${lngLat.lat.toFixed(5)}° N, ${lngLat.lng.toFixed(5)}° E`));
   const testo = testoContesto(contesto);
   if (testo) testata.append(el('p', 'scheda-contesto', testo));
-  testata.append(pannelloPref);
+  testata.append(pannelloPref, tabs);
 
   aggiorna();
   // annuncio breve per i lettori di schermo: la scheda intera non è una regione live
-  const annuncio = el('p', 'solo-lettori', `Scheda aperta: ${titoloTesto}`);
-  annuncio.setAttribute('role', 'status');
-  contenitore.replaceChildren(testata, corpo, annuncio);
+  contenitore.replaceChildren(maniglia, testata, corpo, piede, annuncio);
   contenitore.hidden = false;
   corpo.scrollTop = 0;
   adattaVista(lngLat); // la mappa si centra sul punto nella parte rimasta visibile
@@ -336,6 +489,22 @@ function trovaFeature(map, punto, layers) {
 }
 
 export function collegaScheda(map, moduli, contenitore) {
+  // stampa: tutte le schede aperte e visibili; dopo, si torna alla scheda attiva
+  window.addEventListener('beforeprint', () => {
+    for (const sz of contenitore.querySelectorAll('.scheda-sez')) { sz.hidden = false; sz.open = true; }
+  });
+  window.addEventListener('afterprint', () => contenitore.querySelector('.scheda-indice [aria-selected="true"]')?.click());
+  // link condiviso: riapre la scheda nel punto indicato, dopo il primo caricamento dei dati
+  const condiviso = new URLSearchParams(location.search).get('scheda');
+  if (condiviso) {
+    const [lat, lng] = condiviso.split(',').map(Number);
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      map.once('idle', () => setTimeout(() => {
+        const lngLat = new maplibregl.LngLat(lng, lat);
+        map.fire('click', { point: map.project(lngLat), lngLat });
+      }, 800));
+    }
+  }
   const conScheda = moduli.filter(m => m.scheda);
   // le scelte sulle informazioni da mostrare stanno in memoria e, se il browser lo permette, in localStorage
   const archivio = (() => { try { return window.localStorage; } catch { return null; } })();
@@ -355,9 +524,13 @@ export function collegaScheda(map, moduli, contenitore) {
       voci.push(...m.scheda.voci(trovati, e.lngLat));
     }
     const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);
-    const chiudiScheda = () => { contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); adattaVista(); };
+    const chiudiScheda = () => { aggiornaUrl(null); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); adattaVista(); };
     const dati = unisci(voci);
-    if (!dati.sezioni.length) { chiudiScheda(); return; } // clic su un punto vuoto
+    if (!dati.sezioni.length) { // clic su un punto vuoto
+      chiudiScheda();
+      segnala(map.getZoom() < 14 ? 'Nessun dato in questo punto: avvicina lo zoom o accendi uno strato.' : 'Nessun dato in questo punto.');
+      return;
+    }
     const extra = voci.flatMap(v => v.evidenza ?? []); // luoghi vicini che un layer vuole vedere sulla mappa
     const base = soloCliccato(sceltePerLayer(trovatiTutti, e.lngLat));
     for (const m of conScheda) m.scheda.suEvidenza?.(base); // chi ridisegna l'evidenza dopo il clic (es. percorso di una linea) tiene anche questa

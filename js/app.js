@@ -18,10 +18,23 @@ import pai from './layers/pai.js';
 import trasporto from './layers/trasporto.js';
 import sicurezza, { STRATI_INCIDENTI, legendaSicurezza } from './layers/sicurezza.js';
 import { collegaFiltroIncidenti } from './layers/sicurezza-filtro.js';
+import { collegaRicercaTerritorio } from './layers/ricerca-territorio.js';
 import { collegaRicercaIncidenti } from './layers/sicurezza-ricerca.js';
 import { collegaFiltroLinea } from './layers/trasporto-filtro.js';
 import terreno from './layers/terreno.js';
 import base from './layers/base.js';
+
+// strati (mobile) e legenda riducibile
+const apriStrati = document.getElementById('apri-strati');
+const impostaStrati = on => { document.body.classList.toggle('strati-aperti', on); apriStrati.setAttribute('aria-expanded', String(on)); };
+apriStrati.addEventListener('click', () => impostaStrati(true));
+document.getElementById('chiudi-strati').addEventListener('click', () => impostaStrati(false));
+const riduciLegenda = document.getElementById('legende-riduci');
+riduciLegenda.addEventListener('click', () => {
+  const ridotta = document.getElementById('legende-box').classList.toggle('ridotta');
+  riduciLegenda.setAttribute('aria-expanded', String(!ridotta));
+  riduciLegenda.textContent = ridotta ? '▸ Legenda' : '▾ Riduci';
+});
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
 const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, scuole, uffici, trasporto, sicurezza, incendi, confini];
@@ -67,7 +80,7 @@ map.once('style.load', async () => {
   legendaSicurezza.suTipologie = tipologie => filtroIncidenti.imposta({ tipologie }); // la legenda degli incidenti filtra per gravità
   collegaRicerca(map, document.getElementById('cerca'),
     document.getElementById('cerca-testo'), document.getElementById('cerca-risultati'), vaiParticella, zone,
-    collegaRicercaIncidenti(map, filtroIncidenti));
+    collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti)));
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('pannello-filtri'),
     document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
