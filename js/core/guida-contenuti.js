@@ -1,7 +1,7 @@
 // Fonte unica della guida: la leggono il tab Info (guida.js), lo script degli screenshot e quello del video.
 // `narrazione` è il testo parlato: niente cifre né sigle (si scrivono per esteso come si pronunciano).
 // `scena` dice allo script degli screenshot come preparare la mappa (vedi scripts/guida_screenshot.py).
-const TEATRO_MASSIMO = [13.3586, 38.1203];
+const PUNTO_CLIC = [13.3586, 38.1203];
 const CENTRO = [13.3615, 38.1157];
 
 export const PASSI = [
@@ -31,12 +31,12 @@ export const PASSI = [
     id: 'strati',
     titolo: 'La barra degli strati',
     paragrafi: [
-      'Gli strati sono i temi che si possono sovrapporre alla mappa. Il pulsante «Strati» apre la barra: ogni icona accende o spegne un tema, e quelli accesi compaiono anche come etichette sopra la mappa.',
-      'La legenda in alto a sinistra spiega i colori degli strati accesi. Si può accenderne più d\'uno alla volta per confrontare, ad esempio, edifici e catasto.',
+      'Gli strati sono i temi che si possono sovrapporre alla mappa. La barra a sinistra li raggruppa (Rilievo, Popolazione, Territorio, Edifici, Trasporti, Sicurezza e altri): da telefono si apre con il pulsante «Strati». Scegliendo un gruppo si apre l\'elenco dei suoi strati, con una casella per accenderli o spegnerli e un campo per cercarli.',
+      'Gli strati accesi compaiono come etichette in alto sulla mappa, e la legenda in basso a sinistra ne spiega i colori. Se ne possono accendere più d\'uno per confrontarli, ad esempio edifici e catasto.',
     ],
-    immagine: { file: 'img/guida/passi/strati.webp', alt: 'La barra degli strati aperta, con le icone dei temi e alcuni strati accesi sulla mappa.', didascalia: 'La barra degli strati con catasto ed edifici accesi.' },
-    narrazione: 'Gli strati sono i temi che si sovrappongono alla mappa. Il pulsante Strati apre la barra: ogni icona accende o spegne un tema. Gli strati accesi compaiono anche come etichette sulla mappa, e la legenda ne spiega i colori. Puoi accenderne più di uno per confrontarli.',
-    scena: { strati: ['edificato', 'catasto'], centro: TEATRO_MASSIMO, zoom: 16, apriStrati: true },
+    immagine: { file: 'img/guida/passi/strati.webp', alt: 'La barra degli strati con il gruppo Territorio aperto: un elenco di strati con caselle, tra cui catasto, piano regolatore, monumenti e uffici comunali.', didascalia: 'Il gruppo «Territorio» aperto, con il catasto acceso.' },
+    narrazione: 'Gli strati sono i temi che si sovrappongono alla mappa. La barra a sinistra li raggruppa: rilievo, popolazione, territorio, edifici, trasporti e sicurezza. Scegli un gruppo per vedere l\'elenco dei suoi strati e accendili con la casella. Gli strati accesi compaiono come etichette in alto, e la legenda in basso ne spiega i colori. Puoi accenderne più di uno per confrontarli.',
+    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 16, gruppo: 'Territorio' },
   },
   {
     id: 'clic',
@@ -44,20 +44,20 @@ export const PASSI = [
     paragrafi: [
       'Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono. Il punto scelto viene evidenziato e si apre la scheda del luogo.',
     ],
-    immagine: { file: 'img/guida/passi/clic.webp', alt: 'Un edificio evidenziato sulla mappa dopo il clic, con la scheda del luogo che si apre sul lato.', didascalia: 'Un clic sul Teatro Massimo evidenzia l\'edificio e apre la scheda.' },
+    immagine: { file: 'img/guida/passi/clic.webp', alt: 'Un punto scelto sulla mappa in via Maqueda, evidenziato in viola, con la scheda del luogo aperta sul lato destro.', didascalia: 'Un clic in via Maqueda evidenzia il punto e apre la scheda.' },
     narrazione: 'Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono. Il punto scelto viene evidenziato e si apre la scheda del luogo.',
-    scena: { strati: ['edificato', 'catasto'], centro: TEATRO_MASSIMO, zoom: 17, clic: TEATRO_MASSIMO },
+    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC },
   },
   {
     id: 'scheda',
     titolo: 'Cosa si legge nella scheda',
     paragrafi: [
-      'La scheda raccoglie tutto ciò che la mappa sa del punto scelto, in sezioni: l\'indirizzo, la particella catastale, la zona del piano regolatore con i suoi vincoli, la popolazione della sezione di censimento e le caratteristiche dell\'edificio.',
-      'Ogni sezione indica la fonte. I dati catastali, urbanistici e i vincoli sono solo informativi; la popolazione per edificio è una stima.',
+      'La scheda è organizzata in sezioni, che si scelgono dalle linguette in alto: Luogo, Catasto, Vincoli, Mercato, Popolazione e altre. «Luogo» riassume ciò che c\'è nel punto scelto: indirizzo, circoscrizione e quartiere, monumenti, rischio di incidenti e fermate vicine.',
+      'La sezione «Catasto» mostra la particella con foglio e numero e il collegamento alla visura. Ogni sezione indica la fonte: i dati catastali, urbanistici e i vincoli sono solo informativi.',
     ],
-    immagine: { file: 'img/guida/passi/scheda.webp', alt: 'La scheda del luogo aperta, divisa in sezioni con indirizzo, catasto, zona urbanistica, popolazione ed edificio.', didascalia: 'La scheda del luogo, divisa per argomento.' },
-    narrazione: 'La scheda raccoglie ciò che la mappa sa del punto scelto, a sezioni: l\'indirizzo, la particella catastale, la zona del piano regolatore con i vincoli, la popolazione della sezione di censimento e le caratteristiche dell\'edificio. Ogni sezione indica la fonte, e i dati urbanistici sono solo informativi.',
-    scena: { strati: ['edificato', 'catasto'], centro: TEATRO_MASSIMO, zoom: 17, clic: TEATRO_MASSIMO, ritaglio: '#scheda' },
+    immagine: { file: 'img/guida/passi/scheda.webp', alt: 'La scheda del luogo aperta sulla sezione Catasto, con i dati della particella.', didascalia: 'La scheda del luogo, qui sulla sezione «Catasto».' },
+    narrazione: 'La scheda è divisa in sezioni, che scegli dalle linguette in alto: luogo, catasto, vincoli, mercato, popolazione e altre. La prima riassume ciò che c\'è nel punto scelto: l\'indirizzo, i monumenti, il rischio di incidenti e le fermate vicine. La sezione catasto mostra la particella, e ogni sezione indica la fonte dei dati.',
+    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Catasto' },
   },
   {
     id: 'filtri',
@@ -77,8 +77,8 @@ export const PASSI = [
       'Catasto, zonizzazione e vincoli hanno valore solo informativo e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. Il piano regolatore è la variante generale del duemilaquattro: varianti successive potrebbero non essere incluse.',
       'I dati del censimento sono stime campionarie, quindi i valori per sezione non sono conteggi esatti.',
     ],
-    immagine: { file: 'img/guida/passi/avvertenze.webp', alt: 'La scheda Fonti e avvisi con le avvertenze sul valore informativo dei dati.', didascalia: 'Le avvertenze sono sempre consultabili in «Fonti e avvisi».' },
+    immagine: { file: 'img/guida/passi/avvertenze.webp', alt: 'La sezione Vincoli della scheda del luogo, con in fondo l\'avviso: dato informativo, senza valore legale.', didascalia: 'In fondo a ogni scheda, l\'avviso sul valore informativo dei dati.' },
     narrazione: 'Un\'ultima avvertenza: catasto, zonizzazione e vincoli hanno valore solo informativo, e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. I dati del censimento sono stime. Per usi legali rivolgiti sempre agli uffici competenti.',
-    scena: { strati: [], centro: CENTRO, zoom: 12, ritaglio: '#crediti' },
+    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Vincoli' },
   },
 ];
