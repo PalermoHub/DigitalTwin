@@ -76,3 +76,15 @@ test('schedaGuida: ogni immagine è lazy, ha alt e didascalia', () => {
   });
   assert.equal(tutti(schedaGuida(doc), 'figcaption').length, PASSI.length);
 });
+
+test('schedaGuida: blocco media con video sottotitolato e audio', () => {
+  const radice = schedaGuida(doc);
+  const [video] = tutti(radice, 'video');
+  assert.equal(video.attrs.preload, 'metadata');
+  assert.equal(video.attrs.poster, PASSI[0].immagine.file);
+  const [track] = tutti(video, 'track');
+  assert.equal(track.attrs.kind, 'captions');
+  assert.equal(track.attrs.src, 'media/guida/guida.vtt');
+  const [audio] = tutti(radice, 'audio');
+  assert.equal(audio.attrs.preload, 'none');
+});

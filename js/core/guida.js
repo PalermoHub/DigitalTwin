@@ -22,6 +22,34 @@ export function schedaGuida(doc = document, passi = PASSI) {
   indice.append(ol);
   radice.append(indice);
 
+  const media = doc.createElement('div');
+  media.className = 'guida-media';
+  const video = doc.createElement('video');
+  video.setAttribute('controls', '');
+  video.setAttribute('preload', 'metadata');
+  video.setAttribute('poster', passi[0].immagine.file);
+  video.setAttribute('aria-label', 'Video guida: panoramica della mappa');
+  const sv = doc.createElement('source');
+  sv.setAttribute('src', 'media/guida/guida.mp4');
+  sv.setAttribute('type', 'video/mp4');
+  const tr = doc.createElement('track');
+  tr.setAttribute('kind', 'captions');
+  tr.setAttribute('srclang', 'it');
+  tr.setAttribute('label', 'Italiano');
+  tr.setAttribute('src', 'media/guida/guida.vtt');
+  tr.setAttribute('default', '');
+  video.append(sv, tr);
+  const audio = doc.createElement('audio');
+  audio.setAttribute('controls', '');
+  audio.setAttribute('preload', 'none');
+  audio.setAttribute('aria-label', 'Versione solo audio della guida');
+  const sa = doc.createElement('source');
+  sa.setAttribute('src', 'media/guida/guida.mp3');
+  sa.setAttribute('type', 'audio/mpeg');
+  audio.append(sa);
+  media.append(video, audio);
+  radice.append(media);
+
   for (const p of passi) {
     const sez = doc.createElement('section');
     sez.className = 'guida-passo';

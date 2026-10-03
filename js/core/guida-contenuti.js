@@ -11,11 +11,11 @@ export const PASSI = [
     id: 'cos-e',
     titolo: 'Cos\'è la mappa e a cosa serve',
     paragrafi: [
-      'Il Digital Twin di Palermo è una mappa interattiva che riunisce in un solo posto i dati aperti sulla città: catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico, sicurezza stradale e uffici comunali.',
+      'Il Digital Twin di Palermo, realizzato da Open Data Sicilia, è una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città: catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico, sicurezza stradale e uffici comunali.',
       'Serve a leggere un luogo da più punti di vista: chi cerca una particella, chi vuole capire come è fatto un quartiere, chi studia la mobilità o i servizi. Ogni informazione resta collegata alla fonte da cui proviene.',
     ],
     immagine: { file: 'img/guida/passi/cos-e.webp', alt: 'La mappa di Palermo appena aperta, con la barra di ricerca in basso e i pulsanti degli strumenti a destra.', didascalia: 'La vista iniziale: il centro di Palermo.' },
-    narrazione: 'Benvenuto nel Digital Twin di Palermo. È una mappa interattiva che riunisce in un solo posto i dati aperti sulla città: catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale. Serve a leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.',
+    narrazione: 'Benvenuti nel Digital Twin di Palermo, realizzato da Open Data Sicilia: una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città. Qui trovi insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale, e puoi leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.',
     scena: { strati: [], centro: CENTRO, zoom: 12 },
   },
   {
