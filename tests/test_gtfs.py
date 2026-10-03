@@ -126,3 +126,21 @@ def test_feed_reale_coerente(reale):
     assert {str(s) for s in servizi_usati} <= set(orari["servizi"])
     assert max(t for rotte in orari["fermate"].values() for gruppi in rotte.values() for g_ in gruppi for t in g_["t"]) > 1440
     assert orari["validita"] == {"da": "2026-08-25", "a": "2026-10-31"}
+
+
+def test_direzione_dalla_forma_del_tracciato_se_il_feed_la_etichetta_male(feed):
+    """Il feed AMAT a volte dà direction_id 0 anche alle corse di ritorno: la direzione si ricava dal verso del tracciato."""
+    righe = list(csv.reader(open(feed / "trips.txt", encoding="utf-8")))
+    righe.append(["100", "A", "t5", "", "0", "SH2", "", ""])  # SH2 è l'inverso di SH1, ma il feed dice direzione 0
+    with open(feed / "trips.txt", "w", encoding="utf-8", newline="") as f:
+        csv.writer(f).writerows(righe)
+    soste = list(csv.reader(open(feed / "stop_times.txt", encoding="utf-8")))
+    soste += [["t5", "10:00:00", "10:00:00", "S3", "1"], ["t5", "10:10:00", "10:10:00", "S2", "2"], ["t5", "10:20:00", "10:20:00", "S1", "3"]]
+    with open(feed / "stop_times.txt", "w", encoding="utf-8", newline="") as f:
+        csv.writer(f).writerows(soste)
+    _, linee, orari = g.costruisci(feed)
+    assert sorted(f["properties"]["id"] for f in linee["features"]) == ["linea-100-0", "linea-100-1", "linea-TRAM1-0"]
+    ritorno = {f["properties"]["id"]: f["properties"] for f in linee["features"]}["linea-100-1"]
+    assert (ritorno["da"], ritorno["a"]) == ("Stazione Centrale", "Piazza Indipendenza")
+    # a S3 (capolinea del ritorno) le partenze delle 08:00 (servizio B) e delle 10:00 (servizio A) sono entrambe della direzione 1
+    assert orari["fermate"]["S3"]["100"] == [{"d": 1, "s": 0, "t": [600]}, {"d": 1, "s": 1, "t": [480]}]

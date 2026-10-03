@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { unisci, testoContesto } from '../../js/core/scheda-modello.js';
+import { unisci, testoContesto, titoloScheda, separaMancanti, dividiDettaglio, valoreLungo, MANCANTE } from '../../js/core/scheda-modello.js';
 
 const riga = (etichetta, valore, extra = {}) => ({ etichetta, valore, ...extra });
 const voce = (chiave, peso, righe, extra = {}) => ({ chiave, peso, titolo: chiave, gruppi: [{ righe }], ...extra });
@@ -78,13 +78,62 @@ test('scarta le sezioni senza contenuto, non quelle con link o accordion', () =>
 });
 
 test('nessuna voce: nessuna sezione e contesto vuoto', () => {
-  assert.deepEqual(unisci([]), { contesto: {}, sezioni: [] });
+  assert.deepEqual(unisci([]), { contesto: {}, sezioni: [], legale: false });
 });
 
 test('l\'icona della sezione resta quella della prima voce', () => {
   const { sezioni } = unisci([
-    { chiave: 'z', peso: 1, titolo: 'Z', icona: 'fa-map', gruppi: [{ righe: [riga('a', '1')] }] },
-    { chiave: 'z', peso: 2, titolo: 'Z', icona: 'fa-scroll', gruppi: [{ righe: [riga('b', '2')] }] },
+    { chiave: 'z', peso: 1, titolo: 'Z', icona: 'mappa', gruppi: [{ righe: [riga('a', '1')] }] },
+    { chiave: 'z', peso: 2, titolo: 'Z', icona: 'altro', gruppi: [{ righe: [riga('b', '2')] }] },
   ]);
-  assert.equal(sezioni[0].icona, 'fa-map');
+  assert.equal(sezioni[0].icona, 'mappa');
+});
+
+test('titoloScheda: indirizzo in maiuscole/minuscole, altrimenti titolo generico', () => {
+  const ind = voce('indirizzo', 10, [riga('Via', 'VIA TEATRO BIONDO'), riga('Civico', '3/B')]);
+  assert.equal(titoloScheda(unisci([ind]).sezioni), 'Via Teatro Biondo, 3/B');
+  const dau = voce('indirizzo', 10, [riga('Via', "VIA DI SANT'ANNA E DELLA CROCE"), riga('Civico', '12')]);
+  assert.equal(titoloScheda(unisci([dau]).sezioni), "Via di Sant'Anna e della Croce, 12");
+  assert.equal(titoloScheda(unisci([voce('zonizzazione', 40, [riga('Zona', 'A2')])]).sezioni), 'Scheda del luogo');
+  assert.equal(titoloScheda(unisci([voce('indirizzo', 10, [riga('Via', 'VIA ROMA')])]).sezioni), 'Via Roma');
+});
+
+test('separaMancanti: due o più righe senza dato diventano una sola riga di riepilogo', () => {
+  const rr = [riga('Residenti 2021', '5'), riga('Residenti 2023', MANCANTE), riga('Densità', MANCANTE), riga('Vecchiaia', MANCANTE)];
+  const { presenti, mancanti } = separaMancanti(rr);
+  assert.deepEqual(presenti.map(r => r.etichetta), ['Residenti 2021']);
+  assert.deepEqual(mancanti, ['Residenti 2023', 'Densità', 'Vecchiaia']);
+  // una sola riga mancante resta com'è
+  const una = separaMancanti([riga('a', '1'), riga('b', MANCANTE)]);
+  assert.equal(una.presenti.length, 2);
+  assert.deepEqual(una.mancanti, []);
+});
+
+test('dividiDettaglio: separa la soglia tra parentesi dal valore', () => {
+  assert.deepEqual(dividiDettaglio('Alta costruibilità (slope<5°, elev<100m)'), { valore: 'Alta costruibilità', dettaglio: 'slope<5°, elev<100m' });
+  assert.deepEqual(dividiDettaglio('Stabile (0–5°)'), { valore: 'Stabile', dettaglio: '0–5°' });
+  assert.deepEqual(dividiDettaglio('Piano'), { valore: 'Piano', dettaglio: '' });
+});
+
+test('valoreLungo: oltre 24 caratteri il valore va sotto l\'etichetta', () => {
+  assert.equal(valoreLungo('B – Centrale'), false);
+  assert.equal(valoreLungo('VITTORIO EMANUELE-MAQUEDA-ROMA'), true);
+});
+
+test('unisci: l\'avviso legale è un solo flag, non una nota per sezione', () => {
+  const { legale, sezioni } = unisci([
+    voce('particella', 20, [riga('Foglio', '1')], { legale: true }),
+    voce('vincoli', 50, [riga('Tipo', 'x')], { legale: true }),
+  ]);
+  assert.equal(legale, true);
+  assert.equal(sezioni.length, 2);
+  assert.equal(unisci([voce('a', 1, [riga('x', '1')])]).legale, false);
+});
+
+test('unisci: un gruppo senza righe né griglia non lascia il titolo vuoto nella sezione', () => {
+  const { sezioni } = unisci([{ chiave: 'vincoli', peso: 50, titolo: 'Vincoli', gruppi: [
+    { titolo: 'Vincolo areale 1', righe: [riga('Tipo', 'Paesaggistico')] },
+    { titolo: 'Vincolo areale 2', righe: [] },
+  ] }]);
+  assert.deepEqual(sezioni[0].gruppi.map(g => g.titolo), ['Vincolo areale 1']);
 });

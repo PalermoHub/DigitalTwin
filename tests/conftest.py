@@ -79,6 +79,14 @@ class Pagina:
     def js(self, espressione):
         return self.page.evaluate(espressione)
 
+    def mostra(self, selettore):
+        """Apre il sotto-pannello della barra che contiene l'elemento (se è chiuso)."""
+        self.page.evaluate(
+            """sel => {
+                const g = document.querySelector(sel)?.closest('.sotto-pannello');
+                if (g?.hidden) document.getElementById('btn-gruppo-' + g.id.replace('gruppo-', '')).click();
+            }""", selettore)
+
     def vai(self, lon, lat, zoom):
         """Sposta la mappa e attende che abbia finito di caricare i tile."""
         self.page.evaluate(

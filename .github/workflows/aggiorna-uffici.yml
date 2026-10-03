@@ -1,0 +1,70 @@
+name: Aggiorna uffici
+
+# Avvio manuale: ri-estrae gli uffici dal sito del Comune di Palermo e rigenera dati/uffici/.
+on:
+  workflow_dispatch:
+    inputs:
+      committa:
+        description: "Salva i dati aggiornati nel repository (altrimenti solo artefatto scaricabile)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-uffici
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Estrai schede e sedi dal sito del Comune
+        run: python3 scripts/uffici_scrape.py
+
+      - name: Costruisci gerarchia, GeoJSON, CSV ed elenco (fallisce se la struttura è anomala)
+        run: python3 scripts/uffici_build.py
+
+      - name: Riepilogo
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          o = json.load(open("dati/uffici/uffici.json"))
+          g = json.load(open("dati/uffici/uffici.geojson"))["features"]
+          s = json.load(open("dati/uffici/sedi.geojson"))["features"]
+          print("## Uffici aggiornati")
+          print(f"- Aree: {len(o)}  · Settori: {sum(len(a['settori']) for a in o)}  · U.O.: {sum(len(x['unita']) for a in o for x in a['settori'])}")
+          print(f"- Uffici geolocalizzati: {len(g)}  · Sedi: {len(s)}")
+          PY
+
+      - name: Artefatto
+        uses: actions/upload-artifact@v4
+        with:
+          name: dati-uffici
+          path: |
+            dati/uffici/uffici.json
+            dati/uffici/uffici.geojson
+            dati/uffici/sedi.geojson
+            dati/uffici/uffici.csv
+            dati/uffici/ELENCO.md
+
+      - name: Salva nel repository
+        if: ${{ inputs.committa }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dati/uffici/uffici.json dati/uffici/uffici.geojson dati/uffici/sedi.geojson dati/uffici/uffici.csv dati/uffici/ELENCO.md dati/uffici/README.md
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione nei dati."
+          else
+            git commit -m "dati: aggiornamento uffici comunali ($(date -u +%F))"
+            git push
+          fi

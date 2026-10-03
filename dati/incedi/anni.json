@@ -1,0 +1,215 @@
+{
+ "servizio": "https://sifweb.regione.sicilia.it/arcgis/rest/services/Censimento_Incendi/MapServer",
+ "aggiornato": "2026-10-03",
+ "anni": [
+  {
+   "anno": 2025,
+   "layer": 0,
+   "n": 4,
+   "ettari": 6.51,
+   "colore": "#55ff00",
+   "bordo": "#ff0000",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2024,
+   "layer": 1,
+   "n": 0,
+   "ettari": 0,
+   "colore": "#ffff73",
+   "bordo": "#ff0000",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2023,
+   "layer": 2,
+   "n": 16,
+   "ettari": 3224.01,
+   "colore": "#aaff00",
+   "bordo": "#0070ff",
+   "spessore_bordo": 1,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2022,
+   "layer": 3,
+   "n": 11,
+   "ettari": 267.38,
+   "colore": "#beffe8",
+   "bordo": "#ff00c5",
+   "spessore_bordo": 1,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2021,
+   "layer": 4,
+   "n": 4,
+   "ettari": 30.23,
+   "colore": "#e8beff",
+   "bordo": "#828282",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2020,
+   "layer": 5,
+   "n": 14,
+   "ettari": 393.12,
+   "colore": "#e1e1e1",
+   "bordo": "#686868",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2019,
+   "layer": 6,
+   "n": 10,
+   "ettari": 273.03,
+   "colore": "#730000",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2018,
+   "layer": 7,
+   "n": 12,
+   "ettari": 159.81,
+   "colore": "#a80000",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2017,
+   "layer": 8,
+   "n": 13,
+   "ettari": 123.47,
+   "colore": "#a83800",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2016,
+   "layer": 9,
+   "n": 13,
+   "ettari": 838.85,
+   "colore": "#e69800",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2015,
+   "layer": 10,
+   "n": 10,
+   "ettari": 55.73,
+   "colore": "#ff0000",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2014,
+   "layer": 11,
+   "n": 11,
+   "ettari": 546.88,
+   "colore": "#ffaa00",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2013,
+   "layer": 12,
+   "n": 9,
+   "ettari": 97.44,
+   "colore": "#ffd37f",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2012,
+   "layer": 13,
+   "n": 12,
+   "ettari": 774.0,
+   "colore": "#ffa77f",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2011,
+   "layer": 14,
+   "n": 14,
+   "ettari": 287.83,
+   "colore": "#ffebbe",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2010,
+   "layer": 15,
+   "n": 15,
+   "ettari": 152.89,
+   "colore": "#f57a7a",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2009,
+   "layer": 16,
+   "n": 19,
+   "ettari": 34.84,
+   "colore": "#c1f5d5",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2008,
+   "layer": 17,
+   "n": 11,
+   "ettari": 309.97,
+   "colore": "#f7dad0",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  },
+  {
+   "anno": 2007,
+   "layer": 18,
+   "n": 14,
+   "ettari": 1133.53,
+   "colore": "#f4c1f5",
+   "bordo": "#6e6e6e",
+   "spessore_bordo": 0.4,
+   "opacita": 0.8,
+   "opacita_bordo": 0.8
+  }
+ ]
+}

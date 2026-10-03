@@ -33,3 +33,10 @@ test('etichetteChip: una per filtro attivo, con la gravità in parole', () => {
   assert.deepEqual(etichetteChip({ anno: 2018, gravita: 'R', via: 'Via della Libertà' }),
     [{ chiave: 'anno', testo: 'Incidenti 2018' }, { chiave: 'gravita', testo: 'Incidenti con prognosi riservata' }, { chiave: 'via', testo: 'Incidenti: Via della Libertà' }]);
 });
+
+test('filtroIncidenti: le gravità accese dalla legenda si aggiungono in AND', () => {
+  assert.equal(filtroIncidenti({ tipologie: null }), null);
+  assert.deepEqual(filtroIncidenti({ tipologie: ['M', 'R'] }), ['in', ['get', 'Tipologia'], ['literal', ['M', 'R']]]);
+  assert.deepEqual(filtroIncidenti({ anno: 2018, tipologie: ['M'] }),
+    ['all', ['==', ['get', 'anno'], 2018], ['in', ['get', 'Tipologia'], ['literal', ['M']]]]);
+});

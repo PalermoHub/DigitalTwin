@@ -15,6 +15,8 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from compatta_dati import codifica_orari
+
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "dati" / "gtfs"
 OUT = ROOT / "dati" / "trasporto"
@@ -57,6 +59,16 @@ def servizi(src):
     return {sid: sorted(date) for sid, date in attivi.items() if date}
 
 
+def _d2(a, b):
+    return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2
+
+
+def orientamento(coord, riferimento):
+    """0 se il tracciato va nello stesso verso del riferimento (capolinea di partenza e di arrivo vicini), 1 se è il ritorno."""
+    a, b, r1, r2 = coord[0], coord[-1], riferimento[0], riferimento[-1]
+    return 0 if _d2(a, r1) + _d2(b, r2) <= _d2(a, r2) + _d2(b, r1) else 1
+
+
 def costruisci(src=SRC):
     stops = {r["stop_id"]: r for r in leggi(src, "stops")}
     rotte = {r["route_id"]: r for r in leggi(src, "routes")}
@@ -78,11 +90,25 @@ def costruisci(src=SRC):
     # corse utilizzabili: hanno fermate e un servizio con almeno una data
     valide = {tid: c for tid, c in corse.items() if soste.get(tid) and c["service_id"] in indice}
 
+    # La direzione si ricava dal verso del tracciato rispetto a quello più usato della linea: il direction_id del feed non è
+    # affidabile (a volte cambia da un servizio all'altro, o dà 0 anche al ritorno). Senza tracciato vale il direction_id.
+    forme = {sid: [[lon, lat] for _, lon, lat in sorted(punti)] for sid, punti in tracciati.items()}
+    principale = {}
+    for route in {c["route_id"] for c in valide.values()}:
+        usate = Counter(c["shape_id"] for c in valide.values() if c["route_id"] == route and c["shape_id"] in forme)
+        if usate:
+            principale[route] = forme[usate.most_common(1)[0][0]]
+
+    def direzione(c):
+        if c["shape_id"] in forme and c["route_id"] in principale:
+            return orientamento(forme[c["shape_id"]], principale[c["route_id"]])
+        return int(c["direction_id"] or 0)
+
     passano = defaultdict(set)  # fermata -> numeri di linea
     gruppi = defaultdict(list)  # (fermata, linea, direzione, servizio) -> minuti
     per_linea = defaultdict(list)  # (linea, direzione) -> corse con tracciato
     for tid, c in valide.items():
-        d = int(c["direction_id"] or 0)
+        d = direzione(c)
         numero = rotte[c["route_id"]]["route_short_name"]
         for _, stop, _m in soste[tid]:
             passano[stop].add(numero)
@@ -125,6 +151,8 @@ def costruisci(src=SRC):
 def scrivi(risultato, out=OUT):
     out.mkdir(parents=True, exist_ok=True)
     for file, dati in zip(("fermate.geojson", "linee.geojson", "orari.json"), risultato):
+        if file == "orari.json":
+            dati = codifica_orari(dati)  # compatto: lo decodifica js/core/compatto.js
         (out / file).write_text(json.dumps(dati, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 

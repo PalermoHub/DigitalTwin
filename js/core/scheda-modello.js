@@ -2,10 +2,29 @@
 // senza ripetizioni e con il contesto amministrativo portato una sola volta nell'intestazione.
 //
 // Una voce è { chiave, peso, titolo, badge?, contesto?, gruppi?, accordion?, link?, nota?, fonte?, collassabile? }
-//   gruppo   = { titolo?, righe: [{ etichetta, valore, classe? }], griglia?: [{ valore, chiave }] }
+//   gruppo   = { titolo?, righe: [{ etichetta, valore, classe?, ripiego?: livello }], griglia?: [{ valore, chiave }] }
+//   sempre? = la sezione resta anche senza righe (titolo e badge bastano)
+//   luogo? = chiave del luogo fisico (vedi chiaveLuogo): voci con lo stesso luogo diventano una sola scheda
+//   immagine = { url, alt }, testo = paragrafo di presentazione (mostrati sotto il titolo)
+//   legale? = la sezione riguarda dati senza valore legale: l'avviso compare una sola volta in fondo alla scheda
+//   aperta? = false: sezione collassabile chiusa all'apertura della scheda
 //   accordion = { riassunto, elementi: [{ titolo, stato?, anteprima?, righe }] }
 
+export const NOTA_LEGALE = 'Dato informativo, senza valore legale: per usi legali servono visure e certificato di destinazione urbanistica.';
+export const MANCANTE = 'senza dato';
+
 const pieno = v => v != null && v !== '';
+
+const GENERICHE = new Set(['scuola', 'scuole', 'primaria', 'secondaria', 'infanzia', 'media', 'materna', 'asilo', 'nido',
+  'epoca', 'd', 'di', 'e', 'plesso', 'istituto', 'comprensivo', 'direzione', 'didattica', 'statale']);
+
+// Chiave del luogo dal nome: senza accenti, apostrofi e parole generiche ("Scuola primaria NICOLO' TURRISI",
+// "Scuola d'Epoca Nicolò Turrisi" e "Nicolo' Turrisi" danno la stessa chiave). Vuota se resta troppo poco.
+export function chiaveLuogo(nome) {
+  const parole = String(nome ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .split(/[^a-z0-9]+/).filter(w => w && !GENERICHE.has(w));
+  return parole.length >= 2 ? [...new Set(parole)].sort().join(' ') : '';
+}
 
 function aggiungiGruppo(sezione, gruppo) {
   let g = sezione.gruppi.find(x => x.titolo === gruppo.titolo);
@@ -14,7 +33,12 @@ function aggiungiGruppo(sezione, gruppo) {
     sezione.gruppi.push(g);
   }
   for (const r of gruppo.righe ?? []) {
-    // stessa etichetta e stesso valore nello stesso gruppo = informazione ripetuta
+    // riga `ripiego` (livello 1, 2…): vale solo se la scheda non ha già una riga con la stessa etichetta di
+    // livello pari o migliore (0 = riga normale); una riga di livello migliore sostituisce quelle peggiori
+    const liv = r.ripiego ?? 0;
+    const stesse = sezione.gruppi.flatMap(x => x.righe).filter(x => x.etichetta === r.etichetta && x.valore !== r.valore);
+    if (stesse.some(x => (x.ripiego ?? 0) <= liv)) continue;
+    for (const x of sezione.gruppi) x.righe = x.righe.filter(y => !(y.etichetta === r.etichetta && (y.ripiego ?? 0) > liv));
     if (!g.righe.some(x => x.etichetta === r.etichetta && x.valore === r.valore)) g.righe.push(r);
   }
   if (gruppo.griglia) {
@@ -24,26 +48,34 @@ function aggiungiGruppo(sezione, gruppo) {
 }
 
 const conContenuto = s =>
-  s.gruppi.some(g => g.righe.length || g.griglia?.length) || s.accordion?.elementi?.length > 0 || s.link;
+  s.gruppi.some(g => g.righe.length || g.griglia?.length) || s.accordion?.elementi?.length > 0 || s.link || s.testo || s.immagine || s.sempre;
 
 export function unisci(voci) {
   const contesto = {};
+  let legale = false;
   const perChiave = new Map();
   for (const v of voci) {
+    if (v.legale) legale = true;
     for (const [k, val] of Object.entries(v.contesto ?? {})) if (pieno(val) && !(k in contesto)) contesto[k] = val;
-    let s = perChiave.get(v.chiave);
+    const id = v.luogo ? `luogo:${v.luogo}` : v.chiave;
+    let s = perChiave.get(id);
     if (!s) {
-      const { contesto: _scartato, gruppi: _g, ...resto } = v;
-      s = { ...resto, gruppi: [] };
-      perChiave.set(v.chiave, s);
+      const { contesto: _scartato, gruppi: _g, legale: _l, ...resto } = v;
+      s = { ...resto, gruppi: [], badges: v.badge ? [v.badge] : [] };
+      perChiave.set(id, s);
     } else {
-      s.peso = Math.min(s.peso, v.peso);
-      for (const campo of ['badge', 'link', 'accordion', 'nota', 'fonte']) s[campo] ??= v[campo];
+      const pesoPrima = s.peso;
+      if (v.peso < s.peso) Object.assign(s, { peso: v.peso, titolo: v.titolo, icona: v.icona, chiave: v.chiave }); // titolo della voce principale
+      for (const campo of ['badge', 'link', 'accordion', 'nota', 'immagine', 'testo']) s[campo] ??= v[campo];
+      if (v.badge && !s.badges.includes(v.badge)) s.badges[v.peso < pesoPrima ? 'unshift' : 'push'](v.badge);
+      // fonti diverse della stessa scheda: una per riga
+      if (v.fonte && !(s.fonte ?? '').split('\n').includes(v.fonte)) s.fonte = s.fonte ? `${s.fonte}\n${v.fonte}` : v.fonte;
     }
     for (const g of v.gruppi ?? []) aggiungiGruppo(s, g);
   }
+  for (const s of perChiave.values()) s.gruppi = s.gruppi.filter(g => g.righe.length || g.griglia?.length);
   const sezioni = [...perChiave.values()].filter(conContenuto).sort((a, b) => a.peso - b.peso);
-  return { contesto, sezioni };
+  return { contesto, sezioni, legale };
 }
 
 export function testoContesto({ circoscrizione, quartiere, upl } = {}) {
@@ -53,3 +85,36 @@ export function testoContesto({ circoscrizione, quartiere, upl } = {}) {
     pieno(upl) && `UPL ${upl}`,
   ].filter(Boolean).join(' · ');
 }
+
+const PARTICELLE = new Set(['di', 'da', 'del', 'dello', 'della', 'dei', 'degli', 'delle', 'e', 'in', 'a', 'la', 'il', 'lo', 'le']);
+
+// "VIA DI SANT'ANNA" → "Via di Sant'Anna": le particelle restano minuscole, le iniziali (anche dopo apostrofo) maiuscole.
+function maiuscoleItaliane(testo) {
+  return testo.toLowerCase().split(' ').map((w, i) =>
+    (i > 0 && PARTICELLE.has(w)) ? w : w.replace(/(^|['’-])(\p{L})/gu, (_, sep, c) => sep + c.toUpperCase())).join(' ');
+}
+
+// Titolo della scheda: l'indirizzo se c'è (via e civico), altrimenti un titolo generico.
+export function titoloScheda(sezioni) {
+  const righe = sezioni.find(s => s.chiave === 'indirizzo')?.gruppi.flatMap(g => g.righe) ?? [];
+  const valore = nome => righe.find(r => r.etichetta === nome)?.valore;
+  const via = valore('Via');
+  if (!via) return 'Scheda del luogo';
+  const civico = valore('Civico');
+  return civico ? `${maiuscoleItaliane(via)}, ${civico}` : maiuscoleItaliane(via);
+}
+
+// Due o più righe «senza dato» si riassumono in una sola riga; una sola resta dov'è.
+export function separaMancanti(righe) {
+  const mancanti = righe.filter(r => r.valore === MANCANTE);
+  if (mancanti.length < 2) return { presenti: righe, mancanti: [] };
+  return { presenti: righe.filter(r => r.valore !== MANCANTE), mancanti: mancanti.map(r => r.etichetta) };
+}
+
+// "Alta costruibilità (slope<5°)" → valore breve nel badge, soglia in una nota a parte.
+export function dividiDettaglio(valore) {
+  const m = /^(.*?)\s+\((.+)\)$/.exec(valore);
+  return m ? { valore: m[1], dettaglio: m[2] } : { valore, dettaglio: '' };
+}
+
+export const valoreLungo = valore => String(valore).length > 24;

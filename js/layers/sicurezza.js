@@ -2,6 +2,8 @@ import { pmt } from '../core/config.js';
 import { primo, tutti } from '../core/scheda-util.js';
 import { voceArco, voceHotspot, voceIncidente, tooltipArco, GRAVITA } from './scheda-sicurezza.js';
 import { ZOOM_BASE } from './sicurezza-filtro.js';
+import { registraTooltip } from '../core/tooltip.js';
+import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
 
 // Sicurezza stradale (studio «Rete stradale», fase 2): tasso di incidenti per km sugli archi, hotspot Gi* a griglia da 250 m
 // e incidenti puntuali 2015–2023 (il 2019 non è nel dataset pulito). Strati spenti di default; i layer «hit» sono sempre
@@ -26,52 +28,76 @@ function el(tag, classe, testo) {
   return e;
 }
 
-function creaLegenda(gruppo) {
+// Legenda in #legende (sulla mappa, come monumenti e scuole): una sezione per strato, visibile solo a strato acceso.
+// Ogni voce è un filtro: tasso, hotspot e gravità restringono i tratti, i poligoni e i punti disegnati.
+// Il filtro degli incidenti passa da quello del pannello (sicurezza-filtro.js), collegato da app.js.
+export const legendaSicurezza = { suTipologie: () => {} };
+const sezioni = {};
+function creaLegenda(_gruppo, map) {
   const box = el('div', 'legenda legenda-sicurezza');
-  const riga = (simbolo, testo) => { const r = el('div', 'sicurezza-legenda-riga'); r.append(simbolo, testo); box.append(r); };
   const tratto = (colore, extra = '') => { const i = el('i', `sicurezza-tratto ${extra}`.trim()); i.style.background = colore; return i; };
-  box.append(el('div', 'sicurezza-legenda-titolo', 'Incidenti per km (tratti ≥ 20 m)'));
-  COLORI_TASSO.forEach((c, i) => riga(tratto(c), `Tasso ${ETICHETTE_TASSO[i]}`));
-  riga(tratto(COLORE_PERICOLOSE, 'sicurezza-tratto--spesso'), 'Le 20 vie più pericolose (gravità per km)');
-  box.append(el('div', 'sicurezza-legenda-titolo', 'Hotspot (confidenza)'));
-  COLORI_HOTSPOT.forEach(([c, t]) => riga(tratto(c), t));
-  box.append(el('div', 'sicurezza-legenda-titolo', 'Incidenti (da zoom 14; per anno, gravità o via: pannello Filtri)'));
-  for (const g of Object.values(GRAVITA)) {
-    const p = el('i', 'sicurezza-pallino');
-    p.style.background = g.colore;
-    riga(p, g.nome);
-  }
-  gruppo.append(box);
+  const sezione = (chiave, titolo, voci) => {
+    const s = el('div', 'sicurezza-sezione');
+    s.hidden = true;
+    s.append(el('div', 'sicurezza-legenda-titolo', titolo), ...voci);
+    sezioni[chiave] = s;
+    box.append(s);
+  };
+  // un insieme di voci con una casella ciascuna; `applica` riceve l'insieme dei valori accesi
+  const gruppoFiltri = (voci, applica) => {
+    const accesi = new Set(voci.map(([valore]) => valore));
+    return voci.map(([valore, simbolo, testo]) => voceFiltro(simbolo, testo, acceso => {
+      acceso ? accesi.add(valore) : accesi.delete(valore);
+      applica(accesi, voci.length);
+    }));
+  };
+  sezione(L.archi, 'Incidenti per km (tratti ≥ 20 m)', gruppoFiltri(
+    COLORI_TASSO.map((c, i) => [i, tratto(c), `Tasso ${ETICHETTE_TASSO[i]}`]),
+    (accesi, n) => {
+      const sel = filtroInsieme(['get', 'classe'], accesi, n);
+      map.setFilter(L.archi, sel ? ['all', ['has', 'classe'], sel] : ['has', 'classe']);
+    }));
+  sezione(L.pericolose, 'Vie più pericolose', [voceStrato(tratto(COLORE_PERICOLOSE, 'sicurezza-tratto--spesso'), 'Le 20 vie con più gravità per km', 'sicurezza-pericolose')]);
+  sezione(L.hotspot, 'Hotspot (confidenza)', gruppoFiltri(
+    COLORI_HOTSPOT.map(([c, t]) => [Number.parseInt(t, 10), tratto(c), t]),
+    (accesi, n) => { for (const id of [L.hotspot, L.hitHotspot]) map.setFilter(id, filtroInsieme(['get', 'livello_gravita'], accesi, n)); }));
+  sezione(L.incidenti, 'Incidenti (da zoom 14)', gruppoFiltri(
+    Object.entries(GRAVITA).map(([k, g]) => {
+      const p = el('i', 'sicurezza-pallino');
+      p.style.background = g.colore;
+      return [k, p, g.nome];
+    }),
+    (accesi, n) => legendaSicurezza.suTipologie(accesi.size >= n ? null : [...accesi])));
+  box.hidden = true;
+  document.getElementById('legende').append(box);
+  legenda = box;
+}
+let legenda = null;
+// il box compare se c'è almeno una sezione accesa
+function mostraSezione(chiave, attivo) {
+  if (!legenda) return;
+  sezioni[chiave].hidden = !attivo;
+  legenda.hidden = Object.values(sezioni).every(x => x.hidden);
 }
 
-// Tooltip sugli archi, solo a strato acceso. Sta sotto il cursore: quello dei confini sta sopra e i due possono comparire insieme.
+// Tooltip sugli archi, solo a strato acceso (sezione di quello condiviso).
 function collegaTooltip(map) {
-  let popup = null;
-  let mioCursore = false; // il cursore lo tocchiamo solo se l'abbiamo messo noi
-  const nascondi = () => {
-    popup?.remove();
-    popup = null;
-    if (mioCursore) { map.getCanvas().style.cursor = ''; mioCursore = false; }
-  };
-  map.on('mousemove', e => {
-    if (![L.archi, L.pericolose].some(id => map.getLayoutProperty(id, 'visibility') === 'visible')) return nascondi();
+  registraTooltip(map, e => {
+    if (![L.archi, L.pericolose].some(id => map.getLayoutProperty(id, 'visibility') === 'visible')) return null;
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];
     const f = map.queryRenderedFeatures(riquadro, { layers: [L.hitArchi] })[0];
-    if (!f) return nascondi();
-    map.getCanvas().style.cursor = 'pointer';
-    mioCursore = true;
+    if (!f) return null;
     const t = tooltipArco(f.properties);
     const corpo = el('div', 'sicurezza-tooltip-corpo');
     corpo.append(el('strong', null, t.titolo), el('div', null, t.dettaglio));
-    popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'sicurezza-tooltip', anchor: 'top', offset: 14 });
-    popup.setLngLat(e.lngLat).setDOMContent(corpo).addTo(map);
-  });
-  map.on('mouseout', nascondi);
+    return { contenuto: corpo, cursore: true };
+  }, 1);
 }
 
 export default {
   id: 'sicurezza',
   titolo: 'Sicurezza stradale',
+  argomento: { titolo: 'Sicurezza stradale', descrizione: 'Incidenti 2015–2023: incidenti per km, strade più pericolose, hotspot e singoli eventi.' },
   aggiungiSorgenti(map) {
     for (const n of ['archi', 'hotspot', 'incidenti']) map.addSource(`sicurezza-${n}`, { type: 'vector', url: pmt(`mobilita/sicurezza/${n}.pmtiles`) });
   },
@@ -110,10 +136,10 @@ export default {
     collegaTooltip(map);
   },
   strati: [
-    { id: 'sicurezza-archi', etichetta: 'Incidenti per km sulle strade', layers: [L.archi], attivo: false },
-    { id: 'sicurezza-pericolose', etichetta: 'Le 20 strade più pericolose', layers: [L.pericolose], attivo: false },
-    { id: 'sicurezza-hotspot', etichetta: 'Hotspot degli incidenti', layers: [L.hotspot], attivo: false },
-    { id: 'sicurezza-incidenti', etichetta: 'Incidenti (da zoom 14)', layers: [L.incidenti], attivo: false },
+    { id: 'sicurezza-archi', etichetta: 'Incidenti per km sulle strade', layers: [L.archi], attivo: false, suCambio: attivo => mostraSezione(L.archi, attivo) },
+    { id: 'sicurezza-pericolose', etichetta: 'Le 20 strade più pericolose', layers: [L.pericolose], attivo: false, suCambio: attivo => mostraSezione(L.pericolose, attivo) },
+    { id: 'sicurezza-hotspot', etichetta: 'Hotspot degli incidenti', layers: [L.hotspot], attivo: false, suCambio: attivo => mostraSezione(L.hotspot, attivo) },
+    { id: 'sicurezza-incidenti', etichetta: 'Incidenti (da zoom 14)', layers: [L.incidenti], attivo: false, suCambio: attivo => mostraSezione(L.incidenti, attivo) },
   ],
   pannello: creaLegenda,
   scheda: {

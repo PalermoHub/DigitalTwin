@@ -108,3 +108,14 @@ test('nessuna etichetta duplicata né numeri ripetuti', () => {
     assert.ok(!/(\b\w+\b) \1$/.test(e), e); // es. «… 24 24»
   }
 });
+
+test('indice leggero: la sola via usa il primo punto, il civico richiede i civici caricati', async () => {
+  const { preparaIndiceVie, vieConCivico, cerca } = await import('../../js/core/indirizzi.js');
+  const voci = preparaIndiceVie({ 'VIA ROMA': [13.36, 38.11], 'VIA MILANO': [13.37, 38.12] });
+  assert.deepEqual(cerca(voci, 'roma'), [{ etichetta: 'VIA ROMA', lon: 13.36, lat: 38.11 }]);
+  assert.deepEqual(vieConCivico(voci, 'roma'), []); // senza numero non servono i civici
+  assert.deepEqual(vieConCivico(voci, 'via roma 12').map(v => v.via), ['VIA ROMA']);
+  assert.deepEqual(vieConCivico(voci, '12'), []);
+  voci[0].civici = { 12: [13.361, 38.111] }; // arrivati dal file della sezione
+  assert.deepEqual(cerca(voci, 'via roma 12'), [{ etichetta: 'VIA ROMA 12', lon: 13.361, lat: 38.111 }]);
+});

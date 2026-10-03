@@ -63,6 +63,19 @@ test('riepilogoLinea: corse, primo, ultimo e frequenza media al capolinea', () =
   assert.deepEqual(riepilogoLinea(orari, { ...linea, direzione: 1 }, '2026-09-02'), { n: 1, primo: 600, ultimo: 600, frequenza: null });
 });
 
+test('riepilogoLinea: conta solo le corse del giorno di servizio, non quelle di ieri dopo la mezzanotte', () => {
+  const linea = { route_id: '100', direzione: 0, fermate: ['S1', 'S2'] };
+  // il 2 settembre la corsa delle 25:30 del giorno 1 parte alle 01:30 (compare nella fermata) ma non è una corsa del 2 settembre
+  assert.deepEqual(riepilogoLinea(orari, linea, '2026-09-02'), { n: 2, primo: 420, ultimo: 1530, frequenza: 1110 });
+  assert.deepEqual(partenzeFermata(orari, 'S1', '2026-09-02', false).map(x => x.t), [420, 480, 600, 1530]);
+});
+
+test('riepilogoLinea: se la prima fermata della corsa-modello non ha corse oggi, usa la fermata della linea con più partenze', () => {
+  const linea = { route_id: '100', direzione: 0, fermate: ['S0', 'S1'] }; // S0 è il capolinea di una variante: nel feed non ha orari
+  assert.deepEqual(riepilogoLinea(orari, linea, '2026-09-01'), { n: 2, primo: 420, ultimo: 1530, frequenza: 1110 });
+  assert.equal(riepilogoLinea(orari, { ...linea, fermate: ['S0', 'S9'] }, '2026-09-01'), null);
+});
+
 test('colorePerTesto: testo scuro sui colori chiari e viceversa', () => {
   assert.equal(colorePerTesto('#FACE2F'), '#000000');
   assert.equal(colorePerTesto('#7B263E'), '#ffffff');

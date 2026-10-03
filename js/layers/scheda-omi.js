@@ -52,10 +52,10 @@ function voceZona(features) {
     chiave: `omi-${zona}`,
     peso: 60,
     titolo: 'Quotazioni OMI',
-    icona: 'fa-euro-sign',
+    icona: 'euro',
     badge: `Zona ${zona}`,
     gruppi: [{ righe }],
-    accordion: { icona: 'fa-home', suggerimento: 'Seleziona una tipologia per vedere compravendita e locazione', riassunto: `Tipo prevalente: ${codice ? `[${codice}] ` : ''}${pulisci(p0.Descr_tip_prev) || '—'}`, elementi },
+    accordion: { icona: 'casa', suggerimento: 'Seleziona una tipologia per vedere compravendita e locazione', riassunto: `Tipo prevalente: ${codice ? `[${codice}] ` : ''}${pulisci(p0.Descr_tip_prev) || '—'}`, elementi },
     fonte: `Fonte: Agenzia delle Entrate — ${semestre}`,
   };
 }

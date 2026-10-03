@@ -4,7 +4,7 @@ import { unisci } from '../../js/core/scheda-modello.js';
 import { rigaUso, voceUsoEdificio } from '../../js/layers/scheda-uso.js';
 
 const edificio = occupancy => ({
-  chiave: 'edificio', peso: 30, titolo: 'Edificio', icona: 'fa-building',
+  chiave: 'edificio', peso: 30, titolo: 'Edificio', icona: 'edificio',
   gruppi: [{ righe: [{ etichetta: 'Altezza', valore: '9.0 m' }, rigaUso(occupancy)].filter(Boolean) }],
 });
 const uso = sezioni => sezioni.find(s => s.chiave === 'edificio').gruppi.flatMap(g => g.righe).find(r => r.etichetta === 'Uso')?.valore;

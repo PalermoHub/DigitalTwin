@@ -6,9 +6,16 @@ const MAX_RIGHE_PER_TIPO = 60;
 
 // Titolo fisso per i tipi il cui titolo cambia da luogo a luogo (il nome della via, della fermata, della scuola…)
 const TITOLI_TIPO = {
-  arco: 'Tratto stradale', hotspot: 'Hotspot incidenti', incidente: 'Incidente', fermata: 'Fermata', linee: 'Linee del trasporto',
-  monumento: 'Monumento', scuola: 'Scuola o asilo', seggio: 'Sede elettorale', omi: 'Quotazioni OMI',
+  arco: 'Tratto stradale', hotspot: 'Hotspot incidenti', incidente: 'Incidente', fermata: 'Fermata', linee: 'Linee del trasporto', trasportovicino: 'Trasporto pubblico vicino',
+  monumento: 'Monumento', uffici: 'Uffici comunali', scuola: 'Scuola o asilo', seggio: 'Sede elettorale', omi: 'Quotazioni OMI', incendio: 'Incendio',
 };
+
+// Sezioni da elencare nel pannello anche prima di averle incontrate in una scheda (i layer aggiunti dopo non hanno ancora «visti»).
+const SEZIONI_NOTE = {
+  uffici: { titolo: 'Uffici comunali', righe: ['Indirizzo', 'Uffici', 'Aree'] },
+  incendio: { titolo: 'Incendio', righe: ['Data', 'Località', 'Luogo di inizio', 'Tipo di evento', 'Superficie totale', 'Superficie boscata', 'Superficie non boscata', 'Altre superfici forestali', 'Uso del suolo', 'Altezza scottatura', 'Fine intervento', 'Durata intervento', 'Squadre AIB', 'Costo di spegnimento', 'Feriti', 'Periti'] },
+};
+const conNote = visti => ({ ...SEZIONI_NOTE, ...visti });
 
 export const tipoSezione = s => s.tipo ?? String(s.chiave).replace(/[-:].*$/s, '');
 const titoloTipo = s => TITOLI_TIPO[tipoSezione(s)] ?? s.titolo;
@@ -53,7 +60,7 @@ export function registraVisti(preferenze, sezioni) {
 export function elencoPannello(preferenze) {
   const sezioniNascoste = new Set(preferenze.nascoste.sezioni);
   const righeNascoste = new Set(preferenze.nascoste.righe);
-  return Object.entries(preferenze.visti)
+  return Object.entries(conNote(preferenze.visti))
     .map(([tipo, v]) => ({
       tipo, titolo: v.titolo, visibile: !sezioniNascoste.has(tipo),
       righe: v.righe.map(etichetta => ({ etichetta, visibile: !righeNascoste.has(chiaveRiga(tipo, etichetta)) })),
@@ -80,11 +87,11 @@ export const azzera = preferenze => ({ ...preferenze, nascoste: { sezioni: [], r
 // «Deseleziona tutto»: nasconde ogni sezione vista finora (le righe già nascoste restano tali, per quando si rimostra una sezione).
 export const nascondiTutto = preferenze => ({
   ...preferenze,
-  nascoste: { ...preferenze.nascoste, sezioni: [...new Set([...preferenze.nascoste.sezioni, ...Object.keys(preferenze.visti)])] },
+  nascoste: { ...preferenze.nascoste, sezioni: [...new Set([...preferenze.nascoste.sezioni, ...Object.keys(conNote(preferenze.visti))])] },
 });
 
 export const tuttoNascosto = preferenze => {
-  const tipi = Object.keys(preferenze.visti);
+  const tipi = Object.keys(conNote(preferenze.visti));
   return tipi.length > 0 && tipi.every(t => preferenze.nascoste.sezioni.includes(t));
 };
 

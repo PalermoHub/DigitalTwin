@@ -1,3 +1,4 @@
+import { aggiorna3D } from '../core/mappa.js';
 import { urlTileset } from '../core/config.js';
 import { ELEVATION_STOPS, HILLSHADE_COLORS } from '../core/palette.js';
 import { piuVicino } from '../core/scheda-util.js';
@@ -12,6 +13,7 @@ let legenda = null;
 export default {
   id: 'terreno',
   titolo: 'Terreno',
+  argomento: { titolo: 'Rilievo', descrizione: 'Modello digitale del terreno di Palermo: ombreggiatura 3D ed elevazione colorata.' },
   aggiungiSorgenti(map) {
     const dem = urlTileset('terrain-dem');
     const elevazione = urlTileset('elevazione');
@@ -53,7 +55,7 @@ export default {
       id: 'rilievo3d', etichetta: 'Rilievo 3D con ombreggiatura', layers: ['hillshade-layer'], attivo: false,
       suCambio(attivo, map) {
         map.setTerrain(attivo ? { source: 'terrain-dem', exaggeration: 1.5 } : null);
-        map.easeTo({ pitch: attivo ? 55 : 0, duration: 300 });
+        aggiorna3D(map);
       },
     },
     {
@@ -75,7 +77,7 @@ export default {
       riga.append(chip, value);
       return riga;
     }));
-    el.append(legenda);
+    document.getElementById('legende').append(legenda);
   },
   scheda: {
     layers: ['griglia-hit'],

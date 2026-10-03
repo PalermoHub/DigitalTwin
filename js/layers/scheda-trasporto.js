@@ -5,7 +5,7 @@ const righe = coppie => coppie.filter(([, valore]) => valore).map(([etichetta, v
 
 export function voceFermata(p, dinamico) {
   return {
-    chiave: `fermata-${p.id}`, peso: 6, titolo: p.nome, icona: 'fa-bus', badge: 'Fermata', sempre: true,
+    chiave: `fermata-${p.id}`, peso: 6, titolo: p.nome, icona: 'bus', badge: 'Fermata', sempre: true,
     gruppi: [{ righe: righe([['Linee', p.linee.join(', ')], ['Accessibile in carrozzina', p.accessibile]]) }],
     dinamico,
   };
@@ -30,7 +30,7 @@ export function voceLinee(linee, costruisci) {
   const gruppi = raggruppaLinee(linee);
   const una = gruppi.length === 1 ? gruppi[0] : null;
   return {
-    chiave: 'linee', peso: 7, titolo: una ? `Linea ${una.numero}` : `Linee (${gruppi.length})`, icona: una?.tipo === 'tram' ? 'fa-train' : 'fa-bus',
+    chiave: 'linee', peso: 7, titolo: una ? `Linea ${una.numero}` : `Linee (${gruppi.length})`, icona: una?.tipo === 'tram' ? 'tram' : 'bus',
     badge: una ? (una.tipo === 'tram' ? 'Tram' : 'Bus') : undefined, sempre: true, gruppi: [],
     dinamico: () => costruisci(gruppi),
   };

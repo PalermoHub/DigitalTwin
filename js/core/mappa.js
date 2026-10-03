@@ -1,4 +1,4 @@
-import { CENTRO, ZOOM, STILE_BASE } from './config.js';
+import { CENTRO, ZOOM, LIMITI, STILE_BASE } from './config.js';
 
 const STILE_VUOTO = {
   version: 8,
@@ -8,12 +8,30 @@ const STILE_VUOTO = {
 
 // `suRipiego` viene chiamata se lo stile della base non si carica: la mappa passa a uno sfondo
 // vuoto e gli strati dei dati restano utilizzabili.
+// 2D: niente rotazione né beccheggio con mouse e tocco. Il 3D li abilita.
+function abilitaInclinazione(map, abilita) {
+  const f = abilita ? 'enable' : 'disable';
+  map.dragRotate[f]();
+  map.touchZoomRotate[f + 'Rotation']();
+  map.touchPitch[f]();
+}
+
+// La vista è 3D se è acceso uno strato 3D (edifici o rilievo); altrimenti torna 2D, a nord e senza inclinazione.
+export function aggiorna3D(map) {
+  const attivo = ['strato-edifici3d', 'strato-rilievo3d'].some(id => document.getElementById(id)?.checked);
+  abilitaInclinazione(map, attivo);
+  map.easeTo(attivo ? { pitch: 55, duration: 300 } : { pitch: 0, bearing: 0, duration: 300 });
+  document.dispatchEvent(new CustomEvent('vista3d', { detail: attivo }));
+}
+
 export function creaMappa(idContenitore, suRipiego = () => {}) {
   const protocollo = new pmtiles.Protocol();
   maplibregl.addProtocol('pmtiles', protocollo.tile);
   const map = new maplibregl.Map({
-    container: idContenitore, center: CENTRO, zoom: ZOOM, maxZoom: 19, style: STILE_BASE,
+    container: idContenitore, center: CENTRO, zoom: ZOOM, maxZoom: 19, maxBounds: LIMITI, style: STILE_BASE, hash: true,
+    pitch: 0, bearing: 0,
   });
+  abilitaInclinazione(map, false);
   let stileCaricato = false;
   let ripiegato = false;
   map.on('style.load', () => { stileCaricato = true; });

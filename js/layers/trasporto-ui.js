@@ -1,3 +1,4 @@
+import { metri } from './trasporto-vicino.js';
 import {
   giornoIniziale, oggiISO, minutoAdesso, partenzeFermata, prossime, riepilogoLinea, formatoOra, colorePerTesto,
 } from './trasporto-orari.js';
@@ -138,9 +139,35 @@ export function elencoLinee(gruppi, ctx) {
         corpo.append(el('h4', null, `${d.da} → ${d.a}`), orariLinea(d, ctx)());
       }
     };
-    linea.addEventListener('toggle', () => { if (linea.open) riempi(); });
+    linea.addEventListener('toggle', () => { if (linea.open) { riempi(); if (gruppi.length > 1) ctx.mostraLinea(g.route_id); } });
     if (gruppi.length === 1) { linea.open = true; riempi(); }
     radice.append(linea);
+  }
+  return radice;
+}
+
+// Fermate vicine al punto cliccato: il nome è un pulsante che porta la mappa sulla fermata; sotto, le sue linee (ognuna mostra il proprio percorso).
+export function elencoFermateVicine(fermate, vai, vaiALinea) {
+  const radice = el('div', 'trasporto-vicine');
+  for (const f of fermate) {
+    const voce = el('div', 'trasporto-vicina');
+    const nome = el('button', 'trasporto-vicina-nome', f.nome);
+    nome.type = 'button';
+    nome.title = 'Mostra la fermata sulla mappa';
+    nome.addEventListener('click', () => vai(f));
+    const testa = el('div', 'scheda-riga');
+    testa.append(nome, el('span', 'scheda-val', metri(f.distanza)));
+    const righe = el('div', 'trasporto-vicina-linee');
+    for (const l of f.linee) {
+      const b = el('button', 'trasporto-chip-bottone');
+      b.type = 'button';
+      b.title = `Mostra il percorso della linea ${l.numero}`;
+      b.addEventListener('click', () => vaiALinea(l.numero));
+      b.append(chip({ numero: l.numero, colore: l.colore }));
+      righe.append(b);
+    }
+    voce.append(testa, righe);
+    radice.append(voce);
   }
   return radice;
 }

@@ -32,10 +32,11 @@ function giornoPrima(data) {
 }
 
 // Partenze di una fermata nel giorno `data`, ordinate. Le corse di ieri che finiscono dopo la mezzanotte
-// (orario ≥ 1440) partono di fatto al mattino di oggi e si aggiungono con l'orario riportato a 0–1439.
-export function partenzeFermata(orari, stopId, data) {
+// (orario ≥ 1440) partono di fatto al mattino di oggi e si aggiungono con l'orario riportato a 0–1439
+// (`conIeri = false` per contare solo le corse del giorno di servizio, come nel riepilogo di una linea).
+export function partenzeFermata(orari, stopId, data, conIeri = true) {
   const oggi = serviziAttivi(orari, data);
-  const ieri = serviziAttivi(orari, giornoPrima(data));
+  const ieri = conIeri ? serviziAttivi(orari, giornoPrima(data)) : new Set();
   const partenze = [];
   for (const [route, gruppi] of Object.entries(orari.fermate[stopId] ?? {})) {
     for (const g of gruppi) {
@@ -50,9 +51,12 @@ export function prossime(partenze, minuto, n = 8) {
   return partenze.filter(p => p.t >= minuto).slice(0, n);
 }
 
-// Corse, primo e ultimo passaggio e frequenza media (minuti) misurati alla prima fermata della linea.
+// Corse, primo e ultimo passaggio e frequenza media (minuti) misurati alla prima fermata della linea; se lì oggi non parte
+// niente (è il capolinea di una variante) si usa la fermata della linea con più partenze.
 export function riepilogoLinea(orari, linea, data) {
-  const p = partenzeFermata(orari, linea.fermate[0], data).filter(x => x.route === linea.route_id && x.dir === linea.direzione);
+  const deLinea = stop => partenzeFermata(orari, stop, data, false).filter(x => x.route === linea.route_id && x.dir === linea.direzione);
+  let p = deLinea(linea.fermate[0]);
+  if (!p.length) p = linea.fermate.map(deLinea).reduce((meglio, x) => (x.length > meglio.length ? x : meglio), []);
   if (!p.length) return null;
   const primo = p[0].t;
   const ultimo = p[p.length - 1].t;

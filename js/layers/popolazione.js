@@ -1,11 +1,13 @@
 import { urlDati } from '../core/config.js';
 import { INDICATORI } from '../core/indicatori.js';
+import { daColonne } from '../core/compatto.js';
 import { EDIFICATO_NEUTRAL, densityLegendStops, densityStops } from '../core/palette.js';
 import { segnala } from '../core/pannello.js';
+import { voceFiltro } from '../core/legenda.js';
 import { primo, righe } from '../core/scheda-util.js';
 import { SRC_SEZIONI } from './confini.js';
 
-const FILE = { 2021: 'popolazione/sezioni_indicatori.json', 2023: 'popolazione/sezioni_indicatori_2023.json' };
+const FILE = { 2021: 'popolazione/sezioni_indicatori.compatto.json', 2023: 'popolazione/sezioni_indicatori_2023.compatto.json' };
 const fmt = v => v.toLocaleString('it-IT', { maximumFractionDigits: 1 });
 
 const promesse = {};
@@ -13,6 +15,8 @@ const indici = {};
 let stato = { anno: 2021, indicatore: 'densita', nValori: 0, anniDisponibili: [] };
 let sequenza = 0;
 let legenda = null;
+const nascoste = new Set(); // classi spente dalla legenda: -1 = «senza dato», 0… = intervalli della rampa
+const TRASPARENTE = 'rgba(0, 0, 0, 0)';
 
 // un solo download per anno anche se richiesto più volte; dopo un errore si può riprovare
 function carica(anno) {
@@ -21,6 +25,7 @@ function carica(anno) {
       if (!r.ok) throw new Error(`popolazione ${anno}`);
       return r.json();
     })
+    .then(daColonne)
     .then(dati => {
       indici[anno] = new Map(dati.map(rec => [rec.SEZ21_ID, rec]));
       return dati;
@@ -30,21 +35,34 @@ function carica(anno) {
 }
 
 // Stessa espressione dell'app originale (vecchiaiaExpression): rampa lineare dalla palette,
-// neutro per le sezioni senza valore.
+// neutro per le sezioni senza valore. Le classi spente dalla legenda diventano trasparenti
+// (un filtro non può leggere il feature-state): la classe i copre [stop i, stop i+1), la prima parte da -∞.
 function espressione(rampa) {
-  const ramp = ['interpolate', ['linear'], ['feature-state', 'v'], ...densityStops(rampa, false).flat()];
-  return ['case', ['==', ['feature-state', 'v'], null], EDIFICATO_NEUTRAL, ramp];
+  const stops = densityStops(rampa, false);
+  const v = ['number', ['feature-state', 'v']];
+  const ramp = ['interpolate', ['linear'], ['feature-state', 'v'], ...stops.flat()];
+  const spente = [];
+  stops.forEach(([soglia], i) => {
+    if (!nascoste.has(i)) return;
+    const sotto = i + 1 < stops.length ? [['<', v, stops[i + 1][0]]] : [];
+    spente.push(i === 0 ? sotto[0] : ['all', ['>=', v, soglia], ...sotto], TRASPARENTE);
+  });
+  return ['case', ['==', ['feature-state', 'v'], null], nascoste.has(-1) ? TRASPARENTE : EDIFICATO_NEUTRAL, ...spente, ramp];
 }
 
-function disegnaLegenda(rampa, anno) {
+// Ogni voce è un filtro: spegnerla rende trasparenti le sezioni di quella classe.
+function disegnaLegenda(map, rampa, anno) {
   if (!legenda) return;
+  nascoste.clear();
   const voci = [{ value: 'senza dato', color: EDIFICATO_NEUTRAL }, ...densityLegendStops(rampa, false)];
-  const righe = voci.map(({ value, color }) => {
-    const riga = document.createElement('div');
+  const righe = voci.map(({ value, color }, k) => {
     const chip = document.createElement('i');
     chip.style.background = color;
-    riga.append(chip, value);
-    return riga;
+    return voceFiltro(chip, value, acceso => {
+      const classe = k - 1; // la voce 0 della legenda è «senza dato»
+      acceso ? nascoste.delete(classe) : nascoste.add(classe);
+      map.setPaintProperty('pop-fill', 'fill-color', espressione(rampa));
+    });
   });
   if (anno === 2023) {
     const nota = document.createElement('div');
@@ -71,19 +89,21 @@ async function applica(map, { anno, indicatore }) {
     nValori++;
     map.setFeatureState({ ...src, id: rec.SEZ21_ID }, { v });
   }
+  nascoste.clear(); // nuovo indicatore o anno: la legenda riparte con tutte le classi accese
   map.setPaintProperty('pop-fill', 'fill-color', espressione(ind.rampa));
   stato = { ...stato, anno, indicatore, nValori, anniDisponibili: Object.keys(indici).map(Number).sort() };
-  disegnaLegenda(ind.rampa, anno);
+  disegnaLegenda(map, ind.rampa, anno);
 }
 
 export default {
   id: 'popolazione',
   titolo: 'Popolazione',
+  argomento: { titolo: 'Abitanti', descrizione: 'Popolazione residente per sezione di censimento, dal censimento permanente (stime campionarie).' },
   aggiungiSorgenti() {},
   aggiungiLayer(map) {
     this._map = map; // serve a imposta(), chiamato anche dall'esterno (test, pannello)
     map.addLayer({
-      id: 'pop-fill', type: 'fill', source: SRC_SEZIONI, 'source-layer': 'sezioni',
+      id: 'pop-fill', type: 'fill', source: SRC_SEZIONI, 'source-layer': 'sezioni', layout: { visibility: 'none' },
       paint: { 'fill-color': EDIFICATO_NEUTRAL, 'fill-opacity': 0.55 },
     });
     // sempre presente e invisibile: serve alla scheda del luogo anche con il coropletico spento
@@ -93,7 +113,7 @@ export default {
     });
   },
   strati: [{
-    id: 'coropletico', etichetta: 'Popolazione per sezione', layers: ['pop-fill'], attivo: true,
+    id: 'coropletico', etichetta: 'Popolazione per sezione', layers: ['pop-fill'], attivo: false,
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
   }],
   pannello(el) {
@@ -107,6 +127,7 @@ export default {
     for (const [k, v] of Object.entries(INDICATORI)) ind.add(new Option(v.unita ? `${v.etichetta} (${v.unita})` : v.etichetta, k));
     legenda = document.createElement('div');
     legenda.className = 'legenda';
+    legenda.hidden = true; // il coropletico parte spento
     const cambia = () => this.imposta({ anno: Number(anno.value), indicatore: ind.value }).catch(() => {
       segnala(`Popolazione ${anno.value} non disponibile: resta visibile ${stato.anno}`);
       anno.value = String(stato.anno);
@@ -114,7 +135,8 @@ export default {
     });
     anno.addEventListener('change', cambia);
     ind.addEventListener('change', cambia);
-    el.append(anno, ind, legenda);
+    el.append(anno, ind);
+    document.getElementById('legende').append(legenda);
   },
   async avvia(map) {
     await applica(map, stato);
@@ -143,7 +165,7 @@ export default {
         chiave: 'sezione',
         peso: 70,
         titolo: 'Sezione di censimento',
-        icona: 'fa-users',
+        icona: 'persone',
         // circoscrizione, quartiere e UPL vanno nell'intestazione della scheda, una volta sola
         contesto: { circoscrizione: p.Circoscrizione, quartiere: p.Quartiere, upl: p.UPL },
         gruppi: [{ righe: righe([

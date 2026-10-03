@@ -8,11 +8,13 @@ export const ZOOM_FILTRATO = 12; // con un filtro attivo la città non deve semb
 
 const pieno = v => v != null && v !== '';
 
-export function filtroIncidenti({ anno, gravita, via }) {
+// `tipologie` (elenco di gravità accese) viene dalla legenda sulla mappa; null/assente = tutte
+export function filtroIncidenti({ anno, gravita, via, tipologie }) {
   const condizioni = [];
   if (pieno(anno)) condizioni.push(['==', ['get', 'anno'], Number(anno)]);
   if (pieno(gravita)) condizioni.push(['==', ['get', 'Tipologia'], gravita]);
   if (pieno(via)) condizioni.push(['==', ['get', 'via'], via]);
+  if (Array.isArray(tipologie)) condizioni.push(['in', ['get', 'Tipologia'], ['literal', tipologie]]);
   if (!condizioni.length) return null;
   return condizioni.length === 1 ? condizioni[0] : ['all', ...condizioni];
 }
@@ -33,7 +35,7 @@ export function etichetteChip({ anno, gravita, via }) {
 export function collegaFiltroIncidenti(map, { annoSelect, gravitaSelect, chips, layers, strato }) {
   annoSelect.replaceChildren(new Option('Tutti gli anni', ''), ...ANNI.map(a => new Option(String(a), String(a))));
   gravitaSelect.replaceChildren(new Option('Tutte', ''), ...Object.entries(GRAVITA).map(([k, g]) => new Option(g.nome, k)));
-  const stato = { anno: '', gravita: '', via: '' };
+  const stato = { anno: '', gravita: '', via: '', tipologie: null };
 
   function chip({ chiave, testo }) {
     const c = document.createElement('span');
@@ -51,17 +53,18 @@ export function collegaFiltroIncidenti(map, { annoSelect, gravitaSelect, chips, 
   function imposta(parziale) {
     Object.assign(stato, parziale);
     const filtro = filtroIncidenti(stato);
+    const filtroPannello = filtroIncidenti({ ...stato, tipologie: null }); // la legenda non cambia lo zoom minimo né accende lo strato
     for (const id of layers) {
       if (!map.getLayer(id)) continue;
       map.setFilter(id, filtro);
-      map.setLayerZoomRange(id, zoomMinimo(filtro), 24);
+      map.setLayerZoomRange(id, zoomMinimo(filtroPannello), 24);
     }
     annoSelect.value = stato.anno ? String(stato.anno) : '';
     gravitaSelect.value = stato.gravita ?? '';
     const etichette = etichetteChip(stato);
     chips.hidden = !etichette.length;
     chips.replaceChildren(...etichette.map(chip));
-    if (filtro) { // lo strato spento si accende, come per la ricerca
+    if (filtroPannello) { // lo strato spento si accende, come per la ricerca
       const casella = document.getElementById(`strato-${strato}`);
       if (casella && !casella.checked && !casella.disabled) { casella.checked = true; casella.dispatchEvent(new Event('change')); }
     }

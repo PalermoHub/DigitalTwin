@@ -5,4 +5,10 @@ node_modules/
 .superpowers/
 # i dati pesanti non vanno in git: restano MANIFEST, README e catalogo
 dati/*/
+# eccezione: uffici (piccoli, rigenerati dal workflow «Aggiorna uffici»)
+!dati/uffici/
+# eccezione: incendi (piccoli, rigenerati dal workflow «Aggiorna incendi»)
+!dati/incedi/
+dati/uffici/grezzo.json
 .cache/
+dati/delete/

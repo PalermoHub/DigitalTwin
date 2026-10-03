@@ -1,10 +1,15 @@
 aggiungere:
-
-catasto, come nell'app originale
-
+plugin hash
+atasto, come nell'app originale
 tootips nei poligoni dei confini, come nella app palermo_popolazione
+logo ods lo trovi nella cartella img  in sincro con scheda, aggiungi al lolo link title https://opendatasicilia.it/
 monumenti
 scuole
 seggi elettorali
-fontanelle
 gtfs
+
+fontanelle
+Colonnine elettriche
+Alberi mmonumentali
+
+nelle info degli edifici dove c'è UNK ma sappiamo che potrebbe essere un monumento o scuola, possiamo aggiornare il dato? 
