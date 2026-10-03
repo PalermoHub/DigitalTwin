@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791031551.2056322,
-    "ast_hash": "94d4f6fb4f1cc9277c4e6ac57cf0b52c",
+    "mtime": 1791033504.0,
+    "ast_hash": "0fb8ff543a70f1597fd84cdaddfb2787",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
-    "mtime": 1791030258.2769127,
-    "ast_hash": "7e704acc7b9d6618afe2cff6c8c92bc8",
+    "mtime": 1791044145.024024,
+    "ast_hash": "9ae8f3855afd16c5cba338e6ca73cd2d",
     "semantic_hash": ""
   },
   "js/core/config.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "js/core/pannello.js": {
-    "mtime": 1791031551.206086,
-    "ast_hash": "b8d5f073e1472d6f6b86e128701144ac",
+    "mtime": 1791033504.0,
+    "ast_hash": "a43b8a2554ed5b49f2da4b778e18ddd6",
     "semantic_hash": ""
   },
   "js/core/ricerca.js": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "js/core/scheda.js": {
-    "mtime": 1791030258.280003,
-    "ast_hash": "eb0d94b31f3bbe40977a8b1718b62352",
+    "mtime": 1791033504.0,
+    "ast_hash": "12a58a35eff79054856da539dd1e347d",
     "semantic_hash": ""
   },
   "js/layers/confini.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791031602.3136435,
-    "ast_hash": "4988769a5ea73d42ea7c33f056de9e2c",
+    "mtime": 1791044121.5697725,
+    "ast_hash": "bec96c9b36bf910d041f192ba035f53d",
     "semantic_hash": ""
   },
   "README.md": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791030258.2761786,
-    "ast_hash": "1ff46add801487e7f5efdf622e61fdd2",
+    "mtime": 1791033504.0,
+    "ast_hash": "f45e8a692dee459868215db2c3c64571",
     "semantic_hash": ""
   },
   "docs/schermata-fase1.png": {
@@ -252,91 +252,6 @@
   "img/favicon.png": {
     "mtime": 1791030258.2643142,
     "ast_hash": "891bdcb52af1d261640d6e5b0d36d7dd",
-    "semantic_hash": ""
-  },
-  "img/guida/area.webp": {
-    "mtime": 1791030258.2662244,
-    "ast_hash": "8427449e35eb3499c65a93af7ed1fa24",
-    "semantic_hash": ""
-  },
-  "img/guida/argomenti.webp": {
-    "mtime": 1791030258.2664704,
-    "ast_hash": "fad2299c1b9023292762eae95b87c888",
-    "semantic_hash": ""
-  },
-  "img/guida/classifica.webp": {
-    "mtime": 1791030258.266756,
-    "ast_hash": "56618ef3959f7df85fc16b89859b4ba5",
-    "semantic_hash": ""
-  },
-  "img/guida/confronto.webp": {
-    "mtime": 1791030258.2680426,
-    "ast_hash": "f6c4dadcad8a9a4fd7b0912b6c822665",
-    "semantic_hash": ""
-  },
-  "img/guida/dtm.webp": {
-    "mtime": 1791030258.26843,
-    "ast_hash": "efdb056c9b1d7f714761fe9e84774b40",
-    "semantic_hash": ""
-  },
-  "img/guida/elevazione.webp": {
-    "mtime": 1791030258.269088,
-    "ast_hash": "1ce77bf35c1b031427fdc03551cf8071",
-    "semantic_hash": ""
-  },
-  "img/guida/grafici.webp": {
-    "mtime": 1791030258.2693896,
-    "ast_hash": "2d42fc9b3ec92a2874f46dc86a3bfb27",
-    "semantic_hash": ""
-  },
-  "img/guida/livelli.webp": {
-    "mtime": 1791030258.2701383,
-    "ast_hash": "dc74e555ad5c13d7df0f150b7b023c47",
-    "semantic_hash": ""
-  },
-  "img/guida/maniglie.webp": {
-    "mtime": 1791030258.2705445,
-    "ast_hash": "aac2f34a6886365dafa201f017baad59",
-    "semantic_hash": ""
-  },
-  "img/guida/menu.webp": {
-    "mtime": 1791030258.2707763,
-    "ast_hash": "ac00fc10a0321b25afaed4f11fc5c993",
-    "semantic_hash": ""
-  },
-  "img/guida/mobile.webp": {
-    "mtime": 1791030258.2710955,
-    "ast_hash": "c312dedfc2041a6c57f9cb5b430a030e",
-    "semantic_hash": ""
-  },
-  "img/guida/poligono-disegno.webp": {
-    "mtime": 1791030258.271258,
-    "ast_hash": "73cbcc457390b57e51bff5fa0f0d349f",
-    "semantic_hash": ""
-  },
-  "img/guida/poligono.webp": {
-    "mtime": 1791030258.2719374,
-    "ast_hash": "5d29636ee9a81300f62c1d459dddd703",
-    "semantic_hash": ""
-  },
-  "img/guida/scheda-info.webp": {
-    "mtime": 1791030258.2722106,
-    "ast_hash": "d9c4e58266bcb40c2af1bd8677d83869",
-    "semantic_hash": ""
-  },
-  "img/guida/strumenti.webp": {
-    "mtime": 1791030258.272462,
-    "ast_hash": "85f3fc36c7b0a1c8d8002dd0fca37411",
-    "semantic_hash": ""
-  },
-  "img/guida/tendenza.webp": {
-    "mtime": 1791030258.2727416,
-    "ast_hash": "73843dad70ba3c49840c98e8eee6e90e",
-    "semantic_hash": ""
-  },
-  "img/guida/territorio.webp": {
-    "mtime": 1791030258.2732728,
-    "ast_hash": "f26dc07bbef44cab411acdf137394e2b",
     "semantic_hash": ""
   },
   "img/opendatasicilia.png": {
@@ -550,8 +465,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791031551.2058663,
-    "ast_hash": "357ea7e0bcab977aa039ab7ceb76d1c3",
+    "mtime": 1791033504.0,
+    "ast_hash": "6b99739b7e10de490e7ec27b13f97ea4",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -600,7 +515,7 @@
     "semantic_hash": ""
   },
   "js/core/scheda-preferenze.js": {
-    "mtime": 1791031551.2074,
+    "mtime": 1791032410.7871642,
     "ast_hash": "9c938048285079ca4182e113ac377b8e",
     "semantic_hash": ""
   },
@@ -620,7 +535,7 @@
     "semantic_hash": ""
   },
   "tests/js/scheda-preferenze.test.mjs": {
-    "mtime": 1791031587.1333656,
+    "mtime": 1791032410.7876632,
     "ast_hash": "450cdfac06ac19e73abdcbb8de05399a",
     "semantic_hash": ""
   },
@@ -780,13 +695,13 @@
     "semantic_hash": ""
   },
   "js/layers/incendi.js": {
-    "mtime": 1791030258.2816994,
-    "ast_hash": "a89b7b83976de7ccfa7aa53841ead7be",
+    "mtime": 1791032524.063277,
+    "ast_hash": "a2eee95b89345c3960610c32c6ae1626",
     "semantic_hash": ""
   },
   "js/layers/scheda-incendi.js": {
-    "mtime": 1791030258.2821019,
-    "ast_hash": "409bd377125f2be298d01252c6c6e3b7",
+    "mtime": 1791032524.0622153,
+    "ast_hash": "6694b79ad2e6dfce833d4b9e63df35a6",
     "semantic_hash": ""
   },
   "scripts/incendi.py": {
@@ -795,8 +710,8 @@
     "semantic_hash": ""
   },
   "tests/js/scheda-incendi.test.mjs": {
-    "mtime": 1791030258.2914944,
-    "ast_hash": "780746453f6e0100397b494ba65fc09f",
+    "mtime": 1791032533.878477,
+    "ast_hash": "e9d40e4a1dad3fed2d5026c241606aa3",
     "semantic_hash": ""
   },
   ".github/workflows/aggiorna-incendi.yml": {
@@ -815,33 +730,33 @@
     "semantic_hash": ""
   },
   "js/layers/pai.js": {
-    "mtime": 1791031771.9302986,
-    "ast_hash": "cd3dd36b6cc20c5d73689fed710e00b7",
+    "mtime": 1791033031.4676204,
+    "ast_hash": "2f1c2af7c8ea0a383195d56f688aac65",
     "semantic_hash": ""
   },
   "js/layers/scheda-pai.js": {
-    "mtime": 1791031495.9443603,
-    "ast_hash": "9a749db2b3d73344cec70ed4f68b1add",
+    "mtime": 1791032524.057644,
+    "ast_hash": "9ffc51f58cfda4625673444f1a619f69",
     "semantic_hash": ""
   },
   "scripts/pai.py": {
-    "mtime": 1791031771.9300196,
-    "ast_hash": "f3ccb0a6c29bd7f1e5e3b92f62e0063a",
+    "mtime": 1791034578.988653,
+    "ast_hash": "fbd3d38b3cc901b55a4aeed388744262",
     "semantic_hash": ""
   },
   "tests/js/scheda-pai.test.mjs": {
-    "mtime": 1791031564.2955632,
-    "ast_hash": "4d94877e83f4cee1f7ead882f8ffbafe",
+    "mtime": 1791032533.8782127,
+    "ast_hash": "418978a5afca1349d1b58db2ecbf5147",
     "semantic_hash": ""
   },
   "tests/test_pai.py": {
-    "mtime": 1791031910.7757776,
-    "ast_hash": "03a7648279be483c946de68f90a030fa",
+    "mtime": 1791034578.9921296,
+    "ast_hash": "3790e87047320dff7cc975e9da4b4c27",
     "semantic_hash": ""
   },
   ".github/workflows/aggiorna-pai.yml": {
-    "mtime": 1791031889.1513462,
-    "ast_hash": "94ef2e21c6b3f6f7dc37a5e25faf1350",
+    "mtime": 1791034578.9893162,
+    "ast_hash": "b8b3d383fef19762fd63a017116d5d09",
     "semantic_hash": ""
   },
   "LICENSE-DATA.md": {
@@ -855,8 +770,83 @@
     "semantic_hash": ""
   },
   "dati/pai/README.md": {
-    "mtime": 1791031910.7745678,
-    "ast_hash": "a15b173a97a664a9a7c677dc5726e372",
+    "mtime": 1791034586.2189271,
+    "ast_hash": "dd5735c6136f50667483a85df9e10066",
+    "semantic_hash": ""
+  },
+  "js/core/guida-contenuti.js": {
+    "mtime": 1791043938.0431142,
+    "ast_hash": "b8cea632b1702b6e75a3baeecef683a5",
+    "semantic_hash": ""
+  },
+  "js/core/guida.js": {
+    "mtime": 1791044145.0078409,
+    "ast_hash": "2997ec614b7e9e6f0b4dd9ec1f079df8",
+    "semantic_hash": ""
+  },
+  "js/layers/ricerca-territorio.js": {
+    "mtime": 1791041011.1637216,
+    "ast_hash": "b9e4eb516b88ffb7edae7712064e37d1",
+    "semantic_hash": ""
+  },
+  "scripts/guida_screenshot.py": {
+    "mtime": 1791043938.0435672,
+    "ast_hash": "0c9b7eb17a0dde859912781cab3f1cba",
+    "semantic_hash": ""
+  },
+  "tests/js/guida.test.mjs": {
+    "mtime": 1791044121.5466366,
+    "ast_hash": "9631f58ab11a19d3118b5d325792daeb",
+    "semantic_hash": ""
+  },
+  "tests/test_guida_media.py": {
+    "mtime": 1791043613.5878174,
+    "ast_hash": "faad293a440762b9eb953a9c5c684134",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-03-guida-professionale.md": {
+    "mtime": 1791043372.4223492,
+    "ast_hash": "e3b8d01b0ff790f84f12e654dbb2ae42",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-10-03-guida-professionale-design.md": {
+    "mtime": 1791043171.1035666,
+    "ast_hash": "d6cae1178e670f14641399d3da734fc4",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/avvertenze.webp": {
+    "mtime": 1791043992.8746378,
+    "ast_hash": "f755b4033c14e609f7e8ccd7eecdac80",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/clic.webp": {
+    "mtime": 1791043772.7946382,
+    "ast_hash": "494574f0d9341c18a5ea64376362799a",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/cos-e.webp": {
+    "mtime": 1791043707.0786393,
+    "ast_hash": "31097b1fdd7020808cfa7625c94b5504",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/dati.webp": {
+    "mtime": 1791043714.9266393,
+    "ast_hash": "f23c406b81b2b17ecf31e3217322496d",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/filtri.webp": {
+    "mtime": 1791043830.610638,
+    "ast_hash": "3ad2325930ec9b3957e1721dc87fd5da",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/scheda.webp": {
+    "mtime": 1791043975.1546378,
+    "ast_hash": "eb63e308aa3c3e83e7e64315ad2a2bfc",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/strati.webp": {
+    "mtime": 1791043908.0626373,
+    "ast_hash": "5a326fac8274864b880edd13024668f6",
     "semantic_hash": ""
   }
 }
