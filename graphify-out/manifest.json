@@ -200,8 +200,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1791050851.4873996,
-    "ast_hash": "ad24f129d142b7ea9693930d7b9e10b0",
+    "mtime": 1791059525.3195043,
+    "ast_hash": "45bf4e2a6fc629b96d78a19db88e34d8",
     "semantic_hash": ""
   },
   "aggiungere.txt": {
@@ -855,8 +855,8 @@
     "semantic_hash": ""
   },
   "scripts/guida_video.py": {
-    "mtime": 1791049165.7649033,
-    "ast_hash": "8e5fc3ee87cc276747637c18afdfab61",
+    "mtime": 1791058640.8296893,
+    "ast_hash": "534038928da6af613a2a84a0c2a34a7c",
     "semantic_hash": ""
   },
   "tests/test_guida_carosello.py": {
@@ -945,23 +945,23 @@
     "semantic_hash": ""
   },
   "media/guida/guida-whatsapp.mp4": {
-    "mtime": 1791049165.7128844,
-    "ast_hash": "ecff60ead6fb247277832275483c7e5a",
+    "mtime": 1791058780.569545,
+    "ast_hash": "8bdcfc492fc86e69a243d6f3bb386eda",
     "semantic_hash": ""
   },
   "media/guida/guida.mp3": {
-    "mtime": 1791049165.7275891,
-    "ast_hash": "c0343a2d87f3feb9c02a381813a71b64",
+    "mtime": 1791058741.604407,
+    "ast_hash": "0b0ddc3011f088146ac6d3e6a5971be7",
     "semantic_hash": ""
   },
   "media/guida/guida.mp4": {
-    "mtime": 1791049165.7626183,
-    "ast_hash": "63f4ae0c0b58d75c4ecbc7e15d09070e",
+    "mtime": 1791060505.5703964,
+    "ast_hash": "aa6682681e336cabee4a930998a50406",
     "semantic_hash": ""
   },
   "scripts/guida_carosello2.py": {
-    "mtime": 1791050828.3983362,
-    "ast_hash": "939c4ca5be0eb2c3e869ca714acafe58",
+    "mtime": 1791052066.7369454,
+    "ast_hash": "1832b92cd0d8ff4a580d55f4310e7270",
     "semantic_hash": ""
   },
   "tests/test_guida_carosello2.py": {
@@ -1022,6 +1022,161 @@
   "social/carosello-2/11.png": {
     "mtime": 1791050838.3633919,
     "ast_hash": "d35063025cfd984dee6e638a7326f53f",
+    "semantic_hash": ""
+  },
+  "scripts/carosello5.py": {
+    "mtime": 1791062299.0696168,
+    "ast_hash": "3af0b12e8135eb3ace3288fb555aebb0",
+    "semantic_hash": ""
+  },
+  "scripts/guida_carosello3.py": {
+    "mtime": 1791055565.7964602,
+    "ast_hash": "25e6ae95aca4de3755e10f948e831ec4",
+    "semantic_hash": ""
+  },
+  "scripts/guida_carosello4.py": {
+    "mtime": 1791059751.175887,
+    "ast_hash": "06e516b771247fc7aa2648a739977164",
+    "semantic_hash": ""
+  },
+  "tests/test_guida_carosello3.py": {
+    "mtime": 1791052152.2922604,
+    "ast_hash": "b466f7921340f7cdb5f0d4dd52416a2d",
+    "semantic_hash": ""
+  },
+  "tests/test_guida_carosello4.py": {
+    "mtime": 1791059917.543936,
+    "ast_hash": "4bc7d3e6133b5431c990d3461520ba03",
+    "semantic_hash": ""
+  },
+  "media/guida/guida.txt": {
+    "mtime": 1791060090.2183645,
+    "ast_hash": "c1d7568a87e8d2e8f7fad0da3d11631c",
+    "semantic_hash": ""
+  },
+  "social/Palermo_Digital_Twin.pdf": {
+    "mtime": 1791061352.6441054,
+    "ast_hash": "3366ca69d502b637dbac22840cde1f3a",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/01.png": {
+    "mtime": 1791059805.7079034,
+    "ast_hash": "367fdd577fa99979fb65f22fd18a3706",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/02.png": {
+    "mtime": 1791059806.5248668,
+    "ast_hash": "4bfa01339ca66ae7411b54365ab9f96c",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/03.png": {
+    "mtime": 1791059807.2275846,
+    "ast_hash": "ffc123b1a41be4c77cf0a7f856620ac1",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/04.png": {
+    "mtime": 1791059808.2564983,
+    "ast_hash": "cb557e7092e16ad16cb1f14c3bbc97ea",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/05.png": {
+    "mtime": 1791059809.0548396,
+    "ast_hash": "fc55ea90067b93cac1e7179f8b8c725c",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/06.png": {
+    "mtime": 1791059809.8465145,
+    "ast_hash": "14f8d43b2cc757772bf14274f48d82a4",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/07.png": {
+    "mtime": 1791059810.7337253,
+    "ast_hash": "dc99513df1129532a95c22f1607b6dbf",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/08.png": {
+    "mtime": 1791059811.4593282,
+    "ast_hash": "d62a39089c489b609be94a38c5bf76bc",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/09.png": {
+    "mtime": 1791059812.0923603,
+    "ast_hash": "f47895094608e7ab641e0e36aaa5a59d",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/10.png": {
+    "mtime": 1791059812.715125,
+    "ast_hash": "57b29b7ac9ce402f0e3884a7ec729e9d",
+    "semantic_hash": ""
+  },
+  "social/carosello-4/11.png": {
+    "mtime": 1791059813.515972,
+    "ast_hash": "0e3c7aa0648d39cef104d690bb039868",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/01.png": {
+    "mtime": 1791062302.770294,
+    "ast_hash": "3002681204b7b3863aa8845e410efa9a",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/02.png": {
+    "mtime": 1791062304.4035633,
+    "ast_hash": "2c194183ba49708241a80705783b69b8",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/03.png": {
+    "mtime": 1791062305.4638994,
+    "ast_hash": "990f2e969e2006649e78fd8f797c9e7f",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/04.png": {
+    "mtime": 1791062306.4145038,
+    "ast_hash": "499c2c8e8c6603ec075231539be19f84",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/05.png": {
+    "mtime": 1791062306.9680123,
+    "ast_hash": "813cf6f11b23275b205d047b4780bf1d",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/06.png": {
+    "mtime": 1791062307.4862227,
+    "ast_hash": "88ad63db5a7f0a222f3e8dfd03490e4a",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/07.png": {
+    "mtime": 1791062308.6215115,
+    "ast_hash": "17bd2c2a8f4b60d1ffaec16e43570364",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/08.png": {
+    "mtime": 1791062309.6580117,
+    "ast_hash": "d5761d331857f7e4b00d08828cf0042c",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/09.png": {
+    "mtime": 1791062310.5436957,
+    "ast_hash": "37a13083e2ac3de7e08d6895b7d2dc78",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/10.png": {
+    "mtime": 1791062311.4087064,
+    "ast_hash": "066538afaceebb26686c66d2cb7df6e4",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/11.png": {
+    "mtime": 1791062312.4409215,
+    "ast_hash": "c4b6f98af0bd776b1290b88b3011effb",
+    "semantic_hash": ""
+  },
+  "social/carosello-5/12.png": {
+    "mtime": 1791062313.015509,
+    "ast_hash": "33001081b14ff4f1b21333442fd78870",
+    "semantic_hash": ""
+  },
+  "media/guida/guida_02.mp4": {
+    "mtime": 1791058740.0958521,
+    "ast_hash": "3bec4c6643195131810c0d8bdbe85696",
     "semantic_hash": ""
   }
 }

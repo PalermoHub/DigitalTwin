@@ -57,3 +57,6 @@ Codice sotto [EUPL-1.2](LICENSE). Dati e documentazione prodotti dal progetto so
 
 ### Secondo carosello (stile notturno)
 `python3 scripts/guida_carosello2.py` genera 11 slide 1080×1350 in `social/carosello-2/`: un panorama continuo della mappa, numeri dai nostri dati (monumenti, uffici, strati), screenshot ritagliati con annotazioni. Le sorgenti ad alta risoluzione (screenshot a doppia scala e panorama) vanno in `lavoro/carosello/` (non versionato); `--rigenera` le rifà.
+
+### Quarto carosello (stile editoriale moderno)
+`python3 scripts/guida_carosello4.py` genera 11 slide 1080×1350 in `social/carosello-4/`: stile Digital Atlas in midnight navy e accenti oro/ambra, cornice device window con visuale ad alta risoluzione, badge contestuali floating e schede con le caratteristiche chiave.

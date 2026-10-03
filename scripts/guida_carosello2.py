@@ -106,25 +106,25 @@ def _percorso(tot):
             f'<path d="{d}" fill="none" stroke="#f5a623" stroke-width="16" opacity=".55" filter="url(#g)"/><path d="{d}" fill="none" stroke="#ffd27a" stroke-width="5" opacity=".95"/>{nodi}</svg>')
 
 
-def _crop(slide):
+def _crop(slide, cw=CARD_W, ch=CARD_H):
     """(larghezza, altezza, sinistra, alto) dell'immagine dentro la cornice, con il centro limitato in modo che la cornice resti piena."""
     fx, fy, z = slide["crop"]
-    w, h = CARD_W * z, CARD_W * z * IMG_H / IMG_W
-    h = max(h, CARD_H)  # con zoom bassi l'immagine deve comunque coprire l'altezza
+    w, h = cw * z, cw * z * IMG_H / IMG_W
+    h = max(h, ch)  # con zoom bassi l'immagine deve comunque coprire l'altezza
     w = max(w, h * IMG_W / IMG_H)
-    fx = min(max(fx, CARD_W / 2 / w), 1 - CARD_W / 2 / w)
-    fy = min(max(fy, CARD_H / 2 / h), 1 - CARD_H / 2 / h)
-    return w, h, CARD_W / 2 - fx * w, CARD_H / 2 - fy * h
+    fx = min(max(fx, cw / 2 / w), 1 - cw / 2 / w)
+    fy = min(max(fy, ch / 2 / h), 1 - ch / 2 / h)
+    return w, h, cw / 2 - fx * w, ch / 2 - fy * h
 
 
-def _annotazioni(slide):
-    w, h, sx, sy = _crop(slide)
+def _annotazioni(slide, cw=CARD_W, ch=CARD_H):
+    w, h, sx, sy = _crop(slide, cw, ch)
     out = []
     for a in slide["ann"]:
         x, y = sx + a["x"] / IMG_W * w, sy + a["y"] / IMG_H * h
-        if not (30 < x < CARD_W - 30 and 30 < y < CARD_H - 30):
+        if not (30 < x < cw - 30 and 30 < y < ch - 30):
             continue
-        lato = "right:%dpx" % (CARD_W - x - 26) if x > CARD_W * 0.62 else "left:%dpx" % (x - 26)
+        lato = "right:%dpx" % (cw - x - 26) if x > cw * 0.62 else "left:%dpx" % (x - 26)
         out.append(f'<div class="ring" style="left:{x:.0f}px;top:{y:.0f}px"></div><div class="pill" style="{lato};top:{y:.0f}px">{html.escape(a["t"])}</div>')
     return "".join(out)
 

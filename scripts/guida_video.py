@@ -80,14 +80,55 @@ def _sintetizza(testo, modello, wav):
     subprocess.run([sys.executable, "-m", "piper", "-m", str(modello), "-f", str(wav)], input=testo, text=True, check=True)
 
 
-def _segmento(passo, wav, durata_audio, dest):
+def _ts_ass(s):
+    cs = round(s * 100)
+    return f"{cs // 360000:d}:{cs // 6000 % 60:02d}:{cs // 100 % 60:02d}.{cs % 100:02d}"
+
+
+def _genera_ass(cues, out_ass):
+    righe = [
+        "[Script Info]",
+        "ScriptType: v4.00+",
+        "PlayResX: 1280",
+        "PlayResY: 720",
+        "",
+        "[V4+ Styles]",
+        "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
+        "Style: Default,DejaVu Sans,22,&H00FFFFFF,&H000000FF,&H00000000,&HA8070A19,-1,0,0,0,100,100,0,0,3,10,0,2,80,80,52,1",
+        "",
+        "[Events]",
+        "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
+    ]
+    t = 0.0
+    for dur, testo in cues:
+        t_end = t + dur
+        testo_pulito = testo.strip().replace("\n", " ").replace("\\", "").replace("{", "").replace("}", "")
+        righe.append(f"Dialogue: 0,{_ts_ass(t)},{_ts_ass(t_end)},Default,,0,0,0,,{testo_pulito}")
+        t = t_end
+    out_ass.write_text("\n".join(righe), encoding="utf-8")
+
+
+def _segmento(passo, wav, durata_audio, dest, indice=1, totale=1, ass_path=None):
     durata = durata_audio + PAUSA
-    titolo = passo["titolo"].replace("'", "’").replace(":", "\\:")
-    zoom = f"zoompan=z='min(zoom+0.0004,1.06)':d={int(durata * FPS) + 1}:s=1280x720:fps={FPS}"
-    testo = f"drawtext=fontfile={FONT}:text='{titolo}':fontcolor=white:fontsize=34:box=1:boxcolor=black@0.55:boxborderw=14:x=40:y=h-th-40"
+    titolo = passo["titolo"].replace("'", "’").replace(":", "\\:").replace("%", "\\%")
+    zoom = f"zoompan=z='min(zoom+0.0003,1.05)':d={int(durata * FPS) + 1}:s=1280x720:fps={FPS}"
+    top_bar = "drawbox=x=0:y=0:w=1280:h=56:color=black@0.78:t=fill"
+    brand = f"drawtext=fontfile={FONT}:text='DIGITAL TWIN PALERMO':fontcolor=0xf5a623:fontsize=18:x=32:y=19"
+    sep1 = f"drawtext=fontfile={FONT}:text='·':fontcolor=white@0.5:fontsize=18:x=290:y=19"
+    step = f"drawtext=fontfile={FONT}:text='PASSO {indice:02d}/{totale:02d}':fontcolor=0x7fe6ff:fontsize=16:x=310:y=20"
+    sep2 = f"drawtext=fontfile={FONT}:text='·':fontcolor=white@0.5:fontsize=18:x=455:y=19"
+    title = f"drawtext=fontfile={FONT}:text='{titolo}':fontcolor=white:fontsize=18:x=475:y=19"
+    prog = f"drawbox=x=0:y=715:w='1280*(t/{durata})':h=5:color=0xf5a623@0.95:t=fill"
+
+    filtri_v = [f"[0:v]scale=2560:1440", zoom, top_bar, brand, sep1, step, sep2, title, prog]
+    if ass_path and Path(ass_path).exists():
+        filtri_v.append(f"subtitles={ass_path}")
+    filtri_v.append("format=yuv420p[v]")
+    vf_string = ",".join(filtri_v)
+
     subprocess.run([
         "ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-i", str(ROOT / passo["immagine"]["file"]), "-i", str(wav),
-        "-filter_complex", f"[0:v]scale=2560:1440,{zoom},{testo},format=yuv420p[v];[1:a]apad=pad_dur={PAUSA},aresample=44100[a]",
+        "-filter_complex", f"{vf_string};[1:a]apad=pad_dur={PAUSA},aresample=44100[a]",
         "-map", "[v]", "-map", "[a]", "-t", f"{durata:.3f}", "-c:v", "libx264", "-c:a", "aac", "-ar", "44100", "-ac", "1", "-r", str(FPS), str(dest),
     ], check=True)
 
@@ -129,11 +170,15 @@ def main(argv=None):
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         segmenti, durate = [], []
-        for p in elenco:
+        tot = len(elenco)
+        for idx, p in enumerate(elenco, 1):
             wav, seg = tmp / f"{p['id']}.wav", tmp / f"{p['id']}.mp4"
             _sintetizza(p["narrazione"], modello, wav)
             da = _durata(wav)
-            _segmento(p, wav, da, seg)
+            cues = cue_per_frase(p["narrazione"], da)
+            ass = tmp / f"{p['id']}.ass"
+            _genera_ass(cues, ass)
+            _segmento(p, wav, da, seg, indice=idx, totale=tot, ass_path=ass)
             segmenti.append(seg)
             durate.append(_durata(seg))  # misurata: il padding di codifica non si accumula sui sottotitoli
             print("ok", p["id"], f"{durate[-1]:.1f}s")
