@@ -6,6 +6,7 @@ Richiede: ffmpeg/ffprobe, piper-tts e il modello vocale in ~/.cache/piper
 (python -m piper.download_voices it_IT-paola-medium --data-dir ~/.cache/piper).
 """
 import argparse
+import re
 import shutil
 import subprocess
 import sys
@@ -15,6 +16,7 @@ from pathlib import Path
 from guida_screenshot import ROOT, passi
 
 PAUSA = 0.6
+LIMITE_WHATSAPP_MB = 9.5  # il limite degli stati è 10: si resta un po' sotto
 FPS = 25
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 CACHE_VOCI = Path.home() / ".cache" / "piper"
@@ -48,6 +50,26 @@ def formatta_vtt(durate, testi):
     return "\n".join(righe)
 
 
+def cue_per_frase(testo, durata):
+    """Spezza la narrazione di un passo in sottotitoli, uno per frase, con la durata ripartita in proporzione ai caratteri."""
+    frasi = [f for f in re.split(r"(?<=[.!?])\s+", testo.strip()) if f]
+    totale = sum(len(f) for f in frasi)
+    cue, usato = [], 0.0
+    for i, f in enumerate(frasi):
+        d = durata - usato if i == len(frasi) - 1 else durata * len(f) / totale
+        cue.append((d, f))
+        usato += d
+    return cue
+
+
+def bitrate_video(durata, mb, audio=48_000):
+    """Bitrate video (bit/s) per stare in `mb` megabyte, con il 3% di margine per il contenitore."""
+    bitrate = int(mb * 1024 * 1024 * 8 * 0.97 / durata) - audio
+    if bitrate < 100_000:
+        raise ValueError(f"video troppo lungo ({durata:.0f} s) per stare in {mb} MB: sotto i 100 kbit/s la qualità non è più leggibile")
+    return bitrate
+
+
 def _durata(f):
     return float(subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(f)],
@@ -73,14 +95,17 @@ def _segmento(passo, wav, durata_audio, dest):
 def comprimi_whatsapp(src, dest, mb=8.5):
     """Ricodifica `src` in `dest` a 960x540 con due passate, puntando a `mb` megabyte (limite degli stati WhatsApp: 10)."""
     audio = 48_000
-    bitrate = int(mb * 1024 * 1024 * 8 * 0.97 / _durata(src)) - audio  # 3% di margine per il contenitore
+    bitrate = bitrate_video(_durata(src), mb, audio)
     comune = ["-vf", "scale=960:540", "-c:v", "libx264", "-preset", "slow", "-b:v", str(bitrate), "-pix_fmt", "yuv420p", "-r", str(FPS)]
     with tempfile.TemporaryDirectory() as tmp:
         log = str(Path(tmp) / "passata")
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), *comune, "-pass", "1", "-passlogfile", log, "-an", "-f", "null", "/dev/null"], check=True)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), *comune, "-pass", "2", "-passlogfile", log,
                         "-c:a", "aac", "-b:a", str(audio), "-ac", "1", "-movflags", "+faststart", str(dest)], check=True)
-    print(f"{dest.name}: {dest.stat().st_size / 1024 / 1024:.1f} MB")
+    dimensione = dest.stat().st_size / 1024 / 1024
+    print(f"{dest.name}: {dimensione:.1f} MB")
+    if dimensione >= LIMITE_WHATSAPP_MB:
+        sys.exit(f"{dest.name} pesa {dimensione:.1f} MB: oltre il limite di {LIMITE_WHATSAPP_MB} MB per gli stati WhatsApp")
 
 
 def main(argv=None):
@@ -110,14 +135,15 @@ def main(argv=None):
             da = _durata(wav)
             _segmento(p, wav, da, seg)
             segmenti.append(seg)
-            durate.append(da + PAUSA)
-            print("ok", p["id"], f"{da + PAUSA:.1f}s")
+            durate.append(_durata(seg))  # misurata: il padding di codifica non si accumula sui sottotitoli
+            print("ok", p["id"], f"{durate[-1]:.1f}s")
         lista = tmp / "lista.txt"
         lista.write_text("".join(f"file '{s}'\n" for s in segmenti))
         mp4 = OUT / "guida.mp4"
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lista), "-c", "copy", "-movflags", "+faststart", str(mp4)], check=True)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(mp4), "-vn", "-c:a", "libmp3lame", "-q:a", "4", str(OUT / "guida.mp3")], check=True)
-    (OUT / "guida.vtt").write_text(formatta_vtt(durate, [p["narrazione"] for p in elenco]), encoding="utf-8")
+    cue = [c for p, d in zip(elenco, durate) for c in cue_per_frase(p["narrazione"], d)]
+    (OUT / "guida.vtt").write_text(formatta_vtt([d for d, _ in cue], [t for _, t in cue]), encoding="utf-8")
     comprimi_whatsapp(OUT / "guida.mp4", OUT / "guida-whatsapp.mp4")
     print("scritti", *(OUT / n for n in ("guida.mp4", "guida.mp3", "guida.vtt", "guida-whatsapp.mp4")))
 

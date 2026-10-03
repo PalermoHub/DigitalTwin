@@ -47,6 +47,7 @@ function elementoFinto(tag) {
   return {
     tag, children: [], attrs: {}, dataset: {}, className: '', textContent: '', hidden: false,
     append(...f) { this.children.push(...f); },
+    addEventListener(t, f) { this.ev ??= {}; this.ev[t] = f; },
     setAttribute(k, v) { this.attrs[k] = v; },
     set href(v) { this.attrs.href = v; }, get href() { return this.attrs.href; },
     set src(v) { this.attrs.src = v; }, get src() { return this.attrs.src; },
@@ -87,4 +88,34 @@ test('schedaGuida: blocco media con video sottotitolato e audio', () => {
   assert.equal(track.attrs.src, 'media/guida/guida.vtt');
   const [audio] = tutti(radice, 'audio');
   assert.equal(audio.attrs.preload, 'none');
+});
+
+test('schedaGuida: se un\'immagine non carica la sua figura sparisce (niente icona rotta)', () => {
+  const radice = schedaGuida(doc);
+  const fig = tutti(radice, 'figure')[0];
+  let rimossa = false;
+  fig.remove = () => { rimossa = true; };
+  tutti(fig, 'img')[0].onerror();
+  assert.ok(rimossa);
+});
+
+test('schedaGuida: se il video o l\'audio non caricano il blocco media sparisce', () => {
+  for (const tag of ['video', 'audio']) {
+    const radice = schedaGuida(doc);
+    const media = tutti(radice, 'div').find(d => d.className === 'guida-media');
+    let rimosso = false;
+    media.remove = () => { rimosso = true; };
+    tutti(radice, tag)[0].children.find(c => c.tag === 'source').onerror();
+    assert.ok(rimosso, tag);
+  }
+});
+
+test('schedaGuida: il clic sull\'indice scorre alla sezione senza cambiare l\'hash dell\'URL', () => {
+  const radice = schedaGuida(doc);
+  const a = tutti(radice, 'a')[2];
+  const sez = tutti(radice, 'section')[2];
+  let scrollato = false, prevenuto = false;
+  sez.scrollIntoView = () => { scrollato = true; };
+  a.ev.click({ preventDefault() { prevenuto = true; } });
+  assert.ok(scrollato && prevenuto);
 });

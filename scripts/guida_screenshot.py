@@ -7,6 +7,7 @@ Richiede rete (base cartografica OpenFreeMap) e Chromium di Playwright.
 import argparse
 import json
 import re
+import shutil
 import socket
 import subprocess
 import sys
@@ -16,6 +17,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VIEWPORT = {"width": 1280, "height": 720}
+
+
+def controlla_requisiti():
+    for exe in ("node", "ffmpeg"):
+        if not shutil.which(exe):
+            sys.exit(f"manca {exe}: installalo (node serve a leggere i contenuti della guida, ffmpeg a creare i WebP)")
+    try:
+        import playwright  # noqa: F401
+    except ImportError:
+        sys.exit("manca playwright: python3 -m pip install playwright && python3 -m playwright install chromium")
 
 
 def passi():
@@ -129,6 +140,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--solo")
     args = ap.parse_args(argv)
+    controlla_requisiti()
     elenco = [p for p in passi() if args.solo in (None, p["id"])]
     if not elenco:
         sys.exit(f"passo sconosciuto: {args.solo}")

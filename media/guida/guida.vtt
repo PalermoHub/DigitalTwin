@@ -1,34 +1,94 @@
 WEBVTT
 
-00:00:00.000 --> 00:00:19.965
-Benvenuti nel Digital Twin di Palermo, realizzato da Open Data Sicilia: una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città. Qui trovi insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale, e puoi leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.
+00:00:00.000 --> 00:00:08.831
+Benvenuti nel Digital Twin di Palermo, realizzato da Open Data Sicilia: una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città.
 
-00:00:19.965 --> 00:00:37.156
-I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap. L'elenco completo, con data e licenza di ogni fonte, si trova nella scheda Fonti e avvisi.
+00:00:08.831 --> 00:00:20.163
+Qui trovi insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale, e puoi leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.
 
-00:00:37.156 --> 00:00:56.634
-Gli strati sono i temi che si sovrappongono alla mappa. La barra a sinistra li raggruppa: rilievo, popolazione, territorio, edifici, trasporti e sicurezza. Scegli un gruppo per vedere l'elenco dei suoi strati e accendili con la casella. Gli strati accesi compaiono come etichette in alto, e la legenda in basso ne spiega i colori. Puoi accenderne più di uno per confrontarli.
+00:00:20.163 --> 00:00:32.495
+I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap.
 
-00:00:56.634 --> 00:01:03.979
-Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono. Il punto scelto viene evidenziato e si apre la scheda del luogo.
+00:00:32.495 --> 00:00:37.609
+L'elenco completo, con data e licenza di ogni fonte, si trova nella scheda Fonti e avvisi.
 
-00:01:03.979 --> 00:01:22.145
-La scheda è divisa in sezioni, che scegli dalle linguette in alto: luogo, catasto, vincoli, mercato, popolazione e altre. La prima riassume ciò che c'è nel punto scelto: l'indirizzo, i monumenti, il rischio di incidenti e le fermate vicine. La sezione catasto mostra la particella, e ogni sezione indica la fonte dei dati.
+00:00:37.609 --> 00:00:40.497
+Gli strati sono i temi che si sovrappongono alla mappa.
 
-00:01:22.145 --> 00:01:38.128
-Lo strato Monumenti mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane e teatri. Dove è stato possibile, anche l'edificio è colorato sulla mappa. Un clic su un monumento apre la sua scheda, con foto, descrizione e il collegamento al Portale del Turismo del Comune di Palermo.
+00:00:40.497 --> 00:00:45.695
+La barra a sinistra li raggruppa: rilievo, popolazione, territorio, edifici, trasporti e sicurezza.
 
-00:01:38.128 --> 00:01:50.373
-Lo strato Uffici comunali mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede. La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando sono pubblicati.
+00:00:45.695 --> 00:00:49.896
+Scegli un gruppo per vedere l'elenco dei suoi strati e accendili con la casella.
 
-00:01:50.373 --> 00:02:09.839
-Il gruppo Piano P A I riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti ed erosione costiera, con la simbologia ufficiale. Un clic su un'area apre la scheda: nella sezione vincoli trovi il riquadro dei vincoli P A I, con la classe più grave. Sono dati informativi.
+00:00:49.896 --> 00:00:54.779
+Gli strati accesi compaiono come etichette in alto, e la legenda in basso ne spiega i colori.
 
-00:02:09.839 --> 00:02:23.396
-Lo strato Incendi mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l'anno. La scheda di un incendio riporta data, località e superfici bruciate.
+00:00:54.779 --> 00:00:57.089
+Puoi accenderne più di uno per confrontarli.
 
-00:02:23.396 --> 00:02:41.458
-La barra in basso permette di cercare una via, un civico, un quartiere o una particella. Il pulsante dei filtri apre il pannello per limitare la ricerca a una circoscrizione, a un quartiere o a una zona. Per esempio, scegli una circoscrizione e scrivi Maqueda: i risultati si restringono, e un clic su uno di essi porta la mappa sul posto.
+00:00:57.089 --> 00:01:01.134
+Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono.
 
-00:02:41.458 --> 00:02:55.769
-Un'ultima avvertenza: catasto, zonizzazione e vincoli hanno valore solo informativo, e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. I dati del censimento sono stime. Per usi legali rivolgiti sempre agli uffici competenti.
+00:01:01.134 --> 00:01:04.585
+Il punto scelto viene evidenziato e si apre la scheda del luogo.
+
+00:01:04.585 --> 00:01:11.482
+La scheda è divisa in sezioni, che scegli dalle linguette in alto: luogo, catasto, vincoli, mercato, popolazione e altre.
+
+00:01:11.482 --> 00:01:18.208
+La prima riassume ciò che c'è nel punto scelto: l'indirizzo, i monumenti, il rischio di incidenti e le fermate vicine.
+
+00:01:18.208 --> 00:01:22.825
+La sezione catasto mostra la particella, e ogni sezione indica la fonte dei dati.
+
+00:01:22.825 --> 00:01:28.554
+Lo strato Monumenti mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane e teatri.
+
+00:01:28.554 --> 00:01:32.079
+Dove è stato possibile, anche l'edificio è colorato sulla mappa.
+
+00:01:32.079 --> 00:01:39.185
+Un clic su un monumento apre la sua scheda, con foto, descrizione e il collegamento al Portale del Turismo del Comune di Palermo.
+
+00:01:39.185 --> 00:01:44.732
+Lo strato Uffici comunali mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede.
+
+00:01:44.732 --> 00:01:51.186
+La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando sono pubblicati.
+
+00:01:51.186 --> 00:02:02.457
+Il gruppo Piano P A I riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti ed erosione costiera, con la simbologia ufficiale.
+
+00:02:02.457 --> 00:02:09.140
+Un clic su un'area apre la scheda: nella sezione vincoli trovi il riquadro dei vincoli P A I, con la classe più grave.
+
+00:02:09.140 --> 00:02:10.386
+Sono dati informativi.
+
+00:02:10.386 --> 00:02:19.015
+Lo strato Incendi mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana.
+
+00:02:19.015 --> 00:02:20.360
+Il colore indica l'anno.
+
+00:02:20.360 --> 00:02:24.226
+La scheda di un incendio riporta data, località e superfici bruciate.
+
+00:02:24.226 --> 00:02:29.031
+La barra in basso permette di cercare una via, un civico, un quartiere o una particella.
+
+00:02:29.031 --> 00:02:35.255
+Il pulsante dei filtri apre il pannello per limitare la ricerca a una circoscrizione, a un quartiere o a una zona.
+
+00:02:35.255 --> 00:02:42.626
+Per esempio, scegli una circoscrizione e scrivi Maqueda: i risultati si restringono, e un clic su uno di essi porta la mappa sul posto.
+
+00:02:42.626 --> 00:02:52.160
+Un'ultima avvertenza: catasto, zonizzazione e vincoli hanno valore solo informativo, e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali.
+
+00:02:52.160 --> 00:02:54.000
+I dati del censimento sono stime.
+
+00:02:54.000 --> 00:02:57.066
+Per usi legali rivolgiti sempre agli uffici competenti.
