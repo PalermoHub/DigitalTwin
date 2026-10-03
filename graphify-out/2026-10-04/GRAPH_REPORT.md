@@ -1,11 +1,11 @@
 # Graph Report - DigitalTwin  (2026-10-04)
 
 ## Corpus Check
-- 160 files · ~1,515,856 words
+- 160 files · ~1,515,755 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 4343 nodes · 8741 edges · 210 communities (150 shown, 60 thin omitted)
+- 4343 nodes · 8741 edges · 210 communities (149 shown, 61 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 290 edges (avg confidence: 0.72)
 - Token cost: 0 input · 0 output
 
@@ -111,7 +111,7 @@
 - Digital Twin di Palermo — inventario e piano
 - scheda-pai.js
 - pai.js
-- oi
+- .parse
 - Ht
 - .createVertexBuffer
 - Ya
@@ -131,7 +131,7 @@
 - Settore: Ufficio di pianificazione e monitoraggio delle attività sociali e delle emergenze sociali
 - qc
 - RIPARTENZA.md
-- stile-omi.test.mjs
+- sicurezza-filtro.js
 - Lt
 - cs
 - Settore: Ufficio autonomo gestione verde urbano, agricoltura urbana e rapporti con RESET
@@ -194,7 +194,7 @@
 - Settore: Ufficio Traffico e Mobilità Urbana
 - guida_carosello4.py
 - _cerca_e_vai
-- ui
+- oi
 - .recalculate
 - ys
 - uffici/README.md
@@ -222,7 +222,7 @@
 - getImage
 - yu
 - ni
-- .parse
+- Yt
 - hs
 
 ## God Nodes (most connected - your core abstractions)
@@ -252,7 +252,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (210 total, 60 thin omitted)
+## Communities (210 total, 61 thin omitted)
 
 ### Community 0 - "$"
 Cohesion: 0.02
@@ -295,8 +295,8 @@ Cohesion: 0.07
 Nodes (7): cc(), dc, ea, eh(), getPaintProperty(), ra, wh()
 
 ### Community 10 - "terreno.js"
-Cohesion: 0.14
-Nodes (15): urlTileset(), aggiorna3D(), ELEVATION_STOPS, HILLSHADE_COLORS, suCambio(), classe(), fmt(), ha() (+7 more)
+Cohesion: 0.09
+Nodes (24): pmt(), urlTileset(), aggiorna3D(), ELEVATION_STOPS, HILLSHADE_COLORS, primo(), aggiungiSorgenti(), suCambio() (+16 more)
 
 ### Community 11 - "oa"
 Cohesion: 0.06
@@ -399,8 +399,8 @@ Cohesion: 0.10
 Nodes (20): Digital Twin di Palermo — Fase 0 + Fase 1 Implementation Plan, File Structure, Global Constraints, poi aprire http://127.0.0.1:8000/index.html, Review Focus, Self-Review (eseguita), Task 0: Repository, strumenti e server con Range, Task 10: Terreno, elevazione e griglia DTM (aggiunto su richiesta dell'utente) (+12 more)
 
 ### Community 41 - "territorio.js"
-Cohesion: 0.11
-Nodes (26): pmt(), dopoClic(), gruppoDi(), voceFiltro(), voceStrato(), piuVicino(), presente(), primo() (+18 more)
+Cohesion: 0.12
+Nodes (20): dopoClic(), gruppoDi(), voceFiltro(), voceStrato(), piuVicino(), presente(), tutti(), creaLegenda() (+12 more)
 
 ### Community 42 - "trasporto-filtro.js"
 Cohesion: 0.18
@@ -463,8 +463,8 @@ Cohesion: 0.07
 Nodes (30): Area: Area della Istruzione e Formazione, Settore: Capo Area responsabile pianificazione dell’Istruzione e Formazione, Settore: Ufficio Edilizia Scolastica, Settore: Ufficio per la scuola dell’obbligo e contrasto alla dispersione scolastica, Settore: Ufficio Servizi Educativi e Scuola dell’Infanzia 0-6 anni, U.O.: U.O. Approvvigionamento, U.O.: U.O. Assistenza Specialistica, U.O.: U.O. Contributi 0/6 (+22 more)
 
 ### Community 63 - "popolazione.js"
-Cohesion: 0.07
-Nodes (36): INDICATORI, num(), SOPRA_64, SOTTO_15, densityLegendStops(), densityStops(), applica(), avvia() (+28 more)
+Cohesion: 0.08
+Nodes (28): INDICATORI, num(), SOPRA_64, SOTTO_15, densityLegendStops(), densityStops(), applica(), avvia() (+20 more)
 
 ### Community 64 - "urlDati"
 Cohesion: 0.25
@@ -556,15 +556,15 @@ Nodes (10): 1. Obiettivo (da confermare), 2. Inventario dati già disponibili, 2
 
 ### Community 94 - "scheda-pai.js"
 Cohesion: 0.17
-Nodes (19): dataIt(), E_PROVVEDIMENTO(), FONTE, gravita(), lunghezza(), luogo(), modelloPopup(), num() (+11 more)
+Nodes (20): chiavePai(), dataIt(), E_PROVVEDIMENTO(), FONTE, gravita(), lunghezza(), luogo(), modelloPopup() (+12 more)
 
 ### Community 95 - "pai.js"
-Cohesion: 0.20
-Nodes (22): accesi, aggiornaLegenda(), aggiungiLayer(), aggiungiTema(), applicaFiltro(), avvia(), campione(), campioneMatch() (+14 more)
+Cohesion: 0.21
+Nodes (21): accesi, aggiornaLegenda(), aggiungiLayer(), aggiungiTema(), applicaFiltro(), avvia(), campione(), campioneMatch() (+13 more)
 
-### Community 96 - "oi"
+### Community 96 - ".parse"
 Cohesion: 0.15
-Nodes (5): cn(), jt(), oi(), vn(), xn
+Nodes (5): cn(), jt(), qt(), vn(), Zt()
 
 ### Community 101 - "Digital Twin di Palermo — Fase 0 + Fase 1: design"
 Cohesion: 0.20
@@ -598,9 +598,9 @@ Nodes (11): aggiungiGruppo(), conContenuto(), GENERICHE, maiuscoleItaliane(), MA
 Cohesion: 0.29
 Nodes (7): Area: Area delle Politiche Socio Sanitarie, Settore: Ufficio di pianificazione e monitoraggio delle attività sociali e delle emergenze sociali, U.O.: U.O. Accreditamento Servizi sociali, U.O.: U.O. Fondo povertà estrema, U.O.: U.O. Piano di zona e distretto, U.O.: U.O. Pon Metro e Progettazione, U.O.: U.O. Progetti Infanzia e adolescenza
 
-### Community 116 - "stile-omi.test.mjs"
-Cohesion: 0.47
-Nodes (3): STILE_OMI, DESTINAZIONE, estrai()
+### Community 116 - "sicurezza-filtro.js"
+Cohesion: 0.38
+Nodes (8): ANNI, etichetteChip(), filtroIncidenti(), NOME_GRAVITA_CHIP, pieno(), ZOOM_BASE, ZOOM_FILTRATO, zoomMinimo()
 
 ### Community 119 - "Settore: Ufficio autonomo gestione verde urbano, agricoltura urbana e rapporti con RESET"
 Cohesion: 0.11
@@ -815,8 +815,8 @@ Cohesion: 0.40
 Nodes (5): _legenda_filtro(), Accende lo strato, clicca la voce di legenda (seleziona solo quella) e…, test_legende_omi_ogni_fascia_filtra_le_zone(), test_legende_scuole_tipo_filtra_i_punti(), test_legende_sicurezza_tasso_hotspot_e_gravita()
 
 ### Community 194 - "un"
-Cohesion: 0.15
-Nodes (9): dn(), fn(), gn(), ii(), mn(), qn(), ri(), un() (+1 more)
+Cohesion: 0.12
+Nodes (10): dn(), fn(), gn(), ii(), mn(), qn(), ri(), un() (+2 more)
 
 ### Community 196 - "build_gerarchia.py"
 Cohesion: 0.60
@@ -846,19 +846,15 @@ Nodes (5): _pai(), Un elemento del PAI di Palermo e un punto sicuramente dentro 
 Cohesion: 0.33
 Nodes (3): Hu(), yu(), Zu()
 
-### Community 208 - ".parse"
-Cohesion: 0.14
-Nodes (3): qt(), Yt, Zt()
-
 ## Knowledge Gaps
 - **798 isolated node(s):** `apriStrati`, `riduciLegenda`, `MODULI`, `catalogoPromessa`, `map` (+793 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **60 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **61 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `$` connect `$` to `o`, `ft`, `_update`, `dc`, `oa`, `p`, `ls`, `de`, `pmtiles.js`, `ts`, `constructor`, `to`, `ba`, `ta`, `ws`, `ot`, `Ai`, `.fire`, `.getSouthEast`, `.concat`, `ju`, `r`, `.reset`, `os`, `T`, `Z`, `ye`, `j`, `.create`, `c`, `.renderLayer`, `resize`, `xr`, `ga`, `ms`, `ee`, `zl`, `zs`, `w`, `.push`, `Ma`, `pe`, `et`, `Ut`, `ql`, `oi`, `Ht`, `.createVertexBuffer`, `Ya`, `Pa`, `hi`, `es`, `fs`, `mo`, `.get`, `Ua`, `qc`, `Lt`, `cs`, `wa`, `X`, `.possiblyEvaluate`, `Ic`, `.constructor`, `Ss`, `A`, `el`, `h`, `N`, `jc`, `le`, `ks`, `is`, `.loadMatchingFeature`, `za`, `.pop`, `.toString`, `ui`, `.recalculate`, `ys`, `.enable`, `Mc`, `once`, `gs`, `pc`, `U`, `un`, `qe`, `b`, `sl`, `getImage`, `yu`, `ni`, `.parse`, `hs`?**
+- **Why does `$` connect `$` to `o`, `ft`, `_update`, `dc`, `oa`, `p`, `ls`, `de`, `pmtiles.js`, `ts`, `constructor`, `to`, `ba`, `ta`, `ws`, `ot`, `Ai`, `.fire`, `.getSouthEast`, `.concat`, `ju`, `r`, `.reset`, `os`, `T`, `Z`, `ye`, `j`, `.create`, `c`, `.renderLayer`, `resize`, `xr`, `ga`, `ms`, `ee`, `zl`, `zs`, `w`, `.push`, `Ma`, `pe`, `et`, `Ut`, `ql`, `.parse`, `Ht`, `.createVertexBuffer`, `Ya`, `Pa`, `hi`, `es`, `fs`, `mo`, `.get`, `Ua`, `qc`, `Lt`, `cs`, `wa`, `X`, `.possiblyEvaluate`, `Ic`, `.constructor`, `Ss`, `A`, `el`, `h`, `N`, `jc`, `le`, `ks`, `is`, `.loadMatchingFeature`, `za`, `.pop`, `.toString`, `oi`, `.recalculate`, `ys`, `.enable`, `Mc`, `once`, `gs`, `pc`, `U`, `un`, `qe`, `b`, `sl`, `getImage`, `yu`, `ni`, `Yt`, `hs`?**
   _High betweenness centrality (0.339) - this node is a cross-community bridge._
 - **Why does `v()` connect `.push` to `$`, `ricerca.js`, `Ya`, `indirizzi.js`, `scheda-preferenze.js`, `terreno.js`, `.get`, `sicurezza.js`, `w`, `pmtiles.js`, `h`, `incendi.js`, `ricerca-incidenti.js`, `.renderLayer`, `scheda-omi.js`, `scheda-pai.js`, `popolazione.js`?**
   _High betweenness centrality (0.112) - this node is a cross-community bridge._

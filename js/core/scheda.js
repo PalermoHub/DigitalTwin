@@ -435,7 +435,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
     annuncio.textContent = 'Copiato negli appunti';
     setTimeout(() => { b.innerHTML = ICONA_COPIA; b.title = 'Copia indirizzo e riferimenti catastali'; annuncio.textContent = ''; }, 1600);
   });
-  const stampa = azione('scheda-stampa', 'Stampa la scheda', ICONA_STAMPA, () => window.print());
+  const stampa = azione('scheda-stampa', 'Stampa la scheda', ICONA_STAMPA, () => document.dispatchEvent(new CustomEvent('scheda:stampa')));
   azioni.append(copia, stampa, personalizza, x);
   const testata = el('header', 'scheda-intestazione');
   const riga = el('div', 'scheda-testata');
@@ -448,6 +448,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
   aggiorna();
   // annuncio breve per i lettori di schermo: la scheda intera non è una regione live
   contenitore.replaceChildren(maniglia, testata, corpo, piede, annuncio);
+  contenitore.dataset.punto = `${lngLat.lng},${lngLat.lat}`; // per lo stralcio di mappa in stampa
   contenitore.hidden = false;
   corpo.scrollTop = 0;
   adattaVista(lngLat); // la mappa si centra sul punto nella parte rimasta visibile
@@ -488,12 +489,68 @@ function trovaFeature(map, punto, layers) {
   return trovati;
 }
 
+// ritaglia la mappa visibile attorno al punto cliccato e lo cerchia (il canvas ha la risoluzione del dispositivo)
+function stralcioConCerchio(map, punto) {
+  const sorgente = map.getCanvas();
+  const [lng, lat] = (punto ?? '').split(',').map(Number);
+  if (!Number.isFinite(lng) || !Number.isFinite(lat)) return sorgente.toDataURL('image/png');
+  const k = sorgente.width / sorgente.clientWidth;
+  const p = map.project([lng, lat]);
+  const px = p.x * k, py = p.y * k;
+  const w = sorgente.width, h = Math.min(sorgente.height, Math.round(w / 2));
+  const y0 = Math.max(0, Math.min(sorgente.height - h, Math.round(py - h / 2)));
+  const out = document.createElement('canvas');
+  out.width = w; out.height = h;
+  const g = out.getContext('2d');
+  g.drawImage(sorgente, 0, y0, w, h, 0, 0, w, h);
+  const r = h * 0.3, y = py - y0;
+  // fuori dalla lente la mappa è attenuata, così il punto risalta
+  g.fillStyle = 'rgba(255,255,255,.5)';
+  g.beginPath(); g.rect(0, 0, w, h); g.arc(px, y, r, 0, 2 * Math.PI, true); g.fill('evenodd');
+  // manico della lente, in basso a destra
+  const d = Math.SQRT1_2, m0 = [px + r * d, y + r * d], m1 = [px + r * (1 + 0.75) * d, y + r * (1 + 0.75) * d];
+  g.lineCap = 'round';
+  for (const [spessore, colore] of [[16 * k, '#fff'], [10 * k, '#d6246e']]) {
+    g.lineWidth = spessore; g.strokeStyle = colore;
+    g.beginPath(); g.moveTo(...m0); g.lineTo(...m1); g.stroke();
+  }
+  g.lineWidth = 9 * k; g.strokeStyle = '#fff';
+  g.beginPath(); g.arc(px, y, r, 0, 2 * Math.PI); g.stroke();
+  g.lineWidth = 5 * k; g.strokeStyle = '#d6246e';
+  g.beginPath(); g.arc(px, y, r, 0, 2 * Math.PI); g.stroke();
+  g.fillStyle = '#d6246e';
+  g.beginPath(); g.arc(px, y, 4 * k, 0, 2 * Math.PI); g.fill();
+  return out.toDataURL('image/png');
+}
+
 export function collegaScheda(map, moduli, contenitore) {
   // stampa: tutte le schede aperte e visibili; dopo, si torna alla scheda attiva
   window.addEventListener('beforeprint', () => {
     for (const sz of contenitore.querySelectorAll('.scheda-sez')) { sz.hidden = false; sz.open = true; }
   });
-  window.addEventListener('afterprint', () => contenitore.querySelector('.scheda-indice [aria-selected="true"]')?.click());
+  window.addEventListener('afterprint', () => {
+    contenitore.querySelector('.scheda-stralcio')?.remove();
+    contenitore.querySelector('.scheda-indice [aria-selected="true"]')?.click();
+  });
+  // stralcio della mappa visualizzata: il canvas WebGL si legge solo subito dopo un render
+  document.addEventListener('scheda:stampa', () => {
+    let fatto = false;
+    const stampa = async () => {
+      if (fatto) return;
+      fatto = true;
+      try {
+        const img = el('img', 'scheda-stralcio');
+        img.alt = 'Stralcio della mappa visualizzata';
+        img.src = stralcioConCerchio(map, contenitore.dataset.punto);
+        await img.decode(); // senza, la stampa parte prima che l'immagine sia pronta
+        contenitore.querySelector('.scheda-intestazione')?.after(img);
+      } catch { /* canvas non leggibile: si stampa senza stralcio */ }
+      window.print();
+    };
+    map.once('render', stampa);
+    map.triggerRepaint();
+    setTimeout(stampa, 1500);
+  });
   // link condiviso: riapre la scheda nel punto indicato, dopo il primo caricamento dei dati
   const condiviso = new URLSearchParams(location.search).get('scheda');
   if (condiviso) {

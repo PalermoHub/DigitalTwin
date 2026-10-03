@@ -661,4 +661,5 @@ button.strato-chip:hover i { color: var(--text); }
   .scheda-intestazione { background: #fff; }
   .scheda-sez { break-inside: avoid; }
   .scheda-piede { border-top: 1px solid #999; }
+  .scheda-stralcio { display: block; width: 100%; margin: 8px 0; border: 1px solid #999; break-inside: avoid; }
 }

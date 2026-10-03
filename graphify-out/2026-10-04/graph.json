@@ -417,8 +417,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "js_core_config_pmt",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "pmt()"
     },
     {
@@ -1979,8 +1979,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "js_core_scheda_util_primo",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "primo()"
     },
     {
@@ -2251,7 +2251,7 @@
       "label": "collegaScheda()",
       "file_type": "code",
       "source_file": "js/core/scheda.js",
-      "source_location": "L526",
+      "source_location": "L516",
       "_origin": "ast",
       "id": "js_core_scheda_collegascheda",
       "community": 87,
@@ -2628,8 +2628,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_layers_edifici",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "edifici.js"
     },
     {
@@ -2639,8 +2639,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "js_layers_edifici_aggiungisorgenti",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "aggiungisorgenti()"
     },
     {
@@ -2650,8 +2650,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "js_layers_edifici_aggiungilayer",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "aggiungilayer()"
     },
     {
@@ -2672,8 +2672,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_layers_edifici_voci",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "voci()"
     },
     {
@@ -2782,8 +2782,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "js_layers_incendi_aggiungisorgenti",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "aggiungisorgenti()"
     },
     {
@@ -2969,8 +2969,8 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "js_layers_monumenti_aggiungisorgenti",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "aggiungisorgenti()"
     },
     {
@@ -3255,8 +3255,8 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "js_layers_pai_aggiungisorgenti",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "aggiungisorgenti()"
     },
     {
@@ -3948,8 +3948,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "js_layers_scheda_pai_chiavepai",
-      "community": 95,
-      "community_name": "pai.js",
+      "community": 94,
+      "community_name": "scheda-pai.js",
       "norm_label": "chiavepai()"
     },
     {
@@ -4773,8 +4773,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_layers_sicurezza_filtro",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "sicurezza-filtro.js"
     },
     {
@@ -4784,8 +4784,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "js_layers_sicurezza_filtro_anni",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "anni"
     },
     {
@@ -4795,8 +4795,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "js_layers_sicurezza_filtro_zoom_base",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "zoom_base"
     },
     {
@@ -4806,8 +4806,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "js_layers_sicurezza_filtro_zoom_filtrato",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "zoom_filtrato"
     },
     {
@@ -4817,8 +4817,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "js_layers_sicurezza_filtro_pieno",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "pieno()"
     },
     {
@@ -4828,8 +4828,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "js_layers_sicurezza_filtro_filtroincidenti",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "filtroincidenti()"
     },
     {
@@ -4839,8 +4839,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "js_layers_sicurezza_filtro_zoomminimo",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "zoomminimo()"
     },
     {
@@ -4850,8 +4850,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "js_layers_sicurezza_filtro_nome_gravita_chip",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "nome_gravita_chip"
     },
     {
@@ -4861,8 +4861,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "js_layers_sicurezza_filtro_etichettechip",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "etichettechip()"
     },
     {
@@ -5048,8 +5048,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "js_layers_sicurezza_aggiungisorgenti",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "aggiungisorgenti()"
     },
     {
@@ -5081,8 +5081,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_layers_stile_omi",
-      "community": 116,
-      "community_name": "stile-omi.test.mjs",
+      "community": 41,
+      "community_name": "territorio.js",
       "norm_label": "stile-omi.js"
     },
     {
@@ -5092,8 +5092,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "js_layers_stile_omi_stile_omi",
-      "community": 116,
-      "community_name": "stile-omi.test.mjs",
+      "community": 41,
+      "community_name": "territorio.js",
       "norm_label": "stile_omi"
     },
     {
@@ -5257,8 +5257,8 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "js_layers_territorio_aggiungisorgenti",
-      "community": 41,
-      "community_name": "territorio.js",
+      "community": 10,
+      "community_name": "terreno.js",
       "norm_label": "aggiungisorgenti()"
     },
     {
@@ -6875,7 +6875,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_jt",
       "community": 96,
-      "community_name": "oi",
+      "community_name": ".parse",
       "norm_label": "jt()"
     },
     {
@@ -6896,7 +6896,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_qt",
-      "community": 208,
+      "community": 96,
       "community_name": ".parse",
       "norm_label": "qt()"
     },
@@ -6907,7 +6907,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_zt",
-      "community": 208,
+      "community": 96,
       "community_name": ".parse",
       "norm_label": "zt()"
     },
@@ -6929,7 +6929,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_kt_parse",
-      "community": 208,
+      "community": 96,
       "community_name": ".parse",
       "norm_label": ".parse()"
     },
@@ -7062,7 +7062,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_yt",
       "community": 208,
-      "community_name": ".parse",
+      "community_name": "Yt",
       "norm_label": "yt"
     },
     {
@@ -7073,7 +7073,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_yt_constructor",
       "community": 208,
-      "community_name": ".parse",
+      "community_name": "Yt",
       "norm_label": ".constructor()"
     },
     {
@@ -7084,7 +7084,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_yt_fromstring",
       "community": 208,
-      "community_name": ".parse",
+      "community_name": "Yt",
       "norm_label": ".fromstring()"
     },
     {
@@ -7095,7 +7095,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_yt_isempty",
       "community": 208,
-      "community_name": ".parse",
+      "community_name": "Yt",
       "norm_label": ".isempty()"
     },
     {
@@ -7106,7 +7106,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_yt_factory",
       "community": 208,
-      "community_name": ".parse",
+      "community_name": "Yt",
       "norm_label": ".factory()"
     },
     {
@@ -7117,7 +7117,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_yt_tostring",
       "community": 208,
-      "community_name": ".parse",
+      "community_name": "Yt",
       "norm_label": ".tostring()"
     },
     {
@@ -7128,7 +7128,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_jt_constructor",
       "community": 96,
-      "community_name": "oi",
+      "community_name": ".parse",
       "norm_label": ".constructor()"
     },
     {
@@ -7139,7 +7139,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_jt_parse",
       "community": 96,
-      "community_name": "oi",
+      "community_name": ".parse",
       "norm_label": ".parse()"
     },
     {
@@ -7150,7 +7150,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_jt_tostring",
       "community": 96,
-      "community_name": "oi",
+      "community_name": ".parse",
       "norm_label": ".tostring()"
     },
     {
@@ -7160,7 +7160,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_qt_constructor",
-      "community": 208,
+      "community": 96,
       "community_name": ".parse",
       "norm_label": ".constructor()"
     },
@@ -7172,7 +7172,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_qt_parse",
       "community": 96,
-      "community_name": "oi",
+      "community_name": ".parse",
       "norm_label": ".parse()"
     },
     {
@@ -7182,7 +7182,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_qt_tostring",
-      "community": 208,
+      "community": 96,
       "community_name": ".parse",
       "norm_label": ".tostring()"
     },
@@ -7479,7 +7479,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_ce_evaluate",
-      "community": 208,
+      "community": 96,
       "community_name": ".parse",
       "norm_label": ".evaluate()"
     },
@@ -7589,7 +7589,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_pe_parsecolor",
-      "community": 208,
+      "community": 96,
       "community_name": ".parse",
       "norm_label": ".parsecolor()"
     },
@@ -9251,7 +9251,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_cn",
       "community": 96,
-      "community_name": "oi",
+      "community_name": ".parse",
       "norm_label": "cn()"
     },
     {
@@ -9338,8 +9338,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_xn",
-      "community": 96,
-      "community_name": "oi",
+      "community": 194,
+      "community_name": "un",
       "norm_label": "xn"
     },
     {
@@ -9350,7 +9350,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_xn_constructor",
       "community": 96,
-      "community_name": "oi",
+      "community_name": ".parse",
       "norm_label": ".constructor()"
     },
     {
@@ -9360,8 +9360,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_xn_evaluatewithouterrorhandling",
-      "community": 96,
-      "community_name": "oi",
+      "community": 194,
+      "community_name": "un",
       "norm_label": ".evaluatewithouterrorhandling()"
     },
     {
@@ -9371,8 +9371,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_xn_evaluate",
-      "community": 96,
-      "community_name": "oi",
+      "community": 194,
+      "community_name": "un",
       "norm_label": ".evaluate()"
     },
     {
@@ -9383,7 +9383,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_vn",
       "community": 96,
-      "community_name": "oi",
+      "community_name": ".parse",
       "norm_label": "vn()"
     },
     {
@@ -9613,7 +9613,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_oi",
-      "community": 96,
+      "community": 180,
       "community_name": "oi",
       "norm_label": "oi()"
     },
@@ -9636,7 +9636,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_ui",
       "community": 180,
-      "community_name": "ui",
+      "community_name": "oi",
       "norm_label": "ui()"
     },
     {
@@ -10010,7 +10010,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_ui_constructor",
       "community": 180,
-      "community_name": "ui",
+      "community_name": "oi",
       "norm_label": ".constructor()"
     },
     {
@@ -10021,7 +10021,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_ui_issupportedscript",
       "community": 180,
-      "community_name": "ui",
+      "community_name": "oi",
       "norm_label": ".issupportedscript()"
     },
     {
@@ -10032,7 +10032,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_ui_crossfadingfactor",
       "community": 180,
-      "community_name": "ui",
+      "community_name": "oi",
       "norm_label": ".crossfadingfactor()"
     },
     {
@@ -10043,7 +10043,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_ui_getcrossfadeparameters",
       "community": 180,
-      "community_name": "ui",
+      "community_name": "oi",
       "norm_label": ".getcrossfadeparameters()"
     },
     {
@@ -10065,7 +10065,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_qi_constructor",
       "community": 96,
-      "community_name": "oi",
+      "community_name": ".parse",
       "norm_label": ".constructor()"
     },
     {
@@ -21614,7 +21614,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_zt_constructor",
-      "community": 208,
+      "community": 96,
       "community_name": ".parse",
       "norm_label": ".constructor()"
     },
@@ -21625,7 +21625,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_qt_get",
-      "community": 208,
+      "community": 96,
       "community_name": ".parse",
       "norm_label": ".get()"
     },
@@ -23077,7 +23077,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_oi_getdefault",
-      "community": 96,
+      "community": 180,
       "community_name": "oi",
       "norm_label": ".getdefault()"
     },
@@ -23088,7 +23088,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_oi_set",
-      "community": 96,
+      "community": 180,
       "community_name": "oi",
       "norm_label": ".set()"
     },
@@ -23210,7 +23210,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_ui_getdefault",
       "community": 180,
-      "community_name": "ui",
+      "community_name": "oi",
       "norm_label": ".getdefault()"
     },
     {
@@ -23221,7 +23221,7 @@
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_ui_set",
       "community": 180,
-      "community_name": "ui",
+      "community_name": "oi",
       "norm_label": ".set()"
     },
     {
@@ -23737,7 +23737,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "js_vendor_maplibre_gl_oi_constructor",
-      "community": 96,
+      "community": 180,
       "community_name": "oi",
       "norm_label": ".constructor()"
     },
@@ -30755,8 +30755,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_estrai_stile_omi",
-      "community": 116,
-      "community_name": "stile-omi.test.mjs",
+      "community": 41,
+      "community_name": "territorio.js",
       "norm_label": "estrai_stile_omi.mjs"
     },
     {
@@ -30766,8 +30766,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "scripts_estrai_stile_omi_destinazione",
-      "community": 116,
-      "community_name": "stile-omi.test.mjs",
+      "community": 41,
+      "community_name": "territorio.js",
       "norm_label": "destinazione"
     },
     {
@@ -30777,8 +30777,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "scripts_estrai_stile_omi_estrai",
-      "community": 116,
-      "community_name": "stile-omi.test.mjs",
+      "community": 41,
+      "community_name": "territorio.js",
       "norm_label": "estrai()"
     },
     {
@@ -34759,8 +34759,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_js_sicurezza_filtro_test",
-      "community": 63,
-      "community_name": "popolazione.js",
+      "community": 116,
+      "community_name": "sicurezza-filtro.js",
       "norm_label": "sicurezza-filtro.test.mjs"
     },
     {
@@ -34770,8 +34770,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_js_stile_omi_test",
-      "community": 116,
-      "community_name": "stile-omi.test.mjs",
+      "community": 41,
+      "community_name": "territorio.js",
       "norm_label": "stile-omi.test.mjs"
     },
     {
@@ -50154,7 +50154,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "js/core/scheda.js",
-      "source_location": "L592",
+      "source_location": "L582",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -50238,7 +50238,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "js/core/scheda.js",
-      "source_location": "L592",
+      "source_location": "L582",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -50286,7 +50286,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "js/core/scheda.js",
-      "source_location": "L595",
+      "source_location": "L585",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -50334,7 +50334,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "js/core/scheda.js",
-      "source_location": "L584",
+      "source_location": "L574",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -52853,7 +52853,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "js/core/scheda.js",
-      "source_location": "L588",
+      "source_location": "L578",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -53829,7 +53829,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "js/core/scheda.js",
-      "source_location": "L585",
+      "source_location": "L575",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -55007,7 +55007,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "js/core/scheda.js",
-      "source_location": "L568",
+      "source_location": "L558",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -55055,7 +55055,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "js/core/scheda.js",
-      "source_location": "L569",
+      "source_location": "L559",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -55765,7 +55765,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "js/core/scheda.js",
-      "source_location": "L526",
+      "source_location": "L516",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda",
@@ -55953,7 +55953,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "js/core/scheda.js",
-      "source_location": "L542",
+      "source_location": "L532",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -56217,7 +56217,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "js/core/scheda.js",
-      "source_location": "L584",
+      "source_location": "L574",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -56253,7 +56253,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "js/core/scheda.js",
-      "source_location": "L596",
+      "source_location": "L586",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -56277,7 +56277,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "js/core/scheda.js",
-      "source_location": "L583",
+      "source_location": "L573",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -56289,7 +56289,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "js/core/scheda.js",
-      "source_location": "L579",
+      "source_location": "L569",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -56301,7 +56301,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "js/core/scheda.js",
-      "source_location": "L544",
+      "source_location": "L534",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
@@ -56314,7 +56314,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "js/core/scheda.js",
-      "source_location": "L583",
+      "source_location": "L573",
       "weight": 1.0,
       "_origin": "ast",
       "source": "js_core_scheda_collegascheda",
