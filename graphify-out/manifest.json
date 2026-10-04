@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791119627.7183645,
-    "ast_hash": "fd03c1725ee36402f922e3ff0454db3e",
+    "mtime": 1791126288.2179198,
+    "ast_hash": "10dde54b1ec14b7604afbdf6d9e7c282",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "js/core/scheda-modello.js": {
-    "mtime": 1791030258.2794743,
-    "ast_hash": "f0477b13eca53fca2ef1b8cf046517dc",
+    "mtime": 1791126232.4040246,
+    "ast_hash": "d5a02909c86b10bd2f248637770c5941",
     "semantic_hash": ""
   },
   "js/core/scheda-util.js": {
@@ -60,13 +60,13 @@
     "semantic_hash": ""
   },
   "js/core/scheda.js": {
-    "mtime": 1791114449.9446359,
-    "ast_hash": "4af75cb3fc7d62e267f70de1eb231409",
+    "mtime": 1791126241.3042681,
+    "ast_hash": "e6bad8188b42cc5642ee92237ccb362c",
     "semantic_hash": ""
   },
   "js/layers/confini.js": {
-    "mtime": 1791122946.8860435,
-    "ast_hash": "f7fd35a6af7b4365dbfa1b6453a37ed5",
+    "mtime": 1791123098.190747,
+    "ast_hash": "d1dd0608460aca15b195c9850fdd8f95",
     "semantic_hash": ""
   },
   "js/layers/edifici.js": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791033504.0,
-    "ast_hash": "f45e8a692dee459868215db2c3c64571",
+    "mtime": 1791126288.2173886,
+    "ast_hash": "927589732d6db2484e904dbec55bb98a",
     "semantic_hash": ""
   },
   "docs/schermata-fase1.png": {
@@ -760,8 +760,8 @@
     "semantic_hash": ""
   },
   "NOTICE.md": {
-    "mtime": 1791030365.7823036,
-    "ast_hash": "5683c7b7fa1eaee041d4059ca0086d5e",
+    "mtime": 1791126168.020875,
+    "ast_hash": "2ef3ea01bb68bfe30e4514684415b5a1",
     "semantic_hash": ""
   },
   "dati/pai/README.md": {
@@ -1312,6 +1312,111 @@
   "tests/js/fontanelle.test.mjs": {
     "mtime": 1791119310.0747464,
     "ast_hash": "e326fac5ecd3b70c616c724377893785",
+    "semantic_hash": ""
+  },
+  "js/rndt/archivio.js": {
+    "mtime": 1791126191.0971382,
+    "ast_hash": "4d8a7be014247781c63d330390f48754",
+    "semantic_hash": ""
+  },
+  "js/rndt/area.js": {
+    "mtime": 1791126191.096869,
+    "ast_hash": "3c9c4123f82422c156c7bf5bb726215f",
+    "semantic_hash": ""
+  },
+  "js/rndt/host.js": {
+    "mtime": 1791126203.7426705,
+    "ast_hash": "12fd4284aeca7af829b1e2f80dc1f9fb",
+    "semantic_hash": ""
+  },
+  "js/rndt/index.js": {
+    "mtime": 1791126336.9607983,
+    "ast_hash": "b916c0b7d2e19258d8dd56415209ee65",
+    "semantic_hash": ""
+  },
+  "js/rndt/info.js": {
+    "mtime": 1791126191.0975156,
+    "ast_hash": "6e4e4057464600ee16d520d4159bc510",
+    "semantic_hash": ""
+  },
+  "js/rndt/pannello.js": {
+    "mtime": 1791126191.0990126,
+    "ast_hash": "c7b97f3d7d08e474ba9aa552a628ede3",
+    "semantic_hash": ""
+  },
+  "js/rndt/proxy.js": {
+    "mtime": 1791126336.9487982,
+    "ast_hash": "2c8415155d055f5d1e49339f5a2bc939",
+    "semantic_hash": ""
+  },
+  "js/vendor/openrndt-geolibre/index.js": {
+    "mtime": 1791126153.259255,
+    "ast_hash": "b75a87cf08668f30606ddf8b2ecebdf6",
+    "semantic_hash": ""
+  },
+  "js/vendor/openrndt-geolibre/plugin.json": {
+    "mtime": 1791126153.2596583,
+    "ast_hash": "ac2e1e1d93571d23bf60afb89892cccb",
+    "semantic_hash": ""
+  },
+  "plugin/openrndt-geolibre-0.2.0/plugin.json": {
+    "mtime": 1791123966.4666944,
+    "ast_hash": "ac2e1e1d93571d23bf60afb89892cccb",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-archivio.test.mjs": {
+    "mtime": 1791126180.7126493,
+    "ast_hash": "ae98b40a4e9f987920bcf71d975fba4d",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-area.test.mjs": {
+    "mtime": 1791126180.712422,
+    "ast_hash": "f987ace7dbf1780c3bb44df32512ba7f",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-host.test.mjs": {
+    "mtime": 1791126180.7133675,
+    "ast_hash": "8e03e3e0ccac81e230deb2878a24131d",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-info.test.mjs": {
+    "mtime": 1791126180.7129228,
+    "ast_hash": "62d824fcea194ee6cd96a1fff3b68eea",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-proxy-scelta.test.mjs": {
+    "mtime": 1791126336.8499768,
+    "ast_hash": "64e513d3cc9dc6814dc5e7a33925f812",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-proxy.test.mjs": {
+    "mtime": 1791126259.6567972,
+    "ast_hash": "68cd193e846321882d32608622df9a15",
+    "semantic_hash": ""
+  },
+  "tests/js/scheda-ritardo.test.mjs": {
+    "mtime": 1791126232.269835,
+    "ast_hash": "503d398312e97273b6bddefa100e60b6",
+    "semantic_hash": ""
+  },
+  "worker/rndt-proxy.js": {
+    "mtime": 1791126287.9868064,
+    "ast_hash": "9f1bc5bf9ec65f0a54b772fa2d7f3279",
+    "semantic_hash": ""
+  },
+  "docs/RNDT.md": {
+    "mtime": 1791126356.7687974,
+    "ast_hash": "f3452f89e89b78fbe53faac0d690aaf5",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-04-rndt-catalogo.md": {
+    "mtime": 1791126059.0126073,
+    "ast_hash": "1985e772866ff6385c6d86013f51d234",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-10-04-rndt-catalogo-design.md": {
+    "mtime": 1791126168.020875,
+    "ast_hash": "b54b1793c7e8e4df5789b9bd56036f0e",
     "semantic_hash": ""
   }
 }

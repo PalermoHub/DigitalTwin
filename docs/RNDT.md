@@ -17,3 +17,11 @@ npx wrangler deploy
 ```
 
 `wrangler` stampa l'indirizzo (`https://rndt-proxy.<account>.workers.dev`). Scrivilo in `PROXY_PREDEFINITO` di `js/rndt/proxy.js`. In locale (`localhost`) puoi provare un Worker di sviluppo con `?rndt-proxy=http://127.0.0.1:8787`; in produzione il parametro è ignorato. Le origini ammesse sono in `ORIGINI` di `wrangler.toml` (sviluppo locale e `https://gbvitrano.github.io`: correggi se l'origine di produzione è un'altra). I tile WMS passano dal Worker: il piano gratuito ha 100.000 richieste al giorno.
+
+## Limiti noti
+
+- **Non verificato nel browser**: in fase di sviluppo non c'era un Chrome utilizzabile. Le parti che toccano il DOM del plugin (`js/rndt/pannello.js`: selettori `select[name="where"]`, `[name="box"]`, `label.ordt-check`, e la tab RNDT della scheda) hanno test sulle sole funzioni pure. Prima di pubblicare va fatto il giro descritto nel piano (Task 9).
+- Il Worker non è ancora pubblicato: `PROXY_PREDEFINITO` in `js/rndt/proxy.js` è un indirizzo ipotizzato da sostituire dopo `wrangler deploy`.
+- Servizi solo `http` non sono raggiungibili (il Worker usa sempre `https`).
+- Un WMS con CRS diverso da EPSG:3857 viene rifiutato; un WMS senza `GetFeatureInfo` mostra «Servizio non raggiungibile o senza informazioni interrogabili».
+- I layer WFS salvano l'URL del download; se il plugin cambia ordine delle chiamate e l'URL non si lega al layer, il layer vale solo per la sessione (l'elenco lo segnala).
