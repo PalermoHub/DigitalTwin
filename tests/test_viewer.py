@@ -1753,6 +1753,15 @@ def test_desktop_barra_sinistra_a_tab_e_pannello_ancorato(apri):
     assert v.js("(() => { const d = document.createElement('div'); d.style.width = 'var(--sx)'; document.body.append(d); const w = d.getBoundingClientRect().width; d.remove(); return w; })()") == 44
 
 
+def test_desktop_barra_destra_mostra_sempre_tutti_i_tab(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.set_viewport_size({"width": 1440, "height": 800})
+    assert v.page.is_visible("#rail-pannelli [data-pannello=scheda]")
+    assert v.page.is_visible("#rail-pannelli [data-pannello=rndt]")
+    assert v.js("document.querySelector('#rail-pannelli [data-pannello=scheda]').getAttribute('aria-disabled')") == "true"  # senza scheda è spento
+
+
 def test_desktop_pannello_sinistro_non_si_chiude_con_clic_sulla_mappa(apri):
     v = apri()
     v.attendi_pronto()

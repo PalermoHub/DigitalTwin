@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791129200.8993905,
-    "ast_hash": "0c026f2d5f4c357c2aa4f8236f2e36aa",
+    "mtime": 1791134575.0886352,
+    "ast_hash": "3805dc0efe28d478b5bd5913c733df87",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "js/core/scheda.js": {
-    "mtime": 1791126241.3042681,
-    "ast_hash": "e6bad8188b42cc5642ee92237ccb362c",
+    "mtime": 1791131424.2515519,
+    "ast_hash": "15bed9ee07def7245709bc5a654b06f7",
     "semantic_hash": ""
   },
   "js/layers/confini.js": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791126288.2173886,
-    "ast_hash": "927589732d6db2484e904dbec55bb98a",
+    "mtime": 1791134575.0890737,
+    "ast_hash": "c1f483853adfda4beb851cd295353ee2",
     "semantic_hash": ""
   },
   "docs/schermata-fase1.png": {
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791108256.041979,
-    "ast_hash": "a621370dbc21f1c018bce8d54f5dc7f8",
+    "mtime": 1791131741.6249642,
+    "ast_hash": "bba37949f7c8d7e34e931e115eedb386",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -785,18 +785,18 @@
     "semantic_hash": ""
   },
   "scripts/guida_screenshot.py": {
-    "mtime": 1791050311.2020614,
-    "ast_hash": "5f0d93d1b83a3e81308a0e404e045acf",
+    "mtime": 1791131764.9883473,
+    "ast_hash": "79b81fd131fc7f2c060fe26a492acf59",
     "semantic_hash": ""
   },
   "tests/js/guida.test.mjs": {
-    "mtime": 1791049165.802511,
-    "ast_hash": "60f7baa863e205501bf14124cf68d1fc",
+    "mtime": 1791133451.6249034,
+    "ast_hash": "2520f031b7f03bbe8a72c753bf89a606",
     "semantic_hash": ""
   },
   "tests/test_guida_media.py": {
-    "mtime": 1791049165.8028646,
-    "ast_hash": "b804551dd9a4059dcbe054caa4b02f07",
+    "mtime": 1791131707.8888302,
+    "ast_hash": "d935e67d7cd24010289c09bdc0ccaf74",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-03-guida-professionale.md": {
@@ -1315,8 +1315,8 @@
     "semantic_hash": ""
   },
   "js/rndt/archivio.js": {
-    "mtime": 1791129153.81893,
-    "ast_hash": "1579f20fe3cca946236c7e531adcd8a5",
+    "mtime": 1791130392.9903924,
+    "ast_hash": "10cf04856fe9e97cdfd980a7814cd269",
     "semantic_hash": ""
   },
   "js/rndt/area.js": {
@@ -1325,13 +1325,13 @@
     "semantic_hash": ""
   },
   "js/rndt/host.js": {
-    "mtime": 1791129184.5165536,
-    "ast_hash": "09fc52c26818b485f347bc0356ce5a23",
+    "mtime": 1791130796.4884822,
+    "ast_hash": "771aef8fd02aef8b78e70dbf88116811",
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
-    "mtime": 1791128917.3534381,
-    "ast_hash": "4216628860983e54dd5319b8cb769a6d",
+    "mtime": 1791130476.0895562,
+    "ast_hash": "9423c737f150ebc3e32f4ddb5985c255",
     "semantic_hash": ""
   },
   "js/rndt/info.js": {
@@ -1365,8 +1365,8 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-archivio.test.mjs": {
-    "mtime": 1791129168.344351,
-    "ast_hash": "504377b72c7903cac30e0f4714ea53c7",
+    "mtime": 1791130377.689947,
+    "ast_hash": "8f891c33affcb9a97b4e2a12dfaa2df9",
     "semantic_hash": ""
   },
   "tests/js/rndt-area.test.mjs": {
@@ -1375,8 +1375,8 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-host.test.mjs": {
-    "mtime": 1791129200.8989947,
-    "ast_hash": "4baf381dd70d8f44b19c7693689c67bf",
+    "mtime": 1791130759.2484474,
+    "ast_hash": "42aa834b98f8fa9712ebd5ce2cfa6b10",
     "semantic_hash": ""
   },
   "tests/js/rndt-info.test.mjs": {
@@ -1405,8 +1405,8 @@
     "semantic_hash": ""
   },
   "docs/RNDT.md": {
-    "mtime": 1791129212.361767,
-    "ast_hash": "48a3aab85c4afbe2d08c416175e86d24",
+    "mtime": 1791130476.0906332,
+    "ast_hash": "e18e940cd014418cfc6378ec4a5ed25b",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-04-rndt-catalogo.md": {
@@ -1425,13 +1425,103 @@
     "semantic_hash": ""
   },
   "js/rndt/gruppo.js": {
-    "mtime": 1791129200.899191,
-    "ast_hash": "b1b525c039aea90aadb23e4fb8a11775",
+    "mtime": 1791130796.4891129,
+    "ast_hash": "995abbafdebe1cfb40b39225f5c9abeb",
     "semantic_hash": ""
   },
   "tests/js/rndt-gruppo.test.mjs": {
-    "mtime": 1791129200.89959,
-    "ast_hash": "3f23887cc5033a49d29b73d8723f86a9",
+    "mtime": 1791130759.2491715,
+    "ast_hash": "ccaba1c22b6b1d7c18e2a0c80d3155c7",
+    "semantic_hash": ""
+  },
+  "js/rndt/dati.js": {
+    "mtime": 1791130796.4886818,
+    "ast_hash": "9d9eb8631ebffc1f2e659ec316fabc22",
+    "semantic_hash": ""
+  },
+  "js/rndt/importa.js": {
+    "mtime": 1791130796.4888873,
+    "ast_hash": "c4cc99c6a878fc1de7d33e4d789ee011",
+    "semantic_hash": ""
+  },
+  "js/rndt/librerie.js": {
+    "mtime": 1791130311.3879917,
+    "ast_hash": "f09b0a45e94db61bd6c77156ca0d7d7e",
+    "semantic_hash": ""
+  },
+  "js/vendor/fflate.esm.js": {
+    "mtime": 1791130302.5337257,
+    "ast_hash": "b0fcc794ec59c52a4297e3585aadf7e5",
+    "semantic_hash": ""
+  },
+  "js/vendor/shp.esm.min.js": {
+    "mtime": 1791130302.5320213,
+    "ast_hash": "9cc0f4f2dae28abc8bc4073c1ff92412",
+    "semantic_hash": ""
+  },
+  "js/vendor/togeojson.es.mjs": {
+    "mtime": 1791130302.530481,
+    "ast_hash": "dd68b0ef8ed35089707795a33a8aef1c",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-dati.test.mjs": {
+    "mtime": 1791130759.2486722,
+    "ast_hash": "0d9f4d98b340372ff5a84dbd065def31",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-importa.test.mjs": {
+    "mtime": 1791130759.2489088,
+    "ast_hash": "f7a2fc2ffed796fef1219d3bfaac9b84",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-04-rndt-file-locali.md": {
+    "mtime": 1791130021.2327971,
+    "ast_hash": "c8667bd6d908249b2a06283c2c7317d6",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-10-04-rndt-file-locali-design.md": {
+    "mtime": 1791129737.6572876,
+    "ast_hash": "7e4279fa895255618aaedbfa5a930ab1",
+    "semantic_hash": ""
+  },
+  "js/vendor/LICENSE-fflate.txt": {
+    "mtime": 1791130302.551333,
+    "ast_hash": "b44ae31f7482d1a8d2f9bce6cc409db5",
+    "semantic_hash": ""
+  },
+  "js/vendor/LICENSE-shpjs.txt": {
+    "mtime": 1791130302.5471032,
+    "ast_hash": "1af4738d98a9d98709a43759d0bd8064",
+    "semantic_hash": ""
+  },
+  "js/vendor/LICENSE-togeojson.txt": {
+    "mtime": 1791130302.5424583,
+    "ast_hash": "2ffbc239d85b7dc8145369d02ede53df",
+    "semantic_hash": ""
+  },
+  "js/core/rail.js": {
+    "mtime": 1791134575.0661478,
+    "ast_hash": "d7216894c6bf65073d6f7b536e3586d5",
+    "semantic_hash": ""
+  },
+  "scripts/guida_screenshot_rndt.py": {
+    "mtime": 1791133282.1541893,
+    "ast_hash": "ffca568a7e9cdafab67322a77bb4a9fc",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/rndt-catalogo.webp": {
+    "mtime": 1791134540.4958868,
+    "ast_hash": "f1d19b7ab82422b9306e44c583df5174",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/rndt-gruppo.webp": {
+    "mtime": 1791134429.9047933,
+    "ast_hash": "245255ca174cb3394d6c02c4454c19da",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/rndt-info.webp": {
+    "mtime": 1791133434.5687964,
+    "ast_hash": "06f34c512392f673b3ba2adc93ae05cc",
     "semantic_hash": ""
   }
 }

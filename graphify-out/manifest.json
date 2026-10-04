@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791129200.8993905,
-    "ast_hash": "0c026f2d5f4c357c2aa4f8236f2e36aa",
+    "mtime": 1791135661.7905858,
+    "ast_hash": "3a7d2971e37d6ebaa2cb53a9eef3acf1",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
-    "mtime": 1791127760.0224428,
-    "ast_hash": "7113d38482f48707238ba25ab17d0ac9",
+    "mtime": 1791135661.7909763,
+    "ast_hash": "e2203a1981c81c07142b8fba28a94e0d",
     "semantic_hash": ""
   },
   "js/core/config.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "js/core/pannello.js": {
-    "mtime": 1791116912.1077206,
-    "ast_hash": "386f7fec50745cfae067a0f7f33bc7f1",
+    "mtime": 1791136616.4136624,
+    "ast_hash": "bc99e9f16de083e1cb3a16b18eb4ba4d",
     "semantic_hash": ""
   },
   "js/core/ricerca.js": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "js/core/scheda.js": {
-    "mtime": 1791126241.3042681,
-    "ast_hash": "e6bad8188b42cc5642ee92237ccb362c",
+    "mtime": 1791131424.2515519,
+    "ast_hash": "15bed9ee07def7245709bc5a654b06f7",
     "semantic_hash": ""
   },
   "js/layers/confini.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791127489.4901013,
-    "ast_hash": "c7116b0b404e4a58149e91a661e2416a",
+    "mtime": 1791135851.7883124,
+    "ast_hash": "915dafcad248f2c9c9066c1113c47f4a",
     "semantic_hash": ""
   },
   "README.md": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791126288.2173886,
-    "ast_hash": "927589732d6db2484e904dbec55bb98a",
+    "mtime": 1791135661.7902112,
+    "ast_hash": "c1f483853adfda4beb851cd295353ee2",
     "semantic_hash": ""
   },
   "docs/schermata-fase1.png": {
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791108256.041979,
-    "ast_hash": "a621370dbc21f1c018bce8d54f5dc7f8",
+    "mtime": 1791136741.485541,
+    "ast_hash": "9a701cf03c0b3a98d3aff580109b3e55",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -785,18 +785,18 @@
     "semantic_hash": ""
   },
   "scripts/guida_screenshot.py": {
-    "mtime": 1791050311.2020614,
-    "ast_hash": "5f0d93d1b83a3e81308a0e404e045acf",
+    "mtime": 1791131764.9883473,
+    "ast_hash": "79b81fd131fc7f2c060fe26a492acf59",
     "semantic_hash": ""
   },
   "tests/js/guida.test.mjs": {
-    "mtime": 1791049165.802511,
-    "ast_hash": "60f7baa863e205501bf14124cf68d1fc",
+    "mtime": 1791133451.6249034,
+    "ast_hash": "2520f031b7f03bbe8a72c753bf89a606",
     "semantic_hash": ""
   },
   "tests/test_guida_media.py": {
-    "mtime": 1791049165.8028646,
-    "ast_hash": "b804551dd9a4059dcbe054caa4b02f07",
+    "mtime": 1791131707.8888302,
+    "ast_hash": "d935e67d7cd24010289c09bdc0ccaf74",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-03-guida-professionale.md": {
@@ -1325,13 +1325,13 @@
     "semantic_hash": ""
   },
   "js/rndt/host.js": {
-    "mtime": 1791130392.997254,
-    "ast_hash": "6cad3a7ed308901828174633581b701b",
+    "mtime": 1791130796.4884822,
+    "ast_hash": "771aef8fd02aef8b78e70dbf88116811",
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
-    "mtime": 1791130476.0895562,
-    "ast_hash": "9423c737f150ebc3e32f4ddb5985c255",
+    "mtime": 1791135661.7919724,
+    "ast_hash": "f38dc77f4856916299fd25f367014aaf",
     "semantic_hash": ""
   },
   "js/rndt/info.js": {
@@ -1340,8 +1340,8 @@
     "semantic_hash": ""
   },
   "js/rndt/pannello.js": {
-    "mtime": 1791127760.022933,
-    "ast_hash": "3595179b4ed3bbdc1a9b29bb570f8295",
+    "mtime": 1791135661.7923584,
+    "ast_hash": "d5725339a3602f3d2e60d8a037a31d84",
     "semantic_hash": ""
   },
   "js/rndt/proxy.js": {
@@ -1375,8 +1375,8 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-host.test.mjs": {
-    "mtime": 1791130453.2895987,
-    "ast_hash": "4d1fb4a3b6b31d16f98dabea795e0a40",
+    "mtime": 1791130759.2484474,
+    "ast_hash": "42aa834b98f8fa9712ebd5ce2cfa6b10",
     "semantic_hash": ""
   },
   "tests/js/rndt-info.test.mjs": {
@@ -1405,8 +1405,8 @@
     "semantic_hash": ""
   },
   "docs/RNDT.md": {
-    "mtime": 1791130476.0906332,
-    "ast_hash": "e18e940cd014418cfc6378ec4a5ed25b",
+    "mtime": 1791135661.74532,
+    "ast_hash": "a427d0171acd3ed69886e9aa2f7370f3",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-04-rndt-catalogo.md": {
@@ -1425,23 +1425,23 @@
     "semantic_hash": ""
   },
   "js/rndt/gruppo.js": {
-    "mtime": 1791130485.447954,
-    "ast_hash": "219156cdd583ace21493adba2488aa87",
+    "mtime": 1791130796.4891129,
+    "ast_hash": "995abbafdebe1cfb40b39225f5c9abeb",
     "semantic_hash": ""
   },
   "tests/js/rndt-gruppo.test.mjs": {
-    "mtime": 1791129200.89959,
-    "ast_hash": "3f23887cc5033a49d29b73d8723f86a9",
+    "mtime": 1791130759.2491715,
+    "ast_hash": "ccaba1c22b6b1d7c18e2a0c80d3155c7",
     "semantic_hash": ""
   },
   "js/rndt/dati.js": {
-    "mtime": 1791130344.257333,
-    "ast_hash": "23b591913f933ebe44acf9c641be6aeb",
+    "mtime": 1791130796.4886818,
+    "ast_hash": "9d9eb8631ebffc1f2e659ec316fabc22",
     "semantic_hash": ""
   },
   "js/rndt/importa.js": {
-    "mtime": 1791130282.6375556,
-    "ast_hash": "9a5d3a4a9748d262694ef8336d598957",
+    "mtime": 1791130796.4888873,
+    "ast_hash": "c4cc99c6a878fc1de7d33e4d789ee011",
     "semantic_hash": ""
   },
   "js/rndt/librerie.js": {
@@ -1465,13 +1465,13 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-dati.test.mjs": {
-    "mtime": 1791130344.1496704,
-    "ast_hash": "27875e8a33fc6078fed17fce19b724b4",
+    "mtime": 1791130759.2486722,
+    "ast_hash": "0d9f4d98b340372ff5a84dbd065def31",
     "semantic_hash": ""
   },
   "tests/js/rndt-importa.test.mjs": {
-    "mtime": 1791130293.6969774,
-    "ast_hash": "22b755d798b0d83e89e68a86c84a9b26",
+    "mtime": 1791130759.2489088,
+    "ast_hash": "f7a2fc2ffed796fef1219d3bfaac9b84",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-04-rndt-file-locali.md": {
@@ -1497,6 +1497,41 @@
   "js/vendor/LICENSE-togeojson.txt": {
     "mtime": 1791130302.5424583,
     "ast_hash": "2ffbc239d85b7dc8145369d02ede53df",
+    "semantic_hash": ""
+  },
+  "js/core/rail.js": {
+    "mtime": 1791134895.0055692,
+    "ast_hash": "c70fecfaaf53d0d59286ebc75209659a",
+    "semantic_hash": ""
+  },
+  "scripts/guida_screenshot_rndt.py": {
+    "mtime": 1791133282.1541893,
+    "ast_hash": "ffca568a7e9cdafab67322a77bb4a9fc",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/rndt-catalogo.webp": {
+    "mtime": 1791134540.4958868,
+    "ast_hash": "f1d19b7ab82422b9306e44c583df5174",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/rndt-gruppo.webp": {
+    "mtime": 1791134429.9047933,
+    "ast_hash": "245255ca174cb3394d6c02c4454c19da",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/rndt-info.webp": {
+    "mtime": 1791133434.5687964,
+    "ast_hash": "06f34c512392f673b3ba2adc93ae05cc",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-04-barra-sinistra-pannelli.md": {
+    "mtime": 1791135478.9514344,
+    "ast_hash": "c96a8d3790216dfd8c70bba8e7133351",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-10-04-barra-sinistra-pannelli-design.md": {
+    "mtime": 1791135858.5906978,
+    "ast_hash": "20b174295311cd342e834ce23e59c4ea",
     "semantic_hash": ""
   }
 }

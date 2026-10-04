@@ -33,10 +33,7 @@ function limitaArea(radice) {
 
 export function creaPannello(elemento) {
   const testata = el('header', 'rndt-testata');
-  const indietro = el('button', 'rndt-indietro', '‹ Scheda');
-  indietro.type = 'button';
-  indietro.setAttribute('aria-label', 'Chiudi il catalogo e torna alla scheda');
-  testata.append(indietro, el('h2', null, 'Catalogo RNDT · Palermo'));
+  testata.append(el('h2', null, 'Catalogo RNDT · Palermo'));
   const elenco = el('details', 'rndt-layer');
   elenco.hidden = true;
   const contenuto = el('div', 'rndt-contenuto');
@@ -66,7 +63,6 @@ export function creaPannello(elemento) {
 
   const chiudi = () => { elemento.hidden = true; };
   const apri = () => { elemento.hidden = false; monta(); };
-  indietro.addEventListener('click', chiudi);
   // Esc chiude prima il catalogo, poi (al secondo Esc) la scheda: il gestore della scheda sta in fase di bolla
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape' || elemento.hidden) return;

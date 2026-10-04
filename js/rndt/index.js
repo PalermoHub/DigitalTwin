@@ -67,6 +67,7 @@ export function collegaRndt(map, elementoPannello, gruppo) {
 
   return {
     apri,
+    chiudi: pannello.chiudi,
     segnaposto,
     layerAlPunto: lngLat => host.elenco().filter(l => l.visibile && !l.indisponibile && dentro(l, lngLat)),
     interroga: (layers, lngLat, point, zoom) => interrogaTutti({

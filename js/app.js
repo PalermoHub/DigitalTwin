@@ -2,6 +2,7 @@ import { creaMappa } from './core/mappa.js';
 import { impostaCatalogo } from './core/config.js';
 import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js';
 import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
+import { collegaRail } from './core/rail.js';
 import { collegaScheda } from './core/scheda.js';
 import { collegaRndt } from './rndt/index.js';
 import { creaGruppoRndt } from './rndt/gruppo.js';
@@ -73,7 +74,11 @@ map.once('style.load', async () => {
   costruisciPannello(map, [...MODULI, gruppoRndt.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
   const rndt = collegaRndt(map, document.getElementById('rndt-pannello'), gruppoRndt);
   collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt });
-  document.getElementById('btn-rndt').addEventListener('click', rndt.apri);
+  const rail = collegaRail(document.getElementById('rail-pannelli'), [
+    { id: 'scheda', etichetta: 'Scheda', pannello: document.getElementById('scheda') },
+    { id: 'rndt', etichetta: 'RNDT', pannello: document.getElementById('rndt-pannello'), apri: rndt.apri, chiudi: rndt.chiudi },
+  ]);
+  document.getElementById('btn-rndt').addEventListener('click', () => rail.commuta('rndt'));
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
   const vaiParticella = collegaRicercaParticella(map, document.getElementById('cerca-foglio'), document.getElementById('cerca-numero'),
     document.getElementById('cerca-particella-vai'), document.getElementById('cerca-particella-esito'),

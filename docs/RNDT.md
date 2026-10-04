@@ -1,6 +1,6 @@
 # Catalogo RNDT
 
-Il pulsante **RNDT** nella barra strumenti della mappa (icona a nuvola) apre il catalogo RNDT, limitato all'area di Palermo. Il pannello si sovrappone alla scheda del luogo; «‹ Scheda» (o Esc) lo chiude e la scheda riappare.
+Il pulsante **RNDT** nella barra strumenti della mappa (icona a nuvola) apre il catalogo RNDT, limitato all'area di Palermo. Il pannello si affianca alla scheda del luogo nella barra verticale a destra; il tab «Scheda» (o Esc) lo chiude e la scheda riappare.
 
 - Cerca per testo, tema INSPIRE, ente. Aggiungi servizi WMS/WFS/GeoJSON alla mappa.
 - I layer aggiunti restano nell'elenco «Layer aggiunti» del pannello, nel gruppo «RNDT» della barra strati e nella tab Argomenti, e tornano alla riapertura dell'app. I WFS scaricati da un URL noto si salvano con l'URL. I dati senza URL (file caricati dal computer, o GeoJSON del catalogo il cui URL non è riconosciuto) si salvano in IndexedDB (nome `dt-rndt`), fino a 5 MB per layer: oltre, o se il browser blocca IndexedDB, valgono per la sessione e un avviso lo dice.

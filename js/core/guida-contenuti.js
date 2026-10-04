@@ -33,7 +33,7 @@ export const PASSI = [
     id: 'strati',
     titolo: 'La barra degli strati',
     paragrafi: [
-      'Gli strati sono i temi che si possono sovrapporre alla mappa. La barra a sinistra li raggruppa (Rilievo, Popolazione, Territorio, Edifici, Trasporti, Sicurezza e altri): da telefono si apre con il pulsante «Strati». Scegliendo un gruppo si apre l\'elenco dei suoi strati, con una casella per accenderli o spegnerli e un campo per cercarli.',
+      'Gli strati sono i temi che si possono sovrapporre alla mappa. La barra a sinistra li raggruppa (Rilievo, Popolazione, Territorio, Edifici, Trasporti, Sicurezza e altri): da telefono si apre con il pulsante «Strati». Ogni gruppo è un tab: scegliendolo si apre accanto alla barra un pannello con l\'elenco dei suoi strati, con una casella per accenderli o spegnerli e un campo per cercarli. Il pannello resta aperto finché non si preme di nuovo il tab o Esc.',
       'Gli strati accesi compaiono come etichette in alto sulla mappa, e la legenda in basso a sinistra ne spiega i colori. Se ne possono accendere più d\'uno per confrontarli, ad esempio edifici e catasto.',
     ],
     immagine: { file: 'img/guida/passi/strati.webp', alt: 'La barra degli strati con il gruppo Territorio aperto: un elenco di strati con caselle, tra cui catasto, piano regolatore, monumenti e uffici comunali.', didascalia: 'Il gruppo «Territorio» aperto, con il catasto acceso.' },
@@ -122,7 +122,7 @@ export const PASSI = [
     titolo: 'Cercare nel catalogo RNDT',
     statico: true,
     paragrafi: [
-      'Il pulsante con la nuvola e la freccia, nella barra degli strumenti in alto a destra, apre il catalogo del Repertorio Nazionale dei Dati Territoriali (RNDT): l\'elenco dei dati geografici pubblicati dagli enti di tutta Italia. Il pannello si sovrappone alla scheda del luogo; «‹ Scheda» o il tasto Esc lo chiudono.',
+      'Il pulsante con la nuvola e la freccia, nella barra degli strumenti in alto a destra, apre il catalogo del Repertorio Nazionale dei Dati Territoriali (RNDT): l\'elenco dei dati geografici pubblicati dagli enti di tutta Italia. Il pannello si affianca alla scheda del luogo nella barra verticale a destra: i tab «Scheda» e «RNDT» passano dall\'uno all\'altro, il tasto Esc chiude il catalogo.',
       'Si cerca per testo, tema o ente, sempre entro l\'area di Palermo. Un servizio WMS si aggiunge come livello di immagini; un servizio WFS come elementi geografici che si possono interrogare. Il catalogo usa il plugin openrndt-geolibre di Andrea Borruso (onData).',
     ],
     immagine: { file: 'img/guida/passi/rndt-catalogo.webp', alt: 'Il pannello del catalogo RNDT aperto sul lato destro della mappa, con il campo di ricerca e l\'elenco dei risultati.', didascalia: 'Il catalogo RNDT, limitato all\'area di Palermo.' },
