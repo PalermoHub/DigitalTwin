@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791134575.0886352,
-    "ast_hash": "3805dc0efe28d478b5bd5913c733df87",
+    "mtime": 1791135661.7905858,
+    "ast_hash": "3a7d2971e37d6ebaa2cb53a9eef3acf1",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
-    "mtime": 1791127760.0224428,
-    "ast_hash": "7113d38482f48707238ba25ab17d0ac9",
+    "mtime": 1791142402.779067,
+    "ast_hash": "5d7c3954bf2800fb64ff26ebc86e4f11",
     "semantic_hash": ""
   },
   "js/core/config.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "js/core/pannello.js": {
-    "mtime": 1791116912.1077206,
-    "ast_hash": "386f7fec50745cfae067a0f7f33bc7f1",
+    "mtime": 1791142650.9255118,
+    "ast_hash": "845d8b71f4bb8ad28bf5ceb54b0e9ba3",
     "semantic_hash": ""
   },
   "js/core/ricerca.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791127489.4901013,
-    "ast_hash": "c7116b0b404e4a58149e91a661e2416a",
+    "mtime": 1791142402.7812095,
+    "ast_hash": "b94072fb894fd24cad1e92239744dfb9",
     "semantic_hash": ""
   },
   "README.md": {
@@ -240,7 +240,7 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791134575.0890737,
+    "mtime": 1791135661.7902112,
     "ast_hash": "c1f483853adfda4beb851cd295353ee2",
     "semantic_hash": ""
   },
@@ -265,8 +265,8 @@
     "semantic_hash": ""
   },
   "js/layers/base.js": {
-    "mtime": 1791030258.2808776,
-    "ast_hash": "7f4ad447dc365af3628f0de9edd18448",
+    "mtime": 1791142402.7793376,
+    "ast_hash": "c8b6add07f85ec7655bf4068e6dfa2cd",
     "semantic_hash": ""
   },
   "docs/RIPARTENZA.md": {
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791131741.6249642,
-    "ast_hash": "bba37949f7c8d7e34e931e115eedb386",
+    "mtime": 1791136741.485541,
+    "ast_hash": "9a701cf03c0b3a98d3aff580109b3e55",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -1325,13 +1325,13 @@
     "semantic_hash": ""
   },
   "js/rndt/host.js": {
-    "mtime": 1791130796.4884822,
-    "ast_hash": "771aef8fd02aef8b78e70dbf88116811",
+    "mtime": 1791142402.7801769,
+    "ast_hash": "b84f28ac670926efd3b789ebe89df0b1",
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
-    "mtime": 1791130476.0895562,
-    "ast_hash": "9423c737f150ebc3e32f4ddb5985c255",
+    "mtime": 1791135661.7919724,
+    "ast_hash": "f38dc77f4856916299fd25f367014aaf",
     "semantic_hash": ""
   },
   "js/rndt/info.js": {
@@ -1340,8 +1340,8 @@
     "semantic_hash": ""
   },
   "js/rndt/pannello.js": {
-    "mtime": 1791127760.022933,
-    "ast_hash": "3595179b4ed3bbdc1a9b29bb570f8295",
+    "mtime": 1791135661.7923584,
+    "ast_hash": "d5725339a3602f3d2e60d8a037a31d84",
     "semantic_hash": ""
   },
   "js/rndt/proxy.js": {
@@ -1405,8 +1405,8 @@
     "semantic_hash": ""
   },
   "docs/RNDT.md": {
-    "mtime": 1791130476.0906332,
-    "ast_hash": "e18e940cd014418cfc6378ec4a5ed25b",
+    "mtime": 1791135661.74532,
+    "ast_hash": "a427d0171acd3ed69886e9aa2f7370f3",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-04-rndt-catalogo.md": {
@@ -1425,8 +1425,8 @@
     "semantic_hash": ""
   },
   "js/rndt/gruppo.js": {
-    "mtime": 1791130796.4891129,
-    "ast_hash": "995abbafdebe1cfb40b39225f5c9abeb",
+    "mtime": 1791142650.9258392,
+    "ast_hash": "eb7a31d80f3d067089cad21be13d9c65",
     "semantic_hash": ""
   },
   "tests/js/rndt-gruppo.test.mjs": {
@@ -1500,8 +1500,8 @@
     "semantic_hash": ""
   },
   "js/core/rail.js": {
-    "mtime": 1791134575.0661478,
-    "ast_hash": "d7216894c6bf65073d6f7b536e3586d5",
+    "mtime": 1791137457.3887005,
+    "ast_hash": "a249a16541d0148af064062c2996027d",
     "semantic_hash": ""
   },
   "scripts/guida_screenshot_rndt.py": {
@@ -1522,6 +1522,126 @@
   "img/guida/passi/rndt-info.webp": {
     "mtime": 1791133434.5687964,
     "ast_hash": "06f34c512392f673b3ba2adc93ae05cc",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-04-barra-sinistra-pannelli.md": {
+    "mtime": 1791135478.9514344,
+    "ast_hash": "c96a8d3790216dfd8c70bba8e7133351",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-10-04-barra-sinistra-pannelli-design.md": {
+    "mtime": 1791135858.5906978,
+    "ast_hash": "20b174295311cd342e834ce23e59c4ea",
+    "semantic_hash": ""
+  },
+  "img/basi/esri-satellite.jpg": {
+    "mtime": 1791137808.459794,
+    "ast_hash": "a3969b2bba262e9d09ad4dba09da32e6",
+    "semantic_hash": ""
+  },
+  "img/basi/esri-topo.jpg": {
+    "mtime": 1791137808.7134707,
+    "ast_hash": "efdc58b390909db4cf9e4b79d0083cda",
+    "semantic_hash": ""
+  },
+  "img/basi/google-strade.jpg": {
+    "mtime": 1791137810.1441784,
+    "ast_hash": "2dbafb4a77d9324dd9a9f1112d71afe9",
+    "semantic_hash": ""
+  },
+  "img/basi/grigio.jpg": {
+    "mtime": 1791137809.2006967,
+    "ast_hash": "11dad3b5b57e28875935d829fdbc2c1a",
+    "semantic_hash": ""
+  },
+  "img/basi/ibrido.jpg": {
+    "mtime": 1791137810.412363,
+    "ast_hash": "d4e31d71a562eac39655dd5e181a5d79",
+    "semantic_hash": ""
+  },
+  "img/basi/opentopo.jpg": {
+    "mtime": 1791137809.787554,
+    "ast_hash": "38e1ac3e4bf874235afaef3b53ddfd5c",
+    "semantic_hash": ""
+  },
+  "img/basi/osm.jpg": {
+    "mtime": 1791137807.8327985,
+    "ast_hash": "5a21f1333fedd92e391494ecd646a0f6",
+    "semantic_hash": ""
+  },
+  "js/core/opacita.js": {
+    "mtime": 1791139791.9297392,
+    "ast_hash": "d980465bd960e9171ce2539673ea8624",
+    "semantic_hash": ""
+  },
+  "js/core/zoom-strato.js": {
+    "mtime": 1791140320.4967144,
+    "ast_hash": "49d273d0601e8ed539932c6edab87d9f",
+    "semantic_hash": ""
+  },
+  "tests/js/opacita.test.mjs": {
+    "mtime": 1791139806.9862561,
+    "ast_hash": "d13b7579cc6e28ae83cbf51a4e9da044",
+    "semantic_hash": ""
+  },
+  "tests/js/zoom-strato.test.mjs": {
+    "mtime": 1791140320.4982853,
+    "ast_hash": "0c4615f47758146830700a6c5f895e2f",
+    "semantic_hash": ""
+  },
+  "img/basi/ctr-1989.jpg": {
+    "mtime": 1791139294.0315266,
+    "ast_hash": "8e4e22dfd6dc84fd33b9e428aeeea146",
+    "semantic_hash": ""
+  },
+  "img/basi/ctr-2012.jpg": {
+    "mtime": 1791139294.0365746,
+    "ast_hash": "a5a262f50a6a0d9f9d6ba99c704e254c",
+    "semantic_hash": ""
+  },
+  "img/basi/esri-scura.jpg": {
+    "mtime": 1791138195.314481,
+    "ast_hash": "aba4d51a28f7cd637b817fd39450a84f",
+    "semantic_hash": ""
+  },
+  "img/basi/esri-strade.jpg": {
+    "mtime": 1791138008.6745045,
+    "ast_hash": "89dabfea11118a897d42bbe1e0420732",
+    "semantic_hash": ""
+  },
+  "img/basi/google-terreno.jpg": {
+    "mtime": 1791138009.271522,
+    "ast_hash": "dbcf5193008d9577c8e7232766b987d1",
+    "semantic_hash": ""
+  },
+  "img/basi/ofm-bright.jpg": {
+    "mtime": 1791138566.9441607,
+    "ast_hash": "4d7a211f7bbdc1f4a93865a934cd1a25",
+    "semantic_hash": ""
+  },
+  "img/basi/ofm-dark.jpg": {
+    "mtime": 1791138399.8484101,
+    "ast_hash": "6292487a4a4b03c3a097459791134353",
+    "semantic_hash": ""
+  },
+  "img/basi/osm-fr.jpg": {
+    "mtime": 1791138195.707631,
+    "ast_hash": "9ea398f9a387be82c39f0fc6ac720ac6",
+    "semantic_hash": ""
+  },
+  "img/basi/osm-hot.jpg": {
+    "mtime": 1791138008.94272,
+    "ast_hash": "c24b3f22733a6fa5f56076976acbe5e8",
+    "semantic_hash": ""
+  },
+  "js/core/riordino.js": {
+    "mtime": 1791141327.309876,
+    "ast_hash": "f9fc9c6f031ccec850d8ff991588c009",
+    "semantic_hash": ""
+  },
+  "tests/js/riordino.test.mjs": {
+    "mtime": 1791141327.3102112,
+    "ast_hash": "f80f7f23e325b0050f0639aed4e06d43",
     "semantic_hash": ""
   }
 }

@@ -4,6 +4,7 @@
 // quando l'host RNDT è pronto; resta allineato all'host con suCambio.
 
 import { ESTENSIONI } from './importa.js';
+import { occhio, sliderOpacita, abilitaRiordino } from '../core/pannello.js';
 
 const ordina = (a, b) => a.nome.localeCompare(b.nome, 'it', { sensitivity: 'base' });
 
@@ -12,6 +13,7 @@ export function righeGruppo(elenco) {
   return [...elenco].sort(ordina).map(l => ({
     id: l.id,
     nome: l.nome,
+    layers: l.idMappa ?? [],
     acceso: l.visibile && !l.indisponibile,
     disabilitato: l.indisponibile,
     nota: l.indisponibile ? 'non disponibile' : !l.salvato ? 'solo questa sessione' : l.errore ? 'errori di caricamento' : '',
@@ -40,6 +42,7 @@ export function creaGruppoRndt() {
   let apriCatalogo = () => {};
   let caricaFile = async () => {};
 
+  const opacita = new Map(); // id → { originali, valore }: sopravvive al ridisegno del gruppo
   let selettore = null;
   // selettore dei file del computer: creato al primo disegno (serve il DOM), poi si sposta nel gruppo a ogni ridisegno
   function creaSelettore() {
@@ -71,29 +74,37 @@ export function creaGruppoRndt() {
     azioni.append(catalogo, file);
     const righe = righeGruppo(host.elenco());
     const voci = righe.length
-      ? righe.map(r => {
+      ? righe.flatMap(r => {
         const riga = el('div', 'rndt-gruppo-riga');
-        const label = el('label');
+        const label = el('label', 'strato');
         const casella = el('input');
         casella.type = 'checkbox';
         casella.id = `strato-${r.id}`; // come gli altri strati: la tab Argomenti pilota queste caselle
         casella.checked = r.acceso;
         casella.disabled = r.disabilitato;
         casella.addEventListener('change', () => host.mostra(r.id, casella.checked));
-        label.append(casella, ' ', r.nome);
+        label.append(casella, occhio(), ' ', r.nome);
         if (r.nota) label.append(' ', el('em', null, `(${r.nota})`));
-        const togli = el('button', 'rndt-gruppo-togli', '×');
+        const togli = el('button', 'rndt-gruppo-togli');
+        togli.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg>';
         togli.type = 'button';
         togli.id = `rndt-togli-${r.id}`;
         togli.title = `Rimuovi ${r.nome}`;
         togli.setAttribute('aria-label', `Rimuovi il layer ${r.nome}`);
-        togli.addEventListener('click', () => host.elimina(r.id));
+        togli.addEventListener('click', () => { opacita.delete(r.id); host.elimina(r.id); });
         riga.append(label, togli);
-        return riga;
+        if (!opacita.has(r.id)) opacita.set(r.id, { originali: new Map(), valore: 1 });
+        const slider = sliderOpacita(host.getMap(), { id: r.id, etichetta: r.nome, layers: r.layers }, casella, opacita.get(r.id));
+        return [riga, slider];
       })
       : [el('p', 'rndt-gruppo-vuoto', 'Nessun layer RNDT: cercalo nel catalogo.')];
     const idAttivo = radice.contains(document.activeElement) ? document.activeElement.id : null;
     radice.replaceChildren(titolo, azioni, selettore, ...voci);
+    // stessi controlli degli altri gruppi: frecce, trascinamento, albero, ordine salvato
+    let storage = null;
+    try { storage = window.localStorage; } catch { /* storage bloccato: l'ordine vale per la sessione */ }
+    const mappa = host.getMap?.();
+    if (mappa?.getStyle) abilitaRiordino(mappa, radice, new Map(righe.map(r => [r.id, r.layers])), storage, { daElenco: true });
     const vai = idDaFocalizzare(idAttivo, [...radice.querySelectorAll('[id]')].map(e => e.id), 'rndt-carica-file');
     if (vai) document.getElementById(vai)?.focus();
     if (radice.bottone) {

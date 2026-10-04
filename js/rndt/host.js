@@ -197,8 +197,8 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     openRightPanel: () => pannello.apri?.(),
     closeRightPanel: () => pannello.chiudi?.(),
 
-    elenco: () => [...layers.values()].map(({ id, tipo, nome, visibile, indisponibile, errore, salvato, sorgente }) => ({
-      id, tipo, nome, visibile, indisponibile: Boolean(indisponibile), errore: Boolean(errore), salvato, sorgente,
+    elenco: () => [...layers.values()].map(({ id, tipo, nome, visibile, indisponibile, errore, salvato, sorgente, idMappa }) => ({
+      id, tipo, nome, visibile, indisponibile: Boolean(indisponibile), errore: Boolean(errore), salvato, sorgente, idMappa: [...(idMappa ?? [])],
     })),
     mostra: impostaVisibilita,
     elimina(id) {

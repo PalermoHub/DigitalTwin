@@ -1,4 +1,5 @@
 import { urlDati } from '../core/config.js';
+import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { modelloPopupSede, voceUffici } from './scheda-uffici.js';
 import { fette, raggio, archi, areeDaSedi } from './uffici-fette.js';
@@ -115,14 +116,14 @@ function riempiLegenda() {
     const riga = voceFiltro(pallino, `${a.area} (${a.n})`, acceso => imposta(acceso, 'legenda'));
     legenda.append(riga);
     // la stessa area come casella nel menu del layer (con la pallino), abilitata a strato acceso
-    const label = el('label');
+    const label = el('label', 'sotto-voce');
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.checked = true;
     cb.disabled = legenda.hidden;
     cb.dataset.filtro = `area:${a.area}`;
     cb.addEventListener('change', () => imposta(cb.checked, 'pannello'));
-    label.append(cb, ' ', pallino.cloneNode(), ' ', a.area);
+    label.append(cb, occhio(), ' ', pallino.cloneNode(), ' ', a.area);
     blocco?.append(label);
     caselle.set(a.area, { pannello: cb, legenda: riga._filtro.casella });
   }

@@ -112,7 +112,7 @@ export function apriCrediti(dialog, catalogo, moduli = []) {
   const fonti = elenco([
     ...catalogo.filter(v => v.fonte).map(v => `${v.fonte} (${v.data})` + (v.licenza ? ` — ${v.licenza}` : ' — licenza da verificare')),
     'Base cartografica: OpenFreeMap, © OpenMapTiles, dati © OpenStreetMap contributors',
-    'Carta Tecnica Comunale 2k (2007/09): SiciliaHub / Comune di Palermo',
+    'Carte tecniche (CSG 2k 1989/91, CTC 2k 2007/09, CTR 10k 2012/13): SiciliaHub / PalermoHub, Comune di Palermo e Regione Siciliana (SITR)',
     'Scuole, asili comunali e sedi delle sezioni elettorali: Comune di Palermo, dati aperti (2017) — condizioni d\'uso da verificare',
     'Trasporto pubblico (linee, fermate, orari): AMAT Palermo S.p.A., feed GTFS valido dal 25/08/2026 al 31/10/2026 — condizioni d\'uso da verificare',
     'Sicurezza stradale: incidenti 2015–2023 del Comune di Palermo (Polizia Municipale), rete stradale © OpenStreetMap contributors, elaborazione PalermoHub / OpenDataSicilia (studio «Rete stradale») — condizioni d\'uso da verificare',

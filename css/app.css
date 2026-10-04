@@ -647,6 +647,42 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
 /* campo di ricerca negli strati e chip degli strati accesi */
 .strato-cerca { display: block; width: 100%; margin: 0 0 8px; padding: 8px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; font-size: var(--fs-sm); }
 .sotto-pannello label[hidden] { display: none; }
+/* interruttore a occhio: acceso = icona piena con alone, spento = occhio barrato attenuato */
+.sotto-pannello label.strato, .sotto-pannello label.sotto-voce { position: relative; display: flex; align-items: center; gap: 8px; padding: 3px 6px; min-height: 0; border-radius: var(--r-sm); cursor: pointer; font-size: var(--fs-sm); transition: background .2s, box-shadow .2s; }
+.sotto-pannello label.strato:hover, .sotto-pannello label.sotto-voce:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.sotto-pannello label.strato:has(input:checked), .sotto-pannello label.sotto-voce:has(input:checked) { background: color-mix(in srgb, var(--accent) 12%, transparent); box-shadow: inset 3px 0 0 var(--accent); font-weight: 600; }
+.sotto-pannello label.strato > input[type=checkbox], .sotto-pannello label.sotto-voce > input[type=checkbox] { position: absolute; opacity: 0; width: 100%; height: 100%; inset: 0; margin: 0; cursor: pointer; }
+.occhio { flex: none; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; color: var(--text-muted); background: color-mix(in srgb, var(--text-muted) 12%, transparent); transition: transform .2s, color .2s, background .2s, box-shadow .25s; }
+.occhio .on { display: none; }
+label.strato:has(input:checked) .occhio, label.sotto-voce:has(input:checked) .occhio { color: #fff; background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent), 0 1px 5px color-mix(in srgb, var(--accent) 50%, transparent); }
+label.strato:has(input:checked) .occhio .on, label.sotto-voce:has(input:checked) .occhio .on { display: block; }
+label.strato:has(input:checked) .occhio .off, label.sotto-voce:has(input:checked) .occhio .off { display: none; }
+label.strato:active .occhio, label.sotto-voce:active .occhio { transform: scale(.88); }
+label.strato:has(input:focus-visible) .occhio, label.sotto-voce:has(input:focus-visible) .occhio { outline: 2px solid var(--accent); outline-offset: 2px; }
+label.strato:has(input:disabled), label.sotto-voce:has(input:disabled) { opacity: .5; cursor: not-allowed; }
+/* sottovoci: occhio più piccolo (-30%), senza sfondo né bordo colorato sulla riga accesa */
+label.sotto-voce .occhio { width: 17px; height: 17px; }
+label.sotto-voce .occhio svg { width: 10px; height: 10px; }
+.sotto-pannello label.sotto-voce:has(input:checked) { background: none; box-shadow: none; font-weight: inherit; }
+.sotto-pannello label.sotto-voce:has(input:checked):hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+label.sotto-voce:has(input:checked) .occhio { box-shadow: none; }
+.strato-opacita { display: grid; grid-template-columns: auto 1fr 2.6em auto auto; align-items: center; gap: 8px; margin: 0 0 6px 38px; font-size: var(--fs-xs); color: var(--text-muted); }
+.strato-opacita[hidden], .strato-opacita.filtrata { display: none; }
+.strato-opacita input[type=range] { width: 100%; margin: 0; accent-color: var(--accent); }
+.strato-zoom { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; background: none; border: 1px solid var(--border-ui); border-radius: 50%; color: var(--text-muted); cursor: pointer; }
+.strato-zoom:hover { background: var(--surface-hover); color: var(--text); }
+.strato-tema-btn[hidden], .strato-tema[hidden] { display: none; }
+.strato-tema { grid-column: 1 / -1; display: grid; gap: 6px; padding: 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface-alt); color: var(--text); }
+.tema-categorie { display: grid; gap: 4px; max-height: 220px; overflow-y: auto; padding-top: 4px; border-top: 1px solid var(--border); }
+.tema-categorie[hidden] { display: none; }
+.strato-tema .tema-riga { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; min-height: 0; }
+.strato-tema .tema-riga:has(input[type=range]) { grid-template-columns: 5em 1fr 2.6em; }
+.strato-tema .tema-riga[hidden] { display: none; }
+.strato-tema input[type=color] { width: 36px; height: 24px; padding: 0; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: none; cursor: pointer; }
+.strato-tema input[type=range] { width: 100%; margin: 0; accent-color: var(--accent); }
+.tema-azioni { display: flex; flex-wrap: wrap; gap: 6px; }
+.tema-msg { margin: 0; min-height: 1em; font-size: var(--fs-xs); color: var(--text-muted); }
+.strato-opacita output { text-align: right; font-variant-numeric: tabular-nums; }
 #strati-chip { position: fixed; z-index: var(--z-mappa-ui); top: 14px; left: calc(var(--sx) + 12px); right: calc(var(--scheda-l) + 240px); display: flex; flex-wrap: nowrap; gap: 6px; overflow: hidden; pointer-events: none; }
 #strati-chip:empty { display: none; }
 .strato-chip { pointer-events: auto; flex: none; max-width: 180px; height: 32px; padding: 0 8px 0 12px; display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-pill); box-shadow: var(--ombra); color: var(--text); font-size: var(--fs-sm); font-weight: 600; white-space: nowrap; }
@@ -765,9 +801,9 @@ button.strato-chip:hover i { color: var(--text); }
 .rndt-gruppo-aggiungi { width: 100%; margin: 0 0 6px; padding: 6px 10px; border: 1px dashed var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--link); font: inherit; font-weight: 600; cursor: pointer; }
 .rndt-gruppo-aggiungi:hover { background: var(--surface-hover); }
 .rndt-gruppo-riga { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.rndt-gruppo-riga label { overflow-wrap: anywhere; }
+.rndt-gruppo-riga label { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .rndt-gruppo-riga em { color: var(--text-muted); font-size: var(--fs-sm, 12px); }
-.rndt-gruppo-togli { flex: none; width: 28px; height: 28px; border: 0; border-radius: var(--r-pill); background: none; color: var(--text-muted); font-size: 18px; line-height: 1; cursor: pointer; }
+.rndt-gruppo-togli { flex: none; width: 28px; height: 28px; border: 0; border-radius: var(--r-pill); background: none; color: var(--text-muted); display: inline-grid; place-items: center; cursor: pointer; }
 .rndt-gruppo-togli:hover { background: var(--surface-hover); color: var(--text); }
 .rndt-gruppo-vuoto { margin: 4px 0; color: var(--text-muted); font-size: var(--fs-sm, 13px); }
 .rndt-gruppo-azioni { display: grid; gap: 6px; margin: 0 0 6px; }
@@ -897,3 +933,22 @@ button.strato-chip:hover i { color: var(--text); }
   #area-ricerca, #barra-strumenti, #linguetta-info { transition: left .18s ease; }
   .maplibregl-ctrl-bottom-left { left: var(--sx); }
 }
+
+/* albero ripiegabile e riordino degli strati */
+.albero-chiuso { display: none !important; }
+.strato-azioni { position: relative; z-index: 2; margin-left: auto; display: inline-flex; align-items: center; gap: 2px; flex: none; }
+.strato-btn { width: 22px; height: 22px; padding: 0; display: inline-grid; place-items: center; border: 0; border-radius: var(--r-sm); background: none; color: var(--text-muted); font: inherit; font-size: 11px; line-height: 1; cursor: pointer; }
+.strato-btn:hover:not(:disabled) { background: var(--surface-hover); color: var(--text); }
+.strato-btn:disabled { opacity: .3; cursor: default; }
+.strato-btn--su::before { content: '▲'; }
+.strato-btn--giu::before { content: '▼'; }
+.strato-btn--albero::before { content: '▾'; font-size: 14px; }
+.strato-btn--albero[aria-expanded=false]::before { content: '▸'; }
+.strato-btn--trascina { cursor: grab; touch-action: none; font-size: 15px; }
+.strato-btn--trascina::before { content: '⠿'; }
+label.strato.trascinato, .rndt-gruppo-riga.trascinato { background: color-mix(in srgb, var(--accent) 18%, var(--surface)); box-shadow: var(--ombra); }
+label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .strato-btn--trascina { cursor: grabbing; }
+.strato-strumenti { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+.strato-strumento { padding: 4px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface); color: var(--link); font: inherit; font-size: var(--fs-xs); font-weight: 600; cursor: pointer; }
+.strato-strumento:hover { background: var(--surface-hover); }
+.strato-btn[hidden] { display: none; }

@@ -1,4 +1,5 @@
 import { urlDati } from '../core/config.js';
+import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { modelloPopupColonnina, vociColonnine } from './scheda-colonnine.js';
 import { graficiColonnine } from './colonnine-grafici.js';
@@ -65,14 +66,14 @@ function pannelloFiltri(gruppo, tipo, titolo, voci) {
   const blocco = el('div', 'colonnine-filtri');
   blocco.append(el('h3', null, titolo));
   for (const [chiave, nome] of voci) {
-    const label = el('label');
+    const label = el('label', 'sotto-voce');
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.checked = true;
     cb.disabled = true; // si abilita con lo strato acceso
     cb.dataset.filtro = `${tipo}:${chiave}`;
     cb.addEventListener('change', () => impostaFiltro(tipo, chiave, cb.checked, 'pannello'));
-    label.append(cb, ' ', nome);
+    label.append(cb, occhio(), ' ', nome);
     blocco.append(label);
     caselle.set(`${tipo}:${chiave}`, { ...caselle.get(`${tipo}:${chiave}`), pannello: cb });
   }

@@ -1,4 +1,5 @@
 import { urlDati, pmt } from '../core/config.js';
+import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { voceMonumento, modelloPopup } from './scheda-monumenti.js';
 import { voceUsoEdificio } from './scheda-uso.js';
@@ -121,9 +122,10 @@ function creaLegenda(gruppo, map) {
   for (const [nome, col] of MONUMENTI_CATEGORIE) {
     const pallino = el('i', 'monumenti-pallino');
     pallino.style.background = col;
+    pallino.dataset.temaCat = `monumenti|${nome}`; // il pannellino dei colori lo aggiorna
     const riga = voceFiltro(pallino, nome, acceso => imposta(nome, acceso, 'legenda'));
     legenda.append(riga);
-    const label = el('label');
+    const label = el('label', 'sotto-voce');
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.checked = true;
@@ -131,7 +133,7 @@ function creaLegenda(gruppo, map) {
     cb.dataset.filtro = `categoria:${nome}`;
     cb.addEventListener('change', () => imposta(nome, cb.checked, 'pannello'));
     const p = pallino.cloneNode();
-    label.append(cb, ' ', p, ' ', nome);
+    label.append(cb, occhio(), ' ', p, ' ', nome);
     blocco.append(label);
     caselle.set(nome, { pannello: cb, legenda: riga._filtro.casella });
   }

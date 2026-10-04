@@ -1273,10 +1273,10 @@ def test_mobile_barra_verticale_a_sinistra_e_desktop_orizzontale(apri):
 def test_cartografie_di_base_come_cerchi_con_miniatura_e_icona_barra_che_segue(apri):
     v = apri()
     v.attendi_pronto()
-    assert v.js("document.querySelectorAll('#gruppo-base .base-cerchio').length") == 4
-    assert v.js("[...document.querySelectorAll('#gruppo-base h3')].map(h => h.textContent)") == ["Basi moderne", "Cartografia tecnica", "Sfondo neutro"]
+    assert v.js("document.querySelectorAll('#gruppo-base .base-cerchio').length") == 20
+    assert v.js("[...document.querySelectorAll('#gruppo-base h3')].map(h => h.textContent)") == ["Mappe stradali", "Immagini aeree", "Topografiche", "Cartografia tecnica", "Sfondo neutro"]
     v.page.click("#btn-gruppo-base")
-    v.page.click("#gruppo-base label[title^='Carta Tecnica']")  # si sceglie cliccando il cerchio
+    v.page.click("#gruppo-base label[title^='Carta Tecnica Comunale 2k']")  # si sceglie cliccando il cerchio
     assert v.js("window.dt.map.getLayoutProperty('base-ctr', 'visibility')") == "visible"
     assert "ctr.jpg" in v.js("getComputedStyle(document.getElementById('btn-gruppo-base')).getPropertyValue('--miniatura')")
     assert v.js("document.getElementById('base-ctr').checked")
@@ -1294,7 +1294,7 @@ def test_layer_ha_l_icona_dei_livelli_e_il_bianco_sta_dopo_la_carta_tecnica(apri
     v.attendi_pronto()
     assert v.js("document.querySelector('#btn-gruppo-territorio .et').textContent") == "Layer"
     assert v.js("document.querySelector('#gruppo-territorio h2').textContent") == "Layer"
-    assert v.js("[...document.querySelectorAll('#gruppo-base input')].map(i => i.id)") == ["base-positron", "base-satellite", "base-ctr", "base-bianco"]
+    assert v.js("[...document.querySelectorAll('#gruppo-base input')].map(i => i.id)") == ["base-positron", "base-ofm-dark", "base-ofm-bright", "base-osm", "base-osm-fr", "base-osm-hot", "base-esri-strade", "base-google-strade", "base-esri-scura", "base-satellite", "base-esri-satellite", "base-ibrido", "base-google-terreno", "base-opentopo", "base-esri-topo", "base-ctr-1989", "base-ctr", "base-ctr-2012", "base-grigio", "base-bianco"]
 
 
 def _primo_luogo(nome):

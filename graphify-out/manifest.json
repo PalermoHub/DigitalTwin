@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
-    "mtime": 1791135661.7909763,
-    "ast_hash": "e2203a1981c81c07142b8fba28a94e0d",
+    "mtime": 1791142402.779067,
+    "ast_hash": "5d7c3954bf2800fb64ff26ebc86e4f11",
     "semantic_hash": ""
   },
   "js/core/config.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "js/core/pannello.js": {
-    "mtime": 1791136616.4136624,
-    "ast_hash": "bc99e9f16de083e1cb3a16b18eb4ba4d",
+    "mtime": 1791143089.7473426,
+    "ast_hash": "f9802bbe61e5efcb4eda762c87c721ba",
     "semantic_hash": ""
   },
   "js/core/ricerca.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791135851.7883124,
-    "ast_hash": "915dafcad248f2c9c9066c1113c47f4a",
+    "mtime": 1791142402.7812095,
+    "ast_hash": "b94072fb894fd24cad1e92239744dfb9",
     "semantic_hash": ""
   },
   "README.md": {
@@ -265,8 +265,8 @@
     "semantic_hash": ""
   },
   "js/layers/base.js": {
-    "mtime": 1791030258.2808776,
-    "ast_hash": "7f4ad447dc365af3628f0de9edd18448",
+    "mtime": 1791142402.7793376,
+    "ast_hash": "c8b6add07f85ec7655bf4068e6dfa2cd",
     "semantic_hash": ""
   },
   "docs/RIPARTENZA.md": {
@@ -295,8 +295,8 @@
     "semantic_hash": ""
   },
   "js/layers/monumenti.js": {
-    "mtime": 1791117070.3415077,
-    "ast_hash": "a0713f7c40c4ffe104eee47ca8b1c520",
+    "mtime": 1791143564.0663364,
+    "ast_hash": "9e9a127649ef8580c5cd62dbc9dfc666",
     "semantic_hash": ""
   },
   "js/layers/scheda-monumenti.js": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791128925.264702,
-    "ast_hash": "4e6bc9deb3afca64aee080bf8423c1ca",
+    "mtime": 1791143089.747876,
+    "ast_hash": "1e59052bff29982771784d43d393c6df",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -595,8 +595,8 @@
     "semantic_hash": ""
   },
   "js/layers/uffici.js": {
-    "mtime": 1791120160.796673,
-    "ast_hash": "d6de9e39d84469ce59f554e3633a92d8",
+    "mtime": 1791143564.0667665,
+    "ast_hash": "e43c91990952fd1a64c826c9e24cf76d",
     "semantic_hash": ""
   },
   "scripts/uffici_build.py": {
@@ -1240,8 +1240,8 @@
     "semantic_hash": ""
   },
   "js/layers/colonnine.js": {
-    "mtime": 1791117098.2419448,
-    "ast_hash": "095cfc807ad613d4643d530aa8851a96",
+    "mtime": 1791143587.8732955,
+    "ast_hash": "60ef47329100ff1b4c0ff4f61b5c8f6d",
     "semantic_hash": ""
   },
   "js/layers/scheda-colonnine.js": {
@@ -1325,8 +1325,8 @@
     "semantic_hash": ""
   },
   "js/rndt/host.js": {
-    "mtime": 1791130796.4884822,
-    "ast_hash": "771aef8fd02aef8b78e70dbf88116811",
+    "mtime": 1791142402.7801769,
+    "ast_hash": "b84f28ac670926efd3b789ebe89df0b1",
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
@@ -1425,8 +1425,8 @@
     "semantic_hash": ""
   },
   "js/rndt/gruppo.js": {
-    "mtime": 1791130796.4891129,
-    "ast_hash": "995abbafdebe1cfb40b39225f5c9abeb",
+    "mtime": 1791142650.9258392,
+    "ast_hash": "eb7a31d80f3d067089cad21be13d9c65",
     "semantic_hash": ""
   },
   "tests/js/rndt-gruppo.test.mjs": {
@@ -1500,8 +1500,8 @@
     "semantic_hash": ""
   },
   "js/core/rail.js": {
-    "mtime": 1791134895.0055692,
-    "ast_hash": "c70fecfaaf53d0d59286ebc75209659a",
+    "mtime": 1791137457.3887005,
+    "ast_hash": "a249a16541d0148af064062c2996027d",
     "semantic_hash": ""
   },
   "scripts/guida_screenshot_rndt.py": {
@@ -1532,6 +1532,131 @@
   "docs/superpowers/specs/2026-10-04-barra-sinistra-pannelli-design.md": {
     "mtime": 1791135858.5906978,
     "ast_hash": "20b174295311cd342e834ce23e59c4ea",
+    "semantic_hash": ""
+  },
+  "img/basi/esri-satellite.jpg": {
+    "mtime": 1791137808.459794,
+    "ast_hash": "a3969b2bba262e9d09ad4dba09da32e6",
+    "semantic_hash": ""
+  },
+  "img/basi/esri-topo.jpg": {
+    "mtime": 1791137808.7134707,
+    "ast_hash": "efdc58b390909db4cf9e4b79d0083cda",
+    "semantic_hash": ""
+  },
+  "img/basi/google-strade.jpg": {
+    "mtime": 1791137810.1441784,
+    "ast_hash": "2dbafb4a77d9324dd9a9f1112d71afe9",
+    "semantic_hash": ""
+  },
+  "img/basi/grigio.jpg": {
+    "mtime": 1791137809.2006967,
+    "ast_hash": "11dad3b5b57e28875935d829fdbc2c1a",
+    "semantic_hash": ""
+  },
+  "img/basi/ibrido.jpg": {
+    "mtime": 1791137810.412363,
+    "ast_hash": "d4e31d71a562eac39655dd5e181a5d79",
+    "semantic_hash": ""
+  },
+  "img/basi/opentopo.jpg": {
+    "mtime": 1791137809.787554,
+    "ast_hash": "38e1ac3e4bf874235afaef3b53ddfd5c",
+    "semantic_hash": ""
+  },
+  "img/basi/osm.jpg": {
+    "mtime": 1791137807.8327985,
+    "ast_hash": "5a21f1333fedd92e391494ecd646a0f6",
+    "semantic_hash": ""
+  },
+  "js/core/opacita.js": {
+    "mtime": 1791139791.9297392,
+    "ast_hash": "d980465bd960e9171ce2539673ea8624",
+    "semantic_hash": ""
+  },
+  "js/core/zoom-strato.js": {
+    "mtime": 1791140320.4967144,
+    "ast_hash": "49d273d0601e8ed539932c6edab87d9f",
+    "semantic_hash": ""
+  },
+  "tests/js/opacita.test.mjs": {
+    "mtime": 1791139806.9862561,
+    "ast_hash": "d13b7579cc6e28ae83cbf51a4e9da044",
+    "semantic_hash": ""
+  },
+  "tests/js/zoom-strato.test.mjs": {
+    "mtime": 1791140320.4982853,
+    "ast_hash": "0c4615f47758146830700a6c5f895e2f",
+    "semantic_hash": ""
+  },
+  "img/basi/ctr-1989.jpg": {
+    "mtime": 1791139294.0315266,
+    "ast_hash": "8e4e22dfd6dc84fd33b9e428aeeea146",
+    "semantic_hash": ""
+  },
+  "img/basi/ctr-2012.jpg": {
+    "mtime": 1791139294.0365746,
+    "ast_hash": "a5a262f50a6a0d9f9d6ba99c704e254c",
+    "semantic_hash": ""
+  },
+  "img/basi/esri-scura.jpg": {
+    "mtime": 1791138195.314481,
+    "ast_hash": "aba4d51a28f7cd637b817fd39450a84f",
+    "semantic_hash": ""
+  },
+  "img/basi/esri-strade.jpg": {
+    "mtime": 1791138008.6745045,
+    "ast_hash": "89dabfea11118a897d42bbe1e0420732",
+    "semantic_hash": ""
+  },
+  "img/basi/google-terreno.jpg": {
+    "mtime": 1791138009.271522,
+    "ast_hash": "dbcf5193008d9577c8e7232766b987d1",
+    "semantic_hash": ""
+  },
+  "img/basi/ofm-bright.jpg": {
+    "mtime": 1791138566.9441607,
+    "ast_hash": "4d7a211f7bbdc1f4a93865a934cd1a25",
+    "semantic_hash": ""
+  },
+  "img/basi/ofm-dark.jpg": {
+    "mtime": 1791138399.8484101,
+    "ast_hash": "6292487a4a4b03c3a097459791134353",
+    "semantic_hash": ""
+  },
+  "img/basi/osm-fr.jpg": {
+    "mtime": 1791138195.707631,
+    "ast_hash": "9ea398f9a387be82c39f0fc6ac720ac6",
+    "semantic_hash": ""
+  },
+  "img/basi/osm-hot.jpg": {
+    "mtime": 1791138008.94272,
+    "ast_hash": "c24b3f22733a6fa5f56076976acbe5e8",
+    "semantic_hash": ""
+  },
+  "js/core/riordino.js": {
+    "mtime": 1791141327.309876,
+    "ast_hash": "f9fc9c6f031ccec850d8ff991588c009",
+    "semantic_hash": ""
+  },
+  "tests/js/riordino.test.mjs": {
+    "mtime": 1791141327.3102112,
+    "ast_hash": "f80f7f23e325b0050f0639aed4e06d43",
+    "semantic_hash": ""
+  },
+  "js/core/pannello-tema.js": {
+    "mtime": 1791143604.1338232,
+    "ast_hash": "9706145005f853ad8206e1dee92ddc8d",
+    "semantic_hash": ""
+  },
+  "js/core/tema.js": {
+    "mtime": 1791143587.8968885,
+    "ast_hash": "9ff733a3e2e383ad9c6ec5914c84e4b2",
+    "semantic_hash": ""
+  },
+  "tests/js/tema.test.mjs": {
+    "mtime": 1791143587.8973312,
+    "ast_hash": "d9bde256b3250b2e6623fbf86c8ed7df",
     "semantic_hash": ""
   }
 }
