@@ -17,3 +17,7 @@ condizioni aggiornate presso il titolare. Fonti usate:
 - Dati incendi: servizio ArcGIS del titolare, secondo le sue condizioni
 
 Attribuzione richiesta per i dati CC BY: «Digital Twin Palermo, PalermoHub».
+
+## Software di terzi
+
+- `js/vendor/openrndt-geolibre/`: plugin [openrndt-geolibre](https://github.com/ondata/openrndt-geolibre) 0.2.0 di Andrea Borruso (ricerca nel catalogo RNDT), incluso senza modifiche, licenza MIT (`js/vendor/openrndt-geolibre/LICENSE`). Contiene proj4 (MIT).
