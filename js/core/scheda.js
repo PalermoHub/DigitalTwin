@@ -1,4 +1,4 @@
-import { unisci, testoContesto, titoloScheda, separaMancanti, dividiDettaglio, valoreLungo, NOTA_LEGALE } from './scheda-modello.js';
+import { unisci, sezioniConRitardo, testoContesto, titoloScheda, separaMancanti, dividiDettaglio, valoreLungo, NOTA_LEGALE } from './scheda-modello.js';
 import { svgIcona } from './icone.js';
 import { segnala } from './pannello.js';
 import {
@@ -319,6 +319,7 @@ function copiaTesto(testo) {
 
 function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
   const { contesto, sezioni, legale } = dati;
+  let corrente = dati; // le sezioni RNDT arrivano dopo: `aggiungi` le fonde qui e ridisegna il corpo
   const titoloTesto = titoloScheda(sezioni);
   const titolo = el('h2', null, titoloTesto);
   const x = el('button', 'scheda-x');
@@ -357,8 +358,8 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
   // visibile solo in stampa, sempre, anche se la nota legale è nascosta dalle preferenze
   const disclaimer = el('p', 'scheda-disclaimer', DISCLAIMER_STAMPA);
   // Schede (tab) per argomento: l'ordine è la gerarchia delle informazioni, dal luogo cliccato ai dati di contesto.
-  const SCHEDE = [['luogo', 'Luogo'], ['strumenti', 'Strumenti urbanistici'], ['mercato', 'Mercato'], ['popolazione', 'Popolazione'], ['terreno', 'Terreno'], ['servizi', 'Servizi su strada']];
-  const tabDi = (p, chiave = '') => (p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : 'luogo');
+  const SCHEDE = [['luogo', 'Luogo'], ['strumenti', 'Strumenti urbanistici'], ['mercato', 'Mercato'], ['popolazione', 'Popolazione'], ['terreno', 'Terreno'], ['servizi', 'Servizi su strada'], ['rndt', 'Altri dati (RNDT)']];
+  const tabDi = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : 'luogo');
   const tabs = el('div', 'scheda-tabs');
   const prev = el('button', 'scheda-tabs-freccia', '\u2039');
   const next = el('button', 'scheda-tabs-freccia', '\u203a');
@@ -410,7 +411,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
     corpo.scrollTop = 0;
   };
   const aggiorna = () => {
-    const visibili = applicaPreferenze(dati, pref.leggi());
+    const visibili = applicaPreferenze(corrente, pref.leggi());
     corpo.replaceChildren(...visibili.sezioni.map(disegnaSezione));
     if (!visibili.sezioni.length) corpo.append(el('p', 'scheda-vuota', 'Tutte le informazioni di questa scheda sono nascoste: apri \u00abPersonalizza\u00bb per mostrarle.'));
     // ogni pulsante di approfondimento resta legato al tab della sua sezione: compare solo lì
@@ -517,6 +518,14 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
   contenitore.hidden = false;
   corpo.scrollTop = 0;
   adattaVista(lngLat); // la mappa si centra sul punto nella parte rimasta visibile
+  return {
+    aggiungi(nuovi) {
+      const y = corpo.scrollTop;
+      corrente = sezioniConRitardo(corrente, nuovi);
+      aggiorna();
+      corpo.scrollTop = y; // l'arrivo di una risposta non riporta in cima chi sta leggendo
+    },
+  };
 }
 
 const ZERO = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -590,7 +599,8 @@ function stralcioConCerchio(map, punto) {
 
 const DISCLAIMER_STAMPA = 'Disclaimer: Il Digital Twin \u00e8 uno strumento per informarsi, studiare e capire la citt\u00e0. Non sostituisce i documenti ufficiali. Catasto, Piano Regolatore e vincoli hanno qui valore puramente informativo e non hanno valore legale. Per una visura o per un certificato di destinazione urbanistica occorre rivolgersi a SISTER o agli uffici competenti. Anche i dati sulla popolazione per singolo edificio sono stime campionarie e vanno letti come indicazioni, non come conteggi esatti.';
 
-export function collegaScheda(map, moduli, contenitore) {
+export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
+  const rndt = opzioni.rndt;
   // stampa: tutte le schede aperte e visibili; dopo, si torna alla scheda attiva
   window.addEventListener('beforeprint', () => {
     for (const sz of contenitore.querySelectorAll('.scheda-sez')) { sz.hidden = false; sz.open = true; }
@@ -654,6 +664,8 @@ export function collegaScheda(map, moduli, contenitore) {
       trovatiTutti.push(...trovati);
       voci.push(...m.scheda.voci(trovati, e.lngLat));
     }
+    const interrogabili = rndt ? rndt.layerAlPunto(e.lngLat) : [];
+    if (interrogabili.length) voci.push(rndt.segnaposto()); // la scheda si apre subito: le risposte dei servizi arrivano dopo
     const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);
     const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); adattaVista(); };
     const dati = unisci(voci);
@@ -667,6 +679,13 @@ export function collegaScheda(map, moduli, contenitore) {
     for (const m of conScheda) m.scheda.suEvidenza?.(base); // chi ridisegna l'evidenza dopo il clic (es. percorso di una linea) tiene anche questa
     const scelte = [...base, ...extra];
     evidenzia(map, scelte);
-    mostra(contenitore, e.lngLat, dati, chiudiScheda, adattaVista, pref);
+    const scheda = mostra(contenitore, e.lngLat, dati, chiudiScheda, adattaVista, pref);
+    if (interrogabili.length) {
+      const punto = contenitore.dataset.punto;
+      rndt.interroga(interrogabili, e.lngLat, e.point, map.getZoom()).then(nuove => {
+        if (contenitore.hidden || contenitore.dataset.punto !== punto) return; // la scheda ora è su un altro punto, o chiusa
+        scheda.aggiungi(unisci(nuove));
+      });
+    }
   });
 }

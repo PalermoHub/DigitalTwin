@@ -78,6 +78,13 @@ export function unisci(voci) {
   return { contesto, sezioni, legale };
 }
 
+// Sezioni che arrivano dopo l'apertura della scheda (es. RNDT, dopo le risposte dei servizi): prendono il posto di quelle
+// con la stessa famiglia di chiave (il segnaposto incluso). `nuovi` è il risultato di `unisci()` sulle voci arrivate.
+export function sezioniConRitardo(dati, nuovi, prefisso = 'rndt:') {
+  const rimaste = dati.sezioni.filter(s => !String(s.chiave).startsWith(prefisso));
+  return { ...dati, sezioni: [...rimaste, ...nuovi.sezioni].sort((a, b) => a.peso - b.peso), legale: dati.legale || nuovi.legale };
+}
+
 export function testoContesto({ circoscrizione, quartiere, upl } = {}) {
   return [
     pieno(circoscrizione) && `Circoscrizione ${circoscrizione}`,
