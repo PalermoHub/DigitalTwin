@@ -21,6 +21,10 @@ def test_passi_letti_da_javascript():
     assert [x["id"] for x in p][:3] == ["cos-e", "dati", "strati"]
 
 
+def test_passi_statici_fuori_da_screenshot_e_video():
+    assert not [x["id"] for x in PASSI if x.get("statico")]
+
+
 @pytest.mark.parametrize("p", PASSI, ids=lambda p: p["id"])
 def test_immagine_esiste_ed_e_1280x720(p):
     f = ROOT / p["immagine"]["file"]

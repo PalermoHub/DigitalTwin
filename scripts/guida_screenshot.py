@@ -34,7 +34,8 @@ def passi():
         ["node", "-e", "import('./js/core/guida-contenuti.js').then(m=>console.log(JSON.stringify(m.PASSI)))"],
         cwd=ROOT, capture_output=True, text=True, check=True,
     ).stdout
-    return json.loads(out)
+    # i passi «statici» (RNDT) hanno immagini proprie (guida_screenshot_rndt.py) e non entrano né qui né nel video
+    return [p for p in json.loads(out) if not p.get("statico")]
 
 
 def _avvia_server():

@@ -116,6 +116,37 @@ export const PASSI = [
     narrazione: 'La barra in basso permette di cercare una via, un civico, un quartiere o una particella. Il pulsante dei filtri apre il pannello per limitare la ricerca a una circoscrizione, a un quartiere o a una zona. Per esempio, scegli una circoscrizione e scrivi Maqueda: i risultati si restringono, e un clic su uno di essi porta la mappa sul posto.',
     scena: { strati: [], centro: CENTRO, zoom: 13, ricerca: { testo: 'Maqueda', apriFiltri: true, circ: 1 } },
   },
+  // I passi RNDT sono «statici»: immagini fatte con scripts/guida_screenshot_rndt.py, non fanno parte del video (che andrebbe rigenerato con la voce).
+  {
+    id: 'rndt-catalogo',
+    titolo: 'Cercare nel catalogo RNDT',
+    statico: true,
+    paragrafi: [
+      'Il pulsante con la nuvola e la freccia, nella barra degli strumenti in alto a destra, apre il catalogo del Repertorio Nazionale dei Dati Territoriali (RNDT): l\'elenco dei dati geografici pubblicati dagli enti di tutta Italia. Il pannello si sovrappone alla scheda del luogo; «‹ Scheda» o il tasto Esc lo chiudono.',
+      'Si cerca per testo, tema o ente, sempre entro l\'area di Palermo. Un servizio WMS si aggiunge come livello di immagini; un servizio WFS come elementi geografici che si possono interrogare. Il catalogo usa il plugin openrndt-geolibre di Andrea Borruso (onData).',
+    ],
+    immagine: { file: 'img/guida/passi/rndt-catalogo.webp', alt: 'Il pannello del catalogo RNDT aperto sul lato destro della mappa, con il campo di ricerca e l\'elenco dei risultati.', didascalia: 'Il catalogo RNDT, limitato all\'area di Palermo.' },
+  },
+  {
+    id: 'rndt-gruppo',
+    titolo: 'Il gruppo RNDT e i tuoi file',
+    statico: true,
+    paragrafi: [
+      'I dati aggiunti compaiono nel gruppo «RNDT» della barra degli strati, e anche tra gli Argomenti del foglio Info. Ogni layer ha una casella per accenderlo o spegnerlo e una × per rimuoverlo. Si salvano da soli e, riaprendo la mappa, tornano al loro posto, accesi o spenti come li avevi lasciati. Accanto al nome, «solo questa sessione» avverte che quel layer non si è potuto salvare.',
+      'Il pulsante «Carica file dal computer» aggiunge i tuoi dati: GeoJSON, KML, KMZ, GPX, Shapefile (un file zip con anche il .prj) e CSV con le colonne di latitudine e longitudine. GeoJSON e CSV devono essere in WGS84. Di ogni file restano solo gli elementi dentro il Comune di Palermo, e un layer si salva fino a 5 MB: oltre, vale solo finché la pagina è aperta.',
+    ],
+    immagine: { file: 'img/guida/passi/rndt-gruppo.webp', alt: 'Il gruppo RNDT aperto nella barra degli strati, con i pulsanti «Dal catalogo RNDT» e «Carica file dal computer» e un layer in elenco con la sua casella.', didascalia: 'Il gruppo RNDT: i layer aggiunti e i due modi per aggiungerne.' },
+  },
+  {
+    id: 'rndt-info',
+    titolo: 'Interrogare i layer RNDT',
+    statico: true,
+    paragrafi: [
+      'Un clic sulla mappa interroga anche i layer RNDT accesi. Le risposte arrivano nella linguetta «Altri dati (RNDT)» della scheda, con un riquadro per ogni layer. Per i dati in formato GeoJSON, e per i servizi WFS, la scheda mostra gli attributi dell\'elemento cliccato, per esempio nome, specie e località di un albero monumentale: bisogna cliccare proprio sul punto.',
+      'Per i servizi WMS la scheda chiede al servizio le informazioni sul punto (GetFeatureInfo) e riporta la risposta; se il livello è solo grafico, lo dice. I dati dei servizi esterni hanno valore informativo: la fonte è indicata sotto ogni riquadro.',
+    ],
+    immagine: { file: 'img/guida/passi/rndt-info.webp', alt: 'La scheda del luogo sulla linguetta «Altri dati (RNDT)», con gli attributi di un albero monumentale: nome, specie, località e circonferenza.', didascalia: 'Clic su un albero monumentale: gli attributi del layer RNDT.' },
+  },
   {
     id: 'avvertenze',
     titolo: 'Avvertenze',
