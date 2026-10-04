@@ -18,14 +18,14 @@ Successo: aprendo un tab compare il pannello accanto alla barra con tutto il con
 - Il pallino con il conteggio (`data-attivo`, `data-n`) resta sul tab. Se i tab non entrano in altezza, la barra scorre.
 
 ### Pannello
-- `#pannello`: `top:0; bottom:0; left:var(--rail-w); width:var(--scheda-w)`, angoli vivi, ombra laterale, fondo opaco, come `#scheda`.
+- `#pannello`: `top:0; bottom:0; left:var(--rail-w); width:var(--pannello-w)` (280px: i gruppi hanno liste corte), angoli vivi, ombra laterale, fondo opaco.
 - Il `.sotto-pannello` attivo riempie il pannello senza card interna; `h2` come intestazione, corpo scorrevole.
 - Contenuto invariato: strati, «Cerca strato», sezioni, filtri (colonnine, uffici, popolazione).
 - Un solo gruppo aperto alla volta. Secondo clic sul tab attivo ripiega il pannello. Il clic fuori non chiude più
   (rimuovere il listener `pointerdown` in `js/core/pannello.js`).
 
 ### Layout mappa
-- `--sx`: `--rail-w` a pannello chiuso, `--rail-w + --scheda-w` con un gruppo aperto, impostato con `body:has(...)`.
+- `--sx`: `--rail-w` a pannello chiuso, `--rail-w + --pannello-w` con un gruppo aperto, impostato con `body:has(...)`.
 - Gli offset fissi (`left:112px` di legende, avviso fisso, chip strati; i 104px dell'area ricerca) diventano `var(--sx) + 12px`.
   Ricerca e barra strumenti si centrano tra `--sx` e `--scheda-l`. I controlli MapLibre in basso a sinistra seguono `--sx`.
 

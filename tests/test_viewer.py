@@ -1737,6 +1737,46 @@ def test_sicurezza_strato_strade_pericolose_spento_e_filtrato_sulle_vie_in_class
     assert v.js("JSON.stringify(window.dt.map.getFilter('sicurezza-pericolose'))") == '["has","via_rango"]'
 
 
+def test_desktop_barra_sinistra_a_tab_e_pannello_ancorato(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.set_viewport_size({"width": 1440, "height": 800})
+    v.page.wait_for_timeout(300)
+    b = v.js("(() => { const r = document.getElementById('barra-strati').getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; })()")
+    assert b["x"] == 0 and b["y"] == 0 and b["w"] == 44 and b["h"] == 800
+    assert v.js("document.getElementById('btn-gruppo-base').classList.contains('rail-tab')")
+    v.page.click("#btn-gruppo-edifici")
+    p = v.js("(() => { const r = document.getElementById('pannello').getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; })()")
+    assert p["x"] == 44 and p["y"] == 0 and p["h"] == 800 and p["w"] == 280
+    assert v.js("(() => { const d = document.createElement('div'); d.style.width = 'var(--sx)'; document.body.append(d); const w = d.getBoundingClientRect().width; d.remove(); return w; })()") == 324
+    v.page.click("#btn-gruppo-edifici")
+    assert v.js("(() => { const d = document.createElement('div'); d.style.width = 'var(--sx)'; document.body.append(d); const w = d.getBoundingClientRect().width; d.remove(); return w; })()") == 44
+
+
+def test_desktop_pannello_sinistro_non_si_chiude_con_clic_sulla_mappa(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.set_viewport_size({"width": 1440, "height": 800})
+    v.page.click("#btn-gruppo-edifici")
+    v.page.mouse.click(1000, 500)
+    assert v.page.is_visible("#gruppo-edifici")
+    v.page.keyboard.press("Escape")
+    assert not v.page.is_visible("#gruppo-edifici")
+
+
+def test_desktop_sotto_1280_aprire_un_pannello_ripiega_l_altro(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.set_viewport_size({"width": 1200, "height": 800})
+    v.js("document.getElementById('btn-rndt').click()")
+    v.page.wait_for_selector("#rndt-pannello:not([hidden]):not(.collassato)", timeout=15000)
+    v.page.click("#btn-gruppo-edifici")
+    assert v.page.is_visible("#gruppo-edifici")
+    assert v.js("document.getElementById('rndt-pannello').classList.contains('collassato')")
+    v.page.click("#rail-pannelli [data-pannello=rndt]")
+    assert not v.page.is_visible("#gruppo-edifici")
+
+
 def test_sicurezza_strade_pericolose_accese_si_disegnano_e_la_scheda_mostra_la_classifica(apri):
     (lon, lat), p = _arco_della_via_in_classifica(1)
     v = apri()

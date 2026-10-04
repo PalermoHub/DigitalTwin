@@ -79,6 +79,7 @@ function aggiornaConteggio() {
 function bottoneGruppo(id, titolo) {
   const b = document.createElement('button');
   b.type = 'button';
+  b.className = 'rail-tab';
   b.id = `btn-gruppo-${id}`;
   b.title = titolo;
   b.setAttribute('aria-label', titolo);
@@ -91,6 +92,12 @@ function bottoneGruppo(id, titolo) {
 // Ogni modulo diventa un sotto-pannello a comparsa sotto la barra degli strumenti; ne sta aperto uno solo.
 export function costruisciPannello(map, moduli, contenitore, barra) {
   const gruppi = [];
+  const STRETTO = 1280; // sotto questa larghezza due pannelli da 380px non stanno insieme
+  const chiudiGruppi = () => { for (const g of gruppi) if (!g.el.hidden) { g.el.hidden = true; g.bottone.setAttribute('aria-expanded', 'false'); } };
+  const ripiegaDestra = () => {
+    if (window.innerWidth >= STRETTO) return;
+    document.querySelector('#rail-pannelli .rail-tab.attivo')?.click();
+  };
   const aggiungi = (id, titolo) => {
     const el = document.createElement('section');
     el.id = `gruppo-${id}`;
@@ -102,9 +109,10 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     const bottone = bottoneGruppo(id, titolo);
     bottone.addEventListener('click', () => {
       const apri = el.hidden;
-      for (const g of gruppi) { g.el.hidden = true; g.bottone.setAttribute('aria-expanded', 'false'); }
+      chiudiGruppi();
       el.hidden = !apri;
       bottone.setAttribute('aria-expanded', String(apri));
+      if (apri) ripiegaDestra();
     });
     gruppi.push({ el, bottone });
     barra.append(bottone);
@@ -166,11 +174,14 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     el.querySelector('h2').after(campo);
   }
   aggiornaConteggio();
-  // clic fuori dai sotto-pannelli: si chiudono
-  document.addEventListener('pointerdown', e => {
-    if (e.target.closest('.sotto-pannello, #barra-gruppi')) return;
-    for (const g of gruppi) { g.el.hidden = true; g.bottone.setAttribute('aria-expanded', 'false'); }
-  });
+  // Esc ripiega il gruppo aperto; il clic sulla mappa no (come i pannelli di destra)
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') chiudiGruppi(); });
+  // sotto STRETTO, quando a destra si apre un pannello si ripiega il gruppo a sinistra
+  new MutationObserver(() => {
+    if (window.innerWidth >= STRETTO) return;
+    const aperto = ['scheda', 'rndt-pannello'].some(id => { const p = document.getElementById(id); return p && !p.hidden && !p.classList.contains('collassato'); });
+    if (aperto) chiudiGruppi();
+  }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden', 'class'] });
 }
 
 // Disattiva uno strato il cui dato non si è caricato: nascosto, casella spenta e non cliccabile.
