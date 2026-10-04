@@ -7,6 +7,7 @@ export const FONTI = [
   { file: 'scuole/scuole.geojson', strato: 'scuole', nota: p => p.tipo, campi: p => [p.nome, p.indirizzo], sezioni: p => p.seggio_sezioni },
   { file: 'scuole/seggi.geojson', strato: 'seggi', nota: () => 'Sezioni elettorali', campi: p => [p.nome, p.indirizzo], sezioni: p => p.sezioni },
   { file: 'monumenti/monumenti.geojson', strato: 'monumenti', nota: p => p.categoria, campi: p => [p.nome] },
+  { file: 'alberi_monumentali/alberi.geojson', strato: 'alberi', zoom: 18, nota: p => `Albero monumentale, ${p.localita}`, campi: p => [p.nome, p.specie, p.localita] },
   { file: 'trasporto/fermate.geojson', strato: 'trasporto-fermate', nota: p => `Fermata${p.linee.length ? `, linee ${p.linee.join(', ')}` : ''}`, campi: p => [p.nome] },
   // le linee si trovano per numero o nome; lo strato da accendere è bus o tram
   { file: 'trasporto/linee.geojson', strato: p => (p.tipo === 'tram' ? 'trasporto-tram' : 'trasporto-bus'), zoom: 14, numero: p => p.numero,

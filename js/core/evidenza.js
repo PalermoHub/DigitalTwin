@@ -16,6 +16,7 @@ export const FONTI = {
   'civici-hit': { etichetta: 'Numero civico', colore: '#d6336c' },
   'monumenti-hit-poli': { etichetta: 'Monumento', colore: '#862e9c' },
   'monumenti-hit-punti': { etichetta: 'Monumento', colore: '#862e9c' },
+  'alberi-hit-punti': { etichetta: 'Albero monumentale', colore: '#2f7d32' },
   'scuole-hit-poli': { etichetta: 'Scuola o asilo', colore: '#1971c2' },
   'scuole-hit-punti': { etichetta: 'Scuola o asilo', colore: '#1971c2' },
   'seggi-hit-poli': { etichetta: 'Sede di sezioni elettorali', colore: '#0c8599' },

@@ -7,7 +7,7 @@ const MAX_RIGHE_PER_TIPO = 60;
 // Titolo fisso per i tipi il cui titolo cambia da luogo a luogo (il nome della via, della fermata, della scuola…)
 const TITOLI_TIPO = {
   arco: 'Tratto stradale', hotspot: 'Hotspot incidenti', incidente: 'Incidente', fermata: 'Fermata', linee: 'Linee del trasporto', trasportovicino: 'Trasporto pubblico vicino',
-  colonnine: 'Colonnine di ricarica', monumento: 'Monumento', uffici: 'Uffici comunali', scuola: 'Scuola o asilo', seggio: 'Sede elettorale', omi: 'Quotazioni OMI', incendio: 'Incendio', pai: 'Vincolo PAI',
+  colonnine: 'Colonnine di ricarica', monumento: 'Monumento', albero: 'Albero monumentale', uffici: 'Uffici comunali', scuola: 'Scuola o asilo', seggio: 'Sede elettorale', omi: 'Quotazioni OMI', incendio: 'Incendio', pai: 'Vincolo PAI',
 };
 
 // Sezioni da elencare nel pannello anche prima di averle incontrate in una scheda (i layer aggiunti dopo non hanno ancora «visti»).
