@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { calcolaSoglie, etichetteClassi, coloriRampa, rilevaAttributi, espressioneAttributo, validaAttributo } from '../../js/core/tema-attributo.js';
 import { leggiMatch, riscriviMatch, comeEsadecimale, validaTema, partiStrato, applicaTema, leggiTemi, salvaTemi, esportaTemi, importaTemi } from '../../js/core/tema.js';
 
 function finta(layers) {
@@ -27,12 +28,12 @@ test('validaTema scarta i campi non validi', () => {
 
 test('partiStrato: salta i layer di sola selezione (opacità 0) e quelli assenti', () => {
   const map = finta({ f: { type: 'fill', paint: { 'fill-opacity': 0.5 } }, hit: { type: 'fill', paint: { 'fill-opacity': 0 } }, l: { type: 'line' }, c: { type: 'circle' } });
-  assert.deepEqual(partiStrato(map, ['f', 'hit', 'l', 'c', 'x']), { riempimenti: ['f'], uniformi: ['f'], categorie: [], linee: ['l'] });
+  assert.deepEqual(partiStrato(map, ['f', 'hit', 'l', 'c', 'x']), { riempimenti: ['f'], punti: ['c'], uniformi: ['f', 'c'], categorie: [], linee: ['l'], lineeColore: ['l'] });
 });
 
 test('applicaTema colora e ripristina l\'originale', () => {
   const map = finta({ f: { type: 'fill', paint: { 'fill-color': ['get', 'c'] } }, l: { type: 'line', paint: { 'line-width': 2 } } });
-  const parti = { riempimenti: ['f'], uniformi: [], categorie: [], linee: ['l'] };
+  const parti = { riempimenti: ['f'], punti: [], uniformi: [], categorie: [], linee: ['l'], lineeColore: ['l'] };
   const orig = new Map();
   applicaTema(map, parti, undefined, orig);
   assert.deepEqual(map.paint, {}); // niente tema, niente modifiche
@@ -45,6 +46,76 @@ test('applicaTema colora e ripristina l\'originale', () => {
   assert.equal(map.paint['l|line-width'], 2);
   applicaTema(map, parti, null, orig);
   assert.equal(map.paint['f|fill-outline-color'], null);
+});
+
+test('punti e linee: colore, bordo e spessore senza poligoni', () => {
+  const map = finta({
+    p: { type: 'circle', paint: { 'circle-color': '#111111', 'circle-stroke-color': '#fff' } },
+    hit: { type: 'circle', paint: { 'circle-opacity': 0 } },
+    l: { type: 'line', paint: { 'line-color': '#222222', 'line-width': 2 } },
+    lh: { type: 'line', paint: { 'line-opacity': 0 } },
+    lm: { type: 'line', paint: { 'line-color': ['match', ['get', 'k'], 'A', '#0000ff', '#555555'] } },
+  });
+  const parti = partiStrato(map, ['p', 'hit', 'l', 'lh', 'lm']);
+  assert.deepEqual(parti.punti, ['p']);
+  assert.deepEqual(parti.uniformi, ['p']);
+  assert.deepEqual(parti.linee, ['l', 'lm']);
+  assert.deepEqual(parti.lineeColore, ['l']); // la linea per categoria non si sovrascrive
+  assert.equal(parti.categorie[0].id, 'lm');
+  const orig = new Map();
+  applicaTema(map, parti, { riempimento: '#aa0000', bordo: '#00aa00', spessore: 4, categorie: { A: '#123456' } }, orig);
+  assert.equal(map.paint['p|circle-color'], '#aa0000');
+  assert.equal(map.paint['p|circle-stroke-color'], '#00aa00');
+  assert.equal(map.paint['l|line-color'], '#00aa00');
+  assert.equal(map.paint['l|line-width'], 4);
+  assert.equal(map.paint['lm|line-color'][3], '#123456');
+  applicaTema(map, parti, null, orig);
+  assert.equal(map.paint['p|circle-color'], '#111111');
+  assert.equal(map.paint['l|line-color'], '#222222');
+});
+
+test('attributo: classi, rampe, espressioni e validazione', () => {
+  assert.deepEqual(calcolaSoglie([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5, 'intervalli'), [2.8, 4.6, 6.4, 8.2]);
+  assert.deepEqual(calcolaSoglie([1, 1, 1, 9, 9, 9], 3, 'quantili'), [9]); // soglie ripetute o pari al minimo scartate
+  assert.deepEqual(calcolaSoglie([5, 5, 5], 4), []);
+  assert.deepEqual(etichetteClassi([10, 20]), ['< 10', '10 – 20', '≥ 20']);
+  assert.equal(coloriRampa('Blu', 3).length, 3);
+  const campi = rilevaAttributi([{ properties: { a: 'x', n: 1, m: 2, nul: null } }, { properties: { a: 'y', n: 5, m: 'z' } }]);
+  assert.deepEqual([...campi.get('a').valori], ['x', 'y']);
+  assert.equal(campi.get('n').numerico, true);
+  assert.equal(campi.get('m').numerico, false);
+  assert.equal(campi.has('nul'), false);
+  assert.deepEqual(espressioneAttributo({ campo: 'a', tipo: 'categorie', colori: { x: '#ff0000' } }), ['match', ['to-string', ['get', 'a']], 'x', '#ff0000', '#cccccc']);
+  const g = espressioneAttributo({ campo: 'n', tipo: 'graduata', rampa: 'Blu', soglie: [2, 4] });
+  assert.equal(g[0], 'case');
+  assert.deepEqual(g[2].slice(0, 2), ['step', ['get', 'n']]);
+  assert.equal(validaAttributo({ campo: 'n', tipo: 'graduata', soglie: [3, 2] }), null);
+  assert.equal(validaAttributo({ campo: 'a', tipo: 'categorie', colori: { x: 'rosso' } }), null);
+  assert.equal(validaAttributo({ campo: 'n', tipo: 'graduata', rampa: 'Boh', soglie: [1] }).rampa, 'Blu');
+  const t = { attributo: { campo: 'a', tipo: 'categorie', colori: { x: '#FF0000' } } };
+  assert.deepEqual(importaTemi(esportaTemi({ m: t })), { m: { attributo: { campo: 'a', tipo: 'categorie', colori: { x: '#FF0000' } } } });
+});
+
+test('attributo prevale su riempimento e categorie e si ripristina', () => {
+  const map = finta({
+    f: { type: 'fill', paint: { 'fill-color': MATCH, 'fill-opacity': 0.8 } },
+    g: { type: 'fill', paint: { 'fill-color': '#111111' } },
+    l: { type: 'line', paint: { 'line-color': '#222222' } },
+  });
+  const parti = partiStrato(map, ['f', 'g', 'l']);
+  const orig = new Map();
+  const attributo = { campo: 'a', tipo: 'categorie', colori: { x: '#ff0000' } };
+  applicaTema(map, parti, { riempimento: '#abcdef', bordo: '#00ff00', attributo }, orig);
+  assert.equal(map.paint['f|fill-color'][0], 'match');
+  assert.deepEqual(map.paint['g|fill-color'], map.paint['f|fill-color']);
+  assert.equal(map.paint['l|line-color'], '#00ff00'); // con i poligoni la linea resta un bordo
+  applicaTema(map, parti, { riempimento: '#abcdef' }, orig);
+  assert.deepEqual(map.paint['f|fill-color'], MATCH);
+  assert.equal(map.paint['g|fill-color'], '#abcdef');
+  const soloLinee = finta({ l: { type: 'line', paint: { 'line-color': '#222222' } } });
+  const p2 = partiStrato(soloLinee, ['l']);
+  applicaTema(soloLinee, p2, { attributo }, new Map());
+  assert.equal(soloLinee.paint['l|line-color'][0], 'match');
 });
 
 test('salvataggio: round trip e storage assente o rotto', () => {

@@ -196,6 +196,8 @@ dialog li { margin: 4px 0; }
 #cerca-testo::placeholder { color: var(--text-muted); }
 .cerca-sep { width: 1px; height: 22px; margin: 0 4px; flex-shrink: 0; background: var(--border-ui); }
 #cerca-filtri { flex-shrink: 0; width: 36px; height: 36px; margin-right: 8px; display: flex; align-items: center; justify-content: center; background: var(--accent); border: 0; border-radius: 50%; color: var(--accent-ink); }
+#cerca-ripristina { flex-shrink: 0; width: 36px; height: 36px; margin-right: 4px; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; border-radius: 50%; color: inherit; cursor: pointer; }
+#cerca-ripristina:hover { background: var(--border-ui); }
 #cerca-filtri:hover { filter: brightness(1.1); }
 #cerca-filtri[aria-expanded="true"] { box-shadow: 0 0 0 3px rgba(245, 166, 35, .35); }
 #cerca-risultati {
@@ -622,6 +624,7 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
   #legende-riduci, #cerca-risultati button, #cerca-particella input, #cerca-particella button, .sotto-pannello select, #pannello-filtri select { min-height: 44px; }
   #avvisi button { width: 44px; height: 44px; }
   #cerca-filtri { width: 44px; height: 44px; margin-right: 2px; }
+  #cerca-ripristina { width: 44px; height: 44px; }
   #barra-strumenti button { width: 44px; height: 44px; }
   .sotto-pannello label, #pannello-filtri label { min-height: 36px; display: flex; align-items: center; gap: 8px; }
   .sotto-pannello input[type=checkbox], .sotto-pannello input[type=radio] { width: 20px; height: 20px; }
@@ -679,6 +682,10 @@ label.sotto-voce:has(input:checked) .occhio { box-shadow: none; }
 .strato-tema .tema-riga:has(input[type=range]) { grid-template-columns: 5em 1fr 2.6em; }
 .strato-tema .tema-riga[hidden] { display: none; }
 .strato-tema input[type=color] { width: 36px; height: 24px; padding: 0; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: none; cursor: pointer; }
+.tema-attributo { display: grid; gap: 6px; padding-top: 4px; border-top: 1px solid var(--border); }
+.strato-tema select { min-width: 0; max-width: 11em; padding: 2px 4px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
+.strato-tema .tema-riga[hidden] { display: none; }
+.tema-campione { width: 36px; height: 14px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
 .strato-tema input[type=range] { width: 100%; margin: 0; accent-color: var(--accent); }
 .tema-azioni { display: flex; flex-wrap: wrap; gap: 6px; }
 .tema-msg { margin: 0; min-height: 1em; font-size: var(--fs-xs); color: var(--text-muted); }

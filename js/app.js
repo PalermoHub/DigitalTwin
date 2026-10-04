@@ -9,6 +9,7 @@ import { creaGruppoRndt } from './rndt/gruppo.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaZone } from './core/zone.js';
+import { collegaRipristino } from './core/ripristino.js';
 import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
 import territorio from './layers/territorio.js';
@@ -98,6 +99,7 @@ map.once('style.load', async () => {
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('pannello-filtri'),
     document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
+  collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })());
 
   const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia).map(m => m.avvia(map)));
   esiti.forEach(e => { if (e.status === 'rejected') segnala(`Strato non caricato: ${e.reason?.message ?? e.reason}`); });

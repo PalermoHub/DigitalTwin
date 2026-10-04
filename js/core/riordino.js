@@ -1,6 +1,6 @@
 // Riordino degli strati nel pannello: in alto nell'elenco = sopra sulla mappa. Qui la parte pura (testabile);
 // il collegamento al DOM sta in pannello.js.
-const CHIAVE = 'dt-ordine-strati';
+export const CHIAVE = 'dt-ordine-strati';
 
 // Copia di `a` con l'elemento in `da` portato in `a_` (limitato ai bordi).
 export function sposta(a, da, a_) {

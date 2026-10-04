@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791135661.7905858,
-    "ast_hash": "3a7d2971e37d6ebaa2cb53a9eef3acf1",
+    "mtime": 1791144747.8610597,
+    "ast_hash": "974f5e9f18c451fc2e4d73c8a6a15002",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791135661.7902112,
-    "ast_hash": "c1f483853adfda4beb851cd295353ee2",
+    "mtime": 1791144757.689516,
+    "ast_hash": "679bf2bc5d32f738b4875219b2ab97ba",
     "semantic_hash": ""
   },
   "docs/schermata-fase1.png": {
@@ -1635,8 +1635,8 @@
     "semantic_hash": ""
   },
   "js/core/riordino.js": {
-    "mtime": 1791141327.309876,
-    "ast_hash": "f9fc9c6f031ccec850d8ff991588c009",
+    "mtime": 1791144747.8020263,
+    "ast_hash": "acc3060fa6ea6ed34d941c46d2d4211f",
     "semantic_hash": ""
   },
   "tests/js/riordino.test.mjs": {
@@ -1645,18 +1645,38 @@
     "semantic_hash": ""
   },
   "js/core/pannello-tema.js": {
-    "mtime": 1791143604.1338232,
-    "ast_hash": "9706145005f853ad8206e1dee92ddc8d",
+    "mtime": 1791144219.8238485,
+    "ast_hash": "40f9e9b38c88e34493f21a771896b9f6",
     "semantic_hash": ""
   },
   "js/core/tema.js": {
-    "mtime": 1791143587.8968885,
-    "ast_hash": "9ff733a3e2e383ad9c6ec5914c84e4b2",
+    "mtime": 1791144747.8050072,
+    "ast_hash": "7687571ac5ebac7f73b6a8c5d3c3247d",
     "semantic_hash": ""
   },
   "tests/js/tema.test.mjs": {
-    "mtime": 1791143587.8973312,
-    "ast_hash": "d9bde256b3250b2e6623fbf86c8ed7df",
+    "mtime": 1791144259.1717033,
+    "ast_hash": "ff5664c4b47302c8bd3c3ec9f9e9864b",
+    "semantic_hash": ""
+  },
+  "js/core/pannello-attributo.js": {
+    "mtime": 1791144219.8234012,
+    "ast_hash": "24a848029fc7a27bfc0c5673ebefbff8",
+    "semantic_hash": ""
+  },
+  "js/core/tema-attributo.js": {
+    "mtime": 1791144179.2982,
+    "ast_hash": "8746cb7c965b8f534d30b3e257db3fe4",
+    "semantic_hash": ""
+  },
+  "js/core/ripristino.js": {
+    "mtime": 1791144747.8093052,
+    "ast_hash": "4cfde7a7264ef068b31de080c6029e99",
+    "semantic_hash": ""
+  },
+  "tests/js/ripristino.test.mjs": {
+    "mtime": 1791144747.813714,
+    "ast_hash": "53ecc704ef6d3c59979927ec3af92d83",
     "semantic_hash": ""
   }
 }

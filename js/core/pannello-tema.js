@@ -1,7 +1,11 @@
-// Pannellino «Colori» di uno strato: colore di riempimento e bordo dei poligoni, spessore delle linee dello strato.
+// Pannellino «Colori» di uno strato: colore di riempimento e bordo di poligoni e punti, colore e spessore delle linee dello strato.
 // Il tema si salva nel browser e si scambia come file JSON (vedi tema.js).
 import { svgIcona } from './icone.js';
-import { partiStrato, applicaTema, validaTema, comeEsadecimale, leggiTemi, salvaTemi, esportaTemi, importaTemi } from './tema.js';
+import { creaSezioneAttributo } from './pannello-attributo.js';
+import { partiStrato, proprietaColore, applicaTema, validaTema, comeEsadecimale, leggiTemi, salvaTemi, esportaTemi, importaTemi } from './tema.js';
+
+const partiVuote = () => ({ riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [] });
+const haParti = p => p.riempimenti.length + p.punti.length + p.linee.length > 0;
 
 const registro = new Map(); // id strato → { ricarica(): rilegge il tema salvato e lo applica }
 
@@ -21,11 +25,11 @@ function campoColore(testo, nome) {
   return { riga, input: i };
 }
 
-// Restituisce { bottone, pannello }: l'host li mette dove vuole; il bottone si nasconde se lo strato non ha poligoni.
+// Restituisce { bottone, pannello }: l'host li mette dove vuole; il bottone si nasconde se lo strato non ha poligoni, punti o linee.
 export function creaPannelloTema(map, strato, stato) {
   const originali = stato.temaOriginali ??= new Map();
   const storage = storageBrowser();
-  let parti = stato.parti ?? { riempimenti: [], uniformi: [], categorie: [], linee: [] };
+  let parti = stato.parti ?? partiVuote();
   let tema = null;
 
   const bottone = document.createElement('button');
@@ -42,6 +46,7 @@ export function creaPannelloTema(map, strato, stato) {
   pannello.hidden = true;
   const riempimento = campoColore('Riempimento', 'riempimento');
   const bordo = campoColore('Bordo', 'bordo');
+  const etichettaBordo = bordo.riga.firstChild;
   const rigaSpessore = document.createElement('label');
   rigaSpessore.className = 'tema-riga';
   const ts = document.createElement('span');
@@ -78,7 +83,20 @@ export function creaPannelloTema(map, strato, stato) {
   msg.className = 'tema-msg';
   msg.setAttribute('role', 'status');
   azioni.append(reset, esporta, importa, file);
-  pannello.append(riempimento.riga, bordo.riga, rigaSpessore, categorie, azioni, msg);
+  // Il tema viene dichiarato più sotto: la sezione lo legge e lo modifica solo a eventi, dopo la costruzione.
+  const sezioneAttributo = creaSezioneAttributo({
+    map,
+    layers: () => [...parti.riempimenti, ...parti.punti, ...parti.linee],
+    leggi: () => tema?.attributo ?? null,
+    cambia: a => {
+      const nuovo = { ...(tema ?? {}) };
+      if (a) nuovo.attributo = a; else delete nuovo.attributo;
+      tema = validaTema(nuovo);
+      applica();
+      salva();
+    },
+  });
+  pannello.append(riempimento.riga, bordo.riga, rigaSpessore, categorie, sezioneAttributo.el, azioni, msg);
 
   // categorie del colore (valore → colore originale), senza ripetizioni tra i layer dello strato
   const vociCategorie = () => [...new Map(parti.categorie.flatMap(c => c.voci)).entries()];
@@ -114,11 +132,17 @@ export function creaPannelloTema(map, strato, stato) {
 
   // valori mostrati: quelli del tema, altrimenti quelli correnti della mappa
   const mostraValori = () => {
-    const f = parti.riempimenti[0];
     const u = parti.uniformi[0];
+    const f = parti.riempimenti[0];
+    const pt = parti.punti[0];
+    const lc = parti.lineeColore[0];
     riempimento.riga.hidden = !u;
-    if (u) riempimento.input.value = tema?.riempimento ?? comeEsadecimale(originali.get(`${u}|fill-color`) ?? map.getPaintProperty(u, 'fill-color'));
-    bordo.input.value = tema?.bordo ?? comeEsadecimale(originali.get(`${f}|fill-outline-color`) ?? map.getPaintProperty(f, 'fill-outline-color'), u ? riempimento.input.value : '#444444');
+    if (u) riempimento.input.value = tema?.riempimento ?? comeEsadecimale(originali.get(`${u}|${proprietaColore(map, u)}`) ?? map.getPaintProperty(u, proprietaColore(map, u)));
+    // il bordo è quello dei poligoni, altrimenti dei punti, altrimenti il colore delle linee
+    const [idBordo, propBordo] = f ? [f, 'fill-outline-color'] : pt ? [pt, 'circle-stroke-color'] : [lc, 'line-color'];
+    bordo.riga.hidden = !idBordo;
+    etichettaBordo.textContent = f || pt ? 'Bordo' : 'Colore linea';
+    if (idBordo) bordo.input.value = tema?.bordo ?? comeEsadecimale(originali.get(`${idBordo}|${propBordo}`) ?? map.getPaintProperty(idBordo, propBordo), u ? riempimento.input.value : '#444444');
     const l = parti.linee[0];
     const w = tema?.spessore ?? originali.get(`${l}|line-width`) ?? (l && map.getPaintProperty(l, 'line-width'));
     spessore.value = String(typeof w === 'number' ? w : 1);
@@ -128,6 +152,7 @@ export function creaPannelloTema(map, strato, stato) {
     const orig = new Map(vociCategorie());
     for (const [nome, input] of campiCategorie) input.value = tema?.categorie?.[nome] ?? comeEsadecimale(orig.get(nome));
     aggiornaPallini();
+    sezioneAttributo.sincronizza();
   };
 
   const salva = () => {
@@ -139,12 +164,12 @@ export function creaPannelloTema(map, strato, stato) {
 
   // I layer possono comparire dopo la costruzione del pannello: si rivaluta a ogni accensione e al primo idle.
   const aggiorna = () => {
-    if (!parti.riempimenti.length) {
+    if (!haParti(parti)) {
       parti = partiStrato(map, strato.layers);
-      if (parti.riempimenti.length) stato.parti = parti; // si ricorda: con opacità 0 un riempimento sembrerebbe di sola selezione
+      if (haParti(parti)) stato.parti = parti; // si ricorda: con opacità 0 un riempimento sembrerebbe di sola selezione
     }
-    bottone.hidden = !parti.riempimenti.length;
-    if (parti.riempimenti.length) { tema = leggiTemi(storage)[strato.id] ?? null; applica(); }
+    bottone.hidden = !haParti(parti);
+    if (haParti(parti)) { tema = leggiTemi(storage)[strato.id] ?? null; applica(); }
   };
 
   // un campo entra nel tema solo se l'utente lo tocca: gli altri restano quelli originali
@@ -184,7 +209,7 @@ export function creaPannelloTema(map, strato, stato) {
   bottone.addEventListener('click', () => {
     pannello.hidden = !pannello.hidden;
     bottone.setAttribute('aria-expanded', String(!pannello.hidden));
-    if (!pannello.hidden) mostraValori();
+    if (!pannello.hidden) { sezioneAttributo.rileva(); mostraValori(); }
   });
 
   registro.set(strato.id, { ricarica: aggiorna });
