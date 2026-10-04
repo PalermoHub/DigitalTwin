@@ -117,3 +117,11 @@ test('CSV senza colonne di coordinate, o vuoto = errore', async () => {
   await assert.rejects(importaFile(file('p.csv', 'nome,valore\na,1\n'), libFinta()), /nessuna colonna di latitudine e longitudine/);
   await assert.rejects(importaFile(file('p.csv', ''), libFinta()), /vuoto/);
 });
+
+test('CSV: i nomi lat/lon hanno la precedenza su x/y anche se vengono dopo nel file', async () => {
+  const r = await importaFile(file('p.csv', 'id;y;lat;lon\n1;5;38,1;13,3\n'), libFinta());
+  assert.deepEqual(r.fc.features[0].geometry.coordinates, [13.3, 38.1]);
+  assert.deepEqual(r.fc.features[0].properties, { id: '1', y: '5' });
+  const solo = await importaFile(file('q.csv', 'x,y\n13.3,38.1\n'), libFinta());
+  assert.deepEqual(solo.fc.features[0].geometry.coordinates, [13.3, 38.1]);
+});

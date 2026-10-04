@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { elencoArgomenti } from '../../js/core/argomenti.js';
-import { righeGruppo, creaGruppoRndt } from '../../js/rndt/gruppo.js';
+import { righeGruppo, creaGruppoRndt, statoBottone, idDaFocalizzare } from '../../js/rndt/gruppo.js';
 
 const l = (id, nome, extra = {}) => ({ id, nome, visibile: true, indisponibile: false, errore: false, salvato: true, ...extra });
 
@@ -43,4 +43,16 @@ test('nella tab Argomenti il gruppo RNDT compare coi layer, in ordine alfabetico
   const [argomento] = elencoArgomenti([gruppo.modulo]);
   assert.equal(argomento.titolo, 'RNDT');
   assert.deepEqual(argomento.strati.map(s => s.id), ['a', 'b']);
+});
+
+test('il pallino del gruppo segue i layer accesi, anche quando non ce ne sono più', () => {
+  assert.deepEqual(statoBottone(righeGruppo([l('a', 'A'), l('b', 'B', { visibile: false })])), { attivo: true, n: 1 });
+  assert.deepEqual(statoBottone(righeGruppo([l('b', 'B', { visibile: false })])), { attivo: false, n: 0 });
+  assert.deepEqual(statoBottone([]), { attivo: false, n: 0 });
+});
+
+test('dopo il ridisegno il focus torna sullo stesso controllo; se è sparito, sul pulsante di ripiego', () => {
+  assert.equal(idDaFocalizzare('strato-a', ['strato-a', 'strato-b'], 'carica'), 'strato-a');
+  assert.equal(idDaFocalizzare('rndt-togli-a', ['strato-b', 'rndt-togli-b'], 'carica'), 'carica');
+  assert.equal(idDaFocalizzare(null, ['strato-a'], 'carica'), null);
 });

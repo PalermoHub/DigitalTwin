@@ -64,16 +64,17 @@ function righeCsv(testo) {
   return righe.filter(r => r.some(x => x.trim() !== ''));
 }
 
-const NOMI_LAT = ['lat', 'latitude', 'latitudine', 'y'];
-const NOMI_LON = ['lon', 'lng', 'long', 'longitude', 'longitudine', 'x'];
+// x e y valgono solo se mancano i nomi espliciti: in `id;y;lat;lon` la latitudine è `lat`
+const NOMI_LAT = ['lat', 'latitude', 'latitudine'];
+const NOMI_LON = ['lon', 'lng', 'long', 'longitude', 'longitudine'];
 
 function daCsv(testo) {
   const [intestazione, ...righe] = righeCsv(testo);
   if (!intestazione) throw new Error('il file è vuoto');
   const nomi = intestazione.map(n => n.trim());
   const cerca = elenco => nomi.findIndex(n => elenco.includes(n.toLowerCase()));
-  const iLat = cerca(NOMI_LAT);
-  const iLon = cerca(NOMI_LON);
+  const iLat = cerca(NOMI_LAT) >= 0 ? cerca(NOMI_LAT) : cerca(['y']);
+  const iLon = cerca(NOMI_LON) >= 0 ? cerca(NOMI_LON) : cerca(['x']);
   if (iLat < 0 || iLon < 0) throw new Error('nessuna colonna di latitudine e longitudine (per esempio lat e lon)');
   const numero = v => (String(v ?? '').trim() === '' ? NaN : Number(String(v).trim().replace(',', '.')));
   const features = [];

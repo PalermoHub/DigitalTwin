@@ -168,6 +168,29 @@ test('layer rimosso mentre la scrittura è in corso: non resta nulla né nell’
   assert.deepEqual(host.getLayers(), []);
 });
 
+test('lo stesso file caricato due volte di seguito: la scrittura più vecchia non cancella i dati del layer attuale', async () => {
+  const { host, scritti, archivioDati } = costruisci();
+  const dati = fc([pt([13.35, 38.15])]);
+  const id = host.addFileLayer('Zone', dati);
+  assert.equal(host.addFileLayer('Zone', dati), id);
+  await host.attendi();
+  assert.equal(archivioDati.m.has(id), true);
+  assert.deepEqual(scritti.at(-1).layers.map(l => l.id), [id]);
+  assert.equal(host.elenco().find(l => l.id === id).salvato, true);
+});
+
+test('elementi fuori dal Comune scartati dal filtro: un avviso dice quanti', () => {
+  const { host, avvisi } = costruisci({ anelli: [quadrato] });
+  host.addFileLayer('Regione', fc([pt([13.35, 38.15]), pt([14, 39]), pt([14.1, 39.1])]));
+  assert.match(avvisi[0], /2 elementi su 3 sono fuori dal Comune di Palermo/);
+  const uno = costruisci({ anelli: [quadrato] });
+  uno.host.addFileLayer('Regione', fc([pt([13.35, 38.15]), pt([14, 39])]));
+  assert.match(uno.avvisi[0], /1 elemento su 2 è fuori dal Comune di Palermo/);
+  const tutti = costruisci({ anelli: [quadrato] });
+  tutti.host.addFileLayer('Dentro', fc([pt([13.35, 38.15])]));
+  assert.equal(tutti.avvisi.length, 0);
+});
+
 test('elimina rimuove anche i dati salvati', async () => {
   const { host, archivioDati } = costruisci();
   const id = host.addFileLayer('Zone', fc([pt([13.35, 38.15])]));

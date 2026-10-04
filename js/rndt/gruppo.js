@@ -18,6 +18,15 @@ export function righeGruppo(elenco) {
   }));
 }
 
+// Pallino e contatore dell'icona del gruppo: seguono i layer accesi, anche quando il gruppo si svuota
+export const statoBottone = righe => {
+  const n = righe.filter(r => r.acceso).length;
+  return { attivo: n > 0, n };
+};
+
+// Dopo il ridisegno il focus torna sul controllo che l'aveva; se è sparito (layer rimosso), sul pulsante di ripiego
+export const idDaFocalizzare = (idAttivo, idPresenti, ripiego) => (!idAttivo ? null : idPresenti.includes(idAttivo) ? idAttivo : ripiego);
+
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
@@ -54,6 +63,7 @@ export function creaGruppoRndt() {
     const azioni = el('div', 'rndt-gruppo-azioni');
     const catalogo = el('button', 'rndt-gruppo-aggiungi', '＋ Dal catalogo RNDT');
     const file = el('button', 'rndt-gruppo-aggiungi', '📁 Carica file dal computer');
+    file.id = 'rndt-carica-file';
     file.title = `Formati: ${ESTENSIONI.join(' ')}`;
     for (const b of [catalogo, file]) b.type = 'button';
     catalogo.addEventListener('click', () => apriCatalogo());
@@ -74,6 +84,7 @@ export function creaGruppoRndt() {
         if (r.nota) label.append(' ', el('em', null, `(${r.nota})`));
         const togli = el('button', 'rndt-gruppo-togli', '×');
         togli.type = 'button';
+        togli.id = `rndt-togli-${r.id}`;
         togli.title = `Rimuovi ${r.nome}`;
         togli.setAttribute('aria-label', `Rimuovi il layer ${r.nome}`);
         togli.addEventListener('click', () => host.elimina(r.id));
@@ -81,7 +92,15 @@ export function creaGruppoRndt() {
         return riga;
       })
       : [el('p', 'rndt-gruppo-vuoto', 'Nessun layer RNDT: cercalo nel catalogo.')];
+    const idAttivo = radice.contains(document.activeElement) ? document.activeElement.id : null;
     radice.replaceChildren(titolo, azioni, selettore, ...voci);
+    const vai = idDaFocalizzare(idAttivo, [...radice.querySelectorAll('[id]')].map(e => e.id), 'rndt-carica-file');
+    if (vai) document.getElementById(vai)?.focus();
+    if (radice.bottone) {
+      const { attivo, n } = statoBottone(righe);
+      radice.bottone.dataset.attivo = String(attivo);
+      radice.bottone.dataset.n = String(n);
+    }
     // il pannello conta le caselle accese (pallino dell'icona, «Strati · N», chip): lo avvisiamo del cambio
     radice.dispatchEvent(new Event('change'));
   }

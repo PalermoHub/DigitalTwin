@@ -83,6 +83,11 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
   function creaGeoJson(nome, fc, url, salva, idSalvato) {
     const { fc: dati, filtrato } = filtraSuConfine(fc, anelli());
     if (filtrato && !dati.features.length) throw new Error('nessuna feature dentro il Comune di Palermo');
+    if (salva && filtrato) {
+      const fuori = fc.features.length - dati.features.length;
+      if (fuori === 1) notifica(`«${nome}»: 1 elemento su ${fc.features.length} è fuori dal Comune di Palermo e non viene mostrato.`);
+      else if (fuori > 1) notifica(`«${nome}»: ${fuori} elementi su ${fc.features.length} sono fuori dal Comune di Palermo e non vengono mostrati.`);
+    }
     const testo = url ? '' : JSON.stringify(dati);
     const id = idSalvato ?? `rndt-${hash(url ? `geojson|${url}` : `geojson|${nome}|${testo}`)}`;
     if (layers.has(id)) { togliDallaMappa(layers.get(id)); layers.delete(id); }
@@ -114,7 +119,11 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
       return nonSalvato();
     }
     const togli = () => archivioDati.elimina(rec.id).catch(() => {});
-    if (layers.get(rec.id) !== rec) return togli(); // rimosso nel frattempo
+    if (layers.get(rec.id) !== rec) {
+      // rimosso nel frattempo: si puliscono i dati solo se nessun altro layer li usa (lo stesso file ricaricato ha lo stesso id)
+      if (!layers.has(rec.id)) togli();
+      return;
+    }
     const nuovo = salvaAggiungi(stato, daSalvare(rec));
     if (!scrivi(nuovo)) { nonSalvato(); return togli(); }
     stato = nuovo;
