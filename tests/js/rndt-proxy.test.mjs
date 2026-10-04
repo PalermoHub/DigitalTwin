@@ -60,3 +60,28 @@ test('servizio irraggiungibile = 502', async () => {
   const r = await gestisci(rq('/t/a.it/x', { headers: { origin: ORIGINE } }), env, async () => { throw new Error('giù'); });
   assert.equal(r.status, 502);
 });
+
+test('ospiteValido rifiuta IP in forme alternative, caratteri speciali e nomi tutti numerici/esadecimali', () => {
+  for (const no of ['0x7f.0.0.1', '0177.0.0.1', '127.1', '2130706433.it'.replace('.it', ''), 'a@b.com', 'a\\b.com', 'a%2fb.com', 'a#b.com', 'a/b.com', '1.2.3.4.5', '0x7f.1']) {
+    assert.equal(ospiteValido(no), false, no);
+  }
+  assert.equal(ospiteValido('www.geodati.gov.it'), true);
+});
+
+test('un redirect verso un host non valido viene rifiutato, uno valido viene seguito', async () => {
+  const redirect = async u => (u === 'https://a.it/x'
+    ? new Response(null, { status: 302, headers: { location: 'http://169.254.169.254/latest' } })
+    : new Response('segreto'));
+  const r = await gestisci(rq('/t/a.it/x', { headers: { origin: ORIGINE } }), env, redirect);
+  assert.equal(r.status, 502);
+  const buono = async u => (u === 'https://a.it/x'
+    ? new Response(null, { status: 301, headers: { location: 'https://b.it/y' } })
+    : new Response('ok'));
+  const r2 = await gestisci(rq('/t/a.it/x', { headers: { origin: ORIGINE } }), env, buono);
+  assert.equal(await r2.text(), 'ok');
+});
+
+test('troppi redirect = 502', async () => {
+  const giro = async () => new Response(null, { status: 302, headers: { location: 'https://a.it/x' } });
+  assert.equal((await gestisci(rq('/t/a.it/x', { headers: { origin: ORIGINE } }), env, giro)).status, 502);
+});

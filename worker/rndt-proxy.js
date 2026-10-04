@@ -4,12 +4,15 @@
 // in ORIGINI e al massimo 10 MB per risposta. Nessuna cache e nessun cookie.
 
 export const LIMITE_BYTE = 10 * 1024 * 1024;
+const MAX_REDIRECT = 3;
 const PRIVATO = /^(localhost|.*\.(local|localhost|internal|lan|home|corp))$/i;
 
+// Solo nomi di dominio veri: lettere, cifre, trattini e punti; l'ultima etichetta (il TLD) inizia con una lettera, così
+// restano fuori gli IP in ogni forma (127.0.0.1, 0x7f.1, 2130706433) e qualunque trucco con @ backslash % # / :
 export function ospiteValido(host) {
   const h = String(host).toLowerCase();
-  if (h.includes(':') || h.startsWith('[') || !h.includes('.') || PRIVATO.test(h)) return false;
-  return !/^\d+\.\d+\.\d+\.\d+$/.test(h);
+  if (/[^a-z0-9.-]/.test(h) || !h.includes('.') || h.includes('..') || h.startsWith('.') || PRIVATO.test(h)) return false;
+  return /^[a-z][a-z0-9-]*$/.test(h.split('.').pop());
 }
 
 export function urlDestinazione(richiesta) {
@@ -38,10 +41,20 @@ export async function gestisci(richiesta, env, fetchFn) {
 
   let remota;
   try {
-    remota = await fetchFn(destinazione, {
-      method: richiesta.method, redirect: 'follow',
-      headers: { accept: richiesta.headers.get('accept') ?? '*/*', 'user-agent': 'DigitalTwinPalermo-RNDT-proxy' },
-    });
+    let corrente = destinazione;
+    for (let salti = 0; ; salti++) {
+      // i redirect si seguono a mano, ricontrollando ogni destinazione: un servizio esterno non deve poterci portare altrove
+      remota = await fetchFn(corrente, {
+        method: richiesta.method, redirect: 'manual',
+        headers: { accept: richiesta.headers.get('accept') ?? '*/*', 'user-agent': 'DigitalTwinPalermo-RNDT-proxy' },
+      });
+      const sposta = remota.status >= 300 && remota.status < 400 && remota.headers.get('location');
+      if (!sposta) break;
+      if (salti >= MAX_REDIRECT) throw new Error('troppi redirect');
+      const prossimo = new URL(sposta, corrente);
+      if (prossimo.protocol !== 'https:' || prossimo.username || prossimo.password || prossimo.port || !ospiteValido(prossimo.hostname)) throw new Error('redirect non ammesso');
+      corrente = prossimo.href;
+    }
   } catch {
     return risposta(502, 'servizio non raggiungibile', cors);
   }
