@@ -1,0 +1,8 @@
+name = "rndt-proxy"
+main = "rndt-proxy.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+# origini che possono usare il proxy (separate da virgola): sviluppo locale (scripts/serve.py) e GitHub Pages
+ORIGINI = "http://localhost:8000,http://127.0.0.1:8000,https://gbvitrano.github.io"
