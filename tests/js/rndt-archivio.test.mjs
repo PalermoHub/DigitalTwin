@@ -43,9 +43,9 @@ test('aggiungi sostituisce lo stesso id, rimuovi e aggiorna lavorano per id', ()
   assert.deepEqual(rimuovi(s, 'rndt-a').layers, []);
 });
 
-test('un GeoJSON si legge se ha URL o dati, altrimenti si scarta', () => {
+test('un GeoJSON si legge se ha URL, dati nell’archivio dati o dati inline (vecchio formato); altrimenti si scarta', () => {
   const g = (id, sorgente) => ({ id, tipo: 'geojson', nome: id, visibile: true, sorgente });
   const dati = { type: 'FeatureCollection', features: [] };
-  const stato = { v: 1, layers: [g('a', { url: 'https://x.it/a' }), g('b', { dati }), g('c', {}), g('d', { dati: { type: 'Feature' } })] };
-  assert.deepEqual(leggi(finto({ [CHIAVE]: JSON.stringify(stato) })).layers.map(l => l.id), ['a', 'b']);
+  const stato = { v: 1, layers: [g('a', { url: 'https://x.it/a' }), g('b', { dati }), g('c', {}), g('d', { dati: { type: 'Feature' } }), g('e', { dati: true })] };
+  assert.deepEqual(leggi(finto({ [CHIAVE]: JSON.stringify(stato) })).layers.map(l => l.id), ['a', 'b', 'e']);
 });

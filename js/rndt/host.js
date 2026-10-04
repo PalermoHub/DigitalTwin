@@ -6,8 +6,8 @@ import { aggiungi as salvaAggiungi, rimuovi as salvaRimuovi, aggiorna as salvaAg
 
 const COLORI = ['#1c7ed6', '#e8590c', '#2f9e44', '#ae3ec9', '#c92a2a', '#0c8599'];
 const FINESTRA_DOWNLOAD_MS = 30000;
-// Un GeoJSON senza URL si salva coi suoi dati; localStorage è piccolo (circa 5 MB per tutto il sito): oltre questo tetto resta solo in sessione
-export const TETTO_DATI = 1_000_000;
+// Un GeoJSON senza URL si salva coi suoi dati nell'archivio dati (IndexedDB); oltre questo tetto resta solo in sessione
+export const TETTO_DATI = 5_000_000;
 const SEMBRA_DATI = /getfeature(?!info)|\.geojson|f=geojson|outputformat=[^&]*json/i;
 const GET_FEATURE = /request=getfeature(?!info)/i;
 const SOLO_CONTEGGIO = /resulttype=hits/i;
@@ -26,13 +26,15 @@ export function urlProxy(proxy, url) {
   return `${proxy.replace(/\/$/, '')}/t/${m[1]}${m[2] || '/'}`;
 }
 
-export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, fetchFn = (...a) => fetch(...a) }) {
+export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, archivioDati = null, fetchFn = (...a) => fetch(...a) }) {
   let stato = iniziale;
   const layers = new Map(); // id → { id, tipo, nome, visibile, sorgente, idMappa[], idSorgente, salvato, indisponibile?, errore? }
   const ascoltatori = new Set();
   let ultimoDownload = null; // l'ultimo URL che sembra un download di dati: il plugin dà all'host i dati, non l'URL
   let avvisatoSalvataggio = false;
   let contatore = 0;
+  const scritture = new Set(); // scritture dei dati in corso: attendi() le aspetta
+  const inAttesa = promessa => { scritture.add(promessa); promessa.finally(() => scritture.delete(promessa)); return promessa; };
 
   const cambio = () => { for (const f of ascoltatori) f(); };
   const persisti = () => {
@@ -93,24 +95,31 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     ];
     for (const s of strati) map.addLayer(s);
     const rec = { id, tipo: 'geojson', nome, visibile: true, sorgente: url ? { url } : {}, idMappa: strati.map(s => s.id), idSorgente: id, salvato: Boolean(url) };
-    if (!url) {
-      // dati inline: si salvano solo se entrano; una scrittura fallita non deve bloccare i salvataggi degli altri layer
-      rec.sorgente = { dati };
-      rec.salvato = true; // ripristino compreso: i dati vengono dall'archivio
-      if (testo.length > TETTO_DATI) {
-        rec.salvato = false;
-        if (salva) notifica(`«${nome}» è troppo grande per essere salvato: resta finché la pagina è aperta.`);
-      } else if (salva) {
-        const nuovo = salvaAggiungi(stato, daSalvare(rec));
-        if (scrivi(nuovo)) stato = nuovo;
-        else {
-          rec.salvato = false;
-          notifica(`Non riesco a salvare «${nome}»: resta finché la pagina è aperta.`);
-        }
-      }
-      return registra(rec, { salva: false });
+    if (url) return registra(rec, { salva });
+    // senza URL: i dati si salvano a parte, dopo che il layer è in mappa
+    rec.sorgente = { dati: true };
+    if (!salva) rec.salvato = true; // ripristino: i dati vengono dall'archivio
+    else if (testo.length > TETTO_DATI) notifica(`«${nome}» è troppo grande per essere salvato: resta finché la pagina è aperta.`);
+    else inAttesa(salvaDati(rec, dati));
+    return registra(rec, { salva: false });
+  }
+
+  // Scrive i dati, poi mette il layer nell'elenco salvato: un layer non entra mai nell'elenco senza i suoi dati
+  async function salvaDati(rec, fc) {
+    const nonSalvato = () => notifica(`Non riesco a salvare «${rec.nome}»: resta finché la pagina è aperta.`);
+    try {
+      if (!archivioDati) throw new Error('archivio dei dati non disponibile');
+      await archivioDati.scrivi(rec.id, fc);
+    } catch {
+      return nonSalvato();
     }
-    return registra(rec, { salva });
+    const togli = () => archivioDati.elimina(rec.id).catch(() => {});
+    if (layers.get(rec.id) !== rec) return togli(); // rimosso nel frattempo
+    const nuovo = salvaAggiungi(stato, daSalvare(rec));
+    if (!scrivi(nuovo)) { nonSalvato(); return togli(); }
+    stato = nuovo;
+    rec.salvato = true;
+    cambio();
   }
 
   async function fetchArrayBuffer(url) {
@@ -157,6 +166,9 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     }),
     addWmsLayer: (nome, opz) => creaWms(nome, opz, true),
     addTileLayer: (nome, url, opz) => creaTile(nome, url, opz, true),
+    // File dal computer: mai l'URL di un download recente del catalogo
+    addFileLayer: (nome, fc) => creaGeoJson(nome, fc, null, true),
+    attendi: async () => { while (scritture.size) await Promise.allSettled([...scritture]); },
     addGeoJsonLayer(nome, fc) {
       const recente = ultimoDownload && Date.now() - ultimoDownload.t < FINESTRA_DOWNLOAD_MS ? ultimoDownload.url : null;
       ultimoDownload = null;
@@ -185,6 +197,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
       if (!rec) return;
       togliDallaMappa(rec);
       layers.delete(id);
+      if (rec.tipo === 'geojson') archivioDati?.elimina(id).catch(() => {});
       stato = salvaRimuovi(stato, id);
       persisti();
       cambio();
@@ -195,7 +208,19 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
           let id;
           if (salvato.tipo === 'wms') id = creaWms(salvato.nome, salvato.sorgente, false);
           else if (salvato.tipo === 'tile') id = creaTile(salvato.nome, salvato.sorgente.url, { attribution: salvato.sorgente.attribution }, false);
-          else if (salvato.sorgente.dati) id = creaGeoJson(salvato.nome, salvato.sorgente.dati, undefined, false, salvato.id);
+          else if (salvato.sorgente.dati === true) {
+            const fc = await archivioDati?.leggi(salvato.id);
+            if (!fc) throw new Error('dati non trovati');
+            id = creaGeoJson(salvato.nome, fc, undefined, false, salvato.id);
+          } else if (salvato.sorgente.dati) {
+            // vecchio formato: i dati stavano nell'elenco in localStorage; passano all'archivio dati
+            id = creaGeoJson(salvato.nome, salvato.sorgente.dati, undefined, false, salvato.id);
+            try {
+              await archivioDati.scrivi(id, salvato.sorgente.dati);
+              stato = salvaAggiorna(stato, id, { sorgente: { dati: true } });
+              persisti();
+            } catch { /* resta nel vecchio formato: si riprova al prossimo avvio */ }
+          }
           else {
             const buffer = await fetchArrayBuffer(salvato.sorgente.url);
             id = creaGeoJson(salvato.nome, JSON.parse(new TextDecoder().decode(buffer)), salvato.sorgente.url, false);

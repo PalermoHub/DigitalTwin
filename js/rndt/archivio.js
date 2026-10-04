@@ -5,8 +5,11 @@
 export const CHIAVE = 'dt:rndt:v1';
 const TIPI = ['wms', 'tile', 'geojson'];
 const vuoto = () => ({ v: 1, layers: [] });
-// un GeoJSON si richiama dall'URL oppure dai dati salvati con lui
-const sorgenteValida = l => l.tipo !== 'geojson' || typeof l.sorgente?.url === 'string' || l.sorgente?.dati?.type === 'FeatureCollection';
+// un GeoJSON si richiama dall'URL, dai dati nell'archivio dati (`dati: true`) o, nel vecchio formato, dai dati dentro l'elenco
+const sorgenteValida = l => l.tipo !== 'geojson'
+  || typeof l.sorgente?.url === 'string'
+  || l.sorgente?.dati === true
+  || l.sorgente?.dati?.type === 'FeatureCollection';
 
 export function leggi(storage) {
   try {
