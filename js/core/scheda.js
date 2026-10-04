@@ -674,15 +674,18 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
       segnala(map.getZoom() < 14 ? 'Nessun dato in questo punto: avvicina lo zoom o accendi uno strato.' : 'Nessun dato in questo punto.');
       return;
     }
+    // I layer RNDT si interrogano subito, come i layer nativi (trovaFeature): scheda e evidenza adattano la vista della mappa
+    // (con «riduci animazioni» attivo lo spostamento è immediato), e dopo non si saprebbe più cosa c'era sotto il clic.
+    const risposte = interrogabili.length ? rndt.interroga(interrogabili, e.lngLat, e.point, map.getZoom()) : null;
     const extra = voci.flatMap(v => v.evidenza ?? []); // luoghi vicini che un layer vuole vedere sulla mappa
     const base = soloCliccato(sceltePerLayer(trovatiTutti, e.lngLat));
     for (const m of conScheda) m.scheda.suEvidenza?.(base); // chi ridisegna l'evidenza dopo il clic (es. percorso di una linea) tiene anche questa
     const scelte = [...base, ...extra];
     evidenzia(map, scelte);
     const scheda = mostra(contenitore, e.lngLat, dati, chiudiScheda, adattaVista, pref);
-    if (interrogabili.length) {
+    if (risposte) {
       const punto = contenitore.dataset.punto;
-      rndt.interroga(interrogabili, e.lngLat, e.point, map.getZoom()).then(nuove => {
+      risposte.then(nuove => {
         if (contenitore.hidden || contenitore.dataset.punto !== punto) return; // la scheda ora è su un altro punto, o chiusa
         scheda.aggiungi(unisci(nuove));
       });
