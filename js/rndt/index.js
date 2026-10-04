@@ -5,11 +5,12 @@ import { creaPannello } from './pannello.js';
 import { interrogaTutti, segnaposto } from './info.js';
 import { leggi, salva } from './archivio.js';
 import { anelliDaZone } from './area.js';
+import { scegliProxy } from './proxy.js';
 import { urlDati } from '../core/config.js';
 import { segnala } from '../core/pannello.js';
 
-// Indirizzo del Worker (vedi docs/RNDT.md); per una prova: ?rndt-proxy=https://...
-export const PROXY_RNDT = new URLSearchParams(location.search).get('rndt-proxy') || 'https://rndt-proxy.gbvitrano.workers.dev';
+// Indirizzo del Worker (vedi docs/RNDT.md e proxy.js): in produzione è fisso
+export const PROXY_RNDT = scegliProxy(location.search, location.hostname);
 const PLUGIN = 'js/vendor/openrndt-geolibre/index.js';
 const STILE = 'js/vendor/openrndt-geolibre/style.css';
 

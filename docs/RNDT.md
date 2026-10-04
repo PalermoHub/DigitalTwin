@@ -16,4 +16,4 @@ cd worker
 npx wrangler deploy
 ```
 
-`wrangler` stampa l'indirizzo (`https://rndt-proxy.<account>.workers.dev`). Scrivilo in `PROXY_RNDT` di `js/rndt/index.js`, oppure prova al volo con `?rndt-proxy=<indirizzo>` nell'URL dell'app. Le origini ammesse sono in `ORIGINI` di `wrangler.toml` (sviluppo locale e `https://gbvitrano.github.io`: correggi se l'origine di produzione è un'altra). I tile WMS passano dal Worker: il piano gratuito ha 100.000 richieste al giorno.
+`wrangler` stampa l'indirizzo (`https://rndt-proxy.<account>.workers.dev`). Scrivilo in `PROXY_PREDEFINITO` di `js/rndt/proxy.js`. In locale (`localhost`) puoi provare un Worker di sviluppo con `?rndt-proxy=http://127.0.0.1:8787`; in produzione il parametro è ignorato. Le origini ammesse sono in `ORIGINI` di `wrangler.toml` (sviluppo locale e `https://gbvitrano.github.io`: correggi se l'origine di produzione è un'altra). I tile WMS passano dal Worker: il piano gratuito ha 100.000 richieste al giorno.
