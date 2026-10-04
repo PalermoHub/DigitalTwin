@@ -38,7 +38,7 @@ riduciLegenda.addEventListener('click', () => {
 });
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, scuole, uffici, colonnine, trasporto, sicurezza, incendi, confini];
+const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, uffici, trasporto, sicurezza, colonnine, scuole, incendi, confini];
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
 

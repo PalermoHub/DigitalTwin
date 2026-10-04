@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791113552.072271,
-    "ast_hash": "4a5c060caa6476371ed51bfde3c09552",
+    "mtime": 1791116281.5319183,
+    "ast_hash": "34e12434ddb0b0437e3339dcf8633d01",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "js/core/pannello.js": {
-    "mtime": 1791113552.0726073,
-    "ast_hash": "a2e7efdf606c9246192da5e981cad5e7",
+    "mtime": 1791116281.5316708,
+    "ast_hash": "1e7e5f03205deed75ab5b3df3293690d",
     "semantic_hash": ""
   },
   "js/core/ricerca.js": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "js/core/scheda.js": {
-    "mtime": 1791112895.0549638,
-    "ast_hash": "4b435c7c4dba0f9c38b0e1d7438d4c86",
+    "mtime": 1791114449.9446359,
+    "ast_hash": "4af75cb3fc7d62e267f70de1eb231409",
     "semantic_hash": ""
   },
   "js/layers/confini.js": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791113552.0742877,
-    "ast_hash": "fe335e05d485074e93eb73e7c2bbdf70",
+    "mtime": 1791116281.5313528,
+    "ast_hash": "935af7b1ac474013032cb44d19d1335b",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -515,8 +515,8 @@
     "semantic_hash": ""
   },
   "js/core/scheda-preferenze.js": {
-    "mtime": 1791032410.7871642,
-    "ast_hash": "9c938048285079ca4182e113ac377b8e",
+    "mtime": 1791115354.5594623,
+    "ast_hash": "98fcfe86d424593d8bd456d296bfc112",
     "semantic_hash": ""
   },
   "js/layers/sicurezza-filtro.js": {
@@ -535,8 +535,8 @@
     "semantic_hash": ""
   },
   "tests/js/scheda-preferenze.test.mjs": {
-    "mtime": 1791032410.7876632,
-    "ast_hash": "450cdfac06ac19e73abdcbb8de05399a",
+    "mtime": 1791115354.5658574,
+    "ast_hash": "b280446a22c16de1cbb0350e088a4bfa",
     "semantic_hash": ""
   },
   "tests/js/sicurezza-filtro.test.mjs": {
@@ -655,13 +655,13 @@
     "semantic_hash": ""
   },
   "js/core/argomenti.js": {
-    "mtime": 1791030258.2766483,
-    "ast_hash": "8e6329efb3019aac6b3c900188159a98",
+    "mtime": 1791116519.836588,
+    "ast_hash": "8626f6caa39f07fbeb7a2f77c650e9f3",
     "semantic_hash": ""
   },
   "tests/js/argomenti.test.mjs": {
-    "mtime": 1791030258.2902234,
-    "ast_hash": "435e5f524e4bf66c964621d2e88caf42",
+    "mtime": 1791116519.837716,
+    "ast_hash": "c5187d8dc0a9207d7ac4ef467e1a4281",
     "semantic_hash": ""
   },
   "js/layers/trasporto-vicino.js": {
@@ -1240,13 +1240,13 @@
     "semantic_hash": ""
   },
   "js/layers/colonnine.js": {
-    "mtime": 1791113552.0476608,
-    "ast_hash": "113ad91508be08bba2f9fa3fd669be6e",
+    "mtime": 1791116519.8368285,
+    "ast_hash": "fbafb4f7a088fff2f4f4ed2eab91c3c0",
     "semantic_hash": ""
   },
   "js/layers/scheda-colonnine.js": {
-    "mtime": 1791113522.045304,
-    "ast_hash": "befc015c0e876e1538496b6d180fc6e3",
+    "mtime": 1791114832.9274898,
+    "ast_hash": "75cec4135acda74c45bdf8b1613c7770",
     "semantic_hash": ""
   },
   "scripts/colonnine.py": {
@@ -1255,8 +1255,8 @@
     "semantic_hash": ""
   },
   "tests/js/colonnine.test.mjs": {
-    "mtime": 1791113522.0427623,
-    "ast_hash": "4b53096f7b46b76212d568c7e342541f",
+    "mtime": 1791114832.9300523,
+    "ast_hash": "dc1ddc424a46a592149ff64762a57e82",
     "semantic_hash": ""
   },
   "tests/test_colonnine.py": {
@@ -1267,6 +1267,11 @@
   ".github/workflows/aggiorna-colonnine.yml": {
     "mtime": 1791113488.6338594,
     "ast_hash": "d2c365ce69662ff4788f0b36745e2277",
+    "semantic_hash": ""
+  },
+  "js/layers/colonnine-grafici.js": {
+    "mtime": 1791114832.894755,
+    "ast_hash": "7db507b0a52461aa4e331d01c28bdead",
     "semantic_hash": ""
   }
 }

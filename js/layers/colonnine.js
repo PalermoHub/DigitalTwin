@@ -51,21 +51,57 @@ function applicaFiltri() {
   for (const id of [PUNTI, HIT]) mappa?.getLayer(id) && mappa.setFilter(id, filtro);
 }
 
+// Ogni filtro (stato, corrente) ha due caselle sincronizzate: nel pannello sotto la voce dello strato e nella legenda.
+const caselle = new Map(); // «tipo:chiave» -> { pannello, legenda }
+
+function impostaFiltro(tipo, chiave, acceso, origine) {
+  acceso ? accesi[tipo].add(chiave) : accesi[tipo].delete(chiave);
+  const c = caselle.get(`${tipo}:${chiave}`);
+  if (c) for (const [dove, casella] of Object.entries(c)) if (dove !== origine && casella) casella.checked = acceso;
+  applicaFiltri();
+}
+
+function pannelloFiltri(gruppo, tipo, titolo, voci) {
+  const blocco = el('div', 'colonnine-filtri');
+  blocco.append(el('h3', null, titolo));
+  for (const [chiave, nome] of voci) {
+    const label = el('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = true;
+    cb.disabled = true; // si abilita con lo strato acceso
+    cb.dataset.filtro = `${tipo}:${chiave}`;
+    cb.addEventListener('change', () => impostaFiltro(tipo, chiave, cb.checked, 'pannello'));
+    label.append(cb, ' ', nome);
+    blocco.append(label);
+    caselle.set(`${tipo}:${chiave}`, { ...caselle.get(`${tipo}:${chiave}`), pannello: cb });
+  }
+  gruppo.append(blocco);
+}
+
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Colonnine di ricarica'));
   const pallino = col => { const p = el('i', 'monumenti-pallino'); p.style.background = col; return p; };
-  for (const [nome, col] of STATI) {
-    legenda.append(voceFiltro(pallino(col), nome, acceso => { acceso ? accesi.stato.add(nome) : accesi.stato.delete(nome); applicaFiltri(); }));
-  }
+  const riga = (tipo, chiave, nome, col) => {
+    const r = voceFiltro(pallino(col), nome, acceso => impostaFiltro(tipo, chiave, acceso, 'legenda'));
+    caselle.set(`${tipo}:${chiave}`, { ...caselle.get(`${tipo}:${chiave}`), legenda: r._filtro.casella });
+    return r;
+  };
+  for (const [nome, col] of STATI) legenda.append(riga('stato', nome, nome, col));
   const tipi = el('div');
-  for (const [sigla, nome] of CORRENTI) {
-    tipi.append(voceFiltro(pallino('#fff'), nome, acceso => { acceso ? accesi.corrente.add(sigla) : accesi.corrente.delete(sigla); applicaFiltri(); }));
-  }
+  for (const [sigla, nome] of CORRENTI) tipi.append(riga('corrente', sigla, nome, '#fff'));
   legenda.append(tipi);
   legenda.append(el('p', 'uffici-nota', 'Stato dal vivo dalla Piattaforma Unica Nazionale (GSE)'));
   document.getElementById('legende').append(legenda);
+}
+
+// Sotto la voce dello strato: i filtri per stato e per tipo di corrente, attivi solo con lo strato acceso.
+function creaPannello(gruppo) {
+  creaLegenda();
+  pannelloFiltri(gruppo, 'stato', 'Stato', STATI.map(([s]) => [s, s]));
+  pannelloFiltri(gruppo, 'corrente', 'Corrente', CORRENTI);
 }
 
 // Stato aggiornato dallo snapshot remoto: errori di rete non toccano il ripiego del file.
@@ -82,9 +118,8 @@ async function aggiornaDalVivo() {
 
 export default {
   id: 'colonnine',
-  titolo: 'Colonnine di ricarica',
-  argomento: { titolo: 'Colonnine di ricarica', descrizione: 'Colonnine per veicoli elettrici di Palermo, con stato dal vivo, potenza e operatore.' },
-  gruppo: 'territorio',
+  titolo: 'Servizi',
+  argomento: { titolo: 'Servizi su strada', descrizione: 'Colonnine di ricarica per veicoli elettrici di Palermo, con stato dal vivo, potenza e operatore.' },
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: urlDati('colonnine/colonnine.geojson') });
   },
@@ -130,7 +165,14 @@ export default {
   },
   strati: [{
     id: 'colonnine', etichetta: 'Colonnine di ricarica', layers: [PUNTI], attivo: false,
-    suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
+    sottovoci: [
+      { titolo: 'Stato', voci: STATI.map(([s]) => ({ id: `stato:${s}`, etichetta: s })) },
+      { titolo: 'Corrente', voci: CORRENTI.map(([c, nome]) => ({ id: `corrente:${c}`, etichetta: nome })) },
+    ],
+    suCambio(attivo) {
+      if (legenda) legenda.hidden = !attivo;
+      for (const { pannello } of caselle.values()) pannello.disabled = !attivo;
+    },
   }],
-  pannello: creaLegenda,
+  pannello: creaPannello,
 };

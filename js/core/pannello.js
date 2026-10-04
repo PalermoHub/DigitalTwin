@@ -40,11 +40,11 @@ function imposta(map, ids, visibile) {
   }
 }
 
-const ETICHETTE = { base: 'Mappa', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Colonnine', incendi: 'Incendi', sicurezza: 'Sicurezza' };
+const ETICHETTE = { base: 'Mappa', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Servizi', incendi: 'Incendi', sicurezza: 'Sicurezza' };
 
 // Totale degli strati accesi (mostrato sul pulsante «Strati» di mobile)
 function aggiornaConteggio() {
-  const caselle = [...document.querySelectorAll('#pannello input[type=checkbox]:checked')];
+  const caselle = [...document.querySelectorAll('#pannello input[type=checkbox]:checked:not([data-filtro])')];
   const el = document.getElementById('strati-attivi');
   if (el) el.textContent = String(caselle.length);
   // chip degli strati accesi: si spengono con un clic
@@ -116,6 +116,13 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
   for (const m of moduli) {
     // un modulo con `gruppo` mette i suoi strati in un gruppo già esistente (che deve precederlo in MODULI)
     const gruppo = (m.gruppo && document.getElementById(`gruppo-${m.gruppo}`)) || aggiungi(m.id, m.titolo);
+    // `sezione`: titolo sopra gli strati di un modulo che condivide il gruppo con altri
+    if (m.sezione) {
+      const h = document.createElement('h3');
+      h.className = 'gruppo-sezione';
+      h.textContent = m.sezione;
+      gruppo.append(h);
+    }
     for (const s of m.strati) {
       const label = document.createElement('label');
       const cb = document.createElement('input');
@@ -132,7 +139,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     if (m.pannello) m.pannello(gruppo, map);
     // pallino verde sull'icona se nel gruppo c'è almeno uno strato acceso
     const segna = () => {
-      const caselle = [...gruppo.querySelectorAll('input[type=checkbox]')];
+      const caselle = [...gruppo.querySelectorAll('input[type=checkbox]:not([data-filtro])')];
       if (caselle.length) {
         const n = caselle.filter(c => c.checked).length;
         gruppo.bottone.dataset.attivo = String(n > 0);

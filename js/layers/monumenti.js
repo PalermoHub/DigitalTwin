@@ -95,8 +95,12 @@ function collegaPopup(map) {
   }
 }
 
+// Caselle delle categorie nel menu del layer e nella legenda: restano allineate (stessa categoria, due caselle).
+const caselle = new Map(); // categoria -> { pannello, legenda }
+
 // Legenda delle categorie in #legende: compare solo a layer attivo e ogni voce accende/spegne la categoria.
-function creaLegenda(_gruppo, map) {
+// Le stesse categorie compaiono come sottovoci nel menu del layer.
+function creaLegenda(gruppo, map) {
   const attive = new Set(MONUMENTI_CATEGORIE.map(([nome]) => nome));
   const applica = () => {
     const filtro = ['in', ['get', 'categoria'], ['literal', [...attive]]];
@@ -105,14 +109,33 @@ function creaLegenda(_gruppo, map) {
     if (!puntiTutti.length) return; // dati non ancora caricati
     map.getSource(SRC).setData({ type: 'FeatureCollection', features: puntiTutti.filter(f => attive.has(f.properties.categoria)) });
   };
+  const imposta = (nome, acceso, origine) => {
+    acceso ? attive.add(nome) : attive.delete(nome);
+    for (const [dove, casella] of Object.entries(caselle.get(nome))) if (dove !== origine) casella.checked = acceso;
+    applica();
+  };
   legenda = el('div', 'legenda legenda-monumenti');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Monumenti'));
+  const blocco = el('div', 'colonnine-filtri');
   for (const [nome, col] of MONUMENTI_CATEGORIE) {
     const pallino = el('i', 'monumenti-pallino');
     pallino.style.background = col;
-    legenda.append(voceFiltro(pallino, nome, acceso => { (acceso ? attive.add(nome) : attive.delete(nome)); applica(); }));
+    const riga = voceFiltro(pallino, nome, acceso => imposta(nome, acceso, 'legenda'));
+    legenda.append(riga);
+    const label = el('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = true;
+    cb.disabled = true; // si abilita con lo strato acceso
+    cb.dataset.filtro = `categoria:${nome}`;
+    cb.addEventListener('change', () => imposta(nome, cb.checked, 'pannello'));
+    const p = pallino.cloneNode();
+    label.append(cb, ' ', p, ' ', nome);
+    blocco.append(label);
+    caselle.set(nome, { pannello: cb, legenda: riga._filtro.casella });
   }
+  gruppo.append(blocco);
   document.getElementById('legende').append(legenda);
 }
 
@@ -120,7 +143,6 @@ export default {
   id: 'monumenti',
   titolo: 'Monumenti',
   argomento: { titolo: 'Monumenti', descrizione: 'Monumenti e luoghi di interesse storico-culturale, con foto e scheda del Portale del Turismo.' },
-  gruppo: 'territorio', // sotto «Layer», non un gruppo a sé
   aggiungiSorgenti(map) {
     map.addSource(SRC, {
       type: 'geojson', data: urlDati('monumenti/monumenti.geojson'),
@@ -168,7 +190,11 @@ export default {
     for (const f of puntiTutti) dettagli.set(f.properties.id, f.properties);
   },
   strati: [{ id: 'monumenti', etichetta: 'Monumenti (Portale del Turismo)', layers: LAYERS, attivo: false,
-    suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
+    sottovoci: [{ titolo: 'Categorie', voci: MONUMENTI_CATEGORIE.map(([nome]) => ({ id: `categoria:${nome}`, etichetta: nome })) }],
+    suCambio(attivo) {
+      if (legenda) legenda.hidden = !attivo;
+      for (const { pannello } of caselle.values()) pannello.disabled = !attivo;
+    },
   }],
   pannello: creaLegenda,
   scheda: {

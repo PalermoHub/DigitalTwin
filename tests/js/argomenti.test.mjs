@@ -31,3 +31,10 @@ test('senza `argomento` ripiega sul titolo del modulo e descrizione vuota', () =
 test('i moduli senza strati (la base cartografica) non compaiono', () => {
   assert.ok(!elencoArgomenti(moduli).some(a => a.id === 'base'));
 });
+
+test('le sotto-voci di uno strato (es. filtri delle colonnine) passano in elenco', () => {
+  const sottovoci = [{ titolo: 'Stato', voci: [{ id: 'stato:Disponibile', etichetta: 'Disponibile' }] }];
+  const a = elencoArgomenti([{ id: 'servizi', titolo: 'Servizi', strati: [{ id: 'colonnine', etichetta: 'Colonnine', sottovoci }] }])[0];
+  assert.deepEqual(a.strati[0].sottovoci, sottovoci);
+  assert.ok(!('sottovoci' in elencoArgomenti(moduli)[0].strati[0]));
+});

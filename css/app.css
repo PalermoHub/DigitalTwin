@@ -154,6 +154,9 @@ dialog li { margin: 4px 0; }
 .sotto-pannello { padding: 10px 14px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
 .sotto-pannello[hidden] { display: none; }
 .sotto-pannello h2 { margin: 0 0 6px; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+.colonnine-filtri { margin: 2px 0 6px 22px; }
+.colonnine-filtri h3 { margin: 6px 0 2px; }
+.colonnine-filtri input:disabled + * , .colonnine-filtri label:has(input:disabled) { opacity: .5; }
 .sotto-pannello h3 { margin: 10px 0 6px; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text); }
 .sotto-pannello select { padding: 5px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); font: inherit; background: #fff; color: var(--text); }
 
@@ -231,6 +234,9 @@ dialog li { margin: 4px 0; }
 .argomento h3 { margin: 0 0 2px; font-size: 14px; }
 .argomento p { margin: 0 0 6px; color: var(--text-muted); font-size: 13px; }
 .argomento label { display: block; padding: 2px 0; }
+.argomento-filtri { margin: 2px 0 4px 22px; }
+.argomento-filtri h4 { margin: 4px 0 0; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+.argomento-filtri label { font-size: 13px; }
 .guida-media { margin: 0 0 20px; }
 .guida-media video { display: block; width: 100%; height: auto; border-radius: var(--r-sm); background: #000; }
 .guida-media audio { display: block; width: 100%; margin-top: 8px; }
@@ -727,3 +733,4 @@ button.strato-chip:hover i { color: var(--text); }
 .col-legenda i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .col-legenda b { color: var(--text); }
 @media print { .col-grafici { break-inside: avoid; } }
+.gruppo-sezione { margin: 10px 0 2px; }

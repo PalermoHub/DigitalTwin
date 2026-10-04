@@ -86,7 +86,8 @@ export default {
   id: 'scuole',
   titolo: 'Scuole e sezioni elettorali',
   argomento: { titolo: 'Scuole e sezioni elettorali', descrizione: 'Scuole e asili comunali e sedi delle sezioni elettorali.' },
-  gruppo: 'territorio', // sotto «Layer»
+  gruppo: 'colonnine', // dentro «Servizi su strada»
+  sezione: 'Scuole e sezioni elettorali',
   aggiungiSorgenti(map) {
     for (const { chiave } of STRATI) {
       map.addSource(chiave, { type: 'geojson', data: urlDati(`scuole/${chiave}.geojson`) });
