@@ -13,8 +13,13 @@ const moduli = [
   { id: 'senza-testo', titolo: 'Senza testo', strati: [{ id: 's', etichetta: 'S' }] },
 ];
 
-test('un argomento per modulo con strati, nell\'ordine dei moduli', () => {
-  assert.deepEqual(elencoArgomenti(moduli).map(a => a.id), ['edifici', 'territorio', 'monumenti', 'senza-testo']);
+test('un argomento per modulo con strati, in ordine alfabetico di titolo', () => {
+  assert.deepEqual(elencoArgomenti(moduli).map(a => a.id), ['edifici', 'monumenti', 'senza-testo', 'territorio']);
+});
+
+test('gli strati di un argomento sono in ordine alfabetico di etichetta', () => {
+  const a = elencoArgomenti([{ id: 'm', titolo: 'M', strati: [{ id: 'z', etichetta: 'Zeta' }, { id: 'e', etichetta: 'è Esse' }, { id: 'a', etichetta: 'alfa' }] }])[0];
+  assert.deepEqual(a.strati.map(s => s.id), ['a', 'e', 'z']);
 });
 
 test('titolo e descrizione vengono da `argomento`; strati con id ed etichetta', () => {

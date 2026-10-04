@@ -1,4 +1,7 @@
 // Argomenti trattati: un elemento per modulo con strati, per la tab «Argomenti» del foglio Info.
+// Argomenti e strati sono sempre in ordine alfabetico: i moduli nuovi trovano il loro posto da soli.
+const alfabetico = (a, b) => a.localeCompare(b, 'it', { sensitivity: 'base' });
+
 export function elencoArgomenti(moduli) {
   return moduli
     .filter(m => m.strati?.length)
@@ -6,8 +9,9 @@ export function elencoArgomenti(moduli) {
       id: m.id,
       titolo: m.argomento?.titolo ?? m.titolo,
       descrizione: m.argomento?.descrizione ?? '',
-      strati: m.strati.map(s => ({ id: s.id, etichetta: s.etichetta, ...(s.sottovoci && { sottovoci: s.sottovoci }) })),
-    }));
+      strati: m.strati.map(s => ({ id: s.id, etichetta: s.etichetta, ...(s.sottovoci && { sottovoci: s.sottovoci }) })).sort((a, b) => alfabetico(a.etichetta, b.etichetta)),
+    }))
+    .sort((a, b) => alfabetico(a.titolo, b.titolo));
 }
 
 // Le caselle della tab pilotano quelle del pannello strati (`#strato-<id>`), che restano l'unica fonte di verità:

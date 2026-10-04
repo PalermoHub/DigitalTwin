@@ -20,6 +20,8 @@ let mappa = null;
 let legenda = null;
 let accese = null; // aree attive (null = tutte)
 let aree = [];
+let blocco = null; // contenitore delle caselle delle aree nel menu del layer
+const caselle = new Map(); // area -> { pannello, legenda }
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -103,16 +105,32 @@ function riempiLegenda() {
   for (const a of aree) {
     const pallino = el('i', 'monumenti-pallino');
     pallino.style.background = a.colore;
-    legenda.append(voceFiltro(pallino, `${a.area} (${a.n})`, acceso => {
+    const imposta = (acceso, origine) => {
       accese ??= new Set(tutte);
       acceso ? accese.add(a.area) : accese.delete(a.area);
       if (accese.size >= tutte.size) accese = null;
+      for (const [dove, casella] of Object.entries(caselle.get(a.area) ?? {})) if (dove !== origine) casella.checked = acceso;
       programma();
-    }));
+    };
+    const riga = voceFiltro(pallino, `${a.area} (${a.n})`, acceso => imposta(acceso, 'legenda'));
+    legenda.append(riga);
+    // la stessa area come casella nel menu del layer (con la pallino), abilitata a strato acceso
+    const label = el('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = true;
+    cb.disabled = legenda.hidden;
+    cb.dataset.filtro = `area:${a.area}`;
+    cb.addEventListener('change', () => imposta(cb.checked, 'pannello'));
+    label.append(cb, ' ', pallino.cloneNode(), ' ', a.area);
+    blocco?.append(label);
+    caselle.set(a.area, { pannello: cb, legenda: riga._filtro.casella });
   }
 }
 
-function creaLegenda() {
+function creaLegenda(gruppo) {
+  blocco = el('div', 'colonnine-filtri');
+  gruppo.append(blocco);
   legenda = el('div', 'legenda legenda-monumenti legenda-uffici');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Uffici comunali per area'));
@@ -125,7 +143,8 @@ export default {
   id: 'uffici',
   titolo: 'Uffici comunali',
   argomento: { titolo: 'Uffici comunali', descrizione: 'Sedi degli uffici del Comune di Palermo, con responsabili e contatti.' },
-  gruppo: 'territorio',
+  gruppo: 'colonnine', // dentro «Servizi su strada»
+  sezione: 'Uffici comunali',
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
     map.addSource(SRC_HIT, { type: 'geojson', data: urlDati('uffici/sedi.geojson') });
@@ -176,7 +195,14 @@ export default {
   },
   strati: [{
     id: 'uffici', etichetta: 'Uffici comunali (sedi)', layers: [PUNTI], attivo: false,
-    suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
+    // le aree si conoscono solo a dati caricati: l'elenco si legge quando serve (tab Argomenti)
+    get sottovoci() {
+      return aree.length ? [{ titolo: 'Aree', voci: aree.map(a => ({ id: `area:${a.area}`, etichetta: a.area })) }] : [];
+    },
+    suCambio(attivo) {
+      if (legenda) legenda.hidden = !attivo;
+      for (const { pannello } of caselle.values()) pannello.disabled = !attivo;
+    },
   }],
   pannello: creaLegenda,
 };

@@ -1,8 +1,12 @@
-import { pmt } from '../core/config.js';
+import { pmt, urlDati } from '../core/config.js';
+import { primo, righe } from '../core/scheda-util.js';
 import { registraTooltip } from '../core/tooltip.js';
 import { CONFINI_LEVEL_KEYS, confiniStyle, sezioniColors } from '../core/palette.js';
 
 export const SRC_SEZIONI = 'sezioni';
+const SRC_AMAP = 'amap-distretti';
+const ROSSO_AMAP = '#d32f2f';
+const FONTE_AMAP = 'Fonte: AMAP S.p.A. — Distretti idrici di Palermo';
 
 const RIGHE = [['upl', 'UPL', 'UPL'], ['quartieri', 'Quartiere', 'Quartiere'], ['circoscrizioni', 'Circoscrizione', 'Circoscrizione']];
 
@@ -16,6 +20,9 @@ function collegaTooltip(map) {
         righe.push([nome, props[campo]]);
       }
     }
+    const amap = map.getLayoutProperty('confini-amap', 'visibility') === 'visible'
+      ? map.queryRenderedFeatures(e.point, { layers: ['amap-distretti-hit'] })[0]?.properties?.DISTRETTO : null;
+    if (amap) righe.push(['Distretto AMAP', amap]);
     if (!righe.length) return null;
     const html = document.createElement('div');
     html.className = 'confini-tooltip';
@@ -37,6 +44,7 @@ export default {
   argomento: { titolo: 'Confini amministrativi', descrizione: 'Circoscrizioni, quartieri, UPL e sezioni di censimento.' },
   aggiungiSorgenti(map) {
     map.addSource('confini', { type: 'vector', url: pmt('popolazione/confini_amministrativi.pmtiles') });
+    map.addSource(SRC_AMAP, { type: 'geojson', data: urlDati('amap/amap_distretti.geojson') });
     map.addSource(SRC_SEZIONI, {
       type: 'vector',
       url: pmt('popolazione/geo_sezioni_2021.pmtiles'),
@@ -63,16 +71,36 @@ export default {
     // fill invisibile per il tooltip (come nell'app palermo_popolazione)
     map.addLayer({ id: 'confini-upl-fill', type: 'fill', source: 'confini', 'source-layer': 'upl', paint: { 'fill-opacity': 0 } });
     collegaTooltip(map);
+    // distretti idrici AMAP: linea rossa appena più spessa di quella delle UPL (1,2)
+    map.addLayer({
+      id: 'confini-amap', type: 'line', source: SRC_AMAP,
+      layout: { visibility: 'none', 'line-join': 'round' }, paint: { 'line-color': ROSSO_AMAP, 'line-width': 2 },
+    });
+    // fill invisibile e sempre presente: la scheda del luogo legge il distretto anche a strato spento
+    map.addLayer({ id: 'amap-distretti-hit', type: 'fill', source: SRC_AMAP, paint: { 'fill-opacity': 0 } });
     map.addLayer({
       id: 'confini-sezioni', type: 'line', source: SRC_SEZIONI, 'source-layer': 'sezioni', minzoom: 13,
       layout: { visibility: 'none' },
       paint: { 'line-color': sezioniColors(false).border, 'line-width': 0.5 },
     });
   },
+  scheda: {
+    layers: ['amap-distretti-hit'],
+    voci(trovati) {
+      const distretto = primo(trovati, 'amap-distretti-hit')?.properties?.DISTRETTO;
+      if (!distretto) return [];
+      return [{
+        chiave: 'amap-distretto', peso: 12, strato: 'amap-distretti', titolo: 'Distretto idrico', icona: 'fontanella', badge: 'AMAP',
+        gruppi: [{ righe: righe([['Distretto', distretto]]) }],
+        fonte: FONTE_AMAP,
+      }];
+    },
+  },
   strati: [
     { id: 'circoscrizioni', etichetta: 'Circoscrizioni', layers: ['confini-circoscrizioni'], attivo: true },
     { id: 'quartieri', etichetta: 'Quartieri', layers: ['confini-quartieri'], attivo: false },
     { id: 'upl', etichetta: 'UPL (unità di primo livello)', layers: ['confini-upl'], attivo: false },
+    { id: 'amap-distretti', etichetta: 'Distretti idrici AMAP', layers: ['confini-amap'], attivo: false },
     { id: 'sezioni', etichetta: 'Sezioni di censimento (da zoom 13)', layers: ['confini-sezioni'], attivo: false },
   ],
 };

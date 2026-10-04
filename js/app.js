@@ -12,6 +12,7 @@ import territorio from './layers/territorio.js';
 import edifici from './layers/edifici.js';
 import monumenti from './layers/monumenti.js';
 import alberi from './layers/alberi.js';
+import fontanelle from './layers/fontanelle.js';
 import scuole from './layers/scuole.js';
 import uffici from './layers/uffici.js';
 import colonnine from './layers/colonnine.js';
@@ -39,7 +40,7 @@ riduciLegenda.addEventListener('click', () => {
 });
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, alberi, uffici, trasporto, sicurezza, colonnine, scuole, incendi, confini];
+const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, alberi, fontanelle, trasporto, sicurezza, colonnine, uffici, scuole, incendi, confini];
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
 
