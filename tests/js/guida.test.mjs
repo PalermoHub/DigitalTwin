@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 import { PASSI } from '../../js/core/guida-contenuti.js';
 
 test('i passi nell\'ordine previsto', () => {
@@ -52,6 +53,12 @@ test('i passi RNDT sono statici (immagine fatta a mano, fuori da video e screens
   const testo = rndt.map(p => p.paragrafi.join(' ')).join(' ');
   for (const parola of ['Repertorio Nazionale', 'Palermo', 'GeoJSON', 'KML', 'KMZ', 'GPX', 'Shapefile', 'CSV', '5 MB', 'Altri dati (RNDT)', 'salvano', 'GetFeatureInfo']) {
     assert.ok(testo.includes(parola), `manca «${parola}»`);
+  }
+});
+
+test('le immagini dei passi statici esistono (si rigenerano con scripts/guida_screenshot_rndt.py)', () => {
+  for (const p of PASSI.filter(p => p.statico)) {
+    assert.ok(existsSync(new URL(`../../${p.immagine.file}`, import.meta.url)), `manca ${p.immagine.file}`);
   }
 });
 
