@@ -4,6 +4,7 @@ import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js
 import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaScheda } from './core/scheda.js';
 import { collegaRndt } from './rndt/index.js';
+import { creaGruppoRndt } from './rndt/gruppo.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaZone } from './core/zone.js';
@@ -68,8 +69,9 @@ map.once('style.load', async () => {
 
   for (const m of MODULI) m.aggiungiSorgenti(map);
   for (const m of MODULI) m.aggiungiLayer(map);
-  costruisciPannello(map, MODULI, document.getElementById('pannello'), document.getElementById('barra-gruppi'));
-  const rndt = collegaRndt(map, document.getElementById('rndt-pannello'));
+  const gruppoRndt = creaGruppoRndt(); // ultimo gruppo della barra: i suoi layer arrivano a runtime
+  costruisciPannello(map, [...MODULI, gruppoRndt.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
+  const rndt = collegaRndt(map, document.getElementById('rndt-pannello'), gruppoRndt);
   collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt });
   document.getElementById('btn-rndt').addEventListener('click', rndt.apri);
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
@@ -99,7 +101,7 @@ map.once('style.load', async () => {
 
   const foglio = document.getElementById('crediti');
   const commuta = () => {
-    if (catalogo) commutaCrediti(foglio, catalogo, MODULI);
+    if (catalogo) commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo]);
     else segnala('Fonti non disponibili: catalogo dati assente');
   };
   const linguetta = document.getElementById('linguetta-info');

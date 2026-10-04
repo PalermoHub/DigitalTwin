@@ -6,6 +6,8 @@ import { aggiungi as salvaAggiungi, rimuovi as salvaRimuovi, aggiorna as salvaAg
 
 const COLORI = ['#1c7ed6', '#e8590c', '#2f9e44', '#ae3ec9', '#c92a2a', '#0c8599'];
 const FINESTRA_DOWNLOAD_MS = 30000;
+// Un GeoJSON senza URL si salva coi suoi dati; localStorage è piccolo (circa 5 MB per tutto il sito): oltre questo tetto resta solo in sessione
+export const TETTO_DATI = 1_000_000;
 const SEMBRA_DATI = /getfeature(?!info)|\.geojson|f=geojson|outputformat=[^&]*json/i;
 const GET_FEATURE = /request=getfeature(?!info)/i;
 const SOLO_CONTEGGIO = /resulttype=hits/i;
@@ -76,10 +78,11 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     return registra({ id, tipo: 'tile', nome, visibile: true, sorgente: { url, attribution: opz.attribution }, idMappa: [id], idSorgente: id, salvato: true }, { salva });
   }
 
-  function creaGeoJson(nome, fc, url, salva) {
+  function creaGeoJson(nome, fc, url, salva, idSalvato) {
     const { fc: dati, filtrato } = filtraSuConfine(fc, anelli());
     if (filtrato && !dati.features.length) throw new Error('nessuna feature dentro il Comune di Palermo');
-    const id = `rndt-${hash(url ? `geojson|${url}` : `geojson|${nome}|${contatore++}`)}`;
+    const testo = url ? '' : JSON.stringify(dati);
+    const id = idSalvato ?? `rndt-${hash(url ? `geojson|${url}` : `geojson|${nome}|${testo}`)}`;
     if (layers.has(id)) { togliDallaMappa(layers.get(id)); layers.delete(id); }
     const colore = COLORI[parseInt(hash(nome), 36) % COLORI.length];
     map.addSource(id, { type: 'geojson', data: dati });
@@ -89,9 +92,25 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
       { id: `${id}-pt`, type: 'circle', source: id, filter: ['==', ['geometry-type'], 'Point'], paint: { 'circle-color': colore, 'circle-radius': 5, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } },
     ];
     for (const s of strati) map.addLayer(s);
-    return registra({
-      id, tipo: 'geojson', nome, visibile: true, sorgente: url ? { url } : {}, idMappa: strati.map(s => s.id), idSorgente: id, salvato: Boolean(url),
-    }, { salva });
+    const rec = { id, tipo: 'geojson', nome, visibile: true, sorgente: url ? { url } : {}, idMappa: strati.map(s => s.id), idSorgente: id, salvato: Boolean(url) };
+    if (!url) {
+      // dati inline: si salvano solo se entrano; una scrittura fallita non deve bloccare i salvataggi degli altri layer
+      rec.sorgente = { dati };
+      rec.salvato = true; // ripristino compreso: i dati vengono dall'archivio
+      if (testo.length > TETTO_DATI) {
+        rec.salvato = false;
+        if (salva) notifica(`«${nome}» è troppo grande per essere salvato: resta finché la pagina è aperta.`);
+      } else if (salva) {
+        const nuovo = salvaAggiungi(stato, daSalvare(rec));
+        if (scrivi(nuovo)) stato = nuovo;
+        else {
+          rec.salvato = false;
+          notifica(`Non riesco a salvare «${nome}»: resta finché la pagina è aperta.`);
+        }
+      }
+      return registra(rec, { salva: false });
+    }
+    return registra(rec, { salva });
   }
 
   async function fetchArrayBuffer(url) {
@@ -176,6 +195,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
           let id;
           if (salvato.tipo === 'wms') id = creaWms(salvato.nome, salvato.sorgente, false);
           else if (salvato.tipo === 'tile') id = creaTile(salvato.nome, salvato.sorgente.url, { attribution: salvato.sorgente.attribution }, false);
+          else if (salvato.sorgente.dati) id = creaGeoJson(salvato.nome, salvato.sorgente.dati, undefined, false, salvato.id);
           else {
             const buffer = await fetchArrayBuffer(salvato.sorgente.url);
             id = creaGeoJson(salvato.nome, JSON.parse(new TextDecoder().decode(buffer)), salvato.sorgente.url, false);

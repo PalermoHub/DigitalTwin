@@ -14,7 +14,7 @@ export const PROXY_RNDT = scegliProxy(location.search, location.hostname);
 const PLUGIN = 'js/vendor/openrndt-geolibre/index.js';
 const STILE = 'js/vendor/openrndt-geolibre/style.css';
 
-export function collegaRndt(map, elementoPannello) {
+export function collegaRndt(map, elementoPannello, gruppo) {
   const archivio = (() => { try { return window.localStorage; } catch { return null; } })();
   let anelli = [];
   // il confine comunale serve al filtro dei download; è lo stesso file delle zone, già in cache del browser
@@ -25,6 +25,7 @@ export function collegaRndt(map, elementoPannello) {
     map, proxy: PROXY_RNDT, stato: leggi(archivio), scrivi: s => salva(archivio, s), anelli: () => anelli, notifica: segnala, pannello,
   });
   host.suCambio(() => pannello.disegnaElenco(host));
+  gruppo?.collega(host, apri); // gruppo «RNDT» della barra strati
 
   let plugin = null;
   async function apri() {

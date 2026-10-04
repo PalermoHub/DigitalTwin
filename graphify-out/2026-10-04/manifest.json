@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791126288.2179198,
-    "ast_hash": "10dde54b1ec14b7604afbdf6d9e7c282",
+    "mtime": 1791128917.3537846,
+    "ast_hash": "7f40ae8ce1d5f7e8ba197191ce956eff",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
-    "mtime": 1791127489.4882686,
-    "ast_hash": "d755318679b10845cb30fb4a83331ec3",
+    "mtime": 1791127760.0224428,
+    "ast_hash": "7113d38482f48707238ba25ab17d0ac9",
     "semantic_hash": ""
   },
   "js/core/config.js": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791119333.0488968,
-    "ast_hash": "1a8e134f524ade2dbad3a1dee469593c",
+    "mtime": 1791128925.264702,
+    "ast_hash": "4e6bc9deb3afca64aee080bf8423c1ca",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -1330,8 +1330,8 @@
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
-    "mtime": 1791126336.9607983,
-    "ast_hash": "b916c0b7d2e19258d8dd56415209ee65",
+    "mtime": 1791128917.3534381,
+    "ast_hash": "4216628860983e54dd5319b8cb769a6d",
     "semantic_hash": ""
   },
   "js/rndt/info.js": {
@@ -1340,8 +1340,8 @@
     "semantic_hash": ""
   },
   "js/rndt/pannello.js": {
-    "mtime": 1791127489.488604,
-    "ast_hash": "bb828eaf76bcdd14c8fb45432f372ffa",
+    "mtime": 1791127760.022933,
+    "ast_hash": "3595179b4ed3bbdc1a9b29bb570f8295",
     "semantic_hash": ""
   },
   "js/rndt/proxy.js": {
@@ -1422,6 +1422,16 @@
   "worker/proxy-core.js": {
     "mtime": 1791126607.6660488,
     "ast_hash": "723413dc5f39694a0adaae47f2e52159",
+    "semantic_hash": ""
+  },
+  "js/rndt/gruppo.js": {
+    "mtime": 1791128906.380208,
+    "ast_hash": "50a342ca33c653f6cdfbb45e0e1a768c",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-gruppo.test.mjs": {
+    "mtime": 1791128892.5409017,
+    "ast_hash": "fd595300281cc1c0bb6678c703f97bce",
     "semantic_hash": ""
   }
 }

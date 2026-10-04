@@ -1,7 +1,7 @@
 // tests/js/rndt-host.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { creaHost, urlProxy } from '../../js/rndt/host.js';
+import { creaHost, urlProxy, TETTO_DATI } from '../../js/rndt/host.js';
 
 const PROXY = 'https://proxy.test';
 const quadrato = [[13.3, 38.1], [13.4, 38.1], [13.4, 38.2], [13.3, 38.2], [13.3, 38.1]];
@@ -87,17 +87,52 @@ test('fetchArrayBuffer: risposta non ok = errore con lo stato', async () => {
   await assert.rejects(host.fetchArrayBuffer('https://a.it/x'), /HTTP 403/);
 });
 
-test('addGeoJsonLayer salva l’URL del download recente; senza download il layer vale solo per la sessione', async () => {
+test('addGeoJsonLayer salva l’URL del download recente', async () => {
   const url = 'https://wfs.example.org/ows?SERVICE=WFS&REQUEST=GetFeature&TYPENAMES=x&BBOX=13.1,37.9,13.5,38.3';
   const a = costruisci();
   await a.host.fetchArrayBuffer(url);
   const id = a.host.addGeoJsonLayer('Zone', fc([pt([13.35, 38.15])]));
   assert.equal(a.scritti.at(-1).layers[0].sorgente.url, url);
   assert.equal(a.host.elenco().find(l => l.id === id).salvato, true);
-  const b = costruisci();
-  const id2 = b.host.addGeoJsonLayer('Zone', fc([pt([13.35, 38.15])]));
-  assert.equal(b.scritti.length, 0);
-  assert.equal(b.host.elenco().find(l => l.id === id2).salvato, false);
+});
+
+test('addGeoJsonLayer senza download (file locale) salva i dati già filtrati', () => {
+  const { host, scritti } = costruisci({ anelli: [quadrato] });
+  const id = host.addGeoJsonLayer('Zone', fc([pt([13.35, 38.15]), pt([14, 39])]));
+  const salvato = scritti.at(-1).layers[0];
+  assert.equal(salvato.id, id);
+  assert.equal(salvato.sorgente.dati.features.length, 1);
+  assert.equal(host.elenco().find(l => l.id === id).salvato, true);
+});
+
+test('GeoJSON oltre il tetto: resta in mappa solo per la sessione, con avviso', () => {
+  const grosso = fc([{ type: 'Feature', properties: { x: 'a'.repeat(TETTO_DATI) }, geometry: { type: 'Point', coordinates: [13.35, 38.15] } }]);
+  const { host, map, scritti, avvisi } = costruisci();
+  const id = host.addGeoJsonLayer('Grosso', grosso);
+  assert.equal(map.sorgenti.size, 1);
+  assert.equal(scritti.length, 0);
+  assert.equal(host.elenco().find(l => l.id === id).salvato, false);
+  assert.match(avvisi[0], /troppo grande/);
+});
+
+test('scrittura fallita di un GeoJSON: l’archivio non lo contiene e gli altri layer si salvano ancora', () => {
+  const { host, scritti, avvisi } = costruisci({ scrivi: s => !s.layers.some(l => l.tipo === 'geojson') });
+  const id = host.addGeoJsonLayer('Zone', fc([pt([13.35, 38.15])]));
+  assert.equal(host.elenco().find(l => l.id === id).salvato, false);
+  assert.match(avvisi[0], /Non riesco a salvare/);
+  host.addWmsLayer('PAI', wmsOpz);
+  assert.deepEqual(scritti.at(-1).layers.map(l => l.tipo), ['wms']);
+});
+
+test('ripristina un GeoJSON salvato coi dati: stesso id, nessuna rete', async () => {
+  const stato = { v: 1, layers: [{ id: 'rndt-x1', tipo: 'geojson', nome: 'Zone', visibile: true, sorgente: { dati: fc([pt([13.35, 38.15])]) } }] };
+  const { host, map, chiamate } = costruisci({ stato, fetchFn: async () => { throw new Error('rete'); } });
+  await host.ripristina();
+  assert.equal(chiamate.length, 0);
+  assert.ok(map.sorgenti.has('rndt-x1'));
+  assert.equal(host.elenco()[0].indisponibile, false);
+  host.mostra('rndt-x1', false);
+  assert.equal(host.elenco()[0].visibile, false);
 });
 
 test('addGeoJsonLayer: nessuna feature dentro Palermo = errore, nessun layer in mappa', () => {

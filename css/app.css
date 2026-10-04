@@ -758,3 +758,13 @@ button.strato-chip:hover i { color: var(--text); }
 .rndt-contenuto { flex: 1; min-height: 0; overflow: auto; }
 .rndt-attesa, .rndt-errore { margin: 16px; color: var(--text-muted); }
 .rndt-errore { color: var(--avviso-scheda-ink); }
+
+/* Gruppo «RNDT» della barra strati */
+.rndt-gruppo-aggiungi { width: 100%; margin: 0 0 6px; padding: 6px 10px; border: 1px dashed var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--link); font: inherit; font-weight: 600; cursor: pointer; }
+.rndt-gruppo-aggiungi:hover { background: var(--surface-hover); }
+.rndt-gruppo-riga { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rndt-gruppo-riga label { overflow-wrap: anywhere; }
+.rndt-gruppo-riga em { color: var(--text-muted); font-size: var(--fs-sm, 12px); }
+.rndt-gruppo-togli { flex: none; width: 28px; height: 28px; border: 0; border-radius: var(--r-pill); background: none; color: var(--text-muted); font-size: 18px; line-height: 1; cursor: pointer; }
+.rndt-gruppo-togli:hover { background: var(--surface-hover); color: var(--text); }
+.rndt-gruppo-vuoto { margin: 4px 0; color: var(--text-muted); font-size: var(--fs-sm, 13px); }

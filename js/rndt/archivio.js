@@ -5,6 +5,8 @@
 export const CHIAVE = 'dt:rndt:v1';
 const TIPI = ['wms', 'tile', 'geojson'];
 const vuoto = () => ({ v: 1, layers: [] });
+// un GeoJSON si richiama dall'URL oppure dai dati salvati con lui
+const sorgenteValida = l => l.tipo !== 'geojson' || typeof l.sorgente?.url === 'string' || l.sorgente?.dati?.type === 'FeatureCollection';
 
 export function leggi(storage) {
   try {
@@ -12,7 +14,7 @@ export function leggi(storage) {
     if (!grezzo) return vuoto();
     const s = JSON.parse(grezzo);
     if (s?.v !== 1 || !Array.isArray(s.layers)) return vuoto();
-    return { v: 1, layers: s.layers.filter(l => l && typeof l.id === 'string' && TIPI.includes(l.tipo)) };
+    return { v: 1, layers: s.layers.filter(l => l && typeof l.id === 'string' && TIPI.includes(l.tipo) && sorgenteValida(l)) };
   } catch {
     return vuoto();
   }
