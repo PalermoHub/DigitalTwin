@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
-    "mtime": 1791122946.886289,
-    "ast_hash": "2c67126de50a32c6a054fdc02bb46ed8",
+    "mtime": 1791127760.0224428,
+    "ast_hash": "7113d38482f48707238ba25ab17d0ac9",
     "semantic_hash": ""
   },
   "js/core/config.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791049165.8038888,
-    "ast_hash": "7eaec23bccec81ecb03e332f4a953ad3",
+    "mtime": 1791127489.4901013,
+    "ast_hash": "c7116b0b404e4a58149e91a661e2416a",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1340,8 +1340,8 @@
     "semantic_hash": ""
   },
   "js/rndt/pannello.js": {
-    "mtime": 1791126191.0990126,
-    "ast_hash": "c7b97f3d7d08e474ba9aa552a628ede3",
+    "mtime": 1791127760.022933,
+    "ast_hash": "3595179b4ed3bbdc1a9b29bb570f8295",
     "semantic_hash": ""
   },
   "js/rndt/proxy.js": {
@@ -1390,8 +1390,8 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-proxy.test.mjs": {
-    "mtime": 1791126259.6567972,
-    "ast_hash": "68cd193e846321882d32608622df9a15",
+    "mtime": 1791126599.7203574,
+    "ast_hash": "32a96fa69f305fc399bc5efd90b04a6e",
     "semantic_hash": ""
   },
   "tests/js/scheda-ritardo.test.mjs": {
@@ -1400,13 +1400,13 @@
     "semantic_hash": ""
   },
   "worker/rndt-proxy.js": {
-    "mtime": 1791126287.9868064,
-    "ast_hash": "9f1bc5bf9ec65f0a54b772fa2d7f3279",
+    "mtime": 1791126607.6662145,
+    "ast_hash": "776c48485555034fa29dcbb4af0e2857",
     "semantic_hash": ""
   },
   "docs/RNDT.md": {
-    "mtime": 1791126356.7687974,
-    "ast_hash": "f3452f89e89b78fbe53faac0d690aaf5",
+    "mtime": 1791126644.9158487,
+    "ast_hash": "aaf11cbcd46ad75963c213a03e7021f1",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-04-rndt-catalogo.md": {
@@ -1417,6 +1417,11 @@
   "docs/superpowers/specs/2026-10-04-rndt-catalogo-design.md": {
     "mtime": 1791126168.020875,
     "ast_hash": "b54b1793c7e8e4df5789b9bd56036f0e",
+    "semantic_hash": ""
+  },
+  "worker/proxy-core.js": {
+    "mtime": 1791126607.6660488,
+    "ast_hash": "723413dc5f39694a0adaae47f2e52159",
     "semantic_hash": ""
   }
 }

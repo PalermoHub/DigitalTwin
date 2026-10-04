@@ -741,6 +741,11 @@ button.strato-chip:hover i { color: var(--text); }
 @media (min-width: 721px) { #rndt-pannello { top: 0; left: auto; width: var(--scheda-w); border-radius: 0; } }
 .rndt-testata { flex: none; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--border); }
 .rndt-testata h2 { margin: 0; font-size: var(--fs-md); font-weight: 700; }
+.rndt-autore { flex: none; margin: 0; padding: 6px 12px; font-size: var(--fs-sm, 12px); color: var(--muted, inherit); border-bottom: 1px solid var(--border); }
+.rndt-autore a { color: inherit; font-weight: 600; }
+.plugin-merito-titolo { margin: 0 0 4px; font-weight: 700; font-size: var(--fs-md); }
+.plugin-merito p { margin: 0 0 6px; }
+.plugin-merito { padding: 10px 12px; border-radius: var(--r-md, 8px); background: var(--accent-soft); }
 .rndt-indietro { flex: none; min-height: 36px; padding: 0 12px; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
 .rndt-indietro:hover { background: var(--surface-hover); }
 .rndt-layer { flex: none; padding: 8px 12px; border-bottom: 1px solid var(--border); background: var(--surface-alt); font-size: var(--fs-sm, 13px); }

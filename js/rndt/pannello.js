@@ -41,7 +41,14 @@ export function creaPannello(elemento) {
   elenco.hidden = true;
   const contenuto = el('div', 'rndt-contenuto');
   contenuto.append(el('p', 'rndt-attesa', 'Caricamento del catalogo…'));
-  elemento.append(testata, elenco, contenuto);
+  const autore = el('p', 'rndt-autore', 'Plugin openrndt-geolibre di ');
+  const aut = el('a', null, 'Andrea Borruso');
+  aut.href = 'https://www.linkedin.com/in/andreaborruso/';
+  const repo = el('a', null, 'openrndt-geolibre');
+  repo.href = 'https://github.com/ondata/openrndt-geolibre';
+  for (const a of [aut, repo]) { a.target = '_blank'; a.rel = 'noopener'; }
+  autore.append(aut, ' (onData) · ', repo);
+  elemento.append(testata, autore, elenco, contenuto);
 
   let registrazione = null;
   let montato = false;
