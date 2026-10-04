@@ -1,7 +1,7 @@
 // tests/js/rndt-proxy.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { gestisci, ospiteValido, urlDestinazione, LIMITE_BYTE } from '../../worker/rndt-proxy.js';
+import { gestisci, ospiteValido, urlDestinazione, LIMITE_BYTE } from '../../worker/proxy-core.js';
 
 const rq = (percorso, init = {}) => new Request(`https://proxy.test${percorso}`, init);
 const ORIGINE = 'https://dt.example';

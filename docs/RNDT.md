@@ -9,10 +9,21 @@ Il pulsante **RNDT** nella barra strumenti della mappa (icona a nuvola) apre il 
 
 ## Proxy CORS (Cloudflare Worker)
 
-I servizi di terzi non danno CORS: tutto passa da `worker/rndt-proxy.js`. Rotta `/t/<host>/<percorso>?<query>`; solo https, GET/HEAD, nomi pubblici, max 10 MB, nessuna cache.
+I servizi di terzi non danno CORS: tutto passa da `worker/rndt-proxy.js`. `rndt-proxy.js` è solo il punto d'ingresso (un Worker può esportare solo il gestore); la logica e i test sono in `proxy-core.js`. Rotta `/t/<host>/<percorso>?<query>`; solo https, GET/HEAD, nomi pubblici, max 10 MB, nessuna cache.
+
+Prova in locale (senza pubblicare):
 
 ```bash
 cd worker
+npx wrangler dev --port 8787
+```
+poi apri l'app da `localhost` con `?rndt-proxy=http://127.0.0.1:8787` (es. `http://localhost:8000/?rndt-proxy=http://127.0.0.1:8787`).
+
+Pubblicazione:
+
+```bash
+cd worker
+npx wrangler login      # una volta
 npx wrangler deploy
 ```
 
