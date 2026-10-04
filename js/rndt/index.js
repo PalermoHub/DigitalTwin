@@ -5,6 +5,9 @@ import { creaPannello } from './pannello.js';
 import { interrogaTutti, segnaposto } from './info.js';
 import { leggi, salva } from './archivio.js';
 import { anelliDaZone } from './area.js';
+import { importaFile } from './importa.js';
+import { librerie } from './librerie.js';
+import { archivioIndexedDB } from './dati.js';
 import { scegliProxy } from './proxy.js';
 import { urlDati } from '../core/config.js';
 import { segnala } from '../core/pannello.js';
@@ -20,12 +23,24 @@ export function collegaRndt(map, elementoPannello, gruppo) {
   // il confine comunale serve al filtro dei download; è lo stesso file delle zone, già in cache del browser
   const anelliPronti = fetch(urlDati('popolazione/confini_zone.json')).then(r => r.json()).then(z => { anelli = anelliDaZone(z); }).catch(() => {});
 
+  const archivioDati = archivioIndexedDB();
   const pannello = creaPannello(elementoPannello);
   const host = creaHost({
-    map, proxy: PROXY_RNDT, stato: leggi(archivio), scrivi: s => salva(archivio, s), anelli: () => anelli, notifica: segnala, pannello,
+    map, proxy: PROXY_RNDT, stato: leggi(archivio), scrivi: s => salva(archivio, s), anelli: () => anelli, notifica: segnala, pannello, archivioDati,
   });
   host.suCambio(() => pannello.disegnaElenco(host));
-  gruppo?.collega(host, apri); // gruppo «RNDT» della barra strati
+
+  // Un file dal computer: legge, riconduce a GeoJSON WGS84 e lo aggiunge come layer. Gli errori si mostrano, non si lanciano.
+  async function carica(file) {
+    try {
+      await anelliPronti; // il filtro sul confine di Palermo ha bisogno del confine
+      const { nome, fc, avvisi } = await importaFile(file, librerie);
+      for (const a of avvisi) segnala(`${file.name}: ${a}`);
+      host.addFileLayer(nome, fc);
+    } catch (errore) {
+      segnala(`Non carico «${file.name}»: ${errore.message}`);
+    }
+  }
 
   let plugin = null;
   async function apri() {
@@ -42,6 +57,8 @@ export function collegaRndt(map, elementoPannello, gruppo) {
       pannello.errore(`Catalogo RNDT non disponibile: ${errore.message}`);
     }
   }
+
+  gruppo?.collega(host, apri, carica); // gruppo «RNDT» della barra strati
 
   const dentro = (l, { lng, lat }) => {
     const b = l.sorgente?.bounds;

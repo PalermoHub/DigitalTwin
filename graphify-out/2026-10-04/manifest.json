@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791128917.3537846,
-    "ast_hash": "7f40ae8ce1d5f7e8ba197191ce956eff",
+    "mtime": 1791129200.8993905,
+    "ast_hash": "0c026f2d5f4c357c2aa4f8236f2e36aa",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -1315,8 +1315,8 @@
     "semantic_hash": ""
   },
   "js/rndt/archivio.js": {
-    "mtime": 1791126191.0971382,
-    "ast_hash": "4d8a7be014247781c63d330390f48754",
+    "mtime": 1791129153.81893,
+    "ast_hash": "1579f20fe3cca946236c7e531adcd8a5",
     "semantic_hash": ""
   },
   "js/rndt/area.js": {
@@ -1325,8 +1325,8 @@
     "semantic_hash": ""
   },
   "js/rndt/host.js": {
-    "mtime": 1791126203.7426705,
-    "ast_hash": "12fd4284aeca7af829b1e2f80dc1f9fb",
+    "mtime": 1791129184.5165536,
+    "ast_hash": "09fc52c26818b485f347bc0356ce5a23",
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
@@ -1365,8 +1365,8 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-archivio.test.mjs": {
-    "mtime": 1791126180.7126493,
-    "ast_hash": "ae98b40a4e9f987920bcf71d975fba4d",
+    "mtime": 1791129168.344351,
+    "ast_hash": "504377b72c7903cac30e0f4714ea53c7",
     "semantic_hash": ""
   },
   "tests/js/rndt-area.test.mjs": {
@@ -1375,8 +1375,8 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-host.test.mjs": {
-    "mtime": 1791126180.7133675,
-    "ast_hash": "8e03e3e0ccac81e230deb2878a24131d",
+    "mtime": 1791129200.8989947,
+    "ast_hash": "4baf381dd70d8f44b19c7693689c67bf",
     "semantic_hash": ""
   },
   "tests/js/rndt-info.test.mjs": {
@@ -1405,8 +1405,8 @@
     "semantic_hash": ""
   },
   "docs/RNDT.md": {
-    "mtime": 1791126644.9158487,
-    "ast_hash": "aaf11cbcd46ad75963c213a03e7021f1",
+    "mtime": 1791129212.361767,
+    "ast_hash": "48a3aab85c4afbe2d08c416175e86d24",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-04-rndt-catalogo.md": {
@@ -1425,13 +1425,13 @@
     "semantic_hash": ""
   },
   "js/rndt/gruppo.js": {
-    "mtime": 1791128906.380208,
-    "ast_hash": "50a342ca33c653f6cdfbb45e0e1a768c",
+    "mtime": 1791129200.899191,
+    "ast_hash": "b1b525c039aea90aadb23e4fb8a11775",
     "semantic_hash": ""
   },
   "tests/js/rndt-gruppo.test.mjs": {
-    "mtime": 1791128892.5409017,
-    "ast_hash": "fd595300281cc1c0bb6678c703f97bce",
+    "mtime": 1791129200.89959,
+    "ast_hash": "3f23887cc5033a49d29b73d8723f86a9",
     "semantic_hash": ""
   }
 }

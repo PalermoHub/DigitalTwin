@@ -3,6 +3,8 @@
 // accensione, rimozione e il pulsante che apre il catalogo. Il gruppo nasce vuoto con la barra e si riempie
 // quando l'host RNDT è pronto; resta allineato all'host con suCambio.
 
+import { ESTENSIONI } from './importa.js';
+
 const ordina = (a, b) => a.nome.localeCompare(b.nome, 'it', { sensitivity: 'base' });
 
 // Modello delle righe (puro, testabile): ordine alfabetico, stato e nota di ogni layer
@@ -27,13 +29,36 @@ export function creaGruppoRndt() {
   let radice = null;
   let host = null;
   let apriCatalogo = () => {};
+  let caricaFile = async () => {};
+
+  let selettore = null;
+  // selettore dei file del computer: creato al primo disegno (serve il DOM), poi si sposta nel gruppo a ogni ridisegno
+  function creaSelettore() {
+    const input = el('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = ESTENSIONI.join(',');
+    input.hidden = true;
+    input.addEventListener('change', async () => {
+      const files = [...input.files];
+      input.value = ''; // permette di riscegliere lo stesso file
+      for (const file of files) await caricaFile(file);
+    });
+    return input;
+  }
 
   function disegna() {
     if (!radice || !host) return;
+    selettore ??= creaSelettore();
     const titolo = radice.querySelector('h2');
-    const aggiungi = el('button', 'rndt-gruppo-aggiungi', '＋ Aggiungi dati RNDT');
-    aggiungi.type = 'button';
-    aggiungi.addEventListener('click', () => apriCatalogo());
+    const azioni = el('div', 'rndt-gruppo-azioni');
+    const catalogo = el('button', 'rndt-gruppo-aggiungi', '＋ Dal catalogo RNDT');
+    const file = el('button', 'rndt-gruppo-aggiungi', '📁 Carica file dal computer');
+    file.title = `Formati: ${ESTENSIONI.join(' ')}`;
+    for (const b of [catalogo, file]) b.type = 'button';
+    catalogo.addEventListener('click', () => apriCatalogo());
+    file.addEventListener('click', () => selettore.click());
+    azioni.append(catalogo, file);
     const righe = righeGruppo(host.elenco());
     const voci = righe.length
       ? righe.map(r => {
@@ -56,7 +81,7 @@ export function creaGruppoRndt() {
         return riga;
       })
       : [el('p', 'rndt-gruppo-vuoto', 'Nessun layer RNDT: cercalo nel catalogo.')];
-    radice.replaceChildren(titolo, aggiungi, ...voci);
+    radice.replaceChildren(titolo, azioni, selettore, ...voci);
     // il pannello conta le caselle accese (pallino dell'icona, «Strati · N», chip): lo avvisiamo del cambio
     radice.dispatchEvent(new Event('change'));
   }
@@ -72,9 +97,10 @@ export function creaGruppoRndt() {
       get strati() { return host ? righeGruppo(host.elenco()).map(r => ({ id: r.id, etichetta: r.nome })) : []; },
       pannello(gruppo) { radice = gruppo; disegna(); },
     },
-    collega(hostRndt, apri) {
+    collega(hostRndt, apri, carica = async () => {}) {
       host = hostRndt;
       apriCatalogo = apri;
+      caricaFile = carica;
       host.suCambio(disegna);
       disegna();
     },

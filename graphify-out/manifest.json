@@ -1315,8 +1315,8 @@
     "semantic_hash": ""
   },
   "js/rndt/archivio.js": {
-    "mtime": 1791129153.81893,
-    "ast_hash": "1579f20fe3cca946236c7e531adcd8a5",
+    "mtime": 1791130392.9903924,
+    "ast_hash": "10cf04856fe9e97cdfd980a7814cd269",
     "semantic_hash": ""
   },
   "js/rndt/area.js": {
@@ -1325,13 +1325,13 @@
     "semantic_hash": ""
   },
   "js/rndt/host.js": {
-    "mtime": 1791129184.5165536,
-    "ast_hash": "09fc52c26818b485f347bc0356ce5a23",
+    "mtime": 1791130392.997254,
+    "ast_hash": "6cad3a7ed308901828174633581b701b",
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
-    "mtime": 1791128917.3534381,
-    "ast_hash": "4216628860983e54dd5319b8cb769a6d",
+    "mtime": 1791130476.0895562,
+    "ast_hash": "9423c737f150ebc3e32f4ddb5985c255",
     "semantic_hash": ""
   },
   "js/rndt/info.js": {
@@ -1365,8 +1365,8 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-archivio.test.mjs": {
-    "mtime": 1791129168.344351,
-    "ast_hash": "504377b72c7903cac30e0f4714ea53c7",
+    "mtime": 1791130377.689947,
+    "ast_hash": "8f891c33affcb9a97b4e2a12dfaa2df9",
     "semantic_hash": ""
   },
   "tests/js/rndt-area.test.mjs": {
@@ -1375,8 +1375,8 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-host.test.mjs": {
-    "mtime": 1791129200.8989947,
-    "ast_hash": "4baf381dd70d8f44b19c7693689c67bf",
+    "mtime": 1791130453.2895987,
+    "ast_hash": "4d1fb4a3b6b31d16f98dabea795e0a40",
     "semantic_hash": ""
   },
   "tests/js/rndt-info.test.mjs": {
@@ -1405,8 +1405,8 @@
     "semantic_hash": ""
   },
   "docs/RNDT.md": {
-    "mtime": 1791129212.361767,
-    "ast_hash": "48a3aab85c4afbe2d08c416175e86d24",
+    "mtime": 1791130476.0906332,
+    "ast_hash": "e18e940cd014418cfc6378ec4a5ed25b",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-04-rndt-catalogo.md": {
@@ -1425,13 +1425,78 @@
     "semantic_hash": ""
   },
   "js/rndt/gruppo.js": {
-    "mtime": 1791129200.899191,
-    "ast_hash": "b1b525c039aea90aadb23e4fb8a11775",
+    "mtime": 1791130485.447954,
+    "ast_hash": "219156cdd583ace21493adba2488aa87",
     "semantic_hash": ""
   },
   "tests/js/rndt-gruppo.test.mjs": {
     "mtime": 1791129200.89959,
     "ast_hash": "3f23887cc5033a49d29b73d8723f86a9",
+    "semantic_hash": ""
+  },
+  "js/rndt/dati.js": {
+    "mtime": 1791130344.257333,
+    "ast_hash": "23b591913f933ebe44acf9c641be6aeb",
+    "semantic_hash": ""
+  },
+  "js/rndt/importa.js": {
+    "mtime": 1791130282.6375556,
+    "ast_hash": "9a5d3a4a9748d262694ef8336d598957",
+    "semantic_hash": ""
+  },
+  "js/rndt/librerie.js": {
+    "mtime": 1791130311.3879917,
+    "ast_hash": "f09b0a45e94db61bd6c77156ca0d7d7e",
+    "semantic_hash": ""
+  },
+  "js/vendor/fflate.esm.js": {
+    "mtime": 1791130302.5337257,
+    "ast_hash": "b0fcc794ec59c52a4297e3585aadf7e5",
+    "semantic_hash": ""
+  },
+  "js/vendor/shp.esm.min.js": {
+    "mtime": 1791130302.5320213,
+    "ast_hash": "9cc0f4f2dae28abc8bc4073c1ff92412",
+    "semantic_hash": ""
+  },
+  "js/vendor/togeojson.es.mjs": {
+    "mtime": 1791130302.530481,
+    "ast_hash": "dd68b0ef8ed35089707795a33a8aef1c",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-dati.test.mjs": {
+    "mtime": 1791130344.1496704,
+    "ast_hash": "27875e8a33fc6078fed17fce19b724b4",
+    "semantic_hash": ""
+  },
+  "tests/js/rndt-importa.test.mjs": {
+    "mtime": 1791130293.6969774,
+    "ast_hash": "22b755d798b0d83e89e68a86c84a9b26",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-04-rndt-file-locali.md": {
+    "mtime": 1791130021.2327971,
+    "ast_hash": "c8667bd6d908249b2a06283c2c7317d6",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-10-04-rndt-file-locali-design.md": {
+    "mtime": 1791129737.6572876,
+    "ast_hash": "7e4279fa895255618aaedbfa5a930ab1",
+    "semantic_hash": ""
+  },
+  "js/vendor/LICENSE-fflate.txt": {
+    "mtime": 1791130302.551333,
+    "ast_hash": "b44ae31f7482d1a8d2f9bce6cc409db5",
+    "semantic_hash": ""
+  },
+  "js/vendor/LICENSE-shpjs.txt": {
+    "mtime": 1791130302.5471032,
+    "ast_hash": "1af4738d98a9d98709a43759d0bd8064",
+    "semantic_hash": ""
+  },
+  "js/vendor/LICENSE-togeojson.txt": {
+    "mtime": 1791130302.5424583,
+    "ast_hash": "2ffbc239d85b7dc8145369d02ede53df",
     "semantic_hash": ""
   }
 }

@@ -768,3 +768,5 @@ button.strato-chip:hover i { color: var(--text); }
 .rndt-gruppo-togli { flex: none; width: 28px; height: 28px; border: 0; border-radius: var(--r-pill); background: none; color: var(--text-muted); font-size: 18px; line-height: 1; cursor: pointer; }
 .rndt-gruppo-togli:hover { background: var(--surface-hover); color: var(--text); }
 .rndt-gruppo-vuoto { margin: 4px 0; color: var(--text-muted); font-size: var(--fs-sm, 13px); }
+.rndt-gruppo-azioni { display: grid; gap: 6px; margin: 0 0 6px; }
+.rndt-gruppo-azioni .rndt-gruppo-aggiungi { margin: 0; }
