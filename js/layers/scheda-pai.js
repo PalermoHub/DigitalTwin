@@ -52,7 +52,7 @@ export function vocePai(ds, p) {
   const descrizione = campi.filter(c => !E_PROVVEDIMENTO(c.k));
   const provvedimenti = campi.filter(c => E_PROVVEDIMENTO(c.k));
   return {
-    chiave: chiavePai(ds, p), peso: 6, titolo: ds.titolo, icona: 'pai', sempre: true,
+    chiave: chiavePai(ds, p), peso: 6, strato: ds.temi[0].id, titolo: ds.titolo, icona: 'pai', sempre: true,
     badge: ds.temi[0].riga ? p[`cls_${ds.temi[0].id}`] : undefined,
     gruppi: [
       { righe: [...righeTemi(ds, p), ...righe([...descrizione.map(riga), ['Superficie', superficie(p.sup_ha)], ['Lunghezza', lunghezza(p.lung_m)]])] },
@@ -77,7 +77,7 @@ export function vociPai(elementi) {
     gruppi: [],
     accordion: {
       icona: 'pai', suggerimento: 'Seleziona un vincolo per vedere i dettagli', riassunto,
-      elementi: voci.map(({ ds, p, v }) => ({ titolo: ds.titolo, anteprima: v.badge ?? '', righe: v.gruppi.flatMap(g => g.righe) })),
+      elementi: voci.map(({ ds, p, v }) => ({ strato: ds.temi[0].id, titolo: ds.titolo, anteprima: v.badge ?? '', righe: v.gruppi.flatMap(g => g.righe) })),
     },
     fonte: FONTE,
   }];

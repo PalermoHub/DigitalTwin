@@ -1,0 +1,42 @@
+name: Aggiorna colonnine
+
+# Ogni ora (e a mano): scarica l'ultimo snapshot di PalermoHub/evcharginglogsicilia (stato delle colonnine dalla PUN, GSE),
+# tiene quelle di Palermo e rigenera dati/colonnine/colonnine.geojson. Il viewer lo usa come ripiego e poi aggiorna lo stato dal vivo.
+# Se lo snapshot è incompleto o fuori dal comune lo script fallisce e il file in repository resta quello precedente.
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-colonnine
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Estrai le colonnine di Palermo
+        run: python3 scripts/colonnine.py | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Salva nel repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dati/colonnine/colonnine.geojson
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione nei dati."
+          else
+            git commit -m "dati: aggiornamento colonnine di ricarica ($(date -u +%F' '%H:%M))"
+            git push
+          fi

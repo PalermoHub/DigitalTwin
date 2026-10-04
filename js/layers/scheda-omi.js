@@ -51,11 +51,13 @@ function voceZona(features) {
   return {
     chiave: `omi-${zona}`,
     peso: 60,
+    strato: 'omi',
     titolo: 'Quotazioni OMI',
     icona: 'euro',
     badge: `Zona ${zona}`,
     gruppi: [{ righe }],
-    accordion: { icona: 'casa', suggerimento: 'Seleziona una tipologia per vedere compravendita e locazione', riassunto: `Tipo prevalente: ${codice ? `[${codice}] ` : ''}${pulisci(p0.Descr_tip_prev) || '—'}`, elementi },
+    accordion: { aperto: true, icona: 'casa', suggerimento: 'Seleziona una tipologia per vedere compravendita e locazione', riassunto: `Tipo prevalente: ${codice ? `[${codice}] ` : ''}${pulisci(p0.Descr_tip_prev) || '—'}`, elementi },
+    link: { testo: 'Catasto e PRG su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' },
     fonte: `Fonte: Agenzia delle Entrate — ${semestre}`,
   };
 }

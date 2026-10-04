@@ -43,12 +43,12 @@ export function voceIndirizzo(p, livello) {
 export function voceScuola(p) {
   const gruppi = [{ righe: righeScuola(p) }];
   if (p.seggio_sezioni) gruppi.push({ titolo: 'Sede elettorale', righe: righeSeggioInScuola(p) });
-  return { chiave: p.id, peso: 4, luogo: chiaveLuogo(p.nome), titolo: p.nome, icona: 'scuola', badge: p.tipo, sempre: true, gruppi };
+  return { chiave: p.id, peso: 4, strato: 'scuole', luogo: chiaveLuogo(p.nome), titolo: p.nome, icona: 'scuola', badge: p.tipo, sempre: true, gruppi };
 }
 
 export function voceSeggio(p) {
   return {
-    chiave: p.id, peso: 5, luogo: chiaveLuogo(p.nome), titolo: p.nome, icona: 'seggio', badge: p.tipo,
+    chiave: p.id, peso: 5, strato: 'seggi', luogo: chiaveLuogo(p.nome), titolo: p.nome, icona: 'seggio', badge: p.tipo,
     gruppi: [{ titolo: 'Sede elettorale', righe: righeSeggio(p) }],
   };
 }

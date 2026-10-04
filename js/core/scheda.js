@@ -72,6 +72,7 @@ function disegnaGruppo(g) {
 
 function disegnaAccordion(a) {
   const radice = el('details', 'scheda-acc');
+  if (a.aperto) radice.open = true;
   const riassunto = el('summary');
   if (a.icona) riassunto.append(icona(a.icona));
   riassunto.append(a.riassunto);
@@ -84,6 +85,7 @@ function disegnaAccordion(a) {
     if (e.stato) sommario.append(el('em', 'scheda-tipo-stato', e.stato));
     if (e.anteprima) sommario.append(el('span', 'scheda-tipo-anteprima', e.anteprima));
     tipo.append(sommario);
+    if (e.strato) tipo.dataset.strato = e.strato;
     for (const r of e.righe) tipo.append(disegnaRiga(r));
     radice.append(tipo);
   }
@@ -117,6 +119,44 @@ function riassunto(s) {
   return v.length > 26 ? v.slice(0, 25) + '…' : v;
 }
 
+// Interruttore «Mappa» nell'intestazione di una sezione: accende o spegne lo strato collegato. Passa dalla casella del
+// pannello strati (`#strato-<id>`), unica fonte di verità, come fa la tab Argomenti.
+function sincronizzaStrato(b) {
+  const origine = document.getElementById(`strato-${b.dataset.strato}`);
+  b.hidden = !origine;
+  b.disabled = !!origine?.disabled;
+  b.setAttribute('aria-pressed', String(!!origine?.checked));
+  b.title = origine?.disabled ? origine.title : origine?.checked ? 'Nascondi lo strato dalla mappa' : 'Mostra lo strato sulla mappa';
+}
+
+// strati accesi da un interruttore della scheda: si spengono quando la scheda si chiude
+const acceseDaScheda = new Set();
+
+function spegniStratiDaScheda() {
+  for (const id of acceseDaScheda) {
+    const origine = document.getElementById(`strato-${id}`);
+    if (!origine?.checked) continue;
+    origine.checked = false;
+    origine.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  acceseDaScheda.clear();
+}
+
+function creaInterruttoreStrato(id) {
+  const b = el('button', 'scheda-strato', 'Mappa');
+  b.type = 'button';
+  b.dataset.strato = id;
+  b.addEventListener('click', () => {
+    const origine = document.getElementById(`strato-${id}`);
+    if (!origine || origine.disabled) return;
+    origine.checked = !origine.checked;
+    acceseDaScheda[origine.checked ? 'add' : 'delete'](id);
+    origine.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  sincronizzaStrato(b);
+  return b;
+}
+
 function disegnaSezione(s, i) {
   const titolo = el('h3');
   if (s.icona) titolo.append(icona(s.icona));
@@ -135,7 +175,7 @@ function disegnaSezione(s, i) {
   corpo.push(...s.gruppi.map(disegnaGruppo));
   if (s.dinamico) corpo.push(s.dinamico()); // contenuto interattivo costruito dal layer (es. orari con selettore del giorno)
   if (s.accordion) corpo.push(disegnaAccordion(s.accordion));
-  if (s.link) corpo.push(disegnaLink(s.link));
+  for (const l of [].concat(s.link ?? [])) corpo.push(disegnaLink(l));
   if (s.nota) corpo.push(el('p', 'scheda-nota', s.nota));
   for (const f of s.fonte?.split('\n') ?? []) corpo.push(el('p', 'scheda-nota scheda-fonte', f));
 
@@ -149,6 +189,7 @@ function disegnaSezione(s, i) {
   sezione.append(sommario, ...corpo);
   sezione.dataset.chiave = s.chiave;
   sezione.dataset.titolo = s.titolo;
+  if (s.strato) sezione.dataset.strato = s.strato;
   return sezione;
 }
 
@@ -313,9 +354,11 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
   // il pannello conosce anche le sezioni di questa scheda: le registra prima di elencarle
   pref.scrivi(registraVisti(pref.leggi(), sezioni));
   const piede = el('footer', 'scheda-piede');
+  // visibile solo in stampa, sempre, anche se la nota legale è nascosta dalle preferenze
+  const disclaimer = el('p', 'scheda-disclaimer', DISCLAIMER_STAMPA);
   // Schede (tab) per argomento: l'ordine è la gerarchia delle informazioni, dal luogo cliccato ai dati di contesto.
-  const SCHEDE = [['luogo', 'Luogo'], ['catasto', 'Catasto'], ['vincoli', 'Vincoli'], ['mercato', 'Mercato'], ['popolazione', 'Popolazione'], ['terreno', 'Terreno']];
-  const tabDi = (p, chiave = '') => (p === 20 ? 'catasto' : p === 40 || p === 50 || String(chiave).startsWith('pai:') ? 'vincoli' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : 'luogo');
+  const SCHEDE = [['luogo', 'Luogo'], ['strumenti', 'Strumenti urbanistici'], ['mercato', 'Mercato'], ['popolazione', 'Popolazione'], ['terreno', 'Terreno'], ['servizi', 'Servizi su strada']];
+  const tabDi = (p, chiave = '') => (p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : 'luogo');
   const tabs = el('div', 'scheda-tabs');
   const prev = el('button', 'scheda-tabs-freccia', '\u2039');
   const next = el('button', 'scheda-tabs-freccia', '\u203a');
@@ -351,6 +394,8 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
       b.setAttribute('aria-selected', String(b.dataset.tab === id));
       if (b.dataset.tab === id) indice.scrollTo({ left: Math.max(0, b.offsetLeft - 24), behavior: 'smooth' });
     }
+    for (const l of piede.querySelectorAll('.scheda-link')) l.hidden = l.dataset.tab !== id;
+    piede.hidden = ![...piede.children].some(c => !c.hidden);
     corpo.querySelector('.scheda-sunto')?.remove();
     const celle = sunti.get(id);
     if (celle) {
@@ -368,7 +413,15 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
     const visibili = applicaPreferenze(dati, pref.leggi());
     corpo.replaceChildren(...visibili.sezioni.map(disegnaSezione));
     if (!visibili.sezioni.length) corpo.append(el('p', 'scheda-vuota', 'Tutte le informazioni di questa scheda sono nascoste: apri \u00abPersonalizza\u00bb per mostrarle.'));
-    piede.replaceChildren(...corpo.querySelectorAll('.scheda-link'));
+    // ogni pulsante di approfondimento resta legato al tab della sua sezione: compare solo lì
+    const visti = new Set(); // lo stesso indirizzo (es. più zone OMI) compare una volta sola per tab
+    const links = [...corpo.querySelectorAll('.scheda-link')].filter(l => {
+      const sz = l.closest('.scheda-sez');
+      l.dataset.tab = tabDi(+sz.dataset.peso, sz.dataset.chiave);
+      const k = `${l.dataset.tab}|${l.href}`;
+      return !visti.has(k) && visti.add(k) || l.remove();
+    });
+    piede.replaceChildren(...links);
     if (visibili.legale) piede.append(el('p', 'scheda-nota scheda-legale', NOTA_LEGALE));
     piede.hidden = !piede.children.length;
     // riepilogo in testa a Mercato, Popolazione e Terreno: tre valori chiave della prima sezione
@@ -382,9 +435,21 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
           .slice(0, 3).map(r => ({ valore: String(r.valore), chiave: r.etichetta }));
       if (celle.length) sunti.set(id, celle);
     }
-    for (const sz of [...corpo.querySelectorAll('.scheda-sez')]) if (String(sz.dataset.chiave).startsWith('pai:')) corpo.append(sz); // vincoli PAI in coda al tab Vincoli
+    for (const sz of corpo.querySelectorAll('.scheda-sez')) sz.dataset.tab = tabDi(+sz.dataset.peso, sz.dataset.chiave);
+    // Strumenti urbanistici: l'edificio (duplicato da Luogo) apre il tab, poi catasto, zonizzazione, vincoli del PRG, PAI e incendi
+    const edificio = corpo.querySelector('.scheda-sez[data-peso="30"]');
+    if (edificio) {
+      const copia = edificio.cloneNode(true);
+      copia.dataset.tab = 'strumenti';
+      corpo.append(copia);
+    }
+    const ordine = sz => (sz.dataset.peso === '30' ? 0 : sz.dataset.peso === '20' ? 1 : sz.dataset.peso === '40' ? 2 : sz.dataset.peso === '50' ? 3 : String(sz.dataset.chiave).startsWith('pai:') ? 4 : 5);
+    const strumenti = [...corpo.querySelectorAll('.scheda-sez')].filter(sz => sz.dataset.tab === 'strumenti').sort((a, b) => ordine(a) - ordine(b));
+    corpo.append(...strumenti);
+    if (edificio) corpo.prepend(edificio); // anche in Luogo l'edificio è la prima informazione
     const sezioni = [...corpo.querySelectorAll('.scheda-sez')];
-    for (const sz of sezioni) sz.dataset.tab = tabDi(+sz.dataset.peso, sz.dataset.chiave);
+    for (const sz of sezioni) if (sz.dataset.strato) sz.querySelector(':scope > summary').append(creaInterruttoreStrato(sz.dataset.strato));
+    for (const t of corpo.querySelectorAll('.scheda-tipo[data-strato]')) t.querySelector(':scope > summary').append(creaInterruttoreStrato(t.dataset.strato));
     const presenti = SCHEDE.filter(([id]) => sezioni.some(sz => sz.dataset.tab === id));
     indice.replaceChildren(...presenti.map(([id, nome]) => {
       const b = el('button', null, nome);
@@ -447,7 +512,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
 
   aggiorna();
   // annuncio breve per i lettori di schermo: la scheda intera non è una regione live
-  contenitore.replaceChildren(maniglia, testata, corpo, piede, annuncio);
+  contenitore.replaceChildren(maniglia, testata, corpo, piede, disclaimer, annuncio);
   contenitore.dataset.punto = `${lngLat.lng},${lngLat.lat}`; // per lo stralcio di mappa in stampa
   contenitore.hidden = false;
   corpo.scrollTop = 0;
@@ -523,6 +588,8 @@ function stralcioConCerchio(map, punto) {
   return out.toDataURL('image/png');
 }
 
+const DISCLAIMER_STAMPA = 'Disclaimer: Il Digital Twin \u00e8 uno strumento per informarsi, studiare e capire la citt\u00e0. Non sostituisce i documenti ufficiali. Catasto, Piano Regolatore e vincoli hanno qui valore puramente informativo e non hanno valore legale. Per una visura o per un certificato di destinazione urbanistica occorre rivolgersi a SISTER o agli uffici competenti. Anche i dati sulla popolazione per singolo edificio sono stime campionarie e vanno letti come indicazioni, non come conteggi esatti.';
+
 export function collegaScheda(map, moduli, contenitore) {
   // stampa: tutte le schede aperte e visibili; dopo, si torna alla scheda attiva
   window.addEventListener('beforeprint', () => {
@@ -563,6 +630,13 @@ export function collegaScheda(map, moduli, contenitore) {
     }
   }
   const conScheda = moduli.filter(m => m.scheda);
+  // gli strati si accendono anche dal pannello: gli interruttori nella scheda aperta si riallineano
+  document.addEventListener('change', e => {
+    if (String(e.target.id).startsWith('strato-')) {
+      if (!e.target.checked) acceseDaScheda.delete(e.target.id.slice(7)); // spento a mano: non va più spento alla chiusura
+      contenitore.querySelectorAll('.scheda-strato').forEach(sincronizzaStrato);
+    }
+  });
   // le scelte sulle informazioni da mostrare stanno in memoria e, se il browser lo permette, in localStorage
   const archivio = (() => { try { return window.localStorage; } catch { return null; } })();
   let preferenze = leggiPreferenze(archivio);
@@ -581,7 +655,7 @@ export function collegaScheda(map, moduli, contenitore) {
       voci.push(...m.scheda.voci(trovati, e.lngLat));
     }
     const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);
-    const chiudiScheda = () => { aggiornaUrl(null); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); adattaVista(); };
+    const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); adattaVista(); };
     const dati = unisci(voci);
     if (!dati.sezioni.length) { // clic su un punto vuoto
       chiudiScheda();

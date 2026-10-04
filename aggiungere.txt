@@ -13,3 +13,8 @@ Colonnine elettriche
 Alberi mmonumentali
 
 nelle info degli edifici dove c'è UNK ma sappiamo che potrebbe essere un monumento o scuola, possiamo aggiornare il dato? 
+
+Popolazione https://palermohub.opendatasicilia.it/palermo_popolazione.html
+Catasto, prg, vincoli prg https://palermohub.opendatasicilia.it/prg_part_catastali.html
+ANNCUS https://palermohub.opendatasicilia.it/anncus.html
+Terreno DTM 5m https://palermohub.opendatasicilia.it/palermo_dtm5m.html

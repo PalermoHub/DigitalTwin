@@ -43,7 +43,7 @@ function gruppoVia(p) {
 
 export function voceArco(p) {
   return {
-    chiave: `arco-${p.arco_id}`, peso: 8, titolo: p.nome || 'Strada senza nome', icona: 'strada', badge: 'Tratto stradale', sempre: true,
+    chiave: `arco-${p.arco_id}`, peso: 8, strato: 'sicurezza-archi', titolo: p.nome || 'Strada senza nome', icona: 'strada', badge: 'Tratto stradale', sempre: true,
     contesto: { Quartiere: p.Quartiere, Circoscrizione: p.Circoscrizione, UPL: p.UPL },
     gruppi: [
       ...gruppoVia(p),
@@ -64,7 +64,7 @@ export function voceArco(p) {
 
 export function voceHotspot(p) {
   return {
-    chiave: `hotspot-${p.cell_id}`, peso: 7, titolo: 'Zona a incidenti concentrati', icona: 'strada', badge: 'Hotspot incidenti', sempre: true,
+    chiave: `hotspot-${p.cell_id}`, peso: 7, strato: 'sicurezza-hotspot', titolo: 'Zona a incidenti concentrati', icona: 'strada', badge: 'Hotspot incidenti', sempre: true,
     gruppi: [{ righe: righe([
       ['Confidenza (gravità)', ha(p.livello_gravita) ? `${p.livello_gravita}%` : null],
       ['Confidenza (conteggio)', ha(p.livello_conteggio) ? `${p.livello_conteggio}%` : null],
@@ -77,7 +77,7 @@ export function voceHotspot(p) {
 
 export function voceIncidente(p) {
   return {
-    chiave: `incidente-${p.arco_id}-${p.anno}-${p.Luogo}`, peso: 6, titolo: p.Luogo || 'Incidente', icona: 'strada', badge: 'Incidente', sempre: true,
+    chiave: `incidente-${p.arco_id}-${p.anno}-${p.Luogo}`, peso: 6, strato: 'sicurezza-incidenti', titolo: p.Luogo || 'Incidente', icona: 'strada', badge: 'Incidente', sempre: true,
     gruppi: [{ righe: righe([
       ['Anno', p.anno], ['Gravità', GRAVITA[p.Tipologia]?.nome], ['Feriti', ha(p.feriti_n) ? num(p.feriti_n, 0) : null],
     ]) }],

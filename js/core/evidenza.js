@@ -20,6 +20,7 @@ export const FONTI = {
   'scuole-hit-punti': { etichetta: 'Scuola o asilo', colore: '#1971c2' },
   'seggi-hit-poli': { etichetta: 'Sede di sezioni elettorali', colore: '#0c8599' },
   'seggi-hit-punti': { etichetta: 'Sede di sezioni elettorali', colore: '#0c8599' },
+  'colonnine-hit': { etichetta: 'Colonnina di ricarica', colore: '#2b8a3e' },
   'uffici-hit': { etichetta: 'Sede di uffici comunali', colore: '#a61e4d' },
   'trasporto-hit-fermate': { etichetta: 'Fermata', colore: '#364fc7' },
   'trasporto-hit-linee': { etichetta: 'Linea', colore: '#e03131' },

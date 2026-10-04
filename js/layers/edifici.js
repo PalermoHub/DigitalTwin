@@ -46,6 +46,7 @@ export default {
       return [{
         chiave: 'edificio',
         peso: 30,
+        strato: 'edificato',
         titolo: 'Edificio',
         icona: 'edificio',
         gruppi: [{ righe: [

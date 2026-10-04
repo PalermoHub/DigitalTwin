@@ -87,7 +87,7 @@ test('elencoPannello: tipi e righe viste con lo stato di visibilità; i nascosti
   p = commutaSezione(p, 'fermata', false);
   p = commutaRiga(p, 'arco', 'Pendenza media', false);
   const el = elencoPannello(p);
-  assert.deepEqual(el.map(e => e.titolo), ['Fermata', 'Incendio', 'Indirizzo', 'Tratto stradale', 'Uffici comunali', 'Vincolo PAI']); // «Incendio», «Uffici comunali» e «Vincolo PAI» sono sezioni note: ci sono anche se mai viste
+  assert.deepEqual(el.map(e => e.titolo), ['Colonnine di ricarica', 'Fermata', 'Incendio', 'Indirizzo', 'Tratto stradale', 'Uffici comunali', 'Vincolo PAI']); // «Colonnine di ricarica», «Incendio», «Uffici comunali» e «Vincolo PAI» sono sezioni note: ci sono anche se mai viste
   assert.deepEqual(el.find(e => e.tipo === 'uffici').righe.map(r => r.etichetta), ['Indirizzo', 'Uffici', 'Aree']);
   assert.equal(el.find(e => e.tipo === 'fermata').visibile, false);
   assert.deepEqual(el.find(e => e.tipo === 'arco').righe, [{ etichetta: 'Pendenza media', visibile: false }, { etichetta: 'Incidenti 2015–2023', visibile: true }]);
@@ -138,14 +138,14 @@ test('storage: assente, rotto o con dati malformati → preferenze vuote, mai un
 test('nascondiTutto: nasconde ogni sezione vista, conserva le righe già nascoste e non muta', () => {
   const base = commutaRiga(registraVisti(vuote(), dati().sezioni), 'arco', 'Pendenza media', false);
   const p = nascondiTutto(base);
-  assert.deepEqual([...p.nascoste.sezioni].sort(), ['arco', 'fermata', 'incendio', 'indirizzo', 'pai', 'uffici']);
+  assert.deepEqual([...p.nascoste.sezioni].sort(), ['arco', 'colonnine', 'fermata', 'incendio', 'indirizzo', 'pai', 'uffici']);
   assert.deepEqual(p.nascoste.righe, ['arco/Pendenza media']);
   assert.deepEqual(base.nascoste.sezioni, []);
   assert.deepEqual(applicaPreferenze(dati(), p).sezioni, []);
 });
 
 test('nascondiTutto: senza sezioni viste non fa nulla; una sezione già nascosta non si duplica', () => {
-  assert.deepEqual([...nascondiTutto(vuote()).nascoste.sezioni].sort(), ['incendio', 'pai', 'uffici']); // solo le sezioni note
+  assert.deepEqual([...nascondiTutto(vuote()).nascoste.sezioni].sort(), ['colonnine', 'incendio', 'pai', 'uffici']); // solo le sezioni note
   const p = nascondiTutto(commutaSezione(registraVisti(vuote(), dati().sezioni), 'arco', false));
   assert.equal(p.nascoste.sezioni.filter(t => t === 'arco').length, 1);
 });
@@ -163,4 +163,31 @@ test('seleziona tutto = azzera: tutte le sezioni e tutte le righe tornano visibi
   const p = azzera(commutaRiga(nascondiTutto(registraVisti(vuote(), dati().sezioni)), 'arco', 'Pendenza media', false));
   assert.equal(nessunaPreferenza(p), true);
   assert.equal(applicaPreferenze(dati(), p).sezioni.length, 3);
+});
+
+const conAccordion = () => unisci([{
+  chiave: 'colonnine:gruppo', peso: 90, titolo: 'Colonnine di ricarica', gruppi: [],
+  accordion: { riassunto: '2 colonnine', elementi: [
+    { titolo: 'Via A', righe: [{ etichetta: 'Operatore', valore: 'BEC' }, { etichetta: 'Potenza', valore: '22 kW' }] },
+    { titolo: 'Via B', righe: [{ etichetta: 'Operatore', valore: 'ENX' }, { etichetta: 'Potenza', valore: '50 kW' }] },
+  ] },
+}]);
+
+test('righe delle card a fisarmonica: registrate tra le righe della sezione', () => {
+  const p = registraVisti(vuote(), conAccordion().sezioni);
+  assert.deepEqual(p.visti.colonnine.righe, ['Operatore', 'Potenza']);
+});
+
+test('righe delle card a fisarmonica: nascondere una riga la toglie da tutte le card', () => {
+  const p = commutaRiga(vuote(), 'colonnine', 'Potenza', false);
+  const [s] = applicaPreferenze(conAccordion(), p).sezioni;
+  assert.deepEqual(s.accordion.elementi.map(e => e.righe.map(r => r.etichetta)), [['Operatore'], ['Operatore']]);
+});
+
+test('leggiPreferenze: scarta il tipo obsoleto «colonnina» (una sezione per operatore) tra visti e nascosti', () => {
+  const grezzo = { nascoste: { sezioni: ['colonnina', 'pai'], righe: ['colonnina/Potenza', 'pai/Sigla'] },
+    visti: { colonnina: { titolo: 'BEC', righe: ['Operatore'] }, pai: { titolo: 'Vincolo PAI', righe: ['Sigla'] } } };
+  const p = leggiPreferenze({ getItem: () => JSON.stringify(grezzo) });
+  assert.deepEqual(Object.keys(p.visti), ['pai']);
+  assert.deepEqual(p.nascoste, { sezioni: ['pai'], righe: ['pai/Sigla'] });
 });

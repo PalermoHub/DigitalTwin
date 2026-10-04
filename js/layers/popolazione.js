@@ -6,6 +6,7 @@ import { segnala } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { primo, righe } from '../core/scheda-util.js';
 import { SRC_SEZIONI } from './confini.js';
+import { classificaDinamica } from './popolazione-classifica.js';
 
 const FILE = { 2021: 'popolazione/sezioni_indicatori.compatto.json', 2023: 'popolazione/sezioni_indicatori_2023.compatto.json' };
 const fmt = v => v.toLocaleString('it-IT', { maximumFractionDigits: 1 });
@@ -164,10 +165,16 @@ export default {
       return [{
         chiave: 'sezione',
         peso: 70,
+        strato: 'coropletico',
         titolo: 'Sezione di censimento',
         icona: 'persone',
         // circoscrizione, quartiere e UPL vanno nell'intestazione della scheda, una volta sola
+        link: [{ testo: 'Esplorazione demografica', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/palermo_popolazione.html' }, { testo: 'ANNCUS', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/anncus.html' },
+          { testo: 'Densità pop. × Offerta TPL', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/bivariate_tpl.html', suggerimento: 'Densità pop. (ab/km²) × Offerta TPL (corse/ab)' },
+          { testo: 'Densità civici × popolazione', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/bivariate_anncus.html', suggerimento: 'Densità Civici × Densità Popolazione · Palermo' },
+          { testo: 'Popolazione esposta a rischio idrogeologico', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/bivariate_pai.html', suggerimento: 'Capire il rischio sul territorio' }],
         contesto: { circoscrizione: p.Circoscrizione, quartiere: p.Quartiere, upl: p.UPL },
+        dinamico: () => classificaDinamica({ circoscrizione: p.Circoscrizione, quartiere: p.Quartiere, upl: p.UPL }),
         gruppi: [{ righe: righe([
           ['Codice ISTAT', p.SEZ21_ID],
           ['Residenti 2021', p.POP21 != null ? fmt(p.POP21) : null],

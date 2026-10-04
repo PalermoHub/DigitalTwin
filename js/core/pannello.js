@@ -40,7 +40,7 @@ function imposta(map, ids, visibile) {
   }
 }
 
-const ETICHETTE = { base: 'Mappa', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', incendi: 'Incendi', sicurezza: 'Sicurezza' };
+const ETICHETTE = { base: 'Mappa', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Colonnine', incendi: 'Incendi', sicurezza: 'Sicurezza' };
 
 // Totale degli strati accesi (mostrato sul pulsante «Strati» di mobile)
 function aggiornaConteggio() {

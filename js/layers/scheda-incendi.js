@@ -38,7 +38,7 @@ export function modelloPopup(p) {
 
 export function voceIncendio(p) {
   return {
-    chiave: `incendio-${p.anno}-${p.id}`, peso: 7, titolo: titoloIncendio(p), icona: 'incendio', badge: `Incendio ${p.anno}`, sempre: true,
+    chiave: `incendio-${p.anno}-${p.id}`, peso: 7, strato: 'incendi', titolo: titoloIncendio(p), icona: 'incendio', badge: `Incendio ${p.anno}`, sempre: true,
     gruppi: [
       { righe: righe([['Data', dataIt(p.data)], ['Località', p.localita], ['Luogo di inizio', p.luogo_inizio], ['Tipo di evento', p.tipo_evento]]) },
       { titolo: 'Superfici', righe: righe([
@@ -59,7 +59,7 @@ export function vociIncendi(lista) {
   if (lista.length <= 1) return lista.map(voceIncendio);
   const anni = [...new Set(lista.map(p => p.anno))];
   return [{
-    chiave: 'incendio:gruppo', peso: 7, titolo: 'Incendi', icona: 'incendio', badge: `${lista.length} incendi`, sempre: true,
+    chiave: 'incendio:gruppo', peso: 7, strato: 'incendi', titolo: 'Incendi', icona: 'incendio', badge: `${lista.length} incendi`, sempre: true,
     gruppi: [],
     accordion: {
       icona: 'incendio', suggerimento: 'Seleziona un incendio per vedere i dettagli',

@@ -1,6 +1,7 @@
 """Versioni compatte dei dati tabellari, che il viewer scarica al posto dei JSON originali.
 
   python3 scripts/compatta_dati.py popolazione   dati/popolazione/sezioni_indicatori{,_2023}.compatto.json  (da gbvitrano/palermo_popolazione)
+  python3 scripts/compatta_dati.py classifica    dati/popolazione/classifica.json  (residenti e stranieri per circoscrizione, quartiere, UPL)
   python3 scripts/compatta_dati.py civici        dati/civici-omi/civici_vie.json + civici/<00-31>.json  (da palermohub)
 
 Gli orari del trasporto si compattano in `gtfs.py` (stesso file `orari.json`, `codifica_orari`).
@@ -35,6 +36,25 @@ def _scarica(url):
 def codifica_popolazione(righe):
     """Lista di record -> un array per campo (null dove il campo manca), solo i campi usati dal viewer."""
     return {c: [r.get(c) for r in righe] for c in CAMPI_POPOLAZIONE}
+
+
+LIVELLI_CLASSIFICA = {"circoscrizioni": "Circoscrizione", "quartieri": "Quartiere", "upl": "UPL"}
+
+
+def codifica_classifica(righe):
+    """Record delle sezioni -> residenti (P1) e stranieri (ST1) per livello amministrativo, in ordine decrescente."""
+    classifica = {}
+    for livello, campo in LIVELLI_CLASSIFICA.items():
+        somme = {}
+        for r in righe:
+            nome = r.get(campo)
+            if not nome:
+                continue
+            s = somme.setdefault(nome, [0, 0])
+            s[0] += r.get("P1") or 0
+            s[1] += r.get("ST1") or 0
+        classifica[livello] = [[n, t, st] for n, (t, st) in sorted(somme.items(), key=lambda x: (-x[1][0], x[0]))]
+    return classifica
 
 
 def codifica_orari(orari):
@@ -91,6 +111,10 @@ def main(argv):
     if comando == "popolazione":
         for nome in ("sezioni_indicatori", "sezioni_indicatori_2023"):
             _scrivi(DATI / "popolazione" / f"{nome}.compatto.json", codifica_popolazione(_scarica(f"{URL_POPOLAZIONE}{nome}.json")))
+    elif comando == "classifica":
+        _scrivi(DATI / "popolazione" / "classifica.json", {
+            anno: codifica_classifica(_scarica(f"{URL_POPOLAZIONE}{nome}.json"))
+            for anno, nome in (("2021", "sezioni_indicatori"), ("2023", "sezioni_indicatori_2023"))})
     elif comando == "civici":
         vie, sezioni = codifica_civici(_scarica(URL_CIVICI))
         _scrivi(DATI / "civici-omi" / "civici_vie.json", vie)

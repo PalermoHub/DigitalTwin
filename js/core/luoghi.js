@@ -11,6 +11,7 @@ export const FONTI = [
   // le linee si trovano per numero o nome; lo strato da accendere è bus o tram
   { file: 'trasporto/linee.geojson', strato: p => (p.tipo === 'tram' ? 'trasporto-tram' : 'trasporto-bus'), zoom: 14, numero: p => p.numero,
     nota: p => `${p.tipo === 'tram' ? 'Tram' : 'Bus'}, ${p.da} → ${p.a}`, campi: p => [`Linea ${p.numero} ${p.nome}`] },
+  { file: 'colonnine/colonnine.geojson', strato: 'colonnine', zoom: 17, nota: p => `Colonnina ${p.stato.toLowerCase()}, ${p.potenza_kw} kW`, campi: p => [p.operatore, p.indirizzo] },
   // sedi degli uffici (es. «Polo Tecnico»), prima degli uffici che ospitano
   { file: 'uffici/sedi.geojson', strato: 'uffici', zoom: 17, nota: p => `Sede comunale, ${p.n_uffici} uffici`, campi: p => [p.nome, p.indirizzo] },
   // uffici comunali: per nome, sede o responsabile; le coordinate stanno nella geometria

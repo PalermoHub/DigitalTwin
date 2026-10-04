@@ -177,20 +177,20 @@ export default {
       if (civico) {
         const p = civico.properties;
         const numero = presente(p.Esponente) ? `${p.Civico}/${p.Esponente}` : p.Civico;
-        voci.push({ chiave: 'indirizzo', peso: 10, titolo: 'Indirizzo', icona: 'indirizzo', gruppi: [{ righe: righe([['Via', p.Odonimo], ['Civico', numero]]) }] });
+        voci.push({ chiave: 'indirizzo', peso: 10, strato: 'civici', titolo: 'Indirizzo', icona: 'indirizzo', gruppi: [{ righe: righe([['Via', p.Odonimo], ['Civico', numero]]) }] });
       }
 
       const particella = primo(trovati, 'catasto-hit');
       if (particella) {
         const p = particella.properties;
         voci.push({
-          chiave: 'particella', peso: 20, titolo: 'Particella catastale', icona: 'particella',
+          chiave: 'particella', peso: 20, strato: 'catasto', titolo: 'Particella catastale', icona: 'particella',
           gruppi: [{ righe: righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]) }],
           legale: true,
-          link: {
+          link: [{
             testo: 'Visura su SISTER', icona: 'esterno', url: 'https://sister3.agenziaentrate.gov.it/', etichetta: `Fg.${p.Foglio} · P.${p.Paricella}`,
             suggerimento: `Accedi a SISTER con SPID — inserisci Foglio ${p.Foglio} e Particella ${p.Paricella}`,
-          },
+          }, { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' }],
         });
       }
 
@@ -201,8 +201,8 @@ export default {
         const gruppo = zona ? righe([['Zona', zona.ZTO], ['Descrizione', zona.DESCRIZION]]) : [];
         if (ns) gruppo.push({ etichetta: 'Ambito', valore: 'Netto storico' });
         if (cs) gruppo.push({ etichetta: 'Ambito', valore: 'Centro storico' }, { etichetta: 'Strumento', valore: 'PPE' });
-        voci.push({ chiave: 'zonizzazione', peso: 40, titolo: 'Zonizzazione (PRG 2004)', icona: 'mappa', gruppi: [{ righe: gruppo }],
-          legale: true, nota: NOTA_PRG });
+        voci.push({ chiave: 'zonizzazione', peso: 40, strato: 'prg', titolo: 'Zonizzazione (PRG 2004)', icona: 'mappa', gruppi: [{ righe: gruppo }],
+          legale: true, nota: NOTA_PRG, link: { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' } });
       }
 
       // Vincoli: un gruppo per vincolo (areali e lineari)
@@ -220,7 +220,7 @@ export default {
       }
       if (gruppi.length) {
         voci.push({
-          chiave: 'vincoli', peso: 50, titolo: 'Vincoli', icona: 'vincolo', legale: true,
+          chiave: 'vincoli', peso: 50, strato: 'vincoli', titolo: 'Vincoli', icona: 'vincolo', legale: true, link: { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' },
           gruppi: gruppi.map((g, i) => ({ titolo: gruppi.length > 1 ? `${g.nome} ${i + 1}` : g.nome, righe: g.righe })),
         });
       }
@@ -228,7 +228,7 @@ export default {
       const immobile = primo(trovati, 'immobili-hit');
       if (immobile) {
         const p = immobile.properties;
-        voci.push({ chiave: 'immobile', peso: 55, titolo: 'Immobile comunale', icona: 'monumento',
+        voci.push({ chiave: 'immobile', peso: 55, strato: 'immobili', titolo: 'Immobile comunale', icona: 'monumento',
           gruppi: [{ righe: righe([['Tipo', p.TIPO], ['Categoria', p.CATEGORIA], ['Indirizzo', p.INDIRIZZO]]) }] });
       }
 

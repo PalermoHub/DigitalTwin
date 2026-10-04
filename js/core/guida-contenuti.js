@@ -54,12 +54,12 @@ export const PASSI = [
     id: 'scheda',
     titolo: 'Cosa si legge nella scheda',
     paragrafi: [
-      'La scheda è organizzata in sezioni, che si scelgono dalle linguette in alto: Luogo, Catasto, Vincoli, Mercato, Popolazione e altre. «Luogo» riassume ciò che c\'è nel punto scelto: indirizzo, circoscrizione e quartiere, monumenti, rischio di incidenti e fermate vicine.',
-      'La sezione «Catasto» mostra la particella con foglio e numero e il collegamento alla visura. Ogni sezione indica la fonte: i dati catastali, urbanistici e i vincoli sono solo informativi.',
+      'La scheda è organizzata in sezioni, che si scelgono dalle linguette in alto: Luogo, Strumenti urbanistici, Mercato, Popolazione e altre. «Luogo» riassume ciò che c\'è nel punto scelto: indirizzo, circoscrizione e quartiere, monumenti, rischio di incidenti e fermate vicine.',
+      'La sezione «Strumenti urbanistici» comincia dall\'edificio e mostra poi la particella con foglio e numero e il collegamento alla visura. Ogni sezione indica la fonte: i dati catastali, urbanistici e i vincoli sono solo informativi.',
     ],
-    immagine: { file: 'img/guida/passi/scheda.webp', alt: 'La scheda del luogo aperta sulla sezione Catasto, con i dati della particella.', didascalia: 'La scheda del luogo, qui sulla sezione «Catasto».' },
+    immagine: { file: 'img/guida/passi/scheda.webp', alt: 'La scheda del luogo aperta sulla sezione Strumenti urbanistici, con i dati della particella.', didascalia: 'La scheda del luogo, qui sulla sezione «Strumenti urbanistici».' },
     narrazione: 'La scheda è divisa in sezioni, che scegli dalle linguette in alto: luogo, catasto, vincoli, mercato, popolazione e altre. La prima riassume ciò che c\'è nel punto scelto: l\'indirizzo, i monumenti, il rischio di incidenti e le fermate vicine. La sezione catasto mostra la particella, e ogni sezione indica la fonte dei dati.',
-    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Catasto' },
+    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Strumenti urbanistici' },
   },
   {
     id: 'monumenti',
@@ -88,11 +88,11 @@ export const PASSI = [
     titolo: 'Pericolosità e rischio idrogeologico (PAI)',
     paragrafi: [
       'Il gruppo «Piano PAI» riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti, siti di attenzione ed erosione costiera, con la simbologia ufficiale.',
-      'Un clic su un\'area apre la scheda: nella sezione «Vincoli» compare il riquadro «Vincoli PAI», con la classe più grave tra quelle sovrapposte, accanto alla zonizzazione e ai vincoli del piano regolatore. Sono dati informativi: per usi legali vale la cartografia ufficiale dell\'Autorità di Bacino.',
+      'Un clic su un\'area apre la scheda: nella sezione «Strumenti urbanistici» compare il riquadro «Vincoli PAI», con la classe più grave tra quelle sovrapposte, accanto alla zonizzazione e ai vincoli del piano regolatore. Sono dati informativi: per usi legali vale la cartografia ufficiale dell\'Autorità di Bacino.',
     ],
-    immagine: { file: 'img/guida/passi/pai.webp', alt: 'Lo strato Pericolosità idraulica acceso sulla mappa e, nella scheda, la sezione Vincoli con zonizzazione, vincoli e il riquadro Vincoli PAI.', didascalia: 'Clic su un\'area PAI: la scheda, sezione «Vincoli».' },
+    immagine: { file: 'img/guida/passi/pai.webp', alt: 'Lo strato Pericolosità idraulica acceso sulla mappa e, nella scheda, la sezione Strumenti urbanistici con zonizzazione, vincoli e il riquadro Vincoli PAI.', didascalia: 'Clic su un\'area PAI: la scheda, sezione «Strumenti urbanistici».' },
     narrazione: 'Il gruppo Piano P A I riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti ed erosione costiera, con la simbologia ufficiale. Un clic su un\'area apre la scheda: nella sezione vincoli trovi il riquadro dei vincoli P A I, con la classe più grave. Sono dati informativi.',
-    scena: { strati: ['idraulica_pericolosita'], centro: [13.40, 38.08], zoom: 13, clicSu: { layer: 'pai-idraulica_pericolosita-hit' }, schedaTab: 'Vincoli' },
+    scena: { strati: ['idraulica_pericolosita'], centro: [13.40, 38.08], zoom: 13, clicSu: { layer: 'pai-idraulica_pericolosita-hit' }, schedaTab: 'Strumenti urbanistici' },
   },
   {
     id: 'incendi',
@@ -123,8 +123,8 @@ export const PASSI = [
       'Catasto, zonizzazione e vincoli hanno valore solo informativo e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. Il piano regolatore è la variante generale del duemilaquattro: varianti successive potrebbero non essere incluse.',
       'I dati del censimento sono stime campionarie, quindi i valori per sezione non sono conteggi esatti.',
     ],
-    immagine: { file: 'img/guida/passi/avvertenze.webp', alt: 'La sezione Vincoli della scheda del luogo, con in fondo l\'avviso: dato informativo, senza valore legale.', didascalia: 'In fondo a ogni scheda, l\'avviso sul valore informativo dei dati.' },
+    immagine: { file: 'img/guida/passi/avvertenze.webp', alt: 'La sezione Strumenti urbanistici della scheda del luogo, con in fondo l\'avviso: dato informativo, senza valore legale.', didascalia: 'In fondo a ogni scheda, l\'avviso sul valore informativo dei dati.' },
     narrazione: 'Un\'ultima avvertenza: catasto, zonizzazione e vincoli hanno valore solo informativo, e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. I dati del censimento sono stime. Per usi legali rivolgiti sempre agli uffici competenti.',
-    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Vincoli' },
+    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Strumenti urbanistici' },
   },
 ];

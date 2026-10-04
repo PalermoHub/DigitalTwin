@@ -5,7 +5,7 @@ const righe = coppie => coppie.filter(([, valore]) => valore).map(([etichetta, v
 
 export function voceFermata(p, dinamico) {
   return {
-    chiave: `fermata-${p.id}`, peso: 6, titolo: p.nome, icona: 'bus', badge: 'Fermata', sempre: true,
+    chiave: `fermata-${p.id}`, peso: 6, strato: 'trasporto-fermate', titolo: p.nome, icona: 'bus', badge: 'Fermata', sempre: true,
     gruppi: [{ righe: righe([['Linee', p.linee.join(', ')], ['Accessibile in carrozzina', p.accessibile]]) }],
     dinamico,
   };

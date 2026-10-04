@@ -14,5 +14,5 @@ export function rigaUso(occupancy) {
 // Voce «edificio» da affiancare a quella dell'edificato quando il clic cade sul poligono di un monumento, di una scuola o di un seggio.
 export function voceUsoEdificio(tipo) {
   const [valore, ripiego] = USI[tipo];
-  return { chiave: 'edificio', peso: 30, titolo: 'Edificio', icona: 'edificio', gruppi: [{ righe: [{ etichetta: 'Uso', valore, ripiego }] }] };
+  return { chiave: 'edificio', peso: 30, strato: 'edificato', titolo: 'Edificio', icona: 'edificio', gruppi: [{ righe: [{ etichetta: 'Uso', valore, ripiego }] }] };
 }

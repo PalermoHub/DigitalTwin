@@ -11,6 +11,7 @@ export function voceMonumento(p, risolvi) {
   const voce = {
     chiave: `monumento-${p.id}`,
     peso: 5,
+    strato: 'monumenti',
     luogo: chiaveLuogo(p.nome),
     titolo: p.nome,
     icona: 'monumento',

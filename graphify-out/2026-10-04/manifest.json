@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "js/core/scheda.js": {
-    "mtime": 1791070252.305845,
-    "ast_hash": "df4f28d303a4b79e2111d80da6551bec",
+    "mtime": 1791109220.6196287,
+    "ast_hash": "5d8854e164db2a89eff287b90d6bd09b",
     "semantic_hash": ""
   },
   "js/layers/confini.js": {
@@ -70,23 +70,23 @@
     "semantic_hash": ""
   },
   "js/layers/edifici.js": {
-    "mtime": 1791030258.2815256,
-    "ast_hash": "d7131467ab19dc3381133a04d9163462",
+    "mtime": 1791108680.3419752,
+    "ast_hash": "30f842bfc2a82256c3be3a4194decda9",
     "semantic_hash": ""
   },
   "js/layers/popolazione.js": {
-    "mtime": 1791030258.2819905,
-    "ast_hash": "ed226a71b0f6119f8dccc70746b0dc70",
+    "mtime": 1791110107.7992997,
+    "ast_hash": "0aae26827827ba31a0a7f8b59608863a",
     "semantic_hash": ""
   },
   "js/layers/scheda-omi.js": {
-    "mtime": 1791030258.2823322,
-    "ast_hash": "d8c3bad5021b95a184f5d219e8c128ff",
+    "mtime": 1791109220.6200626,
+    "ast_hash": "36e24fb3b6eef73e0ccc1280de162554",
     "semantic_hash": ""
   },
   "js/layers/scheda-terreno.js": {
-    "mtime": 1791030258.2825685,
-    "ast_hash": "2cde44eb18c95a5a8040d4814c6c697c",
+    "mtime": 1791108667.5494041,
+    "ast_hash": "6637cf8e29637a996830554102a1d150",
     "semantic_hash": ""
   },
   "js/layers/stile-omi.js": {
@@ -100,8 +100,8 @@
     "semantic_hash": ""
   },
   "js/layers/territorio.js": {
-    "mtime": 1791030258.2837563,
-    "ast_hash": "b3c697b180842dec3df78377a6792e92",
+    "mtime": 1791108667.5460036,
+    "ast_hash": "67776f4322a61cf6215d4db3ad6114d6",
     "semantic_hash": ""
   },
   "js/vendor/maplibre-gl.js": {
@@ -205,8 +205,8 @@
     "semantic_hash": ""
   },
   "aggiungere.txt": {
-    "mtime": 1791030258.0890667,
-    "ast_hash": "59874a509307d459c0980f8692140061",
+    "mtime": 1791107511.836303,
+    "ast_hash": "a9bde97425ed242f10ce85215c75171b",
     "semantic_hash": ""
   },
   "dati/README.md": {
@@ -300,8 +300,8 @@
     "semantic_hash": ""
   },
   "js/layers/scheda-monumenti.js": {
-    "mtime": 1791030258.2822034,
-    "ast_hash": "138a9c3697ffa48563ecf451cdedfcfd",
+    "mtime": 1791108667.5505607,
+    "ast_hash": "c3b112e97949ef7156416b3d8f005b37",
     "semantic_hash": ""
   },
   "scripts/monumenti.py": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "js/layers/scheda-scuole.js": {
-    "mtime": 1791030258.2824404,
-    "ast_hash": "ca45154cc929c190da5bfb038b585e7c",
+    "mtime": 1791108680.343321,
+    "ast_hash": "25002d417f325cf29188e7ab44e41d85",
     "semantic_hash": ""
   },
   "js/layers/scuole.js": {
@@ -395,8 +395,8 @@
     "semantic_hash": ""
   },
   "js/layers/scheda-trasporto.js": {
-    "mtime": 1791030258.2826927,
-    "ast_hash": "131ab2616409e9d3308b73d823bf4db9",
+    "mtime": 1791108667.5507872,
+    "ast_hash": "4b9e161d1559d247248ab27512b0cb07",
     "semantic_hash": ""
   },
   "js/layers/trasporto-orari.js": {
@@ -445,8 +445,8 @@
     "semantic_hash": ""
   },
   "js/layers/scheda-uso.js": {
-    "mtime": 1791030258.2829187,
-    "ast_hash": "2b6f031ff7eb96c7924c35db7159f5aa",
+    "mtime": 1791108667.5407877,
+    "ast_hash": "946f43575324b22bed2ce426a22fe60c",
     "semantic_hash": ""
   },
   "js/layers/trasporto-filtro.js": {
@@ -475,8 +475,8 @@
     "semantic_hash": ""
   },
   "js/layers/scheda-sicurezza.js": {
-    "mtime": 1791030258.0495892,
-    "ast_hash": "4365b36021b1d0139e187d9ba0404503",
+    "mtime": 1791108667.5523434,
+    "ast_hash": "98fab6b2a59cfc342f6d22086fa329d0",
     "semantic_hash": ""
   },
   "js/layers/sicurezza.js": {
@@ -570,8 +570,8 @@
     "semantic_hash": ""
   },
   "scripts/compatta_dati.py": {
-    "mtime": 1791030258.2860868,
-    "ast_hash": "319e22fc0b73ca27b655c4ab564a9849",
+    "mtime": 1791110079.8319213,
+    "ast_hash": "7dc9bc62edd37f0e9e398b76254ca9ee",
     "semantic_hash": ""
   },
   "tests/js/compatto.test.mjs": {
@@ -590,8 +590,8 @@
     "semantic_hash": ""
   },
   "js/layers/scheda-uffici.js": {
-    "mtime": 1791030258.282801,
-    "ast_hash": "f0ddaf56ebc241363e8f5f40b99cf7fa",
+    "mtime": 1791108667.550347,
+    "ast_hash": "4cdf2ef8606747a0ec2b4b831b017e19",
     "semantic_hash": ""
   },
   "js/layers/uffici.js": {
@@ -695,8 +695,8 @@
     "semantic_hash": ""
   },
   "js/layers/scheda-incendi.js": {
-    "mtime": 1791032524.0622153,
-    "ast_hash": "6694b79ad2e6dfce833d4b9e63df35a6",
+    "mtime": 1791108667.5490673,
+    "ast_hash": "9640cf45ecf83a748594e75e0c5eb919",
     "semantic_hash": ""
   },
   "scripts/incendi.py": {
@@ -730,8 +730,8 @@
     "semantic_hash": ""
   },
   "js/layers/scheda-pai.js": {
-    "mtime": 1791032524.057644,
-    "ast_hash": "9ffc51f58cfda4625673444f1a619f69",
+    "mtime": 1791108847.5043292,
+    "ast_hash": "ac7d1462e4c93c49ac78de11a14e5efe",
     "semantic_hash": ""
   },
   "scripts/pai.py": {
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791049165.69101,
-    "ast_hash": "7e483aa715d81f3dcc927638e25bf459",
+    "mtime": 1791108256.041979,
+    "ast_hash": "a621370dbc21f1c018bce8d54f5dc7f8",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -1222,6 +1222,16 @@
   "social/carosello-6/Palermo_Digital_Twin_10.jpg": {
     "mtime": 1791066600.040489,
     "ast_hash": "dfb75bf46434c7dc7f557acf09aabe19",
+    "semantic_hash": ""
+  },
+  "js/layers/popolazione-classifica.js": {
+    "mtime": 1791110137.9277284,
+    "ast_hash": "50739d704da68511e832e6f2ae3044e6",
+    "semantic_hash": ""
+  },
+  "tests/js/popolazione-classifica.test.mjs": {
+    "mtime": 1791110120.8411639,
+    "ast_hash": "4e1714b9dbe68e9d3e20e87d0926dddb",
     "semantic_hash": ""
   }
 }

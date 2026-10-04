@@ -47,7 +47,7 @@ export function voceUffici(p) {
   const gruppi = raggruppaPerArea(p);
   const n = conteggio(p);
   return {
-    chiave: `uffici-${p.id}`, peso: 8, titolo: p.nome, icona: 'uffici', badge: 'Uffici comunali', sempre: true,
+    chiave: `uffici-${p.id}`, peso: 8, strato: 'uffici', titolo: p.nome, icona: 'uffici', badge: 'Uffici comunali', sempre: true,
     gruppi: [{ righe: [riga('Indirizzo', p.indirizzo), riga('Uffici', String(n)), riga('Aree', String(gruppi.length))].filter(r => r.valore) }],
     accordion: {
       riassunto: `Uffici e responsabili (${n})`,
