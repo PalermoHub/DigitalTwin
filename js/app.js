@@ -3,6 +3,7 @@ import { impostaCatalogo } from './core/config.js';
 import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js';
 import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaScheda } from './core/scheda.js';
+import { collegaRndt } from './rndt/index.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaZone } from './core/zone.js';
@@ -51,7 +52,7 @@ window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pront
 // (con l'etichetta del pannello, non con l'id tecnico).
 const STRATI = MODULI.flatMap(m => m.strati);
 map.on('error', e => {
-  if (!e.sourceId) return;
+  if (!e.sourceId || e.sourceId.startsWith('rndt-')) return; // gli errori dei layer RNDT li segnala lo shim
   const colpiti = STRATI.filter(s => s.layers.some(id => map.getLayer(id)?.source === e.sourceId));
   if (!colpiti.length) return segnala(`Strato non caricato: ${e.sourceId}`);
   segnala(`Strato non caricato: ${colpiti.map(s => s.etichetta).join(', ')}`);
@@ -68,7 +69,10 @@ map.once('style.load', async () => {
   for (const m of MODULI) m.aggiungiSorgenti(map);
   for (const m of MODULI) m.aggiungiLayer(map);
   costruisciPannello(map, MODULI, document.getElementById('pannello'), document.getElementById('barra-gruppi'));
-  collegaScheda(map, MODULI, document.getElementById('scheda'));
+  const rndt = collegaRndt(map, document.getElementById('rndt-pannello'));
+  collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt });
+  document.getElementById('btn-rndt').addEventListener('click', rndt.apri);
+  rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
   const vaiParticella = collegaRicercaParticella(map, document.getElementById('cerca-foglio'), document.getElementById('cerca-numero'),
     document.getElementById('cerca-particella-vai'), document.getElementById('cerca-particella-esito'),
     document.getElementById('pannello-filtri'));

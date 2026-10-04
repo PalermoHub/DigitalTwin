@@ -734,3 +734,22 @@ button.strato-chip:hover i { color: var(--text); }
 .col-legenda b { color: var(--text); }
 @media print { .col-grafici { break-inside: avoid; } }
 .gruppo-sezione { margin: 10px 0 2px; }
+
+/* Catalogo RNDT: pannello che si sovrappone alla scheda del luogo */
+#rndt-pannello { position: fixed; z-index: var(--z-foglio); left: 0; right: 0; bottom: 0; top: 8vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm) var(--r-sm) 0 0; box-shadow: var(--ombra); overflow: hidden; }
+#rndt-pannello[hidden] { display: none; }
+@media (min-width: 721px) { #rndt-pannello { top: 0; left: auto; width: var(--scheda-w); border-radius: 0; } }
+.rndt-testata { flex: none; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.rndt-testata h2 { margin: 0; font-size: var(--fs-md); font-weight: 700; }
+.rndt-indietro { flex: none; min-height: 36px; padding: 0 12px; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+.rndt-indietro:hover { background: var(--surface-hover); }
+.rndt-layer { flex: none; padding: 8px 12px; border-bottom: 1px solid var(--border); background: var(--surface-alt); font-size: var(--fs-sm, 13px); }
+.rndt-layer[hidden] { display: none; }
+.rndt-layer summary { cursor: pointer; font-weight: 600; }
+.rndt-layer-riga { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 0; }
+.rndt-layer-riga label { overflow-wrap: anywhere; }
+.rndt-layer-riga em { color: var(--text-muted); }
+.rndt-rimuovi { flex: none; border: 0; background: none; color: var(--link); font: inherit; cursor: pointer; }
+.rndt-contenuto { flex: 1; min-height: 0; overflow: auto; }
+.rndt-attesa, .rndt-errore { margin: 16px; color: var(--text-muted); }
+.rndt-errore { color: var(--avviso-scheda-ink); }
