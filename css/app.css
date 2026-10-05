@@ -1078,10 +1078,10 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 }
 .invito-clic img { display: block; width: min(640px, 60vw); height: auto; border-radius: var(--r-md); box-shadow: var(--ombra); }
 .invito-mai {
-  pointer-events: auto; cursor: pointer; padding: 4px 12px; border: 1px solid var(--bordo, #cbd5e1); border-radius: 999px;
-  background: rgba(255, 255, 255, .92); color: #334155; font: inherit; font-size: var(--fs-sm);
+  pointer-events: auto; cursor: pointer; padding: 6px 16px; border: 2px solid #fff; border-radius: 999px;
+  background: rgba(35, 38, 43, .88); color: #fff; font: inherit; font-size: var(--fs-sm); font-weight: 600; box-shadow: var(--ombra);
 }
-.invito-mai:hover { background: #fff; }
+.invito-mai:hover { background: #23262b; }
 @media (max-width: 600px) {
   .invito-clic { top: 30%; }
   .invito-clic p { padding: 8px 14px; font-size: var(--fs-sm); }
