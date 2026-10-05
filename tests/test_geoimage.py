@@ -220,3 +220,25 @@ def test_chiudere_il_pannello_in_modalita_gcp_restituisce_i_clic_alla_mappa(apri
     v.page.click("#rail-pannelli [data-pannello=geoimage]")  # ripiega il pannello
     assert v.js("document.getElementById('gi-gcp-modo').getAttribute('aria-pressed')") == "false"
     assert v.js("window.dt.map.getCanvas().style.cursor") == ""
+
+
+def test_il_progetto_si_ricorda_dopo_il_ricaricamento(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    v.page.wait_for_timeout(800)  # salvataggio ritardato e scrittura in IndexedDB
+    v.page.reload()
+    v.attendi_pronto()
+    v.page.wait_for_selector(".gi-overlay:not([hidden]) .gi-immagine[src]", timeout=15000)
+    assert v.js("document.querySelector('.gi-immagine').style.transform").startswith("matrix3d(")
+
+
+def test_rimuovere_l_immagine_pulisce_mappa_e_memoria(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    v.page.click("#gi-rimuovi")
+    assert not v.page.is_visible(".gi-overlay")
+    assert v.page.locator(".gi-maniglia").count() == 0
+    assert not v.page.is_visible("#gi-swipe")
+    assert v.js("localStorage.getItem('dt:geoimage:v1')") is None

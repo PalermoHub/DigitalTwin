@@ -10,6 +10,7 @@ import { collegaImmagine } from './immagine.js';
 import { collegaPosizione } from './posizione.js';
 import { collegaConfronto } from './confronto.js';
 import { collegaGcp } from './gcp.js';
+import { collegaSessione } from './sessione.js';
 import { limiti } from './geometria.js';
 import { segnala } from '../core/pannello.js';
 
@@ -85,12 +86,13 @@ export function collegaGeoimage(map, elemento) {
   collegaPosizione(ctx);
   collegaConfronto(ctx);
   collegaGcp(ctx);
+  const sessione = collegaSessione(ctx);
   ctx.cambiato(); // stato iniziale dei pulsanti
 
   return {
     stato, // sola lettura: lo usano i test del browser
     apri() { elemento.hidden = false; },
     chiudi() { elemento.hidden = true; },
-    async ripristina() {}, // la memoria tra le sessioni arriva con il Task 13
+    ripristina: sessione.ripristina,
   };
 }
