@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 536" role="img" aria-labelledby="t d">
+  <title id="t">Tutto in un punto</title>
+  <desc id="d">Un clic su via Maqueda 435 restituisce catasto, vincoli, sicurezza, cultura e trasporti: particella 180 foglio 128, zonizzazione PRG 2004 centro storico, zona a incidenti concentrati, chiesa delle Francescane non più esistente, trasporto pubblico a 130 metri.</desc>
+  <style>
+    text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#e9ecef}
+    .ti{font-size:30px;font-weight:700;fill:#fff}
+    .h{font-size:17px;font-weight:700;fill:#fff}
+    .b{font-size:14px;fill:#d5dae0}
+    .c{font-size:15px;font-weight:700;fill:#fff}
+    .k{fill:#3a3f46;fill-opacity:.82;stroke:#8a9099;stroke-opacity:.55;stroke-width:1.2}
+    .l{fill:none;stroke:#f5a623;stroke-linecap:round;stroke-linejoin:round}
+    .g{stroke-width:9;stroke-opacity:.22}
+    .f{stroke-width:3}
+    .i{fill:none;stroke:#f5a623;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+    .st{fill:none;stroke:#555b63;stroke-opacity:.45;stroke-width:1}
+  </style>
+  <rect width="960" height="536" fill="#23262b"/>
+  <g class="st">
+    <path d="M0 90 340 20M0 260 250 190 480 270 960 110M0 420 300 360 700 480 960 420M120 0 210 536M420 0 520 536M760 0 700 536M0 180 960 330"/>
+    <path d="M60 330 150 300 190 380 100 410ZM600 60 720 40 740 120 620 140ZM250 420 380 400 400 470 270 490ZM800 470 920 450 930 520 810 530Z"/>
+  </g>
+  <text class="ti" x="480" y="62" text-anchor="middle">La potenza dell’intersezione: Tutto in un punto</text>
+
+  <g class="l">
+    <path class="g" d="M480 268 345 175H300M480 268 604 148H610M480 268H703M480 268 306 345H300M480 268 540 330 580 388H637"/>
+    <path class="f" d="M480 268 345 175H300M480 268 604 148H610M480 268H703M480 268 306 345H300M480 268 540 330 580 388H637"/>
+  </g>
+
+  <g>
+    <ellipse cx="480" cy="268" rx="26" ry="11" fill="#f5a623" fill-opacity=".25" stroke="#f5a623" stroke-width="2"/>
+    <ellipse cx="480" cy="268" rx="9" ry="4" fill="#f5a623"/>
+    <path d="M480 266C462 244 454 232 454 215a26 26 0 0 1 52 0c0 17-8 29-26 51Z" fill="#f5a623" fill-opacity=".35" stroke="#f5a623" stroke-width="3"/>
+    <circle cx="480" cy="213" r="10" fill="#23262b" stroke="#f5a623" stroke-width="3"/>
+  </g>
+
+  <rect class="k" x="370" y="294" width="220" height="34" rx="8"/>
+  <text class="c" x="480" y="316" text-anchor="middle">Clic su Via Maqueda, 435</text>
+
+  <rect class="k" x="146" y="130" width="198" height="84" rx="10"/>
+  <path class="i" d="M158 144h22v22h-22ZM158 166l11-9 5 4 6-8"/>
+  <text class="h" x="190" y="161">Catasto</text>
+  <text class="b" x="158" y="188">Particella 180,</text>
+  <text class="b" x="158" y="206">Foglio 128.</text>
+
+  <rect class="k" x="610" y="102" width="198" height="84" rx="10"/>
+  <path class="i" d="M622 116h20v22h-20ZM626 123h12M626 128h12M626 133h8"/>
+  <text class="h" x="654" y="133">Vincoli</text>
+  <text class="b" x="622" y="160">Zonizzazione PRG 2004 -</text>
+  <text class="b" x="622" y="178">Centro Storico (PPE).</text>
+
+  <rect class="k" x="703" y="222" width="228" height="84" rx="10"/>
+  <path class="i" d="M715 250l11-20 11 20ZM726 237v6"/>
+  <text class="h" x="746" y="250">Sicurezza</text>
+  <text class="b" x="715" y="276">Zona a incidenti concentrati</text>
+  <text class="b" x="715" y="294">(Confidenza gravità: 99%).</text>
+
+  <rect class="k" x="108" y="301" width="198" height="84" rx="10"/>
+  <path class="i" d="M120 322l11-8 11 8ZM122 325v14M127 325v14M135 325v14M140 325v14M120 341h22"/>
+  <text class="h" x="154" y="333">Cultura</text>
+  <text class="b" x="120" y="360">Chiesa delle Francescane</text>
+  <text class="b" x="120" y="378">(non più esistente).</text>
+
+  <rect class="k" x="637" y="342" width="198" height="84" rx="10"/>
+  <path class="i" d="M650 358h18v16h-18ZM650 366h18M653 378v3M665 378v3"/>
+  <text class="h" x="678" y="372">Trasporti</text>
+  <text class="b" x="649" y="398">Trasporto pubblico a 130m</text>
+  <text class="b" x="649" y="416">(Piazza Verdi).</text>
+
+  <rect class="k" x="27" y="460" width="906" height="52" rx="10"/>
+  <text class="b" x="480" y="492" text-anchor="middle" style="font-size:16px;fill:#eef0f2">Un singolo clic non restituisce un solo dato, ma svela la complessa realtà sovrapposta della vita urbana.</text>
+</svg>

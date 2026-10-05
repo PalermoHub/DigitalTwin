@@ -51,6 +51,15 @@ export const PASSI = [
     scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC },
   },
   {
+    id: 'tutto-in-un-punto',
+    titolo: 'Tutto in un punto',
+    statico: true,
+    paragrafi: [
+      'Un solo clic interroga insieme tutti gli strati: catasto, vincoli del piano regolatore, sicurezza stradale, beni culturali e trasporto pubblico. Il risultato è la scheda del luogo, che mette in fila ciò che si sovrappone in quel punto.',
+    ],
+    immagine: { file: 'img/guida/passi/intersezione.svg', alt: 'Schema: un clic su via Maqueda 435 restituisce catasto (particella 180, foglio 128), vincoli (zonizzazione PRG 2004, centro storico), sicurezza (zona a incidenti concentrati), cultura (chiesa delle Francescane, non più esistente) e trasporti (fermata a 130 metri).', didascalia: 'Un clic, cinque letture dello stesso luogo.' },
+  },
+  {
     id: 'scheda',
     titolo: 'Cosa si legge nella scheda',
     paragrafi: [

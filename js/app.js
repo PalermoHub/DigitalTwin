@@ -1,6 +1,7 @@
 import { creaMappa } from './core/mappa.js';
 import { impostaCatalogo } from './core/config.js';
 import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js';
+import { collegaInvito } from './core/invito.js';
 import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaRail } from './core/rail.js';
 import { collegaScheda } from './core/scheda.js';
@@ -123,5 +124,6 @@ map.once('style.load', async () => {
   foglio.addEventListener('close', () => { linguetta.hidden = false; });
   foglio.addEventListener('toggle', () => { linguetta.hidden = foglio.open; });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && foglio.open) foglio.close(); });
+  collegaInvito(map, document, (() => { try { return window.localStorage; } catch { return null; } })(), { url: location.search });
   window.dt.pronto = true;
 });

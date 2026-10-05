@@ -1228,7 +1228,8 @@ def test_tab_guida_mostra_i_passi_con_le_immagini(apri):
     v.page.wait_for_selector("#crediti[open]")
     v.page.click("#tab-guida")
     assert "provvisorio" not in v.page.inner_text("#tabpanel-guida")
-    assert v.js("document.querySelectorAll('#tabpanel-guida .guida-passo').length") == 11
+    assert v.js("document.querySelectorAll('#tabpanel-guida .guida-passo').length") == 15
+    assert v.js("!!document.querySelector('#guida-tutto-in-un-punto img[src$=\"intersezione.svg\"]')")
     v.page.wait_for_function("document.querySelector('#tabpanel-guida video').duration > 10", timeout=15000)
     assert v.js("document.querySelector('#tabpanel-guida video track').track.mode") in ("showing", "hidden", "disabled")
     assert v.js("document.querySelector('#tabpanel-guida audio source').getAttribute('src')") == "media/guida/guida.mp3"

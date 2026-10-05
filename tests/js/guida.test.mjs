@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs';
 import { PASSI } from '../../js/core/guida-contenuti.js';
 
 test('i passi nell\'ordine previsto', () => {
-  assert.deepEqual(PASSI.map(p => p.id), ['cos-e', 'dati', 'strati', 'clic', 'scheda', 'monumenti', 'uffici', 'pai', 'incendi', 'filtri', 'rndt-catalogo', 'rndt-gruppo', 'rndt-info', 'avvertenze']);
+  assert.deepEqual(PASSI.map(p => p.id), ['cos-e', 'dati', 'strati', 'clic', 'tutto-in-un-punto', 'scheda', 'monumenti', 'uffici', 'pai', 'incendi', 'filtri', 'rndt-catalogo', 'rndt-gruppo', 'rndt-info', 'avvertenze']);
 });
 
 test('id univoci e validi come ancora', () => {
@@ -18,7 +18,7 @@ test('ogni passo ha titolo, paragrafi, narrazione e immagine completa', () => {
     assert.ok(p.titolo.trim(), `${p.id}: titolo`);
     assert.ok(p.paragrafi.length >= 1 && p.paragrafi.every(t => t.trim()), `${p.id}: paragrafi`);
     if (!p.statico) assert.ok(p.narrazione.trim().length > 40, `${p.id}: narrazione`);
-    assert.equal(p.immagine.file, `img/guida/passi/${p.id}.webp`);
+    assert.match(p.immagine.file, new RegExp(`^img/guida/passi/${p.id === 'tutto-in-un-punto' ? 'intersezione\\.svg' : p.id + '\\.webp'}$`));
     assert.ok(p.immagine.alt.trim() && p.immagine.didascalia.trim(), `${p.id}: alt e didascalia`);
   }
 });
