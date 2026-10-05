@@ -9,6 +9,7 @@ import { creaSospensione } from './sospensione.js';
 import { collegaImmagine } from './immagine.js';
 import { collegaPosizione } from './posizione.js';
 import { collegaConfronto } from './confronto.js';
+import { collegaGcp } from './gcp.js';
 import { limiti } from './geometria.js';
 import { segnala } from '../core/pannello.js';
 
@@ -83,6 +84,7 @@ export function collegaGeoimage(map, elemento) {
   collegaImmagine(ctx);
   collegaPosizione(ctx);
   collegaConfronto(ctx);
+  collegaGcp(ctx);
   ctx.cambiato(); // stato iniziale dei pulsanti
 
   return {

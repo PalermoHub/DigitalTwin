@@ -135,3 +135,88 @@ def test_swipe_e_spotlight_ritagliano_l_immagine(apri):
     v.page.click("#gi-inverti")
     v.page.mouse.move(540, 420)
     assert v.js("document.querySelector('.gi-overlay').style.clipPath").startswith("circle(")
+
+
+def _tre_gcp(v):
+    angoli = _angoli(v)
+    v.page.click("#gi-gcp-modo")
+    for u, w in [(0.25, 0.25), (0.75, 0.3), (0.5, 0.75)]:
+        x, y = _punto(angoli, u, w)
+        v.page.mouse.click(x, y)
+        v.page.mouse.click(x + 10, y + 5)
+    v.page.click("#gi-gcp-modo")
+
+
+def test_gcp_due_clic_per_punto_senza_aprire_la_scheda_e_allinea(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    angoli = _angoli(v)
+    v.page.click("#gi-gcp-modo")
+    for u, w, dx, dy in [(0.25, 0.25, 30, 20), (0.75, 0.3, 30, 20), (0.5, 0.75, 30, 20)]:
+        x, y = _punto(angoli, u, w)
+        v.page.mouse.click(x, y)              # passo 1: sull'immagine
+        v.page.mouse.click(x + dx, y + dy)    # passo 2: sulla mappa
+    assert v.page.locator(".gi-gcp:not(.gi-gcp-attesa)").count() == 3
+    assert v.page.locator("#gi-gcp-corpo tr").count() == 3
+    assert v.js("document.getElementById('scheda').hidden"), "in modalità GCP il clic non apre la Scheda"
+    assert v.js("!document.getElementById('gi-allinea').disabled")
+    assert v.page.is_visible("#gi-rmse")
+    prima = v.js("window.dt.geoimage.stato.angoli[0]")
+    v.page.click("#gi-allinea")
+    dopo = v.js("window.dt.geoimage.stato.angoli[0]")
+    assert abs(dopo["lat"] - prima["lat"]) > 1e-6 or abs(dopo["lng"] - prima["lng"]) > 1e-6, "l'immagine si è spostata sulle coordinate dei GCP"
+    v.page.click("#gi-gcp-modo")  # esce: i clic tornano normali
+    assert v.js("document.getElementById('gi-gcp-modo').getAttribute('aria-pressed')") == "false"
+    assert not any("geoimage" in e.lower() for e in v.errori), v.errori
+
+
+def test_con_pochi_gcp_o_poly2_senza_abbastanza_punti_allinea_resta_spento(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    angoli = _angoli(v)
+    v.page.click("#gi-gcp-modo")
+    for u, w in [(0.25, 0.25), (0.75, 0.3)]:
+        x, y = _punto(angoli, u, w)
+        v.page.mouse.click(x, y)
+        v.page.mouse.click(x + 10, y + 5)
+    assert v.js("document.getElementById('gi-allinea').disabled")
+    assert not v.page.is_visible("#gi-rmse")
+    assert "ne servono almeno 3" in v.page.inner_text("#gi-gcp-conteggio")
+    x, y = _punto(angoli, 0.5, 0.75)
+    v.page.mouse.click(x, y)
+    v.page.mouse.click(x + 10, y + 5)
+    assert v.js("!document.getElementById('gi-allinea').disabled")
+    v.page.select_option("#gi-tipo", "poly2")
+    assert v.js("document.getElementById('gi-allinea').disabled"), "la poly2 vuole almeno 6 GCP"
+    assert not any("geoimage" in e.lower() for e in v.errori), v.errori
+
+
+def test_una_nuova_immagine_spegne_swipe_e_modalita_gcp_e_azzera_i_gcp(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    angoli = _angoli(v)
+    v.page.click("#gi-gcp-modo")
+    x, y = _punto(angoli, 0.3, 0.3)
+    v.page.mouse.click(x, y)
+    v.page.mouse.click(x + 10, y + 5)
+    v.page.click("#gi-swipe")
+    assert v.page.locator(".gi-gcp:not(.gi-gcp-attesa)").count() == 1
+    _carica(v, "seconda.png")
+    assert v.js("document.getElementById('gi-gcp-modo').getAttribute('aria-pressed')") == "false"
+    assert v.js("document.getElementById('gi-swipe').getAttribute('aria-pressed')") == "false"
+    assert v.js("document.querySelector('.gi-overlay').style.clipPath") == ""
+    assert v.page.locator(".gi-gcp").count() == 0
+    assert v.page.locator("#gi-gcp-corpo tr").count() == 0
+
+
+def test_chiudere_il_pannello_in_modalita_gcp_restituisce_i_clic_alla_mappa(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    v.page.click("#gi-gcp-modo")
+    v.page.click("#rail-pannelli [data-pannello=geoimage]")  # ripiega il pannello
+    assert v.js("document.getElementById('gi-gcp-modo').getAttribute('aria-pressed')") == "false"
+    assert v.js("window.dt.map.getCanvas().style.cursor") == ""
