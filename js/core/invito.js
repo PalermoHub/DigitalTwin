@@ -1,14 +1,14 @@
 // Invito all'avvio: un pill con lo schema «tutto in un punto» (sotto, solo su schermi larghi) che dice di fare clic su un punto.
-// Resta finché non si fa clic (o tocco) sulla mappa; il clic si ricorda e non torna più.
-// Chiave nuova: la vecchia versione la scriveva anche alla scomparsa a tempo, e quei browser non vedevano più l'invito.
+// Compare a ogni apertura e sparisce al clic (o tocco) sulla mappa; solo «Non mostrare più» lo spegne per sempre.
+// «Ripristina» nella barra di ricerca lo riaccende (la chiave è tra le personalizzazioni).
 // Non compare se l'indirizzo apre già una scheda.
-export const CHIAVE_INVITO = 'dt.invito.cliccato';
+export const CHIAVE_INVITO = 'dt.invito.no';
 export const SCHEMA_INVITO = 'img/guida/passi/intersezione.svg';
 
 export function collegaInvito(map, doc, archivio, { url = '' } = {}) {
-  let visto = false;
-  try { visto = archivio?.getItem(CHIAVE_INVITO) === '1'; } catch { /* storage bloccato: l'invito si mostra */ }
-  if (visto || /[?&]scheda=/.test(url)) return null;
+  let spento = false;
+  try { spento = archivio?.getItem(CHIAVE_INVITO) === '1'; } catch { /* storage bloccato: l'invito si mostra */ }
+  if (spento || /[?&]scheda=/.test(url)) return null;
   const radice = doc.createElement('div');
   radice.className = 'invito-clic';
   radice.setAttribute('role', 'status');
@@ -18,13 +18,17 @@ export function collegaInvito(map, doc, archivio, { url = '' } = {}) {
   schema.src = SCHEMA_INVITO;
   schema.alt = '';
   schema.onerror = () => schema.remove(); // deploy senza lo schema: resta il pill
-  radice.append(pill, schema);
+  const mai = doc.createElement('button');
+  mai.type = 'button';
+  mai.className = 'invito-mai';
+  mai.textContent = 'Non mostrare più';
+  radice.append(pill, schema, mai);
   doc.body.append(radice);
-  const alClic = () => {
-    map.off('click', alClic);
-    radice.remove();
+  const chiudi = () => { map.off('click', chiudi); radice.remove(); };
+  mai.addEventListener('click', () => {
+    chiudi();
     try { archivio?.setItem(CHIAVE_INVITO, '1'); } catch { /* si ripresenta al prossimo avvio */ }
-  };
-  map.on('click', alClic);
-  return alClic;
+  });
+  map.on('click', chiudi);
+  return chiudi;
 }

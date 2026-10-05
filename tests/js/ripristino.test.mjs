@@ -5,10 +5,10 @@ import { ripristinaPersonalizzazioni, collegaRipristino, CHIAVI_PERSONALIZZAZION
 const finto = dati => ({ dati, getItem: k => dati[k] ?? null, removeItem: k => { delete dati[k]; } });
 
 test('toglie solo le personalizzazioni, non i layer RNDT', () => {
-  const s = finto({ 'dt-temi-strati': '{}', 'dt.scheda.nascosti': '{}', 'dt-ordine-strati': '[]', 'dt:rndt:v1': '{"layer":1}' });
-  assert.equal(ripristinaPersonalizzazioni(s), 3);
+  const s = finto({ 'dt-temi-strati': '{}', 'dt.scheda.nascosti': '{}', 'dt-ordine-strati': '[]', 'dt.invito.no': '1', 'dt:rndt:v1': '{"layer":1}' });
+  assert.equal(ripristinaPersonalizzazioni(s), 4);
   assert.deepEqual(Object.keys(s.dati), ['dt:rndt:v1']);
-  assert.equal(CHIAVI_PERSONALIZZAZIONI.length, 3);
+  assert.equal(CHIAVI_PERSONALIZZAZIONI.length, 4);
 });
 
 test('storage assente o che lancia: nessun errore', () => {

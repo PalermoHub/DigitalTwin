@@ -4,8 +4,9 @@
 import { CHIAVE as CHIAVE_TEMI } from './tema.js';
 import { CHIAVE_STORAGE as CHIAVE_SCHEDA } from './scheda-preferenze.js';
 import { CHIAVE as CHIAVE_ORDINE } from './riordino.js';
+import { CHIAVE_INVITO } from './invito.js';
 
-export const CHIAVI_PERSONALIZZAZIONI = [CHIAVE_TEMI, CHIAVE_SCHEDA, CHIAVE_ORDINE];
+export const CHIAVI_PERSONALIZZAZIONI = [CHIAVE_TEMI, CHIAVE_SCHEDA, CHIAVE_ORDINE, CHIAVE_INVITO];
 
 // Restituisce quante chiavi erano presenti. Lo storage può mancare o rifiutare l'operazione.
 export function ripristinaPersonalizzazioni(storage) {
@@ -21,7 +22,7 @@ export function ripristinaPersonalizzazioni(storage) {
 
 export function collegaRipristino(bottone, storage, ricarica = () => location.reload(), conferma = testo => window.confirm(testo)) {
   bottone?.addEventListener('click', () => {
-    if (!conferma('Ripristinare colori, schede e ordine degli strati ai valori iniziali? I layer RNDT aggiunti restano.')) return;
+    if (!conferma('Ripristinare colori, schede, ordine degli strati e invito ai valori iniziali? I layer RNDT aggiunti restano.')) return;
     ripristinaPersonalizzazioni(storage);
     ricarica();
   });
