@@ -1,7 +1,8 @@
 // Invito all'avvio: un pill con lo schema «tutto in un punto» (sotto, solo su schermi larghi) che dice di fare clic su un punto.
 // Resta finché non si fa clic (o tocco) sulla mappa; il clic si ricorda e non torna più.
+// Chiave nuova: la vecchia versione la scriveva anche alla scomparsa a tempo, e quei browser non vedevano più l'invito.
 // Non compare se l'indirizzo apre già una scheda.
-export const CHIAVE_INVITO = 'dt.invito.visto';
+export const CHIAVE_INVITO = 'dt.invito.cliccato';
 export const SCHEMA_INVITO = 'img/guida/passi/intersezione.svg';
 
 export function collegaInvito(map, doc, archivio, { url = '' } = {}) {
