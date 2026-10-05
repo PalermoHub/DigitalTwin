@@ -974,6 +974,18 @@ def test_basi_cartografiche_alternative(apri):
     assert v.js("window.dt.map.getLayoutProperty('base-bianco', 'visibility')") == "visible"
 
 
+def test_mappe_storiche_dell_atlante_sono_basi_raster(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.mostra("#base-st-1935")
+    v.page.check("#base-st-1935")
+    assert v.js("window.dt.map.getLayoutProperty('base-st-1935', 'visibility')") == "visible"
+    assert v.js("window.dt.map.getLayoutProperty('base-st-1580', 'visibility')") == "none"
+    assert "mapwarper.net/maps/tile/19706/" in v.js("window.dt.map.getSource('st-1935-r').tiles[0]")
+    assert "Omira 1935" in v.js("document.getElementById('base-st-1935').closest('label').title")
+    assert v.js("document.querySelector('#gruppo-base a[href*=index_atlante_iframe]') !== null")
+
+
 def test_ricerca_foglio_particella(apri):
     v = apri()
     v.attendi_pronto()
@@ -1329,8 +1341,8 @@ def test_mobile_barra_verticale_a_sinistra_e_desktop_orizzontale(apri):
 def test_cartografie_di_base_come_cerchi_con_miniatura_e_icona_barra_che_segue(apri):
     v = apri()
     v.attendi_pronto()
-    assert v.js("document.querySelectorAll('#gruppo-base .base-cerchio').length") == 20
-    assert v.js("[...document.querySelectorAll('#gruppo-base h3')].map(h => h.textContent)") == ["Mappe stradali", "Immagini aeree", "Topografiche", "Cartografia tecnica", "Sfondo neutro"]
+    assert v.js("document.querySelectorAll('#gruppo-base .base-cerchio').length") == 35
+    assert v.js("[...document.querySelectorAll('#gruppo-base h3')].map(h => h.textContent)") == ["Mappe stradali", "Immagini aeree", "Topografiche", "Mappe storiche", "Cartografia tecnica", "Sfondo neutro"]
     v.page.click("#btn-gruppo-base")
     v.page.click("#gruppo-base label[title^='Carta Tecnica Comunale 2k']")  # si sceglie cliccando il cerchio
     assert v.js("window.dt.map.getLayoutProperty('base-ctr', 'visibility')") == "visible"
@@ -1350,7 +1362,7 @@ def test_layer_ha_l_icona_dei_livelli_e_il_bianco_sta_dopo_la_carta_tecnica(apri
     v.attendi_pronto()
     assert v.js("document.querySelector('#btn-gruppo-territorio .et').textContent") == "Layer"
     assert v.js("document.querySelector('#gruppo-territorio h2').textContent") == "Layer"
-    assert v.js("[...document.querySelectorAll('#gruppo-base input')].map(i => i.id)") == ["base-positron", "base-ofm-dark", "base-ofm-bright", "base-osm", "base-osm-fr", "base-osm-hot", "base-esri-strade", "base-google-strade", "base-esri-scura", "base-satellite", "base-esri-satellite", "base-ibrido", "base-google-terreno", "base-opentopo", "base-esri-topo", "base-ctr-1989", "base-ctr", "base-ctr-2012", "base-grigio", "base-bianco"]
+    assert v.js("[...document.querySelectorAll('#gruppo-base input')].map(i => i.id)") == ["base-positron", "base-ofm-dark", "base-ofm-bright", "base-osm", "base-osm-fr", "base-osm-hot", "base-esri-strade", "base-google-strade", "base-esri-scura", "base-satellite", "base-esri-satellite", "base-ibrido", "base-google-terreno", "base-opentopo", "base-esri-topo", "base-st-1580", "base-st-1754", "base-st-1860", "base-st-1877", "base-st-1882", "base-st-1891", "base-st-1893", "base-st-1908", "base-st-1935", "base-st-1941", "base-st-1943", "base-st-1956", "base-st-1962", "base-st-1987", "base-st-1993", "base-ctr-1989", "base-ctr", "base-ctr-2012", "base-grigio", "base-bianco"]
 
 
 def _primo_luogo(nome):

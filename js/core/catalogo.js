@@ -97,7 +97,7 @@ function elenco(voci) {
   const ul = document.createElement('ul');
   for (const t of voci) {
     const li = document.createElement('li');
-    li.textContent = t;
+    li.append(...[t].flat()); // una voce è una stringa o un elenco di stringhe e nodi (per i link)
     ul.append(li);
   }
   return ul;
@@ -114,6 +114,7 @@ export function apriCrediti(dialog, catalogo, moduli = []) {
     ...catalogo.filter(v => v.fonte).map(v => `${v.fonte} (${v.data})` + (v.licenza ? ` — ${v.licenza}` : ' — licenza da verificare')),
     'Base cartografica: OpenFreeMap, © OpenMapTiles, dati © OpenStreetMap contributors',
     'Carte tecniche (CSG 2k 1989/91, CTC 2k 2007/09, CTR 10k 2012/13): SiciliaHub / PalermoHub, Comune di Palermo e Regione Siciliana (SITR)',
+    ['Mappe storiche (1580–1993): ', Object.assign(document.createElement('a'), { href: 'https://palermohub.opendatasicilia.it/index_atlante_iframe.html', target: '_blank', rel: 'noopener', textContent: 'Atlante delle carte tecniche storiche di Palermo' }), ', OpenDataSicilia (A. Borruso, F. P. Paolicelli, C. Spataro, G. B. Vitrano), georeferenziate su Map Warper — CC BY 4.0; le fonti originali (BnF Gallica, Library of Congress, Harvard Map Collection, U.S. Army Map Service, Comune di Palermo) sono indicate nell\'attribuzione di ogni mappa'],
     'Scuole, asili comunali e sedi delle sezioni elettorali: Comune di Palermo, dati aperti (2017) — condizioni d\'uso da verificare',
     'Trasporto pubblico (linee, fermate, orari): AMAT Palermo S.p.A., feed GTFS valido dal 25/08/2026 al 31/10/2026 — condizioni d\'uso da verificare',
     'Sicurezza stradale: incidenti 2015–2023 del Comune di Palermo (Polizia Municipale), rete stradale © OpenStreetMap contributors, elaborazione PalermoHub / OpenDataSicilia (studio «Rete stradale») — condizioni d\'uso da verificare',

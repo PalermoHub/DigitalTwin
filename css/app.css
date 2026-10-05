@@ -172,6 +172,10 @@ dialog li { margin: 4px 0; }
 .base-scelta:hover .base-cerchio { box-shadow: 0 0 0 2px var(--border-ui), 0 2px 8px rgba(0, 0, 0, .3); }
 .base-scelta input:checked + .base-cerchio { box-shadow: 0 0 0 3px var(--accent), 0 2px 8px rgba(0, 0, 0, .3); }
 .base-scelta input:focus-visible + .base-cerchio { outline: 2px solid var(--focus); outline-offset: 3px; }
+.base-precisione { position: absolute; top: 42px; left: 50%; margin-left: 12px; pointer-events: none; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--border-ui); }
+.base-precisione-alta { background: #2e9e4f; }
+.base-precisione-media { background: #e8b923; }
+.base-precisione-bassa { background: #d64545; }
 .base-et { margin-top: 4px; font-size: var(--fs-xs); font-weight: 700; color: var(--text); text-align: center; }
 .base-mini { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--miniatura) center / cover; box-shadow: 0 0 0 1.5px #fff, 0 0 0 2.5px var(--border-ui); }
 #barra-gruppi button[aria-expanded="true"] .base-mini { box-shadow: 0 0 0 1.5px #fff; }

@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791211649.4585702,
-    "ast_hash": "256c2a3d3f43529eb90381bf672df658",
+    "mtime": 1791236435.0427358,
+    "ast_hash": "3b6b042c587253c4c885b2d3c675271d",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
-    "mtime": 1791211649.45881,
-    "ast_hash": "42f535c4fe1cd184b495ffedc7785f3f",
+    "mtime": 1791238568.4748967,
+    "ast_hash": "3feb0de576f737e40f98058236954442",
     "semantic_hash": ""
   },
   "js/core/config.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791211649.481705,
-    "ast_hash": "eaa2578f6361b0fe76122cdb7943618c",
+    "mtime": 1791238568.477216,
+    "ast_hash": "f87cd7aa2f621fb61475f0bffd5ffadf",
     "semantic_hash": ""
   },
   "README.md": {
@@ -265,8 +265,8 @@
     "semantic_hash": ""
   },
   "js/layers/base.js": {
-    "mtime": 1791195349.711853,
-    "ast_hash": "c8b6add07f85ec7655bf4068e6dfa2cd",
+    "mtime": 1791238568.4754968,
+    "ast_hash": "349ed71dcf145c8339699f4c9003754a",
     "semantic_hash": ""
   },
   "docs/RIPARTENZA.md": {
@@ -350,8 +350,8 @@
     "semantic_hash": ""
   },
   "js/core/evidenza.js": {
-    "mtime": 1791119333.0463386,
-    "ast_hash": "4e742b76d8b65888a6e6de507d88220e",
+    "mtime": 1791235985.453199,
+    "ast_hash": "3eaea67f2c80e57a7e5bef51db4cd667",
     "semantic_hash": ""
   },
   "tests/js/evidenza.test.mjs": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791201818.3020737,
-    "ast_hash": "5faf9873e9f042df57bf0a61dd7244cd",
+    "mtime": 1791235985.4528375,
+    "ast_hash": "80bd5088c0877201b37f97cabd5953c8",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -665,8 +665,8 @@
     "semantic_hash": ""
   },
   "js/layers/trasporto-vicino.js": {
-    "mtime": 1791030258.2847624,
-    "ast_hash": "2a74f22e763830b379ff0ad18f9c9207",
+    "mtime": 1791235715.7867966,
+    "ast_hash": "2f2a192b90f253c4dd7465e8eee4b69f",
     "semantic_hash": ""
   },
   "tests/js/trasporto-vicino.test.mjs": {
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791195349.7095582,
-    "ast_hash": "9a701cf03c0b3a98d3aff580109b3e55",
+    "mtime": 1791236435.0443397,
+    "ast_hash": "dcabf76c07ac41d2c613d064f39c03f6",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -790,8 +790,8 @@
     "semantic_hash": ""
   },
   "tests/js/guida.test.mjs": {
-    "mtime": 1791195349.7243774,
-    "ast_hash": "2520f031b7f03bbe8a72c753bf89a606",
+    "mtime": 1791236435.0445704,
+    "ast_hash": "f61ea00623283d7cfa976af75ebb2c57",
     "semantic_hash": ""
   },
   "tests/test_guida_media.py": {
@@ -1445,13 +1445,13 @@
     "semantic_hash": ""
   },
   "js/core/ripristino.js": {
-    "mtime": 1791195349.7106159,
-    "ast_hash": "4cfde7a7264ef068b31de080c6029e99",
+    "mtime": 1791237759.2637384,
+    "ast_hash": "0a7ab83e9dd15f2703673598a0f7a5bb",
     "semantic_hash": ""
   },
   "tests/js/ripristino.test.mjs": {
-    "mtime": 1791195349.7246895,
-    "ast_hash": "53ecc704ef6d3c59979927ec3af92d83",
+    "mtime": 1791237772.683217,
+    "ast_hash": "ea5cd3b2cae47b72f4eb5eec854195a3",
     "semantic_hash": ""
   },
   "plugin/openrndt-geolibre-0.3.1/plugin.json": {
@@ -1712,6 +1712,101 @@
   "img/puzzle.webp": {
     "mtime": 1791201834.9241974,
     "ast_hash": "433c990e8de2736ed51c785e800c153c",
+    "semantic_hash": ""
+  },
+  "js/core/invito.js": {
+    "mtime": 1791237750.9935505,
+    "ast_hash": "9aa6799e15399e9ef8cbba024fd3987d",
+    "semantic_hash": ""
+  },
+  "tests/js/evidenza-legenda.test.mjs": {
+    "mtime": 1791235715.787137,
+    "ast_hash": "135224c79e988f5abeabd44cd954524c",
+    "semantic_hash": ""
+  },
+  "tests/js/invito.test.mjs": {
+    "mtime": 1791237759.263474,
+    "ast_hash": "0300081a7edd1aea28409eb99895a0d8",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/intersezione.svg": {
+    "mtime": 1791237459.810369,
+    "ast_hash": "eb61545bca9df95162100982fd14ac04",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1580.jpg": {
+    "mtime": 1791238568.4847677,
+    "ast_hash": "3f755f7414a20052ecce8602f2fde7da",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1754.jpg": {
+    "mtime": 1791238568.4849916,
+    "ast_hash": "ef92807af3832bf6297e929d9157ad9b",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1860.jpg": {
+    "mtime": 1791238568.4852471,
+    "ast_hash": "44fc7ec2cb4c085adc9abe03b7593b09",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1877.jpg": {
+    "mtime": 1791238568.485433,
+    "ast_hash": "ef6172666a91516f2f131cbd7c7293f3",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1882.jpg": {
+    "mtime": 1791238568.485621,
+    "ast_hash": "c05a71ace5935923d6dc785e7d46b401",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1891.jpg": {
+    "mtime": 1791238568.4858508,
+    "ast_hash": "4aaa7a65e38b21d6b0c3e0ce8cfa443f",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1893.jpg": {
+    "mtime": 1791238568.486069,
+    "ast_hash": "00882d86c8349144e9c338f7433203f7",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1908.jpg": {
+    "mtime": 1791238568.4863434,
+    "ast_hash": "64882cbce75b7d34b1cec9bb75d179b1",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1935.jpg": {
+    "mtime": 1791238568.4865785,
+    "ast_hash": "4577a91237edc724392b48d94c782090",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1941.jpg": {
+    "mtime": 1791238568.4868555,
+    "ast_hash": "d6aafa35fc4c28a8397747f1837087eb",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1943.jpg": {
+    "mtime": 1791238568.487231,
+    "ast_hash": "d6c9adb76abdd2c83f51e6fde6479215",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1956.jpg": {
+    "mtime": 1791238568.487426,
+    "ast_hash": "193499a9c1da8710f6e6b6d134b1940b",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1962.jpg": {
+    "mtime": 1791238568.4876974,
+    "ast_hash": "8fc385354d437ba3861fc86bf9332a31",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1987.jpg": {
+    "mtime": 1791238568.4879644,
+    "ast_hash": "7e56773f97f5506cfbb137a9ec791e50",
+    "semantic_hash": ""
+  },
+  "img/basi/st-1993.jpg": {
+    "mtime": 1791238568.4883318,
+    "ast_hash": "6fe985410cd143d7c0d5df4ec83c42bf",
     "semantic_hash": ""
   }
 }

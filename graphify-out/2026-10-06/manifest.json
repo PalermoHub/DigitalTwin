@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791211649.4585702,
-    "ast_hash": "256c2a3d3f43529eb90381bf672df658",
+    "mtime": 1791236435.0427358,
+    "ast_hash": "3b6b042c587253c4c885b2d3c675271d",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791211649.481705,
-    "ast_hash": "eaa2578f6361b0fe76122cdb7943618c",
+    "mtime": 1791236489.7482026,
+    "ast_hash": "9b06806a66a1f14a632f34a3c637c8e1",
     "semantic_hash": ""
   },
   "README.md": {
@@ -350,8 +350,8 @@
     "semantic_hash": ""
   },
   "js/core/evidenza.js": {
-    "mtime": 1791119333.0463386,
-    "ast_hash": "4e742b76d8b65888a6e6de507d88220e",
+    "mtime": 1791235985.453199,
+    "ast_hash": "3eaea67f2c80e57a7e5bef51db4cd667",
     "semantic_hash": ""
   },
   "tests/js/evidenza.test.mjs": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791201818.3020737,
-    "ast_hash": "5faf9873e9f042df57bf0a61dd7244cd",
+    "mtime": 1791235985.4528375,
+    "ast_hash": "80bd5088c0877201b37f97cabd5953c8",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -665,8 +665,8 @@
     "semantic_hash": ""
   },
   "js/layers/trasporto-vicino.js": {
-    "mtime": 1791030258.2847624,
-    "ast_hash": "2a74f22e763830b379ff0ad18f9c9207",
+    "mtime": 1791235715.7867966,
+    "ast_hash": "2f2a192b90f253c4dd7465e8eee4b69f",
     "semantic_hash": ""
   },
   "tests/js/trasporto-vicino.test.mjs": {
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791195349.7095582,
-    "ast_hash": "9a701cf03c0b3a98d3aff580109b3e55",
+    "mtime": 1791236435.0443397,
+    "ast_hash": "dcabf76c07ac41d2c613d064f39c03f6",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -790,8 +790,8 @@
     "semantic_hash": ""
   },
   "tests/js/guida.test.mjs": {
-    "mtime": 1791195349.7243774,
-    "ast_hash": "2520f031b7f03bbe8a72c753bf89a606",
+    "mtime": 1791236435.0445704,
+    "ast_hash": "f61ea00623283d7cfa976af75ebb2c57",
     "semantic_hash": ""
   },
   "tests/test_guida_media.py": {
@@ -1712,6 +1712,26 @@
   "img/puzzle.webp": {
     "mtime": 1791201834.9241974,
     "ast_hash": "433c990e8de2736ed51c785e800c153c",
+    "semantic_hash": ""
+  },
+  "js/core/invito.js": {
+    "mtime": 1791236435.0139997,
+    "ast_hash": "d7a1dbc3e0d8b0a2219264948f7e4fb4",
+    "semantic_hash": ""
+  },
+  "tests/js/evidenza-legenda.test.mjs": {
+    "mtime": 1791235715.787137,
+    "ast_hash": "135224c79e988f5abeabd44cd954524c",
+    "semantic_hash": ""
+  },
+  "tests/js/invito.test.mjs": {
+    "mtime": 1791236435.0152745,
+    "ast_hash": "fbb67817b58b3459e30299d2047243fc",
+    "semantic_hash": ""
+  },
+  "img/guida/passi/intersezione.svg": {
+    "mtime": 1791236356.7363157,
+    "ast_hash": "eb61545bca9df95162100982fd14ac04",
     "semantic_hash": ""
   }
 }

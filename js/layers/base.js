@@ -21,6 +21,32 @@ const RASTER = {
   ctr: { url: 'https://siciliahub.github.io/Tiles/ctr_pa_2k/{z}/{x}/{y}.png', max: 19, min: 12, attr: '© Carta Tecnica Comunale 2k 2007/09' },
   'ctr-2012': { url: 'https://siciliahub.github.io/Tiles/ctr_pa_10k/{z}/{x}/{y}.png', max: 18, min: 13, attr: '© Carta Tecnica Regionale 10k 2012/13' },
 };
+// Mappe storiche dell'Atlante delle carte tecniche storiche di Palermo (OpenDataSicilia): tile georeferenziate su Map Warper.
+// `precisione` è il giudizio editoriale dell'atlante: alta (rilievo aerofotogrammetrico), media (pre-aerofotogrammetria), bassa (incisioni).
+const ATLANTE = 'https://palermohub.opendatasicilia.it/index_atlante_iframe.html';
+const STORICHE = [
+  { id: 1580, mw: 60119, max: 17, precisione: 'bassa', etichetta: '1580', titolo: 'Città di Palermo 1580 | Fonte: gallica.bnf.fr / BnF', attr: 'Palermo 1580, Maiocco e Bonifacio (BnF Gallica)' },
+  { id: 1754, mw: 60176, max: 17, precisione: 'bassa', etichetta: '1754', titolo: 'Città di Palermo 1754 | Fonte: Library of Congress Geography and Map Division Washington', attr: 'Palermo 1754-59, G. Vasi (Library of Congress)' },
+  { id: 1860, mw: 60203, max: 17, precisione: 'bassa', etichetta: '1860', titolo: 'Pianta topografica | Palermo 1860 circa | Fonte: Harvard Map Collection, Harvard University', attr: 'Palermo 1860 circa (Harvard Map Collection)' },
+  { id: 1877, mw: 60399, max: 17, precisione: 'media', etichetta: '1877', titolo: 'Costa nord, Baia di Palermo 1877 | 1:36,417 | Fonte: Wisconsin-Milwaukee University', attr: 'Baia di Palermo 1877 (Univ. Wisconsin-Milwaukee)' },
+  { id: 1882, mw: 33126, max: 17, precisione: 'media', etichetta: '1882', titolo: 'Città di Palermo 1882 | 1:1k Fonte: gallica.bnf.fr / BnF', attr: 'Nuova pianta di Palermo 1882, L. Pedone Laurieri (BnF Gallica)' },
+  { id: 1891, mw: 60209, max: 17, precisione: 'media', etichetta: '1891', titolo: 'Nuova pianta della Città di Palermo 1891 1:10k | Fonte: Harvard Map Collection, Harvard University', attr: 'Nuova pianta di Palermo 1891, C. Clausen (Harvard Map Collection)' },
+  { id: 1893, mw: 19658, max: 16, precisione: 'media', etichetta: '1893', titolo: 'Carta tecnica 1893 | 1:13k (max zoom 16)', attr: 'Carta tecnica di Palermo 1893' },
+  { id: 1908, mw: 25750, max: 18, precisione: 'media', etichetta: '1908', titolo: 'Carta tecnica Municipale 1908 | 1:8k', attr: 'Carta tecnica di Palermo, Ufficio Tecnico Comunale 1908' },
+  { id: 1935, mw: 19706, max: 18, precisione: 'alta', etichetta: '1935', titolo: 'Carta tecnica Omira 1935 | 1:5k', attr: 'Carta tecnica di Palermo, OMIRA 1935' },
+  { id: 1941, mw: 45321, max: 17, precisione: 'media', etichetta: '1941', titolo: 'U.S. Army Map Service, 1941 Series 4229 | Palermo 1:50k', attr: 'U.S. Army Map Service 1941, Series 4229' },
+  { id: 1943, mw: 45304, max: 17, precisione: 'media', etichetta: '1943', titolo: 'U.S. Army Map Service, 1943-1944 | City Plans Palermo 1:10k', attr: 'U.S. Army Map Service 1943-1944, City Plans' },
+  { id: 1956, mw: 19792, max: 18, precisione: 'alta', etichetta: '1956', titolo: 'Carta tecnica Irta 1956 | 1:5k', attr: 'Carta tecnica di Palermo, IRTA 1956' },
+  { id: 1962, mw: 52666, max: 18, precisione: 'alta', etichetta: '1962', titolo: 'Piano Regolatore Generale 1962 | 1:5k', attr: 'Comune di Palermo, PRG 1962' },
+  { id: 1987, mw: 19785, max: 18, precisione: 'alta', etichetta: '1987', titolo: 'Carta tecnica Sas 1987 | 1:5k', attr: 'Carta tecnica di Palermo, SAS 1987' },
+  { id: 1993, mw: 52867, max: 18, precisione: 'alta', etichetta: '1993', titolo: 'P.P.E. del centro storico 1993 | 1:500', attr: 'Comune di Palermo, PPE del centro storico 1993' },
+];
+for (const s of STORICHE) {
+  RASTER[`st-${s.id}`] = {
+    url: `https://mapwarper.net/maps/tile/${s.mw}/{z}/{x}/{y}.png`, max: s.max, min: 13,
+    attr: `${s.attr} · Atlante storico OpenDataSicilia, georeferenziazione su Map Warper`,
+  };
+}
 // Basi vettoriali OpenFreeMap: stessi sprite, font e sorgenti dello stile di partenza, quindi se ne aggiungono solo i layer.
 const VETTORIALI = {
   'ofm-dark': 'https://tiles.openfreemap.org/styles/dark',
@@ -49,6 +75,9 @@ const GRUPPI = [
     { id: 'opentopo', etichetta: 'OpenTopo', titolo: 'OpenTopoMap (curve di livello)' },
     { id: 'esri-topo', etichetta: 'Esri Topo', titolo: 'Esri World Topographic Map' },
   ] },
+  { titolo: 'Mappe storiche', nota: true, basi: STORICHE.map(s => ({
+    id: `st-${s.id}`, etichetta: s.etichetta, titolo: `${s.titolo} (precisione della sovrapposizione: ${s.precisione})`, precisione: s.precisione,
+  })) },
   { titolo: 'Cartografia tecnica', basi: [
     { id: 'ctr-1989', etichetta: 'CSG 1989', titolo: 'Carta Tecnica Comunale CSG 2k (1989/91)' },
     { id: 'ctr', etichetta: 'CTC 2k', titolo: 'Carta Tecnica Comunale 2k (2007/09)' },
@@ -119,6 +148,13 @@ export default {
       h.textContent = g.titolo;
       const riga = document.createElement('div');
       riga.className = 'base-griglia';
+      let nota = null;
+      if (g.nota) {
+        nota = document.createElement('p');
+        nota.className = 'base-suggerimento';
+        const a = Object.assign(document.createElement('a'), { href: ATLANTE, target: '_blank', rel: 'noopener', textContent: 'Atlante delle carte tecniche storiche' });
+        nota.append('Mappe georeferenziate dell\'', a, ' (OpenDataSicilia). Il pallino indica quanto è affidabile la sovrapposizione: verde alta, giallo media, rosso bassa.');
+      }
       for (const b of g.basi) {
         const label = document.createElement('label');
         label.className = 'base-scelta';
@@ -140,10 +176,17 @@ export default {
           scegli(map, b.id);
           if (bottone) bottone.style.setProperty('--miniatura', `url(${miniatura(b.id)})`);
         });
+        if (b.precisione) {
+          const p = document.createElement('span');
+          p.className = `base-precisione base-precisione-${b.precisione}`;
+          label.append(p);
+        }
         label.append(r, cerchio, et);
         riga.append(label);
       }
-      el.append(h, riga);
+      el.append(h);
+      if (nota) el.append(nota);
+      el.append(riga);
     }
     // l'icona della barra mostra la base in uso, come nell'atlante
     if (icona) icona.replaceWith(Object.assign(document.createElement('span'), { className: 'base-mini' }));
