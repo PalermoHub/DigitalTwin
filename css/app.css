@@ -980,6 +980,15 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .strato-strumento { padding: 4px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface); color: var(--link); font: inherit; font-size: var(--fs-xs); font-weight: 600; cursor: pointer; }
 .strato-strumento:hover { background: var(--surface-hover); }
 .strato-btn[hidden] { display: none; }
+/* Ordine di disegno: elenco unico degli strati accesi, di qualsiasi gruppo */
+.ordine-nota { margin: 4px 12px 6px; color: var(--text-muted); font-size: var(--fs-xs); }
+.ordine-elenco { display: flex; flex-direction: column; gap: 2px; padding: 0 8px; }
+.ordine-riga { display: flex; align-items: center; gap: 6px; padding: 4px 6px; border-radius: var(--r-sm); background: var(--surface); font-size: var(--fs-sm, 13px); }
+.ordine-riga.trascinato { background: color-mix(in srgb, var(--accent) 18%, var(--surface)); box-shadow: var(--ombra); }
+.ordine-riga.trascinato .strato-btn--trascina { cursor: grabbing; }
+.ordine-nome { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; text-overflow: ellipsis; }
+.ordine-nome small { color: var(--text-muted); font-size: var(--fs-xs); }
+.ordine-elenco[hidden], .ordine-nota[hidden] { display: none; }
 
 /* Sezioni del tab «Layer»: ognuna si apre e si chiude da sola */
 .layer-sezione { border-top: 1px solid var(--border); }
@@ -1094,3 +1103,32 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
   .invito-clic p { padding: 8px 14px; font-size: var(--fs-sm); }
   .invito-clic img { display: none; } /* a 390 px il testo dello schema sarebbe illeggibile: sta nella Guida */
 }
+
+/* Isole di calore: legenda con metodo e numero di classi, grafico 2019–2025 */
+.legenda-isole-calore { max-width: 300px; }
+.legenda-isole-calore .ic-etichetta { display: block; margin: 8px 0 4px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); }
+.legenda-isole-calore .ic-etichetta input { display: block; width: 60%; margin-top: 6px; accent-color: var(--accent-strong); }
+.legenda-isole-calore .ic-metodi { display: flex; gap: 5px; }
+.legenda-isole-calore .ic-metodo { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 4px 7px; border: 1.5px solid var(--border-ui); border-radius: 6px; background: var(--surface-alt); color: var(--text-muted); font: inherit; font-size: 10px; font-weight: 600; line-height: 1.2; cursor: pointer; }
+.legenda-isole-calore .ic-metodo:hover { color: var(--text); border-color: var(--accent-strong); }
+.legenda-isole-calore .ic-metodo[aria-pressed="true"] { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; }
+.legenda-isole-calore .ic-icona { width: 100%; height: 20px; }
+.legenda-isole-calore .ic-rottura { stroke: #e74c3c; stroke-width: 1; }
+.legenda-isole-calore .ic-metodo[aria-pressed="true"] .ic-rottura { stroke: #fff; }
+.legenda-isole-calore .ic-barra { display: flex; height: 22px; border-radius: 4px; overflow: hidden; }
+.legenda-isole-calore .ic-classe { flex: 1; align-self: stretch; }
+.legenda-isole-calore .ic-assi { display: flex; align-items: center; gap: 4px; margin-top: 5px; font-size: 9px; font-weight: 600; color: var(--text-muted); }
+.legenda-isole-calore .ic-freccia { flex: 1; height: 2px; border: 0; background: linear-gradient(90deg, var(--border), var(--accent-strong)); }
+.legenda-isole-calore .ic-nd { display: flex; align-items: center; gap: 6px; margin-top: 5px; font-size: var(--fs-xs); }
+.legenda-isole-calore .ic-nd i { width: 14px; height: 10px; border: 1px solid var(--border); }
+.legenda-isole-calore .ic-link { display: block; margin-top: 6px; font-size: var(--fs-xs); color: var(--link); }
+.ic-graf .ic-svg svg { display: block; width: 100%; height: auto; }
+.ic-asse { font-size: 8.5px; fill: var(--text-muted); }
+.ic-graf .col-legenda i.ic-tratteggio { height: 0; border: 0; border-top: 2px dashed var(--text-muted); border-radius: 0; background: none; }
+.ic-graf .col-legenda i.ic-fascia { width: 12px; border-radius: 2px; background: var(--text-muted); opacity: .25; }
+.ic-graf .col-legenda i.ic-tratteggio { width: 14px; }
+/* `.legenda div` dispone i figli in riga: scala e grafico stanno in colonna */
+.legenda-isole-calore .ic-scala, .legenda-isole-calore .ic-graf, .legenda-isole-calore .ic-svg { display: block; }
+.legenda-isole-calore .ic-graf { margin-top: 8px; }
+.legenda-isole-calore .ic-assi i.ic-freccia { width: auto; border: 0; }
+.legenda-isole-calore .col-legenda { display: flex; flex-wrap: wrap; }

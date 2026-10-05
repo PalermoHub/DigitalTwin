@@ -23,6 +23,7 @@ import scuole from './layers/scuole.js';
 import uffici from './layers/uffici.js';
 import colonnine from './layers/colonnine.js';
 import incendi from './layers/incendi.js';
+import isoleCalore from './layers/isole-calore.js';
 import pai from './layers/pai.js';
 import trasporto from './layers/trasporto.js';
 import sicurezza, { STRATI_INCIDENTI, legendaSicurezza } from './layers/sicurezza.js';
@@ -46,7 +47,7 @@ riduciLegenda.addEventListener('click', () => {
 });
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, alberi, fontanelle, trasporto, sicurezza, colonnine, uffici, scuole, incendi, confini];
+const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, alberi, fontanelle, trasporto, sicurezza, colonnine, uffici, scuole, incendi, isoleCalore, confini];
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
 

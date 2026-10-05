@@ -3,7 +3,11 @@ import { applicaOpacita } from './opacita.js';
 import { limitiStrato, zoomMinimoStrato } from './zoom-strato.js';
 import { creaPannelloTema } from './pannello-tema.js';
 import { ordinaSezioni, leggiAperte, salvaAperta } from './layer-sezioni.js';
-import { ordina, mosseMappa, mosseSequenza, applicaMosse, leggiOrdine, salvaOrdine, azzeraOrdine } from './riordino.js';
+import { ordina, mosseMappa, mosseSequenza, applicaMosse, leggiOrdine, salvaOrdine, azzeraOrdine, ordineStrati, mosseVicino, mosseOrdine, leggiOrdineDisegno, salvaOrdineDisegno, azzeraOrdineDisegno } from './riordino.js';
+
+// Il pannello «Ordine layer in mappa» e i gruppi si avvisano a vicenda quando cambia l'ordine degli strati sulla mappa.
+const EVENTO_DISEGNO = 'dt:ordine-disegno';
+const EVENTO_GRUPPO = 'dt:ordine-gruppo';
 
 const mostrati = new Set();
 const DURATA_AVVISO = 8000;
@@ -45,7 +49,7 @@ function imposta(map, ids, visibile) {
   }
 }
 
-const ETICHETTE = { base: 'Mappe di base', layer: 'Layer', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Servizi', incendi: 'Incendi', sicurezza: 'Sicurezza' };
+const ETICHETTE = { base: 'Mappe di base', layer: 'Layer', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Servizi', incendi: 'Incendi', 'isole-calore': 'Isole di calore', sicurezza: 'Sicurezza' };
 
 // I soli gruppi che hanno un tab proprio; tutti gli altri sono sezioni del tab «Layer».
 const TAB_DIRETTI = new Set(['base', 'rndt']);
@@ -227,7 +231,22 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
     salvaOrdine(storage, idGruppo, tutti.map(b => b.id));
     applicaMosse(map, mosseMappa(stackIniziale(), tutti.map(b => layersDi.get(b.id) ?? [])));
     aggiornaFrecce();
+    document.dispatchEvent(new CustomEvent(EVENTO_GRUPPO));
   };
+  // l'«Ordine layer in mappa» ha cambiato lo stack: gli strati del gruppo si rimettono nell'ordine in cui sono disegnati
+  const sincronizza = () => {
+    const tutti = blocchi(gruppo);
+    if (tutti.length < 2) return;
+    const indice = new Map(stackIniziale().map((id, i) => [id, i]));
+    const cima = b => Math.max(-1, ...(layersDi.get(b.id) ?? []).filter(id => indice.has(id)).map(id => indice.get(id)));
+    if (tutti.some(b => cima(b) < 0)) return;
+    const voluto = tutti.map((b, i) => ({ b, i, k: cima(b) })).sort((x, y) => y.k - x.k || x.i - y.i).map(x => x.b);
+    if (voluto.every((b, i) => b === tutti[i])) return;
+    let dopo = tutti[0].nodi[0].previousElementSibling;
+    for (const b of voluto) { dopo.after(...b.nodi); dopo = b.nodi.at(-1); }
+    aggiornaFrecce();
+  };
+  if (!daElenco) document.addEventListener(EVENTO_DISEGNO, sincronizza);
   // sposta il blocco di `verso` posizioni (-1 su, +1 giù); false se non può
   const muovi = (riga, verso) => {
     const tutti = blocchi(gruppo);
@@ -321,6 +340,7 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
       azzeraOrdine(storage, idGruppo);
       applicaMosse(map, daElenco ? mosseMappa(stackIniziale(), blocchi(gruppo).map(b => layersDi.get(b.id) ?? [])) : mosseSequenza(stackIniziale(), originale));
       aggiornaFrecce();
+      document.dispatchEvent(new CustomEvent(EVENTO_GRUPPO));
     });
     barra.append(reset);
   }
@@ -337,6 +357,146 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
   }
   aggiornaFrecce();
   aggiornaStrumenti();
+}
+
+// Sezione «Ordine layer in mappa» del tab Layer: tutti gli strati accesi, di qualsiasi gruppo, in un unico elenco.
+// In alto = sopra sulla mappa; frecce e trascinamento lo cambiano, l'ordine resta salvato nel browser.
+function creaOrdineDisegno(map, moduli, storage, iniziale) {
+  const strati = moduli.flatMap(m => m.strati.map(s => ({ id: s.id, etichetta: s.etichetta, layers: s.layers, da: ETICHETTE[m.gruppo ?? m.id] ?? m.titolo })));
+  const per = new Map(strati.map(s => [s.id, s]));
+  const stack = () => map.getStyle().layers.map(l => l.id);
+  const attivo = id => document.getElementById(`strato-${id}`)?.checked;
+
+  const el = document.createElement('details');
+  el.id = 'ordine-disegno';
+  el.className = 'layer-sezione';
+  const sommario = document.createElement('summary');
+  const h = document.createElement('h2');
+  h.textContent = 'Ordine layer in mappa';
+  sommario.append(h);
+  const elenco = document.createElement('div');
+  elenco.className = 'ordine-elenco';
+  const nota = document.createElement('p');
+  nota.className = 'ordine-nota';
+  nota.textContent = 'In alto = sopra sulla mappa. Vale per tutti gli strati accesi, anche di gruppi diversi.';
+  const barra = document.createElement('div');
+  barra.className = 'strato-strumenti';
+  const reset = document.createElement('button');
+  reset.type = 'button';
+  reset.className = 'strato-strumento';
+  reset.dataset.azione = 'ripristina-disegno';
+  reset.textContent = 'Ripristina ordine';
+  barra.append(reset);
+  el.append(sommario, nota, elenco, barra);
+
+  const righe = () => [...elenco.querySelectorAll(':scope > .ordine-riga')];
+  const salva = () => salvaOrdineDisegno(storage, ordineStrati(stack(), strati));
+  const aggiornaFrecce = () => {
+    const r = righe();
+    r.forEach((riga, i) => {
+      riga.querySelector('[data-azione=su]').disabled = i === 0;
+      riga.querySelector('[data-azione=giu]').disabled = i === r.length - 1;
+      for (const a of ['su', 'giu', 'trascina']) riga.querySelector(`[data-azione=${a}]`).hidden = r.length < 2;
+    });
+  };
+  const ridisegna = () => {
+    const ids = ordineStrati(stack(), strati).filter(attivo);
+    elenco.replaceChildren(...ids.map(id => riga(per.get(id))));
+    nota.hidden = elenco.hidden = !ids.length;
+    barra.hidden = !ids.length;
+    aggiornaFrecce();
+  };
+  // la riga appena spostata va subito sopra lo strato che ora la segue (o, se è l'ultima, subito sotto quello che la precede)
+  const applica = rigaMossa => {
+    const r = righe();
+    const i = r.indexOf(rigaMossa);
+    const mio = per.get(rigaMossa.dataset.id).layers;
+    const mosse = i < r.length - 1
+      ? mosseVicino(stack(), mio, per.get(r[i + 1].dataset.id).layers, true)
+      : i > 0 ? mosseVicino(stack(), mio, per.get(r[i - 1].dataset.id).layers, false) : [];
+    applicaMosse(map, mosse);
+    salva();
+    aggiornaFrecce();
+    document.dispatchEvent(new CustomEvent(EVENTO_DISEGNO));
+  };
+  const muovi = (r, verso) => {
+    const vicina = verso < 0 ? r.previousElementSibling : r.nextElementSibling;
+    if (!vicina) return false;
+    if (verso < 0) vicina.before(r); else vicina.after(r);
+    return true;
+  };
+  function riga(s) {
+    const r = document.createElement('div');
+    r.className = 'ordine-riga';
+    r.dataset.id = s.id;
+    const nome = document.createElement('span');
+    nome.className = 'ordine-nome';
+    nome.textContent = s.etichetta;
+    const da = document.createElement('small');
+    da.textContent = s.da;
+    nome.append(da);
+    const azioni = document.createElement('span');
+    azioni.className = 'strato-azioni';
+    const su = bottoneAzione('su', `Sposta su ${s.etichetta}`);
+    const giu = bottoneAzione('giu', `Sposta giù ${s.etichetta}`);
+    const maniglia = bottoneAzione('trascina', 'Trascina per spostare');
+    maniglia.removeAttribute('aria-label');
+    maniglia.setAttribute('aria-hidden', 'true');
+    maniglia.tabIndex = -1;
+    su.addEventListener('click', () => { if (muovi(r, -1)) applica(r); });
+    giu.addEventListener('click', () => { if (muovi(r, 1)) applica(r); });
+    maniglia.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      const prima = righe().indexOf(r);
+      r.classList.add('trascinato');
+      const segui = ev => {
+        const meta = x => { const b = x.getBoundingClientRect(); return b.top + b.height / 2; };
+        for (let passi = 0; passi < 50; passi++) {
+          const su_ = r.previousElementSibling;
+          const giu_ = r.nextElementSibling;
+          if (su_ && ev.clientY < meta(su_)) muovi(r, -1);
+          else if (giu_ && ev.clientY > meta(giu_)) muovi(r, 1);
+          else break;
+        }
+      };
+      const fine = () => {
+        document.removeEventListener('pointermove', segui);
+        document.removeEventListener('pointerup', fine);
+        document.removeEventListener('pointercancel', fine);
+        r.classList.remove('trascinato');
+        if (righe().indexOf(r) !== prima) applica(r);
+      };
+      document.addEventListener('pointermove', segui);
+      document.addEventListener('pointerup', fine);
+      document.addEventListener('pointercancel', fine);
+    });
+    azioni.append(su, giu, maniglia);
+    r.append(nome, azioni);
+    return r;
+  }
+
+  reset.addEventListener('click', () => {
+    // prima i gruppi tornano al loro ordine, poi lo stack all'ordine di partenza di tutti gli strati
+    for (const b of document.querySelectorAll('#pannello [data-azione=ripristina]')) b.click();
+    azzeraOrdineDisegno(storage);
+    applicaMosse(map, mosseOrdine(stack(), strati, iniziale));
+    ridisegna();
+    document.dispatchEvent(new CustomEvent(EVENTO_DISEGNO));
+  });
+  document.addEventListener(EVENTO_GRUPPO, () => { salva(); ridisegna(); });
+  el.addEventListener('toggle', () => { if (el.open) ridisegna(); });
+  return {
+    el,
+    ridisegna,
+    // ordine salvato in una visita precedente
+    ripristinaSalvato: () => {
+      const salvato = leggiOrdineDisegno(storage);
+      if (!salvato) return;
+      applicaMosse(map, mosseOrdine(stack(), strati, salvato));
+      document.dispatchEvent(new CustomEvent(EVENTO_DISEGNO));
+    },
+    strati,
+  };
 }
 
 // Ogni modulo diventa un sotto-pannello a comparsa sotto la barra degli strumenti; ne sta aperto uno solo.
@@ -443,7 +603,11 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
   const contenitori = [...gruppi.map(g => g.el).filter(el => el !== layer), ...sezioni];
   // albero ripiegabile e strati riordinabili
   const layersDi = new Map(moduli.flatMap(m => m.strati.map(s => [s.id, s.layers])));
+  const inizialeDisegno = ordineStrati(map.getStyle().layers.map(l => l.id), moduli.flatMap(m => m.strati));
   for (const el of contenitori) abilitaRiordino(map, el, layersDi, storage);
+  // ordine di disegno globale: un elenco unico degli strati accesi, sotto «Cerca strato»
+  const disegno = layer ? creaOrdineDisegno(map, moduli, storage, inizialeDisegno) : null;
+  disegno?.ripristinaSalvato();
   // un solo «Cerca strato» in cima a Layer: filtra gli strati di tutte le sezioni, apre quelle con risultati e nasconde le altre
   if (layer) {
     const campo = document.createElement('input');
@@ -467,6 +631,9 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
       }
     });
     layer.querySelector(':scope > h2').after(campo);
+    campo.after(disegno.el);
+    campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; });
+    contenitore.addEventListener('change', e => { if (e.target.matches?.('label.strato input[type=checkbox]') && disegno.el.open) disegno.ridisegna(); });
   }
   aggiornaConteggio();
   // Esc ripiega il gruppo aperto; il clic sulla mappa no (come i pannelli di destra)

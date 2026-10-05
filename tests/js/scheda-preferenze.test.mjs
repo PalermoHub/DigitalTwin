@@ -87,7 +87,7 @@ test('elencoPannello: tipi e righe viste con lo stato di visibilità; i nascosti
   p = commutaSezione(p, 'fermata', false);
   p = commutaRiga(p, 'arco', 'Pendenza media', false);
   const el = elencoPannello(p);
-  assert.deepEqual(el.map(e => e.titolo), ['Colonnine di ricarica', 'Fermata', 'Incendio', 'Indirizzo', 'Tratto stradale', 'Uffici comunali', 'Vincolo PAI']); // «Colonnine di ricarica», «Incendio», «Uffici comunali» e «Vincolo PAI» sono sezioni note: ci sono anche se mai viste
+  assert.deepEqual(el.map(e => e.titolo), ['Colonnine di ricarica', 'Fermata', 'Incendio', 'Indirizzo', 'Isola di calore', 'Tratto stradale', 'Uffici comunali', 'Vincolo PAI']); // «Colonnine di ricarica», «Incendio», «Isola di calore», «Uffici comunali» e «Vincolo PAI» sono sezioni note: ci sono anche se mai viste
   assert.deepEqual(el.find(e => e.tipo === 'uffici').righe.map(r => r.etichetta), ['Indirizzo', 'Uffici', 'Aree']);
   assert.equal(el.find(e => e.tipo === 'fermata').visibile, false);
   assert.deepEqual(el.find(e => e.tipo === 'arco').righe, [{ etichetta: 'Pendenza media', visibile: false }, { etichetta: 'Incidenti 2015–2023', visibile: true }]);
@@ -138,14 +138,14 @@ test('storage: assente, rotto o con dati malformati → preferenze vuote, mai un
 test('nascondiTutto: nasconde ogni sezione vista, conserva le righe già nascoste e non muta', () => {
   const base = commutaRiga(registraVisti(vuote(), dati().sezioni), 'arco', 'Pendenza media', false);
   const p = nascondiTutto(base);
-  assert.deepEqual([...p.nascoste.sezioni].sort(), ['arco', 'colonnine', 'fermata', 'incendio', 'indirizzo', 'pai', 'uffici']);
+  assert.deepEqual([...p.nascoste.sezioni].sort(), ['arco', 'colonnine', 'fermata', 'incendio', 'indirizzo', 'isolacalore', 'pai', 'uffici']);
   assert.deepEqual(p.nascoste.righe, ['arco/Pendenza media']);
   assert.deepEqual(base.nascoste.sezioni, []);
   assert.deepEqual(applicaPreferenze(dati(), p).sezioni, []);
 });
 
 test('nascondiTutto: senza sezioni viste non fa nulla; una sezione già nascosta non si duplica', () => {
-  assert.deepEqual([...nascondiTutto(vuote()).nascoste.sezioni].sort(), ['colonnine', 'incendio', 'pai', 'uffici']); // solo le sezioni note
+  assert.deepEqual([...nascondiTutto(vuote()).nascoste.sezioni].sort(), ['colonnine', 'incendio', 'isolacalore', 'pai', 'uffici']); // solo le sezioni note
   const p = nascondiTutto(commutaSezione(registraVisti(vuote(), dati().sezioni), 'arco', false));
   assert.equal(p.nascoste.sezioni.filter(t => t === 'arco').length, 1);
 });

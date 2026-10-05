@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { sposta, ordina, mosseMappa, mosseSequenza, applicaMosse, leggiOrdine, salvaOrdine } from '../../js/core/riordino.js';
+import { sposta, ordina, mosseMappa, mosseSequenza, applicaMosse, leggiOrdine, salvaOrdine, ordineStrati, mosseVicino, mosseOrdine, leggiOrdineDisegno, salvaOrdineDisegno, azzeraOrdineDisegno } from '../../js/core/riordino.js';
 
 // Mappa finta: moveLayer(id, prima) come in MapLibre (senza `prima` in cima).
 function simula(stack, mosse) {
@@ -66,4 +66,51 @@ test('leggiOrdine / salvaOrdine: giro completo e storage rotto ignorato', () => 
   assert.deepEqual(leggiOrdine({ getItem: () => '{non json' }), {});
   assert.doesNotThrow(() => salvaOrdine({ getItem: () => null, setItem: () => { throw new Error('quota'); } }, 'x', []));
   assert.deepEqual(leggiOrdine(null), {});
+});
+
+// Ordine di disegno globale: strati di gruppi diversi, dall'alto verso il basso.
+const STRATI = [{ id: 'cal', layers: ['cal-fill', 'cal-bordo'] }, { id: 'edi', layers: ['edi-2d', 'edi-3d'] }, { id: 'mon', layers: ['mon'] }, { id: 'vuoto', layers: ['non-esiste'] }];
+const STACK = ['base', 'cal-fill', 'cal-bordo', 'mon', 'edi-2d', 'edi-3d', 'etichette'];
+
+test('ordineStrati: dall\'alto in basso per il layer più alto di ogni strato; senza layer in mappa restano fuori', () => {
+  assert.deepEqual(ordineStrati(STACK, STRATI), ['edi', 'mon', 'cal']);
+});
+
+test('mosseVicino: sopra = subito sopra il layer più alto del riferimento, gli altri strati non si toccano', () => {
+  const dopo = simula(STACK, mosseVicino(STACK, ['edi-2d', 'edi-3d'], ['cal-fill', 'cal-bordo'], true));
+  assert.deepEqual(dopo, ['base', 'cal-fill', 'cal-bordo', 'edi-2d', 'edi-3d', 'mon', 'etichette']);
+});
+test('mosseVicino: sotto = subito sotto il layer più basso del riferimento', () => {
+  const dopo = simula(STACK, mosseVicino(STACK, ['edi-2d', 'edi-3d'], ['cal-fill', 'cal-bordo'], false));
+  assert.deepEqual(dopo, ['base', 'edi-2d', 'edi-3d', 'cal-fill', 'cal-bordo', 'mon', 'etichette']);
+});
+test('mosseVicino: sopra il riferimento che è già in cima porta in cima, e se è già lì non muove nulla', () => {
+  assert.deepEqual(simula(STACK, mosseVicino(STACK, ['cal-fill', 'cal-bordo'], ['edi-2d', 'edi-3d'], true)), ['base', 'mon', 'edi-2d', 'edi-3d', 'cal-fill', 'cal-bordo', 'etichette']);
+  assert.deepEqual(mosseVicino(STACK, ['edi-2d', 'edi-3d'], ['mon'], true), []);
+});
+test('mosseVicino: strato con layer assenti o riferimento senza layer non muove nulla', () => {
+  assert.deepEqual(mosseVicino(STACK, ['x'], ['mon'], true), []);
+  assert.deepEqual(mosseVicino(STACK, ['mon'], ['x'], true), []);
+});
+
+test('mosseOrdine: porta gli strati nell\'ordine dato (alto → basso) anche tra gruppi', () => {
+  const dopo = simula(STACK, mosseOrdine(STACK, STRATI, ['cal', 'edi', 'mon']));
+  assert.deepEqual(ordineStrati(dopo, STRATI), ['cal', 'edi', 'mon']);
+  assert.deepEqual(dopo.filter(id => id === 'base' || id === 'etichette'), ['base', 'etichette']);
+});
+test('mosseOrdine: strati sconosciuti ignorati, già in ordine = nessuna mossa', () => {
+  assert.deepEqual(mosseOrdine(STACK, STRATI, ['edi', 'mon', 'cal']), []);
+  assert.deepEqual(ordineStrati(simula(STACK, mosseOrdine(STACK, STRATI, ['ignoto', 'cal', 'mon'])), STRATI), ['edi', 'cal', 'mon']);
+});
+
+test('ordine di disegno: salva, rilegge e azzera; storage assente non rompe', () => {
+  const dati = {};
+  const storage = { getItem: k => dati[k] ?? null, setItem: (k, v) => { dati[k] = v; } };
+  assert.equal(leggiOrdineDisegno(storage), null);
+  salvaOrdineDisegno(storage, ['edi', 'cal']);
+  assert.deepEqual(leggiOrdineDisegno(storage), ['edi', 'cal']);
+  azzeraOrdineDisegno({ ...storage, removeItem: k => delete dati[k] });
+  assert.equal(leggiOrdineDisegno(storage), null);
+  assert.equal(leggiOrdineDisegno(null), null);
+  assert.doesNotThrow(() => salvaOrdineDisegno(null, ['a']));
 });

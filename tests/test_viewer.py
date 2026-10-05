@@ -1203,6 +1203,48 @@ def test_layer_conteggio_strati_accesi_su_sezione_e_tab(apri):
     assert v.js("!document.querySelector('#gruppo-layer summary .strato-cerca, #gruppo-layer summary .strato-strumenti')")
 
 
+def test_ordine_di_disegno_sposta_strati_di_gruppi_diversi_sulla_mappa(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.click("#btn-gruppo-layer")
+    v.js("localStorage.removeItem('dt-ordine-disegno')")
+    for strato in ("edificato", "isole-calore"):
+        v.js(f"(() => {{ const c = document.getElementById('strato-{strato}'); if (!c.checked) c.click(); }})()")
+    v.js("document.getElementById('ordine-disegno').open = true")
+    ids = lambda: v.js("[...document.querySelectorAll('#ordine-disegno .ordine-riga')].map(r => r.dataset.id)")
+    sopra = lambda a, b: v.js(f"(() => {{ const s = window.dt.map.getStyle().layers.map(l => l.id); return s.indexOf('{a}') > s.indexOf('{b}'); }})()")
+    iniziale = sopra("isole-calore-fill", "edifici-2d")  # ordine di partenza dei due strati
+    # sono in due gruppi diversi del pannello, ma nello stesso elenco
+    assert {"edificato", "isole-calore"} <= set(ids())
+    assert v.js("document.getElementById('strato-edificato').closest('details').id") != v.js("document.getElementById('strato-isole-calore').closest('details').id")
+    # edifici sopra le isole di calore, con un clic sulle frecce
+    for _ in range(len(ids())):
+        if sopra("edifici-2d", "isole-calore-fill") and ids().index("edificato") < ids().index("isole-calore"):
+            break
+        riga = "edificato" if not sopra("edifici-2d", "isole-calore-fill") else "isole-calore"
+        v.js(f"document.querySelector('#ordine-disegno .ordine-riga[data-id={riga}] [data-azione=su]').click()")
+    assert sopra("edifici-2d", "isole-calore-fill")
+    # ...e sotto: ora le isole di calore salgono sopra gli edifici
+    v.js("document.querySelector('#ordine-disegno .ordine-riga[data-id=isole-calore] [data-azione=su]').click()")
+    while not sopra("isole-calore-fill", "edifici-2d"):
+        v.js("document.querySelector('#ordine-disegno .ordine-riga[data-id=isole-calore] [data-azione=su]').click()")
+    assert ids().index("isole-calore") < ids().index("edificato")
+    # l'ordine resta salvato e «Ripristina ordine» lo azzera
+    assert "isole-calore" in v.js("localStorage.getItem('dt-ordine-disegno')")
+    v.page.reload()
+    v.attendi_pronto()
+    assert sopra("isole-calore-fill", "edifici-2d")
+    v.page.click("#btn-gruppo-layer")
+    v.js("document.getElementById('ordine-disegno').open = true")
+    # rovescio l'ordine di partenza, poi il ripristino lo riporta com'era
+    chi = "edificato" if iniziale else "isole-calore"
+    while sopra("isole-calore-fill", "edifici-2d") == iniziale:
+        v.js(f"document.querySelector('#ordine-disegno .ordine-riga[data-id={chi}] [data-azione=su]').click()")
+    v.js("document.querySelector('#ordine-disegno [data-azione=ripristina-disegno]').click()")
+    assert v.js("localStorage.getItem('dt-ordine-disegno')") is None
+    assert sopra("isole-calore-fill", "edifici-2d") == iniziale
+
+
 def test_carta_tecnica_2k_tra_le_cartografie_di_base(apri):
     v = apri()
     v.attendi_pronto()
@@ -2272,3 +2314,62 @@ def test_pai_dissesti_per_tipologia_usano_i_retini_del_server(apri):
     v.page.wait_for_function("window.dt.map.queryRenderedFeatures({layers: ['pai-dissesti_tipologia-fill']}).length > 0")
     assert v.js("window.dt.map.hasImage('pai-dissesti_tipologia-0')")
     assert not any("pai" in e.lower() for e in v.errori)
+
+
+def _sezione_calda():
+    """Una sezione censuaria con temperatura 2025 e un punto sicuramente dentro (dallo studio in lavoro/isole-calore/)."""
+    shapely_geometry = pytest.importorskip("shapely.geometry")
+    sorgente = ROOT / "lavoro" / "isole-calore" / "sezioni_lst_years.geojson"
+    if not sorgente.exists():
+        pytest.skip("dati di lavoro delle isole di calore non presenti")
+    feats = json.loads(sorgente.read_text(encoding="utf-8"))["features"]
+    f = max((f for f in feats if f["properties"].get("LST_2025") is not None), key=lambda f: shapely_geometry.shape(f["geometry"]).area)
+    p = shapely_geometry.shape(f["geometry"]).representative_point()
+    return (p.x, p.y), f["properties"]
+
+
+def test_strato_isole_di_calore_legenda_metodo_e_classi(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.mostra("#strato-isole-calore")
+    assert not v.page.is_checked("#strato-isole-calore")
+    assert not v.page.is_visible("#legende .legenda-isole-calore")
+    v.page.check("#strato-isole-calore")
+    (lon, lat), _ = _sezione_calda()
+    v.vai(lon, lat, 14)
+    v.page.wait_for_function("window.dt.map.queryRenderedFeatures({layers: ['isole-calore-fill']}).length > 0")
+    leg = "#legende .legenda-isole-calore"
+    assert v.page.is_visible(leg)
+    assert v.page.locator(f"{leg} .ic-classe").count() == 5
+    assert v.page.locator(f"{leg} .ic-classe").first.bounding_box()["height"] > 10  # la barra dei colori è visibile
+    prima = v.js("window.dt.map.getPaintProperty('isole-calore-fill', 'fill-color')")
+    v.page.click(f"{leg} .ic-metodo[data-metodo='equal']")
+    assert v.page.get_attribute(f"{leg} .ic-metodo[data-metodo='equal']", "aria-pressed") == "true"
+    assert v.js("window.dt.map.getPaintProperty('isole-calore-fill', 'fill-color')") != prima
+    v.page.eval_on_selector(f"{leg} input[type=range]", "e => { e.value = '7'; e.dispatchEvent(new Event('input')); }")
+    assert v.page.locator(f"{leg} .ic-classe").count() == 7
+    assert v.page.inner_text(f"{leg} .ic-n") == "7"
+    assert v.page.locator(f"{leg} .ic-nd").count() == 1
+    assert v.js("window.dt.map.getPaintProperty('isole-calore-fill', 'fill-color')[3].length") == 3 + 6 * 2
+    assert v.page.locator(f"{leg} svg[role=img]").count() == 1  # andamento comunale 2019–2025
+    assert "isole_di_calore.html" in v.page.get_attribute(f"{leg} a.ic-link", "href")
+    assert not any("isole" in e.lower() for e in v.errori)
+
+
+def test_scheda_isole_di_calore_anche_a_strato_spento(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.mostra("#strato-isole-calore")
+    assert not v.page.is_checked("#strato-isole-calore")
+    (lon, lat), p = _sezione_calda()
+    v.vai(lon, lat, 14)
+    v.page.wait_for_function("window.dt.map.queryRenderedFeatures({layers: ['isole-calore-hit']}).length > 0")
+    v.clic(lon, lat)
+    v.page.wait_for_selector("#scheda:not([hidden]) [data-chiave^='isolacalore-']", state="attached")
+    v.page.click("#scheda .scheda-indice [data-tab='terreno']")  # la temperatura sta nel tab «Terreno»
+    v.page.wait_for_selector("#scheda [data-chiave^='isolacalore-']:visible")
+    sez = v.page.locator("#scheda [data-chiave^='isolacalore-']").first
+    assert "Rispetto alla media comunale" in sez.inner_text()
+    assert sez.locator("svg[role=img]").count() == 1
+    assert v.page.locator("#scheda .scheda-link[href$='isole_di_calore.html']:visible").count() == 1  # i link stanno nel piede del tab
+    assert v.js("window.dt.map.getLayoutProperty('isole-calore-fill', 'visibility')") == "none"

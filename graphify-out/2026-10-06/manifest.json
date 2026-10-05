@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791238568.477216,
-    "ast_hash": "f87cd7aa2f621fb61475f0bffd5ffadf",
+    "mtime": 1791239431.7984374,
+    "ast_hash": "b3c4d5d1c26681a973fd1264db7221bc",
     "semantic_hash": ""
   },
   "README.md": {
@@ -265,8 +265,8 @@
     "semantic_hash": ""
   },
   "js/layers/base.js": {
-    "mtime": 1791238568.4754968,
-    "ast_hash": "349ed71dcf145c8339699f4c9003754a",
+    "mtime": 1791239560.537387,
+    "ast_hash": "8a18776aa012492c81e9eacbabfabfa2",
     "semantic_hash": ""
   },
   "docs/RIPARTENZA.md": {

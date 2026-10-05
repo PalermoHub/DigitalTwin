@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791236435.0427358,
-    "ast_hash": "3b6b042c587253c4c885b2d3c675271d",
+    "mtime": 1791241331.5354767,
+    "ast_hash": "d048219c8f67ed94308ca24a77cbb0bb",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "js/core/pannello.js": {
-    "mtime": 1791211649.4590256,
-    "ast_hash": "256bcfa36aefe58352f1daa2d75ca7ca",
+    "mtime": 1791241331.536077,
+    "ast_hash": "aed9c3980a6b3424783838193dea411a",
     "semantic_hash": ""
   },
   "js/core/ricerca.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791239431.7984374,
-    "ast_hash": "b3c4d5d1c26681a973fd1264db7221bc",
+    "mtime": 1791241331.5375006,
+    "ast_hash": "108e33d5f8412a6df68be02299e741e0",
     "semantic_hash": ""
   },
   "README.md": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791235985.4528375,
-    "ast_hash": "80bd5088c0877201b37f97cabd5953c8",
+    "mtime": 1791241331.5357807,
+    "ast_hash": "1d708d39dfe99154294c97d88e2b6b33",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -515,8 +515,8 @@
     "semantic_hash": ""
   },
   "js/core/scheda-preferenze.js": {
-    "mtime": 1791119333.0476477,
-    "ast_hash": "9cb0f4e51e2f1f15b3b898aa6427ca36",
+    "mtime": 1791241331.5362968,
+    "ast_hash": "af33d3018dc7bf1e4d4290d3982161b2",
     "semantic_hash": ""
   },
   "js/layers/sicurezza-filtro.js": {
@@ -535,8 +535,8 @@
     "semantic_hash": ""
   },
   "tests/js/scheda-preferenze.test.mjs": {
-    "mtime": 1791115354.5658574,
-    "ast_hash": "b280446a22c16de1cbb0350e088a4bfa",
+    "mtime": 1791241331.5365672,
+    "ast_hash": "cafebf4465571b80467b2e6a4752de21",
     "semantic_hash": ""
   },
   "tests/js/sicurezza-filtro.test.mjs": {
@@ -760,8 +760,8 @@
     "semantic_hash": ""
   },
   "NOTICE.md": {
-    "mtime": 1791211649.4566407,
-    "ast_hash": "79448c50932dc725ce4d37dc82809702",
+    "mtime": 1791241331.534036,
+    "ast_hash": "09f0c9dd7b02a0b6041bd8e6b38378fc",
     "semantic_hash": ""
   },
   "dati/pai/README.md": {
@@ -1807,6 +1807,51 @@
   "img/basi/st-1993.jpg": {
     "mtime": 1791238568.4883318,
     "ast_hash": "6fe985410cd143d7c0d5df4ec83c42bf",
+    "semantic_hash": ""
+  },
+  "dati/isole-calore/isole-calore.json": {
+    "mtime": 1791241331.5514731,
+    "ast_hash": "4ccba9b826fa801cfb2423a055379de4",
+    "semantic_hash": ""
+  },
+  "js/layers/isole-calore-classi.js": {
+    "mtime": 1791241331.5565894,
+    "ast_hash": "7ce23676ee56a4d5c823fc948a0d883d",
+    "semantic_hash": ""
+  },
+  "js/layers/isole-calore-grafico.js": {
+    "mtime": 1791241331.5568242,
+    "ast_hash": "416d5fc658e29a375f6236890fc931bc",
+    "semantic_hash": ""
+  },
+  "js/layers/isole-calore.js": {
+    "mtime": 1791241331.5570323,
+    "ast_hash": "d85454e7326686f0858871fe1d009ab8",
+    "semantic_hash": ""
+  },
+  "js/layers/scheda-isole-calore.js": {
+    "mtime": 1791241331.5572078,
+    "ast_hash": "4ec0b1edd1ed354a62997ac7d864c74f",
+    "semantic_hash": ""
+  },
+  "scripts/isole_calore.py": {
+    "mtime": 1791241331.5576475,
+    "ast_hash": "4af763cfb774cd9c561513d94165bf18",
+    "semantic_hash": ""
+  },
+  "tests/js/isole-calore.test.mjs": {
+    "mtime": 1791241331.5580604,
+    "ast_hash": "77453142746084278aebfa593894c328",
+    "semantic_hash": ""
+  },
+  "tests/test_isole_calore.py": {
+    "mtime": 1791241331.5587955,
+    "ast_hash": "3ffcb8c55f2fe2b5c8f23ce10832319e",
+    "semantic_hash": ""
+  },
+  "dati/isole-calore/README.md": {
+    "mtime": 1791241331.5510838,
+    "ast_hash": "e64c41915f0cbb758a52c78879334e21",
     "semantic_hash": ""
   }
 }

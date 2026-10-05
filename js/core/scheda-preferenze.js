@@ -7,7 +7,7 @@ const MAX_RIGHE_PER_TIPO = 60;
 // Titolo fisso per i tipi il cui titolo cambia da luogo a luogo (il nome della via, della fermata, della scuola…)
 const TITOLI_TIPO = {
   arco: 'Tratto stradale', hotspot: 'Hotspot incidenti', incidente: 'Incidente', fermata: 'Fermata', linee: 'Linee del trasporto', trasportovicino: 'Trasporto pubblico vicino',
-  colonnine: 'Colonnine di ricarica', monumento: 'Monumento', albero: 'Albero monumentale', fontanella: 'Fontanella', uffici: 'Uffici comunali', scuola: 'Scuola o asilo', seggio: 'Sede elettorale', omi: 'Quotazioni OMI', incendio: 'Incendio', pai: 'Vincolo PAI',
+  colonnine: 'Colonnine di ricarica', monumento: 'Monumento', albero: 'Albero monumentale', fontanella: 'Fontanella', uffici: 'Uffici comunali', scuola: 'Scuola o asilo', seggio: 'Sede elettorale', omi: 'Quotazioni OMI', incendio: 'Incendio', pai: 'Vincolo PAI', isolacalore: 'Isola di calore',
 };
 
 // Sezioni da elencare nel pannello anche prima di averle incontrate in una scheda (i layer aggiunti dopo non hanno ancora «visti»).
@@ -15,6 +15,7 @@ const SEZIONI_NOTE = {
   uffici: { titolo: 'Uffici comunali', righe: ['Indirizzo', 'Uffici', 'Aree'] },
   colonnine: { titolo: 'Colonnine di ricarica', righe: ['Operatore', 'Indirizzo', 'Potenza', 'Connettore', 'Connettori', 'Orario', 'Stato'] },
   pai: { titolo: 'Vincolo PAI', righe: ['Pericolosità', 'Rischio', 'Attività', 'Tipologia', 'Numero PAI', 'Numero bacino', 'Bacino', 'Provincia', 'Comune', 'Altro comune', 'Località', 'Sigla', 'Dissesto collegato', 'Elemento a rischio', 'Fenomeno', 'Superficie', 'Lunghezza'] },
+  isolacalore: { titolo: 'Isola di calore', righe: ['Temperatura estiva', 'Rispetto alla media comunale', 'Variazione dal 2019'] },
   incendio: { titolo: 'Incendio', righe: ['Data', 'Località', 'Luogo di inizio', 'Tipo di evento', 'Superficie totale', 'Superficie boscata', 'Superficie non boscata', 'Altre superfici forestali', 'Uso del suolo', 'Altezza scottatura', 'Fine intervento', 'Durata intervento', 'Squadre AIB', 'Costo di spegnimento', 'Feriti', 'Periti'] },
 };
 const conNote = visti => ({ ...SEZIONI_NOTE, ...visti });
