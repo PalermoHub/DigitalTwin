@@ -7,6 +7,7 @@ import { creaManiglie } from './maniglie.js';
 import { creaStorico } from './storico.js';
 import { creaSospensione } from './sospensione.js';
 import { collegaImmagine } from './immagine.js';
+import { collegaPosizione } from './posizione.js';
 import { limiti } from './geometria.js';
 import { segnala } from '../core/pannello.js';
 
@@ -79,6 +80,7 @@ export function collegaGeoimage(map, elemento) {
   });
 
   collegaImmagine(ctx);
+  collegaPosizione(ctx);
   ctx.cambiato(); // stato iniziale dei pulsanti
 
   return {

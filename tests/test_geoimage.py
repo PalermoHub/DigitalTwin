@@ -100,3 +100,21 @@ def test_con_la_mappa_inclinata_e_ruotata_l_immagine_segue_in_prospettiva(apri):
     m = v.js("document.querySelector('.gi-immagine').style.transform.slice(9, -1).split(',').map(Number)")
     assert abs(m[3]) > 0 or abs(m[7]) > 0, "con il pitch la matrice ha una componente prospettica"
     assert not any("geoimage" in e.lower() or "matrix" in e.lower() for e in v.errori), v.errori
+
+
+def test_trascinare_il_centro_sposta_l_immagine(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    prima = _angoli(v)
+    cx, cy = v.js("(() => { const r = document.querySelector('.gi-centro').getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; })()")
+    v.page.mouse.move(cx, cy)
+    v.page.mouse.down()
+    v.page.mouse.move(cx + 60, cy + 40, steps=8)
+    v.page.mouse.up()
+    dopo = _angoli(v)
+    assert abs((dopo[0][0] - prima[0][0]) - 60) < 3 and abs((dopo[0][1] - prima[0][1]) - 40) < 3
+    assert v.js("!document.getElementById('gi-annulla').disabled")
+    v.page.click("#gi-annulla")
+    tornato = _angoli(v)
+    assert abs(tornato[0][0] - prima[0][0]) < 2
