@@ -123,6 +123,7 @@ export async function interrogaTutti({ layers, lngLat, zoom, leggiTesto, feature
         const elementi = uniche(featureAlPunto(layer).map(f => f.properties)).map(proprieta).filter(r => r.length);
         return vociDa(layer, elementi.length ? { tipo: 'json', elementi } : { tipo: 'vuoto' });
       }
+      if (layer.tipo === 'wms' && layer.sorgente?.queryable === false) return vociDa(layer, { tipo: 'non-interrogabile' }); // il server lo dichiara non interrogabile
       if (layer.tipo === 'wms') return vociDa(layer, await conTimeout(interrogaWms(layer.sorgente, lngLat, zoom, leggiTesto), timeoutMs));
       return vociDa(layer, { tipo: 'non-interrogabile' });
     } catch {

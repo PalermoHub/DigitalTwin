@@ -98,3 +98,13 @@ test('interrogaTutti: un servizio lento va in errore dopo il timeout, gli altri 
   assert.match(voci.find(v => v.chiave === 'rndt:rndt-lento:0').nota, /non raggiungibile/);
   assert.equal(voci.find(v => v.chiave === 'rndt:rndt-veloce:0').testo, 'Valore: 1');
 });
+
+test('interrogaTutti: un WMS dichiarato queryable=false non invia richieste', async () => {
+  let richieste = 0;
+  const voci = await interrogaTutti({
+    layers: [{ ...layer, id: 'rndt-nq', sorgente: { ...layer.sorgente, queryable: false } }],
+    lngLat: [13.36, 38.11], zoom: 16, leggiTesto: async () => { richieste++; return ''; }, featureAlPunto: () => [],
+  });
+  assert.equal(richieste, 0);
+  assert.match(voci[0].gruppi[0].righe[0].valore, /solo grafico/);
+});
