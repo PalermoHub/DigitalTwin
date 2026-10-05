@@ -15,9 +15,11 @@ export function collegaImmagine(ctx) {
 
   async function carica(file) {
     if (!file?.type.startsWith('image/')) return ctx.avvisa('Geoimage: scegli un file immagine (JPG, PNG, WEBP o BMP).');
+    const id = ctx.prenota();
     try {
       const dataUrl = await leggiFile(file);
       const schermo = await preparaSchermo(dataUrl);
+      if (!ctx.attuale(id)) return; // nel frattempo ne è stata scelta un'altra
       const immagine = { dataUrl, nome: file.name, larghezza: schermo.originaleL, altezza: schermo.originaleA };
       const b = map.getBounds();
       const c = map.getCenter();

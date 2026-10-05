@@ -320,3 +320,57 @@ def test_il_foglio_info_ha_il_tab_guida_geoimage(apri):
     assert "Come georeferenziare" in v.page.inner_text("#tabpanel-geoimage")
     assert "Cosa cambia nel Digital Twin" in v.page.inner_text("#tabpanel-geoimage")
     assert not any("geoimage" in e.lower() for e in v.errori), v.errori
+
+
+def test_se_l_immagine_non_si_salva_i_parametri_vecchi_o_nuovi_non_restano_accoppiati_male(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    v.page.wait_for_timeout(700)
+    assert v.js("localStorage.getItem('dt:geoimage:v1')") is not None
+    # da qui IndexedDB rifiuta le scritture (quota piena, storage in errore)
+    v.js("(() => { IDBObjectStore.prototype.put = function () { throw new DOMException('quota', 'QuotaExceededError'); }; })()")
+    _carica(v, "seconda.png")
+    v.page.wait_for_timeout(900)
+    assert v.js("localStorage.getItem('dt:geoimage:v1')") is None, "senza l'immagine nuova non si tengono parametri che la descrivono"
+    assert "Esporta JSON" in v.page.inner_text("#avvisi")
+
+
+def test_il_ripristino_in_corso_non_sovrascrive_una_scelta_dell_utente(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    v.page.wait_for_timeout(800)
+    nome = v.js("""(async () => {
+        const r = window.dt.geoimage.ripristina();      // riparte il ripristino asincrono…
+        document.getElementById('gi-rimuovi').click();  // …e l'utente toglie l'immagine
+        await r;
+        return window.dt.geoimage.stato.immagine?.nome ?? null;
+    })()""")
+    assert nome is None, "il ripristino non fa riapparire l'immagine che l'utente ha appena tolto"
+
+
+def test_esc_che_annulla_il_gcp_non_arriva_agli_altri_gestori(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    v.js("window.__esc = 0; document.addEventListener('keydown', e => { if (e.key === 'Escape') window.__esc++; })")
+    v.page.click("#gi-gcp-modo")
+    v.page.keyboard.press("Escape")  # esce dalla modalità GCP
+    assert v.js("document.getElementById('gi-gcp-modo').getAttribute('aria-pressed')") == "false"
+    assert v.js("window.__esc") == 0, "Esc consumato da Geoimage: la Scheda e i gruppi non si chiudono"
+    v.page.keyboard.press("Escape")  # ora Geoimage non ha nulla da annullare: Esc passa agli altri
+    assert v.js("window.__esc") == 1
+
+
+def test_ripiegando_il_pannello_swipe_e_spotlight_si_spengono(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    v.page.click("#gi-swipe")
+    assert "50%" in v.js("document.querySelector('.gi-overlay').style.clipPath")
+    v.page.click("#rail-pannelli [data-pannello=geoimage]")  # ripiega
+    assert v.js("document.querySelector('.gi-overlay').style.clipPath") == ""
+    assert not v.page.is_visible(".gi-divisore")
+    v.page.click("#rail-pannelli [data-pannello=geoimage]")  # riapre
+    assert v.js("document.getElementById('gi-swipe').getAttribute('aria-pressed')") == "false"

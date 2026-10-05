@@ -6,6 +6,7 @@ import { creaOverlay } from './overlay.js';
 import { creaManiglie } from './maniglie.js';
 import { creaStorico } from './storico.js';
 import { creaSospensione } from './sospensione.js';
+import { creaRichieste } from './richieste.js';
 import { collegaImmagine } from './immagine.js';
 import { collegaPosizione } from './posizione.js';
 import { collegaConfronto } from './confronto.js';
@@ -25,6 +26,7 @@ export function collegaGeoimage(map, elemento) {
   const overlay = creaOverlay(map);
   const storico = creaStorico();
   const sospensione = creaSospensione(map);
+  const richieste = creaRichieste();
   const ascoltatori = { cambio: [], caricamento: [], visibilita: [], tasto: [] };
   const aperto = () => !elemento.hidden && !elemento.classList.contains('collassato');
 
@@ -33,6 +35,8 @@ export function collegaGeoimage(map, elemento) {
     $: id => elemento.querySelector(`#gi-${id}`),
     avvisa: segnala, // avvisi che restano visibili sulla mappa
     messaggio: testo => { elemento.querySelector('#gi-stato').textContent = testo; },
+    prenota: richieste.prenota, // vedi richieste.js: chi finisce dopo deve controllare attuale(id) prima di toccare lo stato
+    attuale: richieste.attuale,
     sulCambio: fn => ascoltatori.cambio.push(fn),
     sulCaricamento: fn => ascoltatori.caricamento.push(fn), // fn(origine): 'file' | 'progetto' | 'ripristino' | 'rimossa'
     suVisibilita: fn => ascoltatori.visibilita.push(fn),
@@ -57,6 +61,7 @@ export function collegaGeoimage(map, elemento) {
       ctx.cambiato();
     },
     rimuoviImmagine() {
+      richieste.prenota(); // un caricamento o ripristino ancora in corso non deve far riapparire l'immagine
       Object.assign(stato, { immagine: null, schermo: null, angoli: null, angoliIniziali: null, gcp: [] });
       overlay.nascondi();
       storico.azzera();
@@ -80,8 +85,9 @@ export function collegaGeoimage(map, elemento) {
   // scorciatoie: solo a pannello aperto e fuori dai campi di testo, per non toccare quelle del resto dell'app
   document.addEventListener('keydown', e => {
     if (!aperto() || /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName) || e.target.isContentEditable) return;
-    for (const fn of ascoltatori.tasto) if (fn(e) === true) { e.preventDefault(); break; }
-  });
+    // in fase di cattura e fermando l'evento: un Esc consumato qui non deve chiudere anche la Scheda o i gruppi della barra
+    for (const fn of ascoltatori.tasto) if (fn(e) === true) { e.preventDefault(); e.stopPropagation(); break; }
+  }, true);
 
   collegaImmagine(ctx);
   collegaPosizione(ctx);

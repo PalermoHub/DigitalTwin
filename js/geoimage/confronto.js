@@ -82,4 +82,6 @@ export function collegaConfronto(ctx) {
 
   // un'altra immagine, o nessuna: il confronto riparte spento
   ctx.sulCaricamento(() => imposta(null));
+  // pannello chiuso o ripiegato: i controlli non si vedono, quindi la mappa torna senza ritagli
+  ctx.suVisibilita(aperto => { if (!aperto) imposta(null); });
 }
