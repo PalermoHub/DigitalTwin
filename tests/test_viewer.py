@@ -1213,7 +1213,7 @@ def test_modale_info_ha_i_tab_fonti_guida_credits(apri):
     v.attendi_pronto()
     v.page.click("#apri-crediti")
     v.page.wait_for_selector("#crediti[open]")
-    assert v.js("[...document.querySelectorAll('#crediti [role=tab]')].map(t => t.textContent)") == ["Fonti e avvisi", "Argomenti", "Guida", "Plugin RNDT", "Credits"]
+    assert v.js("[...document.querySelectorAll('#crediti [role=tab]')].map(t => t.textContent)") == ["Fonti e avvisi", "Argomenti", "Guida", "Guida Geoimage", "Plugin RNDT", "Credits"]
     assert v.page.is_visible("#tabpanel-fonti") and not v.page.is_visible("#tabpanel-guida")
     v.page.click("#tab-guida")
     assert v.page.is_visible("#tabpanel-guida") and not v.page.is_visible("#tabpanel-fonti")
