@@ -2,6 +2,7 @@ import { svgIcona } from './icone.js';
 import { applicaOpacita } from './opacita.js';
 import { limitiStrato, zoomMinimoStrato } from './zoom-strato.js';
 import { creaPannelloTema } from './pannello-tema.js';
+import { ordinaSezioni, leggiAperte, salvaAperta } from './layer-sezioni.js';
 import { ordina, mosseMappa, mosseSequenza, applicaMosse, leggiOrdine, salvaOrdine, azzeraOrdine } from './riordino.js';
 
 const mostrati = new Set();
@@ -44,13 +45,24 @@ function imposta(map, ids, visibile) {
   }
 }
 
-const ETICHETTE = { base: 'Mappa', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Servizi', incendi: 'Incendi', sicurezza: 'Sicurezza' };
+const ETICHETTE = { base: 'Mappe di base', layer: 'Layer', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Servizi', incendi: 'Incendi', sicurezza: 'Sicurezza' };
+
+// I soli gruppi che hanno un tab proprio; tutti gli altri sono sezioni del tab «Layer».
+const TAB_DIRETTI = new Set(['base', 'rndt']);
+// Titolo di un gruppo: il `summary` di una sezione, altrimenti l'`h2` del pannello. Barre e campi si inseriscono dopo.
+const intestazione = el => el.querySelector(':scope > summary') ?? el.querySelector('h2');
 
 // Totale degli strati accesi (mostrato sul pulsante «Strati» di mobile)
 function aggiornaConteggio() {
   const caselle = [...document.querySelectorAll('#pannello input[type=checkbox]:checked:not([data-filtro])')];
   const el = document.getElementById('strati-attivi');
   if (el) el.textContent = String(caselle.length);
+  const tabLayer = document.getElementById('btn-gruppo-layer');
+  if (tabLayer) {
+    const n = document.querySelectorAll('#gruppo-layer input[type=checkbox]:checked:not([data-filtro])').length;
+    tabLayer.dataset.attivo = String(n > 0);
+    tabLayer.dataset.n = String(n);
+  }
   // chip degli strati accesi: si spengono con un clic
   const chip = document.getElementById('strati-chip');
   if (!chip) return;
@@ -89,7 +101,7 @@ function bottoneGruppo(id, titolo) {
   b.setAttribute('aria-label', titolo);
   b.setAttribute('aria-expanded', 'false');
   b.setAttribute('aria-controls', `gruppo-${id}`);
-  b.innerHTML = `${svgIcona(id) || svgIcona('info')}<span class="et">${ETICHETTE[id] ?? titolo}</span>`;
+  b.innerHTML = `${svgIcona(id === 'base' ? 'mappa' : id) || svgIcona('info')}<span class="et">${ETICHETTE[id] ?? titolo}</span>`;
   return b;
 }
 
@@ -312,7 +324,7 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
     });
     barra.append(reset);
   }
-  if (barra.children.length) gruppo.querySelector('h2').after(barra);
+  if (barra.children.length) intestazione(gruppo).after(barra);
 
   // ordine salvato in una visita precedente
   const salvato = leggiOrdine(storage)[idGruppo];
@@ -329,6 +341,12 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
 
 // Ogni modulo diventa un sotto-pannello a comparsa sotto la barra degli strumenti; ne sta aperto uno solo.
 export function costruisciPannello(map, moduli, contenitore, barra) {
+  let storage = null;
+  try { storage = window.localStorage; } catch { /* storage bloccato: ordine e sezioni valgono per la sessione */ }
+  const aperte = leggiAperte(storage);
+  const sezioni = [];
+  let layer = null;
+  let cercando = ''; // testo del «Cerca strato» di Layer: finché c'è, aprire e chiudere le sezioni non va salvato
   const gruppi = [];
   const STRETTO = 1280; // sotto questa larghezza due pannelli da 380px non stanno insieme
   const chiudiGruppi = () => { for (const g of gruppi) if (!g.el.hidden) { g.el.hidden = true; g.bottone.setAttribute('aria-expanded', 'false'); } };
@@ -336,7 +354,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     if (window.innerWidth >= STRETTO) return;
     document.querySelector('#rail-pannelli .rail-tab.attivo')?.click();
   };
-  const aggiungi = (id, titolo) => {
+  const nuovoTab = (id, titolo) => {
     const el = document.createElement('section');
     el.id = `gruppo-${id}`;
     el.className = 'sotto-pannello';
@@ -358,6 +376,25 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     el.bottone = bottone;
     return el;
   };
+  // gruppo ordinario: una sezione ripiegabile dentro il pannello «Layer», creato al primo uso
+  const nuovaSezione = (id, titolo) => {
+    layer ??= nuovoTab('layer', ETICHETTE.layer);
+    const el = document.createElement('details');
+    el.id = `gruppo-${id}`;
+    el.className = 'layer-sezione';
+    el.open = aperte.includes(id);
+    const sommario = document.createElement('summary');
+    const h = document.createElement('h2');
+    h.textContent = ETICHETTE[id] ?? titolo;
+    sommario.append(h);
+    el.append(sommario);
+    el.bottone = sommario; // `segna` ci scrive pallino e conteggio, come sul tab di un gruppo
+    el.addEventListener('toggle', () => { if (!cercando) salvaAperta(storage, id, el.open); });
+    sezioni.push(el);
+    layer.append(el);
+    return el;
+  };
+  const aggiungi = (id, titolo) => (TAB_DIRETTI.has(id) ? nuovoTab(id, titolo) : nuovaSezione(id, titolo));
 
   // in un gruppo condiviso ogni modulo ha il suo titolo, anche quello che ospita gli altri: gli strati si possono spostare
   const perGruppo = new Map();
@@ -401,30 +438,35 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     gruppo.addEventListener('change', segna);
     segna();
   }
+  // sezioni in ordine alfabetico (anche per i gruppi che arriveranno)
+  if (layer) layer.append(...ordinaSezioni(sezioni.map(el => ({ id: el.id, titolo: el.querySelector('h2').textContent }))).map(id => document.getElementById(id)));
+  const contenitori = [...gruppi.map(g => g.el).filter(el => el !== layer), ...sezioni];
   // albero ripiegabile e strati riordinabili
   const layersDi = new Map(moduli.flatMap(m => m.strati.map(s => [s.id, s.layers])));
-  let storage = null;
-  try { storage = window.localStorage; } catch { /* storage bloccato: l'ordine vale per la sessione */ }
-  for (const { el } of gruppi) abilitaRiordino(map, el, layersDi, storage);
-  // campo «Cerca strato» nei gruppi con molte voci
-  for (const { el } of gruppi) {
-    const voci = [...el.querySelectorAll(':scope > label')];
-    if (voci.length < 4 || el.querySelector('.base-griglia')) continue;
+  for (const el of contenitori) abilitaRiordino(map, el, layersDi, storage);
+  // un solo «Cerca strato» in cima a Layer: filtra gli strati di tutte le sezioni, apre quelle con risultati e nasconde le altre
+  if (layer) {
     const campo = document.createElement('input');
     campo.type = 'search';
     campo.className = 'strato-cerca';
     campo.placeholder = 'Cerca strato\u2026';
     campo.setAttribute('aria-label', 'Cerca strato');
     campo.addEventListener('input', () => {
-      const q = campo.value.trim().toLowerCase();
-      for (const v of voci) {
-        const nascosta = !!q && !v.textContent.toLowerCase().includes(q);
-        v.hidden = nascosta;
-        const o = v.nextElementSibling;
-        if (o?.classList.contains('strato-opacita')) o.classList.toggle('filtrata', nascosta);
+      cercando = campo.value.trim().toLowerCase();
+      for (const el of sezioni) {
+        let trovati = 0;
+        for (const v of el.querySelectorAll(':scope > label.strato')) {
+          const nascosta = !!cercando && !v.textContent.toLowerCase().includes(cercando);
+          v.hidden = nascosta;
+          if (!nascosta) trovati++;
+          const o = v.nextElementSibling;
+          if (o?.classList.contains('strato-opacita')) o.classList.toggle('filtrata', nascosta);
+        }
+        el.hidden = !!cercando && !trovati;
+        el.open = cercando ? trovati > 0 : leggiAperte(storage).includes(el.id.replace('gruppo-', ''));
       }
     });
-    el.querySelector('h2').after(campo);
+    layer.querySelector(':scope > h2').after(campo);
   }
   aggiornaConteggio();
   // Esc ripiega il gruppo aperto; il clic sulla mappa no (come i pannelli di destra)

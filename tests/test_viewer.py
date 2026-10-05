@@ -1118,17 +1118,71 @@ def test_ricerca_numeri_romani_selezionano_la_circoscrizione(apri):
         assert v.js("document.getElementById('f-circ').value") == romano
 
 
-def test_strati_stanno_in_sotto_pannelli_della_barra_e_si_apre_uno_solo(apri):
+def test_barra_sinistra_ha_tre_tab_e_si_apre_un_pannello_solo(apri):
     v = apri()
     v.attendi_pronto()
+    assert v.js("[...document.querySelectorAll('#barra-gruppi button')].map(b => b.id)") == [
+        "btn-gruppo-base", "btn-gruppo-layer", "btn-gruppo-rndt"]
     assert v.js("!document.getElementById('pannello').querySelector('.sotto-pannello:not([hidden])')")
     v.page.click("#btn-gruppo-base")
     assert v.page.is_visible("#gruppo-base")
-    v.page.click("#btn-gruppo-edifici")
-    assert v.page.is_visible("#gruppo-edifici")
+    v.page.click("#btn-gruppo-layer")
+    assert v.page.is_visible("#gruppo-layer")
     assert not v.page.is_visible("#gruppo-base")
-    v.page.click("#btn-gruppo-edifici")
-    assert not v.page.is_visible("#gruppo-edifici")
+    v.page.click("#btn-gruppo-layer")
+    assert not v.page.is_visible("#gruppo-layer")
+
+
+def test_layer_raccoglie_i_gruppi_in_sezioni_alfabetiche_indipendenti(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.click("#btn-gruppo-layer")
+    titoli = v.js("[...document.querySelectorAll('#gruppo-layer > details > summary > h2')].map(h => h.textContent)")
+    assert titoli == sorted(titoli, key=str.casefold)
+    for atteso in ("Edifici", "Popolazione", "Confini", "Monumenti", "Servizi"):
+        assert atteso in titoli
+    # i moduli con `gruppo:` stanno nella sezione del gruppo ospite
+    assert v.js("!!document.querySelector('#gruppo-monumenti #strato-alberi, #gruppo-monumenti #strato-fontanelle')")
+    # tutte chiuse alla prima apertura, poi indipendenti
+    assert v.js("document.querySelectorAll('#gruppo-layer > details[open]').length") == 0
+    v.page.click("#gruppo-edifici > summary")
+    v.page.click("#gruppo-confini > summary")
+    assert v.js("document.getElementById('gruppo-edifici').open && document.getElementById('gruppo-confini').open")
+    # lo stato sopravvive alla ricarica
+    v.page.reload()
+    v.attendi_pronto()
+    v.page.click("#btn-gruppo-layer")
+    assert v.js("document.getElementById('gruppo-edifici').open && document.getElementById('gruppo-confini').open")
+    assert not v.js("document.getElementById('gruppo-popolazione').open")
+
+
+def test_layer_ha_un_solo_cerca_strato_in_cima_che_filtra_tutte_le_sezioni(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.click("#btn-gruppo-layer")
+    assert v.js("document.querySelectorAll('.strato-cerca').length") == 1
+    assert v.js("document.querySelector('#gruppo-layer > h2').nextElementSibling.classList.contains('strato-cerca')")
+    v.page.fill("#gruppo-layer > .strato-cerca", "quartieri")
+    assert v.page.is_visible("#gruppo-confini")
+    assert v.js("document.getElementById('gruppo-confini').open")  # la sezione con risultati si apre da sola
+    assert not v.page.is_visible("#gruppo-edifici")  # senza risultati sparisce
+    v.page.fill("#gruppo-layer > .strato-cerca", "")
+    assert v.page.is_visible("#gruppo-edifici")
+    assert not v.js("document.getElementById('gruppo-confini').open")  # tornano chiuse come prima
+
+
+def test_layer_conteggio_strati_accesi_su_sezione_e_tab(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.click("#btn-gruppo-layer")
+    v.js("document.querySelector('#gruppo-confini').open = true")
+    v.js("document.querySelector('#gruppo-confini label.strato input').click()")
+    totale = v.js("document.querySelectorAll('#gruppo-layer input[type=checkbox]:checked:not([data-filtro])').length")
+    assert v.js("document.getElementById('btn-gruppo-layer').dataset.n") == str(totale)
+    n = v.js("document.querySelectorAll('#gruppo-confini input[type=checkbox]:checked:not([data-filtro])').length")
+    assert v.js("document.querySelector('#gruppo-confini > summary').dataset.n") == str(n)
+    # «Cerca strato» e il riordino stanno dopo il summary, mai dentro
+    assert v.js("!document.querySelector('#gruppo-layer summary .strato-cerca, #gruppo-layer summary .strato-strumenti')")
 
 
 def test_carta_tecnica_2k_tra_le_cartografie_di_base(apri):
@@ -1263,11 +1317,12 @@ def test_mobile_barra_verticale_a_sinistra_e_desktop_orizzontale(apri):
     assert not v.page.is_visible("#zoom-slider")
     assert v.page.is_visible("#btn-gruppo-base .et")
     assert v.js("document.documentElement.scrollWidth <= innerWidth")
-    v.page.click("#btn-gruppo-edifici")
-    p = v.js("(() => { const r = document.getElementById('gruppo-edifici').getBoundingClientRect(); return r.left; })()")
-    assert p >= r["r"]  # il sotto-pannello si apre accanto alla barra
-    assert v.js("document.getElementById('btn-gruppo-edifici').dataset.attivo") == "true"
-    assert v.js("document.getElementById('btn-gruppo-terreno').dataset.attivo") == "false"
+    v.page.click("#btn-gruppo-layer")
+    v.page.click("#gruppo-edifici > summary")
+    p = v.js("(() => { const r = document.getElementById('gruppo-layer').getBoundingClientRect(); return r.left; })()")
+    assert p >= r["r"]  # il pannello si apre accanto alla barra
+    assert v.js("document.querySelector('#gruppo-edifici > summary').dataset.attivo") == "true"
+    assert v.js("document.querySelector('#gruppo-terreno > summary').dataset.attivo") == "false"
 
 
 def test_cartografie_di_base_come_cerchi_con_miniatura_e_icona_barra_che_segue(apri):

@@ -80,10 +80,13 @@ class Pagina:
         return self.page.evaluate(espressione)
 
     def mostra(self, selettore):
-        """Apre il sotto-pannello della barra che contiene l'elemento (se è chiuso)."""
+        """Apre il pannello della barra e la sezione di Layer che contengono l'elemento (se sono chiusi)."""
         self.page.evaluate(
             """sel => {
-                const g = document.querySelector(sel)?.closest('.sotto-pannello');
+                const el = document.querySelector(sel);
+                const sezione = el?.closest('details.layer-sezione');
+                if (sezione) sezione.open = true;
+                const g = el?.closest('.sotto-pannello');
                 if (g?.hidden) document.getElementById('btn-gruppo-' + g.id.replace('gruppo-', '')).click();
             }""", selettore)
 
