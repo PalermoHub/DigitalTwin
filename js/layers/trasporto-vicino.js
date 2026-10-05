@@ -34,6 +34,6 @@ export function voceTrasportoVicino(fermate, raggio, costruisci, max = 8) {
     chiave: 'trasportovicino', peso: 8, titolo: 'Trasporto pubblico vicino', icona: 'bus', gruppi: [], sempre: true,
     dinamico: () => costruisci(mostrate),
     nota: `Fermate entro ${raggio} m in linea d’aria${altre > 0 ? ` (altre ${altre} più lontane non elencate)` : ''}. Tocca il nome per vederla sulla mappa.`,
-    evidenza: [{ id: 'trasporto-vicine', etichetta: 'Fermata vicina', colore: '#364fc7', features: mostrate.map(f => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [f.lon, f.lat] }, properties: {} })) }],
+    evidenza: [{ id: 'trasporto-vicine', etichetta: 'Fermata vicina', colore: '#364fc7', features: mostrate.map(f => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [f.lon, f.lat] }, properties: { attributo: f.nome } })) }],
   };
 }

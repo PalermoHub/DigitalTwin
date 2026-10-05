@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791195349.709206,
-    "ast_hash": "974f5e9f18c451fc2e4d73c8a6a15002",
+    "mtime": 1791211649.4585702,
+    "ast_hash": "256c2a3d3f43529eb90381bf672df658",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
-    "mtime": 1791195349.709369,
-    "ast_hash": "5d7c3954bf2800fb64ff26ebc86e4f11",
+    "mtime": 1791211649.45881,
+    "ast_hash": "42f535c4fe1cd184b495ffedc7785f3f",
     "semantic_hash": ""
   },
   "js/core/config.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "js/core/pannello.js": {
-    "mtime": 1791195772.4068544,
-    "ast_hash": "117a4fb237f378f1313adbf30470ba0d",
+    "mtime": 1791211649.4590256,
+    "ast_hash": "256bcfa36aefe58352f1daa2d75ca7ca",
     "semantic_hash": ""
   },
   "js/core/ricerca.js": {
@@ -140,8 +140,8 @@
     "semantic_hash": ""
   },
   "tests/conftest.py": {
-    "mtime": 1791030258.2896483,
-    "ast_hash": "6e581a42be1713d5459823b1600a5933",
+    "mtime": 1791198542.3931856,
+    "ast_hash": "1951e1c7f087a35e1dfc19edf9f074f2",
     "semantic_hash": ""
   },
   "tests/js/dati.mjs": {
@@ -195,18 +195,18 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791195349.7266805,
-    "ast_hash": "b94072fb894fd24cad1e92239744dfb9",
+    "mtime": 1791211649.481705,
+    "ast_hash": "eaa2578f6361b0fe76122cdb7943618c",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1791059525.3195043,
-    "ast_hash": "45bf4e2a6fc629b96d78a19db88e34d8",
+    "mtime": 1791211649.456916,
+    "ast_hash": "ce776b060479e7066f2583731d41a955",
     "semantic_hash": ""
   },
   "aggiungere.txt": {
-    "mtime": 1791107511.836303,
-    "ast_hash": "a9bde97425ed242f10ce85215c75171b",
+    "mtime": 1791211649.4804456,
+    "ast_hash": "2fb0836106e85b6f1f6dddb3719b4450",
     "semantic_hash": ""
   },
   "dati/README.md": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791195349.709,
-    "ast_hash": "679bf2bc5d32f738b4875219b2ab97ba",
+    "mtime": 1791211649.4583223,
+    "ast_hash": "4f9745385ed5b500ab7d1d69e31817ea",
     "semantic_hash": ""
   },
   "docs/schermata-fase1.png": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791195349.709724,
-    "ast_hash": "1e59052bff29982771784d43d393c6df",
+    "mtime": 1791201818.3020737,
+    "ast_hash": "5faf9873e9f042df57bf0a61dd7244cd",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -760,8 +760,8 @@
     "semantic_hash": ""
   },
   "NOTICE.md": {
-    "mtime": 1791195349.66954,
-    "ast_hash": "d6101b5bd747796c72740f53ebe766c6",
+    "mtime": 1791211649.4566407,
+    "ast_hash": "79448c50932dc725ce4d37dc82809702",
     "semantic_hash": ""
   },
   "dati/pai/README.md": {
@@ -884,61 +884,6 @@
     "ast_hash": "10425e72c901fa0dab2f5a08ac8db5db",
     "semantic_hash": ""
   },
-  "social/carosello/01.png": {
-    "mtime": 1791049565.9082057,
-    "ast_hash": "fbe7e2d241162b059957cb11aa845ec4",
-    "semantic_hash": ""
-  },
-  "social/carosello/02.png": {
-    "mtime": 1791049566.219161,
-    "ast_hash": "d1ad0bb6697d7aeae1ade66089327ff7",
-    "semantic_hash": ""
-  },
-  "social/carosello/03.png": {
-    "mtime": 1791049566.5055766,
-    "ast_hash": "4d766f353999da470a26cd84a1029971",
-    "semantic_hash": ""
-  },
-  "social/carosello/04.png": {
-    "mtime": 1791049566.8825014,
-    "ast_hash": "9dc0135670eeab2fdea9be05b210f31d",
-    "semantic_hash": ""
-  },
-  "social/carosello/05.png": {
-    "mtime": 1791049567.226497,
-    "ast_hash": "be6926c4e2b7e92ebc7119c9b5de52b0",
-    "semantic_hash": ""
-  },
-  "social/carosello/06.png": {
-    "mtime": 1791049567.5615885,
-    "ast_hash": "aec25a03492b2f4e73fae809505492b2",
-    "semantic_hash": ""
-  },
-  "social/carosello/07.png": {
-    "mtime": 1791049567.8618,
-    "ast_hash": "b3cef7f4be2de1ddb96db4d64d8c1339",
-    "semantic_hash": ""
-  },
-  "social/carosello/08.png": {
-    "mtime": 1791049568.1486084,
-    "ast_hash": "f9f082053e4301b58d0c13b5239658ee",
-    "semantic_hash": ""
-  },
-  "social/carosello/09.png": {
-    "mtime": 1791049568.4271731,
-    "ast_hash": "2fdbd5d0d9700ff69d77b3a9971f3c81",
-    "semantic_hash": ""
-  },
-  "social/carosello/10.png": {
-    "mtime": 1791049568.6957748,
-    "ast_hash": "d5c4dbc9809a55d339d8a4c2c4fb472f",
-    "semantic_hash": ""
-  },
-  "social/carosello/11.png": {
-    "mtime": 1791049568.9188547,
-    "ast_hash": "c96504cf4f5755a544d18ff9b3d6a007",
-    "semantic_hash": ""
-  },
   "media/guida/guida-whatsapp.mp4": {
     "mtime": 1791058780.569545,
     "ast_hash": "8bdcfc492fc86e69a243d6f3bb386eda",
@@ -962,61 +907,6 @@
   "tests/test_guida_carosello2.py": {
     "mtime": 1791050827.968669,
     "ast_hash": "a6ba286b6da14f5ca38ea52c872181f5",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/01.png": {
-    "mtime": 1791050830.0313468,
-    "ast_hash": "e50cadda3167936091ba4a1d9576d36e",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/02.png": {
-    "mtime": 1791050830.8827958,
-    "ast_hash": "2c38e4c20bd69cfe5667839f7b851b36",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/03.png": {
-    "mtime": 1791050831.702401,
-    "ast_hash": "a067e4593e4325b66dd1f90efa59da46",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/04.png": {
-    "mtime": 1791050832.5415444,
-    "ast_hash": "0257d17691a6bb0f0b0082288ac81852",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/05.png": {
-    "mtime": 1791050833.3662407,
-    "ast_hash": "4614515ce18996ba81520079f3ef7913",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/06.png": {
-    "mtime": 1791050834.3049726,
-    "ast_hash": "a53177454ba0ae665104bb69c0843b08",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/07.png": {
-    "mtime": 1791050835.2197812,
-    "ast_hash": "b1cd397acdd1050cb3ab5d59ce6d95a4",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/08.png": {
-    "mtime": 1791050836.012501,
-    "ast_hash": "e19e17991812b9f32d80f88c940a36ec",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/09.png": {
-    "mtime": 1791050836.7799728,
-    "ast_hash": "e8c28706154834fcbea0d2f4861894f1",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/10.png": {
-    "mtime": 1791050837.5839295,
-    "ast_hash": "58a1b4451b3acdff3dbe661e93de6638",
-    "semantic_hash": ""
-  },
-  "social/carosello-2/11.png": {
-    "mtime": 1791050838.3633919,
-    "ast_hash": "d35063025cfd984dee6e638a7326f53f",
     "semantic_hash": ""
   },
   "scripts/carosello5.py": {
@@ -1047,121 +937,6 @@
   "media/guida/guida.txt": {
     "mtime": 1791060090.2183645,
     "ast_hash": "c1d7568a87e8d2e8f7fad0da3d11631c",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/01.png": {
-    "mtime": 1791059805.7079034,
-    "ast_hash": "367fdd577fa99979fb65f22fd18a3706",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/02.png": {
-    "mtime": 1791059806.5248668,
-    "ast_hash": "4bfa01339ca66ae7411b54365ab9f96c",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/03.png": {
-    "mtime": 1791059807.2275846,
-    "ast_hash": "ffc123b1a41be4c77cf0a7f856620ac1",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/04.png": {
-    "mtime": 1791059808.2564983,
-    "ast_hash": "cb557e7092e16ad16cb1f14c3bbc97ea",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/05.png": {
-    "mtime": 1791059809.0548396,
-    "ast_hash": "fc55ea90067b93cac1e7179f8b8c725c",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/06.png": {
-    "mtime": 1791059809.8465145,
-    "ast_hash": "14f8d43b2cc757772bf14274f48d82a4",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/07.png": {
-    "mtime": 1791059810.7337253,
-    "ast_hash": "dc99513df1129532a95c22f1607b6dbf",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/08.png": {
-    "mtime": 1791059811.4593282,
-    "ast_hash": "d62a39089c489b609be94a38c5bf76bc",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/09.png": {
-    "mtime": 1791059812.0923603,
-    "ast_hash": "f47895094608e7ab641e0e36aaa5a59d",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/10.png": {
-    "mtime": 1791059812.715125,
-    "ast_hash": "57b29b7ac9ce402f0e3884a7ec729e9d",
-    "semantic_hash": ""
-  },
-  "social/carosello-4/11.png": {
-    "mtime": 1791059813.515972,
-    "ast_hash": "0e3c7aa0648d39cef104d690bb039868",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/01.png": {
-    "mtime": 1791062302.770294,
-    "ast_hash": "3002681204b7b3863aa8845e410efa9a",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/02.png": {
-    "mtime": 1791062304.4035633,
-    "ast_hash": "2c194183ba49708241a80705783b69b8",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/03.png": {
-    "mtime": 1791062305.4638994,
-    "ast_hash": "990f2e969e2006649e78fd8f797c9e7f",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/04.png": {
-    "mtime": 1791062306.4145038,
-    "ast_hash": "499c2c8e8c6603ec075231539be19f84",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/05.png": {
-    "mtime": 1791062306.9680123,
-    "ast_hash": "813cf6f11b23275b205d047b4780bf1d",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/06.png": {
-    "mtime": 1791062307.4862227,
-    "ast_hash": "88ad63db5a7f0a222f3e8dfd03490e4a",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/07.png": {
-    "mtime": 1791062308.6215115,
-    "ast_hash": "17bd2c2a8f4b60d1ffaec16e43570364",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/08.png": {
-    "mtime": 1791062309.6580117,
-    "ast_hash": "d5761d331857f7e4b00d08828cf0042c",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/09.png": {
-    "mtime": 1791062310.5436957,
-    "ast_hash": "37a13083e2ac3de7e08d6895b7d2dc78",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/10.png": {
-    "mtime": 1791062311.4087064,
-    "ast_hash": "066538afaceebb26686c66d2cb7df6e4",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/11.png": {
-    "mtime": 1791062312.4409215,
-    "ast_hash": "c4b6f98af0bd776b1290b88b3011effb",
-    "semantic_hash": ""
-  },
-  "social/carosello-5/12.png": {
-    "mtime": 1791062313.015509,
-    "ast_hash": "33001081b14ff4f1b21333442fd78870",
     "semantic_hash": ""
   },
   "media/guida/guida_02.mp4": {
@@ -1500,8 +1275,8 @@
     "semantic_hash": ""
   },
   "js/core/rail.js": {
-    "mtime": 1791195349.7104192,
-    "ast_hash": "a249a16541d0148af064062c2996027d",
+    "mtime": 1791211649.4592106,
+    "ast_hash": "9fbd048d9b29de9e27026182dd10f6b9",
     "semantic_hash": ""
   },
   "scripts/guida_screenshot_rndt.py": {
@@ -1682,6 +1457,261 @@
   "plugin/openrndt-geolibre-0.3.1/plugin.json": {
     "mtime": 1791195349.7239327,
     "ast_hash": "56d928130cc37c93021460320ce19817",
+    "semantic_hash": ""
+  },
+  "js/core/layer-sezioni.js": {
+    "mtime": 1791198460.5275192,
+    "ast_hash": "a50f83440949a09c092f3804a6d3e50a",
+    "semantic_hash": ""
+  },
+  "js/geoimage/archivio.js": {
+    "mtime": 1791211649.4592106,
+    "ast_hash": "daf5d3b6685b358edc13b9bcdbe4ff0a",
+    "semantic_hash": ""
+  },
+  "js/geoimage/confronto-clip.js": {
+    "mtime": 1791211649.4597583,
+    "ast_hash": "8e72b27698597f648d3635c04bb35a41",
+    "semantic_hash": ""
+  },
+  "js/geoimage/confronto.js": {
+    "mtime": 1791211649.459885,
+    "ast_hash": "827d7e572e1da22b7845fccfefe72143",
+    "semantic_hash": ""
+  },
+  "js/geoimage/esporta.js": {
+    "mtime": 1791211649.4600015,
+    "ast_hash": "6b6e905a998172272061065cd2d770fa",
+    "semantic_hash": ""
+  },
+  "js/geoimage/export-geotiff.js": {
+    "mtime": 1791211649.460158,
+    "ast_hash": "e82b0925d86fd4301b4c7116e6b466b4",
+    "semantic_hash": ""
+  },
+  "js/geoimage/export.js": {
+    "mtime": 1791211649.4602833,
+    "ast_hash": "43a6b3f296f791cd0e48e70a34ca10d8",
+    "semantic_hash": ""
+  },
+  "js/geoimage/gcp.js": {
+    "mtime": 1791211649.4604604,
+    "ast_hash": "e65c9b23520f37c9b0387e1f4d1fa1e8",
+    "semantic_hash": ""
+  },
+  "js/geoimage/geometria.js": {
+    "mtime": 1791211649.4607213,
+    "ast_hash": "7c8ea4d0c2e12a2fb282929d70af645b",
+    "semantic_hash": ""
+  },
+  "js/geoimage/guida-contenuti.js": {
+    "mtime": 1791211649.4609401,
+    "ast_hash": "eda144fef714846b8e50a7671e9d62d6",
+    "semantic_hash": ""
+  },
+  "js/geoimage/guida.js": {
+    "mtime": 1791211649.4610786,
+    "ast_hash": "51aa6f36b3cc5fe86f0dc2013e3d92c1",
+    "semantic_hash": ""
+  },
+  "js/geoimage/immagine.js": {
+    "mtime": 1791211649.4612155,
+    "ast_hash": "09edf3e76637bfeb8d6a7268685d242b",
+    "semantic_hash": ""
+  },
+  "js/geoimage/index.js": {
+    "mtime": 1791211649.4613793,
+    "ast_hash": "50e237e4127159f75db227ff72fa4c9f",
+    "semantic_hash": ""
+  },
+  "js/geoimage/librerie.js": {
+    "mtime": 1791211649.4615223,
+    "ast_hash": "1a727f23d1d5774a06b4db02d8e3057c",
+    "semantic_hash": ""
+  },
+  "js/geoimage/maniglie.js": {
+    "mtime": 1791211649.4617486,
+    "ast_hash": "67317f3d6acbddb89756c0dac73a892d",
+    "semantic_hash": ""
+  },
+  "js/geoimage/omografia.js": {
+    "mtime": 1791211649.461864,
+    "ast_hash": "6cc8dc3aa2bd2fe71c4f964b1bca40f5",
+    "semantic_hash": ""
+  },
+  "js/geoimage/overlay.js": {
+    "mtime": 1791211649.4620395,
+    "ast_hash": "8221999db06d3b89292d2c0e9d169568",
+    "semantic_hash": ""
+  },
+  "js/geoimage/pannello.js": {
+    "mtime": 1791211649.4622238,
+    "ast_hash": "dbe7b0a9423075cd277a33b7404c060b",
+    "semantic_hash": ""
+  },
+  "js/geoimage/posizione.js": {
+    "mtime": 1791211649.462386,
+    "ast_hash": "9f1313d7e4e3cab6c2799c24a63b760d",
+    "semantic_hash": ""
+  },
+  "js/geoimage/progetto.js": {
+    "mtime": 1791211649.4625597,
+    "ast_hash": "4a5149713bcb1e138fb6e4c94e6c8012",
+    "semantic_hash": ""
+  },
+  "js/geoimage/richieste.js": {
+    "mtime": 1791211649.4627178,
+    "ast_hash": "22f491ed005ed8b1c3a44dbd117283fe",
+    "semantic_hash": ""
+  },
+  "js/geoimage/scarica.js": {
+    "mtime": 1791211649.4628727,
+    "ast_hash": "cdf8c982433bd9d868739e8eca24ae92",
+    "semantic_hash": ""
+  },
+  "js/geoimage/sessione.js": {
+    "mtime": 1791211649.4630632,
+    "ast_hash": "7f5524e8c4529eab26478dc83618d9ee",
+    "semantic_hash": ""
+  },
+  "js/geoimage/sospensione.js": {
+    "mtime": 1791211649.4631834,
+    "ast_hash": "f30df92023b33e6b0b37f852b25b56c4",
+    "semantic_hash": ""
+  },
+  "js/geoimage/storico.js": {
+    "mtime": 1791211649.4633012,
+    "ast_hash": "385c6a6a60543db4965ba7fdd72d8c3d",
+    "semantic_hash": ""
+  },
+  "js/geoimage/trasformazioni.js": {
+    "mtime": 1791211649.4634545,
+    "ast_hash": "d250d24f41add948593def596a10bcdd",
+    "semantic_hash": ""
+  },
+  "js/vendor/jszip.min.js": {
+    "mtime": 1791211649.4649587,
+    "ast_hash": "b5d02b3f0bf3ae026451909419df07bb",
+    "semantic_hash": ""
+  },
+  "js/vendor/proj4.js": {
+    "mtime": 1791211649.4658623,
+    "ast_hash": "8bf11952639a77bbf96132dcce8ad171",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-archivio.test.mjs": {
+    "mtime": 1791211649.466039,
+    "ast_hash": "3cf920998f692eb5fb46af566170c1f6",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-confronto-clip.test.mjs": {
+    "mtime": 1791211649.46618,
+    "ast_hash": "df623df15cbe829136f6df61c118a5cf",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-export.test.mjs": {
+    "mtime": 1791211649.4663126,
+    "ast_hash": "387733eea25c590b8d1411682d30b89c",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-geometria.test.mjs": {
+    "mtime": 1791211649.4664555,
+    "ast_hash": "843d534f6a2aab3d7e6d057c4cfb4be7",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-geotiff.test.mjs": {
+    "mtime": 1791211649.4665978,
+    "ast_hash": "fc9da0dd9225f9cee93788ff4bcd0a8e",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-guida.test.mjs": {
+    "mtime": 1791211649.4667032,
+    "ast_hash": "b71fe72b19f8597056891b3c26fbce36",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-omografia.test.mjs": {
+    "mtime": 1791211649.4668055,
+    "ast_hash": "453b1f0a839562323cb9736665e448b0",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-overlay.test.mjs": {
+    "mtime": 1791211649.4669087,
+    "ast_hash": "4336f5d3d74daffc8466f23dccfb0f9f",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-progetto.test.mjs": {
+    "mtime": 1791211649.4670062,
+    "ast_hash": "c5aafcd89da2ec49616f10ea0e51f708",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-richieste.test.mjs": {
+    "mtime": 1791211649.4672503,
+    "ast_hash": "4d9e1cc2b652db887e4085654dbf511d",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-sospensione.test.mjs": {
+    "mtime": 1791211649.4674392,
+    "ast_hash": "379c7cd93fd840c9346b658eba5708f4",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-storico.test.mjs": {
+    "mtime": 1791211649.4676192,
+    "ast_hash": "4518eabdc5cf2b816518bc412974c780",
+    "semantic_hash": ""
+  },
+  "tests/js/geoimage-trasformazioni.test.mjs": {
+    "mtime": 1791211649.4678347,
+    "ast_hash": "90ef041742e41033cc2a8a4aff4a7e75",
+    "semantic_hash": ""
+  },
+  "tests/js/layer-sezioni.test.mjs": {
+    "mtime": 1791198455.7471094,
+    "ast_hash": "455cd479fd4bfcce5dc1fbd2354fe15d",
+    "semantic_hash": ""
+  },
+  "tests/test_geoimage.py": {
+    "mtime": 1791211649.4682095,
+    "ast_hash": "547dd1f450276383bd2e8624bdca77a8",
+    "semantic_hash": ""
+  },
+  "docs/GEOIMAGE.md": {
+    "mtime": 1791211649.458022,
+    "ast_hash": "55692ae6756c674394518613a3a79ad7",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-05-barra-sinistra-tre-tab.md": {
+    "mtime": 1791198200.186683,
+    "ast_hash": "09ea6df7309f0a4ec6989e8c98388bb1",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-05-geoimage-pannello.md": {
+    "mtime": 1791206164.5889025,
+    "ast_hash": "c42ff010eb03d64ab25a16aa6d465f4b",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-10-05-barra-sinistra-tre-tab-design.md": {
+    "mtime": 1791198027.0457547,
+    "ast_hash": "eab516e060dba8742e75060251b607a6",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-10-05-geoimage-pannello-design.md": {
+    "mtime": 1791205726.3983088,
+    "ast_hash": "c664febba3b9ac33611e2fe65af7ab8a",
+    "semantic_hash": ""
+  },
+  "js/vendor/LICENSE-jszip.txt": {
+    "mtime": 1791211649.4638283,
+    "ast_hash": "28c4d6943c892a3c61ac2aaa5d781861",
+    "semantic_hash": ""
+  },
+  "js/vendor/LICENSE-proj4.txt": {
+    "mtime": 1791211649.4639735,
+    "ast_hash": "f8507086e5e5b7bf9848dd9d15da6ea3",
+    "semantic_hash": ""
+  },
+  "img/puzzle.webp": {
+    "mtime": 1791201834.9241974,
+    "ast_hash": "433c990e8de2736ed51c785e800c153c",
     "semantic_hash": ""
   }
 }
