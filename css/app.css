@@ -905,8 +905,8 @@ button.strato-chip:hover i { color: var(--text); }
    Barra sinistra a tab e pannello ancorato (desktop), come la barra di destra
    ========================================================================== */
 @media (min-width: 721px) {
-  /* i gruppi hanno liste corte: il pannello sinistro è più stretto di quello della scheda */
-  body { --pannello-w: 280px; --sx: var(--rail-w); }
+  /* il pannello sinistro ospita le sezioni di Layer: più stretto di quello della scheda */
+  body { --pannello-w: 320px; --sx: var(--rail-w); }
   body:has(#pannello .sotto-pannello:not([hidden])) { --sx: calc(var(--pannello-w) + var(--rail-w)); }
 
   #barra-strati {
@@ -914,9 +914,9 @@ button.strato-chip:hover i { color: var(--text); }
     border-width: 0 1px 0 0; border-radius: 0; box-shadow: none; border-color: var(--border);
   }
   .barra-titolo { display: none; }
-  #barra-gruppi { align-items: center; gap: 2px; }
+  #barra-gruppi { align-items: center; gap: 14px; }
   #barra-gruppi button.rail-tab {
-    width: 34px; min-height: 0; padding: 6px 0; gap: 4px; border: 1px solid transparent; border-radius: var(--r-md);
+    width: 34px; min-height: 0; padding: 8px 0; gap: 8px; border: 1px solid transparent; border-radius: var(--r-md);
     background: none; color: var(--text-muted); font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
   }
   #barra-gruppi button.rail-tab svg { width: 16px; height: 16px; }
@@ -959,3 +959,22 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .strato-strumento { padding: 4px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface); color: var(--link); font: inherit; font-size: var(--fs-xs); font-weight: 600; cursor: pointer; }
 .strato-strumento:hover { background: var(--surface-hover); }
 .strato-btn[hidden] { display: none; }
+
+/* Sezioni del tab «Layer»: ognuna si apre e si chiude da sola */
+.layer-sezione { border-top: 1px solid var(--border); }
+.layer-sezione:first-of-type { border-top: 0; }
+.layer-sezione > summary {
+  position: relative; display: flex; align-items: center; gap: 8px;
+  padding: 10px 2px; cursor: pointer; list-style: none; user-select: none;
+}
+.layer-sezione > summary::-webkit-details-marker { display: none; }
+.layer-sezione > summary h2 { margin: 0; flex: 1; }
+.layer-sezione > summary::before { content: '▸'; flex: none; width: 12px; text-align: center; color: var(--text-muted); font-size: var(--fs-xs); line-height: 1; transition: transform .12s; }
+.layer-sezione[open] > summary::before { transform: rotate(90deg); }
+.layer-sezione > summary:hover h2 { color: var(--text); }
+.layer-sezione > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; border-radius: var(--r-sm); }
+.layer-sezione > summary[data-attivo="true"]::after {
+  content: attr(data-n); flex: none; min-width: 18px; height: 18px; padding: 0 5px; border-radius: var(--r-pill);
+  background: var(--accent); color: var(--accent-ink); font-size: var(--fs-2xs); font-weight: 700; line-height: 18px; text-align: center;
+}
+.layer-sezione[open] { padding-bottom: 8px; }
