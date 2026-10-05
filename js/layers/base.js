@@ -1,3 +1,5 @@
+import { svgIcona } from '../core/icone.js';
+
 // Basi cartografiche alternative: Positron (stile di partenza), basi raster classiche (OSM, Esri, Google,
 // OpenTopoMap), carte tecniche comunali e regionali e sfondi neutri. Una sola è visibile alla volta.
 
@@ -142,6 +144,16 @@ export default {
     const suggerimento = document.createElement('p');
     suggerimento.className = 'base-suggerimento';
     suggerimento.textContent = 'Seleziona la cartografia da usare come base.';
+    // pulsante ben visibile, sotto il titolo «Mappe storiche»: apre l'atlante in un'altra scheda, sulla zona che si sta guardando (hash `#zoom/lat/lng` di leaflet-hash)
+    const atlante = Object.assign(document.createElement('a'), {
+      className: 'base-atlante', href: ATLANTE, target: '_blank', rel: 'noopener',
+      title: 'Atlante delle carte tecniche storiche di Palermo (OpenDataSicilia): sovrapposizioni, confronto con cursore e cartoline storiche',
+    });
+    atlante.innerHTML = `<span>Apri l'Atlante storico di Palermo</span>${svgIcona('esterno', 16)}`;
+    atlante.addEventListener('click', () => {
+      const c = map.getCenter();
+      atlante.href = `${ATLANTE}#${Math.min(Math.max(Math.round(map.getZoom()), 13), 18)}/${c.lat.toFixed(5)}/${c.lng.toFixed(5)}`;
+    });
     el.append(suggerimento);
     for (const g of GRUPPI) {
       const h = document.createElement('h3');
@@ -185,7 +197,7 @@ export default {
         riga.append(label);
       }
       el.append(h);
-      if (nota) el.append(nota);
+      if (nota) el.append(atlante, nota);
       el.append(riga);
     }
     // l'icona della barra mostra la base in uso, come nell'atlante

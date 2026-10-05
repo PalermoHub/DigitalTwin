@@ -984,6 +984,12 @@ def test_mappe_storiche_dell_atlante_sono_basi_raster(apri):
     assert "mapwarper.net/maps/tile/19706/" in v.js("window.dt.map.getSource('st-1935-r').tiles[0]")
     assert "Omira 1935" in v.js("document.getElementById('base-st-1935').closest('label').title")
     assert v.js("document.querySelector('#gruppo-base a[href*=index_atlante_iframe]') !== null")
+    v.mostra("#base-st-1935")
+    v.page.evaluate("document.querySelector('.base-atlante').addEventListener('click', e => e.preventDefault(), { once: true })")
+    v.page.click(".base-atlante")
+    href = v.js("document.querySelector('.base-atlante').href")
+    assert href.startswith("https://palermohub.opendatasicilia.it/index_atlante_iframe.html#")
+    assert v.js("document.querySelector('.base-atlante').target") == "_blank"
 
 
 def test_ricerca_foglio_particella(apri):
