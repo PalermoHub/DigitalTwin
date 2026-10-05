@@ -118,3 +118,20 @@ def test_trascinare_il_centro_sposta_l_immagine(apri):
     v.page.click("#gi-annulla")
     tornato = _angoli(v)
     assert abs(tornato[0][0] - prima[0][0]) < 2
+
+
+def test_swipe_e_spotlight_ritagliano_l_immagine(apri):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    v.page.click("#gi-swipe")
+    assert "50%" in v.js("document.querySelector('.gi-overlay').style.clipPath")
+    assert v.page.is_visible(".gi-divisore")
+    v.page.click("#gi-spotlight")
+    assert not v.page.is_visible(".gi-divisore"), "Swipe e Spotlight si escludono"
+    v.page.mouse.move(500, 400)
+    v.page.mouse.move(520, 410)
+    assert v.js("document.querySelector('.gi-overlay').style.clipPath").startswith("path(")
+    v.page.click("#gi-inverti")
+    v.page.mouse.move(540, 420)
+    assert v.js("document.querySelector('.gi-overlay').style.clipPath").startswith("circle(")
