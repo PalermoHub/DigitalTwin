@@ -131,7 +131,7 @@ export function creaPannello(elemento) {
   const testata = el('header', 'gi-testata');
   testata.append(el('h2', null, 'Geoimage · mappe storiche'));
   const autore = el('p', 'gi-autore', 'Georeferenzia una mappa storica sulla base di Palermo. Da ');
-  const link = Object.assign(el('a', null, 'Geoimage'), { href: 'https://github.com/gbvitrano/Geoimage', target: '_blank', rel: 'noopener' });
+  const link = Object.assign(el('a', null, 'Geoimage'), { href: 'https://palermohub.opendatasicilia.it/geoimage.html', target: '_blank', rel: 'noopener' });
   autore.append(link, ' di @gbvitrano.');
   const stato = Object.assign(el('p', 'gi-stato', 'Carica un\'immagine storica per iniziare.'), { id: 'gi-stato' });
   stato.setAttribute('role', 'status');
