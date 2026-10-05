@@ -1,6 +1,7 @@
 import { urlDati } from './config.js';
 import { schedaArgomenti } from './argomenti.js';
 import { schedaGuida } from './guida.js';
+import { schedaGeoimage } from '../geoimage/guida.js';
 
 const AVVISI = [
   'Catasto, zonizzazione PRG e vincoli sono solo informativi e non hanno valore legale: per usi legali servono il certificato di destinazione urbanistica e le visure ufficiali.',
@@ -129,6 +130,7 @@ export function apriCrediti(dialog, catalogo, moduli = []) {
     ['fonti', 'Fonti e avvisi', [Object.assign(document.createElement('h2'), { textContent: 'Fonti e avvisi' }), elenco(AVVISI), fonti]],
     ['argomenti', 'Argomenti', [argomenti.elemento]],
     ['guida', 'Guida', [guida]],
+    ['geoimage', 'Guida Geoimage', [schedaGeoimage()]],
     ['plugin', 'Plugin RNDT', schedaPlugin()],
     ['credits', 'Credits', [Object.assign(document.createElement('h2'), { textContent: 'Credits' }), elenco(CREDITS)]],
   ];

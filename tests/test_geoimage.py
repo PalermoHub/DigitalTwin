@@ -308,3 +308,15 @@ def test_export_qgis_kmz_world_file_geojson_e_geotiff(apri, tmp_path):
     assert d.value.suggested_filename == "storica_georef_EPSG32633.tif"
     _controlla_con_gdal(d.value.path(), None, None, "EPSG:32633")
     assert not any("geoimage" in e.lower() for e in v.errori), v.errori
+
+
+def test_il_foglio_info_ha_il_tab_guida_geoimage(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.page.set_viewport_size({"width": 1440, "height": 800})
+    v.page.click("#apri-crediti")
+    v.page.click("#tab-geoimage")
+    assert v.page.is_visible("#tabpanel-geoimage")
+    assert "Come georeferenziare" in v.page.inner_text("#tabpanel-geoimage")
+    assert "Cosa cambia nel Digital Twin" in v.page.inner_text("#tabpanel-geoimage")
+    assert not any("geoimage" in e.lower() for e in v.errori), v.errori
