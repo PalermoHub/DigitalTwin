@@ -978,3 +978,6 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
   background: var(--accent); color: var(--accent-ink); font-size: var(--fs-2xs); font-weight: 700; line-height: 18px; text-align: center;
 }
 .layer-sezione[open] { padding-bottom: 8px; }
+
+/* Icona del tab RNDT: pezzo di puzzle (img/puzzle.webp) usato come maschera, così segue il colore del tema */
+.icona-puzzle { display: block; flex: none; width: 18px; height: 18px; background: currentColor; -webkit-mask: url(../img/puzzle.webp) center / contain no-repeat; mask: url(../img/puzzle.webp) center / contain no-repeat; }

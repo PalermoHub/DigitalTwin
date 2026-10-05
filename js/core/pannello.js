@@ -101,7 +101,7 @@ function bottoneGruppo(id, titolo) {
   b.setAttribute('aria-label', titolo);
   b.setAttribute('aria-expanded', 'false');
   b.setAttribute('aria-controls', `gruppo-${id}`);
-  b.innerHTML = `${svgIcona(id === 'base' ? 'mappa' : id) || svgIcona('info')}<span class="et">${ETICHETTE[id] ?? titolo}</span>`;
+  b.innerHTML = `${id === 'rndt' ? '<span class="icona-puzzle" aria-hidden="true"></span>' : svgIcona(id === 'base' ? 'mappa' : id) || svgIcona('info')}<span class="et">${ETICHETTE[id] ?? titolo}</span>`;
   return b;
 }
 
