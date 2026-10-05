@@ -6,6 +6,7 @@ import { collegaRail } from './core/rail.js';
 import { collegaScheda } from './core/scheda.js';
 import { collegaRndt } from './rndt/index.js';
 import { creaGruppoRndt } from './rndt/gruppo.js';
+import { collegaGeoimage } from './geoimage/index.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaZone } from './core/zone.js';
@@ -75,12 +76,16 @@ map.once('style.load', async () => {
   costruisciPannello(map, [...MODULI, gruppoRndt.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
   const rndt = collegaRndt(map, document.getElementById('rndt-pannello'), gruppoRndt);
   collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt });
+  const geoimage = collegaGeoimage(map, document.getElementById('geoimage-pannello'));
   const rail = collegaRail(document.getElementById('rail-pannelli'), [
     { id: 'scheda', etichetta: 'Scheda', pannello: document.getElementById('scheda') },
     { id: 'rndt', etichetta: 'RNDT', pannello: document.getElementById('rndt-pannello'), apri: rndt.apri, chiudi: rndt.chiudi },
+    { id: 'geoimage', etichetta: 'Geoimage', pannello: document.getElementById('geoimage-pannello'), apri: geoimage.apri, chiudi: geoimage.chiudi },
   ]);
   document.getElementById('btn-rndt').addEventListener('click', () => rail.commuta('rndt'));
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
+  geoimage.ripristina(); // e la mappa storica di Geoimage, se c'era
+  window.dt.geoimage = geoimage;
   const vaiParticella = collegaRicercaParticella(map, document.getElementById('cerca-foglio'), document.getElementById('cerca-numero'),
     document.getElementById('cerca-particella-vai'), document.getElementById('cerca-particella-esito'),
     document.getElementById('pannello-filtri'));
