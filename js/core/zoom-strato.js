@@ -50,3 +50,13 @@ export async function limitiStrato(map, ids, limiti) {
   }
   return b;
 }
+
+// Zoom minimo da cui lo strato si vede: il più basso `minzoom` dei suoi layer (0 se almeno uno è sempre visibile).
+export function zoomMinimoStrato(map, ids) {
+  let z = Infinity;
+  for (const id of ids) {
+    const l = map.getLayer(id);
+    if (l) z = Math.min(z, Number.isFinite(l.minzoom) ? l.minzoom : 0);
+  }
+  return Number.isFinite(z) ? z : 0;
+}

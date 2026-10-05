@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { bboxGeoJSON, limitiStrato } from '../../js/core/zoom-strato.js';
+import { bboxGeoJSON, limitiStrato, zoomMinimoStrato } from '../../js/core/zoom-strato.js';
 
 test('bboxGeoJSON: punti, linee e poligoni', () => {
   const fc = { type: 'FeatureCollection', features: [
@@ -28,4 +28,12 @@ test('limitiStrato: geojson inline; senza dati null', async () => {
     { g: { type: 'geojson', serialize: () => ({ data: dati }) }, x: { type: 'vector' } });
   assert.deepEqual(await limitiStrato(map, ['a']), [13.3, 38.1, 13.3, 38.1]);
   assert.equal(await limitiStrato(map, ['b']), null);
+});
+
+test('zoomMinimoStrato: minzoom più basso dei layer presenti', () => {
+  const layers = { a: { minzoom: 14 }, b: { minzoom: 12 }, c: {} };
+  const map = { getLayer: (id) => layers[id] };
+  assert.equal(zoomMinimoStrato(map, ['a', 'b']), 12);
+  assert.equal(zoomMinimoStrato(map, ['a', 'c']), 0);
+  assert.equal(zoomMinimoStrato(map, ['assente']), 0);
 });

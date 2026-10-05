@@ -1,6 +1,6 @@
 import { svgIcona } from './icone.js';
 import { applicaOpacita } from './opacita.js';
-import { limitiStrato } from './zoom-strato.js';
+import { limitiStrato, zoomMinimoStrato } from './zoom-strato.js';
 import { creaPannelloTema } from './pannello-tema.js';
 import { ordina, mosseMappa, mosseSequenza, applicaMosse, leggiOrdine, salvaOrdine, azzeraOrdine } from './riordino.js';
 
@@ -134,7 +134,13 @@ export function sliderOpacita(map, strato, cb, stato = { originali: new Map(), v
   z.addEventListener('click', async () => {
     const area = map.getMaxBounds()?.toArray(); // area di lavoro: [[o, s], [e, n]]
     const b = await limitiStrato(map, strato.layers, area && [...area[0], ...area[1]]);
-    map.fitBounds(b ? [[b[0], b[1]], [b[2], b[3]]] : area, { padding: 60, maxZoom: 17, duration: 600 });
+    const riquadro = b ? [[b[0], b[1]], [b[2], b[3]]] : area;
+    const opzioni = { padding: 60, maxZoom: 17, duration: 600 };
+    const minimo = zoomMinimoStrato(map, strato.layers);
+    const cam = map.cameraForBounds(riquadro, { padding: opzioni.padding, maxZoom: opzioni.maxZoom });
+    // Se l'inquadratura è sotto il minzoom dello strato, lo strato resterebbe invisibile: sale fino al suo zoom minimo.
+    if (cam && cam.zoom < minimo) map.easeTo({ center: cam.center, zoom: minimo, duration: opzioni.duration });
+    else map.fitBounds(riquadro, opzioni);
   });
   const tema = creaPannelloTema(map, strato, stato);
   riga.append(t, r, v, z, tema.bottone, tema.pannello);
