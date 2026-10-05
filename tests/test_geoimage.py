@@ -242,3 +242,69 @@ def test_rimuovere_l_immagine_pulisce_mappa_e_memoria(apri):
     assert v.page.locator(".gi-maniglia").count() == 0
     assert not v.page.is_visible("#gi-swipe")
     assert v.js("localStorage.getItem('dt:geoimage:v1')") is None
+
+
+def _compressione(tiff):
+    """Valore del tag Compression (259) nel primo IFD di un TIFF little-endian."""
+    ifd = struct.unpack_from("<I", tiff, 4)[0]
+    for i in range(struct.unpack_from("<H", tiff, ifd)[0]):
+        tag, tipo, n, valore = struct.unpack_from("<HHII", tiff, ifd + 2 + i * 12)
+        if tag == 259:
+            return valore & 0xFFFF
+    return None
+
+
+def _controlla_con_gdal(percorso, larghezza, altezza, epsg):
+    """Il file si apre con GDAL, ha il sistema di riferimento giusto, i pixel decodificati e un'estensione plausibile (Palermo)."""
+    gdal = pytest.importorskip("osgeo.gdal")
+    ds = gdal.Open(str(percorso))
+    assert ds is not None
+    assert ds.GetMetadata("IMAGE_STRUCTURE").get("COMPRESSION") == "LZW"
+    if larghezza:
+        assert (ds.RasterXSize, ds.RasterYSize) == (larghezza, altezza)
+    srs = ds.GetSpatialRef()
+    assert f"{srs.GetAuthorityName(None)}:{srs.GetAuthorityCode(None)}" == epsg
+    banda = ds.GetRasterBand(1).ReadAsArray()
+    assert banda.min() != banda.max(), "i pixel si decodificano (il gradiente non è piatto)"
+    gt = ds.GetGeoTransform()
+    if epsg == "EPSG:4326":
+        assert 13.0 < gt[0] < 13.7 and 37.9 < gt[3] < 38.4
+
+
+def test_export_qgis_kmz_world_file_geojson_e_geotiff(apri, tmp_path):
+    v = apri()
+    _apri_geoimage(v)
+    _carica(v)
+    _tre_gcp(v)
+    for selettore in ["#gi-qgis", "#gi-kmz", "#gi-mondo", "#gi-geojson"]:
+        assert v.js(f"!document.querySelector('{selettore}').disabled"), selettore
+    with v.page.expect_download() as d:
+        v.page.click("#gi-qgis")
+    assert d.value.suggested_filename == "gcp_qgis.points"
+    assert open(d.value.path()).read().startswith("mapX,mapY,sourceX,sourceY,enable\n")
+    with v.page.expect_download() as d:
+        v.page.click("#gi-kmz")
+    assert d.value.suggested_filename == "storica_georef.kmz"
+    assert open(d.value.path(), "rb").read(2) == b"PK"
+    with v.page.expect_download() as d:
+        v.page.click("#gi-mondo")
+    assert d.value.suggested_filename == "storica.pgw"
+    with v.page.expect_download() as d:
+        v.page.click("#gi-geojson")
+    assert d.value.suggested_filename == "storica_gcp.geojson"
+    v.page.click("#gi-geotiff")
+    assert v.page.is_visible("#gi-gtiff")
+    with v.page.expect_download(timeout=30000) as d:
+        v.page.click("#gi-gtiff-vai")
+    assert d.value.suggested_filename == "storica_georef_EPSG4326.tif"
+    dati = open(d.value.path(), "rb").read()
+    assert dati[:4] == b"II*\x00"
+    assert _compressione(dati) == 5, "compressione LZW come richiesto"
+    _controlla_con_gdal(d.value.path(), 400, 300, "EPSG:4326")
+    v.page.click("#gi-geotiff")
+    v.page.select_option("#gi-gtiff-sr", "32633")
+    with v.page.expect_download(timeout=30000) as d:
+        v.page.click("#gi-gtiff-vai")
+    assert d.value.suggested_filename == "storica_georef_EPSG32633.tif"
+    _controlla_con_gdal(d.value.path(), None, None, "EPSG:32633")
+    assert not any("geoimage" in e.lower() for e in v.errori), v.errori

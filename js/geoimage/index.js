@@ -11,6 +11,7 @@ import { collegaPosizione } from './posizione.js';
 import { collegaConfronto } from './confronto.js';
 import { collegaGcp } from './gcp.js';
 import { collegaSessione } from './sessione.js';
+import { collegaEsporta } from './esporta.js';
 import { limiti } from './geometria.js';
 import { segnala } from '../core/pannello.js';
 
@@ -87,6 +88,7 @@ export function collegaGeoimage(map, elemento) {
   collegaConfronto(ctx);
   collegaGcp(ctx);
   const sessione = collegaSessione(ctx);
+  collegaEsporta(ctx);
   ctx.cambiato(); // stato iniziale dei pulsanti
 
   return {
