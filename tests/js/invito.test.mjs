@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { collegaInvito, CHIAVE_INVITO, DURATA_INVITO } from '../../js/core/invito.js';
+import { collegaInvito, CHIAVE_INVITO } from '../../js/core/invito.js';
 
 function scenario(dati = {}) {
   const figli = [];
@@ -23,16 +23,13 @@ test('si mostra al primo avvio e sparisce al primo clic, ricordandolo', () => {
   assert.equal(s.figli.length, 0);
   assert.equal(s.dati[CHIAVE_INVITO], '1');
   assert.equal(s.ascolti.click, undefined);
-  assert.equal(s.timer.annullato, true);
 });
 
-test('sparisce da solo dopo qualche secondo', () => {
+test('non sparisce da solo: serve il clic sulla mappa', () => {
   const s = scenario();
   collegaInvito(s.map, s.doc, s.archivio, s.opz);
-  assert.equal(s.timer.ms, DURATA_INVITO);
-  s.timer.f();
-  assert.equal(s.figli.length, 0);
-  assert.equal(s.dati[CHIAVE_INVITO], undefined); // scaduto senza clic: si rivede al prossimo avvio
+  assert.equal(s.timer.f, null);
+  assert.equal(s.figli.length, 1);
 });
 
 test('contiene il pill e lo schema «tutto in un punto»', () => {
