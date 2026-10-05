@@ -4,7 +4,8 @@ import { collegaInvito, CHIAVE_INVITO, DURATA_INVITO } from '../../js/core/invit
 
 function scenario(dati = {}) {
   const figli = [];
-  const doc = { createElement: () => ({ setAttribute() {}, remove() { figli.splice(figli.indexOf(this), 1); } }), body: { append: e => figli.push(e) } };
+  const crea = () => ({ figli: [], setAttribute() {}, append(...f) { this.figli.push(...f); }, remove() { const i = figli.indexOf(this); if (i >= 0) figli.splice(i, 1); } });
+  const doc = { createElement: crea, body: { append: e => figli.push(e) } };
   const ascolti = {};
   const map = { on: (t, f) => { ascolti[t] = f; }, off: t => { delete ascolti[t]; } };
   const archivio = { getItem: k => dati[k] ?? null, setItem: (k, v) => { dati[k] = v; } };
@@ -31,6 +32,15 @@ test('sparisce da solo dopo qualche secondo', () => {
   assert.equal(s.timer.ms, DURATA_INVITO);
   s.timer.f();
   assert.equal(s.figli.length, 0);
+  assert.equal(s.dati[CHIAVE_INVITO], undefined); // scaduto senza clic: si rivede al prossimo avvio
+});
+
+test('contiene il pill e lo schema «tutto in un punto»', () => {
+  const s = scenario();
+  collegaInvito(s.map, s.doc, s.archivio, s.opz);
+  const [pill, schema] = s.figli[0].figli;
+  assert.match(pill.textContent, /Clicca sulla mappa/);
+  assert.equal(schema.src, 'img/guida/passi/intersezione.svg');
 });
 
 test('non si mostra a chi l\'ha già visto o se l\'indirizzo apre una scheda', () => {

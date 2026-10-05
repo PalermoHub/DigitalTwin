@@ -1067,10 +1067,18 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .gi-gcp { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; background: #ef4444; color: #fff; font-size: 11px; font-weight: 700; box-shadow: 0 1px 4px rgba(0, 0, 0, .45); cursor: grab; }
 .gi-gcp-attesa { background: rgba(245, 158, 11, .9); pointer-events: none; }
 
-/* invito all'avvio: pill sopra la mappa, non intercetta i clic */
+/* invito all'avvio: pill e schema sopra la mappa, non intercettano i clic */
 .invito-clic {
-  position: fixed; z-index: var(--z-barra); top: 38%; left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 32px);
-  padding: 10px 20px; border: 2px solid #fff; border-radius: 999px; background: var(--accent-strong); color: #fff;
-  font-size: var(--fs-base); font-weight: 700; text-align: center; box-shadow: var(--ombra); pointer-events: none;
+  position: fixed; z-index: var(--z-barra); top: 20%; left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 32px);
+  display: flex; flex-direction: column; align-items: center; gap: 12px; pointer-events: none;
 }
-@media (max-width: 600px) { .invito-clic { top: 30%; padding: 8px 14px; font-size: var(--fs-sm); } }
+.invito-clic p {
+  margin: 0; padding: 10px 20px; border: 2px solid #fff; border-radius: 999px; background: var(--accent-strong); color: #fff;
+  font-size: var(--fs-base); font-weight: 700; text-align: center; box-shadow: var(--ombra);
+}
+.invito-clic img { display: block; width: min(640px, 60vw); height: auto; border-radius: var(--r-md); box-shadow: var(--ombra); }
+@media (max-width: 600px) {
+  .invito-clic { top: 30%; }
+  .invito-clic p { padding: 8px 14px; font-size: var(--fs-sm); }
+  .invito-clic img { display: none; } /* a 390 px il testo dello schema sarebbe illeggibile: sta nella Guida */
+}
