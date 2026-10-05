@@ -39,8 +39,9 @@ stime campionarie (censimento permanente).
 
 ## Struttura
 
-`js/core/` nucleo (mappa, catalogo, pannello, scheda, ricerca) · `js/layers/` un modulo per tema · `scripts/` validazione dei
-dati e server · `tests/` · `docs/` piano, spec, catalogo e stili. Piano generale: `docs/PIANO_DigitalTwin_Palermo.md`.
+`js/core/` nucleo (mappa, catalogo, pannello, scheda, ricerca) · `js/layers/` un modulo per tema · `js/geoimage/` mappe storiche
+georeferenziate sulla base (`docs/GEOIMAGE.md`) · `scripts/` validazione dei dati e server · `tests/` · `docs/` piano, spec, catalogo e stili.
+Piano generale: `docs/PIANO_DigitalTwin_Palermo.md`.
 
 ## Licenza
 
