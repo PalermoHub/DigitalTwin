@@ -40,8 +40,7 @@ stime campionarie (censimento permanente).
 ## Struttura
 
 `js/core/` nucleo (mappa, catalogo, pannello, scheda, ricerca) · `js/layers/` un modulo per tema · `js/geoimage/` mappe storiche
-georeferenziate sulla base (`docs/GEOIMAGE.md`) · `scripts/` validazione dei dati e server · `tests/` · `docs/` piano, spec, catalogo e stili.
-Piano generale: `docs/PIANO_DigitalTwin_Palermo.md`.
+georeferenziate sulla base (`docs/GEOIMAGE.md`) · `worker/` proxy CORS (Cloudflare Worker) · `scripts/` validazione dei dati, server e aggiornamento dei dati · `tests/` · `docs/` catalogo, stili e guide d'uso (`RNDT.md`, `AGGIUNGI_LAYER.md`).
 
 ## Licenza
 
@@ -52,12 +51,3 @@ Codice sotto [EUPL-1.2](LICENSE). Dati e documentazione prodotti dal progetto so
 2. `python3 scripts/guida_screenshot.py` (immagini in `img/guida/passi/`; serve la rete per la base cartografica).
 3. `python3 scripts/guida_video.py` (video, audio, sottotitoli e la versione ridotta per gli stati WhatsApp, sotto i 9 MB, in `media/guida/`; richiede `ffmpeg`, `piper-tts` e il modello vocale: `python3 -m piper.download_voices it_IT-paola-medium --data-dir ~/.cache/piper`).
    Per rifare solo la versione WhatsApp: `python3 scripts/guida_video.py --whatsapp`.
-
-## Carosello social
-`python3 scripts/guida_carosello.py` genera 11 slide 1080×1350 in `social/carosello/` dagli screenshot della guida (rigenerali prima con `guida_screenshot.py` se la mappa è cambiata). I testi brevi sono in `SLIDES` nello script. Il link riportato nelle slide è `palermodigitaltwin.opendatasicilia.it` (costante `LINK`).
-
-### Secondo carosello (stile notturno)
-`python3 scripts/guida_carosello2.py` genera 11 slide 1080×1350 in `social/carosello-2/`: un panorama continuo della mappa, numeri dai nostri dati (monumenti, uffici, strati), screenshot ritagliati con annotazioni. Le sorgenti ad alta risoluzione (screenshot a doppia scala e panorama) vanno in `lavoro/carosello/` (non versionato); `--rigenera` le rifà.
-
-### Quarto carosello (stile editoriale moderno)
-`python3 scripts/guida_carosello4.py` genera 11 slide 1080×1350 in `social/carosello-4/`: stile Digital Atlas in midnight navy e accenti oro/ambra, cornice device window con visuale ad alta risoluzione, badge contestuali floating e schede con le caratteristiche chiave.

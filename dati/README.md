@@ -9,7 +9,7 @@
 > La copia iniziale di `palermo_popolazione/data` aveva preso solo i file e saltato le sottocartelle `terrain/`, `elevazione/`, `griglia_pbf/`: ora sono nel viewer, letti dal link.
 > Le sezioni qui sotto descrivono il contenuto *logico* di ogni cartella, indipendentemente da dove sta il file.
 
-Copia di lavoro (605 MB, 161 file) dei dati indicati nel piano `../docs/PIANO_DigitalTwin_Palermo.md`.
+Copia di lavoro (605 MB, 161 file) dei dati del progetto.
 Copiati il 2026-09-30 **senza modifiche**. `MANIFEST.tsv` riporta per ogni file percorso, dimensione, SHA-256 e sorgente originale.
 Le copie sono state verificate per dimensione contro l'origine. Non sono ancora validate nei contenuti (CRS, attributi, copertura).
 

@@ -18,3 +18,26 @@ lavoro/
 dati/uffici/grezzo.json
 .cache/
 dati/delete/
+
+# materiale di lavoro: resta solo in locale, non si pubblica (docs/DA_FARE_PRIMA_DELLA_PRODUZIONE.md, sezione 4)
+graphify-out/
+social/
+plugin/
+docs/superpowers/
+aggiungere.txt
+*:Zone.Identifier
+media/guida/guida_02.mp4
+media/guida/guida.txt
+scripts/guida_carosello*.py
+scripts/carosello5.py
+tests/test_guida_carosello*.py
+docs/ANALISI_DESIGN.md
+docs/APPUNTI_GUIDA.md
+docs/ARCHITETTURA_HOSTING.md
+docs/AUDIT_DATI.md
+docs/DA_FARE_PRIMA_DELLA_PRODUZIONE.md
+docs/FILE_DA_SPOSTARE_SUL_VPS.md
+docs/ISTRUZIONI_SERVER.md
+docs/PIANO_DigitalTwin_Palermo.md
+docs/RIPARTENZA.md
+docs/schermata-fase1.png
