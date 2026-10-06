@@ -28,7 +28,7 @@ export function urlProxy(proxy, url) {
   return `${proxy.replace(/\/$/, '')}/t/${m[1]}${m[2] || '/'}`;
 }
 
-export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, archivioDati = null, prefisso = 'rndt', etichetta = 'RNDT', autorizzazione = () => null, protetto = () => false, fetchFn = (...a) => fetch(...a) }) {
+export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, archivioDati = null, prefisso = 'rndt', etichetta = 'RNDT', autorizzazione = () => null, protetto = () => false, riscrivi = url => url, fetchFn = (...a) => fetch(...a) }) {
   let stato = iniziale;
   const layers = new Map(); // id → { id, tipo, nome, visibile, sorgente, idMappa[], idSorgente, salvato, indisponibile?, errore? }
   const ascoltatori = new Set();
@@ -152,7 +152,8 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
       throw new Error('download limitato a Palermo: attiva «Only features in the current map view»');
     }
     const auth = autorizzazione(url);
-    const risposta = await (auth ? fetchFn(urlProxy(proxy, url), { headers: { authorization: auth } }) : fetchFn(urlProxy(proxy, url)));
+    const daScaricare = urlProxy(proxy, riscrivi(url)); // il token (se c'è) viaggia solo nella richiesta: l'URL del layer resta senza
+    const risposta = await (auth ? fetchFn(daScaricare, { headers: { authorization: auth } }) : fetchFn(daScaricare));
     if (risposta.status === 401) throw new Error('il servizio richiede utente e password');
     if (!risposta.ok) throw new Error(`HTTP ${risposta.status}`);
     const buffer = await risposta.arrayBuffer();
@@ -206,6 +207,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
         throw errore;
       }
       if (fc?.type !== 'FeatureCollection' || !Array.isArray(fc.features)) throw new Error('il servizio non produce GeoJSON');
+      if (fc.exceededTransferLimit) throw new Error('il servizio ha troncato la risposta: troppi elementi nell’area di Palermo');
       if (fc.features.length > TETTO_WFS) throw new Error(`più di ${TETTO_WFS} elementi nell’area di Palermo: il servizio è troppo grande`);
       if (!fc.features.length) throw new Error('nessun elemento nell’area di Palermo');
       return creaGeoJson(nome, fc, richiesta, true);

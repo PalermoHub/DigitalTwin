@@ -165,3 +165,24 @@ test('se la mappa rifiuta la sorgente il layer non entra nell’elenco e l’err
   assert.equal(host.elenco().length, 0);
   assert.equal(scritti.length, 0);
 });
+
+test('riscrivi: la richiesta parte con l’URL riscritto (token), il layer si salva con l’URL senza token', async () => {
+  const map = mappaFinta(), chiamate = [], scritti = [];
+  const host = creaHost({
+    map, proxy: PROXY, stato: { v: 1, layers: [] }, scrivi: s => { scritti.push(s); return true; }, archivioDati: archivioInMemoria(), prefisso: 'miei',
+    riscrivi: u => `${u}&token=SEGRETO`,
+    fetchFn: async u => { chiamate.push(u); return corpo(punti(2)); },
+  });
+  await host.addWfsLayer('A', RICHIESTA);
+  assert.ok(chiamate[0].endsWith('&token=SEGRETO'));
+  assert.ok(!JSON.stringify(scritti).includes('SEGRETO'));
+  assert.equal(scritti.at(-1).layers[0].sorgente.url, RICHIESTA);
+});
+
+test('exceededTransferLimit: il servizio ha troncato la risposta → errore, mai dati parziali', async () => {
+  const troncata = JSON.stringify({ type: 'FeatureCollection', exceededTransferLimit: true, features: JSON.parse(punti(3)).features });
+  const { host, map, scritti } = costruisci(troncata);
+  await assert.rejects(() => host.addWfsLayer('T', RICHIESTA), /troncato la risposta/);
+  assert.equal(map.sorgenti.size, 0);
+  assert.equal(scritti.length, 0);
+});
