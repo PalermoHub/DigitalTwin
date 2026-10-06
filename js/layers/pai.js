@@ -46,6 +46,18 @@ const campioneMatch = (t, f) => {
   return c.length === 1 ? f(c[0]) : ['match', ['get', `cls_${t.id}`], ...c.flatMap(k => [k.label, f(k)]), f(c[0])];
 };
 
+// Albero del pannello Layer (come nel progetto QGIS): Geomorfologia / Idraulica / Coste, con gli strati nell'ordine del progetto.
+// Un tema non elencato (nuovo dataset del manifest) va in coda al suo gruppo, o in «Coste».
+const ALBERO = new Map([
+  ['geo_rischio', ['Geomorfologia', 0]], ['geo_fascia_p3p4', ['Geomorfologia', 1]], ['dissesti_attivita', ['Geomorfologia', 2]],
+  ['dissesti_tipologia', ['Geomorfologia', 3]], ['geo_pericolosita', ['Geomorfologia', 4]], ['geo_siti', ['Geomorfologia', 5]],
+  ['idraulica_rischio', ['Idraulica', 0]], ['idraulica_pericolosita', ['Idraulica', 1]], ['idraulica_siti', ['Idraulica', 2]],
+  ['idraulica_esondazioni_manovra', ['Idraulica', 3]], ['idraulica_esondazioni_collasso', ['Idraulica', 4]],
+]);
+const GRUPPI = ['Geomorfologia', 'Idraulica', 'Coste'];
+const posizione = ({ t }) => { const [g, i] = ALBERO.get(t.id) ?? ['Coste', 99]; return GRUPPI.indexOf(g) * 100 + i; };
+const ordinaPerAlbero = temi => [...temi].sort((a, b) => posizione(a) - posizione(b));
+
 let legenda = null;
 const accesi = new Map(); // tema -> classi accese (assente = tutte)
 
@@ -237,8 +249,8 @@ export default {
       }).slice(0, MAX_PER_DATASET_IN_SCHEDA).map(p => ({ ds, p }));
     })),
   },
-  strati: TEMI.map(tema => ({
-    id: tema.t.id, etichetta: tema.t.titolo, layers: layerDelTema(tema), attivo: false,
+  strati: ordinaPerAlbero(TEMI).map(tema => ({
+    id: tema.t.id, etichetta: tema.t.titolo, layers: layerDelTema(tema), attivo: false, sezione: ALBERO.get(tema.t.id)?.[0] ?? 'Coste',
     suCambio: aggiornaLegenda,
   })),
   pannello: creaLegenda,

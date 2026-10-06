@@ -601,7 +601,16 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
       h.textContent = titolo;
       gruppo.append(h);
     }
+    let sezioneStrato = null;
     for (const s of m.strati) {
+      // `sezione` su uno strato: sottotitolo che raggruppa gli strati consecutivi (es. Geomorfologia / Idraulica nel PAI)
+      if (s.sezione && s.sezione !== sezioneStrato) {
+        sezioneStrato = s.sezione;
+        const h = document.createElement('h3');
+        h.className = 'gruppo-sezione';
+        h.textContent = s.sezione;
+        gruppo.append(h);
+      }
       const label = document.createElement('label');
       const cb = document.createElement('input');
       cb.type = 'checkbox';
