@@ -8,6 +8,8 @@ const COLORI = ['#1c7ed6', '#e8590c', '#2f9e44', '#ae3ec9', '#c92a2a', '#0c8599'
 const FINESTRA_DOWNLOAD_MS = 30000;
 // Un GeoJSON senza URL si salva coi suoi dati nell'archivio dati (IndexedDB); oltre questo tetto resta solo in sessione
 export const TETTO_DATI = 5_000_000;
+// Un WFS dell'utente oltre questo numero di feature è troppo grande per il browser
+export const TETTO_WFS = 5000;
 const SEMBRA_DATI = /getfeature(?!info)|\.geojson|f=geojson|outputformat=[^&]*json/i;
 const GET_FEATURE = /request=getfeature(?!info)/i;
 const SOLO_CONTEGGIO = /resulttype=hits/i;
@@ -26,7 +28,7 @@ export function urlProxy(proxy, url) {
   return `${proxy.replace(/\/$/, '')}/t/${m[1]}${m[2] || '/'}`;
 }
 
-export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, archivioDati = null, fetchFn = (...a) => fetch(...a) }) {
+export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, archivioDati = null, prefisso = 'rndt', etichetta = 'RNDT', fetchFn = (...a) => fetch(...a) }) {
   let stato = iniziale;
   const layers = new Map(); // id → { id, tipo, nome, visibile, sorgente, idMappa[], idSorgente, salvato, indisponibile?, errore? }
   const ascoltatori = new Set();
@@ -40,7 +42,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
   const persisti = () => {
     if (scrivi(stato) || avvisatoSalvataggio) return;
     avvisatoSalvataggio = true;
-    notifica('Non riesco a salvare i layer RNDT: restano finché la pagina è aperta.');
+    notifica(`Non riesco a salvare i layer ${etichetta}: restano finché la pagina è aperta.`);
   };
   const daSalvare = ({ id, tipo, nome, visibile, sorgente }) => ({ id, tipo, nome, visibile, sorgente });
 
@@ -58,7 +60,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
 
   function creaWms(nome, opz, salva) {
     if (opz.crs && opz.crs !== 'EPSG:3857') throw new Error(`CRS ${opz.crs} non supportato dalla mappa`);
-    const id = `rndt-${hash(`wms|${opz.url}|${opz.layers}`)}`;
+    const id = `${prefisso}-${hash(`wms|${opz.url}|${opz.layers}`)}`;
     if (layers.has(id)) return id;
     const v13 = String(opz.version).startsWith('1.3');
     const q = new URL(opz.url);
@@ -73,7 +75,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
   }
 
   function creaTile(nome, url, opz = {}, salva) {
-    const id = `rndt-${hash(`tile|${url}`)}`;
+    const id = `${prefisso}-${hash(`tile|${url}`)}`;
     if (layers.has(id)) return id;
     map.addSource(id, { type: 'raster', tiles: [urlProxy(proxy, url)], tileSize: 256, attribution: opz.attribution, bounds: BBOX_PALERMO });
     map.addLayer({ id, type: 'raster', source: id });
@@ -89,7 +91,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
       else if (fuori > 1) notifica(`«${nome}»: ${fuori} elementi su ${fc.features.length} sono fuori dal Comune di Palermo e non vengono mostrati.`);
     }
     const testo = url ? '' : JSON.stringify(dati);
-    const id = idSalvato ?? `rndt-${hash(url ? `geojson|${url}` : `geojson|${nome}|${testo}`)}`;
+    const id = idSalvato ?? `${prefisso}-${hash(url ? `geojson|${url}` : `geojson|${nome}|${testo}`)}`;
     if (layers.has(id)) { togliDallaMappa(layers.get(id)); layers.delete(id); }
     const colore = COLORI[parseInt(hash(nome), 36) % COLORI.length];
     map.addSource(id, { type: 'geojson', data: dati });
@@ -155,7 +157,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     const rec = e?.sourceId && layers.get(e.sourceId);
     if (!rec || rec.errore) return;
     rec.errore = true; // un solo avviso per layer; non si disattiva (un tile mancante non è un layer rotto)
-    notifica(`Layer RNDT con errori di caricamento: ${rec.nome}`);
+    notifica(`Layer ${etichetta} con errori di caricamento: ${rec.nome}`);
     cambio();
   });
 
@@ -177,6 +179,20 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     addTileLayer: (nome, url, opz) => creaTile(nome, url, opz, true),
     // File dal computer: mai l'URL di un download recente del catalogo
     addFileLayer: (nome, fc) => creaGeoJson(nome, fc, null, true),
+    // WFS da un servizio dell'utente: `richiesta` è il GetFeature già completo (con bbox di Palermo). Si salva con l'URL.
+    async addWfsLayer(nome, richiesta) {
+      const id = `${prefisso}-${hash(`geojson|${richiesta}`)}`;
+      if (layers.has(id)) return id;
+      let fc;
+      try { fc = JSON.parse(new TextDecoder().decode(await fetchArrayBuffer(richiesta))); } catch (errore) {
+        if (errore instanceof SyntaxError) throw new Error('il servizio non produce GeoJSON');
+        throw errore;
+      }
+      if (fc?.type !== 'FeatureCollection' || !Array.isArray(fc.features)) throw new Error('il servizio non produce GeoJSON');
+      if (fc.features.length > TETTO_WFS) throw new Error(`più di ${TETTO_WFS} elementi nell’area di Palermo: il servizio è troppo grande`);
+      if (!fc.features.length) throw new Error('nessun elemento nell’area di Palermo');
+      return creaGeoJson(nome, fc, richiesta, true);
+    },
     attendi: async () => { while (scritture.size) await Promise.allSettled([...scritture]); },
     addGeoJsonLayer(nome, fc) {
       const recente = ultimoDownload && Date.now() - ultimoDownload.t < FINESTRA_DOWNLOAD_MS ? ultimoDownload.url : null;
