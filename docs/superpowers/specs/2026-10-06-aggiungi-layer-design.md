@@ -25,10 +25,10 @@ incollati per URL (XYZ, WMS, WFS). I servizi aggiunti si salvano nel browser e s
 
 ## Architettura
 
-- **Tab «Aggiungi layer»** nella rail sinistra (`collegaRail`), accanto a «RNDT», con un pulsante nella barra strumenti.
-  Il pannello è un elemento come `rndt-pannello`.
-- **Secondo host**: `creaHost({ map, proxy: PROXY_RNDT, stato, scrivi, anelli, notifica, pannello, archivioDati })`
-  con stato letto da `dt:miei:v1`. Condivide con il catalogo il proxy, i confini e l'IndexedDB `dt-rndt`
+- **Tab «Aggiungi layer»** nella rail destra (`collegaRail`), accanto a «RNDT», con un pulsante nella barra strumenti.
+  Il pannello è un elemento come `rndt-pannello`. Il gruppo «I miei layer» sta invece nella barra sinistra degli strati.
+- **Secondo host**: `creaHost({ map, proxy: PROXY_RNDT, prefisso: 'miei', etichetta: 'aggiunti', stato, scrivi, anelli, notifica, archivioDati })`
+  con stato letto da `dt:miei:v1`. `prefisso` (default `rndt`) è l'inizio degli id di sorgenti e layer in mappa; `etichetta` entra nei messaggi. Condivide con il catalogo il proxy, i confini e l'IndexedDB `dt-rndt`
   (gli id dei layer sono hash dei contenuti, non collidono).
 - **Gruppo «I miei layer»** nella barra strati, costruito come `creaGruppoRndt` ma legato al secondo host. L'ordine
   è alfabetico, come tutti i gruppi (vedi memoria del progetto).
@@ -46,9 +46,9 @@ incollati per URL (XYZ, WMS, WFS). I servizi aggiunti si salvano nel browser e s
 
 ### Host: aggiunte
 
-- **`addWfsLayer(nome, { url, tipo, versione })`**: scarica con `GetFeature`, `outputFormat` JSON, `bbox` di Palermo
-  e un massimo di 5.000 feature; filtra sul confine con `filtraSuConfine`; crea il layer con `creaGeoJson` e lo salva
-  **con l'URL** della richiesta, così il ripristino riscarica come già fa per i WFS del catalogo. Se il servizio
+- **`addWfsLayer(nome, richiesta)`**: `richiesta` è l'URL `GetFeature` già completo (lo costruisce `servizi.js`, con `bbox` di Palermo
+  e tetto di 5.001 feature); l'host scarica, rifiuta oltre 5.000 feature, filtra sul confine con `filtraSuConfine`, crea il layer
+  con `creaGeoJson` e lo salva **con l'URL** della richiesta, così il ripristino riscarica come già fa per i WFS del catalogo. Se il servizio
   non produce JSON o supera il tetto, errore chiaro.
 - `creaWms` e `creaTile` si riusano. Il WMS accetta solo EPSG:3857 (errore già presente).
 - Nessun tipo nuovo in `archivio.js`: il WFS è un `geojson` con URL.
@@ -74,7 +74,8 @@ Aggiungi layer
 ## Dati e salvataggio
 
 - `dt:miei:v1` in `localStorage`: layer aggiunti alla mappa (stesso formato di `dt:rndt:v1`).
-- `dt:miei:servizi:v1` in `localStorage`: **servizi salvati** `{ tipo, nome, url, layer[] }` (solo URL e scelte, nessun dato).
+- `dt:miei:servizi:v1` in `localStorage`: **servizi salvati** `{ id, tipo, nome, url, voci[] }` (solo URL e scelte, nessun dato).
+  Una voce è `{ chiave, nome, … }`: per WMS le opzioni del layer (`opz`), per WFS l'URL `GetFeature` (`richiesta`); XYZ non ha voci.
   Distinto dall'elenco dei layer perché un servizio salvato può non essere in mappa.
 - File dal computer: IndexedDB `dt-rndt`, tetto 5 MB per file (come oggi).
 - Se `localStorage` o IndexedDB sono bloccati: funziona per la sessione con l'avviso già in uso.
@@ -82,8 +83,9 @@ Aggiungi layer
 ### Migrazione
 
 All'avvio, una sola volta: i layer di `dt:rndt:v1` con `sorgente.dati === true` (file dal computer) passano a
-`dt:miei:v1`; i loro dati restano in IndexedDB con lo stesso id. Fatto prima di `ripristina()`. Si segna
-`dt:miei:migrato=1`. Se la scrittura fallisce, nulla si perde: i layer restano dov'erano e si riprova al prossimo avvio.
+`dt:miei:v1`; i loro dati restano in IndexedDB con lo stesso id. Fatto prima di creare gli host. Non serve un
+marcatore: dopo il primo passaggio nello stato RNDT non restano file. Se una scrittura fallisce si torna allo stato
+precedente: nessun layer si perde né si duplica, e si riprova al prossimo avvio.
 
 ## Limite di area
 
