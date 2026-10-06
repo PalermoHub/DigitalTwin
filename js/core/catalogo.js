@@ -93,6 +93,46 @@ function schedaPlugin() {
   ];
 }
 
+const LICENZE = {
+  'CC BY 4.0': 'https://creativecommons.org/licenses/by/4.0/deed.it',
+  'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/deed.it',
+  'CC BY 3.0 IT': 'https://creativecommons.org/licenses/by/3.0/it/legalcode',
+  'IODL 2.0': 'https://www.dati.gov.it/content/italian-open-data-license-v20',
+};
+
+// Nome della licenza come link al testo ufficiale (se noto), altrimenti come testo semplice.
+function licenza(nome) {
+  return [LICENZE[nome] ? link(nome, LICENZE[nome]) : nome];
+}
+
+// Una voce dell'elenco fonti: testo, «Fonte dati» con i link, licenza (con link) o avviso se da verificare.
+// `extra` = licenze note che valgono solo per una parte dei dati (es. le scuole del MIUR).
+function voce(testo, riferimenti = [], lic = null, extra = []) {
+  const parti = [testo];
+  if (lic) parti.push(' — ', ...licenza(lic));
+  if (riferimenti.length) {
+    parti.push('. Fonte dati: ');
+    riferimenti.forEach(([t, u], i) => parti.push(...(i ? [', '] : []), link(t, u)));
+  }
+  if (extra.length) parti.push(' (licenze: ', ...extra.flatMap((n, i) => [...(i ? [', '] : []), ...licenza(n)]), ')');
+  if (!lic && !/condizioni d.uso da verificare|licenza da verificare/.test(testo) && !extra.length) parti.push(' — licenza da verificare');
+  return parti;
+}
+
+// Link alla fonte dati dei layer scaricati dal catalogo (la corrispondenza è sul testo della fonte).
+const LINK_CATALOGO = [
+  [/particelle catastali/, [['SITR Regione Siciliana', 'https://www.sitr.regione.sicilia.it/'], ['Geoportale cartografico catastale, Agenzia delle Entrate', 'https://geoportale.cartografia.agenziaentrate.gov.it/age-inspire/srv/ita/catalog.search#/home'], ['Open data del Comune di Palermo', 'https://opendata.comune.palermo.it/index.php']]],
+  [/Variante generale al PRG 2004/, [['Geocatalogo del Comune di Palermo', 'https://geocatalog.comune.palermo.it/geonetwork/srv/ita/catalog.search#/metadata/25562f02-587f-49ca-b5b6-21018efe7c78'], ['Open data del Comune di Palermo', 'https://opendata.comune.palermo.it/index.php'], ['SITR Regione Siciliana', 'https://www.sitr.regione.sicilia.it/']]],
+  [/numeri civici/, [['ANNCSU, Archivio nazionale dei numeri civici', 'https://www.anncsu.gov.it/it/consultazione-dellarchivio/open-data/'], ['Mappa ANNCSU di PalermoHub', 'https://gbvitrano.github.io/ANNCSU/index.html']]],
+  [/HR-DTM-5m/, [['Dati su Zenodo', 'https://zenodo.org/records/18872933'], ['DOI del dataset', 'https://doi.org/10.5281/zenodo.18921767'], ['Articolo (Scientific Data)', 'https://doi.org/10.1038/s41597-025-06132-z'], ['Repository del progetto', 'https://github.com/palermohub/Palerm-DTM-5m']]],
+  [/Censimento permanente 2023/, [['Cruscotto Statistico Comunale (Palermo)', 'https://cruscotto-italia.dati.gov.it/comune.html?istat=082053#censimento']]],
+  [/ISTAT/, [['ISTAT, Basi territoriali e variabili censuarie', 'https://www.istat.it/notizia/basi-territoriali-e-variabili-censuarie/'], ['Popolazione residente a Palermo, open data del Comune', 'https://opendata.comune.palermo.it/opendata-archivio-dataset.php?tag=POPOLAZIONE%20RESIDENTE']]],
+];
+
+function linkCatalogo(fonte) {
+  return (LINK_CATALOGO.find(([re]) => re.test(fonte)) ?? [null, []])[1];
+}
+
 function elenco(voci) {
   const ul = document.createElement('ul');
   for (const t of voci) {
@@ -111,19 +151,22 @@ export function commutaCrediti(dialog, catalogo, moduli = []) {
 
 export function apriCrediti(dialog, catalogo, moduli = []) {
   const fonti = elenco([
-    ...catalogo.filter(v => v.fonte).map(v => `${v.fonte} (${v.data})` + (v.licenza ? ` — ${v.licenza}` : ' — licenza da verificare')),
-    'Base cartografica: OpenFreeMap, © OpenMapTiles, dati © OpenStreetMap contributors',
-    'Carte tecniche (CSG 2k 1989/91, CTC 2k 2007/09, CTR 10k 2012/13): SiciliaHub / PalermoHub, Comune di Palermo e Regione Siciliana (SITR)',
-    ['Mappe storiche (1580–1993): ', Object.assign(document.createElement('a'), { href: 'https://palermohub.opendatasicilia.it/index_atlante_iframe.html', target: '_blank', rel: 'noopener', textContent: 'Atlante delle carte tecniche storiche di Palermo' }), ', OpenDataSicilia (A. Borruso, F. P. Paolicelli, C. Spataro, G. B. Vitrano), georeferenziate su Map Warper — CC BY 4.0; le fonti originali (BnF Gallica, Library of Congress, Harvard Map Collection, U.S. Army Map Service, Comune di Palermo) sono indicate nell\'attribuzione di ogni mappa'],
-    'Scuole, asili comunali e sedi delle sezioni elettorali: Comune di Palermo, dati aperti (2017) — condizioni d\'uso da verificare',
-    'Trasporto pubblico (linee, fermate, orari): AMAT Palermo S.p.A., feed GTFS valido dal 25/08/2026 al 31/10/2026 — condizioni d\'uso da verificare',
-    'Sicurezza stradale: incidenti 2015–2023 del Comune di Palermo (Polizia Municipale), rete stradale © OpenStreetMap contributors, elaborazione PalermoHub / OpenDataSicilia (studio «Rete stradale») — condizioni d\'uso da verificare',
-    'Colonnine di ricarica: GSE, Piattaforma Unica Nazionale (PUN), serie storica PalermoHub/evcharginglogsicilia, stato aggiornato in continuo — CC BY 4.0',
-    'Uffici comunali (struttura, responsabili, sedi e contatti): sito istituzionale del Comune di Palermo, comune.palermo.it/amministrazione/uffici — condizioni d\'uso da verificare',
-    'Fontanelle: AMAP S.p.A., fontanelle pubbliche di Palermo (elaborazione PalermoHub / OpenDataSicilia) — condizioni d\'uso da verificare',
-    'Distretti idrici: AMAP S.p.A., Palermo — condizioni d\'uso da verificare',
-    'Alberi monumentali: Ministero dell\'agricoltura, della sovranità alimentare e delle foreste (MASAF), Elenco degli alberi monumentali d\'Italia — condizioni d\'uso da verificare',
-    'Monumenti: Portale del Turismo del Comune di Palermo (testi, foto e link) e «Mappa monumentale di Palermo e dell\'Agro Palermitano» di Marcello Petrucci (posizioni, testi e foto) — condizioni d\'uso da verificare',
+    ...catalogo.filter(v => v.fonte).map(v => voce(`${v.fonte} (${v.data})`, linkCatalogo(v.fonte), v.licenza)),
+    voce('Base cartografica: OpenFreeMap, © OpenMapTiles, dati © OpenStreetMap contributors', [['OpenFreeMap', 'https://openfreemap.org/'], ['OpenStreetMap', 'https://www.openstreetmap.org/copyright']]),
+    voce('Carte tecniche (CSG 2k 1989/91, CTC 2k 2007/09, CTR 10k 2012/13): SiciliaHub / PalermoHub, Comune di Palermo e Regione Siciliana (SITR)', [['SITR Regione Siciliana', 'https://www.sitr.regione.sicilia.it/?page_id=419'], ['Geocatalogo del Comune di Palermo', 'https://geocatalog.comune.palermo.it/geonetwork/srv/ita/catalog.search#/metadata/25562f02-587f-49ca-b5b6-21018efe7c78'], ['Atlante delle carte tecniche', 'https://palermohub.opendatasicilia.it/index_atlante_iframe.html']]),
+    ['Mappe storiche (1580–1993): ', link('Atlante delle carte tecniche storiche di Palermo', 'https://palermohub.opendatasicilia.it/index_atlante_iframe.html'), ', OpenDataSicilia (A. Borruso, F. P. Paolicelli, C. Spataro, G. B. Vitrano), georeferenziate su ', link('Map Warper', 'https://mapwarper.net/'), ' — ', ...licenza('CC BY 4.0'), '; le fonti originali (BnF Gallica, Library of Congress, Harvard Map Collection, U.S. Army Map Service, Comune di Palermo) sono indicate nell\'attribuzione di ogni mappa. Fonte dati: ', link('Dataset del Comune di Palermo', 'https://opendata.comune.palermo.it/opendata-dataset.php?dataset=1287'), ', ', link('SITR', 'https://www.sitr.regione.sicilia.it/geoportale/it/Metadata/Details/784'), ', ', link('Repertorio cartografico CRICD', 'https://www.cricd.it/'), ', ', link('University of Texas, Perry-Castañeda Library Map Collection', 'https://legacy.lib.utexas.edu/maps/ams/italy_city_plans/')],
+    voce('Scuole, asili comunali e sedi delle sezioni elettorali: Comune di Palermo, dati aperti (2017) — condizioni d\'uso da verificare', [['Anagrafe edilizia scolastica, MIUR (scuole)', 'http://www.miur.gov.it/web/guest/-/scuola-online-i-dati-aggiornati-dell-anagrafe-dell-edilizia'], ['Open data del Comune di Palermo', 'https://opendata.comune.palermo.it/index.php']], null, ['IODL 2.0']),
+    voce('Trasporto pubblico (linee, fermate, orari): AMAT Palermo S.p.A., feed GTFS valido dal 25/08/2026 al 31/10/2026 — condizioni d\'uso da verificare', [['Progetto OpenAMAT', 'https://github.com/openamat/Products/tree/master/data']]),
+    voce('Sicurezza stradale: incidenti 2015–2023 del Comune di Palermo (Polizia Municipale), rete stradale © OpenStreetMap contributors, elaborazione PalermoHub / OpenDataSicilia (studio «Rete stradale») — condizioni d\'uso da verificare', [['Sinistri 2022, open data del Comune', 'https://opendata.comune.palermo.it/opendata-dataset.php?dataset=1713'], ['Dataset sugli incidenti di Palermo su dati.gov.it', 'https://www.dati.gov.it/view-dataset?Cerca=incidenti+palermo'], ['OpenStreetMap', 'https://www.openstreetmap.org/copyright']]),
+    voce('Colonnine di ricarica: GSE, Piattaforma Unica Nazionale (PUN), serie storica PalermoHub/evcharginglogsicilia, stato aggiornato in continuo', [['Piattaforma Unica Nazionale', 'https://www.piattaformaunicanazionale.it/'], ['EV Charging Log Sicilia', 'https://palermohub.github.io/evcharginglogsicilia/'], ['Rete di ricarica, onData', 'https://github.com/ondata/rete_ricarica_veicoli_elettrici']], 'CC BY 4.0'),
+    voce('Uffici comunali (struttura, responsabili, sedi e contatti): sito istituzionale del Comune di Palermo, comune.palermo.it/amministrazione/uffici — condizioni d\'uso da verificare', [['Uffici del Comune di Palermo', 'https://www.comune.palermo.it/amministrazione/uffici']]),
+    voce('Fontanelle: AMAP S.p.A., fontanelle pubbliche di Palermo (elaborazione PalermoHub / OpenDataSicilia) — condizioni d\'uso da verificare', [['Dataset sul portale open data del Comune', 'https://opendata.comune.palermo.it/opendata-dataset.php?dataset=1249'], ['Libro delle fontane AMAP (PDF)', 'https://www.amapspa.it/wp-content/uploads/2019/07/Libro_Fontane_AMAP.pdf'], ['Progetto Fontanelle, onData', 'https://fontanelle.ondata.it/']]),
+    voce('Distretti idrici: AMAP S.p.A., Palermo — condizioni d\'uso da verificare', [['Emergenza idrica, AMAP', 'https://www.amapspa.it/it/comunicazione/emergenza-idrica/'], ['Emergenza idrica in Sicilia, OpenDataSicilia', 'https://opendatasicilia.github.io/emergenza-idrica-sicilia/']]),
+    voce('Alberi monumentali: Ministero dell\'agricoltura, della sovranità alimentare e delle foreste (MASAF), Elenco degli alberi monumentali d\'Italia — condizioni d\'uso da verificare', [['Elenco degli alberi monumentali d\'Italia, MASAF', 'https://www.politicheagricole.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/11260'], ['Dove sono gli alberi monumentali d\'Italia?', 'https://medium.com/tantotanto/dove-sono-gli-alberi-monumentali-ditalia-ffd7d0d6d860']]),
+    voce('Monumenti: Portale del Turismo del Comune di Palermo (testi, foto e link) e «Mappa monumentale di Palermo e dell\'Agro Palermitano» di Marcello Petrucci (posizioni, testi e foto) — condizioni d\'uso da verificare', [['Mappa monumentale di Palermo, M. Petrucci', 'https://www.google.com/maps/d/viewer?mid=1BbwKWTf0ssw__JFLvYJAoVrZVDw']]),
+    voce('Isole di calore: temperatura superficiale da satellite Landsat (USGS), elaborazione PalermoHub / OpenDataSicilia, 2019–2025', [['USGS Landsat', 'https://www.usgs.gov/landsat-missions/landsat-science-products'], ['Dati su Zenodo', 'https://zenodo.org/records/18872933'], ['Isole di calore urbane 2019-2025', 'https://palermohub.github.io/isole_di_calore/']], 'CC BY 4.0'),
+    voce('Pericolosità e rischio idrogeologico (PAI): Regione Siciliana, Piano di assetto idrogeologico, bacini 039-040', [['PAI, SITR Regione Siciliana', 'https://www.sitr.regione.sicilia.it/pai/'], ['Dati PAI aggiornati al 12/05/2026', 'https://www.sitr.regione.sicilia.it/dati-pai-idraulica-e-geomorfologia-aggiornati-al-12-05-2026/']]),
+    voce('Incendi: catasto dei soprassuoli percorsi dal fuoco, Comune di Palermo e Sistema Informativo Forestale (SIF) della Regione Siciliana', [['SIF Regione Siciliana', 'https://sif.regione.sicilia.it/ilportale/']], null, ['CC BY 3.0 IT']),
   ]);
   const argomenti = schedaArgomenti(moduli);
   const guida = schedaGuida();
