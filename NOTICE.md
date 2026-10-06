@@ -25,3 +25,7 @@ Attribuzione richiesta per i dati CC BY: «Digital Twin Palermo, PalermoHub».
 - `js/geoimage/`: porting in MapLibre di [Geoimage](https://github.com/gbvitrano/Geoimage) di @gbvitrano (nel repository originale: GPL-2.0), con le modifiche descritte in `docs/GEOIMAGE.md`.
 - `js/vendor/proj4.js`: [proj4js](https://github.com/proj4js/proj4js) 2.11.0, licenza MIT (`js/vendor/LICENSE-proj4.txt`).
 - `js/vendor/jszip.min.js`: [JSZip](https://stuk.github.io/jszip/) 3.10.1, licenza MIT o GPL-3.0 a scelta (`js/vendor/LICENSE-jszip.txt`).
+
+## Font
+
+Montserrat (Julieta Ulanovsky e collaboratori), licenza SIL Open Font License 1.1 — https://fonts.google.com/specimen/Montserrat. Sottoinsieme latino in `css/fonts/`.

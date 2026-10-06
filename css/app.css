@@ -92,7 +92,13 @@
 :root[data-tema="scuro"] #app-logo .logo-scuro { display: block; }
 
 * { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; font: var(--fs-base)/1.4 system-ui, sans-serif; color: var(--text); background: var(--surface); }
+button, input, select, textarea { font-family: inherit; }
+/* Montserrat (SIL OFL), self-hosted, sottoinsieme latino */
+@font-face { font-family: 'Montserrat'; font-weight: 400; font-style: normal; font-display: swap; src: url('fonts/montserrat-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 500; font-style: normal; font-display: swap; src: url('fonts/montserrat-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 600; font-style: normal; font-display: swap; src: url('fonts/montserrat-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 700; font-style: normal; font-display: swap; src: url('fonts/montserrat-Bold.woff2') format('woff2'); }
+html, body { height: 100%; margin: 0; font: var(--fs-base)/1.4 'Montserrat', system-ui, sans-serif; color: var(--text); background: var(--surface); }
 /* la pagina non scorre né rimbalza mai (su iPad e Surface un trascinamento o uno zoom del browser porterebbe fuori vista barra e ricerca) */
 html, body { overflow: hidden; overscroll-behavior: none; }
 #barra-strumenti, #area-ricerca, #legende, #pannello { touch-action: manipulation; } /* niente zoom con doppio tocco sull'interfaccia */
