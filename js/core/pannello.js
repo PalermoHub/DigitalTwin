@@ -377,11 +377,21 @@ function creaOrdineDisegno(map, moduli, storage, iniziale) {
 
   const el = document.createElement('details');
   el.id = 'ordine-disegno';
-  el.className = 'layer-sezione';
+  el.className = 'layer-sezione ordine-strumento'; // una scheda con l'accento: è uno strumento, non un gruppo di strati
   const sommario = document.createElement('summary');
+  const icona = document.createElement('span');
+  icona.className = 'ordine-ico';
+  icona.innerHTML = svgIcona('ordine', 20);
+  const testi = document.createElement('span');
+  testi.className = 'ordine-testi';
   const h = document.createElement('h2');
   h.textContent = 'Ordine layer in mappa';
-  sommario.append(h);
+  const sotto = document.createElement('small');
+  sotto.className = 'ordine-sotto';
+  const conta = document.createElement('span');
+  conta.className = 'ordine-conta';
+  testi.append(h, sotto);
+  sommario.append(icona, testi, conta);
   const elenco = document.createElement('div');
   elenco.className = 'ordine-elenco';
   const nota = document.createElement('p');
@@ -407,8 +417,16 @@ function creaOrdineDisegno(map, moduli, storage, iniziale) {
       for (const a of ['su', 'giu', 'trascina']) riga.querySelector(`[data-azione=${a}]`).hidden = r.length < 2;
     });
   };
-  const ridisegna = () => {
+  // la testata (contatore e sottotitolo) è sempre aggiornata, anche a scheda chiusa
+  const aggiornaTestata = () => {
     aggiornaStrati();
+    const n = ordineStrati(stack(), strati).filter(attivo).length;
+    conta.textContent = String(n);
+    conta.hidden = n === 0;
+    sotto.textContent = n < 2 ? 'Accendi almeno due strati per cambiare l’ordine' : 'Metti un layer sopra o sotto un altro';
+  };
+  const ridisegna = () => {
+    aggiornaTestata();
     const ids = ordineStrati(stack(), strati).filter(attivo);
     elenco.replaceChildren(...ids.map(id => riga(per.get(id))));
     nota.hidden = elenco.hidden = !ids.length;
@@ -495,10 +513,12 @@ function creaOrdineDisegno(map, moduli, storage, iniziale) {
   document.addEventListener(EVENTO_GRUPPO, () => { salva(); ridisegna(); });
   el.addEventListener('toggle', () => { if (el.open) ridisegna(); });
   // un layer che si accende, si spegne, arriva o parte (anche dai gruppi dinamici) aggiorna l'elenco se è aperto
-  document.addEventListener('change', () => { if (el.open) ridisegna(); }, true);
+  document.addEventListener('change', () => { if (el.open) ridisegna(); else aggiornaTestata(); }, true);
+  aggiornaTestata();
   return {
     el,
     ridisegna,
+    aggiornaTestata,
     // ordine salvato in una visita precedente
     ripristinaSalvato: () => {
       const salvato = leggiOrdineDisegno(storage);
@@ -644,7 +664,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     layer.querySelector(':scope > h2').after(campo);
     campo.after(disegno.el);
     campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; });
-    contenitore.addEventListener('change', e => { if (e.target.matches?.('label.strato input[type=checkbox]') && disegno.el.open) disegno.ridisegna(); });
+    contenitore.addEventListener('change', e => { if (e.target.matches?.('label.strato input[type=checkbox]')) { if (disegno.el.open) disegno.ridisegna(); else disegno.aggiornaTestata(); } });
   }
   aggiornaConteggio();
   // Esc ripiega il gruppo aperto; il clic sulla mappa no (come i pannelli di destra)

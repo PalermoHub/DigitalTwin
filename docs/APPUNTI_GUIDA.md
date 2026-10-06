@@ -93,6 +93,7 @@ Legenda: **[Guida]** = da riflettere nella Guida; **[Fonti]** = da riflettere in
 - Nella sezione **«Ordine layer in mappa»** (sezione 5) compaiono ora anche i layer di **«I miei layer»** e **RNDT**, prima ignorati (l'elenco si leggeva una volta sola all'avvio): si possono mettere sopra o sotto gli strati di qualunque altro gruppo. Un layer appena aggiunto parte in cima a tutto.
 - Dentro «I miei layer» le righe hanno anche frecce e trascinamento, come gli altri gruppi.
 - **[Guida]** Nel passo «Ordine layer in mappa» (sezione 5) aggiungere che vale anche per i layer dei propri servizi e dei dati RNDT.
+- **Grafica nuova** (`css/app.css`, `.ordine-strumento`): «Ordine layer in mappa» non è più una riga grigia uguale ai gruppi ma una **scheda con l'accento** (sfondo e bordo arancio, icona con le frecce su/giù, titolo in evidenza, sottotitolo «Metti un layer sopra o sotto un altro» sempre visibile, **contatore** degli strati accesi anche a scheda chiusa; con meno di due strati il sottotitolo dice di accenderne almeno due). Serve a far capire che è uno strumento e non un gruppo. **[Guida]** Lo screenshot del tab Layer va rifatto con la nuova scheda.
 
 ## 11. WMTS e ArcGIS REST — `js/aggiungi/wmts.js`, `js/aggiungi/arcgis.js`
 (commit `9e1c0ee`, `e085e32`, `1062817`, `7b62922`)

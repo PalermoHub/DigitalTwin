@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791269544.252259,
-    "ast_hash": "15bf3eed750ab62750fed5ccf3792322",
+    "mtime": 1791271004.3495064,
+    "ast_hash": "e59e720e87da7fe4d824b9072307df98",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -1100,8 +1100,8 @@
     "semantic_hash": ""
   },
   "js/rndt/host.js": {
-    "mtime": 1791269401.7166934,
-    "ast_hash": "7529299f38d001605fed1a9dabecd515",
+    "mtime": 1791270454.0161865,
+    "ast_hash": "7921c448d3d06c1cd842838566e927c7",
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
@@ -1855,13 +1855,13 @@
     "semantic_hash": ""
   },
   "js/aggiungi/controllo.js": {
-    "mtime": 1791269093.7595735,
-    "ast_hash": "a2480a1119f07676567b1cbfe6e8c899",
+    "mtime": 1791270478.4554567,
+    "ast_hash": "f92ec10c0507e5b96a32326b873bc0b7",
     "semantic_hash": ""
   },
   "js/aggiungi/index.js": {
-    "mtime": 1791269114.8774734,
-    "ast_hash": "8771080b1f7f8d2a15587dd86f592521",
+    "mtime": 1791270495.5991142,
+    "ast_hash": "0251daf4f1c4e4b29d46778fd430dae3",
     "semantic_hash": ""
   },
   "js/aggiungi/migrazione.js": {
@@ -1870,13 +1870,13 @@
     "semantic_hash": ""
   },
   "js/aggiungi/salvati.js": {
-    "mtime": 1791269049.257658,
-    "ast_hash": "c2f59f6de58869f70551bac3cdc34c27",
+    "mtime": 1791270406.8007047,
+    "ast_hash": "1b40bf3e9b2424197c8a7f2704dcc712",
     "semantic_hash": ""
   },
   "js/aggiungi/servizi.js": {
-    "mtime": 1791267671.0124862,
-    "ast_hash": "25a465f873a6c1cc33c8bff6b5129f35",
+    "mtime": 1791270415.8937154,
+    "ast_hash": "0d75d306b32a82204523d3b1cf7de655",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-archivio.test.mjs": {
@@ -1885,8 +1885,8 @@
     "semantic_hash": ""
   },
   "tests/js/aggiungi-controllo.test.mjs": {
-    "mtime": 1791269093.7597864,
-    "ast_hash": "eb68d4703e9f37b19ee772d798daa38f",
+    "mtime": 1791270478.2629354,
+    "ast_hash": "e36e6ca9fc03c22f894baf82e0266a48",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-gruppo.test.mjs": {
@@ -1895,8 +1895,8 @@
     "semantic_hash": ""
   },
   "tests/js/aggiungi-host.test.mjs": {
-    "mtime": 1791269401.5389361,
-    "ast_hash": "f9588c15da09c9f7245678f0e72fb35c",
+    "mtime": 1791270446.4749348,
+    "ast_hash": "4aed35491f85ae4faa5fc30367b034cb",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-migrazione.test.mjs": {
@@ -1905,8 +1905,8 @@
     "semantic_hash": ""
   },
   "tests/js/aggiungi-salvati.test.mjs": {
-    "mtime": 1791269049.0875773,
-    "ast_hash": "876a33de2d14edaf25e2d13f6657f497",
+    "mtime": 1791270406.6069345,
+    "ast_hash": "c408370ca4e516f74b8f8d059d11ab00",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-servizi.test.mjs": {
@@ -1915,13 +1915,13 @@
     "semantic_hash": ""
   },
   "docs/AGGIUNGI_LAYER.md": {
-    "mtime": 1791269731.3841388,
-    "ast_hash": "b68935a8c0459f9928feb2353407b80c",
+    "mtime": 1791271004.3492029,
+    "ast_hash": "8c9ad560dc6cb76274989dc5f8c35a29",
     "semantic_hash": ""
   },
   "docs/APPUNTI_GUIDA.md": {
-    "mtime": 1791244179.5686836,
-    "ast_hash": "3aa893879f3d62ee902ec622c3debc8a",
+    "mtime": 1791271004.3498127,
+    "ast_hash": "aeadfe931a6c7b242bea39886339224f",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-06-aggiungi-layer.md": {
@@ -1930,28 +1930,53 @@
     "semantic_hash": ""
   },
   "docs/superpowers/specs/2026-10-06-aggiungi-layer-design.md": {
-    "mtime": 1791268645.785254,
-    "ast_hash": "11601d7718f6e982d5934d8bb2fa8770",
+    "mtime": 1791270100.7950554,
+    "ast_hash": "bdafa51d2c23fa0681b358911460a29b",
     "semantic_hash": ""
   },
   "js/aggiungi/albero.js": {
-    "mtime": 1791269114.8773246,
-    "ast_hash": "b035dac86f08e6d5314416fc71ec5507",
+    "mtime": 1791270495.5986083,
+    "ast_hash": "e30483dc9ff0e0e1293eeceb6c26c5d4",
     "semantic_hash": ""
   },
   "js/aggiungi/credenziali.js": {
-    "mtime": 1791269030.0841491,
-    "ast_hash": "796e41b66901e499205c61f512ae658c",
+    "mtime": 1791270406.800483,
+    "ast_hash": "76174a74a85ee982e9bd00c64605587c",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-credenziali.test.mjs": {
-    "mtime": 1791269029.98148,
-    "ast_hash": "72836e89c787f67c3858b2c9badd47fc",
+    "mtime": 1791270406.6069345,
+    "ast_hash": "01ccc37d938e3e58c55dd1edbcfa93ea",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-06-aggiungi-layer-albero.md": {
     "mtime": 1791268821.647396,
     "ast_hash": "bf67d6dffa74ab228d78994c801e0bf3",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/arcgis.js": {
+    "mtime": 1791270423.0379825,
+    "ast_hash": "1def38f93c53e11176caf332385e252f",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/wmts.js": {
+    "mtime": 1791270422.7291524,
+    "ast_hash": "d9cc61f6425af955b3dc0efa48b91520",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-arcgis.test.mjs": {
+    "mtime": 1791270436.326693,
+    "ast_hash": "0f1b7b39f14b2bacf7765fa64cea693c",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-wmts.test.mjs": {
+    "mtime": 1791270415.9160855,
+    "ast_hash": "839e814ff29f47a80a1019a13959a9bf",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-06-wmts-arcgis.md": {
+    "mtime": 1791270316.4965782,
+    "ast_hash": "0e3831dba17d29e9439775fac8c21e50",
     "semantic_hash": ""
   }
 }

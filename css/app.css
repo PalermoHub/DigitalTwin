@@ -1009,6 +1009,20 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 }
 .layer-sezione[open] { padding-bottom: 8px; }
 
+/* «Ordine layer in mappa»: una scheda con l'accento, perché si distingua dai gruppi di strati e si noti */
+.layer-sezione.ordine-strumento { margin: 8px 0 12px; border: 1px solid var(--accent); border-radius: var(--r-md); background: var(--accent-soft); }
+.ordine-strumento > summary { padding: 10px 12px; gap: 10px; }
+.ordine-strumento > summary::before { color: var(--accent-strong); }
+.ordine-ico { flex: none; display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: var(--r-pill); background: var(--accent); color: var(--accent-ink); }
+.ordine-testi { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.ordine-strumento > summary h2 { flex: none; color: var(--accent-strong); font-weight: 700; }
+.ordine-strumento > summary:hover h2 { color: var(--accent-strong); }
+.ordine-sotto { color: var(--text-muted); font-size: var(--fs-xs); font-weight: 400; }
+.ordine-conta { flex: none; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--r-pill); background: var(--accent); color: var(--accent-ink); font-size: var(--fs-2xs); font-weight: 700; line-height: 20px; text-align: center; }
+.ordine-conta[hidden] { display: none; }
+.ordine-strumento[open] { padding-bottom: 10px; }
+.ordine-strumento .strato-strumenti { padding: 8px 12px 0; }
+
 /* Icona del tab RNDT: pezzo di puzzle (img/puzzle.webp) usato come maschera, così segue il colore del tema */
 .icona-puzzle { display: block; flex: none; width: 18px; height: 18px; background: currentColor; -webkit-mask: url(../img/puzzle.webp) center / contain no-repeat; mask: url(../img/puzzle.webp) center / contain no-repeat; }
 
