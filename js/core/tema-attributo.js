@@ -1,5 +1,7 @@
 // Tematizzazione per attributo: parte pura (rilevamento dei campi, classi, tavolozze, espressione MapLibre, validazione).
 // Il pannello che la usa sta in pannello-attributo.js; l'applicazione alla mappa in tema.js.
+import { RAMPE_CRAMERI, RAMPE_DIVERGENTI } from './rampe-crameri.js';
+
 const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 const MAX_CATEGORIE = 200;
 const MAX_CLASSI = 9;
@@ -13,7 +15,15 @@ export const RAMPE = {
   Arancio: ['#fff5eb', '#fee6ce', '#fdd0a2', '#fdae6b', '#fd8d3c', '#f16913', '#d94801', '#a63603', '#7f2704'],
   Viola: ['#fcfbfd', '#efedf5', '#dadaeb', '#bcbddc', '#9e9ac8', '#807dba', '#6a51a3', '#54278f', '#3f007d'],
   'Rosso-Verde': ['#a50026', '#d73027', '#f46d43', '#fdae61', '#ffffbf', '#a6d96a', '#66bd63', '#1a9850', '#006837'],
+  ...RAMPE_CRAMERI,
 };
+
+// Gruppi per il selettore: ColorBrewer, Crameri sequenziali (uniformi per percezione, adatte al daltonismo), Crameri divergenti.
+export const GRUPPI_RAMPE = [
+  ['ColorBrewer', Object.keys(RAMPE).filter(n => !(n in RAMPE_CRAMERI))],
+  ['Crameri · sequenziali', Object.keys(RAMPE_CRAMERI).filter(n => !RAMPE_DIVERGENTI.includes(n))],
+  ['Crameri · divergenti (serve un valore di riferimento)', RAMPE_DIVERGENTI],
+];
 
 // Colori distinguibili per le categorie (Tableau 10 + 2), riusati in giro.
 export const TAVOLOZZA = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac', '#1f77b4', '#8c564b'];

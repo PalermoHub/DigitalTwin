@@ -706,6 +706,8 @@ label.sotto-voce:has(input:checked) .occhio { box-shadow: none; }
 .tema-attributo { display: grid; gap: 6px; padding-top: 4px; border-top: 1px solid var(--border); }
 .strato-tema select { min-width: 0; max-width: 11em; padding: 2px 4px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
 .strato-tema .tema-riga[hidden] { display: none; }
+.tema-anteprima-rampa { height: 10px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
+.tema-anteprima-rampa[hidden] { display: none; }
 .tema-campione { width: 36px; height: 14px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
 .strato-tema input[type=range] { width: 100%; margin: 0; accent-color: var(--accent); }
 .tema-azioni { display: flex; flex-wrap: wrap; gap: 6px; }

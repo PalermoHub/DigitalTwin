@@ -1,6 +1,6 @@
 // Sezione «Colora per attributo» del pannello Colori: sceglie un campo letto dalle feature visibili e lo colora
 // per categorie o in classi numeriche. Il risultato ({campo, tipo, ...}) lo salva e applica pannello-tema.js.
-import { rilevaAttributi, calcolaSoglie, etichetteClassi, coloriRampa, RAMPE, TAVOLOZZA } from './tema-attributo.js';
+import { rilevaAttributi, calcolaSoglie, etichetteClassi, coloriRampa, RAMPE, GRUPPI_RAMPE, TAVOLOZZA } from './tema-attributo.js';
 import { comeEsadecimale } from './tema.js';
 
 function selezione(testo, nome, opzioni) {
@@ -25,7 +25,18 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
   const modo = selezione('Tipo', 'tipo', [['categorie', 'Per categorie'], ['graduata', 'Graduata (numerico)']]);
   const classi = selezione('Classi', 'classi', Array.from({ length: 7 }, (_, i) => [String(i + 3), String(i + 3)]));
   const metodo = selezione('Metodo', 'metodo', [['quantili', 'Quantili'], ['intervalli', 'Intervalli uguali']]);
-  const rampa = selezione('Rampa', 'rampa', Object.keys(RAMPE).map(n => [n, n]));
+  const rampa = selezione('Rampa', 'rampa', []);
+  for (const [nome, rampe] of GRUPPI_RAMPE) {
+    const g = document.createElement('optgroup');
+    g.label = nome;
+    g.append(...rampe.map(n => new Option(n, n)));
+    rampa.select.append(g);
+  }
+  rampa.select.value = 'Blu';
+  const anteprima = document.createElement('div');
+  anteprima.className = 'tema-anteprima-rampa';
+  anteprima.setAttribute('aria-hidden', 'true');
+  const disegnaAnteprima = () => { anteprima.style.background = `linear-gradient(to right, ${RAMPE[rampa.select.value].join(', ')})`; };
   classi.select.value = '5';
   const aggiorna = document.createElement('button');
   aggiorna.type = 'button';
@@ -37,7 +48,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
   const msg = document.createElement('p');
   msg.className = 'tema-msg';
   msg.setAttribute('role', 'status');
-  el.append(titolo, campo.riga, modo.riga, classi.riga, metodo.riga, rampa.riga, aggiorna, voci, msg);
+  el.append(titolo, campo.riga, modo.riga, classi.riga, metodo.riga, rampa.riga, anteprima, aggiorna, voci, msg);
 
   let campi = new Map(); // campo → { valori, numeri, numerico } letto dalle feature in vista
   let ultimo = ''; // attributo mostrato nella lista, per non ricostruirla a ogni modifica
@@ -143,7 +154,8 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
       }
       mostraLista(a);
     }
-    classi.riga.hidden = metodo.riga.hidden = rampa.riga.hidden = modo.select.value !== 'graduata';
+    classi.riga.hidden = metodo.riga.hidden = rampa.riga.hidden = anteprima.hidden = modo.select.value !== 'graduata';
+    disegnaAnteprima();
   };
 
   rileva();
