@@ -35,8 +35,9 @@ function costruisciFoglio(map, immagine) {
     el('header', {}, el('h1', { textContent: 'Palermo Digital Twin' }),
       el('p', { textContent: `Stampa del ${data} · centro ${c.lat.toFixed(4)}, ${c.lng.toFixed(4)} · zoom ${map.getZoom().toFixed(1)}` })),
     el('img', { className: 'stampa-mappa', src: immagine, alt: 'Area di mappa visualizzata' }));
-  if (legende?.textContent.trim()) {
-    const copia = legende.cloneNode(true);
+  const copia = legende?.cloneNode(true);
+  copia?.querySelectorAll('[hidden]').forEach(n => n.remove()); // restano solo le legende dei layer accesi
+  if (copia?.textContent.trim()) {
     copia.removeAttribute('id');
     foglio.append(el('section', { className: 'stampa-legende' }, el('h2', { textContent: 'Legenda' }), copia));
   }
