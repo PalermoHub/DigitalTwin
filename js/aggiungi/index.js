@@ -26,12 +26,14 @@ export function collegaAggiungi(map, gruppo) {
     scrivi: s => salva(storage, s, CHIAVE_MIEI), anelli: () => anelli, notifica: segnala, archivioDati: archivioIndexedDB(),
     autorizzazione: url => credenziali.intestazione(ospiteDi(url)),
     protetto: url => controllo?.protetto(url) ?? false,
+    riscrivi: url => credenziali.conToken(url), // il token ArcGIS si aggiunge alla richiesta, mai all'URL del layer
   });
   controllo = creaControllo({ host, storage, credenziali });
   // i tile (WMS, XYZ) li chiede MapLibre: l'intestazione si aggiunge solo alle richieste dirette al nostro proxy
-  map.setTransformRequest((url, tipo) => {
+  map.setTransformRequest(url => {
     const auth = credenziali.perUrlProxy(PROXY_RNDT, url);
-    return auth ? { url, headers: { authorization: auth } } : { url };
+    const finale = credenziali.riscriviPerProxy(PROXY_RNDT, url);
+    return auth ? { url: finale, headers: { authorization: auth } } : { url: finale };
   });
 
   // Un file dal computer: legge, riconduce a GeoJSON WGS84 e lo aggiunge come layer. Gli errori si mostrano, non si lanciano.

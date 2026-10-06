@@ -1,16 +1,16 @@
 # Graph Report - DigitalTwin  (2026-10-06)
 
 ## Corpus Check
-- 309 files · ~687,701 words
+- 309 files · ~687,888 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 5861 nodes · 12367 edges · 247 communities (213 shown, 34 thin omitted)
+- 5862 nodes · 12368 edges · 253 communities (207 shown, 46 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 573 edges (avg confidence: 0.71)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2b7585aa`
+- Built from commit: `5d496e10`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -25,7 +25,7 @@
 - test_valida_dati.py
 - scheda-preferenze.js
 - ye
-- ea
+- U
 - pannello-tema.js
 - scheda.js
 - ls
@@ -35,7 +35,7 @@
 - app.js
 - ts
 - monumenti_kml.py
-- wa
+- o
 - shp.esm.min.js
 - test_geoimage.py
 - trasporto.js
@@ -45,13 +45,13 @@
 - ta
 - ws
 - controllo.js
-- .push
+- ft
 - proj4.js
 - Settore: Ufficio Sport, turismo e gestione impianti sportivi
 - Settore: Capo Area responsabile della pianificazione interventi sul sociale, dei servizi di base e disabilità, servizi sociali, contrasto alla povertà e servizi residenziali
 - field
-- monumenti.js
-- scheda-pai.js
+- urlDati
+- pai.js
 - ru
 - sessione.js
 - _scheda_su
@@ -68,12 +68,12 @@
 - T
 - .renderLayer
 - oa
-- .pop
+- an
 - openArcgis
 - incendi.js
 - r
 - Settore: Comandante Corpo di Polizia Municipale
-- dc
+- .get
 - Settore: Ufficio spese ed entrate
 - jszip.min.js
 - resize
@@ -93,38 +93,38 @@
 - popolazione.js
 - Settore: Ufficio condono, sanatorie edilizie e abusivismo
 - test_monumenti.py
-- rndt-host.test.mjs
+- host.js
 - A
 - Z
-- U
-- host.js
+- ki
+- area.js
 - esporta.js
 - scuole.js
 - xr
 - salvati.js
-- addToMap
+- openrndt-geolibre/index.js
 - trasformazioni.js
 - Ut
 - Analisi design — Digital Twin Palermo
 - Settore: Capo Area responsabile anagrafe, stato civile ed elettorato
-- qi
+- ds
 - Digital Twin di Palermo — inventario e piano
 - h
-- pai.js
-- openrndt-geolibre/index.js
+- Lt
+- t
 - Ht
 - fontanelle.js
 - scheda-omi.js
-- Ma
+- .createVertexBuffer
 - Digital Twin di Palermo — Fase 0 + Fase 1: design
-- Ua
+- Ya
 - Pannello «Aggiungi layer»: file e servizi XYZ, WMS, WFS
 - os
 - Settore: Ufficio di Staff Innovazione Digitale e Informatizzazione
 - Settore: Capo Area Responsabile risorse umane e reclutamento
 - File Structure
 - Istruzioni per Claude sul VPS IONOS (82.165.59.122)
-- Settore: Capo Area responsabile pianificazione interventi culturali, biblioteche e spazi etnoantropologici
+- indicatori.test.mjs
 - pai.py
 - fflate.esm.js
 - core/pannello.js
@@ -133,15 +133,15 @@
 - RIPARTENZA.md
 - is
 - pannello-attributo.js
-- .constructor
+- trasporto-orari.js
 - Settore: Ufficio autonomo gestione verde urbano, agricoltura urbana e rapporti con RESET
 - Digital Twin di Palermo
 - RangeRequestHandler
-- et
+- ct
 - Settore: Capo Area responsabile Suap, Commercio e Supporto tecnico, lavoro e concessioni suolo pubblico
 - Pagina
 - Struttura degli uffici del Comune di Palermo
-- info.js
+- rndt/index.js
 - package.json
 - guida_carosello2.py
 - Dati del Digital Twin di Palermo
@@ -150,10 +150,10 @@
 - Settore: Capo di Gabinetto
 - evidenza.js
 - Ic
-- Ya
+- scheda-trasporto.test.mjs
 - ot
 - _righe
-- wh
+- wi
 - overlay.js
 - File structure
 - catalogo.md
@@ -161,24 +161,24 @@
 - Settore: Capo Area Responsabile ICI/IMU/TASI
 - el
 - Sicurezza stradale (viabilità pericolosa) — design
-- hi
+- i
 - alberi.py
-- .get
+- .evaluate
 - Dove mettere codice e dati: GitHub, VPS IONOS o entrambi
 - geoimage/pannello.js
 - guida_video.py
 - _dati_trasporto
 - Settore: Capo Area Responsabile Patrimonio
-- g
+- .loadMatchingFeature
 - Review Focus
 - Catalogo RNDT nella scheda del luogo — design
-- a
+- za
 - geoimage/index.js
 - Settore: Capo Area responsabile Igiene e Salute, Benessere Animale – Canile Comunale, Politiche Abitative ed Assegnazione Erp
 - Struttura dei file
 - _dati_sicurezza
 - Trasporto pubblico AMAT (GTFS): design
-- palette.js
+- albero.js
 - Settore: Vice Comandante
 - Audit dati e caricamento — 2026-10-02
 - uffici_scrape.py
@@ -190,37 +190,37 @@
 - carosello5.py
 - search
 - Settore: Capo Area Responsabile pianificazione e coordinamento fondi extracomunali
-- an
+- un
 - costruisciPannello
 - guida_carosello4.py
 - _cerca_e_vai
 - export-geotiff.js
 - test_colonnine.py
-- kt
+- ye
 - uffici/README.md
 - Design
-- Ss
+- sicurezza-filtro.js
 - File Structure
 - W
 - j
 - test_guida_carosello.py
 - test_pannello_e_scheda_hanno_sfondo_chiaro_e_testo_a_contrasto_anche_con_sistema_scuro
-- w
+- xi
 - Barra sinistra a pannelli Implementation Plan
-- voci
+- S
 - colonnine.py
-- X
+- rs
 - build_gerarchia.py
 - File Structure
 - Incendi nel Comune di Palermo
-- .parse
+- .push
 - test_pai.py
-- .fire
+- q
 - Vincoli PAI nel Comune di Palermo
 - Geoimage nel pannello di destra
 - rndt-proxy.test.mjs
 - Layer RNDT: gruppo nella barra strati e caricamento di file dal computer
-- c
+- a
 - inflate
 - es
 - Catalogo RNDT
@@ -229,9 +229,9 @@
 - zip
 - constructor
 - AsyncDecompress
-- Area: Area della cultura, turismo e sport
+- Hl
 - addArcgisFeatures
-- popolazione-classifica.js
+- Settore: Capo Area responsabile pianificazione dei LL.PP. e manutenzioni
 - .e
 - cs
 - AsyncZipDeflate
@@ -246,18 +246,24 @@
 - mo
 - test_isole_calore.py
 - trasporto-vicino.test.mjs
+- qa
 - conftest.py
 - Geoimage: mappe storiche sulla base di Palermo
 - trasporto-filtro.js
-- b
-- urlDati
-- ds
+- Settore: Ufficio Edilizia Pubblica ed Impianti Sportivi
+- aggiungi/index.js
+- .recalculate
+- Mc
 - zs
-- Settore: Ufficio di pianificazione e monitoraggio delle attività sociali e delle emergenze sociali
+- ro
+- Tu
 - hs
+- ks
+- ys
 - isole-calore/README.md
 - Aggiungi layer
-- proxy.js
+- ZipFinto
+- _incendio
 - jc
 - Area: Area Servizi Demografici e Decentramento
 
@@ -276,23 +282,23 @@
 ## Surprising Connections (you probably didn't know these)
 - `corpo()` --indirect_call--> `testo()`  [INFERRED]
   tests/js/aggiungi-host.test.mjs → js/layers/scheda-terreno.js
+- `corpo()` --indirect_call--> `testo()`  [INFERRED]
+  tests/js/rndt-host.test.mjs → js/layers/scheda-terreno.js
 - `mostraLinea()` --indirect_call--> `mappa()`  [INFERRED]
   js/layers/trasporto.js → tests/js/geoimage-overlay.test.mjs
 - `costruisci()` --indirect_call--> `m()`  [INFERRED]
   tests/js/aggiungi-host.test.mjs → js/vendor/maplibre-gl.js
 - `costruisci()` --indirect_call--> `m()`  [INFERRED]
   tests/js/rndt-host.test.mjs → js/vendor/maplibre-gl.js
-- `X()` --references--> `K`  [EXTRACTED]
-  js/vendor/maplibre-gl.js → tests/js/monumenti.test.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (247 total, 34 thin omitted)
+## Communities (253 total, 46 thin omitted)
 
 ### Community 0 - "$"
 Cohesion: 0.02
-Nodes (84): $, addControl(), addLayer(), addSprite(), ah(), ar(), ch, _createDelegatedListener() (+76 more)
+Nodes (91): $, addLayer(), addSprite(), ah(), ar(), ch, clearMetrics(), completeTask() (+83 more)
 
 ### Community 1 - "monumenti.py"
 Cohesion: 0.07
@@ -315,8 +321,8 @@ Cohesion: 0.05
 Nodes (82): apri(), apri(blocca=None) -> Pagina. `blocca` è un pattern di URL da far fallire (vince…, _pai(), Uso «UNK» dell'edificato: dove l'edificio coincide con un poligono di scuola,…, Un elemento del PAI di Palermo e un punto sicuramente dentro il suo perimetro…, Una sezione censuaria con temperatura 2025 e un punto sicuramente dentro (dallo…, _sede_uffici(), _sezione_calda() (+74 more)
 
 ### Community 6 - "colonnine.js"
-Cohesion: 0.09
-Nodes (40): accesi, aggiornaDalVivo(), aggiungiLayer(), aggiungiSorgenti(), applicaFiltri(), avvia(), caselle, completo() (+32 more)
+Cohesion: 0.07
+Nodes (49): accesi, aggiornaDalVivo(), aggiungiLayer(), aggiungiSorgenti(), applicaFiltri(), avvia(), caselle, completo() (+41 more)
 
 ### Community 7 - "test_valida_dati.py"
 Cohesion: 0.05
@@ -324,47 +330,55 @@ Nodes (61): Fonte, data e licenza dei file usati dal viewer (chiave = percorso i
 
 ### Community 8 - "scheda-preferenze.js"
 Cohesion: 0.14
-Nodes (26): creaPannelloPreferenze(), applicaPreferenze(), azzera(), CHIAVE_STORAGE, chiaveRiga(), commutaRiga(), commutaSezione(), con() (+18 more)
+Nodes (25): creaPannelloPreferenze(), applicaPreferenze(), azzera(), CHIAVE_STORAGE, chiaveRiga(), commutaRiga(), commutaSezione(), con() (+17 more)
 
 ### Community 9 - "ye"
-Cohesion: 0.13
-Nodes (27): A(), applyServerStyle(), ar(), be(), countFeatures(), cr(), de(), dr() (+19 more)
+Cohesion: 0.14
+Nodes (25): A(), applyServerStyle(), ar(), be(), countFeatures(), cr(), dr(), Ee() (+17 more)
+
+### Community 10 - "U"
+Cohesion: 0.07
+Nodes (5): ae, be, ee(), Eu(), U()
 
 ### Community 11 - "pannello-tema.js"
-Cohesion: 0.18
-Nodes (24): ICONE, svgIcona(), campoColore(), creaPannelloTema(), haParti(), partiVuote(), registro, storageBrowser() (+16 more)
+Cohesion: 0.21
+Nodes (22): campoColore(), creaPannelloTema(), haParti(), partiVuote(), registro, storageBrowser(), applicaTema(), espressioneAttributo() (+14 more)
 
 ### Community 12 - "scheda.js"
-Cohesion: 0.16
-Nodes (28): acceseDaScheda, adattaVistaMappa(), aggiornaUrl(), BREVI, collegaScheda(), copiaTesto(), creaInterruttoreStrato(), disegnaAccordion() (+20 more)
+Cohesion: 0.17
+Nodes (27): acceseDaScheda, adattaVistaMappa(), aggiornaUrl(), BREVI, collegaScheda(), copiaTesto(), creaInterruttoreStrato(), disegnaAccordion() (+19 more)
 
 ### Community 14 - "sicurezza.js"
-Cohesion: 0.10
-Nodes (36): righe(), GRAVITA, gruppoVia(), ha(), NOTA_CLASSIFICA, NOTA_DATI, num(), pai() (+28 more)
+Cohesion: 0.13
+Nodes (29): righe(), GRAVITA, gruppoVia(), ha(), NOTA_CLASSIFICA, NOTA_DATI, num(), pai() (+21 more)
 
 ### Community 15 - "de"
-Cohesion: 0.07
-Nodes (9): addSource(), ce, de, getLayer(), getLayoutProperty(), getPaintProperty(), getSky(), isSourceLoaded() (+1 more)
+Cohesion: 0.04
+Nodes (21): V(), addControl(), addSource(), ce, de, getDefaultPosition(), getFeatureState(), getGlyphs() (+13 more)
 
 ### Community 16 - "pmtiles.js"
 Cohesion: 0.11
-Nodes (33): rt(), add(), At(), b(), Be(), bt(), constructor(), $e() (+25 more)
+Nodes (34): rt(), add(), At(), b(), Be(), bt(), constructor(), $e() (+26 more)
 
 ### Community 17 - "app.js"
 Cohesion: 0.08
-Nodes (28): apriStrati, catalogoPromessa, map, MODULI, riduciLegenda, STRATI, CENTRO, DATI (+20 more)
+Nodes (31): apriStrati, catalogoPromessa, map, MODULI, riduciLegenda, STRATI, CENTRO, DATI (+23 more)
 
 ### Community 18 - "ts"
-Cohesion: 0.06
-Nodes (9): ac(), _cancelRenderFrame(), e(), project(), _requestRenderFrame(), setMaxZoom(), setMinZoom(), ts (+1 more)
+Cohesion: 0.04
+Nodes (10): calculateCameraOptionsFromTo(), _cancelRenderFrame(), e(), getCanvas(), project(), _requestRenderFrame(), setMaxZoom(), setMinZoom() (+2 more)
 
 ### Community 19 - "monumenti_kml.py"
 Cohesion: 0.09
 Nodes (25): abbina_portale(), _chiavi(), classifica(), _corrispondenza(), deduplica(), _file_foto(), foto(), leggi_kml() (+17 more)
 
+### Community 20 - "o"
+Cohesion: 0.13
+Nodes (11): Ao, bo(), jo(), Ko(), lo(), No(), o(), uo() (+3 more)
+
 ### Community 21 - "shp.esm.min.js"
-Cohesion: 0.07
-Nodes (47): draw(), aa(), as(), Bi(), cs(), ct(), ea(), es() (+39 more)
+Cohesion: 0.06
+Nodes (53): aa(), as(), b(), Bi(), ct(), ea(), es(), et() (+45 more)
 
 ### Community 22 - "test_geoimage.py"
 Cohesion: 0.15
@@ -372,91 +386,87 @@ Nodes (32): _angoli(), _apri_geoimage(), _carica(), _compressione(), _controlla_
 
 ### Community 23 - "trasporto.js"
 Cohesion: 0.10
-Nodes (24): collega(), fornitori, nascondi(), registraTooltip(), raggruppaLinee(), righe(), tooltipFermata(), tooltipLinee() (+16 more)
+Nodes (22): aggiungiSorgenti(), creaLegenda(), ctx, el(), fermate, geometrie, percorso(), L (+14 more)
 
 ### Community 24 - "Guida professionale del Digital Twin — design"
 Cohesion: 0.15
 Nodes (12): Accessibilità, Architettura, Assunzioni (da correggere se sbagliate), Cosa spiega la guida, Flusso di lavoro, Fuori ambito, Guida professionale del Digital Twin — design, Obiettivo (+4 more)
 
 ### Community 25 - "territorio.js"
-Cohesion: 0.12
-Nodes (22): dopoClic(), filtroInsieme(), gruppoDi(), voceFiltro(), voceStrato(), piuVicino(), presente(), tutti() (+14 more)
+Cohesion: 0.09
+Nodes (30): urlTileset(), dopoClic(), filtroInsieme(), gruppoDi(), voceFiltro(), voceStrato(), ELEVATION_STOPS, HILLSHADE_COLORS (+22 more)
 
 ### Community 27 - "ta"
 Cohesion: 0.05
-Nodes (7): calculateCameraOptionsFromTo(), d(), gl(), L, ml(), ta, wl()
+Nodes (7): as, d(), gl(), L, ml(), Ss, ta
 
 ### Community 28 - "ws"
-Cohesion: 0.11
-Nodes (5): bs, i(), isZooming(), ws, xs
+Cohesion: 0.07
+Nodes (8): bs, getCanvasContainer(), getContainer(), isZooming(), la(), wa, ws, xs
 
 ### Community 29 - "controllo.js"
-Cohesion: 0.19
-Nodes (22): creaControllo(), filtraServizi(), bboxDi(), capabilitiesWfs(), capabilitiesWms(), CRS_WEB, crsDi(), decodifica() (+14 more)
+Cohesion: 0.21
+Nodes (20): bboxDi(), capabilitiesWfs(), capabilitiesWms(), CRS_WEB, crsDi(), decodifica(), ENTITA, erroreDelServizio() (+12 more)
 
-### Community 30 - ".push"
-Cohesion: 0.05
-Nodes (12): Ao, bo(), ei(), ft, jo(), No(), o(), _setupPainter() (+4 more)
+### Community 30 - "ft"
+Cohesion: 0.06
+Nodes (4): ft, kt(), vi, Xt
 
 ### Community 31 - "proj4.js"
 Cohesion: 0.11
 Nodes (32): at(), b(), c(), d(), e(), et(), f(), g() (+24 more)
 
 ### Community 32 - "Settore: Ufficio Sport, turismo e gestione impianti sportivi"
-Cohesion: 0.12
-Nodes (17): Settore: Ufficio Sport, turismo e gestione impianti sportivi, U.O.: U.O. Cassa-Assegnazione utilizzo impianti sportivi e palestre scolastiche, U.O.: U.O. Gestione amministrativo contabile, U.O.: U.O. Gestione Impianti Sportivi -Manifestazioni Sportive e Protocollo, U.O.: U.O. Gestione Personale, Servizi generali e Segreteria di Direzione, U.O.: U.O. Gestione Tecnica Impianti Sportivi, U.O.: U.O. Impianto PalaMangano, U.O.: U.O. Impianto PalaOreto (+9 more)
+Cohesion: 0.05
+Nodes (42): Area: Area della cultura, turismo e sport, Settore: Capo Area responsabile pianificazione interventi culturali, biblioteche e spazi etnoantropologici, Settore: Ufficio musei e spazi espositivi, Settore: Ufficio Sport, turismo e gestione impianti sportivi, Settore: Ufficio teatri, spettacoli e coordinamento eventi, U.O.: U.O. Biblioteche Decentrate, U.O.: U.O. Cantieri Culturali alla Zisa, U.O.: U.O. Cassa-Assegnazione utilizzo impianti sportivi e palestre scolastiche (+34 more)
 
 ### Community 33 - "Settore: Capo Area responsabile della pianificazione interventi sul sociale, dei servizi di base e disabilità, servizi sociali, contrasto alla povertà e servizi residenziali"
 Cohesion: 0.06
 Nodes (33): Settore: Capo Area responsabile della pianificazione interventi sul sociale, dei servizi di base e disabilità, servizi sociali, contrasto alla povertà e servizi residenziali, U.O.: U.O. A Sostegno, U.O.: U.O. Affidamento familiare – Adozioni nazionale e internazionali, U.O.: U.O. Casa dei diritti, U.O.: U.O. Città dei ragazzi, gruppo tecnico e magazzini, U.O.: U.O. Contrasto alla grave marginalità adulta, U.O.: U.O. Coordinamento Servizi Sociali, U.O.: U.O. DesTEENazione (+25 more)
 
 ### Community 34 - "field"
-Cohesion: 0.14
-Nodes (27): activeChips(), afterReset(), buildForm(), clearButton(), clearField(), clearFilters(), excludeOrganisation(), field() (+19 more)
+Cohesion: 0.13
+Nodes (35): activeChips(), advancedCount(), afterReset(), buildForm(), buildSearchBar(), buildSettings(), changeSort(), clearButton() (+27 more)
 
-### Community 35 - "monumenti.js"
+### Community 35 - "urlDati"
+Cohesion: 0.09
+Nodes (31): pmt(), urlDati(), occhio(), aggiungiSorgenti(), aggiungiSorgenti(), aggiungiLayer(), aggiungiSorgenti(), avvia() (+23 more)
+
+### Community 36 - "pai.js"
 Cohesion: 0.10
-Nodes (26): occhio(), aggiungiLayer(), avvia(), caselle, collegaPopup(), colore, completo(), contenutoPopup() (+18 more)
-
-### Community 36 - "scheda-pai.js"
-Cohesion: 0.17
-Nodes (20): chiavePai(), dataIt(), E_PROVVEDIMENTO(), FONTE, gravita(), lunghezza(), luogo(), modelloPopup() (+12 more)
+Nodes (41): accesi, aggiornaLegenda(), aggiungiLayer(), aggiungiTema(), applicaFiltro(), avvia(), campione(), campioneMatch() (+33 more)
 
 ### Community 37 - "ru"
-Cohesion: 0.09
-Nodes (9): fi, Hu(), ju, Ou, pi(), ru(), Ti(), yu() (+1 more)
+Cohesion: 0.15
+Nodes (6): Hu(), ju, Ou, ru(), yu(), Zu()
 
 ### Community 38 - "sessione.js"
-Cohesion: 0.15
-Nodes (19): CHIAVE, elimina(), ID_IMMAGINE, leggi(), numero(), punto(), quattro(), salva() (+11 more)
+Cohesion: 0.12
+Nodes (22): CHIAVE, elimina(), ID_IMMAGINE, leggi(), numero(), punto(), quattro(), salva() (+14 more)
 
 ### Community 39 - "_scheda_su"
 Cohesion: 0.09
-Nodes (25): _attendi_fermo(), Porta la mappa al centro, sceglie un punto davvero dentro `layer_hit` e clicca., _scheda_su(), _sezioni_scheda(), test_clic_sulla_mappa_avvicina_lo_zoom_e_centra_il_punto(), test_con_scheda_aperta_toolbar_ricerca_e_legenda_non_si_sovrappongono(), test_icone_delle_altre_sezioni(), test_la_scheda_della_sezione_mostra_gli_indicatori_dell_anno_attivo() (+17 more)
+Nodes (24): _attendi_fermo(), Porta la mappa al centro, sceglie un punto davvero dentro `layer_hit` e clicca., _scheda_su(), _sezioni_scheda(), test_clic_sulla_mappa_avvicina_lo_zoom_e_centra_il_punto(), test_con_scheda_aperta_toolbar_ricerca_e_legenda_non_si_sovrappongono(), test_la_scheda_della_sezione_mostra_gli_indicatori_dell_anno_attivo(), test_le_parti_espandibili_si_riconoscono_come_cliccabili() (+16 more)
 
 ### Community 40 - "File Structure"
 Cohesion: 0.10
 Nodes (20): Digital Twin di Palermo — Fase 0 + Fase 1 Implementation Plan, File Structure, Global Constraints, poi aprire http://127.0.0.1:8000/index.html, Review Focus, Self-Review (eseguita), Task 0: Repository, strumenti e server con Range, Task 10: Terreno, elevazione e griglia DTM (aggiunto su richiesta dell'utente) (+12 more)
 
 ### Community 41 - "ga"
-Cohesion: 0.06
-Nodes (6): ga, Ha(), Ka(), na, xa(), za
+Cohesion: 0.10
+Nodes (3): ga, Mi(), xa()
 
 ### Community 42 - "base.js"
 Cohesion: 0.21
 Nodes (10): aggiungiLayer(), GRUPPI, idPositron, miniatura(), pannello(), RASTER, scegli(), stiliVettoriali (+2 more)
 
 ### Community 43 - "Area: Area dei Lavori Pubblici e Manutenzioni"
-Cohesion: 0.05
-Nodes (38): Area: Area dei Lavori Pubblici e Manutenzioni, Settore: Capo Area responsabile pianificazione dei LL.PP. e manutenzioni, Settore: Gestione amministrativa COIME, Settore: Ufficio autoparco, programmazione e gestione attività di manutenzione a supporto del Capo Area per il coordinamento tecnico COIME e cantiere comunale, Settore: Ufficio Edilizia Pubblica ed Impianti Sportivi, Settore: Ufficio illuminazione pubblica e impianti tecnologici, Settore: Ufficio infrastrutture viarie e per la mobilità, Settore: Ufficio per il dissesto idrogeologico, servizi a rete idrico-fognari ed Espropriazioni (+30 more)
+Cohesion: 0.10
+Nodes (21): Area: Area dei Lavori Pubblici e Manutenzioni, Settore: Gestione amministrativa COIME, Settore: Ufficio autoparco, programmazione e gestione attività di manutenzione a supporto del Capo Area per il coordinamento tecnico COIME e cantiere comunale, Settore: Ufficio illuminazione pubblica e impianti tecnologici, Settore: Ufficio infrastrutture viarie e per la mobilità, Settore: Ufficio per il dissesto idrogeologico, servizi a rete idrico-fognari ed Espropriazioni, Settore: Ufficio tecnico ERP, U.O.: U.O. Attività di Supporto alla Manutenzione Stradale (+13 more)
 
 ### Community 44 - "uffici.js"
 Cohesion: 0.10
 Nodes (32): conteggio(), ETICHETTA, modelloPopupSede(), nUffici(), ORDINE, raggruppaPerArea(), riga(), ufficio() (+24 more)
-
-### Community 45 - ".reset"
-Cohesion: 0.05
-Nodes (4): ps, qa(), rs, S()
 
 ### Community 46 - "Settore: Capo area responsabile servizi cimiteriali"
 Cohesion: 0.08
@@ -471,40 +481,40 @@ Cohesion: 0.13
 Nodes (37): classifica_vie(), _con_tasso(), _fc(), _livello(), main(), _pmtiles(), Una riga per via con nome: incidenti (solo snap affidabile), mortali, km, punto…, {nome via: {rango, gravita_km, mortali, incidenti, km}} per le `top` vie con… (+29 more)
 
 ### Community 49 - "scheda-modello.js"
-Cohesion: 0.16
-Nodes (14): aggiungiGruppo(), conContenuto(), GENERICHE, maiuscoleItaliane(), MANCANTE, NOTA_LEGALE, PARTICELLE, pieno() (+6 more)
+Cohesion: 0.15
+Nodes (16): aggiungiGruppo(), conContenuto(), GENERICHE, maiuscoleItaliane(), MANCANTE, NOTA_LEGALE, PARTICELLE, pieno() (+8 more)
+
+### Community 50 - "T"
+Cohesion: 0.07
+Nodes (9): addImage(), b(), getImage(), getImageData(), k(), loadImage(), p(), T() (+1 more)
 
 ### Community 51 - ".renderLayer"
-Cohesion: 0.07
-Nodes (8): Aa, da(), ec(), f(), ia, Sa, va(), Yi
+Cohesion: 0.05
+Nodes (17): Aa, ac(), ea, f(), Fa(), g(), getPaintProperty(), getSource() (+9 more)
 
-### Community 52 - "oa"
-Cohesion: 0.07
-Nodes (3): Ke, Lc(), oa
-
-### Community 53 - ".pop"
-Cohesion: 0.12
-Nodes (8): fh(), hh, Ih(), Mh, ph(), pop(), push(), zh()
+### Community 53 - "an"
+Cohesion: 0.06
+Nodes (23): an(), en(), hh, jn(), kn(), kr(), ln(), Mh (+15 more)
 
 ### Community 54 - "openArcgis"
 Cohesion: 0.10
-Nodes (35): addGeoJson(), b(), dt(), er(), ft(), gt(), he(), j() (+27 more)
+Nodes (36): addGeoJson(), b(), dt(), er(), ft(), gt(), he(), j() (+28 more)
 
 ### Community 55 - "incendi.js"
 Cohesion: 0.15
-Nodes (23): aggiungiLayer(), anni, applicaFiltro(), avvia(), contenutoPopup(), creaLegenda(), distinti(), el() (+15 more)
+Nodes (24): aggiungiLayer(), aggiungiSorgenti(), anni, applicaFiltro(), avvia(), contenutoPopup(), creaLegenda(), distinti() (+16 more)
 
 ### Community 56 - "r"
 Cohesion: 0.08
-Nodes (8): _down(), getCanvas(), Ns, r(), setMaxPitch(), setMinPitch(), _up(), Bs()
+Nodes (8): _down(), Ns, push(), r(), setMaxPitch(), setMinPitch(), _up(), Bs()
 
 ### Community 57 - "Settore: Comandante Corpo di Polizia Municipale"
 Cohesion: 0.05
 Nodes (38): Settore: Comandante Corpo di Polizia Municipale, U.O.: U.O. Aliquota P.M. presso il Tribunale per i minorenni, U.O.: U.O. Aliquota P.M. presso tribunale, U.O.: U.O. Armeria, U.O.: U.O Benessere animale – Comandante Corpo di Polizia Municipale, U.O.: U.O. Centrale comunicazioni – Comando operativo – Richiesta interventi rimozione forzata, U.O.: U.O. Controlli ambientali e Veicoli abbandonati, U.O.: U.O. Gestione e custodia veicoli (+30 more)
 
-### Community 58 - "dc"
-Cohesion: 0.08
-Nodes (3): dc, gt(), xi()
+### Community 58 - ".get"
+Cohesion: 0.06
+Nodes (10): cc(), dc, ec(), gt(), m(), vh(), wh(), xh() (+2 more)
 
 ### Community 59 - "Settore: Ufficio spese ed entrate"
 Cohesion: 0.06
@@ -514,17 +524,13 @@ Nodes (31): Area: Ragioneria Generale, Settore: Ragioniere Generale, Settore: Uf
 Cohesion: 0.24
 Nodes (22): A(), c(), d(), f(), G(), h(), i(), j() (+14 more)
 
-### Community 61 - "resize"
-Cohesion: 0.15
-Nodes (4): ks, resize(), setPixelRatio(), ys
-
 ### Community 62 - "Settore: Ufficio per la scuola dell’obbligo e contrasto alla dispersione scolastica"
 Cohesion: 0.07
 Nodes (30): Area: Area della Istruzione e Formazione, Settore: Capo Area responsabile pianificazione dell’Istruzione e Formazione, Settore: Ufficio Edilizia Scolastica, Settore: Ufficio per la scuola dell’obbligo e contrasto alla dispersione scolastica, Settore: Ufficio Servizi Educativi e Scuola dell’Infanzia 0-6 anni, U.O.: U.O. Approvvigionamento, U.O.: U.O. Assistenza Specialistica, U.O.: U.O. Contributi 0/6 (+22 more)
 
 ### Community 63 - "geometria.js"
-Cohesion: 0.17
-Nodes (14): centro(), copia(), cosLat(), geoAPixel(), passo(), postoRotazione(), ruota(), scala() (+6 more)
+Cohesion: 0.15
+Nodes (14): angoliIniziali(), centro(), copia(), cosLat(), geoAPixel(), passo(), postoRotazione(), ruota() (+6 more)
 
 ### Community 64 - "alberi.js"
 Cohesion: 0.20
@@ -536,19 +542,19 @@ Nodes (10): File Structure, Global Constraints, Guida professionale — Implemen
 
 ### Community 66 - "gtfs.py"
 Cohesion: 0.05
-Nodes (43): chiave_sezione(), codifica_civici(), codifica_classifica(), codifica_orari(), codifica_popolazione(), main(), _primo(), Versioni compatte dei dati tabellari, che il viewer scarica al posto dei JSON… (+35 more)
+Nodes (44): chiave_sezione(), codifica_civici(), codifica_classifica(), codifica_orari(), codifica_popolazione(), main(), _primo(), Versioni compatte dei dati tabellari, che il viewer scarica al posto dei JSON… (+36 more)
 
 ### Community 67 - "Settore: Ufficio autonomo circoscrizioni e postazioni decentrate"
 Cohesion: 0.07
 Nodes (29): Settore: Ufficio autonomo circoscrizioni e postazioni decentrate, U.O.: U.O. Circ. I – Direzione/Organi Istituzionali, U.O.: U.O. Circ. I – Sportello Polifunzionale, U.O.: U.O. Circ. II – Direzione/Organi Istituzionali, U.O.: U.O. Circ. II – Sportello Polifunzionale, U.O.: U.O. Circ. III – Direzione/Organi Istituzionali, U.O.: U.O. Circ. III – Sportello Polifunzionale, U.O.: U.O. Circ. IV – Direzione/Organi Istituzionali (+21 more)
 
 ### Community 68 - "importa.js"
-Cohesion: 0.12
-Nodes (25): bottone(), campo(), creaAlbero(), el(), ICONE, nodo(), nuovoEsito(), TIPI (+17 more)
+Cohesion: 0.18
+Nodes (17): controllaGradi(), daCsv(), daGeoJson(), estensione(), ESTENSIONI, GEOMETRIE, importaFile(), nomeLayer() (+9 more)
 
 ### Community 69 - "mt"
-Cohesion: 0.15
-Nodes (22): it, at(), bt(), ct(), F(), ht(), I(), it() (+14 more)
+Cohesion: 0.22
+Nodes (17): at(), ct(), de(), F(), ht(), I(), it(), jt() (+9 more)
 
 ### Community 70 - "Settore: Ufficio supporto generale e procedure sanzionatorie"
 Cohesion: 0.07
@@ -567,52 +573,48 @@ Cohesion: 0.05
 Nodes (38): Area: Uffici non collocati, Settore: Sportelli polifunzionali, Settore: U.O. Piani attuativi, programmi costruttivi, ERP, rapporti con IACP, Settore: U.O. Pianificazione aree con vincoli decaduti. Attuazione piano ristrutturazione rete distribuzione carburanti, Art. 4 L.R. 16/2016, Settore: U.O. Protocollo Urbanistica, Settore: U.O. Segreteria Assessore – Polo Tecnico e ex Noviziato dei Crociferi, Settore: U.O. Servizi amministrativi e Segreteria, Settore: U.O. Staff supporto economico finanziario (+30 more)
 
 ### Community 75 - "popolazione.js"
-Cohesion: 0.08
-Nodes (27): INDICATORI, SOPRA_64, SOTTO_15, densityLegendStops(), densityStops(), applica(), avvia(), carica() (+19 more)
+Cohesion: 0.07
+Nodes (37): CONFINI_LABEL_SINGULAR, CONFINI_LEVEL_KEYS, CONFINI_LEVELS, confiniStyle(), DATA_COLORS, DENSITY_LABELS, DENSITY_RAMPS, densityLegendStops() (+29 more)
 
 ### Community 76 - "Settore: Ufficio condono, sanatorie edilizie e abusivismo"
 Cohesion: 0.08
 Nodes (26): Area: Area Urbanistica della rigenerazione urbana, della mobilità e del centro storico, Settore: Capo Area responsabile della pianificazione urbanistica, Settore: Ufficio condono, sanatorie edilizie e abusivismo, Settore: Ufficio del centro storico per la progettazione, lavori e riqualificazione di beni immobili di interesse storico monumentale, Settore: Ufficio per la rigenerazione urbana e la qualità dello spazio pubblico e dell’abitare – aree monumentali e pedonali, Settore: Ufficio pianificazione della mobilità sostenibile, U.O.: U.O. Affari Generali e Archivio Abusivismo, U.O.: U.O. Affari Generali e Archivio Condono (+18 more)
 
-### Community 78 - "rndt-host.test.mjs"
-Cohesion: 0.12
-Nodes (15): classe(), fmt(), ha(), riga(), testo(), voceTerreno(), voci(), TETTO_DATI (+7 more)
+### Community 78 - "host.js"
+Cohesion: 0.16
+Nodes (16): archivioInMemoria(), COLORI, creaHost(), hash(), TETTO_DATI, TETTO_WFS, urlProxy(), corpo() (+8 more)
 
-### Community 81 - "U"
-Cohesion: 0.05
-Nodes (13): Ai(), completeTask(), ee(), Eu(), k(), ki(), Mi(), process() (+5 more)
+### Community 81 - "ki"
+Cohesion: 0.06
+Nodes (5): Ai(), Ke, ki(), sendAsync(), si()
 
-### Community 82 - "host.js"
-Cohesion: 0.17
-Nodes (16): BBOX_PALERMO, CENTRO_PALERMO, contieneCentro(), dentroAnello(), dentroConfine(), filtraSuConfine(), intersezione(), SOGLIA_FILTRO (+8 more)
+### Community 82 - "area.js"
+Cohesion: 0.19
+Nodes (14): BBOX_PALERMO, CENTRO_PALERMO, contieneCentro(), dentroAnello(), dentroConfine(), filtraSuConfine(), intersezione(), SOGLIA_FILTRO (+6 more)
 
 ### Community 83 - "esporta.js"
-Cohesion: 0.17
-Nodes (21): caricaImg(), collegaEsporta(), creaKmz(), escXml(), estensioneWorldFile(), geojsonGcp(), creaGeoTiff(), definisciSr() (+13 more)
+Cohesion: 0.24
+Nodes (18): caricaImg(), collegaEsporta(), creaKmz(), escXml(), estensioneWorldFile(), geojsonGcp(), kml(), nomeBase() (+10 more)
 
 ### Community 84 - "scuole.js"
-Cohesion: 0.16
-Nodes (23): chiaveLuogo(), modelloPopupScuola(), righe(), righeScuola(), righeSeggio(), righeSeggioInScuola(), viaCivico(), voceIndirizzo() (+15 more)
+Cohesion: 0.13
+Nodes (26): chiaveLuogo(), voci(), modelloPopupScuola(), righe(), righeScuola(), righeSeggio(), righeSeggioInScuola(), viaCivico() (+18 more)
 
 ### Community 85 - "xr"
-Cohesion: 0.05
-Nodes (22): Cl(), cr(), er(), He(), hr(), ir(), Je(), kr() (+14 more)
+Cohesion: 0.07
+Nodes (17): Cl(), cr(), er(), He(), hr(), ir(), Je(), lr() (+9 more)
 
 ### Community 86 - "salvati.js"
-Cohesion: 0.13
-Nodes (14): aggiungiServizio(), CHIAVE_SERVIZI, idServizio(), leggiServizi(), rimuoviServizio(), salvaServizi(), TETTO_SERVIZI, TIPI (+6 more)
+Cohesion: 0.18
+Nodes (13): aggiungiServizio(), CHIAVE_SERVIZI, filtraServizi(), idServizio(), leggiServizi(), rimuoviServizio(), salvaServizi(), TETTO_SERVIZI (+5 more)
 
-### Community 87 - "addToMap"
-Cohesion: 0.10
-Nodes (28): activate(), addToMap(), applyFilters(), clear(), destroy(), ensure(), g(), hideTooltip() (+20 more)
+### Community 87 - "openrndt-geolibre/index.js"
+Cohesion: 0.07
+Nodes (49): activate(), addToMap(), applyFilters(), areaOf(), clear(), Cn(), copyForAgent(), copyQuery() (+41 more)
 
 ### Community 88 - "trasformazioni.js"
-Cohesion: 0.22
-Nodes (14): riproietta(), collegaGcp(), applica(), calcolaAffine(), calcolaPoly2(), calcolaTrasformazione(), inversa(), inversaAffine() (+6 more)
-
-### Community 89 - "Ut"
-Cohesion: 0.05
-Nodes (3): at, Lt(), Ut()
+Cohesion: 0.23
+Nodes (13): collegaGcp(), applica(), calcolaAffine(), calcolaPoly2(), calcolaTrasformazione(), inversa(), inversaAffine(), inversaPoly2() (+5 more)
 
 ### Community 90 - "Analisi design — Digital Twin Palermo"
 Cohesion: 0.22
@@ -630,17 +632,9 @@ Nodes (10): 1. Obiettivo (da confermare), 2. Inventario dati già disponibili, 2
 Cohesion: 0.12
 Nodes (4): h(), _isOutOfMapMaxBounds(), pc, _updateCircleRadius()
 
-### Community 95 - "pai.js"
-Cohesion: 0.19
-Nodes (22): accesi, aggiornaLegenda(), aggiungiLayer(), aggiungiTema(), applicaFiltro(), avvia(), campione(), campioneMatch() (+14 more)
-
-### Community 96 - "openrndt-geolibre/index.js"
-Cohesion: 0.08
-Nodes (37): An(), areaOf(), buildResultsHead(), changeSort(), clearResults(), Cn(), copyForAgent(), copyQuery() (+29 more)
-
-### Community 97 - "Ht"
-Cohesion: 0.12
-Nodes (3): Ht, nt(), removeControl()
+### Community 96 - "t"
+Cohesion: 0.25
+Nodes (11): An(), H(), In(), jn(), kn(), kt(), Ln(), Nn() (+3 more)
 
 ### Community 98 - "fontanelle.js"
 Cohesion: 0.20
@@ -650,13 +644,13 @@ Nodes (14): aggiungiLayer(), aggiungiSorgenti(), avvia(), collegaPopup(), comple
 Cohesion: 0.29
 Nodes (9): intervallo(), it(), numero(), pulisci(), SUPERFICIE, voceZona(), vociOmi(), comune (+1 more)
 
-### Community 100 - "Ma"
-Cohesion: 0.10
-Nodes (4): Ca, Ma(), Pa, querySourceFeatures()
-
 ### Community 101 - "Digital Twin di Palermo — Fase 0 + Fase 1: design"
 Cohesion: 0.20
 Nodes (9): 1. Obiettivo e ambito, 2. Esito della validazione dati (fase 0, già eseguita in sola lettura), 3. Architettura, 4. Funzioni del viewer (fase 1), 5. Gestione errori e limiti, 6. Test e verifica, 7. Rischi specifici di questa fase, 8. Decisioni da approvare (+1 more)
+
+### Community 102 - "Ya"
+Cohesion: 0.04
+Nodes (6): dh(), Ha(), na, Ua, us(), Ya()
 
 ### Community 103 - "Pannello «Aggiungi layer»: file e servizi XYZ, WMS, WFS"
 Cohesion: 0.10
@@ -678,9 +672,9 @@ Nodes (15): Catalogo RNDT nella scheda del luogo — Implementation Plan, File S
 Cohesion: 0.11
 Nodes (18): 1. Audit in sola lettura (da fare per primo), 2.0 Backup del database (prima di qualunque modifica), 2.1 PostgreSQL non deve essere raggiungibile da Internet (urgente), 2.2 Firewall, 2.3 SSH, 2.4 Resto, 2. Mettere in sicurezza (dopo conferma dell'utente), 3.0 Procedura passo per passo (percorsi da verificare con l'audit) (+10 more)
 
-### Community 109 - "Settore: Capo Area responsabile pianificazione interventi culturali, biblioteche e spazi etnoantropologici"
-Cohesion: 0.13
-Nodes (15): Settore: Capo Area responsabile pianificazione interventi culturali, biblioteche e spazi etnoantropologici, U.O.: U.O. Biblioteche Decentrate, U.O.: U.O. Cantieri Culturali alla Zisa, U.O.: U.O. Commissione Tecnica di Pubblico Spettacolo, U.O.: U.O. Contabilità Cultura, U.O.: U.O. Gestione Personale Archivio Cultura, U.O.: U.O. Gestione Personale Biblioteca Sciascia e Biblioteche Decentrate, U.O.: U.O. Gestione Tecnica Siti Culturali (+7 more)
+### Community 109 - "indicatori.test.mjs"
+Cohesion: 0.18
+Nodes (9): INDICATORI, SOPRA_64, SOTTO_15, leggiJson(), RADICE, sha(), ORIGINALE, SOPRA (+1 more)
 
 ### Community 110 - "pai.py"
 Cohesion: 0.16
@@ -699,12 +693,16 @@ Cohesion: 0.16
 Nodes (8): AsyncDeflate(), AsyncGzip(), AsyncZlib(), deflate, gzip, gzipSync(), zlib, zlibSync()
 
 ### Community 114 - "trasporto-ui.js"
-Cohesion: 0.21
-Nodes (26): avvia(), colorePerTesto(), due(), formatoOra(), giornoIniziale(), giornoPrima(), minutoAdesso(), oggiISO() (+18 more)
+Cohesion: 0.40
+Nodes (14): formatoOra(), chip(), conGiorno(), dataIt(), el(), elencoFermateVicine(), elencoLinee(), fermateInSequenza() (+6 more)
 
 ### Community 117 - "pannello-attributo.js"
 Cohesion: 0.38
 Nodes (9): creaSezioneAttributo(), selezione(), calcolaSoglie(), COLORE_MANCANTE, coloriRampa(), etichetteClassi(), RAMPE, rilevaAttributi() (+1 more)
+
+### Community 118 - "trasporto-orari.js"
+Cohesion: 0.29
+Nodes (12): avvia(), colorePerTesto(), due(), giornoIniziale(), giornoPrima(), minutoAdesso(), oggiISO(), partenzeFermata() (+4 more)
 
 ### Community 119 - "Settore: Ufficio autonomo gestione verde urbano, agricoltura urbana e rapporti con RESET"
 Cohesion: 0.11
@@ -718,10 +716,6 @@ Nodes (14): Dati di terzi, Licenze, Software di terzi, Avvio, Avvisi, Carosello 
 Cohesion: 0.33
 Nodes (3): RangeRequestHandler, SimpleHTTPRequestHandler subclass that supports HTTP Range Requests and adds…, SimpleHTTPRequestHandler
 
-### Community 122 - "et"
-Cohesion: 0.12
-Nodes (3): ct, et(), setFeatureState()
-
 ### Community 123 - "Settore: Capo Area responsabile Suap, Commercio e Supporto tecnico, lavoro e concessioni suolo pubblico"
 Cohesion: 0.08
 Nodes (25): Area: Area SUAP, Sviluppo Economico, Mercati e Lavoro, Settore: Capo Area responsabile Suap, Commercio e Supporto tecnico, lavoro e concessioni suolo pubblico, Settore: Ufficio Mercati Generali e rionali, servizi di trasporto pubblico, rilascio licenza NCC e taxi e pubblicità, U.O.: U.O. Affari Generali, Fiera del Mediterraneo e U.R.P., U.O.: U.O. Antievasione, U.O.: U.O. Antievasione, U.O.: U.O. Commercio su area privata, U.O.: U.O. Commercio su area pubblica (+17 more)
@@ -731,12 +725,12 @@ Cohesion: 0.22
 Nodes (4): Pagina, Coordinate di un punto che la mappa, così com'è, riconosce dentro `layer_hit`.…, Apre il pannello della barra e la sezione di Layer che contengono l'elemento…, Sposta la mappa e attende che abbia finito di caricare i tile.
 
 ### Community 125 - "Struttura degli uffici del Comune di Palermo"
-Cohesion: 0.12
-Nodes (15): Area: Area Affari Generali e Istituzionali, Area: Segreteria Generale, Area: Sportello autonomo concessioni edilizie, Settore: Capo Area Affari Generali e Istituzionali, Settore: Segretario Generale, Settore: Ufficio autonomo SACE, Settore: Ufficio contratti e approvvigionamenti, Struttura degli uffici del Comune di Palermo (+7 more)
+Cohesion: 0.09
+Nodes (22): Area: Area Affari Generali e Istituzionali, Area: Area delle Politiche Socio Sanitarie, Area: Segreteria Generale, Area: Sportello autonomo concessioni edilizie, Settore: Capo Area Affari Generali e Istituzionali, Settore: Segretario Generale, Settore: Ufficio autonomo SACE, Settore: Ufficio contratti e approvvigionamenti (+14 more)
 
-### Community 126 - "info.js"
-Cohesion: 0.28
-Nodes (14): conTimeout(), fonteDi(), FORMATI, interrogaTutti(), interrogaWms(), leggiRisposta(), lngLatA3857(), proprieta() (+6 more)
+### Community 126 - "rndt/index.js"
+Cohesion: 0.15
+Nodes (22): segnala(), lngLat(), anelliDaZone(), collegaRndt(), PROXY_RNDT, conTimeout(), fonteDi(), FORMATI (+14 more)
 
 ### Community 127 - "package.json"
 Cohesion: 0.33
@@ -763,24 +757,20 @@ Cohesion: 0.12
 Nodes (16): Area: Ufficio di Gabinetto del Sindaco, Settore: Capo di Gabinetto, Settore: Ufficio Capo di Gabinetto, Settore: Ufficio del Cerimoniale e Relazioni Internazionali, U.O.: U.O. Affari Generali, Archivio, Protocollo, U.O.: U.O. Archivio, Magazzino, Coordinamento Servizi Ausiliari per Attività di Rappresentanza, U.O.: U.O. Cerimoniale, Relazioni Internazionali, Film Commission, U.O.: U.O. Coordinamento Amministrativo/Finanziario e Gestione Contabile del Gabinetto del Sindaco (+8 more)
 
 ### Community 133 - "evidenza.js"
-Cohesion: 0.18
-Nodes (18): aggiornaLegenda(), assicuraStrati(), ATTRIBUTI, attributoDi(), cancellaEvidenza(), collezione(), evidenzia(), FONTI (+10 more)
+Cohesion: 0.15
+Nodes (20): aggiornaLegenda(), assicuraStrati(), ATTRIBUTI, attributoDi(), cancellaEvidenza(), collezione(), evidenzia(), FONTI (+12 more)
 
-### Community 135 - "Ya"
-Cohesion: 0.11
-Nodes (5): dh(), m(), p(), ra, Ya()
+### Community 135 - "scheda-trasporto.test.mjs"
+Cohesion: 0.27
+Nodes (9): raggruppaLinee(), righe(), tooltipFermata(), tooltipLinee(), voceFermata(), voceLinee(), aggiungiLayer(), collegaTooltip() (+1 more)
 
 ### Community 137 - "_righe"
 Cohesion: 0.40
 Nodes (6): _n_validi(), Quante sezioni hanno un valore per l'indicatore (stessa regola dell'app…, _righe(), test_cambi_rapidi_finiscono_nell_ultimo_stato(), test_popolazione_2021_poi_2023(), test_sezione_2021_senza_dato_2023_resta_senza_valore()
 
-### Community 138 - "wh"
-Cohesion: 0.17
-Nodes (5): cc(), uc(), wh(), H(), Q()
-
 ### Community 139 - "overlay.js"
-Cohesion: 0.25
-Nodes (11): css3d(), davanti(), omografia(), proietta(), creaOverlay(), dimensioniSchermo(), LATO_MASSIMO, preparaSchermo() (+3 more)
+Cohesion: 0.27
+Nodes (10): css3d(), davanti(), omografia(), proietta(), creaOverlay(), dimensioniSchermo(), LATO_MASSIMO, trasformazione() (+2 more)
 
 ### Community 140 - "File structure"
 Cohesion: 0.20
@@ -791,28 +781,32 @@ Cohesion: 0.14
 Nodes (14): Area: Area delle Entrate e dei Tributi Comunali, Settore: Avvocato Dirigente – Tributi, Settore: Capo Area Area delle Entrate e dei Tributi Comunali, Settore: Capo Area Responsabile ICI/IMU/TASI, Settore: Ufficio TARSU/TARES/TARI, U.O.: U.O. Call center, U.O.: U.O. Contenzioso tributario, U.O.: U.O. Cup (ex tosap/temporanea e permanente e icp) (+6 more)
 
 ### Community 145 - "el"
-Cohesion: 0.05
-Nodes (18): Do(), el(), eo(), fo, Go(), Hl, Ho(), Ko() (+10 more)
+Cohesion: 0.16
+Nodes (10): Do(), el(), eo(), fo, Go(), Ho(), Oo(), to() (+2 more)
 
 ### Community 146 - "Sicurezza stradale (viabilità pericolosa) — design"
 Cohesion: 0.20
 Nodes (9): Dati, Errori e casi limite, Layer (`js/layers/sicurezza.js`), Obiettivo, Perimetro, Rischi, Scheda (`js/layers/scheda-sicurezza.js`), Sicurezza stradale (viabilità pericolosa) — design (+1 more)
 
+### Community 147 - "i"
+Cohesion: 0.10
+Nodes (5): hi(), i(), pi(), Ti(), ui()
+
 ### Community 148 - "alberi.py"
 Cohesion: 0.23
 Nodes (12): costruisci(), criteri(), feature(), gradi(), main(), numero(), Alberi monumentali di Palermo (elenco MASAF, Sicilia) ->…, «38° 7' 58,02''» -> 38.13278 (gradi decimali); None se non e' una coordinata. (+4 more)
 
-### Community 149 - ".get"
-Cohesion: 0.04
-Nodes (13): Gc(), Gi, il(), ja(), Kl, nl(), ql, sl (+5 more)
+### Community 149 - ".evaluate"
+Cohesion: 0.08
+Nodes (6): il(), ja(), nl(), ql, sl, zl
 
 ### Community 150 - "Dove mettere codice e dati: GitHub, VPS IONOS o entrambi"
 Cohesion: 0.14
 Nodes (13): A. Com'è ora, B. Viewer su GitHub, dati statici sul VPScosa d, C. API PostGIS a runtime, Configurazione nginx per i dati statici (opzione B), Cosa verificare prima di decidere, D. Tutto sul VPS, Dove mettere codice e dati: GitHub, VPS IONOS o entrambi, Il server reale (controllo del 2026-10-02) (+5 more)
 
 ### Community 151 - "geoimage/pannello.js"
-Cohesion: 0.47
-Nodes (15): bottone(), campo(), creaPannello(), el(), intervallo(), nota(), riga(), selezione() (+7 more)
+Cohesion: 0.22
+Nodes (22): bottone(), campo(), creaPannello(), el(), intervallo(), nota(), riga(), selezione() (+14 more)
 
 ### Community 152 - "guida_video.py"
 Cohesion: 0.07
@@ -826,9 +820,9 @@ Nodes (17): _dati_trasporto(), _fermata_con_orari(), _muovi_su(), Genera dati/tr
 Cohesion: 0.15
 Nodes (13): Area: Area del Patrimonio, Settore: Capo Area Responsabile Patrimonio, Settore: Ufficio Autonomo Demanio e Inventario, U.O.: U.O. Fitti passivi – Patrimonio, U.O.: U.O. Gestione beni confiscati – Patrimonio, U.O.: U.O. Gestione beni demaniali e patrimonio indisponibile, U.O.: U.O. Gestione condomini – Patrimonio, U.O.: U.O. Gestione fitti attivi e patrimonio disponibile – Patrimonio (+5 more)
 
-### Community 155 - "g"
-Cohesion: 0.13
-Nodes (3): g(), ni(), Zc
+### Community 155 - ".loadMatchingFeature"
+Cohesion: 0.12
+Nodes (4): Gc(), vc, wl(), Zc
 
 ### Community 156 - "Review Focus"
 Cohesion: 0.20
@@ -838,13 +832,9 @@ Nodes (9): Global Constraints, Review Focus, Task 1: Script `scripts/gtfs.py` e 
 Cohesion: 0.14
 Nodes (13): Aggiornamenti dal piano (2026-10-04), Area: solo Palermo, Assunzioni da confermare, Catalogo RNDT nella scheda del luogo — design, Decisioni già prese, Errori e sicurezza, Fuori ambito, `host.js` — API GeoLibre implementate (+5 more)
 
-### Community 158 - "a"
-Cohesion: 0.19
-Nodes (14): a(), at(), b(), bt(), j(), k(), L(), lt() (+6 more)
-
 ### Community 159 - "geoimage/index.js"
-Cohesion: 0.12
-Nodes (12): clipSpotlight(), clipSwipe(), collegaConfronto(), el(), angoliIniziali(), limiti(), collegaImmagine(), collegaGeoimage() (+4 more)
+Cohesion: 0.14
+Nodes (11): clipSpotlight(), clipSwipe(), collegaConfronto(), el(), limiti(), collegaImmagine(), collegaGeoimage(), creaManiglie() (+3 more)
 
 ### Community 160 - "Settore: Capo Area responsabile Igiene e Salute, Benessere Animale – Canile Comunale, Politiche Abitative ed Assegnazione Erp"
 Cohesion: 0.17
@@ -862,9 +852,9 @@ Nodes (25): _apri_scheda_arco(), _arco_con_incidenti(), _arco_della_via_in_class
 Cohesion: 0.29
 Nodes (6): Dati (`scripts/gtfs.py` → `dati/trasporto/`), Obiettivo, Rischi, Test, Trasporto pubblico AMAT (GTFS): design, Viewer
 
-### Community 164 - "palette.js"
-Cohesion: 0.07
-Nodes (34): pmt(), urlTileset(), aggiorna3D(), CONFINI_LABEL_SINGULAR, CONFINI_LEVEL_KEYS, CONFINI_LEVELS, confiniStyle(), DATA_COLORS (+26 more)
+### Community 164 - "albero.js"
+Cohesion: 0.31
+Nodes (8): bottone(), campo(), creaAlbero(), el(), ICONE, nodo(), nuovoEsito(), TIPI
 
 ### Community 165 - "Settore: Vice Comandante"
 Cohesion: 0.18
@@ -895,24 +885,24 @@ Cohesion: 0.13
 Nodes (19): eFile(), migraFileLocali(), aggiorna(), aggiungi(), CHIAVE, CHIAVE_MIEI, leggi(), rimuovi() (+11 more)
 
 ### Community 172 - "le"
-Cohesion: 0.06
-Nodes (6): be, gr(), le, re(), se, xc
+Cohesion: 0.09
+Nodes (4): gr(), le, re(), se
 
 ### Community 173 - "carosello5.py"
 Cohesion: 0.33
 Nodes (10): carica(), copertina_foto(), corpo(), img(), main(), pagina(), pila(), Ritaglio originale della pagina, ingrandito (Lanczos) e data-URI. (+2 more)
 
 ### Community 174 - "search"
-Cohesion: 0.15
-Nodes (18): advancedCount(), Bn(), closeDetail(), fitAbstract(), footprintsOverlay(), ii(), markHovered(), openDetail() (+10 more)
+Cohesion: 0.10
+Nodes (29): it, Bn(), bt(), buildResultsHead(), buildSummary(), clearResults(), closeDetail(), ii() (+21 more)
 
 ### Community 175 - "Settore: Capo Area Responsabile pianificazione e coordinamento fondi extracomunali"
 Cohesion: 0.25
 Nodes (8): Area: Area Programmazione Fondi Extracomunali, Settore: Capo Area Responsabile pianificazione e coordinamento fondi extracomunali, Settore: Ufficio autonomo programmazione monitoraggio, supporto al controllo e rendicontazione PNRR e PN Metro Plus, U.O.: U.O. Attività finalizzata alla gestione della strategia territoriale dell’area urbana funzionale (FUA) di Palermo e monitoraggio interventi programmi operativi nazionali, U.O.: U.O. Direzione e coordinamento altri fondi extracomunali, U.O.: U.O. Gestione economico finanziaria, U.O.: U.O. Programmazione, Monitoraggio, Supporto al controllo e rendicontazione PN Metro Plus e PON Metro complementare, U.O.: U.O. Programmazione, Monitoraggio, Supporto al controllo e rendicontazione PNRR
 
-### Community 176 - "an"
-Cohesion: 0.04
-Nodes (34): an(), bn(), cn(), dn(), en(), fn(), gn(), hn() (+26 more)
+### Community 176 - "un"
+Cohesion: 0.06
+Nodes (16): cn(), dn(), fn(), gn(), ii(), jt(), mn(), ni() (+8 more)
 
 ### Community 177 - "costruisciPannello"
 Cohesion: 0.26
@@ -927,52 +917,52 @@ Cohesion: 0.13
 Nodes (16): _cerca_e_vai(), _civico_reale(), _primo_luogo(), parametrize, Punto e nome del primo luogo di dati/scuole/<nome>.geojson che ha anche un…, Il pannello di destra mostra i dati del luogo anche se lo strato è spento…, Il tooltip del trasporto resettava il cursore a ogni mousemove, anche con i…, test_ricerca_civico_inesistente_lo_dice_e_nessun_risultato_e_esplicito() (+8 more)
 
 ### Community 180 - "export-geotiff.js"
-Cohesion: 0.32
-Nodes (8): campionaBilineare(), campionaVicino(), lzwComprimi(), scriviGeoTiff(), scriviTiffAffine(), scriviTiffNordSu(), SR, proj4
+Cohesion: 0.28
+Nodes (11): campionaBilineare(), campionaVicino(), creaGeoTiff(), definisciSr(), lzwComprimi(), riproietta(), scriviGeoTiff(), scriviTiffAffine() (+3 more)
 
 ### Community 181 - "test_colonnine.py"
 Cohesion: 0.33
 Nodes (9): parametrize, snap(), test_aggiornato_e_fonte_nel_geojson(), test_connettore_sconosciuto_resta_com_e(), test_proprieta_normalizzate(), test_senza_coordinate_scartato(), test_stato_in_tre_classi(), test_tiene_solo_palermo_anche_con_spazi_e_maiuscole() (+1 more)
 
-### Community 182 - "kt"
-Cohesion: 0.17
-Nodes (4): kt(), oe(), te, Xt
+### Community 182 - "ye"
+Cohesion: 0.05
+Nodes (9): ge, ie(), me, oe(), pe, te, ye, Yt (+1 more)
 
 ### Community 184 - "Design"
 Cohesion: 0.18
 Nodes (10): Approccio, Barra, Barra sinistra a pannelli, come quella di destra, Design, Layout mappa, Mobile (≤720px), Obiettivo, Pannello (+2 more)
+
+### Community 185 - "sicurezza-filtro.js"
+Cohesion: 0.33
+Nodes (9): ANNI, collegaFiltroIncidenti(), etichetteChip(), filtroIncidenti(), NOME_GRAVITA_CHIP, pieno(), ZOOM_BASE, ZOOM_FILTRATO (+1 more)
 
 ### Community 186 - "File Structure"
 Cohesion: 0.15
 Nodes (12): Aggiungi layer Implementation Plan, File Structure, Global Constraints, Review Focus, Self-review (spec ↔ piano), Task 1: Memoria separata (archivio parametrico e servizi salvati), Task 2: Lettura dei servizi (`servizi.js`, puro), Task 3: Host — prefisso, etichetta e `addWfsLayer` (+4 more)
 
 ### Community 187 - "W"
-Cohesion: 0.16
-Nodes (26): br(), buildFooter(), buildSearchBar(), buildSettings(), buildSummary(), copyButton(), exportErrorLog(), forgetHistory() (+18 more)
+Cohesion: 0.21
+Nodes (16): br(), buildFooter(), copyButton(), fitAbstract(), jr(), kr(), openDetail(), qr() (+8 more)
 
 ### Community 188 - "j"
-Cohesion: 0.10
-Nodes (5): isParsed(), j(), removeSource(), setMethods(), ve
+Cohesion: 0.08
+Nodes (6): isParsed(), j(), N, removeSource(), setMethods(), ve
 
 ### Community 189 - "test_guida_carosello.py"
 Cohesion: 0.24
 Nodes (5): html_slide(), main(), _uri(), parametrize, test_png_1080x1350()
 
 ### Community 190 - "test_pannello_e_scheda_hanno_sfondo_chiaro_e_testo_a_contrasto_anche_con_sistema_scuro"
-Cohesion: 0.29
-Nodes (8): _contrasto(), _incendio(), _luminanza(), Un incendio di Palermo e un punto sicuramente dentro il suo perimetro (il più…, _rgb(), test_pannello_e_scheda_hanno_sfondo_chiaro_e_testo_a_contrasto_anche_con_sistema_scuro(), test_scheda_incendi_anche_a_strato_spento(), test_strato_incendi_popup_e_legenda_per_anno()
+Cohesion: 0.83
+Nodes (4): _contrasto(), _luminanza(), _rgb(), test_pannello_e_scheda_hanno_sfondo_chiaro_e_testo_a_contrasto_anche_con_sistema_scuro()
 
-### Community 191 - "w"
-Cohesion: 0.09
-Nodes (5): isStyleLoaded(), qe, setTerrain(), w(), Zi
+### Community 191 - "xi"
+Cohesion: 0.06
+Nodes (6): isStyleLoaded(), Kl, qe, w(), xi(), Zi
 
 ### Community 192 - "Barra sinistra a pannelli Implementation Plan"
 Cohesion: 0.25
 Nodes (7): Barra sinistra a pannelli Implementation Plan, Global Constraints, Review Focus, Self-review, Task 1: Barra e pannello ancorati, layout con `--sx` (CSS), Task 2: Comportamento: niente chiusura al clic fuori, ripiegamento incrociato sotto 1280px, Task 3: Documenti, guida e screenshot
-
-### Community 193 - "voci"
-Cohesion: 0.20
-Nodes (10): percorso(), mostraLinea(), percorsoLinea(), puntoCliccato(), vaiAFermata(), voci(), mappa(), fermate (+2 more)
 
 ### Community 194 - "colonnine.py"
 Cohesion: 0.39
@@ -986,17 +976,17 @@ Nodes (4): lonlat(), main(), Genera js/core/gerarchia.js: gerarchia circoscrizio
 Cohesion: 0.18
 Nodes (10): File Structure, Global Constraints, Pannello ad albero e credenziali Implementation Plan, Review Focus, Self-review (spec ↔ piano), Task 1: Il Worker inoltra l'autenticazione, Task 2: Credenziali in memoria, host e servizi salvati, Task 3: Il controllo gestisce le credenziali (+2 more)
 
-### Community 200 - ".parse"
-Cohesion: 0.04
-Nodes (16): ae, bt(), Dt(), fe, ge, ie(), me, Mt() (+8 more)
+### Community 200 - ".push"
+Cohesion: 0.06
+Nodes (17): bn(), bt(), ei(), fe, hn(), ne(), qc, _setupPainter() (+9 more)
 
 ### Community 201 - "test_pai.py"
 Cohesion: 0.29
 Nodes (3): skipif, Script dei vincoli PAI (funzioni pure) e coerenza dei dati scaricati in…, test_manifest_coerente_con_i_file()
 
-### Community 202 - ".fire"
-Cohesion: 0.09
-Nodes (4): V(), getFeatureState(), q, tt()
+### Community 202 - "q"
+Cohesion: 0.06
+Nodes (4): et(), q, tt(), X()
 
 ### Community 203 - "Vincoli PAI nel Comune di Palermo"
 Cohesion: 0.33
@@ -1014,9 +1004,9 @@ Nodes (6): env, gestisci(), LIMITE_BYTE, ospiteValido(), risposta(), urlDestinaz
 Cohesion: 0.18
 Nodes (10): 1. Importazione di file (`js/rndt/importa.js`), 2. Selettore file nel gruppo, 3. Dati in IndexedDB (`js/rndt/dati.js`), Da fare, Errori e casi limite, Fuori scope, Già fatto (non committato al momento della stesura), Layer RNDT: gruppo nella barra strati e caricamento di file dal computer (+2 more)
 
-### Community 207 - "c"
-Cohesion: 0.17
-Nodes (3): Bc(), c(), fc
+### Community 207 - "a"
+Cohesion: 0.13
+Nodes (8): Bc(), c(), fc, a(), at(), bt(), lt(), wt()
 
 ### Community 208 - "inflate"
 Cohesion: 0.24
@@ -1040,19 +1030,19 @@ Nodes (6): deflateSync(), EncodeUTF8(), strFromU8(), strToU8(), zip, zipSync()
 
 ### Community 214 - "constructor"
 Cohesion: 0.03
-Nodes (42): addClassName(), addTo(), ci(), clearMetrics(), _clearWatch(), constructor(), _containerDimensions(), _createButton() (+34 more)
+Nodes (33): addClassName(), addTo(), ci(), _clearWatch(), constructor(), _createButton(), _createCanvas(), _createCloseButton() (+25 more)
 
-### Community 216 - "Area: Area della cultura, turismo e sport"
-Cohesion: 0.20
-Nodes (10): Area: Area della cultura, turismo e sport, Settore: Ufficio musei e spazi espositivi, Settore: Ufficio teatri, spettacoli e coordinamento eventi, U.O.: U.O. Eventi culturali, U.O.: U.O. Gestione Amministrativa Personale GAM, U.O.: U.O. Gestione dei teatri, U.O.: U.O. Gestione Scientifica Museale, U.O.: U.O. Gestione Tecnica e Amministrativa Contabile – GAM (+2 more)
+### Community 216 - "Hl"
+Cohesion: 0.22
+Nodes (3): Hl, cs(), ns()
 
 ### Community 217 - "addArcgisFeatures"
-Cohesion: 0.31
-Nodes (10): addArcgisFeatures(), Ae(), ce(), fe(), je(), me(), Ne(), pe() (+2 more)
+Cohesion: 0.25
+Nodes (11): addArcgisFeatures(), Ae(), ce(), fe(), je(), me(), Ne(), pe() (+3 more)
 
-### Community 218 - "popolazione-classifica.js"
-Cohesion: 0.38
-Nodes (9): badge(), carica(), classificaDinamica(), costruisciClassifica(), el(), fmt(), LIVELLI, tendenza() (+1 more)
+### Community 218 - "Settore: Capo Area responsabile pianificazione dei LL.PP. e manutenzioni"
+Cohesion: 0.22
+Nodes (9): Settore: Capo Area responsabile pianificazione dei LL.PP. e manutenzioni, U.O.: U.O. Cantiere comunale e autoparco, U.O.: U.O. Coordinamento Amministrativo del personale – Capo Area responsabile pianificazione dei LL.PP. e manutenzioni, U.O.: U.O. Programmazione OO.PP., U.O.: U.O. Segreteria Assessore – Capo Area responsabile pianificazione dei LL.PP. e manutenzioni, U.O.: U.O. Segreteria – Capo Area responsabile pianificazione dei LL.PP. e manutenzioni, U.O.: U.O. Supporto economico – Capo Area responsabile pianificazione dei LL.PP. e manutenzioni, U.O.: U.O. Supporto giuridico – Capo Area responsabile pianificazione dei LL.PP. e manutenzioni (+1 more)
 
 ### Community 222 - "isole_calore.py"
 Cohesion: 0.29
@@ -1087,8 +1077,8 @@ Cohesion: 0.20
 Nodes (3): skipif, Isole di calore (LST estiva per sezione censuaria): soglie di classificazione e…, test_manifest_coerente()
 
 ### Community 232 - "trasporto-vicino.test.mjs"
-Cohesion: 0.29
-Nodes (7): distanzaM(), fermateVicine(), perNumero(), rad(), voceTrasportoVicino(), fermate, punto
+Cohesion: 0.31
+Nodes (6): distanzaM(), fermateVicine(), perNumero(), rad(), fermate, punto
 
 ### Community 234 - "conftest.py"
 Cohesion: 0.38
@@ -1102,57 +1092,49 @@ Nodes (5): Come funziona, Geoimage: mappe storiche sulla base di Palermo, Limiti
 Cohesion: 0.36
 Nodes (6): BASE, collegaFiltroLinea(), filtriPerLinea(), opzioniLinee(), stratiDaAccendere(), ordineLinea()
 
-### Community 237 - "b"
-Cohesion: 0.21
-Nodes (5): addImage(), b(), getImageCanvasContext(), getImageData(), updateImage()
+### Community 237 - "Settore: Ufficio Edilizia Pubblica ed Impianti Sportivi"
+Cohesion: 0.25
+Nodes (8): Settore: Ufficio Edilizia Pubblica ed Impianti Sportivi, U.O.: U.O. Direzione Contabile e Recupero Crediti, U.O.: U.O. Edifici produttivi, U.O.: U.O. Edifici Pubblici, U.O.: U.O. Frazionamenti, U.O.: U.O. Gestione Procedure Espropriative e Supporto Tecnico, U.O.: U.O. Impianti Sportivi, U.O.: U.O. Staff del Dirigente – Ufficio Edilizia Pubblica ed Impianti Sportivi
 
-### Community 238 - "urlDati"
-Cohesion: 0.15
-Nodes (19): creaCredenziali(), ospiteDi(), collegaAggiungi(), urlDati(), segnala(), anelliDaZone(), archivioIndexedDB(), archivioInMemoria() (+11 more)
+### Community 238 - "aggiungi/index.js"
+Cohesion: 0.22
+Nodes (8): creaControllo(), creaCredenziali(), ospiteDi(), collegaAggiungi(), carica(), librerie, xml(), costruisci()
 
-### Community 240 - "ds"
-Cohesion: 0.07
-Nodes (3): ds, Fa(), Mc
-
-### Community 241 - "zs"
-Cohesion: 0.16
-Nodes (3): hc(), ji(), zs
-
-### Community 243 - "Settore: Ufficio di pianificazione e monitoraggio delle attività sociali e delle emergenze sociali"
-Cohesion: 0.29
-Nodes (7): Area: Area delle Politiche Socio Sanitarie, Settore: Ufficio di pianificazione e monitoraggio delle attività sociali e delle emergenze sociali, U.O.: U.O. Accreditamento Servizi sociali, U.O.: U.O. Fondo povertà estrema, U.O.: U.O. Piano di zona e distretto, U.O.: U.O. Pon Metro e Progettazione, U.O.: U.O. Progetti Infanzia e adolescenza
+### Community 242 - "ro"
+Cohesion: 0.32
+Nodes (3): po(), ro(), yo()
 
 ### Community 248 - "Aggiungi layer"
-Cohesion: 0.29
-Nodes (6): Aggiungi layer, I miei dati, Limiti, Salvataggio, Servizi, Utente e password
+Cohesion: 0.25
+Nodes (7): Aggiungi layer, I miei dati, Limiti, Ordine sopra/sotto, Salvataggio, Servizi, Utente e password
 
-### Community 250 - "proxy.js"
-Cohesion: 0.70
-Nodes (3): LOCALI, PROXY_PREDEFINITO, scegliProxy()
+### Community 250 - "_incendio"
+Cohesion: 0.50
+Nodes (4): _incendio(), Un incendio di Palermo e un punto sicuramente dentro il suo perimetro (il più…, test_scheda_incendi_anche_a_strato_spento(), test_strato_incendi_popup_e_legenda_per_anno()
 
 ### Community 252 - "jc"
-Cohesion: 0.18
+Cohesion: 0.25
 Nodes (3): jc, Oc, Rc()
 
 ## Knowledge Gaps
-- **1025 isolated node(s):** `ICONE`, `TIPI`, `TIPI`, `ENTITA`, `apriStrati` (+1020 more)
+- **1026 isolated node(s):** `ICONE`, `TIPI`, `TIPI`, `ENTITA`, `apriStrati` (+1021 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **34 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **46 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `$` connect `$` to `Ic`, `Ya`, `ot`, `wh`, `ea`, `ls`, `de`, `pmtiles.js`, `el`, `ts`, `hi`, `wa`, `shp.esm.min.js`, `.get`, `ba`, `ta`, `ws`, `g`, `.push`, `ru`, `ga`, `le`, `.reset`, `an`, `T`, `.renderLayer`, `oa`, `.pop`, `kt`, `r`, `Ss`, `dc`, `j`, `resize`, `w`, `X`, `mt`, `ms`, `.parse`, `.fire`, `A`, `c`, `U`, `es`, `Z`, `xr`, `constructor`, `Ut`, `qi`, `cs`, `h`, `Ht`, `unzip`, `Ma`, `fs`, `mo`, `Ua`, `os`, `b`, `ds`, `zs`, `hs`, `is`, `.constructor`, `et`, `jc`?**
+- **Why does `$` connect `$` to `Ic`, `ot`, `U`, `wi`, `ls`, `de`, `pmtiles.js`, `el`, `ts`, `i`, `o`, `.evaluate`, `ba`, `ta`, `ws`, `.loadMatchingFeature`, `ft`, `za`, `ru`, `ga`, `le`, `.reset`, `search`, `un`, `T`, `.renderLayer`, `oa`, `an`, `ye`, `r`, `.get`, `j`, `resize`, `xi`, `S`, `rs`, `ms`, `.push`, `q`, `A`, `a`, `ki`, `es`, `Z`, `xr`, `constructor`, `Hl`, `Ut`, `ds`, `cs`, `h`, `Lt`, `Ht`, `unzip`, `.createVertexBuffer`, `fs`, `Ya`, `mo`, `os`, `qa`, `.recalculate`, `Mc`, `zs`, `ro`, `Tu`, `hs`, `is`, `ks`, `ys`, `ct`, `jc`?**
   _High betweenness centrality (0.230) - this node is a cross-community bridge._
-- **Why does `a()` connect `a` to `$`, `pmtiles.js`, `el`, `.get`, `shp.esm.min.js`, `ba`, `g`, `ws`, `.push`, `geoimage/index.js`, `proj4.js`, `sessione.js`, `.reset`, `search`, `an`, `T`, `.renderLayer`, `openArcgis`, `incendi.js`, `j`, `jszip.min.js`, `resize`, `geometria.js`, `X`, `mt`, `popolazione.js`, `c`, `U`, `host.js`, `zip`, `xr`, `Ut`, `h`, `openrndt-geolibre/index.js`, `unzip`, `Ht`, `pannello-attributo.js`, `.constructor`?**
+- **Why does `a()` connect `a` to `$`, `pmtiles.js`, `.evaluate`, `shp.esm.min.js`, `ba`, `.loadMatchingFeature`, `ws`, `geoimage/index.js`, `proj4.js`, `sessione.js`, `search`, `un`, `T`, `.renderLayer`, `an`, `ye`, `incendi.js`, `openArcgis`, `sicurezza-filtro.js`, `.get`, `j`, `jszip.min.js`, `resize`, `geometria.js`, `S`, `mt`, `.push`, `q`, `area.js`, `zip`, `xr`, `openrndt-geolibre/index.js`, `addArcgisFeatures`, `h`, `Lt`, `unzip`, `Ht`, `ro`, `pannello-attributo.js`?**
   _High betweenness centrality (0.131) - this node is a cross-community bridge._
-- **Why does `t()` connect `openrndt-geolibre/index.js` to `$`, `ricerca.js`, `scheda-preferenze.js`, `ye`, `wh`, `ea`, `de`, `pmtiles.js`, `el`, `.get`, `shp.esm.min.js`, `geoimage/pannello.js`, `ws`, `controllo.js`, `proj4.js`, `.reset`, `catalogo.js`, `an`, `kt`, `openArcgis`, `dc`, `W`, `j`, `jszip.min.js`, `X`, `mt`, `ms`, `.parse`, `.fire`, `addToMap`, `Ut`, `h`, `pai.js`, `Ht`, `zs`, `trasporto-ui.js`, `.constructor`, `et`?**
+- **Why does `t()` connect `t` to `$`, `ricerca.js`, `scheda-preferenze.js`, `ye`, `de`, `pmtiles.js`, `.evaluate`, `shp.esm.min.js`, `geoimage/pannello.js`, `.loadMatchingFeature`, `ws`, `controllo.js`, `ft`, `proj4.js`, `field`, `pai.js`, `catalogo.js`, `an`, `ye`, `openArcgis`, `.get`, `j`, `jszip.min.js`, `mt`, `ms`, `q`, `ki`, `openrndt-geolibre/index.js`, `Ut`, `h`, `qa`, `zs`, `trasporto-orari.js`?**
   _High betweenness centrality (0.054) - this node is a cross-community bridge._
 - **Are the 156 inferred relationships involving `apri()` (e.g. with `test_caricare_un_immagine_la_mostra_con_le_maniglie()` and `test_chiudere_il_pannello_in_modalita_gcp_restituisce_i_clic_alla_mappa()`) actually correct?**
   _`apri()` has 156 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ICONE`, `TIPI`, `TIPI` to the rest of the system?**
-  _1025 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1026 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `$` be split into smaller, more focused modules?**
-  _Cohesion score 0.019951840385276916 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.019182389937106917 - nodes in this community are weakly interconnected._
 - **Should `monumenti.py` be split into smaller, more focused modules?**
   _Cohesion score 0.06568832983927324 - nodes in this community are weakly interconnected._

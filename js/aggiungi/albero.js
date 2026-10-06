@@ -16,7 +16,9 @@ const ICONE = {
 const TIPI = [
   { id: 'xyz', titolo: 'XYZ', esempio: 'https://tile.example.org/{z}/{x}/{y}.png' },
   { id: 'wms', titolo: 'WMS', esempio: 'https://servizio.example.org/geoserver/ows' },
+  { id: 'wmts', titolo: 'WMTS', esempio: 'https://servizio.example.org/wmts' },
   { id: 'wfs', titolo: 'WFS', esempio: 'https://servizio.example.org/geoserver/ows' },
+  { id: 'arcgis', titolo: 'ArcGIS REST', esempio: 'https://server.example.org/arcgis/rest/services/Cartella/Servizio/MapServer' },
 ];
 
 function el(tag, classe, testo) {
@@ -94,14 +96,25 @@ export function creaAlbero({ controllo, carica, avvisa }) {
   }
 
   function mostraScelta(tipo, scelta, servizio, dati, esitoForm) {
-    const voci = tipo === 'wms' ? servizio.layer : servizio.tipi;
+    const voci = tipo === 'wms' || tipo === 'wmts' ? servizio.layer : tipo === 'wfs' ? servizio.tipi : servizio.layer.map(l => ({ ...l, titolo: l.nome }));
+    // ArcGIS: lo stesso servizio si può vedere come immagini o come dati
+    let modo = null;
+    if (tipo === 'arcgis') {
+      modo = el('select', 'agg-modo');
+      for (const [v, t] of [['immagini', 'Immagini (come una mappa)'], ['dati', 'Dati (elementi che si possono interrogare)']]) modo.append(Object.assign(el('option', null, t), { value: v }));
+      if (servizio.tipo === 'FeatureServer') { modo.value = 'dati'; modo.querySelector('[value=immagini]').disabled = true; }
+      const etichetta = el('label', 'agg-campo');
+      etichetta.append(el('span', null, 'Mostra come'), modo);
+      scelta.append(etichetta);
+      if (servizio.cache) scelta.append(el('p', 'agg-nota', 'Il servizio ha una cache a tile: come «Immagini» si aggiunge un solo layer con tutti i livelli.'));
+    }
     const righe = voci.map(v => {
       const label = el('label', 'agg-voce');
       const casella = el('input');
       casella.type = 'checkbox';
       casella.disabled = v.supportato === false;
       label.append(casella, ' ', v.titolo);
-      if (v.supportato === false) label.append(' ', el('em', null, '(non supportato: serve EPSG:3857)'));
+      if (v.supportato === false) label.append(' ', el('em', null, tipo === 'wmts' ? '(non supportato: serve EPSG:3857, tile 256)' : '(non supportato: serve EPSG:3857)'));
       return { v, casella, label };
     });
     const vai = bottone('Aggiungi selezionati', 'agg-bottone agg-primario');
@@ -112,9 +125,13 @@ export function creaAlbero({ controllo, carica, avvisa }) {
       if (!scelti.length) return esito(esitoForm, 'Scegli almeno un elemento.', true);
       vai.disabled = true;
       esito(esitoForm, 'Aggiungo alla mappa…');
-      const r = await (tipo === 'wms' ? controllo.aggiungiWms({ ...dati, servizio, scelti }) : controllo.aggiungiWfs({ ...dati, servizio, scelti }));
+      const comune = { ...dati, servizio, scelti };
+      const r = await (tipo === 'wms' ? controllo.aggiungiWms(comune)
+        : tipo === 'wmts' ? controllo.aggiungiWmts(comune)
+          : tipo === 'wfs' ? controllo.aggiungiWfs(comune)
+            : controllo.aggiungiArcgis({ ...comune, modo: modo.value, conToken: servizio.conToken }));
       vai.disabled = false;
-      riferisci(esitoForm, r, scelti.length);
+      riferisci(esitoForm, r, tipo === 'arcgis' && modo.value === 'immagini' && servizio.cache ? 1 : scelti.length);
     });
   }
 
@@ -123,7 +140,7 @@ export function creaAlbero({ controllo, carica, avvisa }) {
     form.noValidate = true;
     form.hidden = true;
     const nome = campo('Nome (facoltativo)', 'Come lo chiami');
-    const url = campo(tipo.id === 'xyz' ? 'Indirizzo con {z}/{x}/{y}' : 'Indirizzo del servizio', tipo.esempio, { tipo: 'url' });
+    const url = campo(tipo.id === 'xyz' ? 'Indirizzo con {z}/{x}/{y}' : tipo.id === 'arcgis' ? 'Indirizzo del servizio (MapServer o FeatureServer; con ?token=… se serve)' : 'Indirizzo del servizio', tipo.esempio, { tipo: 'url' });
     const utente = campo('Utente (se serve)', 'Nome utente', { complete: 'off' });
     const password = campo('Password (se serve)', 'Resta solo finché la pagina è aperta', { tipo: 'password', complete: 'new-password' });
     const esitoForm = nuovoEsito();
@@ -185,7 +202,7 @@ export function creaAlbero({ controllo, carica, avvisa }) {
     const apri = bottone('', 'agg-salvato-nome');
     if (serve) { const l = el('span', 'agg-ico'); l.innerHTML = ICONE.lucchetto; apri.append(l); }
     apri.append(el('span', null, s.nome));
-    apri.title = serve ? `Serve la password di «${s.utente}» — ${s.url}` : `Metti in mappa — ${s.url}`;
+    apri.title = serve ? (s.conToken ? `Serve il token — ${s.url}` : `Serve la password di «${s.utente}» — ${s.url}`) : `Metti in mappa — ${s.url}`;
     const togli = bottone('', 'agg-azione');
     togli.innerHTML = ICONE.cestino;
     togli.title = `Togli «${s.nome}» dai servizi salvati`;
@@ -200,7 +217,7 @@ export function creaAlbero({ controllo, carica, avvisa }) {
       if (!serve) { apri.disabled = true; fatto(await controllo.riaggiungi(s.id)); apri.disabled = false; return; }
       if (riga.querySelector('form')) return;
       const form = el('form', 'agg-modulo');
-      const pw = campo(`Password di ${s.utente}`, 'Resta solo finché la pagina è aperta', { tipo: 'password', complete: 'new-password' });
+      const pw = campo(s.conToken ? 'Token del servizio' : `Password di ${s.utente}`, 'Resta solo finché la pagina è aperta', { tipo: 'password', complete: 'new-password' });
       const entra = bottone('Entra', 'agg-bottone agg-primario');
       entra.type = 'submit';
       form.append(pw.label, entra);
