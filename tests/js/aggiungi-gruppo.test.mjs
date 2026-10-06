@@ -39,3 +39,9 @@ test('collega accetta l’intestazione come quarto argomento senza disegnare fin
   const g = creaGruppo(OPZIONI_MIEI);
   assert.doesNotThrow(() => g.collega(hostFinto([l('miei-a', 'Alfa')]), () => {}, async () => {}, () => ({})));
 });
+
+test('gli strati del gruppo portano i loro layer di mappa: serve all’ordine globale dei layer', () => {
+  const g = creaGruppo(OPZIONI_MIEI);
+  g.collega(hostFinto([{ ...l('miei-a', 'Alfa'), idMappa: ['miei-a-fill', 'miei-a-line'] }]), () => {}, async () => {});
+  assert.deepEqual(g.modulo.strati, [{ id: 'miei-a', etichetta: 'Alfa', layers: ['miei-a-fill', 'miei-a-line'] }]);
+});

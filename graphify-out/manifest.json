@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "js/core/pannello.js": {
-    "mtime": 1791267729.5322726,
-    "ast_hash": "f63e5b0806b6fb412d31c1d1e7bdda8a",
+    "mtime": 1791269681.534955,
+    "ast_hash": "3892c188784e57245dd5fae0d35973b7",
     "semantic_hash": ""
   },
   "js/core/ricerca.js": {
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791269516.4264505,
-    "ast_hash": "4c8536e088b123343f1a5df17f212738",
+    "mtime": 1791269544.252259,
+    "ast_hash": "15bf3eed750ab62750fed5ccf3792322",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -1200,8 +1200,8 @@
     "semantic_hash": ""
   },
   "js/rndt/gruppo.js": {
-    "mtime": 1791269104.4749365,
-    "ast_hash": "4645e809be2a7eb4163ba3d2c7c679c7",
+    "mtime": 1791269681.5345132,
+    "ast_hash": "0023893686f8554b164729af9b5dd42b",
     "semantic_hash": ""
   },
   "tests/js/rndt-gruppo.test.mjs": {
@@ -1890,8 +1890,8 @@
     "semantic_hash": ""
   },
   "tests/js/aggiungi-gruppo.test.mjs": {
-    "mtime": 1791269104.3257608,
-    "ast_hash": "f64f26513e933a2a91d0de28f7e378e7",
+    "mtime": 1791269681.3549378,
+    "ast_hash": "539ae7d15af02ee570d2e7c30c05ee81",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-host.test.mjs": {
@@ -1915,8 +1915,8 @@
     "semantic_hash": ""
   },
   "docs/AGGIUNGI_LAYER.md": {
-    "mtime": 1791269516.425938,
-    "ast_hash": "337dbcce4ffd4b577aab3742046955d8",
+    "mtime": 1791269731.3841388,
+    "ast_hash": "b68935a8c0459f9928feb2353407b80c",
     "semantic_hash": ""
   },
   "docs/APPUNTI_GUIDA.md": {

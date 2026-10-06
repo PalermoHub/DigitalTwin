@@ -362,8 +362,16 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
 // Sezione «Ordine layer in mappa» del tab Layer: tutti gli strati accesi, di qualsiasi gruppo, in un unico elenco.
 // In alto = sopra sulla mappa; frecce e trascinamento lo cambiano, l'ordine resta salvato nel browser.
 function creaOrdineDisegno(map, moduli, storage, iniziale) {
-  const strati = moduli.flatMap(m => m.strati.map(s => ({ id: s.id, etichetta: s.etichetta, layers: s.layers, da: ETICHETTE[m.gruppo ?? m.id] ?? m.titolo })));
-  const per = new Map(strati.map(s => [s.id, s]));
+  // gli strati dei gruppi dinamici (RNDT, «I miei layer») arrivano a runtime: l'elenco si rilegge a ogni ridisegno
+  // (stessa lista e stessa mappa, così chi li ha ricevuti vede sempre quelli aggiornati)
+  const strati = [];
+  const per = new Map();
+  const aggiornaStrati = () => {
+    strati.splice(0, strati.length, ...moduli.flatMap(m => m.strati.map(s => ({ id: s.id, etichetta: s.etichetta, layers: s.layers ?? [], da: ETICHETTE[m.gruppo ?? m.id] ?? m.titolo }))));
+    per.clear();
+    for (const s of strati) per.set(s.id, s);
+  };
+  aggiornaStrati();
   const stack = () => map.getStyle().layers.map(l => l.id);
   const attivo = id => document.getElementById(`strato-${id}`)?.checked;
 
@@ -400,6 +408,7 @@ function creaOrdineDisegno(map, moduli, storage, iniziale) {
     });
   };
   const ridisegna = () => {
+    aggiornaStrati();
     const ids = ordineStrati(stack(), strati).filter(attivo);
     elenco.replaceChildren(...ids.map(id => riga(per.get(id))));
     nota.hidden = elenco.hidden = !ids.length;
@@ -485,6 +494,8 @@ function creaOrdineDisegno(map, moduli, storage, iniziale) {
   });
   document.addEventListener(EVENTO_GRUPPO, () => { salva(); ridisegna(); });
   el.addEventListener('toggle', () => { if (el.open) ridisegna(); });
+  // un layer che si accende, si spegne, arriva o parte (anche dai gruppi dinamici) aggiorna l'elenco se è aperto
+  document.addEventListener('change', () => { if (el.open) ridisegna(); }, true);
   return {
     el,
     ridisegna,

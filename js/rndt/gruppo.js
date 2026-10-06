@@ -145,7 +145,7 @@ export function creaGruppo({ id, titolo, argomento, vuoto, azioni, ripiego }) {
       argomento: { ...argomento },
       // vuoto finché non c'è l'host: così costruisciPannello non crea caselle (le disegna disegna()); la tab Argomenti
       // si ricostruisce a ogni apertura e legge l'elenco aggiornato
-      get strati() { return host ? righeGruppo(host.elenco()).map(r => ({ id: r.id, etichetta: r.nome })) : []; },
+      get strati() { return host ? righeGruppo(host.elenco()).map(r => ({ id: r.id, etichetta: r.nome, layers: r.layers })) : []; },
       pannello(gruppo) { radice = gruppo; disegna(); },
     },
     collega(hostCollegato, apriPannello, carica = async () => {}, intestazioneDelContenuto = null) {

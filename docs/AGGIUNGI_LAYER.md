@@ -41,6 +41,10 @@ Servizi e layer passano dal Worker proxy (solo https, vedi `docs/RNDT.md`). Come
 - Se `localStorage` è bloccato tutto funziona per la sessione.
 - Chi aveva già file caricati nel gruppo RNDT li ritrova in «I miei layer»: all'avvio l'elenco passa da `dt:rndt:v1` a `dt:miei:v1`, i dati restano dove stavano.
 
+## Ordine sopra/sotto
+
+I layer di «I miei layer» si riordinano con le frecce e il trascinamento, dentro il gruppo e, insieme a quelli RNDT, nel pannello **Ordine layer in mappa** del tab Layer: lì si possono mettere sopra o sotto gli strati di qualunque altro gruppo. Un layer appena aggiunto parte in cima a tutto.
+
 ## Limiti
 
 - I layer di questo gruppo non si interrogano con il clic sulla mappa (lo fa solo il catalogo RNDT).
