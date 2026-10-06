@@ -40,12 +40,25 @@ export function collegaStrumenti(map) {
   }
 }
 
-// Il pulsante arancione della barra di ricerca apre/chiude i filtri di zona e i campi foglio e particella.
-export function collegaPannelloFiltri(bottone, pannello, esito) {
+// Il pulsante arancione della barra di ricerca apre/chiude il tab «Filtri» della barra a sinistra (zona, linea, incidenti,
+// foglio e particella). Sul tab compare il numero di filtri attivi, letto dalle chip sulla mappa.
+export function collegaPannelloFiltri(bottone, esito) {
+  const tab = document.getElementById('btn-gruppo-filtri');
+  const sezione = document.getElementById('gruppo-filtri');
+  if (!tab || !sezione) { bottone.hidden = true; return; }
+  const chips = ['filtri-chips', 'filtri-linea-chips', 'filtri-incidenti-chips'].map(id => document.getElementById(id)).filter(Boolean);
+  const aggiorna = () => {
+    const aperto = !sezione.hidden;
+    bottone.setAttribute('aria-expanded', String(aperto));
+    if (!aperto) esito.hidden = true;
+    const n = chips.reduce((tot, c) => tot + (c.hidden ? 0 : c.children.length), 0);
+    for (const b of [tab, bottone]) { b.dataset.attivo = String(n > 0); b.dataset.n = String(n); }
+  };
+  new MutationObserver(aggiorna).observe(sezione, { attributes: true, attributeFilter: ['hidden'] });
+  for (const c of chips) new MutationObserver(aggiorna).observe(c, { childList: true, attributes: true, attributeFilter: ['hidden'] });
   bottone.addEventListener('click', () => {
-    pannello.hidden = !pannello.hidden;
-    bottone.setAttribute('aria-expanded', String(!pannello.hidden));
-    if (pannello.hidden) esito.hidden = true;
-    else document.getElementById('f-circ').focus();
+    tab.click();
+    if (!sezione.hidden) document.getElementById('f-circ').focus();
   });
+  aggiorna();
 }

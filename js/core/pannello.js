@@ -49,10 +49,10 @@ function imposta(map, ids, visibile) {
   }
 }
 
-const ETICHETTE = { base: 'Mappe di base', layer: 'Layer', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Servizi', incendi: 'Incendi', 'isole-calore': 'Isole di calore', sicurezza: 'Sicurezza', miei: 'I miei layer' };
+const ETICHETTE = { base: 'Mappe di base', layer: 'Layer', filtri: 'Filtri', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Servizi', incendi: 'Incendi', 'isole-calore': 'Isole di calore', sicurezza: 'Sicurezza', miei: 'I miei layer' };
 
 // I soli gruppi che hanno un tab proprio; tutti gli altri sono sezioni del tab «Layer».
-const TAB_DIRETTI = new Set(['base', 'rndt', 'miei']);
+const TAB_DIRETTI = new Set(['base', 'rndt', 'miei', 'filtri']);
 // Titolo di un gruppo: il `summary` di una sezione, altrimenti l'`h2` del pannello. Barre e campi si inseriscono dopo.
 const intestazione = el => el.querySelector(':scope > summary') ?? el.querySelector('h2');
 
@@ -628,6 +628,12 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     };
     gruppo.addEventListener('change', segna);
     segna();
+  }
+  // i filtri della ricerca (zona, trasporto, incidenti, catasto) vivono in un tab proprio, non in un popup sulla mappa
+  const filtri = document.getElementById('pannello-filtri');
+  if (filtri) {
+    nuovoTab('filtri', ETICHETTE.filtri).append(filtri);
+    filtri.hidden = false;
   }
   // sezioni in ordine alfabetico (anche per i gruppi che arriveranno)
   if (layer) layer.append(...ordinaSezioni(sezioni.map(el => ({ id: el.id, titolo: el.querySelector('h2').textContent }))).map(id => document.getElementById(id)));

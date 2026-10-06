@@ -95,8 +95,7 @@ map.once('style.load', async () => {
   geoimage.ripristina(); // e la mappa storica di Geoimage, se c'era
   window.dt.geoimage = geoimage;
   const vaiParticella = collegaRicercaParticella(map, document.getElementById('cerca-foglio'), document.getElementById('cerca-numero'),
-    document.getElementById('cerca-particella-vai'), document.getElementById('cerca-particella-esito'),
-    document.getElementById('pannello-filtri'));
+    document.getElementById('cerca-particella-vai'), document.getElementById('cerca-particella-esito'));
   const zone = collegaZone(map, {
     selezioni: { circ: document.getElementById('f-circ'), quart: document.getElementById('f-quart'), upl: document.getElementById('f-upl') },
     chips: document.getElementById('filtri-chips'),
@@ -109,8 +108,7 @@ map.once('style.load', async () => {
   collegaRicerca(map, document.getElementById('cerca'),
     document.getElementById('cerca-testo'), document.getElementById('cerca-risultati'), vaiParticella, zone,
     collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti)));
-  collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('pannello-filtri'),
-    document.getElementById('cerca-particella-esito'));
+  collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
   // coordinate del centro mappa e zoom nel piè di pagina
   const piedeCoord = document.getElementById('piede-coord');

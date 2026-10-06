@@ -152,10 +152,9 @@ export function collegaRicerca(map, form, input, lista, vaiParticella = null, zo
 
 // Ricerca per foglio e particella: il dato è un PMTiles senza indice, quindi la particella
 // si trova solo se la sua tile è già caricata (stessa limitazione dell'app catasto originale).
-export function collegaRicercaParticella(map, campoFoglio, campoNumero, bottone, esito, pannello = null) {
+export function collegaRicercaParticella(map, campoFoglio, campoNumero, bottone, esito) {
   function mostra(testo) { esito.textContent = testo; esito.hidden = !testo; }
   function cerca() {
-    if (pannello) pannello.hidden = false;
     const foglio = campoFoglio.value.trim();
     const numero = campoNumero.value.trim();
     if (!foglio || !numero) return mostra('Inserire sia il foglio che la particella');

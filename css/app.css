@@ -212,9 +212,9 @@ dialog li { margin: 4px 0; }
 #cerca-risultati button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
 .cerca-vuoto { padding: 12px 14px; font-size: var(--fs-sm); color: var(--text-muted); text-align: center; }
 
-#pannello-filtri { padding: 10px 12px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
-#pannello-filtri h2 { margin: 0 0 4px; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
-#pannello-filtri h2:not(:first-child) { margin-top: 10px; }
+#pannello-filtri h2:not(:first-child) { margin-top: 14px; }
+#cerca-filtri { position: relative; }
+#cerca-filtri[data-attivo="true"]::after { content: attr(data-n); position: absolute; top: -4px; right: -4px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: var(--r-pill); background: var(--text); color: var(--surface); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; }
 #pannello-filtri label { font-size: var(--fs-xs); color: var(--text-muted); }
 #pannello-filtri select { width: 100%; margin: 2px 0 6px; padding: 5px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); font: inherit; color: var(--text); background: #fff; }
 #cerca-particella { display: flex; gap: 6px; }
@@ -601,7 +601,7 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
 }
 
 /* zoom: slider verticale compatto in basso a destra (solo desktop; su mobile c'è il pinch) */
-#zoom-box { position: fixed; z-index: var(--z-mappa-ui); right: calc(var(--scheda-l) + 12px); bottom: 168px; width: 44px; padding: 8px 0 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: 22px; box-shadow: var(--ombra); transition: right .15s; }
+#zoom-box { position: fixed; z-index: var(--z-mappa-ui); right: calc(var(--scheda-l) + 12px); bottom: 54px; width: 44px; padding: 8px 0 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: 22px; box-shadow: var(--ombra); transition: right .15s; }
 #zoom-box .zoom-wrap { display: block; position: relative; width: 24px; height: 140px; }
 #zoom-box #zoom-slider { position: absolute; left: 50%; top: 50%; width: 140px; margin: 0; transform: translate(-50%, -50%) rotate(-90deg); }
 @media (max-width: 720px) { #zoom-box { display: none; } }
@@ -650,7 +650,7 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
 }
 @media (min-width: 721px) and (max-width: 1000px) {
   :root { --scheda-w: 340px; }
-  body:has(#scheda:not([hidden])) #zoom-box { bottom: 100px; }
+  body:has(#scheda:not([hidden])) #zoom-box { bottom: 54px; }
 }
 
 /* campo di ricerca negli strati e chip degli strati accesi */
@@ -1193,16 +1193,6 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 }
 #app-logo { flex: none; display: block; line-height: 0; }
 #app-logo img { display: block; height: 44px; width: auto; }
-#app-header #cerca { flex: 1 1 auto; max-width: 520px; min-width: 0; height: 44px; margin: 0 auto; box-shadow: none; }
-#app-header #cerca-risultati { top: calc(100% + 8px); bottom: auto; }
-#app-header #barra-strumenti {
-  position: static !important; transform: none !important; inset: auto !important; flex: none; flex-direction: row !important;
-  align-items: center; gap: 6px; max-width: none; max-height: none; padding: 0; overflow: visible; background: none; border: 0; border-radius: 0; box-shadow: none;
-}
-#app-header #barra-strumenti > button { width: 40px; height: 40px; min-height: 0; padding: 0; flex-direction: row; border: 1px solid var(--border-ui); border-radius: 50%; background: var(--surface); box-shadow: none; }
-#app-header #barra-strumenti > button:hover { background: var(--surface-hover); }
-#app-header #barra-strumenti > button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); }
-#app-header #barra-strumenti .et { display: none; }
 
 #app-footer {
   box-sizing: border-box; min-height: 36px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -1219,8 +1209,5 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
   #app-header { flex-wrap: wrap; row-gap: 8px; padding: 8px 12px; min-height: 0; }
   #app-header { column-gap: 8px; }
   #app-logo img { height: 30px; }
-  #app-header #barra-strumenti { margin-left: auto; gap: 4px; }
-  #app-header #barra-strumenti > button { width: 36px; height: 36px; }
-  #app-header #cerca { order: 3; flex: 1 1 100%; max-width: none; margin: 0; }
-  #piede-coord { display: none; }
+      #piede-coord { display: none; }
 }
