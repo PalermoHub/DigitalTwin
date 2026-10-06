@@ -25,6 +25,9 @@ export function schedaArgomenti(moduli, doc = document, chiudi = () => {}) {
   intro.className = 'pagina-intro';
   intro.textContent = 'Di cosa parla il Digital Twin, argomento per argomento.';
   radice.append(h, intro);
+  const griglia = doc.createElement('div');
+  griglia.className = 'argomenti-griglia';
+  radice.append(griglia);
   const bottoni = [];
   for (const a of elencoArgomenti(moduli)) {
     const sez = doc.createElement('section');
@@ -59,7 +62,7 @@ export function schedaArgomenti(moduli, doc = document, chiudi = () => {}) {
     });
     bottoni.push({ mostra, caselle });
     sez.append(ul, mostra);
-    radice.append(sez);
+    griglia.append(sez);
   }
   // senza strati disponibili (es. non ancora caricati) il pulsante resta spento
   const sincronizza = () => {
