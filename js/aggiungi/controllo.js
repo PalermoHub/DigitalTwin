@@ -5,6 +5,8 @@ import { TETTO_WFS } from '../rndt/host.js';
 import {
   capabilitiesWms, capabilitiesWfs, validaXyz, urlBase, urlCapabilities, urlGetFeature,
 } from './servizi.js';
+import { capabilitiesWmts } from './wmts.js';
+import { leggiUrlArcgis, urlInfo, descriviArcgis, urlExport, urlTileCache, urlQuery } from './arcgis.js';
 import { leggiServizi, salvaServizi, aggiungiServizio, rimuoviServizio, filtraServizi } from './salvati.js';
 import { creaCredenziali, ospiteDi } from './credenziali.js';
 
@@ -29,7 +31,17 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
   async function leggiServizio(tipo, urlUtente, { utente, password } = {}) {
     const url = urlBase(urlUtente);
     if (utente) credenziali.imposta(ospiteDi(urlUtente), utente, password);
+    if (tipo === 'arcgis') {
+      const p = leggiUrlArcgis(urlUtente);
+      // il token incollato nell'indirizzo è una credenziale di sessione: si tiene in memoria e non resta in nessun URL
+      if (p.token) credenziali.impostaToken(ospiteDi(p.base), p.token);
+      const grezzo = new TextDecoder().decode(await host.fetchArrayBuffer(urlInfo(p)));
+      let json;
+      try { json = JSON.parse(grezzo); } catch { throw new Error('l’indirizzo non è un servizio ArcGIS REST'); }
+      return { url: p.base, conToken: credenziali.token(ospiteDi(p.base)) !== null, ...descriviArcgis(json, p) };
+    }
     const testo = new TextDecoder().decode(await host.fetchArrayBuffer(urlCapabilities(urlUtente, tipo)));
+    if (tipo === 'wmts') return { url, ...capabilitiesWmts(testo, urlUtente) };
     return { url, ...(tipo === 'wms' ? capabilitiesWms(testo) : capabilitiesWfs(testo)) };
   }
 
@@ -74,14 +86,51 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
   }
 
   // Un servizio salvato torna in mappa com'era, senza rileggere le capabilities.
+  async function aggiungiWmts({ nome, url, servizio, scelti, utente }) {
+    const errori = [];
+    const voci = [];
+    for (const l of scelti) {
+      if (!l.supportato || !l.tile) { errori.push({ nome: l.titolo, messaggio: 'non ha una piramide di tile compatibile con la mappa (serve EPSG:3857, tile 256)' }); continue; }
+      try {
+        host.addTileLayer(l.titolo, l.tile, {});
+        voci.push({ chiave: l.nome, nome: l.titolo, tile: l.tile });
+      } catch (e) { errori.push({ nome: l.titolo, messaggio: messaggio(e) }); }
+    }
+    const r = voci.length ? memorizza({ tipo: 'wmts', nome: nome.trim() || nomeDaUrl(url), url, utente, voci }) : { pieno: false };
+    return { ...r, errori };
+  }
+
+  async function aggiungiArcgis({ nome, url, servizio, scelti, modo, utente, conToken }) {
+    const errori = [];
+    const voci = [];
+    const aggiungiRaster = (titolo, chiave, tile) => {
+      try { host.addTileLayer(titolo, tile, {}); voci.push({ chiave, nome: titolo, tile }); } catch (e) { errori.push({ nome: titolo, messaggio: messaggio(e) }); }
+    };
+    if (modo === 'dati') {
+      for (const l of scelti) {
+        try {
+          const richiesta = urlQuery(url, l.id, BBOX_PALERMO, TETTO_WFS + 1);
+          await host.addWfsLayer(l.nome, richiesta);
+          voci.push({ chiave: `dati:${l.id}`, nome: l.nome, richiesta });
+        } catch (e) { errori.push({ nome: l.nome, messaggio: messaggio(e) }); }
+      }
+    } else if (servizio.cache) {
+      aggiungiRaster(nome.trim() || nomeDaUrl(url), 'cache', urlTileCache(url));
+    } else {
+      for (const l of scelti) aggiungiRaster(l.nome, `immagine:${l.id}`, urlExport(url, l.id));
+    }
+    const r = voci.length ? memorizza({ tipo: 'arcgis', nome: nome.trim() || nomeDaUrl(url), url, utente, conToken, voci }) : { pieno: false };
+    return { ...r, errori };
+  }
+
   const serveCredenziali = id => {
     const s = stato.servizi.find(x => x.id === id);
-    return Boolean(s?.utente) && !credenziali.ha(ospiteDi(s.url));
+    return Boolean(s?.utente || s?.conToken) && !credenziali.ha(ospiteDi(s.url));
   };
   // l'host lo chiede al ripristino: un layer di un servizio con utente e senza password in sessione non deve partire
   const protetto = url => {
     const o = ospiteDi(url);
-    return !credenziali.ha(o) && stato.servizi.some(s => s.utente && ospiteDi(s.url) === o);
+    return !credenziali.ha(o) && stato.servizi.some(s => (s.utente || s.conToken) && ospiteDi(s.url) === o);
   };
 
   async function riaggiungi(id, { password } = {}) {
@@ -90,17 +139,19 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     if (!s) return { errori };
     if (serveCredenziali(id)) {
       if (password === undefined) return { errori: [{ nome: s.nome, messaggio: 'servono utente e password' }], serve: true };
-      credenziali.imposta(ospiteDi(s.url), s.utente, password);
+      if (s.conToken) credenziali.impostaToken(ospiteDi(s.url), password);
+      else credenziali.imposta(ospiteDi(s.url), s.utente, password);
     }
     if (s.tipo === 'xyz') { host.addTileLayer(s.nome, s.url, {}); return { errori }; }
     for (const v of s.voci) {
       try {
-        if (s.tipo === 'wms') host.addWmsLayer(v.nome, v.opz);
-        else await host.addWfsLayer(v.nome, v.richiesta);
+        if (v.opz) host.addWmsLayer(v.nome, v.opz);
+        else if (v.richiesta) await host.addWfsLayer(v.nome, v.richiesta);
+        else if (v.tile) host.addTileLayer(v.nome, v.tile, {});
       } catch (e) { errori.push({ nome: v.nome, messaggio: messaggio(e) }); }
     }
     // password sbagliata: si dimenticano le credenziali, così torna il lucchetto e si può riprovare
-    if (errori.some(e => /utente e password/.test(e.messaggio))) credenziali.togli(ospiteDi(s.url));
+    if (errori.some(e => /utente e password|token/i.test(e.messaggio))) credenziali.togli(ospiteDi(s.url));
     return { errori };
   }
 
@@ -114,6 +165,6 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     stato: () => stato,
     suCambio(fn) { ascoltatori.add(fn); return () => ascoltatori.delete(fn); },
     credenziali, serveCredenziali, protetto, cerca: testo => filtraServizi(stato.servizi, testo),
-    leggiServizio, aggiungiXyz, aggiungiWms, aggiungiWfs, riaggiungi, rimuovi,
+    leggiServizio, aggiungiXyz, aggiungiWms, aggiungiWfs, aggiungiWmts, aggiungiArcgis, riaggiungi, rimuovi,
   };
 }
