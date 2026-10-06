@@ -110,29 +110,8 @@ function strumentiUsati(sezione) {
     return e;
   };
   const qgis = sezione('QGIS Headless WSL2',
-    p('Guida operativa per installare e usare QGIS «headless», cioè senza interfaccia grafica, su WSL2 e su Windows nativo tramite micromamba. Permette di eseguire gli algoritmi di QGIS Processing e il codice PyQGIS da terminale, senza aprire il programma.'),
-    p('Per «headless» si intende l’assenza di finestre: su Qt basta impostare ', el('code', 'export QT_QPA_PLATFORM=offscreen'), '.'),
-    el('h4', 'A cosa serve'),
-    lista([
-      'Automatizzare le elaborazioni geospaziali con degli script.',
-      'Testare gli algoritmi QGIS in pipeline CI/CD senza interfaccia grafica.',
-      'Eseguire PyQGIS in batch su grandi raster.',
-      'Elaborare dati geografici dalla riga di comando.',
-      'Riprodurre le analisi in ambienti isolati e ripetibili.',
-    ]),
-    p('In questo Digital Twin è stato usato per automatizzare l’elaborazione dei dati delle varie mappe: ', el('strong', '18 layer morfologici'), ' derivati dal modello digitale del terreno a 5 m (', link('Palermo DTM 5m', 'https://github.com/coseerobe/palermo_dtm_5m'), '), il grafo stradale, le isole di calore e molto altro.'),
-    el('h4', 'Come funziona'),
-    p('Micromamba crea un ambiente isolato (circa 5 GB in ', el('code', '~/micromamba/envs/qgis'), ') con QGIS e le sue dipendenze: GDAL, PROJ, GEOS, Qt, Python.'),
-    lista([
-      'Installa micromamba: un solo binario, nessun privilegio di root.',
-      'Crea l’ambiente: micromamba create -n qgis -c conda-forge qgis -y',
-      'Imposta offscreen: export QT_QPA_PLATFORM=offscreen',
-      'Esegui: micromamba run -n qgis python script.py',
-    ]),
-    el('h4', 'Requisiti'),
-    lista(['WSL2 attivo con una distribuzione Linux (per esempio Ubuntu).', 'Circa 5 GB liberi nella home di WSL.', 'Connessione a Internet.', 'Nessuna interfaccia Windows né QGIS Desktop già installato.']),
-    p(link('Repository GitHub', 'https://github.com/pigreco/qgis_headless_wsl2'), ' · ', link('Video tutorial', 'https://www.youtube.com/watch?v=FQEmhktDRaQ')),
-    p(link('Pagina originale', 'https://gbvitrano.github.io/palermo_popolazione/')),
+    p('QGIS senza interfaccia grafica su Windows Subsystem for Linux 2 (WSL2): consente di eseguire algoritmi QGIS Processing e codice PyQGIS da terminale o pipeline di automazione, senza aprire il desktop. Qui è servito ad automatizzare l’elaborazione dei dati delle varie mappe: ', el('strong', '18 layer morfologici'), ' derivati dal DTM a 5 m (', link('Palermo DTM 5m', 'https://github.com/coseerobe/palermo_dtm_5m'), '), il grafo stradale, le isole di calore e molto altro.'),
+    p(link('Repository GitHub', 'https://github.com/pigreco/qgis_headless_wsl2'), ' · ', link('Video tutorial', 'https://www.youtube.com/watch?v=FQEmhktDRaQ'), ' · ', link('Pagina originale', 'https://gbvitrano.github.io/palermo_popolazione/')),
     p('Guida di ', link('Totò Fiandaca', 'https://www.linkedin.com/in/salvatore-fiandaca-23a1a250/'), ' (', link('@pigreco71', 'https://www.linkedin.com/in/salvatore-fiandaca-23a1a250/'), ') ❤️'));
   const colori = sezione('Scientific colour maps',
     p('Sono le scale colore scientifiche di Fabio Crameri: rampe di colore «percettivamente uniformi», in cui a uguali variazioni del dato corrispondono uguali variazioni visive. Si leggono bene anche con deficit nella visione dei colori e in stampa in bianco e nero, a differenza di arcobaleni come «jet», che creano false bande e deformano i valori.'),
