@@ -147,7 +147,7 @@ function paginaConIndice(nodi) {
   return radice;
 }
 
-// Tab «Plugin RNDT»: spiega in parole semplici cosa fa il catalogo e dà il merito all'autore del plugin.
+// Tab «Plugin RNDT» (il testo di «Un lavoro di Andrea Borruso» è anche in MERITO_PLUGIN, guida-contenuti.js): spiega in parole semplici cosa fa il catalogo e dà il merito all'autore del plugin.
 function schedaPlugin() {
   const merito = blocco('Un lavoro di Andrea Borruso',
     (() => {

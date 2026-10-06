@@ -1,439 +1,454 @@
 WEBVTT
 
-00:00:00.000 --> 00:00:03.764
+00:00:00.000 --> 00:00:03.885
 Benvenuti nel Digital Twin di Palermo, realizzato da Open Data Sicilia:
 
-00:00:03.764 --> 00:00:08.748
+00:00:03.885 --> 00:00:09.029
 una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città.
 
-00:00:08.748 --> 00:00:20.040
+00:00:09.029 --> 00:00:20.685
 Qui trovi insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale, e puoi leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.
 
-00:00:20.040 --> 00:00:23.456
+00:00:20.685 --> 00:00:24.126
 I dati arrivano da enti pubblici e da progetti di dati aperti:
 
-00:00:23.456 --> 00:00:31.942
+00:00:24.126 --> 00:00:32.674
 il Comune di Palermo, l'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap.
 
-00:00:31.942 --> 00:00:38.720
+00:00:32.674 --> 00:00:39.501
 L'elenco completo si trova nella scheda Fonti e avvisi, con il collegamento al dato originale e alla licenza di ogni fonte.
 
-00:00:38.720 --> 00:00:41.666
+00:00:39.501 --> 00:00:42.489
 Gli strati sono i temi che si sovrappongono alla mappa.
 
-00:00:41.666 --> 00:00:43.488
+00:00:42.489 --> 00:00:44.336
 La barra a sinistra ha cinque tab:
 
-00:00:43.488 --> 00:00:47.130
+00:00:44.336 --> 00:00:48.030
 base cartografica, layer, catalogo nazionale, i miei layer e filtri.
 
-00:00:47.130 --> 00:00:48.952
+00:00:48.030 --> 00:00:49.877
 Il tab layer raggruppa gli strati:
 
-00:00:48.952 --> 00:00:53.987
+00:00:49.877 --> 00:00:54.983
 confini, edifici, monumenti, popolazione, rilievo, servizi, sicurezza, territorio e trasporti.
 
-00:00:53.987 --> 00:00:56.826
+00:00:54.983 --> 00:00:57.862
 Scegli un gruppo e accendi gli strati con la casella.
 
-00:00:56.826 --> 00:01:01.808
+00:00:57.862 --> 00:01:02.914
 Gli strati accesi compaiono come etichette in alto, e la legenda in basso ne spiega i colori.
 
-00:01:01.808 --> 00:01:05.022
+00:01:02.914 --> 00:01:06.100
 In cima al tab layer trovi la scheda ordine layer in mappa:
 
-00:01:05.022 --> 00:01:07.854
+00:01:06.100 --> 00:01:08.908
 elenca tutti gli strati accesi, di qualsiasi gruppo.
 
-00:01:07.854 --> 00:01:09.815
+00:01:08.908 --> 00:01:10.852
 In alto significa sopra sulla mappa.
 
-00:01:09.815 --> 00:01:13.029
+00:01:10.852 --> 00:01:14.038
 Puoi spostare uno strato con le frecce, oppure trascinarlo.
 
-00:01:13.029 --> 00:01:17.114
+00:01:14.038 --> 00:01:18.088
 Vale anche per i layer che aggiungi tu e per quelli del catalogo nazionale.
 
-00:01:17.114 --> 00:01:20.328
+00:01:18.088 --> 00:01:21.274
 L'ordine che scegli viene ricordato alla visita successiva.
 
-00:01:20.328 --> 00:01:23.882
+00:01:21.274 --> 00:01:24.792
 Il tab base cartografica cambia la mappa che sta sotto gli strati:
 
-00:01:23.882 --> 00:01:25.498
+00:01:24.792 --> 00:01:26.390
 stradale, aerea o topografica.
 
-00:01:25.498 --> 00:01:27.275
+00:01:26.390 --> 00:01:28.149
 In fondo trovi le mappe storiche:
 
-00:01:27.275 --> 00:01:35.245
+00:01:28.149 --> 00:01:36.037
 quindici carte di Palermo, dal millecinquecentoottanta al millenovecentonovantatré, dell'Atlante delle carte tecniche storiche di Open Data Sicilia.
 
-00:01:35.245 --> 00:01:39.768
+00:01:36.037 --> 00:01:40.514
 Il pallino colorato indica la precisione della sovrapposizione con la città di oggi.
 
-00:01:39.768 --> 00:01:43.229
+00:01:40.514 --> 00:01:44.014
 Nel tab i miei layer puoi aggiungere i tuoi dati.
 
-00:01:43.229 --> 00:01:48.880
+00:01:44.014 --> 00:01:49.730
 Carichi un file dal computer o da un indirizzo web, oppure aggiungi un servizio:
 
-00:01:48.880 --> 00:01:51.776
+00:01:49.730 --> 00:01:52.658
 X Y Z, W M S, W M T S, W F S o Arc G I S.
 
-00:01:51.776 --> 00:02:00.888
+00:01:52.658 --> 00:02:01.874
 I servizi restano salvati nel browser, e per quelli protetti utente e password restano in memoria solo finché la pagina è aperta.
 
-00:02:00.888 --> 00:02:05.093
+00:02:01.874 --> 00:02:06.030
 Il pulsante con la tavolozza, accanto a ogni strato, apre il pannello dei colori.
 
-00:02:05.093 --> 00:02:11.219
+00:02:06.030 --> 00:02:12.085
 Con colora per attributo scegli un campo dei dati e la mappa si colora di conseguenza, per categorie oppure in classi.
 
-00:02:11.219 --> 00:02:18.280
+00:02:12.085 --> 00:02:19.063
 La rampa si sceglie da un elenco con l'anteprima, e comprende le scale scientifiche di Fabio Crameri, leggibili anche con il daltonismo.
 
-00:02:18.280 --> 00:02:20.772
+00:02:19.063 --> 00:02:21.526
 In basso a sinistra compare la legenda del tema.
 
-00:02:20.772 --> 00:02:24.532
+00:02:21.526 --> 00:02:25.352
 Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono.
 
-00:02:24.532 --> 00:02:27.741
+00:02:25.352 --> 00:02:28.618
 Il punto scelto viene evidenziato e si apre la scheda del luogo.
 
-00:02:27.741 --> 00:02:31.051
+00:02:28.618 --> 00:02:31.985
 Le aree evidenziate hanno una legenda con un colore per ogni voce:
 
-00:02:31.051 --> 00:02:33.457
+00:02:31.985 --> 00:02:34.434
 un clic su una voce lascia in mappa solo quella.
 
-00:02:33.457 --> 00:02:36.616
+00:02:34.434 --> 00:02:37.648
 Passando con il mouse compare un fumetto con il nome del layer.
 
-00:02:36.616 --> 00:02:40.444
+00:02:37.648 --> 00:02:41.450
 La scheda è divisa in sezioni, che scegli dalle linguette in alto:
 
-00:02:40.444 --> 00:02:43.576
+00:02:41.450 --> 00:02:44.561
 luogo, catasto, vincoli, mercato, popolazione e altre.
 
-00:02:43.576 --> 00:02:46.302
+00:02:44.561 --> 00:02:47.269
 La prima riassume ciò che c'è nel punto scelto:
 
-00:02:46.302 --> 00:02:50.362
+00:02:47.269 --> 00:02:51.302
 l'indirizzo, i monumenti, il rischio di incidenti e le fermate vicine.
 
-00:02:50.362 --> 00:02:55.060
+00:02:51.302 --> 00:02:55.968
 La sezione catasto mostra la particella, e ogni sezione indica la fonte dei dati.
 
-00:02:55.060 --> 00:02:58.780
+00:02:55.968 --> 00:02:59.660
 Lo strato Monumenti mostra i luoghi di interesse storico e culturale:
 
-00:02:58.780 --> 00:03:00.614
+00:02:59.660 --> 00:03:01.480
 chiese, palazzi, fontane e teatri.
 
-00:03:00.614 --> 00:03:04.064
+00:03:01.480 --> 00:03:04.905
 Dove è stato possibile, anche l'edificio è colorato sulla mappa.
 
-00:03:04.064 --> 00:03:11.020
+00:03:04.905 --> 00:03:11.808
 Un clic su un monumento apre la sua scheda, con foto, descrizione e il collegamento al Portale del Turismo del Comune di Palermo.
 
-00:03:11.020 --> 00:03:16.642
+00:03:11.808 --> 00:03:17.393
 Lo strato Uffici comunali mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede.
 
-00:03:16.642 --> 00:03:23.183
+00:03:17.393 --> 00:03:23.890
 La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando sono pubblicati.
 
-00:03:23.183 --> 00:03:28.306
+00:03:23.890 --> 00:03:28.872
 Il gruppo Piano P A I riporta il Piano di Assetto Idrogeologico della Regione Siciliana:
 
-00:03:28.306 --> 00:03:34.709
+00:03:28.872 --> 00:03:35.100
 pericolosità e rischio idraulico e geomorfologico, dissesti ed erosione costiera, con la simbologia ufficiale.
 
-00:03:34.709 --> 00:03:36.688
+00:03:35.100 --> 00:03:37.025
 Un clic su un'area apre la scheda:
 
-00:03:36.688 --> 00:03:41.519
+00:03:37.025 --> 00:03:41.724
 nella sezione vincoli trovi il riquadro dei vincoli P A I, con la classe più grave.
 
-00:03:41.519 --> 00:03:42.800
+00:03:41.724 --> 00:03:42.970
 Sono dati informativi.
 
-00:03:42.800 --> 00:03:51.259
+00:03:42.970 --> 00:03:51.451
 Lo strato Incendi mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana.
 
-00:03:51.259 --> 00:03:52.578
+00:03:51.451 --> 00:03:52.773
 Il colore indica l'anno.
 
-00:03:52.578 --> 00:03:56.368
+00:03:52.773 --> 00:03:56.573
 La scheda di un incendio riporta data, località e superfici bruciate.
 
-00:03:56.368 --> 00:04:03.388
+00:03:56.573 --> 00:04:03.396
 Lo strato isole di calore mostra la temperatura superficiale estiva, ricavata dai satelliti Landsat, per ogni sezione di censimento.
 
-00:04:03.388 --> 00:04:11.365
+00:04:03.396 --> 00:04:11.150
 Nella legenda scegli il metodo di classificazione e il numero di classi, e vedi il grafico dell'andamento dal duemiladiciannove al duemilaventicinque.
 
-00:04:11.365 --> 00:04:11.950
+00:04:11.150 --> 00:04:11.718
 Attenzione:
 
-00:04:11.950 --> 00:04:14.928
+00:04:11.718 --> 00:04:14.613
 è la temperatura della superficie, non quella dell'aria.
 
-00:04:14.928 --> 00:04:20.194
+00:04:14.613 --> 00:04:19.878
 Il campo di ricerca in basso permette di cercare una via, un civico, un quartiere o una particella.
 
-00:04:20.194 --> 00:04:30.726
+00:04:19.878 --> 00:04:30.407
 Il tab filtri della barra a sinistra limita la ricerca a una circoscrizione, a un quartiere o a una zona, e permette di scegliere una linea del trasporto pubblico o cercare una particella catastale.
 
-00:04:30.726 --> 00:04:33.705
+00:04:30.407 --> 00:04:33.385
 Per esempio, scegli una circoscrizione e scrivi Maqueda:
 
-00:04:33.705 --> 00:04:37.854
+00:04:33.385 --> 00:04:37.533
 i risultati si restringono, e un clic su uno di essi porta la mappa sul posto.
 
-00:04:37.854 --> 00:04:44.833
+00:04:37.533 --> 00:04:44.508
 Il pulsante con la stampante prepara un foglio con il titolo, la mappa che stai guardando, le legende degli strati accesi e le fonti.
 
-00:04:44.833 --> 00:04:48.454
+00:04:44.508 --> 00:04:48.127
 Scegli il formato, da A quattro ad A zero, l'orientamento e la scala.
 
-00:04:48.454 --> 00:04:54.383
+00:04:48.127 --> 00:04:54.053
 Gli altri pulsanti della barra riportano alla vista iniziale, attivano lo schermo intero o passano al tema scuro.
 
-00:04:54.383 --> 00:04:55.562
+00:04:54.053 --> 00:04:55.219
 Un'ultima avvertenza:
 
-00:04:55.562 --> 00:05:03.924
+00:04:55.219 --> 00:05:03.489
 catasto, zonizzazione e vincoli hanno valore solo informativo, e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali.
 
-00:05:03.924 --> 00:05:05.776
+00:05:03.489 --> 00:05:05.320
 I dati del censimento sono stime.
 
-00:05:05.776 --> 00:05:08.863
+00:05:05.320 --> 00:05:08.373
 Per usi legali rivolgiti sempre agli uffici competenti.
 
-00:05:08.863 --> 00:05:17.848
+00:05:08.373 --> 00:05:15.185
+Il catalogo R N D T di questa mappa si basa interamente sul plugin openrndt-geolibre, ideato e scritto da Andrea Borruso (on Data).
+
+00:05:15.185 --> 00:05:17.889
+Senza il suo lavoro questa funzione non esisterebbe:
+
+00:05:17.889 --> 00:05:19.813
+l'ho solo adattata a questo progetto.
+
+00:05:19.813 --> 00:05:24.493
+Grazie alla sua ottima architettura è stato possibile adattarlo con pochissimi interventi:
+
+00:05:24.493 --> 00:05:31.253
+il plugin nasceva per un'altra applicazione di mappe, ma è pensato così bene da poter essere ospitato anche qui senza riscriverlo.
+
+00:05:31.253 --> 00:05:40.238
 Il pulsante con l'icona dei due layer, nella barra degli strumenti in alto a destra, apre il catalogo del Repertorio Nazionale dei Dati Territoriali (R N D T):
 
-00:05:17.848 --> 00:05:21.634
+00:05:40.238 --> 00:05:44.024
 l'elenco dei dati geografici pubblicati dagli enti di tutta Italia.
 
-00:05:21.634 --> 00:05:25.251
+00:05:44.024 --> 00:05:47.641
 Si cerca per testo, tema o ente, sempre entro l'area di Palermo.
 
-00:05:25.251 --> 00:05:28.359
+00:05:47.641 --> 00:05:50.749
 Un servizio W M S si aggiunge come livello di immagini;
 
-00:05:28.359 --> 00:05:32.315
+00:05:50.749 --> 00:05:54.705
 un servizio W F S come elementi geografici che si possono interrogare.
 
-00:05:32.315 --> 00:05:37.118
+00:05:54.705 --> 00:05:59.508
 Il catalogo usa il plugin openrndt-geolibre, sviluppato da Andrea Borruso di on Data.
 
-00:05:37.118 --> 00:05:43.382
+00:05:59.508 --> 00:06:05.809
 I dati aggiunti compaiono nel gruppo R N D T della barra degli strati, e anche tra gli Argomenti del foglio Info.
 
-00:05:43.382 --> 00:05:48.371
+00:06:05.809 --> 00:06:10.827
 Ogni layer ha l'icona con l'occhio per accenderlo o spegnerlo e il cestino per rimuoverlo.
 
-00:05:48.371 --> 00:05:54.136
+00:06:10.827 --> 00:06:16.626
 Si salvano da soli e, riaprendo la mappa, tornano al loro posto, accesi o spenti come li avevi lasciati.
 
-00:05:54.136 --> 00:05:58.848
+00:06:16.626 --> 00:06:21.366
 Accanto al nome, solo questa sessione avverte che quel layer non si è potuto salvare.
 
-00:05:58.848 --> 00:06:02.289
+00:06:21.366 --> 00:06:24.782
 Un clic sulla mappa interroga anche i layer R N D T accesi.
 
-00:06:02.289 --> 00:06:08.296
+00:06:24.782 --> 00:06:30.747
 Le risposte arrivano nella linguetta Altri dati (R N D T) della scheda, con un riquadro per ogni layer.
 
-00:06:08.296 --> 00:06:16.403
+00:06:30.747 --> 00:06:38.795
 Per i servizi W F S la scheda mostra gli attributi dell'elemento cliccato, per esempio la classe di pericolosità di un'area P A I da frana:
 
-00:06:16.403 --> 00:06:18.677
+00:06:38.795 --> 00:06:41.054
 bisogna cliccare proprio sull'elemento.
 
-00:06:18.677 --> 00:06:25.442
+00:06:41.054 --> 00:06:47.770
 Per i servizi W M S la scheda chiede al servizio le informazioni sul punto (Get Feature Info) e riporta la risposta;
 
-00:06:25.442 --> 00:06:27.658
+00:06:47.770 --> 00:06:49.971
 se il livello è solo grafico, lo dice.
 
-00:06:27.658 --> 00:06:30.691
+00:06:49.971 --> 00:06:52.982
 I dati dei servizi esterni hanno valore informativo:
 
-00:06:30.691 --> 00:06:33.024
+00:06:52.982 --> 00:06:55.298
 la fonte è indicata sotto ogni riquadro.
 
-00:06:33.024 --> 00:06:45.723
+00:06:55.298 --> 00:07:08.116
 Geoimage ti permette di sovrapporre una mappa storica (o qualsiasi immagine) alla cartografia moderna e di georeferenziarla, cioè di associarle coordinate geografiche reali tramite i Ground Control Points (G C P).
 
-00:06:45.723 --> 00:06:53.533
+00:07:08.116 --> 00:07:16.000
 Trascina il file (J P G, P N G, W E B P, B M P) nel riquadro Carica mappa storica, oppure clicca il riquadro per scegliere il file.
 
-00:06:53.533 --> 00:06:58.422
+00:07:16.000 --> 00:07:20.935
 L'immagine appare subito al centro della mappa, con le maniglie di posizionamento.
 
-00:06:58.422 --> 00:07:01.522
+00:07:20.935 --> 00:07:24.064
 Segue la mappa anche se la ruoti o la inclini in 3D.
 
-00:07:01.522 --> 00:07:03.664
+00:07:24.064 --> 00:07:26.228
 Usa le maniglie direttamente sulla mappa.
 
-00:07:03.664 --> 00:07:05.126
+00:07:26.228 --> 00:07:27.706
 Cerchio arancione al centro:
 
-00:07:05.126 --> 00:07:07.216
+00:07:27.706 --> 00:07:29.818
 trascina per spostare l'intera immagine.
 
-00:07:07.216 --> 00:07:09.410
+00:07:29.818 --> 00:07:32.035
 Cerchio con la freccia sopra il lato nord:
 
-00:07:09.410 --> 00:07:10.507
+00:07:32.035 --> 00:07:33.143
 trascina per ruotare.
 
-00:07:10.507 --> 00:07:14.320
+00:07:33.143 --> 00:07:36.997
 Maniglie agli angoli, in due modalità che cambi con il pulsante Maniglie:
 
-00:07:14.320 --> 00:07:15.156
+00:07:36.997 --> 00:07:37.841
 scala / deforma:
 
-00:07:15.156 --> 00:07:21.059
+00:07:37.841 --> 00:07:43.806
 in modalità scala (quadratini arancioni) ridimensionano l'immagine in proporzione tenendo fermo l'angolo opposto;
 
-00:07:21.059 --> 00:07:27.014
+00:07:43.806 --> 00:07:49.824
 in modalità deforma (diamanti blu) ogni angolo si muove liberamente, utile per le mappe storiche non rettangolari.
 
-00:07:27.014 --> 00:07:29.249
+00:07:49.824 --> 00:07:52.040
 Premi Aggiungi G C P (oppure il tasto G).
 
-00:07:29.249 --> 00:07:33.066
+00:07:52.040 --> 00:07:55.823
 Per ogni punto di controllo servono due clic direttamente sulla mappa.
 
-00:07:33.066 --> 00:07:34.865
+00:07:55.823 --> 00:07:57.607
 Passo uno, sull'immagine storica:
 
-00:07:34.865 --> 00:07:38.737
+00:07:57.607 --> 00:08:01.444
 clicca un punto riconoscibile (un incrocio, un edificio, un monumento).
 
-00:07:38.737 --> 00:07:41.899
+00:08:01.444 --> 00:08:04.579
 Compare un cerchio arancione che conferma il punto scelto.
 
-00:07:41.899 --> 00:07:43.589
+00:08:04.579 --> 00:08:06.254
 Passo due, sulla mappa di base:
 
-00:07:43.589 --> 00:07:46.261
+00:08:06.254 --> 00:08:08.903
 clicca lo stesso luogo nella cartografia moderna.
 
-00:07:46.261 --> 00:07:49.423
+00:08:08.903 --> 00:08:12.038
 Il G C P è aggiunto e il cerchio diventa rosso e numerato.
 
-00:07:49.423 --> 00:07:54.494
+00:08:12.038 --> 00:08:17.064
 Aggiungi almeno tre G C P, meglio se distribuiti agli angoli dell'area coperta dall'immagine.
 
-00:07:54.494 --> 00:07:57.760
+00:08:17.064 --> 00:08:20.346
 Con tre o più G C P si abilita Allinea immagine ai G C P.
 
-00:07:57.760 --> 00:08:02.630
+00:08:20.346 --> 00:08:25.240
 L'app calcola la trasformazione scelta nel menu Trasformazione (affine, da tre G C P;
 
-00:08:02.630 --> 00:08:08.073
+00:08:25.240 --> 00:08:30.710
 oppure polinomiale di secondo grado, da sei G C P) e sposta l'immagine nelle coordinate giuste.
 
-00:08:08.073 --> 00:08:10.995
+00:08:30.710 --> 00:08:33.646
 Puoi ripetere l'operazione aggiungendo altri G C P.
 
-00:08:10.995 --> 00:08:18.902
+00:08:33.646 --> 00:08:41.592
 Appena i G C P bastano per la trasformazione scelta (tre per l'affine, sei per la polinomiale) compare l'R M S E, l'errore medio in metri:
 
-00:08:18.902 --> 00:08:20.163
+00:08:41.592 --> 00:08:42.859
 più è basso, meglio è.
 
-00:08:20.163 --> 00:08:24.861
+00:08:42.859 --> 00:08:47.580
 Nella tabella ogni G C P ha il suo residuo in metri, colorato rispetto alla media:
 
-00:08:24.861 --> 00:08:29.616
+00:08:47.580 --> 00:08:52.359
 verde se è nella norma, arancione se è alto, rosso se è molto più alto degli altri.
 
-00:08:29.616 --> 00:08:35.174
+00:08:52.359 --> 00:08:57.944
 Se l'errore è alto, riposiziona i G C P meno precisi (trascinali sulla mappa) o aggiungine altri.
 
-00:08:35.174 --> 00:08:38.912
+00:08:57.944 --> 00:09:01.634
 Lo Swipe divide la mappa in due metà con una linea verticale scorrevole:
 
-00:08:38.912 --> 00:08:42.702
+00:09:01.634 --> 00:09:05.374
 a sinistra vedi l'immagine storica, a destra la sola cartografia di base.
 
-00:08:42.702 --> 00:08:44.934
+00:09:05.374 --> 00:09:07.578
 Nella sezione Confronto visivo premi Swipe:
 
-00:08:44.934 --> 00:08:47.737
+00:09:07.578 --> 00:09:10.345
 sulla mappa compare la linea con la maniglia centrale.
 
-00:08:47.737 --> 00:08:54.071
+00:09:10.345 --> 00:09:16.597
 Trascina la maniglia per spostare la divisione tra il due per cento e il novantotto per cento della larghezza della mappa.
 
-00:08:54.071 --> 00:08:58.938
+00:09:16.597 --> 00:09:21.504
 Lo Spotlight ti aiuta a calibrare la posizione dell'immagine rispetto alla cartografia moderna.
 
-00:08:58.938 --> 00:09:01.244
+00:09:21.504 --> 00:09:23.829
 Premi Spotlight e muovi il mouse sulla mappa:
 
-00:09:01.244 --> 00:09:04.676
+00:09:23.829 --> 00:09:27.289
 un cerchio scopre la cartografia di base nascosta sotto l'immagine.
 
-00:09:04.676 --> 00:09:07.238
+00:09:27.289 --> 00:09:29.872
 Il cursore Raggio ingrandisce o riduce il cerchio.
 
-00:09:07.238 --> 00:09:09.902
+00:09:29.872 --> 00:09:32.558
 Il pulsante con la doppia freccia inverte la logica:
 
-00:09:09.902 --> 00:09:13.591
+00:09:32.558 --> 00:09:36.277
 l'immagine storica si vede solo dentro il cerchio e il resto è nascosto.
 
-00:09:13.591 --> 00:09:15.725
+00:09:36.277 --> 00:09:38.434
 Dalla sezione Export scarichi.
 
-00:09:15.725 --> 00:09:16.152
+00:09:38.434 --> 00:09:38.866
 K M Z:
 
-00:09:16.152 --> 00:09:20.848
+00:09:38.866 --> 00:09:43.611
 per Google Earth, Q G I S e Arc G I S, con l'immagine incorporata.
 
-00:09:20.848 --> 00:09:21.489
+00:09:43.611 --> 00:09:44.258
 Geo Tiff:
 
-00:09:21.489 --> 00:09:27.038
+00:09:44.258 --> 00:09:49.867
 raster con le coordinate incorporate, pronto per Q G I S, Arc G I S e G D A L.
 
-00:09:27.038 --> 00:09:36.501
+00:09:49.867 --> 00:09:59.430
 Scegli sistema di riferimento (W G S ottantaquattro, U T M, Web Mercator), ricampionamento, risoluzione massima e compressione L Z W.
 
-00:09:36.501 --> 00:09:36.999
+00:09:59.430 --> 00:09:59.933
 Points:
 
-00:09:36.999 --> 00:09:40.130
+00:09:59.933 --> 00:10:03.097
 i G C P per il Georeferenziatore di Q G I S.
 
-00:09:40.130 --> 00:09:40.912
+00:10:03.097 --> 00:10:03.888
 world file:
 
-00:09:40.912 --> 00:09:43.616
+00:10:03.888 --> 00:10:06.620
 la trasformazione affine in sei righe.
 
-00:09:43.616 --> 00:09:44.754
+00:10:06.620 --> 00:10:07.771
 G C P Geo Jason:
 
-00:09:44.754 --> 00:09:47.743
+00:10:07.771 --> 00:10:10.791
 i punti di controllo come dati geografici.
 
-00:09:47.743 --> 00:09:48.170
+00:10:10.791 --> 00:10:11.222
 Jason:
 
-00:09:48.170 --> 00:09:52.794
+00:10:11.222 --> 00:10:15.896
 salva e riapre l'intero progetto (Esporta Jason e Importa Jason);
 
-00:09:52.794 --> 00:09:55.071
+00:10:15.896 --> 00:10:18.197
 è lo stesso formato di Geoimage.

@@ -81,7 +81,8 @@ def _frasi(*parti):
 
 def passi_extra():
     """Passi RNDT e Geoimage con il testo dei rispettivi tab, nell'ordine in cui compaiono."""
-    extra = []
+    extra = [{"id": "rndt-plugin", "titolo": "Plugin RNDT: un lavoro di Andrea Borruso", "immagine": {"file": "img/guida/passi/rndt-catalogo.webp"},
+              "narrazione": per_la_voce(" ".join(_contenuti("core/guida-contenuti", "MERITO_PLUGIN")))}]
     for p in _contenuti("core/guida-contenuti", "PASSI_RNDT"):
         par = p["paragrafi"]
         if p["id"] == "rndt-catalogo":  # la prima frase e poi come si cerca

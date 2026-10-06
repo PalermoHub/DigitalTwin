@@ -6,6 +6,13 @@ const CENTRO = [13.3615, 38.1157];
 const TEATRO = [13.3571944, 38.1201711]; // Teatro Massimo (strato Monumenti)
 const PALAGONIA = [13.370036, 38.1167363]; // Palazzo Palagonia, sede comunale (strato Uffici)
 
+// Testo semplice della sezione «Un lavoro di Andrea Borruso» del tab «Plugin RNDT» (la scheda in catalogo.js ha gli stessi
+// paragrafi con i link): è la voce del video. Se cambi uno dei due, cambia anche l'altro.
+export const MERITO_PLUGIN = [
+  'Il catalogo RNDT di questa mappa si basa interamente sul plugin openrndt-geolibre, ideato e scritto da Andrea Borruso (onData). Senza il suo lavoro questa funzione non esisterebbe: l’ho solo adattata a questo progetto.',
+  'Grazie alla sua ottima architettura è stato possibile adattarlo con pochissimi interventi: il plugin nasceva per un’altra applicazione di mappe, ma è pensato così bene da poter essere ospitato anche qui senza riscriverlo.',
+];
+
 export const PASSI = [
   {
     id: 'cos-e',
