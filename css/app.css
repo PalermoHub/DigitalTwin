@@ -1300,3 +1300,6 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 
 /* a pagina informazioni aperta, il suggerimento di avvio non deve restarle sopra */
 body:has(#crediti[open]) :is(.invito-clic, .invito-mai) { display: none; }
+
+/* schermi stretti: il pulsante Strati diventa icona + numero, così non finisce sotto la barra strumenti */
+@media (max-width: 480px) { #apri-strati .lbl-strati { display: none; } }
