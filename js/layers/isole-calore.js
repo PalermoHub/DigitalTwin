@@ -1,4 +1,5 @@
 import { urlDati, pmt } from '../core/config.js';
+import { coloriRampa } from '../core/tema-attributo.js';
 import { tutti } from '../core/scheda-util.js';
 import { coloriClassi, espressioneColore, etichetteClassi, NODATA } from './isole-calore-classi.js';
 import { graficoAndamento } from './isole-calore-grafico.js';
@@ -29,8 +30,10 @@ let legenda = null;
 let metodo = 'jenks';
 let classi = 5;
 let mappa = null;
+let rampaTema = null; // rampa scelta dal tema per attributo: ricolora scala e mappa, il resto della legenda non cambia
 
 const soglie = () => dati.soglie[metodo][classi];
+const colori = () => (rampaTema ? coloriRampa(rampaTema, classi) : coloriClassi(classi));
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -47,7 +50,7 @@ function distinte(feature) {
 
 function applicaClassi() {
   if (!mappa || !dati) return;
-  mappa.setPaintProperty(FILL, 'fill-color', espressioneColore(`LST_${dati.anno}`, soglie()));
+  mappa.setPaintProperty(FILL, 'fill-color', espressioneColore(`LST_${dati.anno}`, soglie(), colori()));
   disegnaScala();
 }
 
@@ -57,12 +60,12 @@ const gradi = v => `${v.toLocaleString('it-IT', { minimumFractionDigits: 1, maxi
 function disegnaScala() {
   const scala = legenda?.querySelector('.ic-scala');
   if (!scala) return;
-  const colori = coloriClassi(classi);
+  const colore = colori();
   const nomi = etichetteClassi(soglie());
   const barra = el('div', 'ic-barra');
   nomi.forEach((nome, i) => {
     const c = el('div', 'ic-classe');
-    c.style.background = colori[i];
+    c.style.background = colore[i];
     c.title = `${nome} °C`;
     barra.append(c);
   });
@@ -135,6 +138,11 @@ export default {
   },
   aggiungiLayer(map) {
     mappa = map;
+    document.addEventListener('tema-rampa', e => {
+      if (e.detail.strato !== 'isole-calore' || e.detail.rampa === rampaTema) return;
+      rampaTema = e.detail.rampa;
+      if (dati) disegnaScala();
+    });
     const nascosto = { visibility: 'none' };
     map.addLayer({
       id: FILL, type: 'fill', source: SRC, 'source-layer': 'sezioni', minzoom: MINZOOM, layout: nascosto,
@@ -161,7 +169,7 @@ export default {
     },
   },
   strati: [{
-    id: 'isole-calore', etichetta: 'Isole di calore (da zoom 10)', layers: [FILL, BORDO], attivo: false, legenda: '.legenda-isole-calore',
+    id: 'isole-calore', etichetta: 'Isole di calore (da zoom 10)', layers: [FILL, BORDO], attivo: false, legendaIntegrata: '.legenda-isole-calore',
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
   }],
   pannello: creaLegenda,

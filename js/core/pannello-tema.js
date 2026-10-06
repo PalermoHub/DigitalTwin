@@ -141,7 +141,12 @@ export function creaPannelloTema(map, strato, stato) {
   const aggiornaLegenda = () => {
     const l = legendaAttributo(tema?.attributo);
     const acceso = Boolean(document.getElementById(`strato-${strato.id}`)?.checked);
-    legendaTema.hidden = !(l && acceso);
+    // Legenda propria che resta (`strato.legendaIntegrata`): cambiano solo i suoi colori, lo strato li legge dalla rampa del tema.
+    if (strato.legendaIntegrata) {
+      const att = tema?.attributo;
+      document.dispatchEvent(new CustomEvent('tema-rampa', { detail: { strato: strato.id, rampa: l && att.tipo === 'graduata' ? att.rampa : null } }));
+    }
+    legendaTema.hidden = !(l && acceso) || Boolean(strato.legendaIntegrata);
     legendaTema.replaceChildren();
     if (l) {
       const t = document.createElement('strong');

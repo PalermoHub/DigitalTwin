@@ -16,8 +16,7 @@ export const NODATA = '#cccccc';
 export const coloriClassi = k => RAMPE[Math.min(9, Math.max(3, k))];
 
 // Colore per classe: `step` sui limiti interni (soglie = [minimo, limite 1 … limite k-1, massimo]).
-export function espressioneColore(campo, soglie) {
-  const colori = coloriClassi(soglie.length - 1);
+export function espressioneColore(campo, soglie, colori = coloriClassi(soglie.length - 1)) {
   const passi = [];
   for (let i = 1; i < soglie.length - 1; i++) passi.push(soglie[i], colori[i]);
   return ['case', ['==', ['get', campo], null], NODATA, ['step', ['get', campo], colori[0], ...passi]];
