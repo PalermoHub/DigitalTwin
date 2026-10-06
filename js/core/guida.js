@@ -1,4 +1,4 @@
-import { PASSI } from './guida-contenuti.js';
+import { PASSI, PASSI_RNDT } from './guida-contenuti.js';
 
 // Tab «Guida» del foglio Info: indice, poi un passo per sezione con testo e figura.
 export function schedaGuida(doc = document, passi = PASSI) {
@@ -56,32 +56,43 @@ export function schedaGuida(doc = document, passi = PASSI) {
   radice.append(media);
 
   for (const p of passi) {
-    const sez = doc.createElement('section');
-    sez.className = 'guida-passo';
-    sez.id = `guida-${p.id}`;
+    const sez = creaPasso(doc, p);
     sezioni[p.id] = sez;
-    const t = doc.createElement('h3');
-    t.textContent = p.titolo;
-    sez.append(t);
-    for (const testo of p.paragrafi) {
-      const par = doc.createElement('p');
-      par.textContent = testo;
-      sez.append(par);
-    }
-    const fig = doc.createElement('figure');
-    fig.className = 'guida-figura';
-    const img = doc.createElement('img');
-    img.src = p.immagine.file;
-    img.alt = p.immagine.alt;
-    img.loading = 'lazy';
-    img.width = 1280;
-    img.height = 720;
-    img.onerror = () => fig.remove(); // deploy senza gli screenshot: niente icona rotta
-    const cap = doc.createElement('figcaption');
-    cap.textContent = p.immagine.didascalia;
-    fig.append(img, cap);
-    sez.append(fig);
     radice.append(sez);
   }
   return radice;
+}
+
+// Una sezione con titolo, paragrafi e figura: la usano la Guida e il tab «Plugin RNDT».
+function creaPasso(doc, p) {
+  const sez = doc.createElement('section');
+  sez.className = 'guida-passo';
+  sez.id = `guida-${p.id}`;
+  const t = doc.createElement('h3');
+  t.textContent = p.titolo;
+  sez.append(t);
+  for (const testo of p.paragrafi) {
+    const par = doc.createElement('p');
+    par.textContent = testo;
+    sez.append(par);
+  }
+  const fig = doc.createElement('figure');
+  fig.className = 'guida-figura';
+  const img = doc.createElement('img');
+  img.src = p.immagine.file;
+  img.alt = p.immagine.alt;
+  img.loading = 'lazy';
+  img.width = 1280;
+  img.height = 720;
+  img.onerror = () => fig.remove(); // deploy senza gli screenshot: niente icona rotta
+  const cap = doc.createElement('figcaption');
+  cap.textContent = p.immagine.didascalia;
+  fig.append(img, cap);
+  sez.append(fig);
+  return sez;
+}
+
+// Passi RNDT da mettere in coda al tab «Plugin RNDT».
+export function passiRndt(doc = document, passi = PASSI_RNDT) {
+  return passi.map(p => creaPasso(doc, p));
 }

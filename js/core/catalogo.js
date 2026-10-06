@@ -1,6 +1,6 @@
 import { urlDati } from './config.js';
 import { schedaArgomenti } from './argomenti.js';
-import { schedaGuida } from './guida.js';
+import { schedaGuida, passiRndt } from './guida.js';
 import { schedaGeoimage } from '../geoimage/guida.js';
 
 const AVVISI = [
@@ -243,7 +243,7 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
     ['argomenti', 'Argomenti', [argomenti.elemento]],
     ['guida', 'Guida', [guida]],
     ['geoimage', 'Guida Geoimage', [schedaGeoimage()]],
-    ['plugin', 'Plugin RNDT', schedaPlugin()],
+    ['plugin', 'Plugin RNDT', [...schedaPlugin(), ...passiRndt()]],
     ['fonti', 'Fonti e avvisi', [Object.assign(document.createElement('h2'), { textContent: 'Fonti e avvisi' }), elenco(AVVISI), fonti]],
     ['about', 'About', schedaComunita()],
   ];

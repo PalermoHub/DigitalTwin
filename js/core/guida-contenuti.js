@@ -125,7 +125,22 @@ export const PASSI = [
     narrazione: 'La barra in basso permette di cercare una via, un civico, un quartiere o una particella. Il pulsante dei filtri apre il pannello per limitare la ricerca a una circoscrizione, a un quartiere o a una zona. Per esempio, scegli una circoscrizione e scrivi Maqueda: i risultati si restringono, e un clic su uno di essi porta la mappa sul posto.',
     scena: { strati: [], centro: CENTRO, zoom: 13, ricerca: { testo: 'Maqueda', apriFiltri: true, circ: 1 } },
   },
-  // I passi RNDT sono «statici»: immagini fatte con scripts/guida_screenshot_rndt.py, non fanno parte del video (che andrebbe rigenerato con la voce).
+  {
+    id: 'avvertenze',
+    titolo: 'Avvertenze',
+    paragrafi: [
+      'Catasto, zonizzazione e vincoli hanno valore solo informativo e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. Il piano regolatore è la variante generale del duemilaquattro: varianti successive potrebbero non essere incluse.',
+      'I dati del censimento sono stime campionarie, quindi i valori per sezione non sono conteggi esatti.',
+    ],
+    immagine: { file: 'img/guida/passi/avvertenze.webp', alt: 'La sezione Strumenti urbanistici della scheda del luogo, con in fondo l\'avviso: dato informativo, senza valore legale.', didascalia: 'In fondo a ogni scheda, l\'avviso sul valore informativo dei dati.' },
+    narrazione: 'Un\'ultima avvertenza: catasto, zonizzazione e vincoli hanno valore solo informativo, e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. I dati del censimento sono stime. Per usi legali rivolgiti sempre agli uffici competenti.',
+    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Strumenti urbanistici' },
+  },
+];
+
+// Passi del tab «Plugin RNDT» (non della Guida): stesso formato, immagini statiche.
+export const PASSI_RNDT = [
+  // Sono «statici»: immagini fatte con scripts/guida_screenshot_rndt.py, non fanno parte del video (che andrebbe rigenerato con la voce).
   {
     id: 'rndt-catalogo',
     titolo: 'Cercare nel catalogo RNDT',
@@ -155,16 +170,5 @@ export const PASSI = [
       'Per i servizi WMS la scheda chiede al servizio le informazioni sul punto (GetFeatureInfo) e riporta la risposta; se il livello è solo grafico, lo dice. I dati dei servizi esterni hanno valore informativo: la fonte è indicata sotto ogni riquadro.',
     ],
     immagine: { file: 'img/guida/passi/rndt-info.webp', alt: 'La scheda del luogo sulla linguetta «Altri dati (RNDT)», con gli attributi di un albero monumentale: nome, specie, località e circonferenza.', didascalia: 'Clic su un albero monumentale: gli attributi del layer RNDT.' },
-  },
-  {
-    id: 'avvertenze',
-    titolo: 'Avvertenze',
-    paragrafi: [
-      'Catasto, zonizzazione e vincoli hanno valore solo informativo e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. Il piano regolatore è la variante generale del duemilaquattro: varianti successive potrebbero non essere incluse.',
-      'I dati del censimento sono stime campionarie, quindi i valori per sezione non sono conteggi esatti.',
-    ],
-    immagine: { file: 'img/guida/passi/avvertenze.webp', alt: 'La sezione Strumenti urbanistici della scheda del luogo, con in fondo l\'avviso: dato informativo, senza valore legale.', didascalia: 'In fondo a ogni scheda, l\'avviso sul valore informativo dei dati.' },
-    narrazione: 'Un\'ultima avvertenza: catasto, zonizzazione e vincoli hanno valore solo informativo, e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. I dati del censimento sono stime. Per usi legali rivolgiti sempre agli uffici competenti.',
-    scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Strumenti urbanistici' },
   },
 ];
