@@ -28,6 +28,12 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
   const rampa = selezione('Rampa', 'rampa', []);
   rampa.select.append(...GRUPPI_RAMPE.flatMap(([, rampe]) => rampe).map(n => new Option(n, n)));
   rampa.select.value = 'Blu';
+  const inverti = document.createElement('label');
+  inverti.className = 'rampa-inverti';
+  const invertiCasella = document.createElement('input');
+  invertiCasella.type = 'checkbox';
+  invertiCasella.dataset.ruolo = 'inverti';
+  inverti.append(invertiCasella, ' Inverti la scala dei colori');
   // Il <select> nativo non può mostrare i colori: resta nascosto come sede del valore e al suo posto c'è un elenco
   // con la barra di colori accanto a ogni nome (stesso valore, stesso evento `change`).
   const sfumatura = nome => `linear-gradient(to right, ${RAMPE[nome].join(', ')})`;
@@ -89,7 +95,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
   const msg = document.createElement('p');
   msg.className = 'tema-msg';
   msg.setAttribute('role', 'status');
-  el.append(titolo, campo.riga, modo.riga, classi.riga, metodo.riga, rampa.riga, aggiorna, voci, msg);
+  el.append(titolo, campo.riga, modo.riga, classi.riga, metodo.riga, rampa.riga, inverti, aggiorna, voci, msg);
 
   let campi = new Map(); // campo → { valori, numeri, numerico } letto dalle feature in vista
   let ultimo = ''; // attributo mostrato nella lista, per non ricostruirla a ogni modifica
@@ -133,7 +139,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
       }
       return;
     }
-    const colori = coloriRampa(a.rampa, a.soglie.length + 1);
+    const colori = coloriRampa(a.rampa, a.soglie.length + 1, a.inverti);
     etichetteClassi(a.soglie).forEach((et, i) => {
       const riga = document.createElement('div');
       riga.className = 'tema-riga tema-classe';
@@ -158,7 +164,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
     let nuovo = null;
     if (modo.select.value === 'graduata') {
       const soglie = calcolaSoglie(info.numeri, Number(classi.select.value), metodo.select.value);
-      if (soglie.length) nuovo = { campo: nome, tipo: 'graduata', rampa: rampa.select.value, soglie };
+      if (soglie.length) nuovo = { campo: nome, tipo: 'graduata', rampa: rampa.select.value, ...(invertiCasella.checked && { inverti: true }), soglie };
       else msg.textContent = 'Valori troppo simili per formare classi.';
     } else {
       const valori = [...(info?.valori ?? [])].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
@@ -175,6 +181,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
 
   campo.select.addEventListener('change', ricalcola);
   for (const s of [modo, classi, metodo, rampa]) s.select.addEventListener('change', ricalcola);
+  invertiCasella.addEventListener('change', ricalcola);
   aggiorna.addEventListener('click', () => { rileva(); if (attivo()) ricalcola(); });
 
   // allinea i controlli al tema (caricamento, import, ripristino, o la modifica appena fatta)
@@ -189,13 +196,14 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
         modo.select.value = a.tipo;
         if (a.tipo === 'graduata') {
           rampa.select.value = a.rampa;
+          invertiCasella.checked = a.inverti === true;
           const n = String(a.soglie.length + 1);
           if ([...classi.select.options].some(o => o.value === n)) classi.select.value = n;
         }
       }
       mostraLista(a);
     }
-    classi.riga.hidden = metodo.riga.hidden = rampa.riga.hidden = modo.select.value !== 'graduata';
+    classi.riga.hidden = metodo.riga.hidden = rampa.riga.hidden = inverti.hidden = modo.select.value !== 'graduata';
     disegnaAnteprima();
   };
 

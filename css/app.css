@@ -708,6 +708,7 @@ label.sotto-voce:has(input:checked) .occhio { box-shadow: none; }
 .strato-tema select { min-width: 0; max-width: 11em; padding: 2px 4px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
 .strato-tema .tema-riga[hidden] { display: none; }
 .rampa-riga { position: relative; }
+.rampa-inverti { display: flex; align-items: center; gap: 6px; margin: 4px 0 8px; font-size: var(--fs-xs); }
 .rampa-scelta, .rampa-elenco button { display: grid; grid-template-columns: 5.5em 1fr; align-items: center; gap: 8px; width: 100%; padding: 3px 6px; border: 0; background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
 .rampa-scelta { width: 11em; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); }
 .rampa-scelta i, .rampa-elenco i { height: 12px; border: 1px solid var(--border-ui); border-radius: 2px; }

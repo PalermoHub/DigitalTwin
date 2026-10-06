@@ -144,7 +144,7 @@ export function creaPannelloTema(map, strato, stato) {
     // Legenda propria che resta (`strato.legendaIntegrata`): cambiano solo i suoi colori, lo strato li legge dalla rampa del tema.
     if (strato.legendaIntegrata) {
       const att = tema?.attributo;
-      document.dispatchEvent(new CustomEvent('tema-rampa', { detail: { strato: strato.id, rampa: l && att.tipo === 'graduata' ? att.rampa : null } }));
+      document.dispatchEvent(new CustomEvent('tema-rampa', { detail: { strato: strato.id, rampa: l && att.tipo === 'graduata' ? att.rampa : null, inverti: att?.inverti === true } }));
     }
     legendaTema.hidden = !(l && acceso) || Boolean(strato.legendaIntegrata);
     legendaTema.replaceChildren();

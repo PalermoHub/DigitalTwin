@@ -29,8 +29,9 @@ export const GRUPPI_RAMPE = [
 export const TAVOLOZZA = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac', '#1f77b4', '#8c564b'];
 
 // `n` colori della rampa, equidistanti.
-export function coloriRampa(nome, n) {
-  const r = RAMPE[nome] ?? RAMPE.Blu;
+// Con `inverti` la rampa si legge dal fondo (il valore più alto prende il colore più chiaro).
+export function coloriRampa(nome, n, inverti = false) {
+  const r = inverti ? [...(RAMPE[nome] ?? RAMPE.Blu)].reverse() : RAMPE[nome] ?? RAMPE.Blu;
   if (n <= 1) return [r[r.length - 1]];
   return Array.from({ length: n }, (_, i) => r[Math.round(i * (r.length - 1) / (n - 1))]);
 }
@@ -84,13 +85,13 @@ export function espressioneAttributo(a) {
     const voci = Object.entries(att.colori).flat();
     return ['match', ['to-string', valore], ...voci, COLORE_MANCANTE];
   }
-  const colori = coloriRampa(att.rampa, att.soglie.length + 1);
+  const colori = coloriRampa(att.rampa, att.soglie.length + 1, att.inverti);
   const step = ['step', valore, colori[0], ...att.soglie.flatMap((s, i) => [s, colori[i + 1]])];
   return ['case', ['==', ['typeof', valore], 'number'], step, COLORE_MANCANTE];
 }
 
 // Attributo ripulito oppure null.
-// { campo, tipo: 'categorie', colori: { valore: #rrggbb } } | { campo, tipo: 'graduata', rampa, soglie: [numeri crescenti] }
+// { campo, tipo: 'categorie', colori: { valore: #rrggbb } } | { campo, tipo: 'graduata', rampa, inverti?: true, soglie: [numeri crescenti] }
 export function validaAttributo(a) {
   if (!a || typeof a !== 'object' || typeof a.campo !== 'string' || !a.campo || a.campo.length > 100) return null;
   if (a.tipo === 'categorie') {
@@ -103,7 +104,7 @@ export function validaAttributo(a) {
     const s = a.soglie;
     if (!Array.isArray(s) || !s.length || s.length >= MAX_CLASSI) return null;
     if (!s.every((x, i) => typeof x === 'number' && Number.isFinite(x) && (i === 0 || x > s[i - 1]))) return null;
-    return { campo: a.campo, tipo: 'graduata', rampa: a.rampa in RAMPE ? a.rampa : 'Blu', soglie: [...s] };
+    return { campo: a.campo, tipo: 'graduata', rampa: a.rampa in RAMPE ? a.rampa : 'Blu', ...(a.inverti === true && { inverti: true }), soglie: [...s] };
   }
   return null;
 }
@@ -119,6 +120,6 @@ export function legendaAttributo(a, max = 12) {
     if (tutte.length > max) voci.push({ colore: null, testo: `… altre ${tutte.length - max}` });
     return { titolo: att.campo, voci };
   }
-  const colori = coloriRampa(att.rampa, att.soglie.length + 1);
+  const colori = coloriRampa(att.rampa, att.soglie.length + 1, att.inverti);
   return { titolo: att.campo, voci: etichetteClassi(att.soglie).map((testo, i) => ({ colore: colori[i], testo })) };
 }

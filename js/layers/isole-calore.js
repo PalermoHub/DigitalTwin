@@ -30,10 +30,11 @@ let legenda = null;
 let metodo = 'jenks';
 let classi = 5;
 let mappa = null;
-let rampaTema = null; // rampa scelta dal tema per attributo: ricolora scala e mappa, il resto della legenda non cambia
+let rampaTema = null;
+let invertiTema = false; // rampa scelta dal tema per attributo: ricolora scala e mappa, il resto della legenda non cambia
 
 const soglie = () => dati.soglie[metodo][classi];
-const colori = () => (rampaTema ? coloriRampa(rampaTema, classi) : coloriClassi(classi));
+const colori = () => (rampaTema ? coloriRampa(rampaTema, classi, invertiTema) : coloriClassi(classi));
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -139,8 +140,9 @@ export default {
   aggiungiLayer(map) {
     mappa = map;
     document.addEventListener('tema-rampa', e => {
-      if (e.detail.strato !== 'isole-calore' || e.detail.rampa === rampaTema) return;
+      if (e.detail.strato !== 'isole-calore' || (e.detail.rampa === rampaTema && e.detail.inverti === invertiTema)) return;
       rampaTema = e.detail.rampa;
+      invertiTema = e.detail.inverti;
       if (dati) disegnaScala();
     });
     const nascosto = { visibility: 'none' };
