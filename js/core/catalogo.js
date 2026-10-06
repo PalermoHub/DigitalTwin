@@ -132,7 +132,8 @@ function strumentiUsati(sezione) {
     el('h4', 'Requisiti'),
     lista(['WSL2 attivo con una distribuzione Linux (per esempio Ubuntu).', 'Circa 5 GB liberi nella home di WSL.', 'Connessione a Internet.', 'Nessuna interfaccia Windows né QGIS Desktop già installato.']),
     p(link('Repository GitHub', 'https://github.com/pigreco/qgis_headless_wsl2'), ' · ', link('Video tutorial', 'https://www.youtube.com/watch?v=FQEmhktDRaQ')),
-    p(link('Pagina originale', 'https://gbvitrano.github.io/palermo_popolazione/')));
+    p(link('Pagina originale', 'https://gbvitrano.github.io/palermo_popolazione/')),
+    p('Guida di ', link('Totò Fiandaca', 'https://www.linkedin.com/in/salvatore-fiandaca-23a1a250/'), ' (', link('@pigreco71', 'https://www.linkedin.com/in/salvatore-fiandaca-23a1a250/'), ') ❤️'));
   const colori = sezione('Scientific colour maps',
     p('Sono le scale colore scientifiche di Fabio Crameri: rampe di colore «percettivamente uniformi», in cui a uguali variazioni del dato corrispondono uguali variazioni visive. Si leggono bene anche con deficit nella visione dei colori e in stampa in bianco e nero, a differenza di arcobaleni come «jet», che creano false bande e deformano i valori.'),
     p('Sono usate qui per colorare i layer per attributo (sequenziali, divergenti e categoriche). Mapshaper le include dalla versione 0.7.75: 12 scale sequenziali (batlow, batlowW, acton, bamako, bilbao, davos, devon, lajolla, lapaz, oslo, tokyo, turku), 5 divergenti (bam, broc, cork, roma, vik) e 1 categorica (batlowS).'),
