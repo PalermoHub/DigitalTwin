@@ -36,10 +36,30 @@ function el(tag, classe, testo) {
   return e;
 }
 
-export function creaGruppoRndt() {
+export const OPZIONI_RNDT = {
+  id: 'rndt',
+  titolo: 'RNDT',
+  argomento: { titolo: 'RNDT', descrizione: 'Dati aggiunti dal catalogo RNDT, anche richiamati dal salvataggio. Si aggiungono dal pulsante del catalogo nella barra strumenti.' },
+  vuoto: 'Nessun layer RNDT: cercalo nel catalogo.',
+  azioni: [{ id: 'rndt-catalogo-apri', testo: '＋ Dal catalogo RNDT', tipo: 'apri' }],
+};
+
+export const OPZIONI_MIEI = {
+  id: 'miei',
+  titolo: 'I miei layer',
+  argomento: { titolo: 'I miei layer', descrizione: 'File caricati dal computer e servizi XYZ, WMS e WFS aggiunti per indirizzo, anche richiamati dal salvataggio. Si aggiungono dal pulsante «Aggiungi layer» nella barra strumenti.' },
+  vuoto: 'Nessun layer aggiunto: carica un file o aggiungi un servizio.',
+  azioni: [
+    { id: 'miei-aggiungi-apri', testo: '＋ Aggiungi servizio o file…', tipo: 'apri' },
+    { id: 'miei-carica-file', testo: '📁 Carica file dal computer', tipo: 'file', titolo: `Formati: ${ESTENSIONI.join(' ')}` },
+  ],
+};
+
+// Un gruppo della barra strati alimentato da un host: layer con accensione, rimozione e pulsanti d'aggiunta
+export function creaGruppo({ id, titolo, argomento, vuoto, azioni }) {
   let radice = null;
   let host = null;
-  let apriCatalogo = () => {};
+  let apri = () => {};
   let caricaFile = async () => {};
 
   const opacita = new Map(); // id → { originali, valore }: sopravvive al ridisegno del gruppo
@@ -61,17 +81,17 @@ export function creaGruppoRndt() {
 
   function disegna() {
     if (!radice || !host) return;
-    selettore ??= creaSelettore();
-    const titolo = radice.querySelector('h2');
-    const azioni = el('div', 'rndt-gruppo-azioni');
-    const catalogo = el('button', 'rndt-gruppo-aggiungi', '＋ Dal catalogo RNDT');
-    const file = el('button', 'rndt-gruppo-aggiungi', '📁 Carica file dal computer');
-    file.id = 'rndt-carica-file';
-    file.title = `Formati: ${ESTENSIONI.join(' ')}`;
-    for (const b of [catalogo, file]) b.type = 'button';
-    catalogo.addEventListener('click', () => apriCatalogo());
-    file.addEventListener('click', () => selettore.click());
-    azioni.append(catalogo, file);
+    selettore ??= azioni.some(a => a.tipo === 'file') ? creaSelettore() : el('span');
+    const h2 = radice.querySelector('h2');
+    const gruppoAzioni = el('div', 'rndt-gruppo-azioni');
+    gruppoAzioni.append(...azioni.map(a => {
+      const b = el('button', 'rndt-gruppo-aggiungi', a.testo);
+      b.type = 'button';
+      b.id = a.id;
+      if (a.titolo) b.title = a.titolo;
+      b.addEventListener('click', () => (a.tipo === 'file' ? selettore.click() : apri()));
+      return b;
+    }));
     const righe = righeGruppo(host.elenco());
     const voci = righe.length
       ? righe.flatMap(r => {
@@ -88,7 +108,7 @@ export function creaGruppoRndt() {
         const togli = el('button', 'rndt-gruppo-togli');
         togli.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg>';
         togli.type = 'button';
-        togli.id = `rndt-togli-${r.id}`;
+        togli.id = `${id}-togli-${r.id}`;
         togli.title = `Rimuovi ${r.nome}`;
         togli.setAttribute('aria-label', `Rimuovi il layer ${r.nome}`);
         togli.addEventListener('click', () => { opacita.delete(r.id); host.elimina(r.id); });
@@ -97,15 +117,15 @@ export function creaGruppoRndt() {
         const slider = sliderOpacita(host.getMap(), { id: r.id, etichetta: r.nome, layers: r.layers }, casella, opacita.get(r.id));
         return [riga, slider];
       })
-      : [el('p', 'rndt-gruppo-vuoto', 'Nessun layer RNDT: cercalo nel catalogo.')];
+      : [el('p', 'rndt-gruppo-vuoto', vuoto)];
     const idAttivo = radice.contains(document.activeElement) ? document.activeElement.id : null;
-    radice.replaceChildren(titolo, azioni, selettore, ...voci);
+    radice.replaceChildren(h2, gruppoAzioni, selettore, ...voci);
     // stessi controlli degli altri gruppi: frecce, trascinamento, albero, ordine salvato
     let storage = null;
     try { storage = window.localStorage; } catch { /* storage bloccato: l'ordine vale per la sessione */ }
     const mappa = host.getMap?.();
     if (mappa?.getStyle) abilitaRiordino(mappa, radice, new Map(righe.map(r => [r.id, r.layers])), storage, { daElenco: true });
-    const vai = idDaFocalizzare(idAttivo, [...radice.querySelectorAll('[id]')].map(e => e.id), 'rndt-carica-file');
+    const vai = idDaFocalizzare(idAttivo, [...radice.querySelectorAll('[id]')].map(e => e.id), azioni[0].id);
     if (vai) document.getElementById(vai)?.focus();
     if (radice.bottone) {
       const { attivo, n } = statoBottone(righe);
@@ -119,20 +139,22 @@ export function creaGruppoRndt() {
   return {
     // modulo da dare a costruisciPannello (solo il gruppo: senza strati propri né sorgenti)
     modulo: {
-      id: 'rndt',
-      titolo: 'RNDT',
-      argomento: { titolo: 'RNDT', descrizione: 'Dati aggiunti dal catalogo RNDT, anche richiamati dal salvataggio. Si aggiungono dal pulsante del catalogo nella barra strumenti.' },
+      id,
+      titolo,
+      argomento: { ...argomento },
       // vuoto finché non c'è l'host: così costruisciPannello non crea caselle (le disegna disegna()); la tab Argomenti
       // si ricostruisce a ogni apertura e legge l'elenco aggiornato
       get strati() { return host ? righeGruppo(host.elenco()).map(r => ({ id: r.id, etichetta: r.nome })) : []; },
       pannello(gruppo) { radice = gruppo; disegna(); },
     },
-    collega(hostRndt, apri, carica = async () => {}) {
-      host = hostRndt;
-      apriCatalogo = apri;
+    collega(hostCollegato, apriPannello, carica = async () => {}) {
+      host = hostCollegato;
+      apri = apriPannello;
       caricaFile = carica;
       host.suCambio(disegna);
       disegna();
     },
   };
 }
+
+export const creaGruppoRndt = () => creaGruppo(OPZIONI_RNDT);

@@ -49,10 +49,10 @@ function imposta(map, ids, visibile) {
   }
 }
 
-const ETICHETTE = { base: 'Mappe di base', layer: 'Layer', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Servizi', incendi: 'Incendi', 'isole-calore': 'Isole di calore', sicurezza: 'Sicurezza' };
+const ETICHETTE = { base: 'Mappe di base', layer: 'Layer', popolazione: 'Popolazione', confini: 'Confini', territorio: 'Territorio', edifici: 'Edifici', terreno: 'Rilievo', trasporto: 'Trasporti', pai: 'Piano PAI', monumenti: 'Monumenti', scuole: 'Scuole', uffici: 'Uffici', colonnine: 'Servizi', incendi: 'Incendi', 'isole-calore': 'Isole di calore', sicurezza: 'Sicurezza', miei: 'I miei layer' };
 
 // I soli gruppi che hanno un tab proprio; tutti gli altri sono sezioni del tab «Layer».
-const TAB_DIRETTI = new Set(['base', 'rndt']);
+const TAB_DIRETTI = new Set(['base', 'rndt', 'miei']);
 // Titolo di un gruppo: il `summary` di una sezione, altrimenti l'`h2` del pannello. Barre e campi si inseriscono dopo.
 const intestazione = el => el.querySelector(':scope > summary') ?? el.querySelector('h2');
 

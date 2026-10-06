@@ -5,8 +5,6 @@ import { creaPannello } from './pannello.js';
 import { interrogaTutti, segnaposto } from './info.js';
 import { leggi, salva } from './archivio.js';
 import { anelliDaZone } from './area.js';
-import { importaFile } from './importa.js';
-import { librerie } from './librerie.js';
 import { archivioIndexedDB } from './dati.js';
 import { scegliProxy } from './proxy.js';
 import { urlDati } from '../core/config.js';
@@ -30,18 +28,6 @@ export function collegaRndt(map, elementoPannello, gruppo) {
   });
   host.suCambio(() => pannello.disegnaElenco(host));
 
-  // Un file dal computer: legge, riconduce a GeoJSON WGS84 e lo aggiunge come layer. Gli errori si mostrano, non si lanciano.
-  async function carica(file) {
-    try {
-      await anelliPronti; // il filtro sul confine di Palermo ha bisogno del confine
-      const { nome, fc, avvisi } = await importaFile(file, librerie);
-      for (const a of avvisi) segnala(`${file.name}: ${a}`);
-      host.addFileLayer(nome, fc);
-    } catch (errore) {
-      segnala(`Non carico «${file.name}»: ${errore.message}`);
-    }
-  }
-
   let plugin = null;
   async function apri() {
     pannello.apri(); // subito visibile, con «Caricamento…» finché il plugin non è pronto
@@ -58,7 +44,7 @@ export function collegaRndt(map, elementoPannello, gruppo) {
     }
   }
 
-  gruppo?.collega(host, apri, carica); // gruppo «RNDT» della barra strati
+  gruppo?.collega(host, apri); // gruppo «RNDT» della barra strati
 
   const dentro = (l, { lng, lat }) => {
     const b = l.sorgente?.bounds;
