@@ -23,11 +23,9 @@ Serve la rete: base cartografica (OpenFreeMap), tile PRG/terreno e PMTiles sono 
 - Restano in `dati/` (non in git) solo i file senza link (≈ 350 MB: gpkg, geoparquet, DTM…). Vedi `dati/README.md`.
 - I **tileset** (cartelle `z/x/y`: PRG, terreno, elevazione, griglia DTM) sono voci `tileset` del catalogo.
 
-## Test
+## Dati
 
 ```bash
-python3 -m pytest -q                # dati + viewer (Playwright/Chromium): ~10 minuti, usa la rete
-node --test tests/js/*.test.mjs     # logica pura (indicatori, indirizzi, scheda, terreno, OMI, stili)
 python3 scripts/valida_dati.py      # rigenera dati/catalogo.json e docs/catalogo.md; controlla link, CORS e tileset
 python3 scripts/valida_dati.py --completo   # in più scarica i file remoti e ne verifica l'hash (≈ 270 MB)
 ```
@@ -40,7 +38,7 @@ stime campionarie (censimento permanente).
 ## Struttura
 
 `js/core/` nucleo (mappa, catalogo, pannello, scheda, ricerca) · `js/layers/` un modulo per tema · `js/geoimage/` mappe storiche
-georeferenziate sulla base (`docs/GEOIMAGE.md`) · `worker/` proxy CORS (Cloudflare Worker) · `scripts/` validazione dei dati, server e aggiornamento dei dati · `tests/` · `docs/` catalogo, stili e guide d'uso (`RNDT.md`, `AGGIUNGI_LAYER.md`).
+georeferenziate sulla base (`docs/GEOIMAGE.md`) · `worker/` proxy CORS (Cloudflare Worker) · `scripts/` validazione dei dati, server e aggiornamento dei dati · `docs/` catalogo, stili e guide d'uso (`RNDT.md`, `AGGIUNGI_LAYER.md`).
 
 ## Licenza
 

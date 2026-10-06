@@ -41,3 +41,8 @@ docs/ISTRUZIONI_SERVER.md
 docs/PIANO_DigitalTwin_Palermo.md
 docs/RIPARTENZA.md
 docs/schermata-fase1.png
+
+# test: restano solo in locale (non servono all'app; vedi docs/DA_FARE_PRIMA_DELLA_PRODUZIONE.md)
+tests/
+package.json
+pytest.ini
