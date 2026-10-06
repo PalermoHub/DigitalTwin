@@ -275,43 +275,40 @@ dialog li { margin: 4px 0; }
 .info-sezione { box-sizing: border-box; width: 100%; max-width: 1100px; margin: 0 auto; }
 .info-sezione[hidden] { display: none; }
 .tab-corpo { flex: 1; min-height: 0; overflow-y: auto; }
-.argomento { margin: 0 0 14px; }
-.argomento h3 { margin: 0 0 2px; font-size: 14px; }
-.argomento p { margin: 0 0 6px; color: var(--text-muted); font-size: 13px; }
-.argomento label { display: block; padding: 2px 0; }
-.argomento-filtri { margin: 2px 0 4px 22px; }
-.argomento-filtri h4 { margin: 4px 0 0; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
-.argomento-filtri label { font-size: 13px; }
-.guida-media { margin: 0 0 20px; }
+/* Pagine informative: stessa struttura in ogni tab (titolo, introduzione, blocchi a scheda) */
+.info-sezione h2 { margin: 0 0 4px; font-size: 1.75rem; font-weight: 700; letter-spacing: -.015em; line-height: 1.2; }
+.info-sezione h2.pagina-sezione { margin-top: 36px; }
+.pagina-intro { margin: 0 0 20px; color: var(--text-muted); font-size: 1.0625rem; line-height: 1.5; }
+.info-blocco { margin: 0 0 14px; padding: 16px 18px; background: var(--surface-alt); border: 1px solid var(--border-ui); border-radius: var(--r-md); }
+.info-blocco h3 { margin: 0 0 8px; font-size: var(--fs-lg); font-weight: 700; }
+.info-blocco h4 { margin: 14px 0 4px; font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+.info-blocco p { margin: 0 0 8px; color: var(--text); font-size: 1rem; line-height: 1.55; }
+.info-blocco p:last-child, .info-blocco ul:last-child, .info-blocco ol:last-child { margin-bottom: 0; }
+.info-blocco ul, .info-blocco ol { margin: 0 0 8px; padding-left: 20px; font-size: 1rem; line-height: 1.55; }
+.info-blocco li { margin: 3px 0; }
+.info-blocco a, .guida-indice a { color: var(--accent-strong); font-weight: 600; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.info-blocco code { font-size: .9em; overflow-wrap: anywhere; }
+.info-blocco img { display: block; width: 100%; height: auto; margin: 12px 0 0; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
+.info-blocco figure { margin: 12px 0 0; }
+.info-blocco figure img { margin: 0; }
+.info-blocco figcaption { margin-top: 6px; color: var(--text-muted); font-size: var(--fs-xs); }
+.guida-passo { scroll-margin-top: 8px; }
+.guida-indice { margin: 0 0 14px; padding: 16px 18px; background: var(--surface-alt); border: 1px solid var(--border-ui); border-radius: var(--r-md); }
+.guida-indice ol { margin: 0; padding-left: 20px; font-size: 1rem; line-height: 1.7; columns: 2 280px; }
+.argomento ul { margin-bottom: 12px; color: var(--text-muted); }
+.argomento-mostra { padding: 6px 14px; border: 1px solid var(--accent); border-radius: var(--r-pill); background: var(--accent); color: var(--accent-ink); font: inherit; font-weight: 700; cursor: pointer; }
+.argomento-mostra:hover:not(:disabled) { filter: brightness(.96); }
+.argomento-mostra:disabled { opacity: .45; cursor: default; }
+.info-sezione h2.pagina-sezione + .info-blocco { margin-top: 14px; }
+.guida-media { margin: 0 0 14px; }
 .guida-media video { display: block; width: 100%; height: auto; border-radius: var(--r-sm); background: #000; }
 .guida-media audio { display: block; width: 100%; margin-top: 8px; }
-.guida-indice { margin: 0 0 16px; }
-.guida-indice ol { margin: 0; padding-left: 20px; }
-.guida-indice a { color: var(--text); }
-.guida-passo { margin: 0 0 24px; scroll-margin-top: 8px; }
-.guida-passo h3 { margin: 0 0 6px; font-size: var(--fs-md); }
-.guida-passo p { margin: 0 0 8px; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
-.guida-figura { margin: 10px 0 0; }
-.guida-figura img { display: block; width: 100%; height: auto; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
-.guida-figura figcaption { margin-top: 4px; color: var(--text-muted); font-size: 12px; }
 #crediti button { padding: 6px 14px; border: 0; border-radius: var(--r-sm); background: var(--accent); color: var(--accent-ink); font-weight: 600; }
 #crediti .in-cima { position: absolute; right: 24px; bottom: 16px; box-shadow: var(--ombra); }
 #crediti .in-cima[hidden] { display: none; }
 
 #crediti .crediti-x { position: absolute; top: 8px; right: 12px; z-index: 1; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: transparent; color: var(--text-muted); }
 #crediti .crediti-x:hover { background: var(--surface-hover); color: var(--text); }
-#tabpanel-about .about-blocco { margin: 0 0 16px; padding: 12px 16px; background: var(--surface-alt); border: 1px solid var(--border-ui); border-left: 3px solid var(--accent); border-radius: var(--r-sm); }
-#tabpanel-about .about-blocco h3 { margin: 0 0 6px; font-size: var(--fs-base); }
-#tabpanel-about .about-blocco p { margin: 0 0 8px; }
-#tabpanel-about .about-blocco ul { margin: 0; padding-left: 20px; }
-#tabpanel-about .about-blocco a { color: var(--accent-strong); font-weight: 600; }
-.dt-blocco { margin: 0 0 20px; }
-.dt-blocco h3 { margin: 0 0 6px; font-size: var(--fs-base); }
-.dt-blocco p { margin: 0 0 10px; }
-.dt-fig { display: block; width: 100%; height: auto; margin: 0 0 12px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
-.dt-firma { font-weight: 600; }
-#tabpanel-digitaltwin a { color: var(--accent-strong); }
-#crediti .info-sezione h2 { margin: 0 0 8px; font-size: var(--fs-md); }
 
 /* ==========================================================================
    Monumenti, trasporto: popup, schede, legende
@@ -557,9 +554,13 @@ dialog li { margin: 4px 0; }
 
 #barra-strumenti {
   position: fixed; z-index: var(--z-barra); top: 12px; left: auto; right: calc(var(--scheda-l) + 12px); transform: none; max-width: none; overflow: visible;
-  display: flex; align-items: center; gap: 4px; padding: 5px 6px;
+  display: flex; align-items: center; gap: 4px; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none;
 }
-#barra-strumenti button { width: 40px; height: 40px; border: 0; }
+/* stessi pulsanti tondi della scheda: 36 px, filo sottile, icone da 18 px, hover ambra */
+#barra-strumenti button { width: 36px; height: 36px; border: 1px solid var(--border); background: var(--surface); box-shadow: var(--ombra); transition: background .12s, border-color .12s, color .12s; }
+#barra-strumenti button svg { width: 18px; height: 18px; }
+#barra-strumenti button:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-strong); }
+#barra-strumenti button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
 
 
 #legende-box { position: fixed; z-index: var(--z-mappa-ui); left: calc(var(--sx) + 12px); bottom: 28px; width: 260px; max-width: calc(100% - var(--sx) - 20px); background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
@@ -1244,8 +1245,10 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 }
 .piede-avviso { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .piede-avviso strong { color: var(--text); }
-#piede-fonti { flex: none; padding: 8px 4px; border: 0; background: none; font: inherit; font-weight: 700; color: var(--text); text-decoration: underline; }
 #piede-coord { margin-left: auto; flex: none; font-family: ui-monospace, Consolas, monospace; font-weight: 500; }
+#piede-copyright { flex: none; white-space: nowrap; }
+#piede-copyright a { color: var(--text); font-weight: 600; text-underline-offset: 2px; }
+.sr-solo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 #logo-ods { flex: none; display: block; line-height: 0; }
 #logo-ods img { display: block; height: 24px; width: auto; }
 
@@ -1254,6 +1257,7 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
   #app-header { column-gap: 8px; }
   #app-logo img { height: 30px; }
       #piede-coord { display: none; }
+  #piede-copyright { font-size: var(--fs-2xs); }
 }
 
 /* stampa della mappa visibile (pulsante «Stampa» della barra strumenti): il foglio compare solo in stampa */

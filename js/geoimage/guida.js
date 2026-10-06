@@ -15,9 +15,10 @@ const elenco = (doc, voci) => {
 
 export function schedaGeoimage(doc = document, sezioni = SEZIONI) {
   const radice = el(doc, 'div');
-  radice.append(el(doc, 'h2', 'Guida Geoimage'));
+  radice.append(el(doc, 'h2', 'Guida Geoimage'), Object.assign(el(doc, 'p', 'Come sovrapporre una mappa storica alla cartografia e georeferenziarla.'), { className: 'pagina-intro' }));
   for (const s of sezioni) {
     const sezione = el(doc, 'section');
+    sezione.className = 'info-blocco';
     sezione.id = `guida-geoimage-${s.id}`;
     sezione.append(el(doc, 'h3', s.titolo));
     for (const t of s.paragrafi ?? []) sezione.append(el(doc, 'p', t));

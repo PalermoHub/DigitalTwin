@@ -14,22 +14,21 @@ export function elencoArgomenti(moduli) {
     .sort((a, b) => alfabetico(a.titolo, b.titolo));
 }
 
-// Le caselle della tab pilotano quelle del pannello strati (`#strato-<id>`), che restano l'unica fonte di verità:
-// così passano da imposta(), suCambio e dal pallino dell'icona senza duplicare la logica.
-// Le sotto-voci di uno strato (es. stato e corrente delle colonnine) fanno lo stesso con le caselle `[data-filtro]` del pannello.
-export function schedaArgomenti(moduli, doc = document) {
+// Pagina di sola lettura: titolo, descrizione e strati di ogni argomento. «Mostra in mappa» accende gli strati
+// dell'argomento attraverso le caselle del pannello strati (`#strato-<id>`), che restano l'unica fonte di verità
+// (così passano da imposta(), suCambio e dal pallino dell'icona), poi chiude la pagina per far vedere la mappa.
+export function schedaArgomenti(moduli, doc = document, chiudi = () => {}) {
   const radice = doc.createElement('div');
   const h = doc.createElement('h2');
   h.textContent = 'Argomenti';
-  radice.append(h);
   const intro = doc.createElement('p');
-  intro.textContent = 'Gli argomenti trattati dal Digital Twin. Spunta uno strato per mostrarlo in mappa.';
-  radice.append(intro);
-  const caselle = [];
-  const filtri = [];
+  intro.className = 'pagina-intro';
+  intro.textContent = 'Di cosa parla il Digital Twin, argomento per argomento.';
+  radice.append(h, intro);
+  const bottoni = [];
   for (const a of elencoArgomenti(moduli)) {
     const sez = doc.createElement('section');
-    sez.className = 'argomento';
+    sez.className = 'argomento info-blocco';
     const t = doc.createElement('h3');
     t.textContent = a.titolo;
     sez.append(t);
@@ -38,60 +37,33 @@ export function schedaArgomenti(moduli, doc = document) {
       p.textContent = a.descrizione;
       sez.append(p);
     }
+    const ul = doc.createElement('ul');
     for (const s of a.strati) {
-      const label = doc.createElement('label');
-      const cb = doc.createElement('input');
-      cb.type = 'checkbox';
-      cb.dataset.strato = s.id;
-      cb.addEventListener('change', () => {
-        const origine = doc.getElementById(`strato-${s.id}`);
-        if (!origine || origine.checked === cb.checked) return;
-        origine.checked = cb.checked;
-        origine.dispatchEvent(new Event('change', { bubbles: true }));
-        sincronizza();
-      });
-      label.append(cb, ' ', s.etichetta);
-      sez.append(label);
-      caselle.push(cb);
-      for (const gruppo of s.sottovoci ?? []) {
-        const blocco = doc.createElement('div');
-        blocco.className = 'argomento-filtri';
-        const titolo = doc.createElement('h4');
-        titolo.textContent = gruppo.titolo;
-        blocco.append(titolo);
-        for (const v of gruppo.voci) {
-          const l = doc.createElement('label');
-          const c = doc.createElement('input');
-          c.type = 'checkbox';
-          c.dataset.sottofiltro = v.id;
-          c.addEventListener('change', () => {
-            const filtro = doc.querySelector(`input[data-filtro="${v.id}"]`);
-            if (!filtro || filtro.disabled || filtro.checked === c.checked) return;
-            filtro.checked = c.checked;
-            filtro.dispatchEvent(new Event('change', { bubbles: true }));
-          });
-          l.append(c, ' ', v.etichetta);
-          blocco.append(l);
-          filtri.push(c);
-        }
-        sez.append(blocco);
-      }
+      const li = doc.createElement('li');
+      li.textContent = s.etichetta;
+      ul.append(li);
     }
+    const mostra = doc.createElement('button');
+    mostra.type = 'button';
+    mostra.className = 'argomento-mostra';
+    mostra.textContent = 'Mostra in mappa';
+    mostra.dataset.argomento = a.id;
+    const caselle = () => a.strati.map(s => doc.getElementById(`strato-${s.id}`)).filter(c => c && !c.disabled);
+    mostra.addEventListener('click', () => {
+      for (const c of caselle()) {
+        if (c.checked) continue;
+        c.checked = true;
+        c.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      chiudi();
+    });
+    bottoni.push({ mostra, caselle });
+    sez.append(ul, mostra);
     radice.append(sez);
   }
-  // riallinea alle caselle del pannello (stato attuale e strati non disponibili)
+  // senza strati disponibili (es. non ancora caricati) il pulsante resta spento
   const sincronizza = () => {
-    for (const cb of caselle) {
-      const origine = doc.getElementById(`strato-${cb.dataset.strato}`);
-      cb.checked = !!origine?.checked;
-      cb.disabled = !origine || origine.disabled;
-      cb.title = origine?.disabled ? origine.title : '';
-    }
-    for (const c of filtri) {
-      const filtro = doc.querySelector(`input[data-filtro="${c.dataset.sottofiltro}"]`);
-      c.checked = !!filtro?.checked;
-      c.disabled = !filtro || filtro.disabled;
-    }
+    for (const { mostra, caselle } of bottoni) mostra.disabled = !caselle().length;
   };
   sincronizza();
   return { elemento: radice, sincronizza };

@@ -23,6 +23,17 @@ function el(tag, testo, attr = {}) {
   return Object.assign(document.createElement(tag), testo != null ? { textContent: testo } : {}, attr);
 }
 
+// Pagina informativa uniforme: titolo, frase introduttiva, poi blocchi (una scheda per argomento).
+function titoloPagina(titolo, introduzione) {
+  return [el('h2', titolo), ...(introduzione ? [el('p', introduzione, { className: 'pagina-intro' })] : [])];
+}
+
+function blocco(titolo, ...contenuto) {
+  const s = el('section', null, { className: 'info-blocco' });
+  s.append(el('h3', titolo), ...contenuto);
+  return s;
+}
+
 function link(testo, href) {
   return el('a', testo, { href, target: '_blank', rel: 'noopener' });
 }
@@ -30,13 +41,9 @@ function link(testo, href) {
 // Testo del post LinkedIn «Palermo Digital Twin… work in progress», con le immagini del carosello a seguire.
 function schedaDigitalTwin() {
   const fig = (n, alt) => el('img', null, { className: 'dt-fig', src: `img/dt/dt-${n}.jpg`, alt, loading: 'lazy', width: 1920, height: 1072 });
-  const sezione = (titolo, testi, ...figure) => {
-    const s = el('section', null, { className: 'dt-blocco' });
-    s.append(el('h3', titolo), ...testi.map(t => el('p', t)), ...figure);
-    return s;
-  };
+  const sezione = (titolo, testi, ...figure) => blocco(titolo, ...testi.map(t => el('p', t)), ...figure);
   return [
-    el('h2', 'Palermo Digital Twin'),
+    ...titoloPagina('Digital Twin', 'La città a strati: catasto, popolazione, edifici, trasporti, sicurezza e molto altro.'),
     sezione('Cos\u2019è per noi un Digital Twin, in parole semplici', [
       'Il Digital Twin di Palermo è una copia digitale della città, costruita con dati pubblici e consultabile da chiunque. Non richiede competenze tecniche.',
       'Non è una semplice mappa, riunisce in un unico spazio informazioni che di solito sono sparse in archivi diversi.',
@@ -67,11 +74,7 @@ function schedaDigitalTwin() {
 
 // Testi della pagina «Chi siamo» di opendatasicilia.it, riscritti con lo stile dell'app.
 function schedaComunita() {
-  const sezione = (titolo, ...contenuto) => {
-    const s = el('section', null, { className: 'about-blocco' });
-    s.append(el('h3', titolo), ...contenuto);
-    return s;
-  };
+  const sezione = blocco;
   const dove = el('ul');
   for (const [prima, testo, href] of [
     ['la ', 'mailing list', 'https://groups.google.com/d/forum/opendatasicilia'],
@@ -89,13 +92,53 @@ function schedaComunita() {
     link('Claude AI (Anthropic)', 'https://www.anthropic.com/claude'),
     ', che ha affiancato le scelte architetturali, l\u2019ottimizzazione del codice e lo sviluppo delle funzionalità di visualizzazione geospaziale.');
   return [
-    el('h2', 'La comunità OpenDataSicilia'),
+    ...titoloPagina('About', 'La comunità OpenDataSicilia, che promuove i dati aperti in Sicilia.'),
     sezione('Che cos\u2019è', el('p', '#opendatasicilia è un\u2019iniziativa civica che si propone di far conoscere e diffondere la cultura dell\u2019open government e le prassi dell\u2019open data nel nostro territorio e aprire una discussione pubblica partecipata.')),
     sezione('Chi siamo', el('p', 'Siamo un gruppo di cittadini con diverse storie, competenze, professioni. Siamo accomunati dalla genuina volontà di contribuire a migliorare la qualità della vita della nostra comunità. Lo vogliamo fare con spirito di collaborazione e concretezza.')),
     sezione('Dove siamo', el('p', 'Ci trovi in questi luoghi:'), dove),
-    el('h2', 'Credits'),
+    el('h2', 'Credits', { className: 'pagina-sezione' }),
     sezione('Sviluppo', sviluppo),
+    ...strumentiUsati(sezione),
   ];
+}
+
+// «Strumenti usati»: schede di due strumenti che hanno reso possibile il lavoro sui dati.
+function strumentiUsati(sezione) {
+  const p = (...parti) => {
+    const e = el('p');
+    e.append(...parti);
+    return e;
+  };
+  const qgis = sezione('QGIS Headless WSL2',
+    p('Guida operativa per installare e usare QGIS «headless», cioè senza interfaccia grafica, su WSL2 e su Windows nativo tramite micromamba. Permette di eseguire gli algoritmi di QGIS Processing e il codice PyQGIS da terminale, senza aprire il programma.'),
+    p('Per «headless» si intende l’assenza di finestre: su Qt basta impostare ', el('code', 'export QT_QPA_PLATFORM=offscreen'), '.'),
+    el('h4', 'A cosa serve'),
+    lista([
+      'Automatizzare le elaborazioni geospaziali con degli script.',
+      'Testare gli algoritmi QGIS in pipeline CI/CD senza interfaccia grafica.',
+      'Eseguire PyQGIS in batch su grandi raster.',
+      'Elaborare dati geografici dalla riga di comando.',
+      'Riprodurre le analisi in ambienti isolati e ripetibili.',
+    ]),
+    p('Nel progetto ', link('Palermo DTM 5m', 'https://github.com/coseerobe/palermo_dtm_5m'), ' è stato usato per derivare in automatico ', el('strong', '18 layer morfologici'), ' dal modello digitale del terreno a 5 m.'),
+    el('h4', 'Come funziona'),
+    p('Micromamba crea un ambiente isolato (circa 5 GB in ', el('code', '~/micromamba/envs/qgis'), ') con QGIS e le sue dipendenze: GDAL, PROJ, GEOS, Qt, Python.'),
+    lista([
+      'Installa micromamba: un solo binario, nessun privilegio di root.',
+      'Crea l’ambiente: micromamba create -n qgis -c conda-forge qgis -y',
+      'Imposta offscreen: export QT_QPA_PLATFORM=offscreen',
+      'Esegui: micromamba run -n qgis python script.py',
+    ]),
+    el('h4', 'Requisiti'),
+    lista(['WSL2 attivo con una distribuzione Linux (per esempio Ubuntu).', 'Circa 5 GB liberi nella home di WSL.', 'Connessione a Internet.', 'Nessuna interfaccia Windows né QGIS Desktop già installato.']),
+    p(link('Repository GitHub', 'https://github.com/pigreco/qgis_headless_wsl2'), ' · ', link('Video tutorial', 'https://www.youtube.com/watch?v=FQEmhktDRaQ')),
+    p(link('Pagina originale', 'https://gbvitrano.github.io/palermo_popolazione/')));
+  const colori = sezione('Scientific colour maps',
+    p('Sono le scale colore scientifiche di Fabio Crameri: rampe di colore «percettivamente uniformi», in cui a uguali variazioni del dato corrispondono uguali variazioni visive. Si leggono bene anche con deficit nella visione dei colori e in stampa in bianco e nero, a differenza di arcobaleni come «jet», che creano false bande e deformano i valori.'),
+    p('Sono usate qui per colorare i layer per attributo (sequenziali, divergenti e categoriche). Mapshaper le include dalla versione 0.7.75: 12 scale sequenziali (batlow, batlowW, acton, bamako, bilbao, davos, devon, lajolla, lapaz, oslo, tokyo, turku), 5 divergenti (bam, broc, cork, roma, vik) e 1 categorica (batlowS).'),
+    p(link('Sito di Fabio Crameri', 'https://www.fabiocrameri.ch/colourmaps/'), ' · ', link('Mapshaper e i colori di Crameri', 'https://claude.ai/artifact/FrXh66VWcJu5BTsDq29BPe')),
+    p('Consigliata dall’Influencer ', link('@aborruso', AUTORE_URL), ' ❤️'));
+  return [el('h2', 'Strumenti usati', { className: 'pagina-sezione' }), qgis, colori];
 }
 
 function lista(voci) {
@@ -106,9 +149,7 @@ function lista(voci) {
 
 // Tab «Plugin RNDT»: spiega in parole semplici cosa fa il catalogo e dà il merito all'autore del plugin.
 function schedaPlugin() {
-  const merito = el('div', null, { className: 'plugin-merito' });
-  merito.append(
-    el('p', 'Un lavoro di Andrea Borruso', { className: 'plugin-merito-titolo' }),
+  const merito = blocco('Un lavoro di Andrea Borruso',
     (() => {
       const p = el('p');
       p.append('Il catalogo RNDT di questa mappa si basa interamente sul plugin ', link('openrndt-geolibre', PLUGIN_URL),
@@ -119,43 +160,37 @@ function schedaPlugin() {
     el('p', 'Grazie alla sua ottima architettura è stato possibile adattarlo con pochissimi interventi: il plugin nasceva per un’altra applicazione di mappe, ma è pensato così bene da poter essere ospitato anche qui senza riscriverlo.'),
   );
   return [
-    el('h2', 'Plugin RNDT'),
+    ...titoloPagina('Plugin RNDT', 'Il catalogo nazionale dei dati territoriali, direttamente sulla mappa.'),
     merito,
-    el('h3', 'Cos’è l’RNDT'),
-    el('p', 'Il Repertorio Nazionale dei Dati Territoriali (RNDT) è il catalogo ufficiale italiano dei dati geografici: raccoglie le schede di migliaia di mappe e dati pubblicati da Comuni, Regioni, ministeri, enti parco, agenzie e altri enti. È un po’ come una biblioteca: dice che cosa esiste, chi lo ha prodotto e dove si può consultare.'),
-    el('h3', 'Cosa fa questo plugin'),
-    lista([
+    blocco('Cos’è l’RNDT', el('p', 'Il Repertorio Nazionale dei Dati Territoriali (RNDT) è il catalogo ufficiale italiano dei dati geografici: raccoglie le schede di migliaia di mappe e dati pubblicati da Comuni, Regioni, ministeri, enti parco, agenzie e altri enti. È un po’ come una biblioteca: dice che cosa esiste, chi lo ha prodotto e dove si può consultare.')),
+    blocco('Cosa fa questo plugin', lista([
       'Cerca nel catalogo nazionale per parola, tema, ente che ha pubblicato il dato, data e tipo di dato.',
       'Per ogni risultato mostra la scheda: titolo, descrizione, ente responsabile e servizi disponibili.',
       'Aggiunge alla mappa i servizi di mappe che trova: WMS (immagini della mappa, come un livello da sovrapporre) e WFS (i dati veri e propri, con le informazioni sugli oggetti).',
       'Scarica i dati WFS in formato GeoJSON, così si possono vedere e interrogare direttamente sulla mappa.',
-    ]),
-    el('h3', 'Come si usa'),
-    lista([
+    ])),
+    blocco('Come si usa', lista([
       'Apri la scheda di un luogo e premi l’icona del catalogo RNDT, in alto accanto all’ingranaggio: il pannello si sovrappone alla scheda.',
       'Scrivi cosa cerchi (per esempio «idrografia», «rischio frane», «zone protette») e, se vuoi, filtra per tipo o per ente.',
       'Scegli un risultato, poi il servizio (WMS o WFS) e premi per aggiungerlo: compare come nuovo strato sulla mappa.',
       'Con il tab «Scheda» nella barra a destra (o con il tasto Esc) chiudi il catalogo e torni alla scheda: gli strati aggiunti restano sulla mappa.',
-    ]),
-    el('h3', 'Strati aggiunti'),
-    lista([
+    ])),
+    blocco('Strati aggiunti', lista([
       'In cima al pannello c’è l’elenco «Layer aggiunti»: puoi mostrarli, nasconderli o rimuoverli.',
       'Gli strati si ricordano da una visita all’altra, in questo browser. Se un servizio non risponde più, resta nell’elenco segnato come «non disponibile» e non viene cancellato.',
       'Cliccando un punto della mappa, la scheda mostra anche le informazioni degli strati RNDT attivi in quel punto, nel tab «Altri dati (RNDT)».',
-    ]),
-    el('h3', 'Cosa è stato adattato per Palermo'),
-    lista([
+    ])),
+    blocco('Cosa è stato adattato per Palermo', lista([
       'La ricerca e i download sono sempre limitati all’area di Palermo: non si può cercare «in tutta Italia».',
       'I servizi pubblici spesso non permettono l’uso da altri siti web: un piccolo servizio intermedio (proxy) li rende raggiungibili, con controlli di sicurezza su indirizzi e dimensioni.',
       'Gli strati molto densi (come le particelle catastali) si vedono meglio con il WMS: il download WFS ha un tetto di 10.000 oggetti.',
-    ]),
-    el('h3', 'Dove saperne di più'),
-    (() => {
+    ])),
+    blocco('Dove saperne di più', (() => {
       const p = el('p');
       p.append('Codice, istruzioni e segnalazioni: ', link('github.com/ondata/openrndt-geolibre', PLUGIN_URL),
         '. Autore: ', link('Andrea Borruso su LinkedIn', AUTORE_URL), '.');
       return p;
-    })(),
+    })()),
   ];
 }
 
@@ -236,7 +271,7 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
     voce('Pericolosità e rischio idrogeologico (PAI): Regione Siciliana, Piano di assetto idrogeologico, bacini 039-040', [['PAI, SITR Regione Siciliana', 'https://www.sitr.regione.sicilia.it/pai/'], ['Dati PAI aggiornati al 12/05/2026', 'https://www.sitr.regione.sicilia.it/dati-pai-idraulica-e-geomorfologia-aggiornati-al-12-05-2026/']]),
     voce('Incendi: catasto dei soprassuoli percorsi dal fuoco, Comune di Palermo e Sistema Informativo Forestale (SIF) della Regione Siciliana', [['SIF Regione Siciliana', 'https://sif.regione.sicilia.it/ilportale/']], null, ['CC BY 3.0 IT']),
   ]);
-  const argomenti = schedaArgomenti(moduli);
+  const argomenti = schedaArgomenti(moduli, document, () => dialog.close());
   const guida = schedaGuida();
   const schede = [
     ['digitaltwin', 'Digital Twin', schedaDigitalTwin()],
@@ -244,7 +279,7 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
     ['guida', 'Guida', [guida]],
     ['geoimage', 'Guida Geoimage', [schedaGeoimage()]],
     ['plugin', 'Plugin RNDT', [...schedaPlugin(), ...passiRndt()]],
-    ['fonti', 'Fonti e avvisi', [Object.assign(document.createElement('h2'), { textContent: 'Fonti e avvisi' }), elenco(AVVISI), fonti]],
+    ['fonti', 'Fonti e avvisi', [...titoloPagina('Fonti e avvisi', 'Da dove vengono i dati e cosa tenere presente quando li si usa.'), blocco('Avvisi', elenco(AVVISI)), blocco('Fonti dei dati', fonti)]],
     ['about', 'About', schedaComunita()],
   ];
 

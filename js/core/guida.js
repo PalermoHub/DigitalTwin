@@ -6,7 +6,10 @@ export function schedaGuida(doc = document, passi = PASSI) {
   const sezioni = {};
   const h = doc.createElement('h2');
   h.textContent = 'Guida';
-  radice.append(h);
+  const intro = doc.createElement('p');
+  intro.className = 'pagina-intro';
+  intro.textContent = 'Come usare la mappa, passo dopo passo.';
+  radice.append(h, intro);
 
   const indice = doc.createElement('nav');
   indice.className = 'guida-indice';
@@ -66,7 +69,7 @@ export function schedaGuida(doc = document, passi = PASSI) {
 // Una sezione con titolo, paragrafi e figura: la usano la Guida e il tab «Plugin RNDT».
 function creaPasso(doc, p) {
   const sez = doc.createElement('section');
-  sez.className = 'guida-passo';
+  sez.className = 'guida-passo info-blocco';
   sez.id = `guida-${p.id}`;
   const t = doc.createElement('h3');
   t.textContent = p.titolo;

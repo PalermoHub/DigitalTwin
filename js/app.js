@@ -146,7 +146,6 @@ map.once('style.load', async () => {
     const aperto = menu.classList.toggle('aperto');
     toggle.setAttribute('aria-expanded', String(aperto));
   });
-  document.getElementById('piede-fonti').addEventListener('click', () => commuta('fonti'));
   // ogni sezione ha il suo indirizzo (#fonti, #guida…): si può condividere e si riapre al caricamento
   const indirizzo = id => history.replaceState(null, '', id ? `#${id}` : location.pathname + location.search);
   foglio.addEventListener('scheda', e => { segna(e.detail); indirizzo(e.detail); });
