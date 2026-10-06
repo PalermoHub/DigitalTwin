@@ -203,5 +203,16 @@ export default {
     // l'icona della barra mostra la base in uso, come nell'atlante
     if (icona) icona.replaceWith(Object.assign(document.createElement('span'), { className: 'base-mini' }));
     bottone?.style.setProperty('--miniatura', `url(${miniatura('positron')})`);
+    // il tema scuro porta con sé la mappa scura, quello chiaro la mappa chiara; una base scelta a mano (satellite, storiche…) non si tocca
+    const perTema = scuro => {
+      if (baseCorrente !== 'positron' && baseCorrente !== 'ofm-dark') return;
+      const radio = document.getElementById(scuro ? 'base-ofm-dark' : 'base-positron');
+      if (!radio || radio.checked) return;
+      radio.checked = true;
+      if (map.getLayer('base-bianco')) radio.dispatchEvent(new Event('change'));
+      else { baseCorrente = scuro ? 'ofm-dark' : 'positron'; bottone?.style.setProperty('--miniatura', `url(${miniatura(baseCorrente)})`); }
+    };
+    document.addEventListener('tema', e => perTema(e.detail));
+    if (document.documentElement.dataset.tema === 'scuro') perTema(true);
   },
 };

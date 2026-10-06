@@ -3,6 +3,7 @@ import { CENTRO, ZOOM, ZOOM_SLIDER } from './config.js';
 
 // Barra degli strumenti: vista iniziale, schermo intero, slider dello zoom sincronizzato con la mappa.
 export function collegaStrumenti(map) {
+  collegaTema(document.getElementById('btn-tema'));
   const slider = document.getElementById('zoom-slider');
   const badge = document.getElementById('zoom-badge');
   const mostra = z => {
@@ -61,4 +62,22 @@ export function collegaPannelloFiltri(bottone, esito) {
     if (!sezione.hidden) document.getElementById('f-circ').focus();
   });
   aggiorna();
+}
+
+// Tema chiaro (predefinito) o scuro dell'interfaccia: la scelta resta nel browser; lo script in <head> la applica prima del disegno.
+function collegaTema(btn) {
+  const radice = document.documentElement;
+  const mostra = scuro => {
+    btn.setAttribute('aria-pressed', String(scuro));
+    btn.title = btn.ariaLabel = scuro ? 'Tema chiaro' : 'Tema scuro';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', scuro ? '#1c2128' : '#ffffff');
+  };
+  mostra(radice.dataset.tema === 'scuro');
+  btn.addEventListener('click', () => {
+    const scuro = radice.dataset.tema !== 'scuro';
+    if (scuro) radice.dataset.tema = 'scuro'; else delete radice.dataset.tema;
+    try { localStorage.setItem('dt-tema', scuro ? 'scuro' : 'chiaro'); } catch { /* storage non disponibile */ }
+    mostra(scuro);
+    document.dispatchEvent(new CustomEvent('tema', { detail: scuro }));
+  });
 }
