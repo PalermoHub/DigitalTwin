@@ -13,7 +13,7 @@ const GET_FEATURE = /request=getfeature(?!info)/i;
 const SOLO_CONTEGGIO = /resulttype=hits/i;
 const CON_AREA = /[?&](bbox|filter|cql_filter)=/i;
 
-function hash(testo) {
+export function hash(testo) {
   let h = 5381;
   for (let i = 0; i < testo.length; i++) h = ((h << 5) + h + testo.charCodeAt(i)) | 0;
   return (h >>> 0).toString(36);

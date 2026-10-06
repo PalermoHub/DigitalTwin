@@ -3,6 +3,7 @@
 // Se il browser lo blocca o è pieno l'app funziona lo stesso, senza memoria.
 
 export const CHIAVE = 'dt:rndt:v1';
+export const CHIAVE_MIEI = 'dt:miei:v1'; // layer aggiunti dal pannello «Aggiungi layer»
 const TIPI = ['wms', 'tile', 'geojson'];
 const vuoto = () => ({ v: 1, layers: [] });
 // un GeoJSON si richiama dall'URL, dai dati nell'archivio dati (`dati: true`) o, nel vecchio formato, dai dati dentro l'elenco
@@ -11,9 +12,9 @@ const sorgenteValida = l => l.tipo !== 'geojson'
   || l.sorgente?.dati === true
   || l.sorgente?.dati?.type === 'FeatureCollection';
 
-export function leggi(storage) {
+export function leggi(storage, chiave = CHIAVE) {
   try {
-    const grezzo = storage?.getItem(CHIAVE);
+    const grezzo = storage?.getItem(chiave);
     if (!grezzo) return vuoto();
     const s = JSON.parse(grezzo);
     if (s?.v !== 1 || !Array.isArray(s.layers)) return vuoto();
@@ -23,9 +24,9 @@ export function leggi(storage) {
   }
 }
 
-export function salva(storage, stato) {
+export function salva(storage, stato, chiave = CHIAVE) {
   try {
-    storage.setItem(CHIAVE, JSON.stringify(stato));
+    storage.setItem(chiave, JSON.stringify(stato));
     return true;
   } catch {
     return false;
