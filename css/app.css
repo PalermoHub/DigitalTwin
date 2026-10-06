@@ -186,6 +186,8 @@ dialog li { margin: 4px 0; }
 #legende { position: fixed; z-index: var(--z-mappa-ui); left: 8px; bottom: 28px; max-width: 260px; display: flex; flex-direction: column; gap: 6px; }
 #legende .legenda { padding: 8px 10px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
 #legende [hidden], #legende .legenda-sostituita { display: none; }
+#legende .legenda-con-tema :is(.ic-etichetta, .ic-metodi, .ic-scala) { display: none; }
+#legende .legenda-con-tema .legenda-tema { margin: 8px 0; }
 #legende .legenda-tema strong { display: block; margin-bottom: 4px; font-size: var(--fs-xs); }
 
 /* ==========================================================================

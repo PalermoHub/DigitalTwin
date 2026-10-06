@@ -133,6 +133,7 @@ export function creaPannelloTema(map, strato, stato) {
 
   // Legenda del tema per attributo, in #legende: compare con lo strato acceso e un tema attivo.
   // Le legende proprie dello strato indicate da `strato.legenda` (selettore CSS) si nascondono finché c'è: non descriverebbero più la mappa.
+  // Quelle indicate da `strato.legendaIntegrata` restano: ne cambia solo la scala, che mostra le classi del tema (tolti metodo e cursore, che non guidano più i colori).
   const legendaTema = document.createElement('div');
   legendaTema.className = 'legenda legenda-tema';
   legendaTema.dataset.legendaTema = strato.id;
@@ -142,6 +143,11 @@ export function creaPannelloTema(map, strato, stato) {
     const l = legendaAttributo(tema?.attributo);
     const acceso = Boolean(document.getElementById(`strato-${strato.id}`)?.checked);
     legendaTema.hidden = !(l && acceso);
+    if (strato.legendaIntegrata) {
+      const propria = document.querySelector(strato.legendaIntegrata);
+      if (propria && legendaTema.parentElement !== propria) (propria.querySelector('.ic-scala') ?? propria.lastChild)?.after(legendaTema);
+      propria?.classList.toggle('legenda-con-tema', Boolean(l));
+    }
     legendaTema.replaceChildren();
     if (l) {
       const t = document.createElement('strong');
