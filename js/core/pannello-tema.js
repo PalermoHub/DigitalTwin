@@ -2,6 +2,7 @@
 // Il tema si salva nel browser e si scambia come file JSON (vedi tema.js).
 import { svgIcona } from './icone.js';
 import { creaSezioneAttributo } from './pannello-attributo.js';
+import { legendaAttributo } from './tema-attributo.js';
 import { partiStrato, proprietaColore, applicaTema, validaTema, comeEsadecimale, leggiTemi, salvaTemi, esportaTemi, importaTemi } from './tema.js';
 
 const partiVuote = () => ({ riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [] });
@@ -130,6 +131,33 @@ export function creaPannelloTema(map, strato, stato) {
     }
   };
 
+  // Legenda del tema per attributo, in #legende: compare con lo strato acceso e un tema attivo.
+  // Le legende proprie dello strato indicate da `strato.legenda` (selettore CSS) si nascondono finché c'è: non descriverebbero più la mappa.
+  const legendaTema = document.createElement('div');
+  legendaTema.className = 'legenda legenda-tema';
+  legendaTema.dataset.legendaTema = strato.id;
+  legendaTema.hidden = true;
+  document.getElementById('legende')?.append(legendaTema);
+  const aggiornaLegenda = () => {
+    const l = legendaAttributo(tema?.attributo);
+    const acceso = Boolean(document.getElementById(`strato-${strato.id}`)?.checked);
+    legendaTema.hidden = !(l && acceso);
+    legendaTema.replaceChildren();
+    if (l) {
+      const t = document.createElement('strong');
+      t.textContent = `${strato.etichetta} · ${l.titolo}`;
+      legendaTema.append(t);
+      for (const v of l.voci) {
+        const riga = document.createElement('div');
+        const i = document.createElement('i');
+        if (v.colore) i.style.background = v.colore; else i.style.visibility = 'hidden';
+        riga.append(i, v.testo);
+        legendaTema.append(riga);
+      }
+    }
+    if (strato.legenda) for (const e of document.querySelectorAll(strato.legenda)) e.classList.toggle('legenda-sostituita', Boolean(l) && acceso);
+  };
+
   // valori mostrati: quelli del tema, altrimenti quelli correnti della mappa
   const mostraValori = () => {
     const u = parti.uniformi[0];
@@ -152,6 +180,7 @@ export function creaPannelloTema(map, strato, stato) {
     const orig = new Map(vociCategorie());
     for (const [nome, input] of campiCategorie) input.value = tema?.categorie?.[nome] ?? comeEsadecimale(orig.get(nome));
     aggiornaPallini();
+    aggiornaLegenda();
     sezioneAttributo.sincronizza();
   };
 

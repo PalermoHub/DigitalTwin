@@ -107,3 +107,18 @@ export function validaAttributo(a) {
   }
   return null;
 }
+
+// Voci di legenda di un attributo valido: { titolo, voci: [{ colore, testo }] }, oppure null.
+// Per le categorie più di `max` voci si accorciano con «… altre N» (il pannello colore le elenca tutte).
+export function legendaAttributo(a, max = 12) {
+  const att = validaAttributo(a);
+  if (!att) return null;
+  if (att.tipo === 'categorie') {
+    const tutte = Object.entries(att.colori);
+    const voci = tutte.slice(0, max).map(([testo, colore]) => ({ colore, testo }));
+    if (tutte.length > max) voci.push({ colore: null, testo: `… altre ${tutte.length - max}` });
+    return { titolo: att.campo, voci };
+  }
+  const colori = coloriRampa(att.rampa, att.soglie.length + 1);
+  return { titolo: att.campo, voci: etichetteClassi(att.soglie).map((testo, i) => ({ colore: colori[i], testo })) };
+}

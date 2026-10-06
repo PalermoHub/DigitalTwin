@@ -42,7 +42,7 @@ function collegaPopup(map) {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-monumenti');
+  legenda = el('div', 'legenda legenda-monumenti legenda-alberi');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Alberi monumentali'));
   const pallino = el('i', 'monumenti-pallino');
@@ -75,7 +75,7 @@ export default {
     const dati = await (await fetch(urlDati('alberi_monumentali/alberi.geojson'))).json(); // già in cache: è il file della sorgente
     for (const f of dati.features) dettagli.set(f.properties.id, f.properties);
   },
-  strati: [{ id: 'alberi', etichetta: 'Alberi monumentali (MASAF)', layers: [PUNTI], attivo: false,
+  strati: [{ id: 'alberi', etichetta: 'Alberi monumentali (MASAF)', layers: [PUNTI], attivo: false, legenda: '.legenda-alberi',
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; } }],
   pannello: creaLegenda,
   scheda: {

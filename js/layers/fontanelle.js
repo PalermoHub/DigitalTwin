@@ -42,7 +42,7 @@ function collegaPopup(map) {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-monumenti');
+  legenda = el('div', 'legenda legenda-monumenti legenda-fontanelle');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Fontanelle'));
   const pallino = el('i', 'monumenti-pallino');
@@ -75,7 +75,7 @@ export default {
     const dati = await (await fetch(urlDati('fontanelle/fontanelle.geojson'))).json(); // già in cache: è il file della sorgente
     for (const f of dati.features) dettagli.set(f.properties.id, f.properties);
   },
-  strati: [{ id: 'fontanelle', etichetta: 'Fontanelle pubbliche', layers: [PUNTI], attivo: false,
+  strati: [{ id: 'fontanelle', etichetta: 'Fontanelle pubbliche', layers: [PUNTI], attivo: false, legenda: '.legenda-fontanelle',
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; } }],
   pannello: creaLegenda,
   scheda: {
