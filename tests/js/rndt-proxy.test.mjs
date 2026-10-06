@@ -85,3 +85,41 @@ test('troppi redirect = 502', async () => {
   const giro = async () => new Response(null, { status: 302, headers: { location: 'https://a.it/x' } });
   assert.equal((await gestisci(rq('/t/a.it/x', { headers: { origin: ORIGINE } }), env, giro)).status, 502);
 });
+
+test('Authorization va al servizio richiesto, non a un altro host dopo un redirect', async () => {
+  const visti = [];
+  const f = async (u, init) => {
+    visti.push([u, init.headers.authorization]);
+    return visti.length === 1 ? new Response(null, { status: 302, headers: { location: 'https://altro.it/y' } }) : new Response('ok');
+  };
+  await gestisci(rq('/t/a.it/x', { headers: { origin: ORIGINE, authorization: 'Basic eDp5' } }), env, f);
+  assert.deepEqual(visti, [['https://a.it/x', 'Basic eDp5'], ['https://altro.it/y', undefined]]);
+});
+
+test('Authorization si mantiene su un redirect nello stesso host', async () => {
+  const visti = [];
+  const f = async (u, init) => {
+    visti.push([u, init.headers.authorization]);
+    return visti.length === 1 ? new Response(null, { status: 302, headers: { location: '/y' } }) : new Response('ok');
+  };
+  await gestisci(rq('/t/a.it/x', { headers: { origin: ORIGINE, authorization: 'Basic eDp5' } }), env, f);
+  assert.deepEqual(visti.map(v => v[1]), ['Basic eDp5', 'Basic eDp5']);
+});
+
+test('senza Authorization nessuna intestazione viene inventata', async () => {
+  let init;
+  await gestisci(rq('/t/a.it/x', { headers: { origin: ORIGINE } }), env, async (u, i) => { init = i; return new Response('ok'); });
+  assert.equal(init.headers.authorization, undefined);
+});
+
+test('preflight: Authorization è tra le intestazioni ammesse (il carattere jolly non la copre)', async () => {
+  const pre = await gestisci(rq('/t/a.it/x', { method: 'OPTIONS', headers: { origin: ORIGINE } }), env, upstream());
+  assert.match(pre.headers.get('access-control-allow-headers'), /authorization/i);
+});
+
+test('un 401 del servizio arriva com’è ma senza WWW-Authenticate (niente finestra di login del browser)', async () => {
+  const r = await gestisci(rq('/t/a.it/x', { headers: { origin: ORIGINE, authorization: 'Basic eDp5' } }), env,
+    async () => new Response('no', { status: 401, headers: { 'www-authenticate': 'Basic realm="x"' } }));
+  assert.equal(r.status, 401);
+  assert.equal(r.headers.get('www-authenticate'), null);
+});

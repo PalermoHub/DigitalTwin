@@ -3,6 +3,8 @@
 // Proxy CORS per i servizi del catalogo RNDT (WMS, WFS, GeoJSON, catalogo). Rotta: /t/<host>/<percorso>?<query>
 // Non è un proxy aperto: solo https, solo GET/HEAD, solo nomi pubblici (niente IP, localhost, porte), solo dalle origini
 // in ORIGINI e al massimo 10 MB per risposta. Nessuna cache e nessun cookie.
+// L'intestazione Authorization (servizi con utente e password) si inoltra solo all'host richiesto, mai su un redirect
+// verso un altro, e non si registra; WWW-Authenticate non torna al browser (niente finestra di login).
 
 export const LIMITE_BYTE = 10 * 1024 * 1024;
 const MAX_REDIRECT = 3;
@@ -34,21 +36,23 @@ export async function gestisci(richiesta, env, fetchFn) {
   if (ammesse.length && !ammesse.includes(origine)) return risposta(403, 'origine non ammessa');
   const cors = { 'access-control-allow-origin': origine ?? '*', vary: 'Origin' };
   if (richiesta.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: { ...cors, 'access-control-allow-methods': 'GET, HEAD, OPTIONS', 'access-control-allow-headers': '*', 'access-control-max-age': '86400' } });
+    return new Response(null, { status: 204, headers: { ...cors, 'access-control-allow-methods': 'GET, HEAD, OPTIONS', 'access-control-allow-headers': 'authorization, accept, content-type', 'access-control-max-age': '86400' } });
   }
   if (richiesta.method !== 'GET' && richiesta.method !== 'HEAD') return risposta(405, 'metodo non ammesso', cors);
   const destinazione = urlDestinazione(richiesta);
   if (!destinazione) return risposta(400, 'indirizzo non valido', cors);
+  const autenticazione = richiesta.headers.get('authorization');
+  const ospiteRichiesto = new URL(destinazione).hostname;
 
   let remota;
   try {
     let corrente = destinazione;
     for (let salti = 0; ; salti++) {
       // i redirect si seguono a mano, ricontrollando ogni destinazione: un servizio esterno non deve poterci portare altrove
-      remota = await fetchFn(corrente, {
-        method: richiesta.method, redirect: 'manual',
-        headers: { accept: richiesta.headers.get('accept') ?? '*/*', 'user-agent': 'DigitalTwinPalermo-RNDT-proxy' },
-      });
+      const intestazioniUpstream = { accept: richiesta.headers.get('accept') ?? '*/*', 'user-agent': 'DigitalTwinPalermo-RNDT-proxy' };
+      // le credenziali valgono per l'host richiesto: mai su un redirect verso un altro
+      if (autenticazione && new URL(corrente).hostname === ospiteRichiesto) intestazioniUpstream.authorization = autenticazione;
+      remota = await fetchFn(corrente, { method: richiesta.method, redirect: 'manual', headers: intestazioniUpstream });
       const sposta = remota.status >= 300 && remota.status < 400 && remota.headers.get('location');
       if (!sposta) break;
       if (salti >= MAX_REDIRECT) throw new Error('troppi redirect');
