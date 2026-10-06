@@ -38,12 +38,12 @@ export function leggiXml(testo) {
   return radice.figli[0];
 }
 
-const figli = (n, nome) => (n?.figli ?? []).filter(f => f.nome === nome);
-const primo = (n, nome) => figli(n, nome)[0];
-const testoDi = (n, nome) => primo(n, nome)?.testo.trim() ?? '';
+export const figli = (n, nome) => (n?.figli ?? []).filter(f => f.nome === nome);
+export const primo = (n, nome) => figli(n, nome)[0];
+export const testoDi = (n, nome) => primo(n, nome)?.testo.trim() ?? '';
 
 // Il servizio può rispondere con un'eccezione al posto delle capabilities: il suo testo è il motivo da mostrare.
-function erroreDelServizio(radice) {
+export function erroreDelServizio(radice) {
   if (!/Exception/.test(radice.nome)) return null;
   const nodi = [];
   const raccogli = n => { if (/^(ServiceException|ExceptionText)$/.test(n.nome)) nodi.push(n.testo.trim()); n.figli.forEach(raccogli); };
