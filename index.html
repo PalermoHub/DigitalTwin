@@ -19,6 +19,17 @@
 <body>
 <header id="app-header">
 <a id="app-logo" href="./" title="Palermo Digital Twin" aria-label="Palermo Digital Twin, pagina iniziale"><img class="logo-chiaro" src="img/logo-palermo-digital-twin.svg" alt="Palermo Digital Twin" width="214" height="46"><img class="logo-scuro" src="img/logo-palermo-digital-twin-scuro.svg" alt="" width="214" height="46"></a>
+<button id="menu-info-toggle" type="button" aria-expanded="false" aria-controls="menu-info" aria-label="Menu informazioni"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button>
+<nav id="menu-info" aria-label="Informazioni">
+  <button type="button" data-scheda="mappa" aria-current="page">Mappa</button>
+  <button type="button" data-scheda="digitaltwin">Digital Twin</button>
+  <button type="button" data-scheda="argomenti">Argomenti</button>
+  <button type="button" data-scheda="guida">Guida</button>
+  <button type="button" data-scheda="geoimage">Guida Geoimage</button>
+  <button type="button" data-scheda="plugin">Plugin RNDT</button>
+  <button type="button" data-scheda="fonti">Fonti e avvisi</button>
+  <button type="button" data-scheda="about">About</button>
+</nav>
 </header>
 <div id="corpo">
 <div id="mappa"></div>
@@ -40,7 +51,6 @@
   <button id="btn-fs" type="button" title="Schermo intero" aria-label="Schermo intero"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></button>
   <button id="btn-stampa" type="button" title="Stampa la mappa visualizzata" aria-label="Stampa la mappa visualizzata"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg></button>
   <button id="btn-tema" type="button" title="Tema scuro" aria-label="Tema scuro" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></button>
-  <button id="apri-crediti" type="button" title="Informazioni, fonti e avvisi" aria-label="Informazioni, fonti e avvisi" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></button>
 </div>
 
 <div id="stampa-menu" role="group" aria-label="Opzioni di stampa" hidden><label for="stampa-formato">Formato</label><select id="stampa-formato"></select><select id="stampa-direzione" aria-label="Orientamento"></select><label for="stampa-scala">Scala</label><select id="stampa-scala"></select><button id="stampa-vai" type="button">Stampa</button></div>
@@ -86,7 +96,7 @@
 <aside id="rndt-pannello" hidden aria-label="Catalogo RNDT"></aside>
 <aside id="geoimage-pannello" hidden aria-label="Geoimage: mappe storiche"></aside>
 <nav id="rail-pannelli" aria-label="Pannelli laterali"></nav>
-<button id="linguetta-info" type="button" title="Apri informazioni" aria-label="Apri informazioni"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg></button>
+<dialog id="crediti" aria-label="Informazioni"></dialog>
 </div>
 <footer id="app-footer">
 <p class="piede-avviso">Catasto, PRG e vincoli sono dati informativi, <strong>senza valore legale</strong>.</p>
@@ -94,7 +104,6 @@
 <span id="piede-coord" aria-hidden="true"></span>
 <a id="logo-ods" href="https://opendatasicilia.it/" title="Open Data Sicilia" target="_blank" rel="noopener"><img src="img/opendatasicilia.png" alt="Open Data Sicilia" width="21" height="24"></a>
 </footer>
-<dialog id="crediti" aria-label="Informazioni"></dialog>
 
 <script src="js/vendor/maplibre-gl.js"></script>
 <script src="js/vendor/pmtiles.js"></script>

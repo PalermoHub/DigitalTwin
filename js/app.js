@@ -125,18 +125,40 @@ map.once('style.load', async () => {
   collegaFiltroLinea(map, { select: document.getElementById('f-linea'), chips: document.getElementById('filtri-linea-chips'), ...trasporto.filtro() });
 
   const foglio = document.getElementById('crediti');
-  const commuta = () => {
-    if (catalogo) commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo]);
+  const menu = document.getElementById('menu-info');
+  const toggle = document.getElementById('menu-info-toggle');
+  const chiudiMenu = () => { menu.classList.remove('aperto'); toggle.setAttribute('aria-expanded', 'false'); };
+  const commuta = tab => {
+    if (tab === 'mappa') return foglio.open && foglio.close();
+    if (catalogo) commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], tab);
     else segnala('Fonti non disponibili: catalogo dati assente');
   };
-  const linguetta = document.getElementById('linguetta-info');
-  document.getElementById('apri-crediti').addEventListener('click', commuta);
-  linguetta.addEventListener('click', commuta);
-  document.getElementById('piede-fonti').addEventListener('click', commuta);
-  // la linguetta esterna si vede solo a foglio chiuso
-  foglio.addEventListener('close', () => { linguetta.hidden = false; });
-  foglio.addEventListener('toggle', () => { linguetta.hidden = foglio.open; });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && foglio.open) foglio.close(); });
+  const segna = tab => menu.querySelectorAll('button').forEach(b => {
+    if (b.dataset.scheda === (tab ?? 'mappa')) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  menu.addEventListener('click', e => {
+    const b = e.target.closest('button[data-scheda]');
+    if (!b) return;
+    commuta(b.dataset.scheda);
+    chiudiMenu();
+  });
+  toggle.addEventListener('click', () => {
+    const aperto = menu.classList.toggle('aperto');
+    toggle.setAttribute('aria-expanded', String(aperto));
+  });
+  document.getElementById('piede-fonti').addEventListener('click', () => commuta('fonti'));
+  // ogni sezione ha il suo indirizzo (#fonti, #guida…): si può condividere e si riapre al caricamento
+  const indirizzo = id => history.replaceState(null, '', id ? `#${id}` : location.pathname + location.search);
+  foglio.addEventListener('scheda', e => { segna(e.detail); indirizzo(e.detail); });
+  foglio.addEventListener('close', () => { segna(null); indirizzo(null); });
+  document.getElementById('app-logo').addEventListener('click', e => { if (foglio.open) { e.preventDefault(); foglio.close(); } });
+  const iniziale = location.hash.slice(1);
+  if (menu.querySelector(`[data-scheda="${iniziale}"]`) && iniziale !== 'mappa') commuta(iniziale);
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (foglio.open) foglio.close();
+    else chiudiMenu();
+  });
   collegaInvito(map, document, (() => { try { return window.localStorage; } catch { return null; } })(), { url: location.search });
   window.dt.pronto = true;
 });

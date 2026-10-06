@@ -16,11 +16,6 @@ export async function caricaCatalogo() {
   return r.json();
 }
 
-const CREDITS = [
-  'Testo provvisorio: progetto a cura di Open Data Sicilia.',
-  'Realizzazione, dati e licenze: da completare.',
-];
-
 const PLUGIN_URL = 'https://github.com/ondata/openrndt-geolibre';
 const AUTORE_URL = 'https://www.linkedin.com/in/andreaborruso/';
 
@@ -30,6 +25,77 @@ function el(tag, testo, attr = {}) {
 
 function link(testo, href) {
   return el('a', testo, { href, target: '_blank', rel: 'noopener' });
+}
+
+// Testo del post LinkedIn «Palermo Digital Twin… work in progress», con le immagini del carosello a seguire.
+function schedaDigitalTwin() {
+  const fig = (n, alt) => el('img', null, { className: 'dt-fig', src: `img/dt/dt-${n}.jpg`, alt, loading: 'lazy', width: 1920, height: 1072 });
+  const sezione = (titolo, testi, ...figure) => {
+    const s = el('section', null, { className: 'dt-blocco' });
+    s.append(el('h3', titolo), ...testi.map(t => el('p', t)), ...figure);
+    return s;
+  };
+  return [
+    el('h2', 'Palermo Digital Twin'),
+    sezione('Cos\u2019è per noi un Digital Twin, in parole semplici', [
+      'Il Digital Twin di Palermo è una copia digitale della città, costruita con dati pubblici e consultabile da chiunque. Non richiede competenze tecniche.',
+      'Non è una semplice mappa, riunisce in un unico spazio informazioni che di solito sono sparse in archivi diversi.',
+    ], fig('01', 'Palermo in Trasparenza: il gemello digitale della città, una guida visiva ai dati aperti di Open Data Sicilia')),
+    sezione('Come è organizzato', [
+      'La città è rappresentata a strati, sovrapposti come i fogli trasparenti di un atlante. Alla base c\u2019è la mappa di Palermo. Sopra si trovano il catasto, il piano regolatore, la popolazione, gli edifici e i monumenti, i trasporti la sicurezza stradale e tanto altro.',
+    ], fig('02', 'La città stratificata: Palermo, Catasto e PRG, Popolazione, Edifici e Monumenti, Trasporto e Sicurezza'),
+    fig('03', 'L\u2019anatomia della piattaforma: strati, legenda e scheda di dettaglio')),
+    sezione('Le fonti', [
+      'Ogni strato proviene da una fonte aperta, Comune di Palermo, Regione Siciliana, ISTAT, Agenzia delle Entrate, OpenStreetMap. Singolarmente, sono file e tabelle di difficile lettura. Messi insieme sulla stessa mappa, diventano comprensibili. \u{1F601}',
+    ], fig('05', 'L\u2019ecosistema dei dati pubblici: Comune di Palermo, Regione Siciliana, ISTAT, Agenzia delle Entrate, OpenStreetMap')),
+    sezione('Come si utilizza', [
+      'La consultazione può partire dall\u2019intera città oppure da una via, da un numero civico o da una particella catastale. Si possono attivare soltanto gli strati di interesse, così da avere una mappa chiara e non sovraccarica.',
+      'Selezionando un punto, si apre una scheda con tutte le informazioni che lo riguardano, la particella catastale, vincoli, zonizzazione, gli incidenti avvenuti nelle vicinanze, la fermata del trasporto pubblico più vicina, l\u2019eventuale presenza di un monumento, una colonnina di ricarica per auto elettrica, etc etc.',
+    ], fig('04', 'Dall\u2019intera città al singolo civico: ricerca libera, filtri geografici, risultato mirato'),
+    fig('09', 'La potenza dell\u2019intersezione: un clic su Via Maqueda 435 mostra catasto, vincoli, sicurezza, cultura e trasporti')),
+    sezione('A cosa serve', [
+      'Un singolo clic non restituisce un solo dato, ma l\u2019insieme di ciò che si sovrappone in quel luogo. Per ottenere lo stesso quadro, è necessario rivolgersi a più uffici e/o consultare più siti.',
+    ], fig('06', 'Le lenti a confronto: urbanistica, sicurezza, servizi e rischi, con strato principale e caso d\u2019uso civico'),
+    fig('07', 'Esplorare il patrimonio: monumenti e uffici comunali'),
+    fig('08', 'Mappare la vulnerabilità: rischio idrogeologico e storico incendi dal 2007')),
+    sezione('Quali sono i limiti', [
+      'Il Digital Twin è uno strumento per informarsi, studiare e capire la città. Non sostituisce i documenti ufficiali. Catasto, Piano Regolatore e vincoli hanno qui valore puramente informativo e non hanno valore legale. Per una visura o per un certificato di destinazione urbanistica occorre rivolgersi a SISTER o agli uffici competenti.',
+      'Anche i dati sulla popolazione per singolo edificio sono stime campionarie e vanno letti come indicazioni, non come conteggi esatti.',
+    ], fig('10', 'Oltre la mappa, il perimetro di utilizzo: valore informativo e valore legale')),
+  ];
+}
+
+// Testi della pagina «Chi siamo» di opendatasicilia.it, riscritti con lo stile dell'app.
+function schedaComunita() {
+  const sezione = (titolo, ...contenuto) => {
+    const s = el('section', null, { className: 'about-blocco' });
+    s.append(el('h3', titolo), ...contenuto);
+    return s;
+  };
+  const dove = el('ul');
+  for (const [prima, testo, href] of [
+    ['la ', 'mailing list', 'https://groups.google.com/d/forum/opendatasicilia'],
+    ['il gruppo ', 'Facebook', 'https://www.facebook.com/groups/opendatasicilia/'],
+    ['l\u2019account ', 'Twitter', 'https://twitter.com/opendatasicilia'],
+    ['il gruppo ', 'Telegram', 'https://t.me/opendatasicilia'],
+    ['GitHub ', 'Discussions', 'https://github.com/opendatasicilia/opendatasicilia.it/discussions'],
+  ]) {
+    const li = el('li');
+    li.append(prima, link(testo, href));
+    dove.append(li);
+  }
+  const sviluppo = el('p');
+  sviluppo.append('Web app progettata e sviluppata da ', link('@gbvitrano', 'https://www.linkedin.com/in/gbvitrano'), ' in collaborazione con ',
+    link('Claude AI (Anthropic)', 'https://www.anthropic.com/claude'),
+    ', che ha affiancato le scelte architetturali, l\u2019ottimizzazione del codice e lo sviluppo delle funzionalità di visualizzazione geospaziale.');
+  return [
+    el('h2', 'La comunità OpenDataSicilia'),
+    sezione('Che cos\u2019è', el('p', '#opendatasicilia è un\u2019iniziativa civica che si propone di far conoscere e diffondere la cultura dell\u2019open government e le prassi dell\u2019open data nel nostro territorio e aprire una discussione pubblica partecipata.')),
+    sezione('Chi siamo', el('p', 'Siamo un gruppo di cittadini con diverse storie, competenze, professioni. Siamo accomunati dalla genuina volontà di contribuire a migliorare la qualità della vita della nostra comunità. Lo vogliamo fare con spirito di collaborazione e concretezza.')),
+    sezione('Dove siamo', el('p', 'Ci trovi in questi luoghi:'), dove),
+    el('h2', 'Credits'),
+    sezione('Sviluppo', sviluppo),
+  ];
 }
 
 function lista(voci) {
@@ -143,13 +209,15 @@ function elenco(voci) {
   return ul;
 }
 
-// Foglio informativo non modale: si apre/chiude dalla linguetta, dal pulsante info o con Esc.
-export function commutaCrediti(dialog, catalogo, moduli = []) {
-  if (dialog.open) return dialog.close();
-  apriCrediti(dialog, catalogo, moduli);
+// Pagina informativa a tutta larghezza (non modale): ogni voce del menu in testata ne apre una sezione;
+// la stessa voce premuta di nuovo, o Esc, la chiude.
+export function commutaCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
+  if (dialog.open && dialog.dataset.tab === tab) return dialog.close();
+  apriCrediti(dialog, catalogo, moduli, tab);
 }
 
-export function apriCrediti(dialog, catalogo, moduli = []) {
+export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
+  if (dialog.open && dialog.vaiA) return dialog.vaiA(tab);
   const fonti = elenco([
     ...catalogo.filter(v => v.fonte).map(v => voce(`${v.fonte} (${v.data})`, linkCatalogo(v.fonte), v.licenza)),
     voce('Base cartografica: OpenFreeMap, © OpenMapTiles, dati © OpenStreetMap contributors', [['OpenFreeMap', 'https://openfreemap.org/'], ['OpenStreetMap', 'https://www.openstreetmap.org/copyright']]),
@@ -171,50 +239,31 @@ export function apriCrediti(dialog, catalogo, moduli = []) {
   const argomenti = schedaArgomenti(moduli);
   const guida = schedaGuida();
   const schede = [
-    ['fonti', 'Fonti e avvisi', [Object.assign(document.createElement('h2'), { textContent: 'Fonti e avvisi' }), elenco(AVVISI), fonti]],
+    ['digitaltwin', 'Digital Twin', schedaDigitalTwin()],
     ['argomenti', 'Argomenti', [argomenti.elemento]],
     ['guida', 'Guida', [guida]],
     ['geoimage', 'Guida Geoimage', [schedaGeoimage()]],
     ['plugin', 'Plugin RNDT', schedaPlugin()],
-    ['credits', 'Credits', [Object.assign(document.createElement('h2'), { textContent: 'Credits' }), elenco(CREDITS)]],
+    ['fonti', 'Fonti e avvisi', [Object.assign(document.createElement('h2'), { textContent: 'Fonti e avvisi' }), elenco(AVVISI), fonti]],
+    ['about', 'About', schedaComunita()],
   ];
 
-  const tabs = document.createElement('div');
-  tabs.className = 'tabs';
-  tabs.setAttribute('role', 'tablist');
-  const pannelli = [];
-  const seleziona = i => schede.forEach(([, , ], k) => {
-    const attiva = k === i;
-    tabs.children[k].setAttribute('aria-selected', String(attiva));
-    tabs.children[k].tabIndex = attiva ? 0 : -1;
-    pannelli[k].hidden = !attiva;
-  });
-  const aggiorna = () => argomenti.sincronizza();
-  schede.forEach(([id, etichetta, contenuto], i) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.id = `tab-${id}`;
-    b.setAttribute('role', 'tab');
-    b.setAttribute('aria-controls', `tabpanel-${id}`);
-    b.textContent = etichetta;
-    b.addEventListener('click', () => { seleziona(i); aggiorna(); });
-    b.addEventListener('keydown', e => {
-      const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-      if (!d) return;
-      const j = (i + d + schede.length) % schede.length;
-      seleziona(j);
-      aggiorna();
-      tabs.children[j].focus();
-    });
-    tabs.append(b);
+  const pannelli = schede.map(([id, , contenuto]) => {
     const p = document.createElement('div');
     p.id = `tabpanel-${id}`;
-    p.setAttribute('role', 'tabpanel');
-    p.setAttribute('aria-labelledby', b.id);
+    p.className = 'info-sezione';
     p.append(...contenuto);
-    pannelli.push(p);
+    return p;
   });
-  seleziona(0);
+  const aggiorna = () => argomenti.sincronizza();
+  const vaiA = id => {
+    const i = Math.max(0, schede.findIndex(([k]) => k === id));
+    pannelli.forEach((p, k) => { p.hidden = k !== i; });
+    dialog.dataset.tab = schede[i][0];
+    dialog.dispatchEvent(new CustomEvent('scheda', { detail: schede[i][0] }));
+    aggiorna();
+    corpo.scrollTop = 0;
+  };
 
   const corpo = document.createElement('div');
   corpo.className = 'tab-corpo';
@@ -226,14 +275,6 @@ export function apriCrediti(dialog, catalogo, moduli = []) {
   inCima.textContent = '↑ In cima';
   inCima.addEventListener('click', () => corpo.scrollTo({ top: 0, behavior: 'smooth' }));
   corpo.addEventListener('scroll', () => { inCima.hidden = corpo.scrollTop < 40; });
-  // cambiando tab si riparte dall'alto
-  tabs.addEventListener('click', () => { corpo.scrollTop = 0; });
-  const linguetta = document.createElement('button');
-  linguetta.type = 'button';
-  linguetta.className = 'crediti-linguetta';
-  linguetta.setAttribute('aria-label', 'Chiudi le informazioni');
-  linguetta.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>';
-  linguetta.addEventListener('click', () => dialog.close());
   const chiudi = document.createElement('button');
   chiudi.type = 'button';
   chiudi.className = 'crediti-x';
@@ -241,13 +282,12 @@ export function apriCrediti(dialog, catalogo, moduli = []) {
   chiudi.title = 'Chiudi';
   chiudi.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
   chiudi.addEventListener('click', () => dialog.close());
-  const testata = document.createElement('div');
-  testata.className = 'crediti-testata';
-  testata.append(tabs, chiudi);
-  dialog.replaceChildren(linguetta, testata, corpo, inCima);
+  dialog.replaceChildren(corpo, chiudi, inCima);
+  dialog.vaiA = vaiA;
   // le caselle del pannello possono cambiare a foglio aperto (il foglio non è modale)
   const ctl = new AbortController();
   document.getElementById('pannello')?.addEventListener('change', aggiorna, { signal: ctl.signal });
   dialog.addEventListener('close', () => ctl.abort(), { once: true });
   if (!dialog.open) dialog.show();
+  vaiA(tab);
 }
