@@ -1,6 +1,7 @@
 // js/geoimage/guida-contenuti.js
 // Testo della guida di Geoimage (tab «Guida Geoimage» del foglio Info), adattato al pannello del Digital Twin.
-// Ogni sezione ha un titolo e, a scelta, paragrafi, passi numerati ({ titolo, testo, elenco }) o un elenco puntato.
+// Ogni sezione ha un titolo e, a scelta, paragrafi, passi numerati ({ titolo, testo, elenco, immagine }) o un elenco puntato;
+// `immagine` ({ file, alt, didascalia }) è uno screenshot di scripts/guida_screenshot_geoimage.py.
 export const SEZIONI = [
   {
     id: 'cos-e',
@@ -21,6 +22,7 @@ export const SEZIONI = [
       {
         titolo: 'Carica la mappa storica',
         testo: 'Trascina il file (JPG, PNG, WEBP, BMP) nel riquadro «Carica mappa storica», oppure clicca il riquadro per scegliere il file. L’immagine appare subito al centro della mappa, con le maniglie di posizionamento. Segue la mappa anche se la ruoti o la inclini in 3D.',
+        immagine: { file: 'img/guida/passi/geoimage-carica.webp', alt: 'Il pannello Geoimage con la pianta di Palermo del 1891 appena caricata sulla mappa, con le maniglie agli angoli', didascalia: 'La pianta di Palermo del 1891 (Harvard Map Collection) appena caricata: maniglie arancioni, opacità al 70 %.' },
       },
       {
         titolo: 'Posiziona e orienta l’immagine',
@@ -29,7 +31,7 @@ export const SEZIONI = [
           'Cerchio arancione al centro: trascina per spostare l’intera immagine.',
           'Cerchio con la freccia sopra il lato nord: trascina per ruotare.',
           'Maniglie agli angoli, in due modalità che cambi con il pulsante «Maniglie: scala / deforma»: in modalità scala (quadratini arancioni) ridimensionano l’immagine in proporzione tenendo fermo l’angolo opposto; in modalità deforma (diamanti blu) ogni angolo si muove liberamente, utile per le mappe storiche non rettangolari.',
-          'Per spostamenti precisi usa le frecce, la rotazione di 5° e la scala del 10 % nella sezione «Posiziona overlay».',
+          'Per spostamenti precisi usa le frecce, la rotazione di 5° e la scala del 10 % nella sezione «Posiziona overlay»; ⌖ inquadra l’immagine, «Blocca» ferma le maniglie e «Reset» riporta tutto alla posizione iniziale.',
           'Annulla e Ripeti (oppure Ctrl+Z e Ctrl+Y; con Maiusc fanno 10 passi) ripercorrono fino a 50 posizioni. La cronologia riparte quando carichi un’altra immagine.',
         ],
       },
@@ -43,14 +45,16 @@ export const SEZIONI = [
           'Esc annulla il passo 1 in attesa; premilo ancora per uscire dalla modalità GCP. Finché sei in questa modalità i clic sulla mappa non aprono la scheda dei luoghi.',
           'Aggiungi almeno 3 GCP, meglio se distribuiti agli angoli dell’area coperta dall’immagine.',
         ],
+        immagine: { file: 'img/guida/passi/geoimage-gcp.webp', alt: 'Quattro GCP numerati sulla mappa e nella tabella del pannello, con i residui', didascalia: 'Quattro GCP: per ognuno un clic sull’immagine e uno sul luogo reale. La tabella mostra coordinate, pixel e residuo.' },
       },
       {
         titolo: 'Allinea l’immagine ai GCP',
-        testo: 'Con 3 o più GCP si abilita «Allinea immagine ai GCP». L’app calcola la trasformazione (affine, oppure polinomiale di 2° grado con almeno 6 GCP) e sposta l’immagine nelle coordinate giuste. Puoi ripetere l’operazione aggiungendo altri GCP.',
+        testo: 'Con 3 o più GCP si abilita «Allinea immagine ai GCP». L’app calcola la trasformazione scelta nel menu «Trasformazione» (affine, da 3 GCP; oppure polinomiale di 2° grado, da 6 GCP) e sposta l’immagine nelle coordinate giuste. Puoi ripetere l’operazione aggiungendo altri GCP.',
+        immagine: { file: 'img/guida/passi/geoimage-allinea.webp', alt: 'La pianta del 1891 allineata alla base moderna dopo l’allineamento ai GCP, con l’RMSE nel pannello', didascalia: 'Dopo «Allinea immagine ai GCP» la pianta del 1891 coincide con la base moderna; nel pannello compare l’RMSE.' },
       },
       {
         titolo: 'Controlla l’errore (RMSE)',
-        testo: 'Dal terzo GCP compare l’RMSE, l’errore medio in metri: più è basso, meglio è. Nella tabella ogni GCP ha il suo residuo, colorato in verde, arancione o rosso. Se l’errore è alto, riposiziona i GCP meno precisi (trascinali sulla mappa) o aggiungine altri.',
+        testo: 'Appena i GCP bastano per la trasformazione scelta (3 per l’affine, 6 per la polinomiale) compare l’RMSE, l’errore medio in metri: più è basso, meglio è. Nella tabella ogni GCP ha il suo residuo in metri, colorato rispetto alla media: verde se è nella norma, arancione se è alto, rosso se è molto più alto degli altri. Se l’errore è alto, riposiziona i GCP meno precisi (trascinali sulla mappa) o aggiungine altri.',
       },
       {
         titolo: 'Esporta il risultato',
@@ -61,8 +65,9 @@ export const SEZIONI = [
           '.points: i GCP per il Georeferenziatore di QGIS.',
           'World file: la trasformazione affine in sei righe (richiede almeno 3 GCP).',
           'GCP GeoJSON: i punti di controllo come dati geografici.',
-          'JSON: salva e riapre l’intero progetto; è lo stesso formato di Geoimage.',
+          'JSON: salva e riapre l’intero progetto («Esporta JSON» e «Importa JSON»); è lo stesso formato di Geoimage.',
         ],
+        immagine: { file: 'img/guida/passi/geoimage-esporta.webp', alt: 'La sezione Export del pannello con le impostazioni GeoTIFF aperte', didascalia: 'Export: il pulsante GeoTIFF apre le impostazioni (sistema di riferimento, ricampionamento, risoluzione, compressione).' },
       },
     ],
   },
@@ -76,6 +81,7 @@ export const SEZIONI = [
       { titolo: 'Naviga normalmente', testo: 'Con lo Swipe attivo puoi ancora spostare e ingrandire la mappa: la linea resta ferma e la divisione si aggiorna in tempo reale. Per spostare la mappa tieni il cursore fuori dalla maniglia.' },
       { titolo: 'Disattivalo', testo: 'Premi di nuovo «Swipe». Swipe e Spotlight si escludono: attivarne uno spegne l’altro.' },
     ],
+    immagine: { file: 'img/guida/passi/geoimage-swipe.webp', alt: 'Lo Swipe: a sinistra la pianta del 1891, a destra la base moderna', didascalia: 'Swipe: la linea divide la pianta storica (a sinistra) dalla base moderna (a destra).' },
   },
   {
     id: 'spotlight',
@@ -86,6 +92,7 @@ export const SEZIONI = [
       { titolo: 'Regola il raggio', testo: 'Il cursore «Raggio» ingrandisce o riduce il cerchio.' },
       { titolo: 'Inverti l’effetto', testo: 'Il pulsante ⇄ inverte la logica: l’immagine storica si vede solo dentro il cerchio e il resto è nascosto.' },
     ],
+    immagine: { file: 'img/guida/passi/geoimage-spotlight.webp', alt: 'Lo Spotlight: un cerchio scopre la base moderna sotto la pianta del 1891', didascalia: 'Spotlight: il cerchio segue il mouse e scopre la base moderna sotto l’immagine.' },
   },
   {
     id: 'suggerimenti',
@@ -109,7 +116,7 @@ export const SEZIONI = [
       'La base cartografica e la ricerca sono quelle del Digital Twin: non ci sono il selettore della mappa di base né la ricerca dei luoghi di Geoimage.',
       'Le maniglie si vedono solo con il pannello Geoimage aperto; a pannello ripiegato resta solo l’immagine.',
       'Il cambio tra scala e deforma degli angoli si fa con un pulsante, non cliccando sull’immagine (il clic sulla mappa apre la scheda dei luoghi).',
-      'È pensato per il computer, con il mouse: sul telefono il tab non è disponibile.',
+      'Si usa meglio con il mouse. Sul telefono il tab laterale non c’è: apri Geoimage dal pulsante nel pannello Strati e chiudilo con la X in alto a destra del pannello.',
     ],
   },
   {

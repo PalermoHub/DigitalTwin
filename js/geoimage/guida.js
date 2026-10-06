@@ -13,6 +13,17 @@ const elenco = (doc, voci) => {
   return ul;
 };
 
+// Screenshot di un passo: se il file manca (deploy senza immagini) la figura sparisce, niente icona rotta.
+function figura(doc, immagine) {
+  const fig = el(doc, 'figure');
+  fig.className = 'guida-figura';
+  const img = el(doc, 'img');
+  Object.assign(img, { src: immagine.file, alt: immagine.alt, loading: 'lazy', width: 1280, height: 720 });
+  img.onerror = () => fig.remove();
+  fig.append(img, el(doc, 'figcaption', immagine.didascalia));
+  return fig;
+}
+
 export function schedaGeoimage(doc = document, sezioni = SEZIONI) {
   const radice = el(doc, 'div');
   radice.append(el(doc, 'h2', 'Guida Geoimage'), Object.assign(el(doc, 'p', 'Come sovrapporre una mappa storica alla cartografia e georeferenziarla.'), { className: 'pagina-intro' }));
@@ -29,10 +40,12 @@ export function schedaGeoimage(doc = document, sezioni = SEZIONI) {
         const titolo = el(doc, 'strong', p.titolo);
         li.append(titolo, ' — ', p.testo);
         if (p.elenco) li.append(elenco(doc, p.elenco));
+        if (p.immagine) li.append(figura(doc, p.immagine));
         ol.append(li);
       }
       sezione.append(ol);
     }
+    if (s.immagine) sezione.append(figura(doc, s.immagine));
     if (s.elenco) sezione.append(elenco(doc, s.elenco));
     if (s.link) {
       const p = el(doc, 'p');

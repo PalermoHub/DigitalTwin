@@ -20,8 +20,7 @@ from guida_screenshot import ROOT, VIEWPORT, _salva_webp  # noqa: E402
 APP = "http://127.0.0.1:8000"
 PROXY = "http://127.0.0.1:8787"
 URL = f"{APP}/index.html?rndt-proxy={PROXY.replace(':', '%3A').replace('/', '%2F')}"
-ALBERI = ROOT / "dati" / "alberi_monumentali" / "alberi.geojson"
-FICO = [13.341453, 38.122858]  # «Fico magnolioide», Villa Malfitano: un albero del file di esempio
+MONTE = [13.30, 38.10]  # le colline a ovest di Palermo (Monte Cuccio, Boccadifalco): qui ci sono aree PAI da frana
 
 
 def _raggiungibile(url):
@@ -34,21 +33,46 @@ def _raggiungibile(url):
 
 def _apri(browser):
     page = browser.new_page(viewport=VIEWPORT)
+    page.add_init_script("try { localStorage.setItem('dt.invito.no', '1'); } catch (e) {}")  # niente invito «Clicca sulla mappa»
     page.goto(URL)
     page.wait_for_function("window.dt && window.dt.pronto === true", timeout=90000)
     return page
 
 
-def _carica_alberi(page):
-    page.click("#btn-gruppo-rndt")
-    page.locator("#gruppo-rndt input[type=file]").set_input_files(str(ALBERI))
-    page.wait_for_function("document.querySelectorAll('#gruppo-rndt input[type=checkbox]').length > 0", timeout=15000)
-    page.wait_for_timeout(800)
-
-
 def _vai(page, centro, zoom):
     page.evaluate("([c, z]) => window.dt.map.jumpTo({ center: c, zoom: z, pitch: 0, bearing: 0 })", [centro, zoom])
     page.wait_for_timeout(1500)
+
+
+def _aggiungi_pai(page):
+    """Aggiunge dal catalogo il WFS «PAI Frane» (elementi interrogabili) e richiude il catalogo.
+    I file del computer stanno nell'albero «I miei layer», che la scheda non interroga: per il gruppo RNDT e per la scheda serve un layer del catalogo."""
+    catalogo(page)
+    page.locator("#rndt-pannello .ordt-result-title").nth(1).click()  # «Aree a pericolosità da frana PAI - Dataset»
+    page.get_by_role("button", name="Add features").first.click()
+    page.wait_for_function("document.querySelectorAll('#gruppo-rndt input[type=checkbox]').length > 0", timeout=60000)
+    page.wait_for_function("window.dt.map.getStyle().layers.some(l => /^rndt-.*-fill$/.test(l.id))", timeout=30000)
+    page.click("#rndt-pannello .pannello-chiudi")
+    page.wait_for_timeout(1500)
+
+
+def _punto_pai(page):
+    """Un punto dello schermo dentro un'area PAI visibile, al centro della mappa."""
+    return page.evaluate(
+        """() => {
+          const m = window.dt.map, r = m.getCanvas().getBoundingClientRect();
+          const id = m.getStyle().layers.find(l => /^rndt-.*-fill$/.test(l.id)).id;
+          const c = { x: r.width / 2, y: r.height / 2 };
+          const fs = m.queryRenderedFeatures(undefined, { layers: [id] });
+          if (!fs.length) return null;
+          let best = null, d = 1e9;
+          for (let x = 40; x < r.width - 40; x += 20) for (let y = 40; y < r.height - 40; y += 20) {
+            const dd = Math.hypot(x - c.x, y - c.y);
+            if (dd < d && m.queryRenderedFeatures([x, y], { layers: [id] }).length) { d = dd; best = [r.left + x, r.top + y]; }
+          }
+          return best;
+        }"""
+    )
 
 
 def catalogo(page):
@@ -61,22 +85,22 @@ def catalogo(page):
 
 
 def gruppo(page):
-    _carica_alberi(page)
-    _vai(page, FICO, 15.5)
+    _aggiungi_pai(page)
+    _vai(page, MONTE, 12.5)
+    page.click("#btn-gruppo-rndt")
+    page.wait_for_timeout(800)
 
 
 def info(page):
-    _carica_alberi(page)
-    page.click("#btn-gruppo-rndt")  # richiude il gruppo: la scheda ha bisogno dello spazio
-    _vai(page, FICO, 18)
-    x, y = page.evaluate(
-        "p => { const m = window.dt.map, r = m.getCanvas().getBoundingClientRect(), q = m.project(p); return [r.left + q.x, r.top + q.y]; }", FICO
-    )
-    page.mouse.click(x, y)
+    _aggiungi_pai(page)
+    _vai(page, MONTE, 13.5)
+    punto = _punto_pai(page)
+    if not punto:
+        raise SystemExit("nessuna area PAI visibile: cambia MONTE/zoom")
+    page.mouse.click(*punto)
     # la linguetta ha un contatore ("Altri dati (RNDT)6"): come in guida_screenshot.py si cerca con una regex sul testo intero
-    page.locator("#scheda").get_by_text(re.compile(r"^Altri dati \(RNDT\)\d*$")).first.click(timeout=20000)
-    # il testo «Fico magnolioide» c'è anche nella prima linguetta (nascosta): si aspetta un'etichetta che compare solo nella linguetta RNDT
-    page.locator("#scheda").get_by_text("localita", exact=True).first.wait_for(state="visible", timeout=20000)
+    page.locator("#scheda").get_by_text(re.compile(r"^Altri dati \(RNDT\)\d*$")).first.click(timeout=30000)
+    page.wait_for_function("!document.querySelector('#scheda')?.innerText.includes('Interrogazione dei servizi in corso')", timeout=30000)
     page.wait_for_timeout(1200)
 
 

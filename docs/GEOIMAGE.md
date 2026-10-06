@@ -1,6 +1,6 @@
 # Geoimage: mappe storiche sulla base di Palermo
 
-Il tab **Geoimage** nella barra verticale a destra (accanto a Scheda e RNDT) sovrappone una mappa storica, o qualsiasi immagine, alla base del Digital Twin e la georeferenzia con i punti di controllo (GCP). Nasce da [Geoimage](https://github.com/gbvitrano/Geoimage) di @gbvitrano, portato da Leaflet a MapLibre. La guida d'uso sta nel foglio Info, tab «Guida Geoimage» (testo in `js/geoimage/guida-contenuti.js`).
+Il tab **Geoimage** nella barra verticale a destra (accanto a Scheda e RNDT) sovrappone una mappa storica, o qualsiasi immagine, alla base del Digital Twin e la georeferenzia con i punti di controllo (GCP). Nasce da [Geoimage](https://github.com/gbvitrano/Geoimage) di @gbvitrano, portato da Leaflet a MapLibre. La guida d'uso sta nel foglio Info, tab «Guida Geoimage» (testo in `js/geoimage/guida-contenuti.js`, screenshot in `img/guida/passi/geoimage-*.webp` rigenerati con `python scripts/guida_screenshot_geoimage.py`).
 
 ## Come funziona
 
@@ -18,7 +18,7 @@ Il tab **Geoimage** nella barra verticale a destra (accanto a Scheda e RNDT) sov
 
 ## Limiti noti
 
-- Solo desktop (>720 px): il tab sta nella barra di destra, che su mobile non c'è.
+- Pensato per il mouse. Sotto i 720 px la barra di destra non c'è: Geoimage si apre dal pulsante nel pannello Strati e si chiude con la X del pannello.
 - L'immagine non può stare sotto altri strati: usa opacità, Swipe e Spotlight.
 - Con la mappa molto inclinata gli angoli possono finire dietro la camera: l'immagine si nasconde finché tornano davanti.
 - Sostituito rispetto a Geoimage: niente selettore della mappa di base né ricerca luoghi (si usano quelli del Twin); il cambio scala/deforma degli angoli è un pulsante, non il clic sull'immagine (il clic apre la Scheda).

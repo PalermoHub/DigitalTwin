@@ -159,16 +159,16 @@ export const PASSI_RNDT = [
       'I dati aggiunti compaiono nel gruppo «RNDT» della barra degli strati, e anche tra gli Argomenti del foglio Info. Ogni layer ha una casella per accenderlo o spegnerlo e una × per rimuoverlo. Si salvano da soli e, riaprendo la mappa, tornano al loro posto, accesi o spenti come li avevi lasciati. Accanto al nome, «solo questa sessione» avverte che quel layer non si è potuto salvare.',
       'I tuoi file non stanno più qui: si caricano dall’albero del gruppo «I miei layer» (icona di caricamento accanto a «I miei dati») e compaiono nello stesso gruppo, insieme ai servizi XYZ, WMS, WMTS, WFS e ArcGIS REST aggiunti per indirizzo, anche con utente e password. «Carica file dal computer» accetta: GeoJSON, KML, KMZ, GPX, Shapefile (un file zip con anche il .prj) e CSV con le colonne di latitudine e longitudine. GeoJSON e CSV devono essere in WGS84. Di ogni file restano solo gli elementi dentro il Comune di Palermo, e un layer si salva fino a 5 MB: oltre, vale solo finché la pagina è aperta. Puoi anche incollare un indirizzo https nel campo «Da indirizzo web» di «I miei dati»: per un foglio Google Sheets condividilo prima con «Chiunque abbia il link» (ruolo Lettore) e ricorda le colonne lat e lon; il file, al massimo 10 MB, è una copia che non si aggiorna da sola.',
     ],
-    immagine: { file: 'img/guida/passi/rndt-gruppo.webp', alt: 'Il gruppo RNDT aperto nella barra degli strati, con i pulsanti «Dal catalogo RNDT» e «Carica file dal computer» e un layer in elenco con la sua casella.', didascalia: 'Il gruppo RNDT: i layer aggiunti e i due modi per aggiungerne.' },
+    immagine: { file: 'img/guida/passi/rndt-gruppo.webp', alt: 'Il gruppo RNDT aperto nella barra degli strati, con il pulsante «Dal catalogo RNDT» e un layer in elenco con casella, cursore dell\'opacità e pulsante per rimuoverlo; sulla mappa le aree a pericolosità da frana.', didascalia: 'Il gruppo RNDT con un layer aggiunto dal catalogo: le aree PAI da frana.' },
   },
   {
     id: 'rndt-info',
     titolo: 'Interrogare i layer RNDT',
     statico: true,
     paragrafi: [
-      'Un clic sulla mappa interroga anche i layer RNDT accesi. Le risposte arrivano nella linguetta «Altri dati (RNDT)» della scheda, con un riquadro per ogni layer. Per i dati in formato GeoJSON, e per i servizi WFS, la scheda mostra gli attributi dell\'elemento cliccato, per esempio nome, specie e località di un albero monumentale: bisogna cliccare proprio sul punto.',
+      'Un clic sulla mappa interroga anche i layer RNDT accesi. Le risposte arrivano nella linguetta «Altri dati (RNDT)» della scheda, con un riquadro per ogni layer. Per i servizi WFS la scheda mostra gli attributi dell\'elemento cliccato, per esempio la classe di pericolosità di un\'area PAI da frana: bisogna cliccare proprio sull\'elemento.',
       'Per i servizi WMS la scheda chiede al servizio le informazioni sul punto (GetFeatureInfo) e riporta la risposta; se il livello è solo grafico, lo dice. I dati dei servizi esterni hanno valore informativo: la fonte è indicata sotto ogni riquadro.',
     ],
-    immagine: { file: 'img/guida/passi/rndt-info.webp', alt: 'La scheda del luogo sulla linguetta «Altri dati (RNDT)», con gli attributi di un albero monumentale: nome, specie, località e circonferenza.', didascalia: 'Clic su un albero monumentale: gli attributi del layer RNDT.' },
+    immagine: { file: 'img/guida/passi/rndt-info.webp', alt: 'La scheda del luogo sulla linguetta «Altri dati (RNDT)», con gli attributi di un\'area a pericolosità da frana: classe di pericolosità, lunghezza e superficie, e la fonte.', didascalia: 'Clic su un\'area PAI da frana: gli attributi del layer RNDT.' },
   },
 ];
