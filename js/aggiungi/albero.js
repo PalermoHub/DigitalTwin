@@ -102,7 +102,10 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
   web.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); inviaWeb(); } });
   const moduloWeb = el('div', 'agg-modulo agg-da-web');
   moduloWeb.append(web.label, scarica, esitoWeb);
-  dati.figli.append(moduloWeb, el('p', 'agg-nota', 'Google Sheets: in Condividi → Accesso generale scegli «Chiunque abbia il link» con ruolo Lettore. Il foglio diventa un CSV (solo il foglio indicato nel link) e deve avere colonne lat e lon. Massimo 10 MB.'));
+  const infoSheets = el('details', 'agg-info');
+  infoSheets.append(el('summary', null, 'Come condividere un foglio Google'),
+    el('p', 'agg-nota', 'In Condividi → Accesso generale scegli «Chiunque abbia il link» con ruolo Lettore. Il foglio diventa un CSV (solo il foglio indicato nel link) e deve avere colonne lat e lon. Massimo 10 MB.'));
+  dati.figli.append(moduloWeb, infoSheets);
 
   const servizi = nodo('Servizi', { icona: 'cartella' });
   const rami = new Map();
