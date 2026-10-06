@@ -56,6 +56,8 @@ export function collegaStampa(map, bottone) {
     document.body.append(foglio);
     document.body.classList.add('stampa-mappa');
     window.addEventListener('afterprint', pulisci);
+    // il data URL va decodificato prima della stampa, altrimenti l'anteprima parte con l'immagine ancora vuota
+    try { await foglio.querySelector('img').decode(); } catch { /* si stampa comunque */ }
     window.print();
   });
 }
