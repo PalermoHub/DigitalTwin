@@ -112,6 +112,11 @@ map.once('style.load', async () => {
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('pannello-filtri'),
     document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
+  // coordinate del centro mappa e zoom nel piè di pagina
+  const piedeCoord = document.getElementById('piede-coord');
+  const aggiornaCoord = () => { const c = map.getCenter(); piedeCoord.textContent = `${c.lat.toFixed(4)}, ${c.lng.toFixed(4)} · zoom ${map.getZoom().toFixed(1)}`; };
+  map.on('move', aggiornaCoord);
+  aggiornaCoord();
   collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })());
 
   const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia).map(m => m.avvia(map)));
@@ -127,6 +132,7 @@ map.once('style.load', async () => {
   const linguetta = document.getElementById('linguetta-info');
   document.getElementById('apri-crediti').addEventListener('click', commuta);
   linguetta.addEventListener('click', commuta);
+  document.getElementById('piede-fonti').addEventListener('click', commuta);
   // la linguetta esterna si vede solo a foglio chiuso
   foglio.addEventListener('close', () => { linguetta.hidden = false; });
   foglio.addEventListener('toggle', () => { linguetta.hidden = foglio.open; });

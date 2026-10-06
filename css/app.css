@@ -97,10 +97,6 @@ select { width: 100%; margin: 2px 0 6px; }
 #avvisi div span { flex: 1; padding: 2px 0; }
 #avvisi button { flex: none; width: 24px; height: 24px; padding: 0; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; background: none; color: var(--text-muted); }
 #avvisi button:hover { background: rgba(0, 0, 0, .08); color: var(--text); }
-.avviso-fisso {
-  position: fixed; z-index: var(--z-mappa-ui); left: 8px; bottom: 4px; margin: 0; max-width: calc(100% - 120px);
-  font-size: var(--fs-xs); padding: 2px 8px; background: var(--avviso); border-radius: var(--r-sm);
-}
 .avviso-fisso-vecchio { margin: 8px 0; padding: 6px 8px; background: var(--avviso); border-radius: var(--r-sm); font-size: var(--fs-xs); }
 
 /* tooltip sulla mappa: uno solo (core/tooltip.js), con una sezione per fonte (trasporto, sicurezza, confini) */
@@ -116,8 +112,6 @@ dialog { max-width: 640px; width: calc(100% - 32px); background: var(--surface);
 dialog li { margin: 4px 0; }
 
 /* logo Open Data Sicilia: in basso a destra (sopra le attribuzioni), si sposta a sinistra quando la scheda è aperta */
-#logo-ods { position: fixed; z-index: var(--z-mappa-ui); bottom: 28px; right: calc(var(--scheda-l) + 16px); line-height: 0; transition: right .15s; }
-#logo-ods img { height: 56px; width: auto; display: block; }
 
 /* ==========================================================================
    Barra degli strumenti
@@ -466,13 +460,9 @@ dialog li { margin: 4px 0; }
    niente slider (c'è il pinch)
    ========================================================================== */
 @media (max-width: 720px) {
-  #logo-ods { bottom: 72px; right: 8px; }
-  #logo-ods img { height: 40px; }
-  #scheda:not([hidden]) ~ #logo-ods { bottom: calc(45% + 120px); }
   .scheda-espandi { display: flex; }
   #area-ricerca { bottom: calc(8px + env(safe-area-inset-bottom, 0px)); width: calc(100% - 16px); }
   #legende { bottom: 120px; left: 64px; }
-  .avviso-fisso { bottom: auto; top: 4px; left: 64px; }
   #linguetta-info { display: none; }
   #crediti { right: 8px; }
 
@@ -487,7 +477,6 @@ dialog li { margin: 4px 0; }
   .zoom-wrap, #zoom-badge { display: none; }
   #pannello { top: 8px; bottom: auto; left: 76px; transform: none; width: min(300px, calc(100% - 84px)); max-height: calc(100% - 72px); }
   #legende { left: 76px; }
-  .avviso-fisso { left: 76px; }
 }
 
 .uffici-popup .uffici-suggerimento { margin-top: 6px; font-style: italic; color: var(--text-muted); }
@@ -536,14 +525,13 @@ dialog li { margin: 4px 0; }
 }
 #barra-strumenti button { width: 40px; height: 40px; border: 0; }
 
+
 #legende-box { position: fixed; z-index: var(--z-mappa-ui); left: calc(var(--sx) + 12px); bottom: 28px; width: 260px; max-width: calc(100% - var(--sx) - 20px); background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
 #legende-box:not(:has(#legende > :not([hidden]))) { display: none; }
 #legende-riduci { width: 100%; padding: 8px 10px; border: 0; background: none; text-align: left; font-size: var(--fs-xs); font-weight: 700; color: var(--text); }
 #legende-box.ridotta #legende { display: none; }
 #legende { position: static; max-width: none; padding: 0 10px 8px; }
 #legende .legenda { padding: 0; border: 0; box-shadow: none; background: none; }
-#logo-ods { bottom: 96px; }
-.avviso-fisso { left: calc(var(--sx) + 12px); }
 
 .scheda-intestazione { padding-bottom: 0; }
 .scheda-indice { display: flex; gap: 2px; margin: 8px -18px 0; padding: 0 14px; overflow-x: auto; scrollbar-width: none; }
@@ -581,9 +569,6 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
   #barra-strumenti > button { width: 44px; height: 44px; min-height: 44px; padding: 0; flex-direction: row; background: var(--surface); border: 1px solid var(--border-ui); border-radius: 50%; box-shadow: var(--ombra); }
   #barra-strumenti .et { display: none; }
   #legende-box { left: 8px; bottom: 72px; width: 220px; }
-  .avviso-fisso { left: 8px; top: 64px; }
-  #scheda:not([hidden]) ~ #logo-ods { display: none; }
-  #logo-ods { bottom: 72px; }
 
   #scheda { top: auto; bottom: 64px; left: 0; right: 0; width: auto; max-height: none; border-width: 1px 0 0; border-radius: 16px 16px 0 0; box-shadow: 0 -8px 32px rgba(0, 0, 0, .2); }
   #scheda[data-altezza="peek"] { height: 168px; }
@@ -665,7 +650,6 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
 }
 @media (min-width: 721px) and (max-width: 1000px) {
   :root { --scheda-w: 340px; }
-  body:has(#scheda:not([hidden])) #logo-ods { display: none; }
   body:has(#scheda:not([hidden])) #zoom-box { bottom: 100px; }
 }
 
@@ -741,7 +725,7 @@ button.strato-chip:hover i { color: var(--text); }
 @media print {
   .scheda-disclaimer { display: block; margin: 12px 0 0; padding-top: 8px; border-top: 1px solid #999; font-size: 11px; line-height: 1.4; color: #333; break-inside: avoid; }
   html, body { height: auto; overflow: visible; background: #fff; }
-  #mappa, #barra-strati, #barra-strumenti, #zoom-box, #strati-chip, #legende-box, #area-ricerca, #logo-ods, #linguetta-info, .avviso-fisso, #apri-strati, #avvisi, #pannello,
+  #app-header, #app-footer, #mappa, #barra-strati, #zoom-box, #strati-chip, #legende-box, #area-ricerca, #linguetta-info, #apri-strati, #avvisi, #pannello,
   .scheda-azioni, .scheda-tabs, .scheda-maniglia, .scheda-pref { display: none !important; }
   #scheda { position: static !important; width: auto !important; height: auto !important; max-height: none !important; box-shadow: none !important; border: 0 !important; display: block !important; }
   .scheda-corpo { overflow: visible !important; }
@@ -1191,3 +1175,52 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .agg-salvato-nome { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; text-align: left; border: 0; background: none; color: var(--link); font: inherit; cursor: pointer; overflow-wrap: anywhere; }
 .agg-salvato > .agg-esito, .agg-salvato > .agg-modulo { flex-basis: 100%; }
 .agg-titolo-layer { margin: 10px 0 4px; font-weight: 700; font-size: var(--fs-sm, 12px); text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }
+
+/* ==========================================================================
+   Struttura della pagina: header, mappa, footer (la pagina non scorre mai)
+   ========================================================================== */
+body { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; height: 100dvh; }
+/* contain: layout fa di #corpo il riferimento di tutti gli elementi fixed dell'interfaccia: restano dentro la mappa */
+/* posizioni esplicite: un elemento estraneo nel body (estensioni del browser, tooltip) non deve spostare le tre righe */
+#app-header { grid-area: 1 / 1; }
+#corpo { grid-area: 2 / 1; position: relative; min-height: 0; overflow: hidden; contain: layout; }
+#app-footer { grid-area: 3 / 1; }
+body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio */
+
+#app-header {
+  position: relative; z-index: 30; box-sizing: border-box; min-height: 64px; padding: 8px 16px;
+  display: flex; align-items: center; gap: 16px; background: var(--surface); border-bottom: 1px solid var(--border-ui);
+}
+#app-logo { flex: none; display: block; line-height: 0; }
+#app-logo img { display: block; height: 44px; width: auto; }
+#app-header #cerca { flex: 1 1 auto; max-width: 520px; min-width: 0; height: 44px; margin: 0 auto; box-shadow: none; }
+#app-header #cerca-risultati { top: calc(100% + 8px); bottom: auto; }
+#app-header #barra-strumenti {
+  position: static !important; transform: none !important; inset: auto !important; flex: none; flex-direction: row !important;
+  align-items: center; gap: 6px; max-width: none; max-height: none; padding: 0; overflow: visible; background: none; border: 0; border-radius: 0; box-shadow: none;
+}
+#app-header #barra-strumenti > button { width: 40px; height: 40px; min-height: 0; padding: 0; flex-direction: row; border: 1px solid var(--border-ui); border-radius: 50%; background: var(--surface); box-shadow: none; }
+#app-header #barra-strumenti > button:hover { background: var(--surface-hover); }
+#app-header #barra-strumenti > button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); }
+#app-header #barra-strumenti .et { display: none; }
+
+#app-footer {
+  box-sizing: border-box; min-height: 36px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  background: var(--surface); border-top: 1px solid var(--border-ui); font-size: var(--fs-xs); color: var(--text-muted);
+}
+.piede-avviso { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.piede-avviso strong { color: var(--text); }
+#piede-fonti { flex: none; padding: 8px 4px; border: 0; background: none; font: inherit; font-weight: 700; color: var(--text); text-decoration: underline; }
+#piede-coord { margin-left: auto; flex: none; font-family: ui-monospace, Consolas, monospace; font-weight: 500; }
+#logo-ods { flex: none; display: block; line-height: 0; }
+#logo-ods img { display: block; height: 24px; width: auto; }
+
+@media (max-width: 720px) {
+  #app-header { flex-wrap: wrap; row-gap: 8px; padding: 8px 12px; min-height: 0; }
+  #app-header { column-gap: 8px; }
+  #app-logo img { height: 30px; }
+  #app-header #barra-strumenti { margin-left: auto; gap: 4px; }
+  #app-header #barra-strumenti > button { width: 36px; height: 36px; }
+  #app-header #cerca { order: 3; flex: 1 1 100%; max-width: none; margin: 0; }
+  #piede-coord { display: none; }
+}

@@ -536,7 +536,7 @@ function paddingScheda(contenitore) {
   if (contenitore.hidden) return ZERO;
   const r = contenitore.getBoundingClientRect();
   if (matchMedia('(max-width: 720px)').matches) {
-    return contenitore.classList.contains('scheda-piena') ? ZERO : { ...ZERO, bottom: Math.round(innerHeight - r.top) };
+    return contenitore.classList.contains('scheda-piena') ? ZERO : { ...ZERO, bottom: Math.round((document.getElementById('corpo')?.getBoundingClientRect().bottom ?? innerHeight) - r.top) };
   }
   return { ...ZERO, right: Math.round(r.width) };
 }
