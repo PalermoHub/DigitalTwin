@@ -35,13 +35,21 @@ export function salvaServizi(storage, stato) {
 }
 
 // Aggiunge o aggiorna (stesso tipo e URL → stesso servizio, voci unite per `chiave`). A tetto raggiunto un servizio nuovo non entra.
-export function aggiungiServizio(stato, { tipo, nome, url, voci = [] }) {
+// Del servizio si ricorda il nome utente, mai la password.
+export function aggiungiServizio(stato, { tipo, nome, url, utente, voci = [] }) {
   const id = idServizio(tipo, url);
   const presente = stato.servizi.find(s => s.id === id);
   if (!presente && stato.servizi.length >= TETTO_SERVIZI) return { stato, pieno: true };
   const unite = new Map([...(presente?.voci ?? []), ...voci].map(v => [v.chiave, v]));
-  const nuovo = { id, tipo, nome: presente?.nome ?? nome, url, voci: [...unite.values()] };
+  const nomeUtente = utente || presente?.utente;
+  const nuovo = { id, tipo, nome: presente?.nome ?? nome, url, ...(nomeUtente ? { utente: nomeUtente } : {}), voci: [...unite.values()] };
   return { stato: { ...stato, servizi: [...stato.servizi.filter(s => s.id !== id), nuovo] }, pieno: false };
+}
+
+// Ricerca nell'albero: nome o indirizzo, senza maiuscole
+export function filtraServizi(servizi, testo) {
+  const t = String(testo).trim().toLowerCase();
+  return t ? servizi.filter(s => `${s.nome} ${s.url}`.toLowerCase().includes(t)) : servizi;
 }
 
 export const rimuoviServizio = (stato, id) => ({ ...stato, servizi: stato.servizi.filter(s => s.id !== id) });

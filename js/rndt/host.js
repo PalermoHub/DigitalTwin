@@ -28,7 +28,7 @@ export function urlProxy(proxy, url) {
   return `${proxy.replace(/\/$/, '')}/t/${m[1]}${m[2] || '/'}`;
 }
 
-export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, archivioDati = null, prefisso = 'rndt', etichetta = 'RNDT', fetchFn = (...a) => fetch(...a) }) {
+export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, archivioDati = null, prefisso = 'rndt', etichetta = 'RNDT', autorizzazione = () => null, protetto = () => false, fetchFn = (...a) => fetch(...a) }) {
   let stato = iniziale;
   const layers = new Map(); // id → { id, tipo, nome, visibile, sorgente, idMappa[], idSorgente, salvato, indisponibile?, errore? }
   const ascoltatori = new Set();
@@ -58,9 +58,13 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     if (map.getSource(rec.idSorgente)) map.removeSource(rec.idSorgente);
   }
 
+  // Un layer «non disponibile» (servizio protetto non ancora sbloccato) si sostituisce quando il servizio si riaggiunge
+  const liberaSeNonDisponibile = id => { if (layers.get(id)?.indisponibile) layers.delete(id); };
+
   function creaWms(nome, opz, salva) {
     if (opz.crs && opz.crs !== 'EPSG:3857') throw new Error(`CRS ${opz.crs} non supportato dalla mappa`);
     const id = `${prefisso}-${hash(`wms|${opz.url}|${opz.layers}`)}`;
+    liberaSeNonDisponibile(id);
     if (layers.has(id)) return id;
     const v13 = String(opz.version).startsWith('1.3');
     const q = new URL(opz.url);
@@ -76,6 +80,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
 
   function creaTile(nome, url, opz = {}, salva) {
     const id = `${prefisso}-${hash(`tile|${url}`)}`;
+    liberaSeNonDisponibile(id);
     if (layers.has(id)) return id;
     map.addSource(id, { type: 'raster', tiles: [urlProxy(proxy, url)], tileSize: 256, attribution: opz.attribution, bounds: BBOX_PALERMO });
     map.addLayer({ id, type: 'raster', source: id });
@@ -137,7 +142,9 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     if (GET_FEATURE.test(url) && !SOLO_CONTEGGIO.test(url) && !CON_AREA.test(url)) {
       throw new Error('download limitato a Palermo: attiva «Only features in the current map view»');
     }
-    const risposta = await fetchFn(urlProxy(proxy, url));
+    const auth = autorizzazione(url);
+    const risposta = await (auth ? fetchFn(urlProxy(proxy, url), { headers: { authorization: auth } }) : fetchFn(urlProxy(proxy, url)));
+    if (risposta.status === 401) throw new Error('il servizio richiede utente e password');
     if (!risposta.ok) throw new Error(`HTTP ${risposta.status}`);
     const buffer = await risposta.arrayBuffer();
     if (SEMBRA_DATI.test(url) && !SOLO_CONTEGGIO.test(url)) ultimoDownload = { url, t: Date.now() };
@@ -182,6 +189,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     // WFS da un servizio dell'utente: `richiesta` è il GetFeature già completo (con bbox di Palermo). Si salva con l'URL.
     async addWfsLayer(nome, richiesta) {
       const id = `${prefisso}-${hash(`geojson|${richiesta}`)}`;
+      liberaSeNonDisponibile(id);
       if (layers.has(id)) return id;
       let fc;
       try { fc = JSON.parse(new TextDecoder().decode(await fetchArrayBuffer(richiesta))); } catch (errore) {
@@ -231,6 +239,8 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
       for (const salvato of stato.layers) {
         try {
           let id;
+          const urlSalvato = salvato.sorgente?.url;
+          if (urlSalvato && protetto(urlSalvato)) throw new Error('servono utente e password');
           if (salvato.tipo === 'wms') id = creaWms(salvato.nome, salvato.sorgente, false);
           else if (salvato.tipo === 'tile') id = creaTile(salvato.nome, salvato.sorgente.url, { attribution: salvato.sorgente.attribution }, false);
           else if (salvato.sorgente.dati === true) {

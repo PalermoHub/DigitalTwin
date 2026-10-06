@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  CHIAVE_SERVIZI, TETTO_SERVIZI, idServizio, leggiServizi, salvaServizi, aggiungiServizio, rimuoviServizio,
+  CHIAVE_SERVIZI, TETTO_SERVIZI, idServizio, leggiServizi, salvaServizi, aggiungiServizio, rimuoviServizio, filtraServizi,
 } from '../../js/aggiungi/salvati.js';
 
 const finto = () => {
@@ -56,4 +56,22 @@ test('stato corrotto o voci non valide: elenco vuoto o filtrato; storage bloccat
   const rotto = { getItem() { throw new Error('x'); }, setItem() { throw new Error('y'); } };
   assert.deepEqual(leggiServizi(rotto), vuoto);
   assert.equal(salvaServizi(rotto, vuoto), false);
+});
+
+test('il nome utente si conserva e non c’è mai una password', () => {
+  const { stato } = aggiungiServizio(vuoto, { ...wms, utente: 'mario' });
+  assert.equal(stato.servizi[0].utente, 'mario');
+  assert.ok(!JSON.stringify(stato).includes('password'));
+  const senza = aggiungiServizio(vuoto, wms).stato;
+  assert.equal('utente' in senza.servizi[0], false);
+  // riaggiungere senza utente non cancella quello già noto
+  assert.equal(aggiungiServizio(stato, wms).stato.servizi[0].utente, 'mario');
+});
+
+test('filtraServizi: nome o indirizzo, senza badare alle maiuscole; testo vuoto = tutti', () => {
+  const a = { id: '1', tipo: 'wms', nome: 'Piano PAI', url: 'https://x.it/ows', voci: [] };
+  const b = { id: '2', tipo: 'wfs', nome: 'Strade', url: 'https://geo.example.org/wfs', voci: [] };
+  assert.deepEqual(filtraServizi([a, b], 'pai').map(s => s.id), ['1']);
+  assert.deepEqual(filtraServizi([a, b], 'EXAMPLE').map(s => s.id), ['2']);
+  assert.deepEqual(filtraServizi([a, b], '  ').map(s => s.id), ['1', '2']);
 });
