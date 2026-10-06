@@ -1240,3 +1240,19 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
   #app-logo img { height: 30px; }
       #piede-coord { display: none; }
 }
+
+/* stampa della mappa visibile (pulsante «Stampa» della barra strumenti): il foglio compare solo in stampa */
+#foglio-stampa { display: none; }
+@media print {
+  body.stampa-mappa > *:not(#foglio-stampa) { display: none !important; }
+  body.stampa-mappa #foglio-stampa { display: block; color: #000; background: #fff; font-family: inherit; }
+  #foglio-stampa h1 { margin: 0; font-size: 18pt; }
+  #foglio-stampa h2 { margin: 8px 0 4px; font-size: 11pt; }
+  #foglio-stampa header p { margin: 2px 0 8px; font-size: 9pt; color: #333; }
+  #foglio-stampa .stampa-mappa { display: block; width: 100%; max-height: 62vh; object-fit: contain; border: 1px solid #999; }
+  #foglio-stampa .stampa-legende { margin-top: 8px; font-size: 9pt; column-count: 2; }
+  #foglio-stampa .stampa-legende h2 { column-span: all; }
+  #foglio-stampa .stampa-legende * { color: #000 !important; max-height: none !important; overflow: visible !important; }
+  #foglio-stampa .stampa-attribuzioni { margin-top: 8px; padding-top: 4px; border-top: 1px solid #999; font-size: 8pt; line-height: 1.35; color: #333; break-inside: avoid; }
+  #foglio-stampa .stampa-attribuzioni p { margin: 0; }
+}

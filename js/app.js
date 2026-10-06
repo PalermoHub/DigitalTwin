@@ -12,6 +12,7 @@ import { migraFileLocali } from './aggiungi/migrazione.js';
 import { collegaGeoimage } from './geoimage/index.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
+import { collegaStampa } from './core/stampa.js';
 import { collegaZone } from './core/zone.js';
 import { collegaRipristino } from './core/ripristino.js';
 import confini from './layers/confini.js';
@@ -110,6 +111,7 @@ map.once('style.load', async () => {
     collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti)));
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
+  collegaStampa(map, document.getElementById('btn-stampa'));
   // coordinate del centro mappa e zoom nel piè di pagina
   const piedeCoord = document.getElementById('piede-coord');
   const aggiornaCoord = () => { const c = map.getCenter(); piedeCoord.textContent = `${c.lat.toFixed(4)}, ${c.lng.toFixed(4)} · zoom ${map.getZoom().toFixed(1)}`; };
