@@ -25,8 +25,7 @@ incollati per URL (XYZ, WMS, WFS). I servizi aggiunti si salvano nel browser e s
 
 ## Architettura
 
-- **Tab «Aggiungi layer»** nella rail destra (`collegaRail`), accanto a «RNDT», con un pulsante nella barra strumenti.
-  Il pannello è un elemento come `rndt-pannello`. Il gruppo «I miei layer» sta invece nella barra sinistra degli strati.
+- ~~Tab «Aggiungi layer» nella rail destra~~ — **sostituito dalla Revisione 2**: non c'è un pannello destro; tutto sta nel gruppo «I miei layer» della barra sinistra.
 - **Secondo host**: `creaHost({ map, proxy: PROXY_RNDT, prefisso: 'miei', etichetta: 'aggiunti', stato, scrivi, anelli, notifica, archivioDati })`
   con stato letto da `dt:miei:v1`. `prefisso` (default `rndt`) è l'inizio degli id di sorgenti e layer in mappa; `etichetta` entra nei messaggi. Condivide con il catalogo il proxy, i confini e l'IndexedDB `dt-rndt`
   (gli id dei layer sono hash dei contenuti, non collidono).
@@ -53,7 +52,7 @@ incollati per URL (XYZ, WMS, WFS). I servizi aggiunti si salvano nel browser e s
 - `creaWms` e `creaTile` si riusano. Il WMS accetta solo EPSG:3857 (errore già presente).
 - Nessun tipo nuovo in `archivio.js`: il WFS è un `geojson` con URL.
 
-## Pannello
+## Pannello (sostituito dalla Revisione 2, vedi sotto)
 
 ```
 Aggiungi layer
@@ -118,3 +117,49 @@ Un servizio salvato che non risponde più resta nell'elenco come «non disponibi
 ## Documentazione
 
 Aggiornare `docs/RNDT.md` (il file dal computer si sposta), una nuova pagina `docs/AGGIUNGI_LAYER.md` e, se serve, la guida.
+
+## Revisione 2 — pannello unico a sinistra, ad albero, con credenziali
+
+Richiesta del 2026-10-06: tutto avviene nello stesso pannello di sinistra, con un albero come il Browser di QGIS/GeoLibre,
+e i servizi possono richiedere utente e password.
+
+### Pannello
+
+Il gruppo «I miei layer» (tab sinistro) contiene, dall'alto:
+
+```
+[ Cerca sorgenti dati… ]
+▾ 📁 I miei dati                    ⬆   ← l'icona apre il selettore dei file
+▾ 📁 Servizi
+   ▸ XYZ (n)                         ＋
+   ▸ WMS (n)                         ＋
+   ▸ WFS (n)                         ＋
+      · servizio salvato  (🔒)      🗑   ← clic: in mappa; 🔒 = serve la password
+Layer in mappa                           ← le righe di oggi: casella, opacità, rimozione, ordine
+```
+
+- Il «＋» di un tipo apre, sotto il ramo, un modulo con Nome (facoltativo), Indirizzo, **Utente** e **Password** (facoltativi).
+  WMS e WFS: «Leggi il servizio» mostra nel modulo i layer da spuntare, poi «Aggiungi selezionati».
+- La ricerca filtra i servizi salvati (nome, indirizzo).
+- L'albero si crea una sola volta e si sposta a ogni ridisegno del gruppo: lo stato (rami aperti, testo digitato) resta.
+- Spariscono `#aggiungi-pannello`, il suo tab nella rail, il pulsante `btn-aggiungi` e il pulsante «＋ Aggiungi servizio o file…».
+
+### Credenziali
+
+- **Solo per la sessione.** Utente e password stanno in una `Map` in memoria (`host → intestazione Basic`); non vanno in
+  `localStorage`, né nei servizi salvati, né in IndexedDB. Il servizio salvato ricorda l'URL e il nome utente (campo `utente`).
+- Un servizio salvato con `utente` e senza password in sessione mostra 🔒; al clic il modulo chiede la password
+  (l'utente è già compilato) e poi lo mette in mappa.
+- Una risposta 401 dà l'errore «il servizio richiede utente e password».
+- `host.fetchArrayBuffer` (capabilities, GetFeature, WFS al ripristino) manda l'intestazione `Authorization` per l'host
+  del servizio; i tile (WMS, XYZ) la ricevono da `map.setTransformRequest` per le richieste dirette al proxy con quell'host.
+- **Worker**: inoltra `Authorization` al servizio solo per l'host richiesto (mai su un redirect verso un altro host);
+  l'elenco `access-control-allow-headers` diventa esplicito (`authorization, accept, content-type`, perché `*` non
+  copre `Authorization`); non gira al browser `WWW-Authenticate` (nessuna finestra di login del browser); non registra
+  nulla. Va ripubblicato (`wrangler deploy`).
+- Solo autenticazione Basic. Un token nell'URL si incolla nell'indirizzo come prima.
+
+### Test aggiunti
+
+Worker (inoltro dell'intestazione, niente su redirect cross-host, CORS), `credenziali.js` (puro), host (intestazione e 401),
+controllo (credenziali, 🔒, salvati senza password), filtro dei servizi; verifica a mano nel browser.
