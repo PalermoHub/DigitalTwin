@@ -161,7 +161,7 @@ export default {
     },
   },
   strati: [{
-    id: 'isole-calore', etichetta: 'Isole di calore (da zoom 10)', layers: [FILL, BORDO], attivo: false, legendaIntegrata: '.legenda-isole-calore',
+    id: 'isole-calore', etichetta: 'Isole di calore (da zoom 10)', layers: [FILL, BORDO], attivo: false, legenda: '.legenda-isole-calore',
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
   }],
   pannello: creaLegenda,
