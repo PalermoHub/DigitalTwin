@@ -6,7 +6,9 @@ import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaRail } from './core/rail.js';
 import { collegaScheda } from './core/scheda.js';
 import { collegaRndt } from './rndt/index.js';
-import { creaGruppoRndt } from './rndt/gruppo.js';
+import { creaGruppo, creaGruppoRndt, OPZIONI_MIEI } from './rndt/gruppo.js';
+import { collegaAggiungi } from './aggiungi/index.js';
+import { migraFileLocali } from './aggiungi/migrazione.js';
 import { collegaGeoimage } from './geoimage/index.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
@@ -58,7 +60,7 @@ window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pront
 // (con l'etichetta del pannello, non con l'id tecnico).
 const STRATI = MODULI.flatMap(m => m.strati);
 map.on('error', e => {
-  if (!e.sourceId || e.sourceId.startsWith('rndt-')) return; // gli errori dei layer RNDT li segnala lo shim
+  if (!e.sourceId || /^(rndt|miei)-/.test(e.sourceId)) return; // gli errori dei layer RNDT e dei «miei layer» li segnalano gli host
   const colpiti = STRATI.filter(s => s.layers.some(id => map.getLayer(id)?.source === e.sourceId));
   if (!colpiti.length) return segnala(`Strato non caricato: ${e.sourceId}`);
   segnala(`Strato non caricato: ${colpiti.map(s => s.etichetta).join(', ')}`);
@@ -74,17 +76,23 @@ map.once('style.load', async () => {
 
   for (const m of MODULI) m.aggiungiSorgenti(map);
   for (const m of MODULI) m.aggiungiLayer(map);
-  const gruppoRndt = creaGruppoRndt(); // ultimo gruppo della barra: i suoi layer arrivano a runtime
-  costruisciPannello(map, [...MODULI, gruppoRndt.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
+  try { migraFileLocali(window.localStorage); } catch { /* storage bloccato: niente da spostare */ }
+  const gruppoRndt = creaGruppoRndt(); // ultimi gruppi della barra: i loro layer arrivano a runtime
+  const gruppoMiei = creaGruppo(OPZIONI_MIEI);
+  costruisciPannello(map, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
   const rndt = collegaRndt(map, document.getElementById('rndt-pannello'), gruppoRndt);
+  const aggiungi = collegaAggiungi(map, document.getElementById('aggiungi-pannello'), gruppoMiei);
   collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt });
   const geoimage = collegaGeoimage(map, document.getElementById('geoimage-pannello'));
   const rail = collegaRail(document.getElementById('rail-pannelli'), [
     { id: 'scheda', etichetta: 'Scheda', pannello: document.getElementById('scheda') },
     { id: 'rndt', etichetta: 'RNDT', pannello: document.getElementById('rndt-pannello'), apri: rndt.apri, chiudi: rndt.chiudi },
+    { id: 'aggiungi', etichetta: 'Aggiungi layer', pannello: document.getElementById('aggiungi-pannello'), apri: aggiungi.apri, chiudi: aggiungi.chiudi },
     { id: 'geoimage', etichetta: 'Geoimage', pannello: document.getElementById('geoimage-pannello'), apri: geoimage.apri, chiudi: geoimage.chiudi },
   ]);
   document.getElementById('btn-rndt').addEventListener('click', () => rail.commuta('rndt'));
+  document.getElementById('btn-aggiungi').addEventListener('click', () => rail.commuta('aggiungi'));
+  aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
   geoimage.ripristina(); // e la mappa storica di Geoimage, se c'era
   window.dt.geoimage = geoimage;
@@ -115,7 +123,7 @@ map.once('style.load', async () => {
 
   const foglio = document.getElementById('crediti');
   const commuta = () => {
-    if (catalogo) commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo]);
+    if (catalogo) commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo]);
     else segnala('Fonti non disponibili: catalogo dati assente');
   };
   const linguetta = document.getElementById('linguetta-info');
