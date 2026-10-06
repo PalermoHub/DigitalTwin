@@ -46,3 +46,4 @@ docs/schermata-fase1.png
 tests/
 package.json
 pytest.ini
+docs/PROCEDURA_DEPLOY_WORKER.md
