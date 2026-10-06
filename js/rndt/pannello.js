@@ -2,6 +2,7 @@
 // Pannello del catalogo RNDT: si sovrappone alla scheda del luogo (desktop) o al foglio basso (mobile). Ospita la UI del
 // plugin, l'elenco dei layer aggiunti e fa rispettare l'area di Palermo sui controlli del plugin.
 import { BBOX_PALERMO } from './area.js';
+import { svgIcona } from '../core/icone.js';
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -34,6 +35,10 @@ function limitaArea(radice) {
 export function creaPannello(elemento) {
   const testata = el('header', 'rndt-testata');
   testata.append(el('h2', null, 'Catalogo RNDT · Palermo'));
+  const x = Object.assign(el('button', 'pannello-chiudi'), { type: 'button', title: 'Chiudi', ariaLabel: 'Chiudi il catalogo RNDT' });
+  x.innerHTML = svgIcona('chiudi', 18);
+  x.addEventListener('click', () => { elemento.hidden = true; });
+  testata.append(x);
   const elenco = el('details', 'rndt-layer');
   elenco.hidden = true;
   const contenuto = el('div', 'rndt-contenuto');

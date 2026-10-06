@@ -3,7 +3,7 @@ import { impostaCatalogo } from './core/config.js';
 import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js';
 import { collegaInvito } from './core/invito.js';
 import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
-import { collegaRail } from './core/rail.js';
+import { collegaRail, ICONE_RAIL } from './core/rail.js';
 import { collegaScheda } from './core/scheda.js';
 import { collegaRndt } from './rndt/index.js';
 import { creaGruppo, creaGruppoRndt, OPZIONI_MIEI } from './rndt/gruppo.js';
@@ -90,6 +90,11 @@ map.once('style.load', async () => {
     { id: 'rndt', etichetta: 'RNDT', pannello: document.getElementById('rndt-pannello'), apri: rndt.apri, chiudi: rndt.chiudi },
     { id: 'geoimage', etichetta: 'Geoimage', pannello: document.getElementById('geoimage-pannello'), apri: geoimage.apri, chiudi: geoimage.chiudi },
   ]);
+  // su mobile la barra laterale non c'è: Geoimage si apre dal pannello Strati
+  const btnGeo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-geoimage-m', className: 'btn-pannello-mobile', title: 'Geoimage: mappe storiche' });
+  btnGeo.innerHTML = `${ICONE_RAIL.geoimage}<span class="et">Geoimage</span>`;
+  btnGeo.addEventListener('click', () => { impostaStrati(false); rail.commuta('geoimage'); });
+  document.getElementById('barra-gruppi').append(btnGeo);
   document.getElementById('btn-rndt').addEventListener('click', () => rail.commuta('rndt'));
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri

@@ -2,6 +2,8 @@
 // Il pannello Geoimage nella barra di destra: solo il markup, nell'ordine delle sezioni di Geoimage.
 // Il comportamento sta nei moduli collega* (immagine, posizione, confronto, gcp, sessione, esporta); gli elementi si
 // ritrovano per id (`#gi-<nome>`). Le sezioni con data-richiede="immagine" compaiono dopo aver caricato un'immagine.
+import { svgIcona } from '../core/icone.js';
+
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
@@ -130,6 +132,10 @@ function sezioneExport() {
 export function creaPannello(elemento) {
   const testata = el('header', 'gi-testata');
   testata.append(el('h2', null, 'Geoimage · mappe storiche'));
+  const x = Object.assign(el('button', 'pannello-chiudi'), { type: 'button', title: 'Chiudi', ariaLabel: 'Chiudi Geoimage' });
+  x.innerHTML = svgIcona('chiudi', 18);
+  x.addEventListener('click', () => { elemento.hidden = true; });
+  testata.append(x);
   const autore = el('p', 'gi-autore', 'Georeferenzia una mappa storica sulla base di Palermo. Da ');
   const link = Object.assign(el('a', null, 'Geoimage'), { href: 'https://palermohub.opendatasicilia.it/geoimage.html', target: '_blank', rel: 'noopener' });
   autore.append(link, ' di @gbvitrano.');

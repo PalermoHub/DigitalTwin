@@ -1303,3 +1303,15 @@ body:has(#crediti[open]) :is(.invito-clic, .invito-mai) { display: none; }
 
 /* schermi stretti: il pulsante Strati diventa icona + numero, così non finisce sotto la barra strumenti */
 @media (max-width: 480px) { #apri-strati .lbl-strati { display: none; } }
+
+/* pulsante di chiusura dei pannelli RNDT e Geoimage (su mobile la barra laterale non c'è) */
+.rndt-testata .pannello-chiudi, .gi-testata .pannello-chiudi { margin-left: auto; flex: none; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--text-muted); cursor: pointer; }
+.rndt-testata .pannello-chiudi:hover, .gi-testata .pannello-chiudi:hover { background: var(--surface-hover); color: var(--text); }
+.gi-testata { display: flex; align-items: center; flex-wrap: wrap; }
+.gi-testata h2 { flex: 1; min-width: 0; }
+@media (pointer: coarse), (max-width: 720px) { .rndt-testata .pannello-chiudi, .gi-testata .pannello-chiudi { width: 44px; height: 44px; } }
+/* Geoimage nel pannello Strati: solo dove non c'è la barra laterale */
+@media (min-width: 721px) { #barra-gruppi .btn-pannello-mobile { display: none; } }
+@media (max-width: 720px) { body.strati-aperti #barra-gruppi .btn-pannello-mobile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; } }
+/* l'invito all'avvio non sta sopra un pannello aperto */
+body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) .invito-clic { display: none; }

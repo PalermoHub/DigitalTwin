@@ -1,6 +1,6 @@
 // Barra verticale a destra con un tab per pannello (Scheda, RNDT): un solo pannello aperto alla volta,
 // gli altri restano raggiungibili dai tab. Cliccando il tab attivo il pannello si ripiega e resta solo la barra.
-const ICONE = {
+export const ICONE_RAIL = {
   scheda: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>',
   rndt: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>',
   geoimage: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-9 9"/></svg>',
@@ -15,7 +15,7 @@ export function collegaRail(rail, voci) {
     b.className = 'rail-tab';
     b.dataset.pannello = v.id;
     b.title = v.etichetta;
-    b.innerHTML = `${ICONE[v.id] || ''}<span>${v.etichetta}</span>`;
+    b.innerHTML = `${ICONE_RAIL[v.id] || ''}<span>${v.etichetta}</span>`;
     b.addEventListener('click', () => {
       if (v.pannello.hidden) { v.apri?.(); return; }
       v.pannello.classList.toggle('collassato');
