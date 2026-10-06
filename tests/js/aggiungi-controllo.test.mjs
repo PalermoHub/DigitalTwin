@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { creaControllo } from '../../js/aggiungi/controllo.js';
 import { leggiServizi, TETTO_SERVIZI } from '../../js/aggiungi/salvati.js';
+import { creaCredenziali } from '../../js/aggiungi/credenziali.js';
 
 const WMS = `<WMS_Capabilities version="1.3.0"><Capability><Request><GetMap><Format>image/png</Format></GetMap></Request>
 <Layer><CRS>EPSG:3857</CRS><Layer><Name>pai</Name><Title>Piano PAI</Title></Layer><Layer><Name>rischio</Name><Title>Rischio</Title></Layer></Layer></Capability></WMS_Capabilities>`;
@@ -17,7 +18,8 @@ function costruisci({ testo = WMS, wfsEsito = async () => 'miei-id', storage = f
     addWmsLayer: (n, o) => { chiamate.wms.push([n, o]); return 'miei-w'; },
     addWfsLayer: async (n, r) => { chiamate.wfs.push([n, r]); return wfsEsito(n, r); },
   };
-  return { c: creaControllo({ host, storage }), chiamate, storage };
+  const credenziali = creaCredenziali();
+  return { c: creaControllo({ host, storage, credenziali }), chiamate, storage, credenziali };
 }
 
 test('leggiServizio WMS: chiede le capabilities e dà layer, versione e URL pulito', async () => {
@@ -126,4 +128,68 @@ test('storage bloccato: tutto funziona per la sessione senza eccezioni', () => {
   assert.doesNotThrow(() => c.aggiungiXyz({ nome: 'A', url: 'https://t.it/{z}/{x}/{y}.png' }));
   assert.equal(chiamate.tile.length, 1);
   assert.equal(c.stato().servizi.length, 1);
+});
+
+test('leggiServizio con utente e password: le credenziali valgono per l’host prima della richiesta', async () => {
+  const { c, credenziali } = costruisci();
+  assert.equal(credenziali.intestazione('x.it'), null);
+  await c.leggiServizio('wms', 'https://x.it/ows', { utente: 'mario', password: 'pw' });
+  assert.equal(credenziali.utente('x.it'), 'mario');
+  assert.ok(credenziali.intestazione('x.it').startsWith('Basic '));
+});
+
+test('il servizio salvato ricorda l’utente, mai la password', async () => {
+  const { c, storage } = costruisci();
+  const servizio = await c.leggiServizio('wms', 'https://x.it/ows', { utente: 'mario', password: 'segretissima' });
+  await c.aggiungiWms({ nome: 'S', url: servizio.url, servizio, scelti: [servizio.layer[0]], utente: 'mario' });
+  const grezzo = [...storage.m.values()].join('|');
+  assert.ok(grezzo.includes('"utente":"mario"'));
+  assert.ok(!grezzo.includes('segretissima'));
+  assert.ok(!grezzo.includes(Buffer.from('mario:segretissima').toString('base64')));
+});
+
+test('aggiungiXyz con credenziali: impostate per l’host e utente salvato', () => {
+  const { c, credenziali, storage } = costruisci();
+  c.aggiungiXyz({ nome: 'T', url: 'https://t.it/{z}/{x}/{y}.png', utente: 'mario', password: 'pw' });
+  assert.equal(credenziali.utente('t.it'), 'mario');
+  assert.equal(leggiServizi(storage).servizi[0].utente, 'mario');
+});
+
+test('riaggiungi di un servizio protetto: senza password non parte nulla; con la password sì', async () => {
+  const storage = finto();
+  const primo = costruisci({ storage });
+  const servizio = await primo.c.leggiServizio('wms', 'https://x.it/ows', { utente: 'mario', password: 'pw' });
+  await primo.c.aggiungiWms({ nome: 'S', url: servizio.url, servizio, scelti: [servizio.layer[0]], utente: 'mario' });
+  // nuova «sessione»: stesso storage, nessuna credenziale in memoria
+  const secondo = costruisci({ storage });
+  const id = leggiServizi(storage).servizi[0].id;
+  assert.equal(secondo.c.serveCredenziali(id), true);
+  assert.equal(secondo.c.protetto('https://x.it/ows?y=1'), true);
+  const senza = await secondo.c.riaggiungi(id);
+  assert.equal(senza.serve, true);
+  assert.equal(secondo.chiamate.wms.length, 0);
+  const con = await secondo.c.riaggiungi(id, { password: 'pw' });
+  assert.deepEqual(con, { errori: [] });
+  assert.equal(secondo.chiamate.wms.length, 1);
+  assert.equal(secondo.c.serveCredenziali(id), false);
+  assert.equal(secondo.c.protetto('https://x.it/ows'), false);
+});
+
+test('cerca filtra i servizi salvati', () => {
+  const { c } = costruisci();
+  c.aggiungiXyz({ nome: 'Ortofoto', url: 'https://a.it/{z}/{x}/{y}.png' });
+  c.aggiungiXyz({ nome: 'Strade', url: 'https://b.it/{z}/{x}/{y}.png' });
+  assert.deepEqual(c.cerca('orto').map(s => s.nome), ['Ortofoto']);
+});
+
+test('password sbagliata: le credenziali si dimenticano e il lucchetto resta', async () => {
+  const storage = finto();
+  const primo = costruisci({ testo: WFS, storage });
+  const servizio = await primo.c.leggiServizio('wfs', 'https://x.it/wfs', { utente: 'mario', password: 'giusta' });
+  await primo.c.aggiungiWfs({ nome: 'S', url: servizio.url, servizio, scelti: servizio.tipi, utente: 'mario' });
+  const secondo = costruisci({ testo: WFS, storage, wfsEsito: async () => { throw new Error('il servizio richiede utente e password'); } });
+  const id = leggiServizi(storage).servizi[0].id;
+  const r = await secondo.c.riaggiungi(id, { password: 'sbagliata' });
+  assert.equal(r.errori.length, 1);
+  assert.equal(secondo.c.serveCredenziali(id), true);
 });
