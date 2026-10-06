@@ -26,17 +26,58 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
   const classi = selezione('Classi', 'classi', Array.from({ length: 7 }, (_, i) => [String(i + 3), String(i + 3)]));
   const metodo = selezione('Metodo', 'metodo', [['quantili', 'Quantili'], ['intervalli', 'Intervalli uguali']]);
   const rampa = selezione('Rampa', 'rampa', []);
-  for (const [nome, rampe] of GRUPPI_RAMPE) {
-    const g = document.createElement('optgroup');
-    g.label = nome;
-    g.append(...rampe.map(n => new Option(n, n)));
-    rampa.select.append(g);
-  }
+  rampa.select.append(...GRUPPI_RAMPE.flatMap(([, rampe]) => rampe).map(n => new Option(n, n)));
   rampa.select.value = 'Blu';
-  const anteprima = document.createElement('div');
-  anteprima.className = 'tema-anteprima-rampa';
-  anteprima.setAttribute('aria-hidden', 'true');
-  const disegnaAnteprima = () => { anteprima.style.background = `linear-gradient(to right, ${RAMPE[rampa.select.value].join(', ')})`; };
+  // Il <select> nativo non può mostrare i colori: resta nascosto come sede del valore e al suo posto c'è un elenco
+  // con la barra di colori accanto a ogni nome (stesso valore, stesso evento `change`).
+  const sfumatura = nome => `linear-gradient(to right, ${RAMPE[nome].join(', ')})`;
+  rampa.select.hidden = true;
+  const scelta = document.createElement('button');
+  scelta.type = 'button';
+  scelta.className = 'rampa-scelta';
+  scelta.setAttribute('aria-haspopup', 'listbox');
+  scelta.setAttribute('aria-expanded', 'false');
+  const elenco = document.createElement('div');
+  elenco.className = 'rampa-elenco';
+  elenco.setAttribute('role', 'listbox');
+  elenco.hidden = true;
+  const voceRampa = (nome, ruolo = 'option') => {
+    const v = document.createElement(ruolo === 'option' ? 'button' : 'span');
+    if (ruolo === 'option') { v.type = 'button'; v.setAttribute('role', 'option'); v.dataset.rampa = nome; }
+    const t = document.createElement('span');
+    t.textContent = nome;
+    const barra = document.createElement('i');
+    barra.style.background = sfumatura(nome);
+    v.append(t, barra);
+    return v;
+  };
+  for (const [gruppo, rampe] of GRUPPI_RAMPE) {
+    const g = document.createElement('strong');
+    g.textContent = gruppo;
+    elenco.append(g, ...rampe.map(n => voceRampa(n)));
+  }
+  const chiudi = () => { elenco.hidden = true; scelta.setAttribute('aria-expanded', 'false'); };
+  const disegnaAnteprima = () => {
+    scelta.replaceChildren(...voceRampa(rampa.select.value, 'testo').childNodes);
+    for (const o of elenco.querySelectorAll('[role=option]')) o.setAttribute('aria-selected', String(o.dataset.rampa === rampa.select.value));
+  };
+  scelta.addEventListener('click', () => {
+    elenco.hidden = !elenco.hidden;
+    scelta.setAttribute('aria-expanded', String(!elenco.hidden));
+    if (!elenco.hidden) elenco.querySelector('[aria-selected=true]')?.scrollIntoView({ block: 'nearest' });
+  });
+  elenco.addEventListener('click', e => {
+    const o = e.target.closest('[role=option]');
+    if (!o) return;
+    rampa.select.value = o.dataset.rampa;
+    rampa.select.dispatchEvent(new Event('change'));
+    chiudi();
+    scelta.focus();
+  });
+  el.addEventListener('keydown', e => { if (e.key === 'Escape' && !elenco.hidden) { chiudi(); scelta.focus(); } });
+  document.addEventListener('click', e => { if (!rampa.riga.contains(e.target)) chiudi(); });
+  rampa.riga.append(scelta, elenco);
+  rampa.riga.classList.add('rampa-riga');
   classi.select.value = '5';
   const aggiorna = document.createElement('button');
   aggiorna.type = 'button';
@@ -48,7 +89,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
   const msg = document.createElement('p');
   msg.className = 'tema-msg';
   msg.setAttribute('role', 'status');
-  el.append(titolo, campo.riga, modo.riga, classi.riga, metodo.riga, rampa.riga, anteprima, aggiorna, voci, msg);
+  el.append(titolo, campo.riga, modo.riga, classi.riga, metodo.riga, rampa.riga, aggiorna, voci, msg);
 
   let campi = new Map(); // campo → { valori, numeri, numerico } letto dalle feature in vista
   let ultimo = ''; // attributo mostrato nella lista, per non ricostruirla a ogni modifica
@@ -154,7 +195,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
       }
       mostraLista(a);
     }
-    classi.riga.hidden = metodo.riga.hidden = rampa.riga.hidden = anteprima.hidden = modo.select.value !== 'graduata';
+    classi.riga.hidden = metodo.riga.hidden = rampa.riga.hidden = modo.select.value !== 'graduata';
     disegnaAnteprima();
   };
 
