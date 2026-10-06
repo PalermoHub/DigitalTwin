@@ -120,7 +120,7 @@ function strumentiUsati(sezione) {
       'Elaborare dati geografici dalla riga di comando.',
       'Riprodurre le analisi in ambienti isolati e ripetibili.',
     ]),
-    p('Nel progetto ', link('Palermo DTM 5m', 'https://github.com/coseerobe/palermo_dtm_5m'), ' è stato usato per derivare in automatico ', el('strong', '18 layer morfologici'), ' dal modello digitale del terreno a 5 m.'),
+    p('In questo Digital Twin è stato usato per automatizzare l’elaborazione dei dati delle varie mappe: ', el('strong', '18 layer morfologici'), ' derivati dal modello digitale del terreno a 5 m (', link('Palermo DTM 5m', 'https://github.com/coseerobe/palermo_dtm_5m'), '), il grafo stradale, le isole di calore e molto altro.'),
     el('h4', 'Come funziona'),
     p('Micromamba crea un ambiente isolato (circa 5 GB in ', el('code', '~/micromamba/envs/qgis'), ') con QGIS e le sue dipendenze: GDAL, PROJ, GEOS, Qt, Python.'),
     lista([
