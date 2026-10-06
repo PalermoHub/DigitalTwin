@@ -188,8 +188,6 @@ dialog li { margin: 4px 0; }
 #legende [hidden], #legende .legenda-sostituita { display: none; }
 #legende .legenda-con-tema :is(.ic-etichetta, .ic-metodi, .ic-scala) { display: none; }
 #legende .legenda-con-tema .legenda-tema { margin: 8px 0; }
-.legenda-isole-calore .ic-etichetta-tema { display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); }
-.legenda-tema-barra .ic-nd i { width: 14px; height: 10px; border: 1px solid var(--border); }
 #legende .legenda-tema strong { display: block; margin-bottom: 4px; font-size: var(--fs-xs); }
 
 /* ==========================================================================

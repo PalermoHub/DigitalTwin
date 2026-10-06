@@ -2,7 +2,7 @@
 // Il tema si salva nel browser e si scambia come file JSON (vedi tema.js).
 import { svgIcona } from './icone.js';
 import { creaSezioneAttributo } from './pannello-attributo.js';
-import { legendaAttributo, COLORE_MANCANTE } from './tema-attributo.js';
+import { legendaAttributo } from './tema-attributo.js';
 import { partiStrato, proprietaColore, applicaTema, validaTema, comeEsadecimale, leggiTemi, salvaTemi, esportaTemi, importaTemi } from './tema.js';
 
 const partiVuote = () => ({ riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [] });
@@ -149,34 +149,7 @@ export function creaPannelloTema(map, strato, stato) {
       propria?.classList.toggle('legenda-con-tema', Boolean(l));
     }
     legendaTema.replaceChildren();
-    legendaTema.classList.toggle('legenda-tema-barra', Boolean(l && strato.legendaIntegrata && tema.attributo.tipo === 'graduata'));
-    if (l && legendaTema.classList.contains('legenda-tema-barra')) {
-      // Stesso disegno della scala originale: barra a classi (limiti nel suggerimento), estremi sotto e «Nessun dato».
-      const barra = document.createElement('div');
-      barra.className = 'ic-barra';
-      for (const v of l.voci) {
-        const c = document.createElement('div');
-        c.className = 'ic-classe';
-        c.style.background = v.colore;
-        c.title = v.testo;
-        barra.append(c);
-      }
-      const assi = document.createElement('div');
-      assi.className = 'ic-assi';
-      const freccia = document.createElement('i');
-      freccia.className = 'ic-freccia';
-      const estremo = testo => Object.assign(document.createElement('span'), { textContent: testo });
-      assi.append(estremo(l.voci[0].testo), freccia, estremo(l.voci.at(-1).testo));
-      const nd = document.createElement('div');
-      nd.className = 'ic-nd';
-      const q = document.createElement('i');
-      q.style.background = COLORE_MANCANTE;
-      nd.append(q, 'Nessun dato');
-      const t = document.createElement('span');
-      t.className = 'ic-etichetta-tema';
-      t.textContent = `Classi del tema · ${l.titolo}`;
-      legendaTema.append(t, barra, assi, nd);
-    } else if (l) {
+    if (l) {
       const t = document.createElement('strong');
       t.textContent = `${strato.etichetta} · ${l.titolo}`;
       legendaTema.append(t);
