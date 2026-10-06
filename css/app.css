@@ -451,7 +451,7 @@ dialog li { margin: 4px 0; }
   .scheda-espandi { display: none; }
   /* con la scheda aperta, barra strumenti, ricerca e fogli si centrano sulla parte di mappa rimasta visibile */
   body { --scheda-l: var(--rail-w); }
-  body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #aggiungi-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) { --scheda-l: calc(var(--scheda-w) + var(--rail-w)); }
+  body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) { --scheda-l: calc(var(--scheda-w) + var(--rail-w)); }
   #barra-strumenti, #area-ricerca, #pannello, #linguetta-info { left: calc((100% - var(--scheda-l)) / 2); transition: left .18s ease; }
   /* la barra non esce mai dalla mappa visibile: se non ci sta, scorre di lato */
   #barra-strumenti { max-width: calc(100% - var(--scheda-l) - 16px); overflow-x: auto; scrollbar-width: none; }
@@ -804,9 +804,9 @@ button.strato-chip:hover i { color: var(--text); }
 .gruppo-sezione { margin: 10px 0 2px; }
 
 /* Catalogo RNDT: pannello che si sovrappone alla scheda del luogo */
-#rndt-pannello, #aggiungi-pannello { position: fixed; z-index: var(--z-foglio); left: 0; right: 0; bottom: 0; top: 8vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm) var(--r-sm) 0 0; box-shadow: var(--ombra); overflow: hidden; }
-#rndt-pannello[hidden], #aggiungi-pannello[hidden] { display: none; }
-@media (min-width: 721px) { #rndt-pannello, #aggiungi-pannello { top: 0; left: auto; right: var(--rail-w); width: var(--scheda-w); border-radius: 0; } }
+#rndt-pannello { position: fixed; z-index: var(--z-foglio); left: 0; right: 0; bottom: 0; top: 8vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm) var(--r-sm) 0 0; box-shadow: var(--ombra); overflow: hidden; }
+#rndt-pannello[hidden] { display: none; }
+@media (min-width: 721px) { #rndt-pannello { top: 0; left: auto; right: var(--rail-w); width: var(--scheda-w); border-radius: 0; } }
 .rndt-testata { flex: none; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--border); }
 .rndt-testata h2 { margin: 0; font-size: var(--fs-md); font-weight: 700; }
 .rndt-autore { flex: none; margin: 0; padding: 6px 12px; font-size: var(--fs-sm, 12px); color: var(--muted, inherit); border-bottom: 1px solid var(--border); }
@@ -897,7 +897,7 @@ button.strato-chip:hover i { color: var(--text); }
 #rndt-pannello .ordt-detail-title { font-size: var(--fs-md); }
 
 /* barra verticale dei pannelli a destra: tab con testo ruotato, pannello attivo evidenziato */
-#scheda.collassato, #rndt-pannello.collassato, #aggiungi-pannello.collassato, #geoimage-pannello.collassato { display: none; }
+#scheda.collassato, #rndt-pannello.collassato, #geoimage-pannello.collassato { display: none; }
 #rail-pannelli { display: none; }
 @media (min-width: 721px) {
   #rail-pannelli {
@@ -1133,17 +1133,22 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .legenda-isole-calore .ic-assi i.ic-freccia { width: auto; border: 0; }
 .legenda-isole-calore .col-legenda { display: flex; flex-wrap: wrap; }
 
-/* Pannello «Aggiungi layer» */
-.agg-contenuto { padding: 8px 12px 16px; }
-.agg-sezione { margin: 0 0 10px; }
-.agg-sezione > summary, .agg-ramo > summary { cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-.agg-ramo > summary span:first-child { flex: 1; }
-.agg-conteggio { color: var(--text-muted); font-weight: 400; }
-.agg-piu { flex: none; width: 28px; height: 28px; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface); color: var(--link); font: inherit; font-weight: 700; cursor: pointer; }
-.agg-piu:hover { background: var(--surface-hover); }
-.agg-nota { margin: 6px 0 0; color: var(--text-muted); font-size: var(--fs-sm, 12px); }
-.agg-cerca { width: 100%; margin: 6px 0; box-sizing: border-box; }
-.agg-modulo { display: grid; gap: 8px; padding: 8px 0; }
+/* Albero di «I miei layer» (stile Browser di QGIS) */
+.agg-albero { margin: 0 0 8px; }
+.agg-cerca { width: 100%; margin: 0 0 8px; box-sizing: border-box; }
+.agg-nodo > summary { display: flex; align-items: center; gap: 6px; padding: 4px 2px; cursor: pointer; font-weight: 600; list-style: none; }
+.agg-nodo > summary::-webkit-details-marker { display: none; }
+.agg-nodo > summary::before { content: '▸'; flex: none; width: 10px; color: var(--text-muted); font-size: 10px; }
+.agg-nodo[open] > summary::before { content: '▾'; }
+.agg-ico { flex: none; display: inline-grid; place-items: center; color: var(--text-muted); }
+.agg-nome { flex: 1; min-width: 0; }
+.agg-conteggio { flex: none; color: var(--text-muted); font-weight: 400; font-size: var(--fs-sm, 12px); }
+.agg-azione { flex: none; width: 26px; height: 26px; border: 0; border-radius: var(--r-pill); background: none; color: var(--text-muted); display: inline-grid; place-items: center; cursor: pointer; }
+.agg-azione:hover { background: var(--surface-hover); color: var(--text); }
+.agg-figli { padding-left: 16px; }
+.agg-tipo > summary { font-weight: 500; }
+.agg-nota { margin: 2px 0 6px; color: var(--text-muted); font-size: var(--fs-sm, 12px); }
+.agg-modulo { display: grid; gap: 6px; padding: 6px 0 8px; }
 .agg-campo { display: grid; gap: 2px; font-size: var(--fs-sm, 13px); }
 .agg-campo input { width: 100%; box-sizing: border-box; }
 .agg-bottone { padding: 6px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: inherit; font: inherit; cursor: pointer; }
@@ -1151,8 +1156,9 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .agg-bottone:disabled { opacity: .6; cursor: progress; }
 .agg-esito { margin: 0; font-size: var(--fs-sm, 13px); }
 .agg-esito[data-errore="true"] { color: var(--avviso-scheda-ink); }
-.agg-scelta { display: grid; gap: 4px; max-height: 260px; overflow: auto; }
+.agg-scelta { display: grid; gap: 4px; max-height: 240px; overflow: auto; }
 .agg-voce em { color: var(--text-muted); }
-.agg-salvato { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; padding: 3px 0; }
-.agg-salvato-nome { flex: 1; min-width: 0; text-align: left; border: 0; background: none; color: var(--link); font: inherit; cursor: pointer; overflow-wrap: anywhere; }
-.agg-salvato .agg-esito { flex-basis: 100%; }
+.agg-salvato { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 1px 0; }
+.agg-salvato-nome { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; text-align: left; border: 0; background: none; color: var(--link); font: inherit; cursor: pointer; overflow-wrap: anywhere; }
+.agg-salvato > .agg-esito, .agg-salvato > .agg-modulo { flex-basis: 100%; }
+.agg-titolo-layer { margin: 10px 0 4px; font-weight: 700; font-size: var(--fs-sm, 12px); text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }

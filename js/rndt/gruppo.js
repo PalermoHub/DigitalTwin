@@ -47,20 +47,20 @@ export const OPZIONI_RNDT = {
 export const OPZIONI_MIEI = {
   id: 'miei',
   titolo: 'I miei layer',
-  argomento: { titolo: 'I miei layer', descrizione: 'File caricati dal computer e servizi XYZ, WMS e WFS aggiunti per indirizzo, anche richiamati dal salvataggio. Si aggiungono dal pulsante «Aggiungi layer» nella barra strumenti.' },
-  vuoto: 'Nessun layer aggiunto: carica un file o aggiungi un servizio.',
-  azioni: [
-    { id: 'miei-aggiungi-apri', testo: '＋ Aggiungi servizio o file…', tipo: 'apri' },
-    { id: 'miei-carica-file', testo: '📁 Carica file dal computer', tipo: 'file', titolo: `Formati: ${ESTENSIONI.join(' ')}` },
-  ],
+  argomento: { titolo: 'I miei layer', descrizione: 'File caricati dal computer e servizi XYZ, WMS e WFS aggiunti per indirizzo, anche richiamati dal salvataggio. Si aggiungono dall’albero in cima al gruppo.' },
+  vuoto: 'Nessun layer in mappa: carica un file o aggiungi un servizio dall’albero qui sopra.',
+  azioni: [],
+  ripiego: 'miei-cerca',
 };
 
 // Un gruppo della barra strati alimentato da un host: layer con accensione, rimozione e pulsanti d'aggiunta
-export function creaGruppo({ id, titolo, argomento, vuoto, azioni }) {
+export function creaGruppo({ id, titolo, argomento, vuoto, azioni, ripiego }) {
   let radice = null;
   let host = null;
   let apri = () => {};
   let caricaFile = async () => {};
+  let intestazione = null; // funzione che crea il contenuto fisso del gruppo (l'albero), chiamata una volta
+  let fissa = null;
 
   const opacita = new Map(); // id → { originali, valore }: sopravvive al ridisegno del gruppo
   let selettore = null;
@@ -82,6 +82,7 @@ export function creaGruppo({ id, titolo, argomento, vuoto, azioni }) {
   function disegna() {
     if (!radice || !host) return;
     selettore ??= azioni.some(a => a.tipo === 'file') ? creaSelettore() : el('span');
+    fissa ??= intestazione?.() ?? null; // creato una volta e rimesso a ogni ridisegno: rami aperti e testo digitato restano
     const h2 = radice.querySelector('h2');
     const gruppoAzioni = el('div', 'rndt-gruppo-azioni');
     gruppoAzioni.append(...azioni.map(a => {
@@ -119,13 +120,13 @@ export function creaGruppo({ id, titolo, argomento, vuoto, azioni }) {
       })
       : [el('p', 'rndt-gruppo-vuoto', vuoto)];
     const idAttivo = radice.contains(document.activeElement) ? document.activeElement.id : null;
-    radice.replaceChildren(h2, gruppoAzioni, selettore, ...voci);
+    radice.replaceChildren(h2, ...(azioni.length ? [gruppoAzioni] : []), selettore, ...(fissa ? [fissa] : []), ...voci);
     // stessi controlli degli altri gruppi: frecce, trascinamento, albero, ordine salvato
     let storage = null;
     try { storage = window.localStorage; } catch { /* storage bloccato: l'ordine vale per la sessione */ }
     const mappa = host.getMap?.();
     if (mappa?.getStyle) abilitaRiordino(mappa, radice, new Map(righe.map(r => [r.id, r.layers])), storage, { daElenco: true });
-    const vai = idDaFocalizzare(idAttivo, [...radice.querySelectorAll('[id]')].map(e => e.id), azioni[0].id);
+    const vai = idDaFocalizzare(idAttivo, [...radice.querySelectorAll('[id]')].map(e => e.id), ripiego ?? azioni[0]?.id);
     if (vai) document.getElementById(vai)?.focus();
     if (radice.bottone) {
       const { attivo, n } = statoBottone(righe);
@@ -147,7 +148,8 @@ export function creaGruppo({ id, titolo, argomento, vuoto, azioni }) {
       get strati() { return host ? righeGruppo(host.elenco()).map(r => ({ id: r.id, etichetta: r.nome })) : []; },
       pannello(gruppo) { radice = gruppo; disegna(); },
     },
-    collega(hostCollegato, apriPannello, carica = async () => {}) {
+    collega(hostCollegato, apriPannello, carica = async () => {}, intestazioneDelContenuto = null) {
+      intestazione = intestazioneDelContenuto;
       host = hostCollegato;
       apri = apriPannello;
       caricaFile = carica;

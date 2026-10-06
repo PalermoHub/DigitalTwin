@@ -81,17 +81,15 @@ map.once('style.load', async () => {
   const gruppoMiei = creaGruppo(OPZIONI_MIEI);
   costruisciPannello(map, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
   const rndt = collegaRndt(map, document.getElementById('rndt-pannello'), gruppoRndt);
-  const aggiungi = collegaAggiungi(map, document.getElementById('aggiungi-pannello'), gruppoMiei);
+  const aggiungi = collegaAggiungi(map, gruppoMiei);
   collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt });
   const geoimage = collegaGeoimage(map, document.getElementById('geoimage-pannello'));
   const rail = collegaRail(document.getElementById('rail-pannelli'), [
     { id: 'scheda', etichetta: 'Scheda', pannello: document.getElementById('scheda') },
     { id: 'rndt', etichetta: 'RNDT', pannello: document.getElementById('rndt-pannello'), apri: rndt.apri, chiudi: rndt.chiudi },
-    { id: 'aggiungi', etichetta: 'Aggiungi layer', pannello: document.getElementById('aggiungi-pannello'), apri: aggiungi.apri, chiudi: aggiungi.chiudi },
     { id: 'geoimage', etichetta: 'Geoimage', pannello: document.getElementById('geoimage-pannello'), apri: geoimage.apri, chiudi: geoimage.chiudi },
   ]);
   document.getElementById('btn-rndt').addEventListener('click', () => rail.commuta('rndt'));
-  document.getElementById('btn-aggiungi').addEventListener('click', () => rail.commuta('aggiungi'));
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
   geoimage.ripristina(); // e la mappa storica di Geoimage, se c'era

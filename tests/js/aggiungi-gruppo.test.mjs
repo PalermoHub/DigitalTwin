@@ -29,3 +29,13 @@ test('«I miei layer» compare nella tab Argomenti', () => {
   assert.equal(argomento.titolo, 'I miei layer');
   assert.deepEqual(argomento.strati.map(s => s.id), ['miei-a']);
 });
+
+test('«I miei layer» non ha pulsanti d’aggiunta propri: l’albero è il contenuto fisso', () => {
+  assert.deepEqual(OPZIONI_MIEI.azioni, []);
+  assert.equal(OPZIONI_MIEI.ripiego, 'miei-cerca');
+});
+
+test('collega accetta l’intestazione come quarto argomento senza disegnare finché manca il DOM', () => {
+  const g = creaGruppo(OPZIONI_MIEI);
+  assert.doesNotThrow(() => g.collega(hostFinto([l('miei-a', 'Alfa')]), () => {}, async () => {}, () => ({})));
+});

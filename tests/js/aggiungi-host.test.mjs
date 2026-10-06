@@ -145,3 +145,23 @@ test('un WMS «non disponibile» si ricrea con addWmsLayer', async () => {
   assert.equal(host.elenco()[0].indisponibile, false);
   assert.ok(map.sorgenti.has(id));
 });
+
+test('un XYZ senza attribuzione non porta la chiave «attribution» (MapLibre rifiuta undefined)', () => {
+  const { host, map } = costruisci('{}');
+  const id = host.addTileLayer('XYZ', 'https://a.it/{z}/{x}/{y}.png', {});
+  assert.equal('attribution' in map.sorgenti.get(id), false);
+  const conAttr = host.addTileLayer('XYZ2', 'https://b.it/{z}/{x}/{y}.png', { attribution: '© B' });
+  assert.equal(map.sorgenti.get(conAttr).attribution, '© B');
+});
+
+test('se la mappa rifiuta la sorgente il layer non entra nell’elenco e l’errore arriva a chi chiama', () => {
+  const map = mappaFinta();
+  map.addSource = () => {}; // MapLibre non lancia: emette un errore e non aggiunge nulla
+  map.addLayer = () => {};
+  const scritti = [];
+  const host = creaHost({ map, proxy: PROXY, stato: { v: 1, layers: [] }, scrivi: s => { scritti.push(s); return true; }, archivioDati: archivioInMemoria(), prefisso: 'miei' });
+  assert.throws(() => host.addTileLayer('XYZ', 'https://a.it/{z}/{x}/{y}.png', {}), /la mappa non accetta/);
+  assert.throws(() => host.addWmsLayer('W', { url: 'https://w.it/ows', layers: 'a', version: '1.3.0', format: 'image/png' }), /la mappa non accetta/);
+  assert.equal(host.elenco().length, 0);
+  assert.equal(scritti.length, 0);
+});

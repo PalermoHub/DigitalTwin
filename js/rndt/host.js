@@ -61,6 +61,13 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
   // Un layer «non disponibile» (servizio protetto non ancora sbloccato) si sostituisce quando il servizio si riaggiunge
   const liberaSeNonDisponibile = id => { if (layers.get(id)?.indisponibile) layers.delete(id); };
 
+  // MapLibre non lancia se rifiuta una sorgente (indirizzo o opzioni non validi): emette un errore e basta. Qui lo si fa emergere.
+  function verificaInMappa(id) {
+    if (map.getLayer(id)) return;
+    if (map.getSource(id)) map.removeSource(id);
+    throw new Error('la mappa non accetta questo layer (indirizzo o opzioni non validi)');
+  }
+
   function creaWms(nome, opz, salva) {
     if (opz.crs && opz.crs !== 'EPSG:3857') throw new Error(`CRS ${opz.crs} non supportato dalla mappa`);
     const id = `${prefisso}-${hash(`wms|${opz.url}|${opz.layers}`)}`;
@@ -75,6 +82,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     const bounds = (opz.bounds && intersezione(opz.bounds, BBOX_PALERMO)) || BBOX_PALERMO; // niente tile fuori da Palermo
     map.addSource(id, { type: 'raster', tiles: [`${urlProxy(proxy, q.toString())}&BBOX={bbox-epsg-3857}`], tileSize: 256, bounds });
     map.addLayer({ id, type: 'raster', source: id });
+    verificaInMappa(id);
     return registra({ id, tipo: 'wms', nome, visibile: true, sorgente: { ...opz }, idMappa: [id], idSorgente: id, salvato: true }, { salva });
   }
 
@@ -82,8 +90,9 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     const id = `${prefisso}-${hash(`tile|${url}`)}`;
     liberaSeNonDisponibile(id);
     if (layers.has(id)) return id;
-    map.addSource(id, { type: 'raster', tiles: [urlProxy(proxy, url)], tileSize: 256, attribution: opz.attribution, bounds: BBOX_PALERMO });
+    map.addSource(id, { type: 'raster', tiles: [urlProxy(proxy, url)], tileSize: 256, ...(opz.attribution ? { attribution: opz.attribution } : {}), bounds: BBOX_PALERMO });
     map.addLayer({ id, type: 'raster', source: id });
+    verificaInMappa(id);
     return registra({ id, tipo: 'tile', nome, visibile: true, sorgente: { url, attribution: opz.attribution }, idMappa: [id], idSorgente: id, salvato: true }, { salva });
   }
 
