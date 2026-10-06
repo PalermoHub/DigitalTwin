@@ -5,7 +5,7 @@ import { hash } from '../rndt/host.js';
 
 export const CHIAVE_SERVIZI = 'dt:miei:servizi:v1';
 export const TETTO_SERVIZI = 50;
-const TIPI = ['xyz', 'wms', 'wfs'];
+const TIPI = ['xyz', 'wms', 'wfs', 'wmts', 'arcgis'];
 const vuoto = () => ({ v: 1, servizi: [] });
 
 export const idServizio = (tipo, url) => `srv-${hash(`${tipo}|${url}`)}`;
@@ -36,13 +36,14 @@ export function salvaServizi(storage, stato) {
 
 // Aggiunge o aggiorna (stesso tipo e URL → stesso servizio, voci unite per `chiave`). A tetto raggiunto un servizio nuovo non entra.
 // Del servizio si ricorda il nome utente, mai la password.
-export function aggiungiServizio(stato, { tipo, nome, url, utente, voci = [] }) {
+export function aggiungiServizio(stato, { tipo, nome, url, utente, conToken, voci = [] }) {
   const id = idServizio(tipo, url);
   const presente = stato.servizi.find(s => s.id === id);
   if (!presente && stato.servizi.length >= TETTO_SERVIZI) return { stato, pieno: true };
   const unite = new Map([...(presente?.voci ?? []), ...voci].map(v => [v.chiave, v]));
   const nomeUtente = utente || presente?.utente;
-  const nuovo = { id, tipo, nome: presente?.nome ?? nome, url, ...(nomeUtente ? { utente: nomeUtente } : {}), voci: [...unite.values()] };
+  const serveToken = conToken || presente?.conToken;
+  const nuovo = { id, tipo, nome: presente?.nome ?? nome, url, ...(nomeUtente ? { utente: nomeUtente } : {}), ...(serveToken ? { conToken: true } : {}), voci: [...unite.values()] };
   return { stato: { ...stato, servizi: [...stato.servizi.filter(s => s.id !== id), nuovo] }, pieno: false };
 }
 

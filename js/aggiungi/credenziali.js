@@ -15,23 +15,36 @@ function base64(testo) {
 
 export function creaCredenziali() {
   const mappa = new Map(); // host → { utente, intestazione }
+  const tokens = new Map(); // host → token (ArcGIS)
+  // `<proxy>/t/<host>/…` → host, altrimenti null
+  const ospiteDaProxy = (proxy, url) => {
+    const base = `${String(proxy).replace(/\/$/, '')}/t/`;
+    if (!String(url).startsWith(base)) return null;
+    try { return decodeURIComponent(String(url).slice(base.length).split(/[/?#]/)[0]); } catch { return null; }
+  };
+  // il token si aggiunge per concatenazione: i segnaposto {z} {x} {y} devono restare com'erano
+  const aggiungiToken = (url, token) => (!token || /[?&]token=/i.test(url) ? url : `${url}${url.includes('?') ? '&' : '?'}token=${encodeURIComponent(token)}`);
   return {
     imposta(host, utente, password) {
       if (!utente) throw new Error('manca il nome utente');
       if (utente.includes(':')) throw new Error('il nome utente non può contenere due punti');
       mappa.set(host, { utente, intestazione: `Basic ${base64(`${utente}:${password ?? ''}`)}` });
     },
-    ha: host => mappa.has(host),
+    impostaToken(host, valore) {
+      if (!valore) throw new Error('manca il token');
+      tokens.set(host, valore);
+    },
+    token: host => tokens.get(host) ?? null,
+    ha: host => mappa.has(host) || tokens.has(host),
     utente: host => mappa.get(host)?.utente ?? null,
     intestazione: host => mappa.get(host)?.intestazione ?? null,
-    togli: host => mappa.delete(host),
+    togli: host => { mappa.delete(host); tokens.delete(host); },
+    conToken: url => aggiungiToken(url, tokens.get(ospiteDi(url))),
+    riscriviPerProxy: (proxy, url) => aggiungiToken(url, tokens.get(ospiteDaProxy(proxy, url))),
     // Una richiesta ai tile: solo se va al nostro proxy (`<proxy>/t/<host>/…`) si dà l'intestazione di quell'host
     perUrlProxy(proxy, url) {
-      const base = `${String(proxy).replace(/\/$/, '')}/t/`;
-      if (!String(url).startsWith(base)) return null;
-      let host;
-      try { host = decodeURIComponent(String(url).slice(base.length).split(/[/?#]/)[0]); } catch { return null; }
-      return mappa.get(host)?.intestazione ?? null;
+      const host = ospiteDaProxy(proxy, url);
+      return host === null ? null : mappa.get(host)?.intestazione ?? null;
     },
   };
 }

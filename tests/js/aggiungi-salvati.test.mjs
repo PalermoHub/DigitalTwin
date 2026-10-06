@@ -75,3 +75,17 @@ test('filtraServizi: nome o indirizzo, senza badare alle maiuscole; testo vuoto 
   assert.deepEqual(filtraServizi([a, b], 'EXAMPLE').map(s => s.id), ['2']);
   assert.deepEqual(filtraServizi([a, b], '  ').map(s => s.id), ['1', '2']);
 });
+
+test('i tipi wmts e arcgis sono validi; conToken si conserva e non si perde riaggiungendo', () => {
+  const a = { tipo: 'arcgis', nome: 'Strade', url: 'https://x.it/arcgis/rest/services/S/MapServer', conToken: true, voci: [{ chiave: '0', nome: 'L0', tile: 'https://x.it/t/{z}/{y}/{x}' }] };
+  const { stato } = aggiungiServizio(vuoto, a);
+  assert.equal(stato.servizi[0].conToken, true);
+  assert.equal('utente' in stato.servizi[0], false);
+  assert.equal(aggiungiServizio(stato, { ...a, conToken: undefined }).stato.servizi[0].conToken, true);
+  const s = finto();
+  assert.equal(salvaServizi(s, stato), true);
+  assert.equal(leggiServizi(s).servizi.length, 1);
+  const w = aggiungiServizio(vuoto, { tipo: 'wmts', nome: 'W', url: 'https://w.it/wmts', voci: [] }).stato;
+  salvaServizi(s, w);
+  assert.equal(leggiServizi(s).servizi[0].tipo, 'wmts');
+});

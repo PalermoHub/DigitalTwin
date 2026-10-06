@@ -48,3 +48,32 @@ test('perUrlProxy: riconosce solo le richieste dirette al proxy per un host con 
   assert.equal(c.perUrlProxy('https://proxy.test', 'https://a.it/ows'), null); // non passa dal proxy: mai
   assert.equal(c.perUrlProxy('https://proxy.test', 'https://proxy.test.evil.it/t/a.it/x'), null);
 });
+
+test('token: in memoria per host, ha() lo riconosce, togli() lo dimentica', () => {
+  const c = creaCredenziali();
+  assert.equal(c.token('a.it'), null);
+  c.impostaToken('a.it', 'abc123');
+  assert.equal(c.token('a.it'), 'abc123');
+  assert.equal(c.ha('a.it'), true);
+  assert.equal(c.ha('b.it'), false);
+  c.togli('a.it');
+  assert.equal(c.ha('a.it'), false);
+  assert.throws(() => c.impostaToken('a.it', ''), /manca il token/);
+});
+
+test('conToken aggiunge token= per concatenazione, senza toccare i segnaposto né altri host', () => {
+  const c = creaCredenziali();
+  c.impostaToken('a.it', 'a b&c');
+  assert.equal(c.conToken('https://a.it/x/MapServer?f=json'), 'https://a.it/x/MapServer?f=json&token=a%20b%26c');
+  assert.equal(c.conToken('https://a.it/x/tile/{z}/{y}/{x}'), 'https://a.it/x/tile/{z}/{y}/{x}?token=a%20b%26c');
+  assert.equal(c.conToken('https://a.it/x?token=gia'), 'https://a.it/x?token=gia');
+  assert.equal(c.conToken('https://b.it/x'), 'https://b.it/x');
+});
+
+test('riscriviPerProxy: il token si aggiunge solo alle richieste al proxy per quell’host', () => {
+  const c = creaCredenziali();
+  c.impostaToken('a.it', 't');
+  assert.equal(c.riscriviPerProxy('https://p.test', 'https://p.test/t/a.it/x/{z}/{y}/{x}'), 'https://p.test/t/a.it/x/{z}/{y}/{x}?token=t');
+  assert.equal(c.riscriviPerProxy('https://p.test', 'https://p.test/t/b.it/x'), 'https://p.test/t/b.it/x');
+  assert.equal(c.riscriviPerProxy('https://p.test', 'https://a.it/x'), 'https://a.it/x');
+});
