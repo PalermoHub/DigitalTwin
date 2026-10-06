@@ -7,6 +7,7 @@ import { creaAlbero } from './albero.js';
 import { leggi, salva, CHIAVE_MIEI } from '../rndt/archivio.js';
 import { anelliDaZone } from '../rndt/area.js';
 import { importaFile } from '../rndt/importa.js';
+import { scaricaComeFile } from './da-url.js';
 import { librerie } from '../rndt/librerie.js';
 import { archivioIndexedDB } from '../rndt/dati.js';
 import { PROXY_RNDT } from '../rndt/index.js';
@@ -48,7 +49,10 @@ export function collegaAggiungi(map, gruppo) {
     }
   }
 
-  gruppo.collega(host, () => {}, carica, () => creaAlbero({ controllo, carica, avvisa: segnala }));
+  // Un file da un indirizzo https: gli errori di rete tornano al modulo, quelli di lettura li mostra carica()
+  const caricaDaUrl = async testo => carica(await scaricaComeFile(testo, PROXY_RNDT));
+
+  gruppo.collega(host, () => {}, carica, () => creaAlbero({ controllo, carica, caricaDaUrl, avvisa: segnala }));
 
   return {
     async ripristina() { await anelliPronti; await host.ripristina(); },

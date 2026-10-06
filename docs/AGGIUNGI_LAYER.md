@@ -19,6 +19,15 @@ LAYER IN MAPPA
 
 «Carica file dal computer» (l'icona di caricamento) accetta GeoJSON/JSON, KML, KMZ, GPX, Shapefile in `.zip` (con `.prj`) e CSV con latitudine e longitudine. I GeoJSON e i CSV devono essere in WGS84. Di ogni file restano solo gli elementi dentro il Comune di Palermo. I dati si salvano in IndexedDB (`dt-rndt`), fino a 5 MB per layer; oltre, o se il browser blocca IndexedDB, il layer vale per la sessione e un avviso lo dice.
 
+### Da indirizzo web (https)
+
+Il campo «Da indirizzo web (https)» scarica un file da un indirizzo https e lo tratta come uno scelto dal computer (stessi formati, stesso filtro su Palermo, stesso salvataggio). Il download passa dal Worker (`/t/<host>/…`), massimo 10 MB; è una copia al momento del caricamento, non si aggiorna da sola.
+
+- **Google Sheets**: il link `…/spreadsheets/d/<ID>/edit` diventa `…/export?format=csv` (con `gid` se il link lo contiene, altrimenti la prima scheda); vale anche il link di «Pubblica sul web». Il foglio va condiviso con «Chiunque abbia il link» (ruolo Lettore) e deve avere colonne `lat` e `lon`. Un foglio privato dà «foglio non trovato o non condiviso».
+- **Google Drive**: `…/file/d/<ID>/view` diventa il download diretto (il file deve essere condiviso allo stesso modo).
+- Altri indirizzi: scaricati così come sono; se il nome non ha estensione si ricava dal tipo di contenuto. Una pagina HTML è rifiutata.
+- Codice: `js/aggiungi/da-url.js`; non serve cambiare il Worker (accetta già ogni host https pubblico).
+
 ## Servizi
 
 Il «＋» di un tipo apre un modulo con Nome (facoltativo), Indirizzo, Utente e Password (facoltativi).

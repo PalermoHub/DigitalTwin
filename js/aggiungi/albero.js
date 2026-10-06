@@ -64,7 +64,7 @@ function nodo(titolo, { icona, apri = true, azione = null, classe = '' } = {}) {
   return { det, figli, conteggio };
 }
 
-export function creaAlbero({ controllo, carica, avvisa }) {
+export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
   const radice = el('div', 'agg-albero');
 
   const cerca = el('input', 'agg-cerca');
@@ -82,6 +82,27 @@ export function creaAlbero({ controllo, carica, avvisa }) {
   });
   const dati = nodo('I miei dati', { icona: 'cartella', azione: { icona: 'carica', titolo: 'Carica file dal computer', suClic: () => selettore.click() } });
   dati.figli.append(el('p', 'agg-nota', 'GeoJSON, KML/KMZ, GPX, Shapefile (.zip) e CSV con latitudine e longitudine.'), selettore);
+
+  // file da un indirizzo https, anche un foglio Google condiviso con «chiunque abbia il link» (copia al momento del caricamento)
+  const web = campo('Da indirizzo web (https)', 'https://docs.google.com/spreadsheets/d/…', { tipo: 'url' });
+  const scarica = bottone('Carica', 'agg-bottone agg-primario');
+  const esitoWeb = nuovoEsito();
+  const inviaWeb = async () => {
+    const testo = web.input.value.trim();
+    if (!testo) return esito(esitoWeb, 'Incolla un indirizzo https.', true);
+    scarica.disabled = true;
+    esito(esitoWeb, 'Scarico il file…');
+    try {
+      await caricaDaUrl(testo);
+      web.input.value = '';
+      esito(esitoWeb, '');
+    } catch (errore) { esito(esitoWeb, `Non riesco a caricare: ${errore.message}.`, true); } finally { scarica.disabled = false; }
+  };
+  scarica.addEventListener('click', inviaWeb);
+  web.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); inviaWeb(); } });
+  const moduloWeb = el('div', 'agg-modulo agg-da-web');
+  moduloWeb.append(web.label, scarica, esitoWeb);
+  dati.figli.append(moduloWeb, el('p', 'agg-nota', 'Google Sheets: in Condividi → Accesso generale scegli «Chiunque abbia il link» con ruolo Lettore. Il foglio diventa un CSV (solo il foglio indicato nel link) e deve avere colonne lat e lon. Massimo 10 MB.'));
 
   const servizi = nodo('Servizi', { icona: 'cartella' });
   const rami = new Map();

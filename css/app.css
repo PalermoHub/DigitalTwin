@@ -1163,6 +1163,8 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .agg-tipo > summary { font-weight: 500; }
 .agg-nota { margin: 2px 0 6px; color: var(--text-muted); font-size: var(--fs-sm, 12px); }
 .agg-modulo { display: grid; gap: 6px; padding: 6px 0 8px; }
+.agg-da-web { grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: 6px; padding-top: 10px; }
+.agg-da-web > .agg-esito { grid-column: 1 / -1; }
 .agg-campo { display: grid; gap: 2px; font-size: var(--fs-sm, 13px); }
 .agg-campo input { width: 100%; box-sizing: border-box; }
 .agg-bottone { padding: 6px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: inherit; font: inherit; cursor: pointer; }
