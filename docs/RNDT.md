@@ -37,3 +37,5 @@ npx wrangler deploy
 - Servizi solo `http` non sono raggiungibili (il Worker usa sempre `https`).
 - Un WMS con CRS diverso da EPSG:3857 viene rifiutato; un WMS senza `GetFeatureInfo` mostra «Servizio non raggiungibile o senza informazioni interrogabili».
 - I layer WFS salvano l'URL del download; se il plugin cambia ordine delle chiamate e l'URL non si lega al layer, il layer si salva coi dati (se entrano nel tetto di 5 MB) oppure vale solo per la sessione (l'elenco lo segnala).
+
+Il Worker inoltra l'intestazione `Authorization` al servizio richiesto (solo a quell'host, mai su un redirect verso un altro) per i servizi che chiedono utente e password (vedi `docs/AGGIUNGI_LAYER.md`); non la registra e non rimanda `WWW-Authenticate` al browser. Dopo la modifica va ripubblicato con `npx wrangler deploy`.

@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791241331.5354767,
-    "ast_hash": "d048219c8f67ed94308ca24a77cbb0bb",
+    "mtime": 1791267804.5217178,
+    "ast_hash": "848f780ca45f9810c4b28947966057a7",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "js/core/pannello.js": {
-    "mtime": 1791241331.536077,
-    "ast_hash": "aed9c3980a6b3424783838193dea411a",
+    "mtime": 1791267729.5322726,
+    "ast_hash": "f63e5b0806b6fb412d31c1d1e7bdda8a",
     "semantic_hash": ""
   },
   "js/core/ricerca.js": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/test_viewer.py": {
-    "mtime": 1791241331.5375006,
-    "ast_hash": "108e33d5f8412a6df68be02299e741e0",
+    "mtime": 1791243509.0147085,
+    "ast_hash": "e9664b23e3670531271c37204167d016",
     "semantic_hash": ""
   },
   "README.md": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791211649.4583223,
-    "ast_hash": "4f9745385ed5b500ab7d1d69e31817ea",
+    "mtime": 1791267804.5212417,
+    "ast_hash": "15c9070f7a107712d9839f0244c97ab2",
     "semantic_hash": ""
   },
   "docs/schermata-fase1.png": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "js/core/icone.js": {
-    "mtime": 1791241331.5357807,
-    "ast_hash": "1d708d39dfe99154294c97d88e2b6b33",
+    "mtime": 1791267729.532526,
+    "ast_hash": "ad6e75beadaa0686e039f5db2d976c0c",
     "semantic_hash": ""
   },
   "docs/ANALISI_DESIGN.md": {
@@ -515,7 +515,7 @@
     "semantic_hash": ""
   },
   "js/core/scheda-preferenze.js": {
-    "mtime": 1791241331.5362968,
+    "mtime": 1791241842.1825042,
     "ast_hash": "af33d3018dc7bf1e4d4290d3982161b2",
     "semantic_hash": ""
   },
@@ -535,7 +535,7 @@
     "semantic_hash": ""
   },
   "tests/js/scheda-preferenze.test.mjs": {
-    "mtime": 1791241331.5365672,
+    "mtime": 1791241842.182744,
     "ast_hash": "cafebf4465571b80467b2e6a4752de21",
     "semantic_hash": ""
   },
@@ -760,7 +760,7 @@
     "semantic_hash": ""
   },
   "NOTICE.md": {
-    "mtime": 1791241331.534036,
+    "mtime": 1791241842.1401107,
     "ast_hash": "09f0c9dd7b02a0b6041bd8e6b38378fc",
     "semantic_hash": ""
   },
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791236435.0443397,
-    "ast_hash": "dcabf76c07ac41d2c613d064f39c03f6",
+    "mtime": 1791268086.1613019,
+    "ast_hash": "ba92365b5c5350b761e4f1f044e01730",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -1090,8 +1090,8 @@
     "semantic_hash": ""
   },
   "js/rndt/archivio.js": {
-    "mtime": 1791195349.7128267,
-    "ast_hash": "10cf04856fe9e97cdfd980a7814cd269",
+    "mtime": 1791267612.7225277,
+    "ast_hash": "34ecc4ec3bbdd99d37e2ab765dbc6e0c",
     "semantic_hash": ""
   },
   "js/rndt/area.js": {
@@ -1100,13 +1100,13 @@
     "semantic_hash": ""
   },
   "js/rndt/host.js": {
-    "mtime": 1791195349.7141125,
-    "ast_hash": "b84f28ac670926efd3b789ebe89df0b1",
+    "mtime": 1791267692.718846,
+    "ast_hash": "46a4c20d2f9addf996d8494a47758c92",
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
-    "mtime": 1791195349.7143455,
-    "ast_hash": "f38dc77f4856916299fd25f367014aaf",
+    "mtime": 1791267729.531939,
+    "ast_hash": "6fdb67461932012045845282f6c50417",
     "semantic_hash": ""
   },
   "js/rndt/info.js": {
@@ -1180,8 +1180,8 @@
     "semantic_hash": ""
   },
   "docs/RNDT.md": {
-    "mtime": 1791195349.6704712,
-    "ast_hash": "a427d0171acd3ed69886e9aa2f7370f3",
+    "mtime": 1791268086.1616156,
+    "ast_hash": "97f52e9beb3bb18bce94b8ded8e3bda8",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-04-rndt-catalogo.md": {
@@ -1200,8 +1200,8 @@
     "semantic_hash": ""
   },
   "js/rndt/gruppo.js": {
-    "mtime": 1791195349.7139397,
-    "ast_hash": "eb7a31d80f3d067089cad21be13d9c65",
+    "mtime": 1791267729.5316892,
+    "ast_hash": "1933306cdc0a3fd00a82b201adc0b778",
     "semantic_hash": ""
   },
   "tests/js/rndt-gruppo.test.mjs": {
@@ -1275,8 +1275,8 @@
     "semantic_hash": ""
   },
   "js/core/rail.js": {
-    "mtime": 1791211649.4592106,
-    "ast_hash": "9fbd048d9b29de9e27026182dd10f6b9",
+    "mtime": 1791267804.521446,
+    "ast_hash": "5c0bd0af180129cc83dcd458e47b53f0",
     "semantic_hash": ""
   },
   "scripts/guida_screenshot_rndt.py": {
@@ -1410,13 +1410,13 @@
     "semantic_hash": ""
   },
   "js/core/riordino.js": {
-    "mtime": 1791195349.7105207,
-    "ast_hash": "acc3060fa6ea6ed34d941c46d2d4211f",
+    "mtime": 1791243261.956716,
+    "ast_hash": "79c4356d4cfd70740164cc2d2b9fbf8a",
     "semantic_hash": ""
   },
   "tests/js/riordino.test.mjs": {
-    "mtime": 1791195349.724588,
-    "ast_hash": "f80f7f23e325b0050f0639aed4e06d43",
+    "mtime": 1791243267.881233,
+    "ast_hash": "4dd726522fdf1dc1f7e9400cf98ce690",
     "semantic_hash": ""
   },
   "js/core/pannello-tema.js": {
@@ -1810,48 +1810,133 @@
     "semantic_hash": ""
   },
   "dati/isole-calore/isole-calore.json": {
-    "mtime": 1791241331.5514731,
+    "mtime": 1791241842.193961,
     "ast_hash": "4ccba9b826fa801cfb2423a055379de4",
     "semantic_hash": ""
   },
   "js/layers/isole-calore-classi.js": {
-    "mtime": 1791241331.5565894,
+    "mtime": 1791241842.202068,
     "ast_hash": "7ce23676ee56a4d5c823fc948a0d883d",
     "semantic_hash": ""
   },
   "js/layers/isole-calore-grafico.js": {
-    "mtime": 1791241331.5568242,
+    "mtime": 1791241842.2022312,
     "ast_hash": "416d5fc658e29a375f6236890fc931bc",
     "semantic_hash": ""
   },
   "js/layers/isole-calore.js": {
-    "mtime": 1791241331.5570323,
+    "mtime": 1791241842.2024274,
     "ast_hash": "d85454e7326686f0858871fe1d009ab8",
     "semantic_hash": ""
   },
   "js/layers/scheda-isole-calore.js": {
-    "mtime": 1791241331.5572078,
+    "mtime": 1791241842.2027435,
     "ast_hash": "4ec0b1edd1ed354a62997ac7d864c74f",
     "semantic_hash": ""
   },
   "scripts/isole_calore.py": {
-    "mtime": 1791241331.5576475,
+    "mtime": 1791241842.202957,
     "ast_hash": "4af763cfb774cd9c561513d94165bf18",
     "semantic_hash": ""
   },
   "tests/js/isole-calore.test.mjs": {
-    "mtime": 1791241331.5580604,
+    "mtime": 1791241842.203142,
     "ast_hash": "77453142746084278aebfa593894c328",
     "semantic_hash": ""
   },
   "tests/test_isole_calore.py": {
-    "mtime": 1791241331.5587955,
+    "mtime": 1791241842.2032914,
     "ast_hash": "3ffcb8c55f2fe2b5c8f23ce10832319e",
     "semantic_hash": ""
   },
   "dati/isole-calore/README.md": {
-    "mtime": 1791241331.5510838,
+    "mtime": 1791241842.1936164,
     "ast_hash": "e64c41915f0cbb758a52c78879334e21",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/controllo.js": {
+    "mtime": 1791267762.1542015,
+    "ast_hash": "6b6b75a2b7ffb72dc4fc17262ec920a0",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/index.js": {
+    "mtime": 1791267787.0281568,
+    "ast_hash": "8ab842d8583d91419643dd4ab74d8e41",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/migrazione.js": {
+    "mtime": 1791267706.9268472,
+    "ast_hash": "73214e660a07f10c2cc9fe6226092e3a",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/pannello.js": {
+    "mtime": 1791267787.027463,
+    "ast_hash": "f288f0e1fd09dc415a0b4db9d410b89e",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/salvati.js": {
+    "mtime": 1791267627.0991518,
+    "ast_hash": "e00664a5d40838190c4cc42307dd1527",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/servizi.js": {
+    "mtime": 1791267671.0124862,
+    "ast_hash": "25a465f873a6c1cc33c8bff6b5129f35",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-archivio.test.mjs": {
+    "mtime": 1791267612.6039367,
+    "ast_hash": "77a609cfec226543229e14d8d30bfca6",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-controllo.test.mjs": {
+    "mtime": 1791267762.0385332,
+    "ast_hash": "49d8bbf913d0a4941ea5a43b3ff7f5ba",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-gruppo.test.mjs": {
+    "mtime": 1791267729.4001572,
+    "ast_hash": "771cd755682ea550a8ec31ce3f44104f",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-host.test.mjs": {
+    "mtime": 1791267684.7076828,
+    "ast_hash": "d5458d42845d8cebe964bafe3e08c669",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-migrazione.test.mjs": {
+    "mtime": 1791267706.8198743,
+    "ast_hash": "fe7f675376e3c00f32902e4e28a3b7d5",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-salvati.test.mjs": {
+    "mtime": 1791267626.9721565,
+    "ast_hash": "094b7740e420fe9a54fe6c4ccb9cba43",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-servizi.test.mjs": {
+    "mtime": 1791267652.383557,
+    "ast_hash": "d9a0955c566837fde315f5dbd2045622",
+    "semantic_hash": ""
+  },
+  "docs/AGGIUNGI_LAYER.md": {
+    "mtime": 1791268086.166553,
+    "ast_hash": "9cabf46e8dc5d13638902955ff3b451f",
+    "semantic_hash": ""
+  },
+  "docs/APPUNTI_GUIDA.md": {
+    "mtime": 1791244179.5686836,
+    "ast_hash": "3aa893879f3d62ee902ec622c3debc8a",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-06-aggiungi-layer.md": {
+    "mtime": 1791267556.9482672,
+    "ast_hash": "b5df6c18226bd77c2d8bd44ab37cc91a",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-10-06-aggiungi-layer-design.md": {
+    "mtime": 1791267333.2004716,
+    "ast_hash": "5fa24e8370ed0c5396b15071e55b7d0f",
     "semantic_hash": ""
   }
 }

@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "js/app.js": {
-    "mtime": 1791267804.5217178,
-    "ast_hash": "848f780ca45f9810c4b28947966057a7",
+    "mtime": 1791269114.8797817,
+    "ast_hash": "c9603194ede7c61382db015f907178b1",
     "semantic_hash": ""
   },
   "js/core/catalogo.js": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791267804.5212417,
-    "ast_hash": "15c9070f7a107712d9839f0244c97ab2",
+    "mtime": 1791269114.8792527,
+    "ast_hash": "4f9745385ed5b500ab7d1d69e31817ea",
     "semantic_hash": ""
   },
   "docs/schermata-fase1.png": {
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "js/core/guida-contenuti.js": {
-    "mtime": 1791268086.1613019,
-    "ast_hash": "ba92365b5c5350b761e4f1f044e01730",
+    "mtime": 1791269516.4264505,
+    "ast_hash": "4c8536e088b123343f1a5df17f212738",
     "semantic_hash": ""
   },
   "js/core/guida.js": {
@@ -1100,8 +1100,8 @@
     "semantic_hash": ""
   },
   "js/rndt/host.js": {
-    "mtime": 1791267692.718846,
-    "ast_hash": "46a4c20d2f9addf996d8494a47758c92",
+    "mtime": 1791269401.7166934,
+    "ast_hash": "7529299f38d001605fed1a9dabecd515",
     "semantic_hash": ""
   },
   "js/rndt/index.js": {
@@ -1165,8 +1165,8 @@
     "semantic_hash": ""
   },
   "tests/js/rndt-proxy.test.mjs": {
-    "mtime": 1791195349.7256112,
-    "ast_hash": "32a96fa69f305fc399bc5efd90b04a6e",
+    "mtime": 1791269017.654936,
+    "ast_hash": "3a7e739d707833c9451a188048f1afcd",
     "semantic_hash": ""
   },
   "tests/js/scheda-ritardo.test.mjs": {
@@ -1180,8 +1180,8 @@
     "semantic_hash": ""
   },
   "docs/RNDT.md": {
-    "mtime": 1791268086.1616156,
-    "ast_hash": "97f52e9beb3bb18bce94b8ded8e3bda8",
+    "mtime": 1791269516.426669,
+    "ast_hash": "739c6f0d3eb5fa39fac0880c2a57ce6b",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-04-rndt-catalogo.md": {
@@ -1195,13 +1195,13 @@
     "semantic_hash": ""
   },
   "worker/proxy-core.js": {
-    "mtime": 1791195349.7269182,
-    "ast_hash": "723413dc5f39694a0adaae47f2e52159",
+    "mtime": 1791269017.8568065,
+    "ast_hash": "33e8066f1994f3b5d8eead2c49fd5d86",
     "semantic_hash": ""
   },
   "js/rndt/gruppo.js": {
-    "mtime": 1791267729.5316892,
-    "ast_hash": "1933306cdc0a3fd00a82b201adc0b778",
+    "mtime": 1791269104.4749365,
+    "ast_hash": "4645e809be2a7eb4163ba3d2c7c679c7",
     "semantic_hash": ""
   },
   "tests/js/rndt-gruppo.test.mjs": {
@@ -1275,8 +1275,8 @@
     "semantic_hash": ""
   },
   "js/core/rail.js": {
-    "mtime": 1791267804.521446,
-    "ast_hash": "5c0bd0af180129cc83dcd458e47b53f0",
+    "mtime": 1791269114.8796084,
+    "ast_hash": "9fbd048d9b29de9e27026182dd10f6b9",
     "semantic_hash": ""
   },
   "scripts/guida_screenshot_rndt.py": {
@@ -1855,13 +1855,13 @@
     "semantic_hash": ""
   },
   "js/aggiungi/controllo.js": {
-    "mtime": 1791267762.1542015,
-    "ast_hash": "6b6b75a2b7ffb72dc4fc17262ec920a0",
+    "mtime": 1791269093.7595735,
+    "ast_hash": "a2480a1119f07676567b1cbfe6e8c899",
     "semantic_hash": ""
   },
   "js/aggiungi/index.js": {
-    "mtime": 1791267787.0281568,
-    "ast_hash": "8ab842d8583d91419643dd4ab74d8e41",
+    "mtime": 1791269114.8774734,
+    "ast_hash": "8771080b1f7f8d2a15587dd86f592521",
     "semantic_hash": ""
   },
   "js/aggiungi/migrazione.js": {
@@ -1869,14 +1869,9 @@
     "ast_hash": "73214e660a07f10c2cc9fe6226092e3a",
     "semantic_hash": ""
   },
-  "js/aggiungi/pannello.js": {
-    "mtime": 1791267787.027463,
-    "ast_hash": "f288f0e1fd09dc415a0b4db9d410b89e",
-    "semantic_hash": ""
-  },
   "js/aggiungi/salvati.js": {
-    "mtime": 1791267627.0991518,
-    "ast_hash": "e00664a5d40838190c4cc42307dd1527",
+    "mtime": 1791269049.257658,
+    "ast_hash": "c2f59f6de58869f70551bac3cdc34c27",
     "semantic_hash": ""
   },
   "js/aggiungi/servizi.js": {
@@ -1890,18 +1885,18 @@
     "semantic_hash": ""
   },
   "tests/js/aggiungi-controllo.test.mjs": {
-    "mtime": 1791267762.0385332,
-    "ast_hash": "49d8bbf913d0a4941ea5a43b3ff7f5ba",
+    "mtime": 1791269093.7597864,
+    "ast_hash": "eb68d4703e9f37b19ee772d798daa38f",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-gruppo.test.mjs": {
-    "mtime": 1791267729.4001572,
-    "ast_hash": "771cd755682ea550a8ec31ce3f44104f",
+    "mtime": 1791269104.3257608,
+    "ast_hash": "f64f26513e933a2a91d0de28f7e378e7",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-host.test.mjs": {
-    "mtime": 1791267684.7076828,
-    "ast_hash": "d5458d42845d8cebe964bafe3e08c669",
+    "mtime": 1791269401.5389361,
+    "ast_hash": "f9588c15da09c9f7245678f0e72fb35c",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-migrazione.test.mjs": {
@@ -1910,8 +1905,8 @@
     "semantic_hash": ""
   },
   "tests/js/aggiungi-salvati.test.mjs": {
-    "mtime": 1791267626.9721565,
-    "ast_hash": "094b7740e420fe9a54fe6c4ccb9cba43",
+    "mtime": 1791269049.0875773,
+    "ast_hash": "876a33de2d14edaf25e2d13f6657f497",
     "semantic_hash": ""
   },
   "tests/js/aggiungi-servizi.test.mjs": {
@@ -1920,8 +1915,8 @@
     "semantic_hash": ""
   },
   "docs/AGGIUNGI_LAYER.md": {
-    "mtime": 1791268086.166553,
-    "ast_hash": "9cabf46e8dc5d13638902955ff3b451f",
+    "mtime": 1791269516.425938,
+    "ast_hash": "337dbcce4ffd4b577aab3742046955d8",
     "semantic_hash": ""
   },
   "docs/APPUNTI_GUIDA.md": {
@@ -1935,8 +1930,28 @@
     "semantic_hash": ""
   },
   "docs/superpowers/specs/2026-10-06-aggiungi-layer-design.md": {
-    "mtime": 1791267333.2004716,
-    "ast_hash": "5fa24e8370ed0c5396b15071e55b7d0f",
+    "mtime": 1791268645.785254,
+    "ast_hash": "11601d7718f6e982d5934d8bb2fa8770",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/albero.js": {
+    "mtime": 1791269114.8773246,
+    "ast_hash": "b035dac86f08e6d5314416fc71ec5507",
+    "semantic_hash": ""
+  },
+  "js/aggiungi/credenziali.js": {
+    "mtime": 1791269030.0841491,
+    "ast_hash": "796e41b66901e499205c61f512ae658c",
+    "semantic_hash": ""
+  },
+  "tests/js/aggiungi-credenziali.test.mjs": {
+    "mtime": 1791269029.98148,
+    "ast_hash": "72836e89c787f67c3858b2c9badd47fc",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-06-aggiungi-layer-albero.md": {
+    "mtime": 1791268821.647396,
+    "ast_hash": "bf67d6dffa74ab228d78994c801e0bf3",
     "semantic_hash": ""
   }
 }
