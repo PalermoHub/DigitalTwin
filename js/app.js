@@ -111,7 +111,7 @@ map.once('style.load', async () => {
     collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti)));
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
-  collegaStampa(map, document.getElementById('btn-stampa'));
+  collegaStampa(map, document.getElementById('btn-stampa'), document.getElementById('stampa-menu'));
   // coordinate del centro mappa e zoom nel piè di pagina
   const piedeCoord = document.getElementById('piede-coord');
   const aggiornaCoord = () => { const c = map.getCenter(); piedeCoord.textContent = `${c.lat.toFixed(4)}, ${c.lng.toFixed(4)} · zoom ${map.getZoom().toFixed(1)}`; };
