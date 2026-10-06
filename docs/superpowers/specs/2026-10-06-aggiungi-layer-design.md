@@ -163,3 +163,46 @@ Layer in mappa                           ← le righe di oggi: casella, opacità
 
 Worker (inoltro dell'intestazione, niente su redirect cross-host, CORS), `credenziali.js` (puro), host (intestazione e 401),
 controllo (credenziali, 🔒, salvati senza password), filtro dei servizi; verifica a mano nel browser.
+
+## Revisione 3 — WMTS e ArcGIS REST
+
+Richiesta del 2026-10-06: aggiungere i servizi WMTS e ArcGIS REST (MapServer e FeatureServer), sia come immagini sia come dati
+vettoriali; token incollato nell'indirizzo, niente generazione di token.
+
+### WMTS
+
+- «Leggi il servizio» legge le `GetCapabilities` (KVP). Per ogni `Layer` sceglie il primo formato immagine, il primo stile e un
+  `TileMatrixSet` **compatibile con la mappa**: EPSG:3857, tile 256×256, origine in alto a sinistra a (−20037508.34, 20037508.34),
+  prima matrice 1×1, matrici in ordine di scala con identificatori `<prefisso><livello>` dove il livello coincide con la
+  posizione (0, 1, 2…; es. `0`, `EPSG:3857:5`, `webmercator:3`). Gli altri layer compaiono «non supportato».
+- Il layer diventa un normale layer XYZ: URL da `ResourceURL` (REST, `{TileMatrix}`→`<prefisso>{z}`, `{TileRow}`→`{y}`,
+  `{TileCol}`→`{x}`, `{TileMatrixSet}` e `{Style}` sostituiti, altre dimensioni col valore predefinito) oppure costruito
+  come `GetTile` KVP (indirizzo dell'operazione `GetTile`, altrimenti quello del servizio). Passa da `creaTile`: proxy, limite di
+  Palermo e credenziali come per XYZ.
+- Il servizio salvato ricorda per ogni layer l'URL XYZ già calcolato (voce `{ chiave, nome, tile }`).
+
+### ArcGIS REST
+
+- Indirizzi accettati: `…/MapServer`, `…/FeatureServer`, con o senza `/N` (un solo layer). `ImageServer` è fuori ambito.
+  Si legge `<indirizzo>?f=json`; un `error` nel JSON diventa il messaggio d'errore.
+- **Come immagini** (solo MapServer): se il servizio ha una cache a tile utilizzabile (`singleFusedMapCache`, Web Mercator,
+  256×256, origine in alto a sinistra a (−20037508.34, 20037508.34), primo livello 0) c'è un solo layer «tutto il servizio» con URL
+  `…/tile/{z}/{y}/{x}`; altrimenti ogni layer scelto è un layer raster con `…/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256,256&format=png32&transparent=true&layers=show:<id>&f=image`.
+  Entrambi passano da `creaTile` (il segnaposto `{bbox-epsg-3857}` lo sostituisce MapLibre).
+- **Come dati** (MapServer e FeatureServer, solo layer con geometria): `…/<N>/query?where=1%3D1&geometry=<ovest,sud,est,nord>&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326&returnGeometry=true&f=geojson&resultRecordCount=5001`.
+  Passa da `host.addWfsLayer` (GeoJSON, area di Palermo, salvataggio con URL). Oltre 5.000 elementi **o** `exceededTransferLimit`
+  (il servizio ha troncato la risposta) → errore: mai dati troncati in silenzio.
+- Dopo «Leggi il servizio» un campo «Mostra come» sceglie immagini o dati; predefinito: immagini per MapServer, dati per FeatureServer.
+- Il servizio salvato ricorda le voci `{ chiave, nome, tile }` (immagini) o `{ chiave, nome, richiesta }` (dati).
+
+### Token ArcGIS
+
+Un token incollato nell'indirizzo (`?token=…`) vale come credenziale **di sessione**: si toglie dall'URL, si tiene in memoria per l'host
+(`credenziali.impostaToken`) e si aggiunge come parametro `token` a ogni richiesta verso quell'host (fetch dell'host e, per i tile,
+`setTransformRequest`). Nei layer e nei servizi salvati l'URL non contiene mai il token; il servizio salvato ha il segno `conToken: true`
+e alla riapertura mostra il lucchetto, che chiede di nuovo il token (stesso comportamento di utente e password). Non si genera nessun token.
+
+### Test aggiunti
+
+`wmts.js` e `arcgis.js` (puri, con documenti di esempio), `credenziali` (token), `salvati` (nuovi tipi, `conToken`), controllo
+(WMTS, ArcGIS immagini/dati, token in sessione), host (`exceededTransferLimit`); verifica a mano nel browser.
