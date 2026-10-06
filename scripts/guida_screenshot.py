@@ -83,14 +83,57 @@ def _punto_su(page, layer, filtro):
     )
 
 
+def _macro_ordine(page):
+    page.locator("#pannello summary").filter(has_text="Ordine layer in mappa").first.click()
+    page.wait_for_timeout(500)
+
+
+def _macro_storiche(page):
+    # porta in vista «Mappe storiche» e accende una carta
+    page.locator("#pannello h3").filter(has_text="Mappe storiche").first.evaluate("e => e.scrollIntoView({ block: 'start' })")
+    page.locator("#pannello .base-griglia button, #pannello .base-griglia label").filter(has_text="1891").first.click()
+    page.wait_for_timeout(2500)
+
+
+def _macro_colori(page):
+    # Edificato colorato per densità di popolazione con una scala Crameri
+    page.evaluate("""() => document.querySelector("button[aria-label^='Colori di Edificato']").click()""")
+    page.wait_for_timeout(500)
+    sel = page.locator(".tema-riga select:visible")
+    sel.nth(0).select_option("dens_pop_ha")
+    sel.nth(1).select_option("graduata")
+    page.wait_for_timeout(300)
+    page.locator(".rampa-scelta:visible").first.click()  # la rampa è un elenco personalizzato
+    page.locator(".rampa-elenco:visible [role=option]").filter(has_text="Batlow").first.click()
+    page.wait_for_timeout(1500)
+    page.evaluate("document.querySelector('.tema-riga select:not([hidden])') && document.querySelector('#pannello').scrollTo(0, 120)")
+
+
+def _macro_stampa(page):
+    page.click("#btn-stampa")
+    page.wait_for_selector("#stampa-menu:not([hidden])")
+
+
+MACRO = {"ordine": _macro_ordine, "storiche": _macro_storiche, "colori": _macro_colori, "stampa": _macro_stampa}
+
+
 def _prepara(page, scena):
     page.evaluate("document.getElementById('crediti')?.open && document.getElementById('crediti').close()")
+    page.evaluate("document.querySelector('.invito-clic')?.remove()")  # l'invito d'avvio copre la mappa
     _imposta_strati(page, scena["strati"])
     lon, lat = scena["centro"]
     page.evaluate("([c, z]) => window.dt.map.jumpTo({ center: c, zoom: z, pitch: 0, bearing: 0 })", [[lon, lat], scena["zoom"]])
     page.wait_for_function("window.dt.map.loaded()", timeout=30000)
-    if "gruppo" in scena:  # apre un gruppo della barra strati
-        page.locator("#barra-gruppi").get_by_text(scena["gruppo"], exact=True).first.click()
+    if "rail" in scena:  # apre un tab della barra verticale a sinistra
+        page.click("#" + scena["rail"])
+        page.wait_for_timeout(600)
+    if "gruppo" in scena:  # apre un gruppo del tab Layer e lo porta in cima al pannello
+        s = page.locator("#pannello summary").filter(has_text=re.compile(rf"^\s*{scena['gruppo']}")).first
+        s.click()
+        s.evaluate("e => e.scrollIntoView({ block: 'start' })")
+        page.wait_for_timeout(300)
+    if "macro" in scena:
+        MACRO[scena["macro"]](page)
     if "clicSu" in scena:
         page.wait_for_timeout(4000)  # tile del layer
         c = scena["clicSu"]
@@ -109,7 +152,7 @@ def _prepara(page, scena):
         page.mouse.click(x, y)
         page.wait_for_selector("#scheda:not([hidden])", timeout=15000)
         if "schedaTab" in scena:
-            page.locator("#scheda").get_by_text(scena["schedaTab"], exact=True).first.click()
+            page.locator("#scheda").get_by_text(re.compile(rf"^{scena['schedaTab']}\s*\d*$")).first.click()
     if "schedaApri" in scena:  # apre un blocco comprimibile della scheda (il clic lo porta anche in vista)
         page.locator("#scheda").get_by_text(re.compile(scena["schedaApri"], re.I)).first.click()
         page.wait_for_timeout(300)
@@ -122,10 +165,11 @@ def _prepara(page, scena):
             page.select_option("#f-circ", index=r["circ"])
         page.fill("#cerca-testo", r["testo"])
         page.wait_for_selector("#cerca-risultati:not([hidden])", timeout=15000)
+        page.wait_for_timeout(2500)
+        page.evaluate("document.getElementById('cerca-risultati').scrollTop = 0")
     if scena.get("ritaglio") == "#crediti":
-        page.click("#apri-crediti")
+        page.click('#menu-info [data-scheda="fonti"]')
         page.wait_for_selector("#crediti[open]")
-        page.click("#tab-fonti")
     page.wait_for_timeout(1200)  # fine animazioni e tile
 
 

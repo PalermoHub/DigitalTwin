@@ -299,6 +299,14 @@ dialog li { margin: 4px 0; }
 .info-blocco figure img { margin: 0; }
 .info-blocco figcaption { margin-top: 6px; color: var(--text-muted); font-size: var(--fs-xs); }
 .guida-passo { scroll-margin-top: 8px; }
+/* schermi larghi: contenuto a sinistra, indice a destra sempre in vista mentre la guida scorre */
+@media (min-width: 1000px) {
+  .guida-pagina { display: grid; grid-template-columns: minmax(0, 1fr) 250px; column-gap: 20px; align-items: start; }
+  .guida-pagina > * { grid-column: 1; }
+  .guida-pagina > .guida-indice { grid-column: 2; grid-row: 1 / span 60; position: sticky; top: 0; align-self: start; max-height: calc(100dvh - 150px); overflow-y: auto; margin: 0; }
+  .guida-pagina > .guida-indice ol { columns: 1; font-size: .9375rem; line-height: 1.5; }
+  .guida-pagina > .guida-indice li { margin: 4px 0; }
+}
 .guida-indice { margin: 0 0 14px; padding: 16px 18px; background: var(--surface-alt); border: 1px solid var(--border-ui); border-radius: var(--r-md); }
 .guida-indice ol { margin: 0; padding-left: 20px; font-size: 1rem; line-height: 1.7; columns: 2 280px; }
 .argomenti-griglia { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: stretch; }
@@ -311,8 +319,7 @@ dialog li { margin: 4px 0; }
 .argomento-mostra:disabled { opacity: .45; cursor: default; }
 .info-sezione h2.pagina-sezione + .info-blocco { margin-top: 14px; }
 .guida-media { margin: 0 0 14px; }
-.guida-media video { display: block; width: 100%; height: auto; border-radius: var(--r-sm); background: #000; }
-.guida-media audio { display: block; width: 100%; margin-top: 8px; }
+.guida-media iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: var(--r-sm); background: #000; }
 #crediti button { padding: 6px 14px; border: 0; border-radius: var(--r-sm); background: var(--accent); color: var(--accent-ink); font-weight: 600; }
 #crediti .in-cima { position: absolute; right: 24px; bottom: 16px; box-shadow: var(--ombra); }
 #crediti .in-cima[hidden] { display: none; }
@@ -1319,3 +1326,20 @@ body:has(#crediti[open]) :is(.invito-clic, .invito-mai) { display: none; }
 @media (max-width: 720px) { body.strati-aperti #barra-gruppi .btn-pannello-mobile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; } }
 /* l'invito all'avvio non sta sopra un pannello aperto */
 body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) .invito-clic { display: none; }
+
+/* Visore delle immagini della guida */
+.guida-figura img, img.dt-fig { cursor: zoom-in; }
+.viewer-img { position: fixed; inset: 0; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 48px 56px 20px; background: rgba(10, 12, 16, .88); }
+.viewer-img-scena { flex: 1; min-height: 0; width: 100%; overflow: auto; display: flex; align-items: flex-start; justify-content: center; }
+.viewer-img-scena img { max-width: 100%; max-height: 100%; margin: auto; border-radius: var(--r-sm); background: #fff; cursor: zoom-in; }
+.viewer-img-scena img.zoom { max-width: none; max-height: none; width: 200%; margin: 0; cursor: zoom-out; }
+.viewer-img-cap { margin: 0; max-width: 900px; color: #e8eaee; font-size: .9375rem; text-align: center; }
+.viewer-img button { position: absolute; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .14); color: #fff; font: inherit; line-height: 1; cursor: pointer; }
+.viewer-img button:hover:not(:disabled) { background: var(--accent); color: var(--accent-ink); }
+.viewer-img button:disabled { opacity: .3; cursor: default; }
+.viewer-img-x { top: 10px; right: 14px; width: 40px; height: 40px; font-size: 1.75rem; }
+.viewer-img-nav { top: 50%; width: 44px; height: 44px; margin-top: -22px; font-size: 2rem; }
+.viewer-img-prec { left: 6px; }
+.viewer-img-succ { right: 6px; }
+.viewer-img button[hidden] { display: none; }
+@media (max-width: 720px) { .viewer-img { padding: 52px 8px 14px; } .viewer-img-nav { top: auto; bottom: 14px; margin: 0; } }

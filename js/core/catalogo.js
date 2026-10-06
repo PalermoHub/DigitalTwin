@@ -1,6 +1,7 @@
 import { urlDati } from './config.js';
 import { schedaArgomenti } from './argomenti.js';
-import { schedaGuida, passiRndt } from './guida.js';
+import { collegaIngrandimento } from './ingrandisci.js';
+import { schedaGuida, passiRndt, indiceLaterale } from './guida.js';
 import { schedaGeoimage } from '../geoimage/guida.js';
 
 const AVVISI = [
@@ -40,7 +41,7 @@ function link(testo, href) {
 
 // Testo del post LinkedIn «Palermo Digital Twin… work in progress», con le immagini del carosello a seguire.
 function schedaDigitalTwin() {
-  const fig = (n, alt) => el('img', null, { className: 'dt-fig', src: `img/dt/dt-${n}.jpg`, alt, loading: 'lazy', width: 1920, height: 1072 });
+  const fig = (n, alt) => el('img', null, { className: 'dt-fig', src: `img/dt/dt-${n}.jpg`, alt, title: `${alt} (clic per ingrandire)`, loading: 'lazy', width: 1920, height: 1072 });
   const sezione = (titolo, testi, ...figure) => blocco(titolo, ...testi.map(t => el('p', t)), ...figure);
   return [
     ...titoloPagina('Digital Twin', 'La città a strati: catasto, popolazione, edifici, trasporti, sicurezza e molto altro.'),
@@ -102,7 +103,7 @@ function schedaComunita() {
   ];
 }
 
-// «Strumenti usati»: schede di due strumenti che hanno reso possibile il lavoro sui dati.
+// «Strumenti usati»: schede degli strumenti e delle librerie che hanno reso possibile il lavoro.
 function strumentiUsati(sezione) {
   const p = (...parti) => {
     const e = el('p');
@@ -118,13 +119,32 @@ function strumentiUsati(sezione) {
     p('Sono usate qui per colorare i layer per attributo (sequenziali, divergenti e categoriche). Mapshaper le include dalla versione 0.7.75: 12 scale sequenziali (batlow, batlowW, acton, bamako, bilbao, davos, devon, lajolla, lapaz, oslo, tokyo, turku), 5 divergenti (bam, broc, cork, roma, vik) e 1 categorica (batlowS).'),
     p(link('Sito di Fabio Crameri', 'https://www.fabiocrameri.ch/colourmaps/'), ' · ', link('Mapshaper e i colori di Crameri', 'https://claude.ai/artifact/FrXh66VWcJu5BTsDq29BPe')),
     p('Consigliata dall’Influencer ', link('@aborruso', AUTORE_URL), ' ❤️'));
-  return [el('h2', 'Strumenti usati', { className: 'pagina-sezione' }), qgis, colori];
+  const mappa = sezione('MapLibre GL JS e librerie della mappa',
+    p(link('MapLibre GL JS', 'https://maplibre.org/'), ' (4.7.1, licenza BSD a tre clausole) disegna la mappa nel browser, con strati vettoriali, raster e rilievo. ', link('PMTiles', 'https://github.com/protomaps/PMTiles'), ' (Protomaps) permette di servire interi insiemi di dati da un unico file statico, senza un server di tile.'),
+    p('Per i file caricati dagli utenti: ', link('shpjs', 'https://github.com/calvinmetcalf/shapefile-js'), ' (Shapefile), ', link('@tmcw/togeojson', 'https://github.com/placemark/togeojson'), ' (KML e GPX), ', link('JSZip', 'https://stuk.github.io/jszip/'), ' e ', link('fflate', 'https://github.com/101arrowz/fflate'), ' (archivi zip e KMZ), ', link('proj4js', 'http://proj4js.org/'), ' (cambio di sistema di riferimento).'),
+    p('Il link all’Atlante storico usa il formato dell’indirizzo di ', link('leaflet-hash', 'https://github.com/mlevans/leaflet-hash'), ' (#zoom/lat/lon), così l’atlante si apre sulla zona che si sta guardando. Il catalogo RNDT è il plugin ', link('openrndt-geolibre', PLUGIN_URL), ' (v. 0.3.1) di Andrea Borruso (onData).'));
+  const base = sezione('Mappe e dati di base',
+    p(link('OpenFreeMap', 'https://openfreemap.org/'), ' fornisce la base cartografica vettoriale, con dati di ', link('OpenStreetMap', 'https://www.openstreetmap.org/copyright'), ' (© contributori di OpenStreetMap, ODbL). Le mappe storiche sono georeferenziate con ', link('Map Warper', 'https://mapwarper.net/'), ' e raccolte nell’', link('Atlante delle carte tecniche storiche di Palermo', 'https://palermohub.opendatasicilia.it/index_atlante_iframe.html'), '.'),
+    p('Il font è ', link('Montserrat', 'https://fonts.google.com/specimen/Montserrat'), ' (Julieta Ulanovsky, licenza SIL OFL), servito dal sito stesso.'));
+  const sviluppoStrumenti = sezione('Strumenti di sviluppo',
+    p('Il codice della webapp è JavaScript puro, senza framework né passaggi di compilazione. I dati sono preparati con script ', link('Python', 'https://www.python.org/'), ' e con QGIS (vedi sopra); la pubblicazione è su ', link('GitHub Pages', 'https://pages.github.com/'), ' e l’inoltro delle richieste verso servizi esterni passa da un ', link('Cloudflare Worker', 'https://workers.cloudflare.com/'), '.'),
+    p('Test con il runner integrato di ', link('Node.js', 'https://nodejs.org/'), ' e con ', link('Playwright', 'https://playwright.dev/'), ' (anche per rigenerare gli screenshot della Guida); video e immagini con ', link('FFmpeg', 'https://ffmpeg.org/'), '. Il progetto è stato sviluppato con l’aiuto di ', link('Claude Code', 'https://claude.com/claude-code'), ' (Anthropic).'));
+  return [el('h2', 'Strumenti usati', { className: 'pagina-sezione' }), mappa, qgis, colori, base, sviluppoStrumenti];
 }
 
 function lista(voci) {
   const ul = el('ul');
   for (const v of voci) ul.append(el('li', v));
   return ul;
+}
+
+// Avvolge una pagina di blocchi in un contenitore con l'indice laterale (un voce per ogni blocco con titolo h3).
+function paginaConIndice(nodi) {
+  const radice = el('div');
+  radice.append(...nodi);
+  const voci = nodi.filter(n => n.tagName === 'SECTION' && n.querySelector('h3')).map(n => ({ titolo: n.querySelector('h3').textContent, sezione: n }));
+  indiceLaterale(document, radice, voci);
+  return radice;
 }
 
 // Tab «Plugin RNDT»: spiega in parole semplici cosa fa il catalogo e dà il merito all'autore del plugin.
@@ -254,11 +274,11 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   const argomenti = schedaArgomenti(moduli, document, () => dialog.close());
   const guida = schedaGuida();
   const schede = [
-    ['digitaltwin', 'Digital Twin', schedaDigitalTwin()],
+    ['digitaltwin', 'Digital Twin', [paginaConIndice(schedaDigitalTwin())]],
     ['argomenti', 'Argomenti', [argomenti.elemento]],
     ['guida', 'Guida', [guida]],
     ['geoimage', 'Guida Geoimage', [schedaGeoimage()]],
-    ['plugin', 'Plugin RNDT', [...schedaPlugin(), ...passiRndt()]],
+    ['plugin', 'Plugin RNDT', [paginaConIndice([...schedaPlugin(), ...passiRndt()])]],
     ['fonti', 'Fonti e avvisi', [...titoloPagina('Fonti e avvisi', 'Da dove vengono i dati e cosa tenere presente quando li si usa.'), blocco('Avvisi', elenco(AVVISI)), blocco('Fonti dei dati', fonti)]],
     ['about', 'About', schedaComunita()],
   ];
@@ -298,6 +318,7 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   chiudi.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
   chiudi.addEventListener('click', () => dialog.close());
   dialog.replaceChildren(corpo, chiudi, inCima);
+  collegaIngrandimento(corpo);
   dialog.vaiA = vaiA;
   // le caselle del pannello possono cambiare a foglio aperto (il foglio non è modale)
   const ctl = new AbortController();

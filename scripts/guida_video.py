@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Genera media/guida/guida.{mp4,mp3,vtt} dalle narrazioni e dagli screenshot dei passi.
+"""Genera media/guida/guida.{mp4,vtt} dalle narrazioni e dagli screenshot dei passi.
 
 Uso: python scripts/guida_video.py [--voce it_IT-paola-medium]
 Richiede: ffmpeg/ffprobe, piper-tts e il modello vocale in ~/.cache/piper
 (python -m piper.download_voices it_IT-paola-medium --data-dir ~/.cache/piper).
 """
 import argparse
+import json
 import re
 import shutil
 import subprocess
@@ -21,6 +22,95 @@ FPS = 25
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 CACHE_VOCI = Path.home() / ".cache" / "piper"
 OUT = ROOT / "media" / "guida"
+
+# Coda del video: plugin RNDT e Geoimage. Il testo parlato è ricavato dai tab (PASSI_RNDT e SEZIONI di geoimage),
+# che non hanno una `narrazione` (il test guida.test.mjs lo impone per i passi statici): qui lo si rende leggibile alla voce.
+SIGLE = {
+    "RNDT": "R N D T", "WMS": "W M S", "WMTS": "W M T S", "WFS": "W F S", "XYZ": "X Y Z", "GCP": "G C P", "GPX": "G P X",
+    "KMZ": "K M Z", "KML": "K M L", "CSV": "C S V", "JPG": "J P G", "PNG": "P N G", "WEBP": "W E B P", "BMP": "B M P",
+    "WGS": "W G S", "UTM": "U T M", "LZW": "L Z W", "RMSE": "R M S E", "GDAL": "G D A L", "QGIS": "Q G I S", "PAI": "P A I",
+    "JSON": "Jason", "GeoJSON": "Geo Jason", "GeoTIFF": "Geo Tiff", "ArcGIS": "Arc G I S", "GetFeatureInfo": "Get Feature Info",
+    "WGS84": "W G S ottantaquattro", "REST": "rest", "onData": "on Data", "Esc": "Esc", "MB": "megabyte", "3D": "tre D", "HTTPS": "H T T P S", "https": "H T T P S", "zip": "zip",
+}
+UNITA = "zero uno due tre quattro cinque sei sette otto nove dieci undici dodici tredici quattordici quindici sedici diciassette diciotto diciannove".split()
+DECINE = "_ _ venti trenta quaranta cinquanta sessanta settanta ottanta novanta".split()
+
+
+def parole(n):
+    if n < 20:
+        return UNITA[n]
+    if n < 100:
+        d, u = divmod(n, 10)
+        base = DECINE[d]
+        if u in (1, 8):
+            base = base[:-1]
+        return base + ("" if u == 0 else UNITA[u] if u != 3 else "tré")
+    if n < 1000:
+        c, r = divmod(n, 100)
+        return ("cento" if c == 1 else UNITA[c] + "cento") + ("" if r == 0 else parole(r))
+    m, r = divmod(n, 1000)
+    return ("mille" if m == 1 else parole(m) + "mila") + ("" if r == 0 else parole(r))
+
+
+def per_la_voce(testo):
+    """Rende un testo del tab leggibile da Piper: sigle lettera per lettera, cifre a parole, niente simboli né indirizzi."""
+    t = re.sub(r"\s*L.idea e il codice vengono da [^.]*\(github\.com[^)]*\)\.", "", testo)
+    t = re.sub(r"\s*\([^)]*\)", lambda m: "" if re.search(r"\d|\.", m.group(0)) and len(m.group(0)) < 30 and "," not in m.group(0) else m.group(0), t)
+    t = t.replace("UTM 32N o 33N", "UTM").replace("una ×", "una croce").replace("pulsante ⇄", "pulsante con la doppia freccia")
+    t = t.replace("«", "").replace("»", "").replace("“", "").replace("”", "").replace("’", "'")
+    t = re.sub(r"2\s*°\s*grado", "secondo grado", t)
+    t = re.sub(r"(\d+)\s*°", lambda m: f"{parole(int(m.group(1)))} gradi", t)
+    t = re.sub(r"(\d+)\s*%", lambda m: f"{parole(int(m.group(1)))} per cento", t)
+    t = re.sub(r"\b(WGS84|GeoJSON|GeoTIFF|ArcGIS|GetFeatureInfo|[A-Z]{2,}|onData|zip|https)\b", lambda m: SIGLE.get(m.group(1), " ".join(m.group(1))), t)
+    t = t.replace(".points", "Points").replace("World file", "world file")
+    t = re.sub(r"(?<![\w])(\d+)(?![\w])", lambda m: parole(int(m.group(1))), t)
+    t = t.replace("⌖", "il mirino").replace(" — ", ", ")
+    t = re.sub(r"\s*[:;]\s*$", ".", t.strip())
+    return re.sub(r"\s+", " ", t)
+
+
+def _contenuti(modulo, nome):
+    out = subprocess.run(["node", "-e", f"import('./js/{modulo}.js').then(m=>console.log(JSON.stringify(m.{nome})))"],
+                         cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    return json.loads(out)
+
+
+def _frasi(*parti):
+    return " ".join(p if p.rstrip()[-1:] in ".!?" else p.rstrip(" :;") + "." for p in parti if p)
+
+
+def passi_extra():
+    """Passi RNDT e Geoimage con il testo dei rispettivi tab, nell'ordine in cui compaiono."""
+    extra = []
+    for p in _contenuti("core/guida-contenuti", "PASSI_RNDT"):
+        par = p["paragrafi"]
+        if p["id"] == "rndt-catalogo":  # la prima frase e poi come si cerca
+            par = [re.split(r"(?<=[.!?])\s", par[0])[0], par[1]]
+        elif p["id"] == "rndt-gruppo":  # il gruppo e i layer; i formati dei file stanno nella guida scritta
+            par = par[:1]
+        extra.append({"id": p["id"], "titolo": f"Plugin RNDT: {p['titolo']}", "immagine": p["immagine"], "narrazione": per_la_voce(" ".join(par))})
+    sez = {s["id"]: s for s in _contenuti("geoimage/guida-contenuti", "SEZIONI")}
+    pas = {p["titolo"]: p for s in sez.values() for p in s.get("passi", [])}
+    passi_di = lambda sezione: {p["titolo"]: p for p in sez[sezione]["passi"]}
+    sw, sp = passi_di("swipe"), passi_di("spotlight")
+    img = lambda nome: {"file": f"img/guida/passi/geoimage-{nome}.webp"}
+    el = lambda titolo, *idx: [pas[titolo]["elenco"][i] for i in idx]
+    gruppi = [  # (id, titolo, immagine, testi del tab)
+        ("carica", "Geoimage: caricare l'immagine", "carica", sez["cos-e"]["paragrafi"][:1] + [pas["Carica la mappa storica"]["testo"]]),
+        ("posiziona", "Geoimage: posizionare l'immagine", "carica", [pas["Posiziona e orienta l’immagine"]["testo"]] + el("Posiziona e orienta l’immagine", 0, 1, 2)),
+        ("gcp", "Geoimage: i punti di controllo", "gcp", [pas["Aggiungi i GCP (due clic per ogni punto)"]["testo"]] + el("Aggiungi i GCP (due clic per ogni punto)", 0, 1, 4)),
+        ("allinea", "Geoimage: allineare e controllare l'errore", "allinea", [pas["Allinea l’immagine ai GCP"]["testo"], pas["Controlla l’errore (RMSE)"]["testo"]]),
+        ("swipe", "Geoimage: lo Swipe", "swipe", sez["swipe"]["paragrafi"] + [sw["Attivalo"]["testo"], sw["Trascina la linea"]["testo"]]),
+        ("spotlight", "Geoimage: lo Spotlight", "spotlight", sez["spotlight"]["paragrafi"] + [sp["Attivalo"]["testo"], sp["Regola il raggio"]["testo"], sp["Inverti l’effetto"]["testo"]]),
+        ("esporta", "Geoimage: esportare il risultato", "esporta", [pas["Esporta il risultato"]["testo"]] + pas["Esporta il risultato"]["elenco"]),
+    ]
+    for id_, titolo, immagine, testi in gruppi:
+        extra.append({"id": f"geoimage-{id_}", "titolo": titolo, "immagine": img(immagine), "narrazione": per_la_voce(_frasi(*testi))})
+    return extra
+
+
+def passi_video():
+    return passi() + passi_extra()
 
 
 def controlla_requisiti(voce):
@@ -52,7 +142,7 @@ def formatta_vtt(durate, testi):
 
 def cue_per_frase(testo, durata):
     """Spezza la narrazione di un passo in sottotitoli, uno per frase, con la durata ripartita in proporzione ai caratteri."""
-    frasi = [f for f in re.split(r"(?<=[.!?])\s+", testo.strip()) if f]
+    frasi = [f for f in re.split(r"(?<=[.!?;:])\s+", testo.strip()) if f]
     totale = sum(len(f) for f in frasi)
     cue, usato = [], 0.0
     for i, f in enumerate(frasi):
@@ -65,8 +155,8 @@ def cue_per_frase(testo, durata):
 def bitrate_video(durata, mb, audio=48_000):
     """Bitrate video (bit/s) per stare in `mb` megabyte, con il 3% di margine per il contenitore."""
     bitrate = int(mb * 1024 * 1024 * 8 * 0.97 / durata) - audio
-    if bitrate < 100_000:
-        raise ValueError(f"video troppo lungo ({durata:.0f} s) per stare in {mb} MB: sotto i 100 kbit/s la qualità non è più leggibile")
+    if bitrate < 50_000:
+        raise ValueError(f"video troppo lungo ({durata:.0f} s) per stare in {mb} MB: sotto i 50 kbit/s la qualità non è più leggibile")
     return bitrate
 
 
@@ -135,7 +225,7 @@ def _segmento(passo, wav, durata_audio, dest, indice=1, totale=1, ass_path=None)
 
 def comprimi_whatsapp(src, dest, mb=8.5):
     """Ricodifica `src` in `dest` a 960x540 con due passate, puntando a `mb` megabyte (limite degli stati WhatsApp: 10)."""
-    audio = 48_000
+    audio = 32_000
     bitrate = bitrate_video(_durata(src), mb, audio)
     comune = ["-vf", "scale=960:540", "-c:v", "libx264", "-preset", "slow", "-b:v", str(bitrate), "-pix_fmt", "yuv420p", "-r", str(FPS)]
     with tempfile.TemporaryDirectory() as tmp:
@@ -162,7 +252,7 @@ def main(argv=None):
             sys.exit("manca media/guida/guida.mp4: esegui prima scripts/guida_video.py")
         return comprimi_whatsapp(OUT / "guida.mp4", OUT / "guida-whatsapp.mp4")
     modello = controlla_requisiti(args.voce)
-    elenco = passi()
+    elenco = passi_video()
     mancanti = [p["immagine"]["file"] for p in elenco if not (ROOT / p["immagine"]["file"]).exists()]
     if mancanti:
         sys.exit(f"immagini mancanti: {mancanti}; esegui scripts/guida_screenshot.py")
@@ -186,11 +276,10 @@ def main(argv=None):
         lista.write_text("".join(f"file '{s}'\n" for s in segmenti))
         mp4 = OUT / "guida.mp4"
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lista), "-c", "copy", "-movflags", "+faststart", str(mp4)], check=True)
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(mp4), "-vn", "-c:a", "libmp3lame", "-q:a", "4", str(OUT / "guida.mp3")], check=True)
     cue = [c for p, d in zip(elenco, durate) for c in cue_per_frase(p["narrazione"], d)]
     (OUT / "guida.vtt").write_text(formatta_vtt([d for d, _ in cue], [t for _, t in cue]), encoding="utf-8")
     comprimi_whatsapp(OUT / "guida.mp4", OUT / "guida-whatsapp.mp4")
-    print("scritti", *(OUT / n for n in ("guida.mp4", "guida.mp3", "guida.vtt", "guida-whatsapp.mp4")))
+    print("scritti", *(OUT / n for n in ("guida.mp4", "guida.vtt", "guida-whatsapp.mp4")))
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import { PASSI, PASSI_RNDT } from './guida-contenuti.js';
 // Tab «Guida» del foglio Info: indice, poi un passo per sezione con testo e figura.
 export function schedaGuida(doc = document, passi = PASSI) {
   const radice = doc.createElement('div');
+  radice.className = 'guida-pagina'; // su schermi larghi l'indice sta a destra e resta in vista
   const sezioni = {};
   const h = doc.createElement('h2');
   h.textContent = 'Guida';
@@ -30,32 +31,11 @@ export function schedaGuida(doc = document, passi = PASSI) {
 
   const media = doc.createElement('div');
   media.className = 'guida-media';
-  const video = doc.createElement('video');
-  video.setAttribute('controls', '');
-  video.setAttribute('preload', 'metadata');
-  video.setAttribute('poster', passi[0].immagine.file);
-  video.setAttribute('aria-label', 'Video guida: panoramica della mappa');
-  const sv = doc.createElement('source');
-  sv.setAttribute('src', 'media/guida/guida.mp4');
-  sv.setAttribute('type', 'video/mp4');
-  const tr = doc.createElement('track');
-  tr.setAttribute('kind', 'captions');
-  tr.setAttribute('srclang', 'it');
-  tr.setAttribute('label', 'Italiano');
-  tr.setAttribute('src', 'media/guida/guida.vtt');
-  tr.setAttribute('default', '');
-  sv.onerror = () => media.remove(); // deploy senza i media: niente player nero e rotto
-  video.append(sv, tr);
-  const audio = doc.createElement('audio');
-  audio.setAttribute('controls', '');
-  audio.setAttribute('preload', 'none');
-  audio.setAttribute('aria-label', 'Versione solo audio della guida');
-  const sa = doc.createElement('source');
-  sa.setAttribute('src', 'media/guida/guida.mp3');
-  sa.setAttribute('type', 'audio/mpeg');
-  sa.onerror = () => media.remove();
-  audio.append(sa);
-  media.append(video, audio);
+  const video = doc.createElement('iframe');
+  Object.assign(video, { src: 'https://www.youtube-nocookie.com/embed/QK_e67FvgEs', title: 'Video guida: la mappa, il plugin RNDT e Geoimage', loading: 'lazy', allowFullscreen: true });
+  video.setAttribute('allow', 'accelerometer; encrypted-media; picture-in-picture; fullscreen');
+  video.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+  media.append(video);
   radice.append(media);
 
   for (const p of passi) {
@@ -84,6 +64,7 @@ function creaPasso(doc, p) {
   const img = doc.createElement('img');
   img.src = p.immagine.file;
   img.alt = p.immagine.alt;
+  img.title = `${p.immagine.didascalia} (clic per ingrandire)`;
   img.loading = 'lazy';
   img.width = 1280;
   img.height = 720;
@@ -98,4 +79,26 @@ function creaPasso(doc, p) {
 // Passi RNDT da mettere in coda al tab «Plugin RNDT».
 export function passiRndt(doc = document, passi = PASSI_RNDT) {
   return passi.map(p => creaPasso(doc, p));
+}
+
+// Indice laterale per le pagine fatte di blocchi (Guida Geoimage, Plugin RNDT): su schermi larghi sta a destra e resta in vista.
+// `voci` = [{ titolo, sezione }]; il clic scorre fino alla sezione senza toccare l'indirizzo della pagina.
+export function indiceLaterale(doc, radice, voci) {
+  radice.className = 'guida-pagina';
+  const nav = doc.createElement('nav');
+  nav.className = 'guida-indice';
+  nav.setAttribute('aria-label', 'Indice della pagina');
+  const ol = doc.createElement('ol');
+  for (const { titolo, sezione } of voci) {
+    const li = doc.createElement('li');
+    const a = doc.createElement('a');
+    a.href = '#';
+    a.addEventListener('click', e => { e.preventDefault(); sezione.scrollIntoView({ block: 'start' }); });
+    a.textContent = titolo;
+    li.append(a);
+    ol.append(li);
+  }
+  nav.append(ol);
+  radice.append(nav);
+  return nav;
 }
