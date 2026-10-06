@@ -1249,7 +1249,7 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
   #foglio-stampa h1 { margin: 0; font-size: 18pt; }
   #foglio-stampa h2 { margin: 8px 0 4px; font-size: 11pt; }
   #foglio-stampa header p { margin: 2px 0 8px; font-size: 9pt; color: #333; }
-  #foglio-stampa .stampa-mappa { display: block; width: 100%; max-height: 62vh; object-fit: contain; border: 1px solid #999; }
+  #foglio-stampa .stampa-mappa { display: block; width: 100%; max-height: var(--mappa-a, 62vh); object-fit: contain; border: 1px solid #999; }
   #foglio-stampa .stampa-legende { margin-top: 8px; font-size: 9pt; column-count: 2; }
   #foglio-stampa .stampa-legende h2 { column-span: all; }
   #foglio-stampa .stampa-legende * { color: #000 !important; max-height: none !important; overflow: visible !important; }
@@ -1258,13 +1258,14 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 }
 
 /* menu del pulsante «Stampa»: vista attuale o scala fissa */
-#stampa-menu { position: fixed; z-index: var(--z-barra); top: 64px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-pill); box-shadow: var(--ombra); font-size: var(--fs-sm); color: var(--text); }
+#stampa-menu { width: max-content; top: 70px; right: calc(var(--scheda-l) + 12px); left: auto; transform: none; flex-wrap: wrap; justify-content: center; max-width: calc(100vw - 24px); position: fixed; z-index: var(--z-barra); display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: 18px; box-shadow: var(--ombra); font-size: var(--fs-sm); color: var(--text); }
 #stampa-menu[hidden] { display: none; }
-#stampa-menu select { padding: 4px 8px; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border-ui); border-radius: 8px; }
+#stampa-menu label { display: inline; padding: 0; }
+#stampa-menu select { width: auto; margin: 0; padding: 4px 8px; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border-ui); border-radius: 8px; }
 #stampa-menu button { padding: 5px 14px; font: inherit; font-weight: 600; color: var(--accent-ink); background: var(--accent); border: 1px solid var(--accent); border-radius: var(--r-pill); cursor: pointer; }
 #stampa-menu button:disabled { opacity: .6; cursor: wait; }
 @media print {
-  #foglio-stampa.in-scala .stampa-mappa { width: 277mm; height: 125mm; max-height: none; object-fit: fill; }
+  #foglio-stampa.in-scala .stampa-mappa { width: var(--mappa-l); height: var(--mappa-a); max-height: none; object-fit: fill; }
   #foglio-stampa .stampa-scala { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 8pt; }
   #foglio-stampa .stampa-scala-barra { display: inline-block; height: 3mm; border: 1px solid #000; border-top-width: 3px; box-sizing: border-box; }
 }
