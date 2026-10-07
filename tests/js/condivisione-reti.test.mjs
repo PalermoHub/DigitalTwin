@@ -18,3 +18,10 @@ test('il link è sempre codificato e compare una sola volta come indirizzo', () 
   assert.equal(url.linkedin, `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`);
   assert.ok(url.email.startsWith('mailto:?subject=') && url.email.includes(enc));
 });
+
+test('ogni rete ha il suo logo (percorso SVG) e il colore del marchio', () => {
+  for (const r of RETI) {
+    assert.match(r.icona, /^M[\d. a-zA-Z,-]+$/, r.id);
+    assert.match(r.colore, /^#[0-9a-f]{6}$/i, r.id);
+  }
+});

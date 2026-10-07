@@ -54,7 +54,12 @@ export function collegaCondivisione(map, bottone, { storage }) {
   async function apri() {
     const r = await link();
     campo.value = r.link;
-    reti.replaceChildren(...RETI.map(rete => el('a', { className: 'condividi-rete', href: rete.url(r.link, TESTO_CONDIVISIONE), target: '_blank', rel: 'noopener noreferrer', textContent: rete.nome })));
+    reti.replaceChildren(...RETI.map(rete => {
+      const a = el('a', { className: 'condividi-rete', href: rete.url(r.link, TESTO_CONDIVISIONE), target: '_blank', rel: 'noopener noreferrer', title: `Condividi su ${rete.nome}`, innerHTML: `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="${rete.icona}"/></svg>` });
+      a.setAttribute('aria-label', `Condividi su ${rete.nome}`);
+      a.style.setProperty('--rete', rete.colore);
+      return a;
+    }));
     const avvisi = [];
     if (r.scartati) avvisi.push(`${r.scartati} layer aggiunti da te (file o servizi con credenziali) non sono nel link.`);
     if (r.troncato) avvisi.push('La vista è molto ricca: colori personalizzati o layer aggiunti non sono nel link.');
