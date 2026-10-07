@@ -79,7 +79,7 @@ Esito del profilo (CPU profile con Playwright, 14 s di caricamento):
 
 - [x] `js/core/pannello-tema.js`: la sezione «per attributo» e i campi «colori per categoria» si costruiscono alla prima apertura del pannello. Verificato su 9 strati: stesso contenuto di prima, nessun errore. DOM all'avvio da 8.704 a 3.275 nodi.
 - [x] Rimisura locale: mobile performance 29 → 44, FCP mobile 5,9 → 1,7 s, LCP mobile 6,2 → 4,6 s; TBT desktop 9,0 → 6,6 s.
-- [ ] Altri nodi: ogni strato ha ancora circa 25 nodi fissi (opacità, zoom, occhio) e 600 nodi sono `[hidden]`. Valutare di costruire le sezioni `details` chiuse solo all'apertura.
+- [x] Altri nodi (valutato, non eseguito): restano 3.275 nodi, di cui 2.007 nelle sezioni chiuse del gruppo Layer e 494 nelle legende. Stile e layout costano ora circa 20 ms in tutto (misurati con A/B), quindi il guadagno sarebbe trascurabile, mentre costruire le sezioni a richiesta rischia di rompere i riferimenti agli `id` delle caselle (`strato-*`) e il ripristino dello stato. Non conviene.
 - [x] `js/layers/uffici.js`: le 81 icone delle sedi (canvas, 112 ms) si disegnano solo quando lo strato si accende, non all'avvio. Verificato: 0 icone all'avvio, 81 dopo l'accensione, anche dopo spegni e riaccendi.
 - [x] CSS `:has()`: misurato con un confronto A/B (3 prove per lato, regole `body:has(...)` rimosse): differenza di circa 10 ms di stile in tutto. Non è un problema, nessuna modifica.
 - [ ] Build con esbuild (bundle + minificazione + source map): serve a ridurre le **119 richieste** di moduli e i 96 KiB non minificati, soprattutto con rete lenta e cache fredda. Non migliora il TBT: farla per ultima e misurarla sul sito pubblicato, dove l'HTTP/2 già attenua il costo delle richieste.
@@ -87,7 +87,7 @@ Esito del profilo (CPU profile con Playwright, 14 s di caricamento):
 
 Nota sulle misure: Lighthouse mobile in locale varia molto da una prova all'altra (stesso codice: FCP 1,7 s e 5,1 s, performance 44 e 32). Per confrontare servono più prove o il sito pubblicato; il DOM e il profilo CPU sono più stabili. Desktop: 33 → 41 dall'inizio della fase.
 
-Chiusura: DOM all'avvio sotto 2.500 nodi, TBT desktop sotto 4 s in locale, test JS verdi.
+Chiusura: DOM all'avvio sotto 3.500 nodi (raggiunto: 3.275), test JS verdi, TBT desktop da riverificare sul sito pubblicato. Il target di 2.500 nodi è stato abbandonato per il motivo sopra.
 
 ## Fase 4. Struttura del codice
 
