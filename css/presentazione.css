@@ -57,7 +57,9 @@ a { color: inherit; }
 .logo .scuro { display: none; }
 :root[data-tema="scuro"] .logo .chiaro { display: none; }
 :root[data-tema="scuro"] .logo .scuro { display: block; }
-.menu { display: none; align-items: center; gap: 28px; font-size: .9375rem; font-weight: 600; }
+/* stessa dimensione del menu dell'app (index.html): 12,25 px, e 12,69 px sotto i 1181 px (là 1rem = 14 px, qui 16 px) */
+.menu { display: none; align-items: center; gap: 28px; font-size: .765625rem; font-weight: 600; }
+@media (max-width: 1180px) { .menu { font-size: .793rem; } }
 .menu a { text-decoration: none; color: var(--testo-tenue); padding: 6px 2px; }
 .menu a:hover { color: var(--testo); }
 @media (min-width: 820px) { .menu { display: flex; } }
