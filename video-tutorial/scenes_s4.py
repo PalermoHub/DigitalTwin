@@ -74,11 +74,9 @@ def _(r):
     rx, ry = centro_di(r, ".gi-rota")
     r.drag(rx, ry, rx + 50, ry + 15, dur=0.6)
     r.sync(0.40)
-    r.click("#gi-modo", after=0.5)
-    r.ring("#gi-modo", "Scala ⇄ deforma", pos="left", hold=1.0)
-    r.click("#gi-modo", after=0.3)
+    r.ring("#gi-modo", "Scala ⇄ deforma", pos="left", hold=1.6)
     r.sync(0.62)
-    for _ in range(8):
+    for _ in range(6):
         r.click("#gi-piu", move=0.2, after=0.05)
     r.shot("ingrandita")
 

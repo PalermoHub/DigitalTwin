@@ -31,8 +31,15 @@ class Rec:
         self.s_start = self.now()
         self.s_voice = self.s_start + LEAD * K
         self.audio = self.dur.get(sid, 5.0) * K
+        self.extra = extra
         self.s_end = self.s_voice + self.audio + extra * K
         self.log.append(dict(id=sid, start=self.s_start, voice_start=self.s_voice, voice_dur=self.audio / K))
+
+    def start_voice(self, lead=0.25):
+        """Da chiamare quando la preparazione (cambio vista, strati…) è finita: la voce parte da qui."""
+        self.s_voice = self.now() + lead * K
+        self.s_end = self.s_voice + self.audio + self.extra * K
+        self.log[-1]["voice_start"] = self.s_voice
 
     def sync(self, frac):
         """Aspetta il punto `frac` (0..1) della voce della scena corrente."""
@@ -131,7 +138,7 @@ class Rec:
 
     def jump(self, lng, lat, zoom, pitch=None, bearing=None):
         self.pg.evaluate("""([a,b,z,p,br])=>new Promise(res=>{const m=window.dt.map;const o={center:[a,b],zoom:z};if(p!=null)o.pitch=p;if(br!=null)o.bearing=br;
-            m.jumpTo(o);m.once('idle',()=>res(1));setTimeout(()=>res(0),4000)})""", [lng, lat, zoom, pitch, bearing])
+            m.jumpTo(o);m.once('idle',()=>res(1));setTimeout(()=>res(0),2500)})""", [lng, lat, zoom, pitch, bearing])
         self.pg.wait_for_timeout(int(600 * K))
 
     def fly(self, lng, lat, zoom, ms=2200, pitch=None, bearing=None):
@@ -205,9 +212,9 @@ class Rec:
         self.pg.wait_for_timeout(int(400 * K))
 
     def group(self, nome):
-        """Apre (se chiuso) il gruppo del tab Layer: <details id="gruppo-<nome>">; non lo richiude se è già aperto."""
-        slug = re.sub(r"[^a-z0-9]+", "-", nome.lower()).strip("-")
-        det = self.pg.locator(f"#pannello details#gruppo-{slug}")
+        """Apre (se chiuso) il gruppo del tab Layer, riconosciuto dal titolo (<details class="layer-sezione"><summary><h2>)."""
+        det = self.pg.locator("#pannello details.layer-sezione").filter(
+            has=self.pg.locator("summary h2", has_text=re.compile(rf"^\s*{re.escape(nome)}\s*$", re.I))).first
         try:
             det.wait_for(state="attached", timeout=5000)
         except PWTimeout:

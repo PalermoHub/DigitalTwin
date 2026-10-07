@@ -75,6 +75,7 @@ def _(r):
 @sc("2-cos-e")
 def _(r):
     r.jump(*CENTRO, 12)
+    r.start_voice()
     r.sync(0.12)
     r.ring("#app-logo", "Logo e menu", pos="below", hold=0.2, wait=False)
     r.ring("#menu-info", None, hold=1.8)
@@ -138,6 +139,7 @@ def _(r):
 def _(r):
     r.jump(*MAQUEDA, 16)
     r.layers_off(keep=("circoscrizioni", "edificato"))
+    r.start_voice()
     r.sync(0.17)
     tab_layer(r)
     r.sync(0.30)
@@ -171,12 +173,11 @@ def _(r):
 @sc("2-storiche")
 def _(r):
     r.jump(*CENTRO, 14)
+    r.start_voice()
     r.sync(0.05)
     r.click("#btn-gruppo-base")
     r.sync(0.16)
-    r.click(r.pg.locator("#pannello label.base-scelta", has_text=re.compile(r"^Satellite$")), after=1.2)
-    r.sync(0.30)
-    r.click(r.pg.locator("#pannello label.base-scelta", has_text=re.compile(r"^Mappa chiara$")), after=0.8)
+    r.click(r.pg.locator("#pannello label.base-scelta", has_text=re.compile(r"^Satellite$")), after=1.0)
     r.sync(0.42)
     loc = r.pg.locator("#pannello label.base-scelta", has_text=re.compile(r"^1891$"))
     loc.first.scroll_into_view_if_needed()
@@ -207,24 +208,24 @@ def _(r):
     r.jump(*CENTRO, 15)
     r.layers_off(keep=("circoscrizioni", "edificato"))
     tab_layer(r)
-    r.sync(0.08)
     if not r.pg.locator('button.strato-tema-btn[title^="Colori di Edificato"]').first.is_visible():
         r.group("Edifici")
-    r.sync(0.20)
+    r.start_voice()
     r.click('button.strato-tema-btn[title^="Colori di Edificato"]')
-    r.pause(0.8)
+    r.pause(0.6)
     r.zoom_box("#pannello", 1.25)
-    r.sync(0.38)
+    r.sync(0.30)
     r.scegli(r.pg.locator("#pannello select:visible").nth(0), "dens_pop_ha")
-    r.sync(0.52)
+    r.sync(0.46)
     r.scegli(r.pg.locator("#pannello select:visible").nth(1), "graduata")
-    r.pause(1.2)
+    r.pause(1.0)
+    r.sync(0.62)
     r.click("button.rampa-scelta", after=0.8)
     if not r.click_text("Batlow", css="li, button, div, span, label", root=None, after=1.0):
         r.key("Escape")
     r.pause(0.6)
     r.shot("graduata")
-    r.sync(0.74)
+    r.sync(0.80)
     r.ring("#legende-box", "Legenda del tema", pos="right", hold=1.8)
     r.zoom_out()
 
@@ -235,6 +236,7 @@ def _(r):
     r.click(r.pg.locator("#pannello button:visible", has_text=re.compile(r"^\s*Ripristina\s*$")), after=0.5)
     r.layers_off(keep=("circoscrizioni", "edificato"))
     r.jump(*MAQUEDA, 17)
+    r.start_voice()
     r.sync(0.10)
     r.map_click(*MAQUEDA, after=1.8)
     r.sync(0.40)
@@ -301,8 +303,8 @@ def vai_a_strato(r, gruppo, strato, centro, zoom):
 
 @sc("2-monumenti")
 def _(r):
-    r.sync(0.04)
     vai_a_strato(r, "Monumenti", "monumenti", TEATRO, 16.5)
+    r.start_voice()
     r.sync(0.45)
     r.map_click(*TEATRO, after=1.8)
     r.sync(0.68)
@@ -319,8 +321,8 @@ def _(r):
 
 @sc("2-uffici")
 def _(r):
-    r.sync(0.04)
     vai_a_strato(r, "Servizi", "uffici", PALAGONIA, 16.5)
+    r.start_voice()
     r.sync(0.45)
     p = r.feature_px("uffici-hit", near=PALAGONIA)
     if p:
@@ -334,8 +336,8 @@ def _(r):
 
 @sc("2-pai")
 def _(r):
-    r.sync(0.04)
     vai_a_strato(r, "Piano PAI", "idraulica_pericolosita", (13.40, 38.08), 14)
+    r.start_voice()
     r.pause(1.5)
     r.sync(0.50)
     p = r.feature_px("pai-idraulica_pericolosita-hit")
@@ -355,8 +357,8 @@ def _(r):
 
 @sc("2-incendi")
 def _(r):
-    r.sync(0.04)
     vai_a_strato(r, "Territorio", "incendi", (13.33, 38.10), 12)
+    r.start_voice()
     r.pause(1.5)
     r.sync(0.45)
     p = r.feature_px("incendi-hit", ["==", ["get", "anno"], 2023]) or r.feature_px("incendi-hit")
@@ -369,8 +371,8 @@ def _(r):
 
 @sc("2-calore")
 def _(r):
-    r.sync(0.04)
     vai_a_strato(r, "Territorio", "isole-calore", CENTRO, 13)
+    r.start_voice()
     r.pause(2.0)
     r.sync(0.35)
     r.zoom_box("#legende-box", 1.5)
@@ -389,6 +391,7 @@ def _(r):
     r.key("Escape")
     r.layers_off(keep=("circoscrizioni", "edificato"))
     r.jump(*CENTRO, 13)
+    r.start_voice()
     r.sync(0.12)
     r.click("#btn-gruppo-filtri")
     r.pause(0.8)
@@ -410,12 +413,14 @@ def _(r):
     r.sync(0.22)
     r.click("#btn-3d", after=2.2)
     r.shot("3d")
-    r.click("#btn-3d", after=1.0)
+    r.pg.evaluate("()=>{window.dt.map.easeTo({pitch:0,bearing:0,duration:700})}")
+    r.pause(1.0)
     r.sync(0.46)
     r.ring("#btn-fs", "Schermo intero", pos="below", hold=1.0)
     r.sync(0.58)
     r.click("#btn-tema", after=1.4)
-    r.click("#btn-tema", after=0.7)
+    r.pg.evaluate("()=>document.getElementById('btn-tema').click()")
+    r.pause(0.5)
     r.sync(0.74)
     r.click("#btn-stampa", after=0.8)
     r.zoom_box("#stampa-menu", 1.5)
@@ -427,6 +432,7 @@ def _(r):
 @sc("2-avvertenze")
 def _(r):
     r.jump(*MAQUEDA, 17)
+    r.start_voice()
     r.sync(0.10)
     r.map_click(*MAQUEDA, after=1.8)
     r.click_text("Strumenti urbanistici", css="button, [role=tab], span", root="#scheda", after=0.9)
