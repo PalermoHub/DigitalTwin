@@ -119,7 +119,7 @@ Vista: Le linguette della scheda (Luogo, Strumenti urbanistici, Mercato, Popolaz
 
 Vista: Strato «Monumenti» acceso; zoom sul Teatro Massimo; clic: la scheda mostra foto, descrizione, categoria e il link al Portale del Turismo.
 
-1. Layer → Territorio → spunta «Monumenti».
+1. Tab «Layer» → apri il gruppo «Monumenti» (nell'app è un gruppo a sé) → spunta lo strato.
 2. Vola sul Teatro Massimo (13.3572, 38.1202), zoom 16,5.
 3. Clic sul monumento.
 4. Evidenzia foto e link al Portale del Turismo.
@@ -206,76 +206,76 @@ Vista: Callout sul pulsante nella barra strumenti, poi sul pannello sul lato des
 
 ### 26. `3-cerca` · 7:43
 
-Vista: Nel campo di ricerca si scrive «frane» e si preme «Search». Si evidenziano i filtri: Type (All/Data/Services), Where, Available as (WMS, WFS, ArcGIS REST), Advanced filters.
+Vista: Nel campo di ricerca si scrive «zone protette» e si preme «Search». Si evidenziano i filtri: Type (All/Data/Services), Where, Available as (WMS, WFS, ArcGIS REST), Advanced filters.
 
 1. Clic nel campo «Search titles, abstracts, keywords…».
-2. Digita «frane» e premi «Search».
+2. Digita «zone protette» e premi «Search».
 3. Evidenzia Type, Where, Available as, Advanced filters (apri e richiudi).
 
 ### 27. `3-risultato` · 8:01
 
-Vista: L'elenco dei risultati; clic su uno: scheda con titolo, descrizione, ente responsabile e servizi disponibili. Si evidenziano i pulsanti WMS e WFS.
+Vista: L'elenco dei risultati; clic su uno: scheda con titolo, descrizione, ente responsabile e servizi. «Open» sul servizio: compare l'elenco dei layer; si spunta «Riserve Regionali».
 
-1. Clic su un risultato pertinente (PAI / frane).
+1. Clic sul risultato «Aree naturali protette della Sicilia – Parchi e Riserve – Servizio di Consultazione (WMS)».
 2. Evidenzia titolo, ente, servizi.
-3. Evidenzia i pulsanti WMS e WFS.
+3. Clic su «Open» della riga ArcGIS REST; spunta «Riserve Regionali»; evidenzia «Add to map» e «Add features».
 
-### 28. `3-aggiungi` · 8:19
+### 28. `3-aggiungi` · 8:25
 
-Vista: Si aggiunge il servizio WFS: l'area PAI da frana compare sulla mappa. Il tab «RNDT» della barra a sinistra mostra il layer nel gruppo, con occhio, cursore opacità e cestino.
+Vista: Si preme «Add features»: le Riserve regionali compaiono in arancione sulla mappa (Monte Pellegrino, Capo Gallo…). Il tab «RNDT» della barra a sinistra mostra il layer nel gruppo, con occhio, cursore opacità e cestino.
 
-1. Clic sul pulsante per aggiungere il servizio.
-2. Attendi il caricamento del layer sulla mappa.
+1. Clic su «Add features» (layer Riserve Regionali).
+2. Attendi: «Added 16 features».
 3. Apri il tab «RNDT» a sinistra: evidenzia occhio, opacità, cestino.
 
-### 29. `3-interroga` · 8:35
+### 29. `3-interroga` · 8:43
 
-Vista: Clic su un'area del layer: la scheda si apre sulla linguetta «Altri dati (RNDT)» con il riquadro del layer e la classe di pericolosità.
+Vista: Clic su una riserva: la scheda si apre e si passa alla linguetta «Altri dati (RNDT)», con il riquadro del layer (denominazione, tipologia, gestore).
 
-1. Vola sull'area e zooma finché l'elemento è cliccabile.
-2. Clic proprio sull'elemento.
-3. Scheda → linguetta «Altri dati (RNDT)»; evidenzia classe e fonte.
+1. Vola su Monte Pellegrino.
+2. Clic proprio sulla riserva.
+3. Scheda → linguetta «Altri dati (RNDT)»; evidenzia denominazione, tipologia, gestore e fonte.
 
-### 30. `3-limiti` · 8:51
+### 30. `3-limiti` · 8:59
 
 Vista: Testo animato a schermo con due promemoria: «WFS: massimo 10.000 oggetti → per strati densi, meglio il WMS» e «Servizio non raggiungibile → resta in elenco come “non disponibile”».
 
 1. Mappa ferma con il layer acceso; cartello animato con i due promemoria.
 
-### 31. `3-file` · 9:07
+### 31. `3-file` · 9:15
 
 Vista: Tab «I miei layer»: evidenziata l'icona di caricamento accanto a «I miei dati»; elenco dei formati accettati a schermo.
 
 1. Clic sul tab «I miei layer».
 2. Evidenzia l'icona di caricamento e «Carica file dal computer» (senza caricare nulla).
 
-### 32. `3-sintesi` · 9:22
+### 32. `3-sintesi` · 9:30
 
 Vista: Quattro icone in fila: cerca, scegli, aggiungi, clicca. Sullo sfondo la mappa con il layer RNDT.
 
 1. Stacco grafico di riepilogo; nessuna interazione.
 
-### 33. `4-cose` · 9:30
+### 33. `4-cose` · 9:38
 
 Vista: Cartello di sezione «Geoimage». Apertura del pannello dal tab «Geoimage» della barra a destra. Callout sul riquadro «Carica mappa storica».
 
 1. Lower third «Geoimage».
 2. Clic sul tab «Geoimage» nella barra verticale a destra.
 
-### 34. `4-inquadra` · 9:44
+### 34. `4-inquadra` · 9:52
 
 Vista: Nel campo di ricerca si scrive «Teatro Massimo»: la mappa si porta sull'area che l'immagine rappresenta.
 
 1. Cerca «Teatro Massimo» (o via Maqueda) e scegli il risultato; zoom 15.
 
-### 35. `4-carica` · 9:51
+### 35. `4-carica` · 9:59
 
 Vista: Il file della pianta del 1891 viene trascinato nel riquadro «Carica mappa storica»; l'immagine appare al centro, con le maniglie arancioni.
 
 1. Carica il file (pianta_1891_demo.png) nel riquadro «Carica mappa storica» (trascinamento).
 2. Evidenzia le maniglie.
 
-### 36. `4-posiziona` · 10:04
+### 36. `4-posiziona` · 10:12
 
 Vista: Si trascina il cerchio centrale (sposta), il cerchio con la freccia (ruota), un angolo (scala); si passa a «deforma» con il pulsante «Maniglie: scala / deforma»; si regola l'opacità.
 
@@ -284,7 +284,7 @@ Vista: Si trascina il cerchio centrale (sposta), il cerchio con la freccia (ruot
 3. Trascina un angolo in modalità scala; clic su «Maniglie: scala / deforma»; trascina un angolo in modalità deforma.
 4. Abbassa l'opacità.
 
-### 37. `4-gcp` · 10:15
+### 37. `4-gcp` · 10:23
 
 Vista: Modalità GCP: per ciascun punto, un clic sull'immagine storica (cerchio arancione) e uno sullo stesso luogo nella mappa di base (il cerchio diventa rosso e numerato). Quattro punti agli angoli.
 
@@ -292,46 +292,46 @@ Vista: Modalità GCP: per ciascun punto, un clic sull'immagine storica (cerchio 
 2. Per 4 punti (Teatro Massimo, Quattro Canti, Porta Nuova, Stazione Centrale): clic sul punto dell'immagine, poi sul punto della base.
 3. Attiva Spotlight un istante per scegliere con precisione il secondo clic.
 
-### 38. `4-allinea` · 10:35
+### 38. `4-allinea` · 10:43
 
 Vista: Clic su «Allinea immagine ai GCP»: l'immagine scorre e si sovrappone alla città di oggi.
 
 1. Clic su «Allinea immagine ai GCP» (trasformazione affine).
 
-### 39. `4-rmse` · 10:43
+### 39. `4-rmse` · 10:51
 
 Vista: Zoom sul pannello: valore dell'RMSE e tabella dei GCP con i residui colorati (verde, arancione, rosso).
 
 1. Zoom sul valore RMSE e sulla tabella dei residui.
 2. Trascina un GCP impreciso per ridurre l'errore (se serve).
 
-### 40. `4-confronto` · 11:01
+### 40. `4-confronto` · 11:09
 
 Vista: Swipe: la linea verticale scorre, a sinistra la carta storica e a destra la base moderna. Poi Spotlight: il cerchio segue il mouse e scopre la base sotto l'immagine.
 
 1. Clic su «Swipe»: trascina la maniglia da sinistra a destra.
 2. Clic su «Swipe» per spegnere; clic su «Spotlight»: muovi il mouse in cerchio; regola «Raggio».
 
-### 41. `4-esporta` · 11:16
+### 41. `4-esporta` · 11:24
 
 Vista: Sezione «Export»: si vedono KMZ, GeoTIFF, .points, World file, GCP GeoJSON, JSON. Un clic su GeoTIFF apre le impostazioni (sistema di riferimento, ricampionamento, risoluzione, compressione).
 
 1. Scorri fino a «Export».
 2. Clic su «GeoTIFF»: mostra le impostazioni; chiudi senza scaricare.
 
-### 42. `4-chiusura` · 11:29
+### 42. `4-chiusura` · 11:37
 
 Vista: Callout sul salvataggio automatico e testo «Più precisione? MapWarper».
 
 1. Cartello animato con i due promemoria.
 
-### 43. `5-riepilogo` · 11:37
+### 43. `5-riepilogo` · 11:45
 
 Vista: Zoom indietro sulla mappa di Palermo. Tre punti numerati compaiono a schermo, uno per frase.
 
 1. Home; cartelli animati 1-2-3.
 
-### 44. `5-saluti` · 11:53
+### 44. `5-saluti` · 12:01
 
 Vista: Schermata finale fornita (assets/chiusura.png): «Grazie per l'attenzione», indirizzo palermodigitaltwin.opendatasicilia.it, Open Data Sicilia, crediti. Dissolvenza in entrata.
 

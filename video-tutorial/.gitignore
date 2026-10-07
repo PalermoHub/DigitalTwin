@@ -3,3 +3,7 @@ voci/*.onnx
 verifica/*.png
 __pycache__/
 *.bundle
+out/
+audio/*.wav
+assets/pianta_1891_demo.png
+assets/fonts/

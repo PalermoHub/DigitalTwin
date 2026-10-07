@@ -1,0 +1,29 @@
+<!doctype html><html lang="it"><meta charset="utf-8"><title>Apertura</title>
+<style>
+@font-face{font-family:Montserrat;font-weight:500;src:url('file:///home/user/DigitalTwin/css/fonts/montserrat-Medium.woff2')}
+@font-face{font-family:Montserrat;font-weight:700;src:url('file:///home/user/DigitalTwin/css/fonts/montserrat-Bold.woff2')}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#15171b;font-family:Montserrat,system-ui,sans-serif;color:#fff}
+.bg{position:absolute;inset:0;background:radial-gradient(900px 600px at 70% 30%,#f5a62333,transparent 70%),radial-gradient(800px 700px at 20% 90%,#364fc744,transparent 70%),#15171b}
+.griglia{position:absolute;inset:-200px;background-image:linear-gradient(#ffffff0d 2px,transparent 2px),linear-gradient(90deg,#ffffff0d 2px,transparent 2px);background-size:90px 90px;transform:perspective(900px) rotateX(58deg) translateY(120px) scale(1.5);animation:scorri 14s linear infinite;mask-image:linear-gradient(transparent 5%,#000 60%)}
+@keyframes scorri{to{background-position:0 900px}}
+.logo{position:absolute;left:50%;top:300px;width:760px;transform:translate(-50%,0) scale(.6);opacity:0;filter:blur(18px);animation:logo 1.6s .4s cubic-bezier(.2,.9,.25,1) forwards}
+@keyframes logo{to{opacity:1;transform:translate(-50%,0) scale(1);filter:blur(0)}}
+.linea{position:absolute;left:50%;top:560px;height:8px;width:0;background:#f5a623;border-radius:4px;transform:translateX(-50%);animation:lin 1s 1.8s ease forwards}
+@keyframes lin{to{width:520px}}
+h1{position:absolute;left:0;right:0;top:610px;text-align:center;font-size:84px;font-weight:700;margin:0}
+h1 span{opacity:0;display:inline-block;transform:translateY(40px);animation:su .6s forwards}
+@keyframes su{to{opacity:1;transform:none}}
+p{position:absolute;left:0;right:0;top:740px;text-align:center;font-size:42px;font-weight:500;margin:0;color:#f5a623;opacity:0;animation:fa 1s 4.4s forwards}
+@keyframes fa{to{opacity:1}}
+small{position:absolute;left:0;right:0;bottom:70px;text-align:center;font-size:28px;color:#ffffff99;opacity:0;animation:fa 1s 6s forwards}
+</style>
+<div class="bg"></div><div class="griglia"></div>
+<img class="logo" src="file:///home/user/DigitalTwin/img/logo-palermo-digital-twin-scuro.svg" alt="">
+<div class="linea"></div>
+<h1 id="t"></h1>
+<p>Una mappa con i dati aperti di Palermo</p>
+<small>Tutorial · a cura di Open Data Sicilia</small>
+<script>
+const t=document.getElementById('t');
+'Tutorial dell’app'.split('').forEach((c,i)=>{const s=document.createElement('span');s.textContent=c===' '?' ':c;s.style.animationDelay=(2.3+i*.06)+'s';t.appendChild(s)});
+</script></html>

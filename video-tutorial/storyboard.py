@@ -137,7 +137,7 @@ scena(id="2-scheda", sez=2,
       testo="La scheda è divisa in sezioni, che scegli dalle linguette in alto. Luogo riassume indirizzo, quartiere, monumenti, rischio di incidenti e fermate vicine. Strumenti urbanistici parte dall'edificio, poi mostra la particella, con foglio e numero, e il collegamento alla visura. Ogni sezione indica la fonte.")
 scena(id="2-monumenti", sez=2,
       vista="Strato «Monumenti» acceso; zoom sul Teatro Massimo; clic: la scheda mostra foto, descrizione, categoria e il link al Portale del Turismo.",
-      azioni=["Layer → Territorio → spunta «Monumenti».", "Vola sul Teatro Massimo (13.3572, 38.1202), zoom 16,5.", "Clic sul monumento.", "Evidenzia foto e link al Portale del Turismo."],
+      azioni=["Tab «Layer» → apri il gruppo «Monumenti» (nell'app è un gruppo a sé) → spunta lo strato.", "Vola sul Teatro Massimo (13.3572, 38.1202), zoom 16,5.", "Clic sul monumento.", "Evidenzia foto e link al Portale del Turismo."],
       testo="Lo strato Monumenti mostra chiese, palazzi, fontane e teatri. Un clic sul Teatro Massimo apre la sua scheda: foto, descrizione, categoria, e il collegamento al Portale del Turismo del Comune di Palermo, da cui arrivano i testi.")
 scena(id="2-uffici", sez=2,
       vista="Strato «Uffici comunali (sedi)»: clic su Palazzo Palagonia; la scheda elenca aree e uffici con responsabili e contatti.",
@@ -182,21 +182,21 @@ scena(id="3-dove", sez=3,
       azioni=["Evidenzia il pulsante RNDT nella barra strumenti.", "Evidenzia i tab «Scheda» e «RNDT» nella barra verticale a destra.", "Esc chiude il pannello; riapri con il pulsante."],
       testo="Lo trovi nella barra degli strumenti in alto a destra: è l'icona con i due layer. Il pannello si apre sul lato destro, e i tab Scheda e RNDT ti fanno passare dall'uno all'altro. Con Esc lo chiudi. L'interfaccia del plugin è in inglese: sono poche parole, non spaventarti.")
 scena(id="3-cerca", sez=3,
-      vista="Nel campo di ricerca si scrive «frane» e si preme «Search». Si evidenziano i filtri: Type (All/Data/Services), Where, Available as (WMS, WFS, ArcGIS REST), Advanced filters.",
-      azioni=["Clic nel campo «Search titles, abstracts, keywords…».", "Digita «frane» e premi «Search».", "Evidenzia Type, Where, Available as, Advanced filters (apri e richiudi)."],
-      testo="Scrivi cosa cerchi, per esempio frane, e premi Search. La ricerca è sempre limitata all'area di Palermo. Puoi filtrare per tipo, dati o servizi, e per formato: WMS, WFS o ArcGIS REST. Nei filtri avanzati ci sono tema, ente e date.")
+      vista="Nel campo di ricerca si scrive «zone protette» e si preme «Search». Si evidenziano i filtri: Type (All/Data/Services), Where, Available as (WMS, WFS, ArcGIS REST), Advanced filters.",
+      azioni=["Clic nel campo «Search titles, abstracts, keywords…».", "Digita «zone protette» e premi «Search».", "Evidenzia Type, Where, Available as, Advanced filters (apri e richiudi)."],
+      testo="Scrivi cosa cerchi, per esempio zone protette, e premi Search. La ricerca è sempre limitata all'area di Palermo. Puoi filtrare per tipo, dati o servizi, e per formato: WMS, WFS o ArcGIS REST. Nei filtri avanzati ci sono tema, ente e date.")
 scena(id="3-risultato", sez=3,
-      vista="L'elenco dei risultati; clic su uno: scheda con titolo, descrizione, ente responsabile e servizi disponibili. Si evidenziano i pulsanti WMS e WFS.",
-      azioni=["Clic su un risultato pertinente (PAI / frane).", "Evidenzia titolo, ente, servizi.", "Evidenzia i pulsanti WMS e WFS."],
-      testo="Scegli un risultato: si apre la scheda, con titolo, descrizione, ente responsabile e servizi disponibili. Poi scegli il servizio. Il WMS è un livello di immagini da sovrapporre; il WFS porta i dati veri, con le informazioni sugli oggetti, scaricati come GeoJSON.")
+      vista="L'elenco dei risultati; clic su uno: scheda con titolo, descrizione, ente responsabile e servizi. «Open» sul servizio: compare l'elenco dei layer; si spunta «Riserve Regionali».",
+      azioni=["Clic sul risultato «Aree naturali protette della Sicilia – Parchi e Riserve – Servizio di Consultazione (WMS)».", "Evidenzia titolo, ente, servizi.", "Clic su «Open» della riga ArcGIS REST; spunta «Riserve Regionali»; evidenzia «Add to map» e «Add features»."],
+      testo="Scegli un risultato: si apre la scheda, con titolo, descrizione, ente responsabile e servizi disponibili. Premi Open sul servizio e spunta il layer che ti interessa: qui, le Riserve regionali. I servizi WMS si aggiungono come immagini. Con Add features, e con i servizi WFS, porti in mappa gli elementi veri e propri, con le loro informazioni.")
 scena(id="3-aggiungi", sez=3,
-      vista="Si aggiunge il servizio WFS: l'area PAI da frana compare sulla mappa. Il tab «RNDT» della barra a sinistra mostra il layer nel gruppo, con occhio, cursore opacità e cestino.",
-      azioni=["Clic sul pulsante per aggiungere il servizio.", "Attendi il caricamento del layer sulla mappa.", "Apri il tab «RNDT» a sinistra: evidenzia occhio, opacità, cestino."],
-      testo="Ecco il nuovo strato sulla mappa. Lo ritrovi nel gruppo RNDT della barra degli strati: con l'occhio lo accendi e lo spegni, con il cestino lo rimuovi. Si ricorda da solo: riapri la mappa e lo ritrovi lì.")
+      vista="Si preme «Add features»: le Riserve regionali compaiono in arancione sulla mappa (Monte Pellegrino, Capo Gallo…). Il tab «RNDT» della barra a sinistra mostra il layer nel gruppo, con occhio, cursore opacità e cestino.",
+      azioni=["Clic su «Add features» (layer Riserve Regionali).", "Attendi: «Added 16 features».", "Apri il tab «RNDT» a sinistra: evidenzia occhio, opacità, cestino."],
+      testo="Ecco le riserve sulla mappa. Le ritrovi tra i layer aggiunti e nel gruppo RNDT della barra degli strati: con l'occhio le accendi e le spegni, con il cestino le rimuovi. Si ricordano da sole: riapri la mappa e sono ancora lì.")
 scena(id="3-interroga", sez=3,
-      vista="Clic su un'area del layer: la scheda si apre sulla linguetta «Altri dati (RNDT)» con il riquadro del layer e la classe di pericolosità.",
-      azioni=["Vola sull'area e zooma finché l'elemento è cliccabile.", "Clic proprio sull'elemento.", "Scheda → linguetta «Altri dati (RNDT)»; evidenzia classe e fonte."],
-      testo="Un clic sulla mappa interroga anche questi layer. Le risposte arrivano nella linguetta Altri dati RNDT della scheda, con un riquadro per ogni layer. Qui, la classe di pericolosità di un'area da frana. Bisogna cliccare proprio sull'elemento.")
+      vista="Clic su una riserva: la scheda si apre e si passa alla linguetta «Altri dati (RNDT)», con il riquadro del layer (denominazione, tipologia, gestore).",
+      azioni=["Vola su Monte Pellegrino.", "Clic proprio sulla riserva.", "Scheda → linguetta «Altri dati (RNDT)»; evidenzia denominazione, tipologia, gestore e fonte."],
+      testo="Un clic sulla mappa interroga anche questi layer. Le risposte arrivano nella linguetta Altri dati RNDT della scheda, con un riquadro per ogni layer. Qui, per esempio, Monte Pellegrino, con tipologia e gestore. Bisogna cliccare proprio sull'elemento.")
 scena(id="3-limiti", sez=3,
       vista="Testo animato a schermo con due promemoria: «WFS: massimo 10.000 oggetti → per strati densi, meglio il WMS» e «Servizio non raggiungibile → resta in elenco come “non disponibile”».",
       azioni=["Mappa ferma con il layer acceso; cartello animato con i due promemoria."],
