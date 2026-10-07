@@ -649,7 +649,8 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
 @media (max-width: 720px) {
   #barra-strati { display: none; }
   body.strati-aperti #barra-strati { display: flex; top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 70%; z-index: var(--z-foglio); padding: 12px; border-radius: var(--r-lg) var(--r-lg) 0 0; border-width: 1px 0 0; }
-  body.strati-aperti #barra-gruppi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+  /* sei riquadri (Mappe di base, Layer, RNDT, I miei layer, Filtri, Geoimage): tre per riga, due righe piene */
+  body.strati-aperti #barra-gruppi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
   body.strati-aperti #barra-gruppi button { border: 1px solid var(--border-ui); min-height: 64px; }
   body.strati-aperti #barra-gruppi button[aria-expanded="true"] { border-color: var(--accent); }
   body.strati-aperti .barra-titolo { text-align: left; padding: 0 0 8px; font-size: var(--fs-xs); }
