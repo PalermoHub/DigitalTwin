@@ -93,10 +93,10 @@ Chiusura: DOM all'avvio sotto 3.500 nodi (raggiunto: 3.275), test JS verdi, TBT 
 
 Obiettivo: rendere più semplice cambiare l'app senza regressioni.
 
-- [ ] `app.js`: sostituire il monkey-patch di `map.addSource` e il polling `setInterval` (timeout 20 s) con un campo dichiarativo nel modulo (`differito: true`) e l'attesa dell'evento `sourcedata`. Test dedicati.
+- [x] `app.js`: sostituire il monkey-patch di `map.addSource` e il polling `setInterval` (timeout 20 s) con un campo dichiarativo nel modulo (`differito: true`) e l'attesa dell'evento `sourcedata`. Fatto in `js/core/differiti.js` (un `Proxy` al posto della modifica temporanea di `map.addSource`, evento `sourcedata` al posto del `setInterval`), con 5 test su una mappa finta (`tests/js/differiti.test.mjs`). Verificato nel browser: dati pronti in 0,9 s, strati accesi, nessun errore.
 - [ ] Spezzare `core/scheda.js` (706 righe) e `core/pannello.js` (704 righe) per responsabilità (intestazione, azioni, contenuto, riordino).
 - [ ] Unificare le icone: una sola libreria (Phosphor o Tabler) al posto di SVG scritti a mano e simboli Unicode (`▾ ▸ ·`).
-- [ ] Per gli `href` che arrivano da dati (`monumenti.js`, `scheda.js`, `isole-calore.js`): funzione unica `urlSicuro()` che accetta solo `http:` e `https:`.
+- [x] Per gli `href` che arrivano da dati (`monumenti.js`, `scheda.js`, `isole-calore.js`): funzione unica `urlSicuro()` in `js/core/url-sicuro.js` che accetta solo `http:` e `https:`, applicata a scheda, monumenti e isole di calore (3 test).
 - [ ] Unire i test della guida (`test_guida_carosello`, `2`, `3`, `4`) in un solo file parametrizzato.
 
 Chiusura: nessun cambio visibile all'utente, tutti i test verdi, `graphify update .`.

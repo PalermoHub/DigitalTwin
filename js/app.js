@@ -15,6 +15,7 @@ import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaStampa } from './core/stampa.js';
 import { collegaZone } from './core/zone.js';
 import { collegaRipristino } from './core/ripristino.js';
+import { creaDifferiti } from './core/differiti.js';
 import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
 import territorio from './layers/territorio.js';
@@ -55,47 +56,14 @@ const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti,
 const catalogoPromessa = caricaCatalogo().catch(() => null);
 
 // Gli strati puntuali nascono spenti, ma la scheda li interroga anche da spenti: i loro dati (GeoJSON) non bloccano l'avvio.
-// Partono in secondo piano poco dopo (o alla prima accensione, o al primo clic sulla mappa, se arriva prima).
+// Partono in secondo piano poco dopo (o alla prima accensione, o al primo clic sulla mappa, se arriva prima): vedi core/differiti.js.
 // Il trasporto resta fuori perché il filtro Linea ha bisogno dei suoi dati subito.
 const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine']);
-const VUOTO = { type: 'FeatureCollection', features: [] };
-const carica = new Map(); // id modulo → funzione che scarica i dati (una sola volta)
-const fontiDifferite = [];
-let promessaDifferiti = null;
-// Promessa dei dati differiti: la scheda la attende prima di rispondere a un clic arrivato troppo presto.
-const caricaDifferiti = () => promessaDifferiti ??= (async () => {
-  for (const f of carica.values()) f();
-  await new Promise(ok => {
-    const t = setInterval(() => { if (fontiDifferite.every(id => map.getSource(id) && map.isSourceLoaded(id))) { clearInterval(t); ok(); } }, 150);
-    setTimeout(() => { clearInterval(t); ok(); }, 20000);
-  });
-  window.dt.differitiPronti = true;
-})();
-
-// Aggiunge le sorgenti del modulo con i GeoJSON da URL vuoti, ricordando gli indirizzi da caricare dopo.
-function aggiungiSorgentiDifferite(map, m) {
-  const urls = new Map();
-  map.addSource = (id, spec) => {
-    if (spec.type === 'geojson' && typeof spec.data === 'string') { urls.set(id, spec.data); return Object.getPrototypeOf(map).addSource.call(map, id, { ...spec, data: VUOTO }); }
-    return Object.getPrototypeOf(map).addSource.call(map, id, spec);
-  };
-  try { m.aggiungiSorgenti(map); } finally { delete map.addSource; }
-  fontiDifferite.push(...urls.keys());
-  let fatto = false;
-  carica.set(m.id, () => {
-    if (fatto) return;
-    fatto = true;
-    for (const [id, url] of urls) map.getSource(id)?.setData(url);
-    Promise.resolve(m.avvia?.(map)).catch(e => segnala(`Strato non caricato: ${e?.message ?? e}`));
-  });
-  for (const strato of m.strati) {
-    const suCambio = strato.suCambio;
-    strato.suCambio = function (attivo, mp) { if (attivo) carica.get(m.id)(); return suCambio?.call(this, attivo, mp); };
-  }
-}
 
 const map = creaMappa('mappa', () => segnala('Base cartografica non disponibile: mappa semplificata'));
-window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false, differitiPronti: false, differiti: () => caricaDifferiti() };
+const differiti = creaDifferiti(map, { segnala });
+const caricaDifferiti = () => differiti.tutti().then(() => { window.dt.differitiPronti = true; });
+window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false, differitiPronti: false, differiti: caricaDifferiti };
 
 // Un errore su una sorgente disattiva solo gli strati che la usano e li nomina nell'avviso
 // (con l'etichetta del pannello, non con l'id tecnico).
@@ -115,7 +83,7 @@ map.once('style.load', async () => {
   if (catalogo) impostaCatalogo(catalogo);
   else segnala('Catalogo dati non disponibile: uso le copie locali dei dati');
 
-  for (const m of MODULI) { if (DIFFERITI.has(m.id)) aggiungiSorgentiDifferite(map, m); else m.aggiungiSorgenti(map); }
+  for (const m of MODULI) { if (DIFFERITI.has(m.id)) differiti.aggiungi(m); else m.aggiungiSorgenti(map); }
   for (const m of MODULI) m.aggiungiLayer(map);
   try { migraFileLocali(window.localStorage); } catch { /* storage bloccato: niente da spostare */ }
   const gruppoRndt = creaGruppoRndt(); // ultimi gruppi della barra: i loro layer arrivano a runtime
