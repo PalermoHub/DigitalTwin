@@ -128,12 +128,13 @@ Chiusura: test con utenti, nessuna regressione di accessibilità.
 
 Obiettivo: visite ripetute istantanee e scoperta del progetto.
 
-- [ ] Service worker: cache dei file statici dell'app (shell, JS, CSS, icone) con strategia stale-while-revalidate; dati e PMTiles con cache a range e limite di dimensione.
-- [ ] Completare il manifest (icone maschera, schermata di avvio, `display: standalone`) per l'installazione su mobile.
-- [ ] Pagina di presentazione statica (landing) con il video del tour, link all'app, descrizione e dati strutturati `WebApplication`; da progettare con la skill `design-taste-frontend` solo per questa pagina, non per l'app.
-- [ ] Aggiungere `sitemap.xml` e `robots.txt`.
+- [x] Service worker (`sw.js`): pagina e dati dell'app con rete prima e copia salvata come ripiego; file statici con copia salvata subito e aggiornamento in secondo piano; PMTiles, video, richieste a intervalli di byte e altri siti non si toccano. Si registra solo in HTTPS o con `?sw` (in locale no, così lo sviluppo vede sempre i file nuovi). Per rilasciare una versione nuova si cambia `VERSIONE` in `sw.js`. Verificato nel browser: attivo alla prima visita, 143 risposte locali su 182 servite dal service worker alla seconda, **app che si apre e funziona (pannelli, ricerca, avviso «strati non caricati») anche senza rete**. 4 test (`tests/js/sw.test.mjs`); il test ha trovato e fatto correggere un difetto (un `.pmtiles` richiesto intero finiva nella cache dei dati).
+- [x] Manifest completo: `id`, `display: standalone`, `orientation`, icone 192 e 512 e icona «maskable» 512 con margine di sicurezza.
+- [ ] Verificare in produzione: installabilità (Lighthouse), che `sw.js` sia servito con `Cache-Control: no-cache` (altrimenti gli aggiornamenti arrivano in ritardo) e la dimensione della cache dopo qualche giorno d'uso.
+- [ ] Pagina di presentazione statica (landing) con il video del tour, link all'app, descrizione e dati strutturati `WebApplication`; da progettare con la skill `design-taste-frontend` solo per questa pagina, non per l'app. Serve l'indirizzo pubblico.
+- [ ] Aggiungere `sitemap.xml` e `robots.txt`. Serve l'indirizzo pubblico.
 
-Chiusura: Lighthouse PWA/installabilità, seconda visita sotto 1 s al primo layer.
+Chiusura: Lighthouse PWA/installabilità, seconda visita sotto 1 s al primo layer (da misurare sul sito pubblicato).
 
 ---
 

@@ -208,3 +208,11 @@ map.once('style.load', async () => {
   window.dt.pronto = true;
   setTimeout(() => (window.requestIdleCallback ?? (f => f()))(() => caricaDifferiti()), 3000);
 });
+
+// Service worker (sw.js): visite ripetute immediate e interfaccia anche senza rete. Si registra solo in HTTPS (produzione) o con ?sw per provarlo:
+// in locale no, così lo sviluppo vede sempre i file nuovi.
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || /[?&]sw(=|&|$)/.test(location.search))) {
+  const registra = () => navigator.serviceWorker.register('sw.js').catch(() => { /* senza service worker l'app funziona uguale */ });
+  // i moduli finiscono di caricarsi anche dopo l'evento load: se la pagina è già completa si registra subito
+  if (document.readyState === 'complete') registra(); else window.addEventListener('load', registra);
+}
