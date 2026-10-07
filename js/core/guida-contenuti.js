@@ -20,18 +20,28 @@ export const PASSI = [
     paragrafi: [
       'Il Digital Twin di Palermo, realizzato da Open Data Sicilia, è una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città: catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico, sicurezza stradale e uffici comunali.',
       'Serve a leggere un luogo da più punti di vista: chi cerca una particella, chi vuole capire come è fatto un quartiere, chi studia la mobilità o i servizi. Ogni informazione resta collegata alla fonte da cui proviene.',
-      'In alto, accanto al logo, il menu porta alle altre schede (Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e avvisi, About); la mappa sta al centro, con la barra degli strati a sinistra e la scheda del luogo a destra. Funziona anche da telefono, dove le barre si aprono dai pulsanti in basso e in alto.',
+      'In alto, accanto al logo, il menu porta alle altre schede (Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e avvisi, About); la mappa sta al centro, con la barra degli strati a sinistra e la scheda del luogo a destra. Funziona anche da telefono, con una barra di quattro tab in basso: vedi il passo «Sul telefono».',
     ],
     immagine: { file: 'img/guida/passi/cos-e.webp', alt: 'La mappa di Palermo appena aperta: in alto il logo, il menu delle schede e i pulsanti degli strumenti; a sinistra la barra verticale degli strati; in basso la ricerca e, a piè di pagina, l\'avviso sul valore legale.', didascalia: 'La vista iniziale: il centro di Palermo.' },
     narrazione: 'Benvenuti nel Digital Twin di Palermo, realizzato da Open Data Sicilia: una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città. Qui trovi insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale, e puoi leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.',
     scena: { strati: [], centro: CENTRO, zoom: 12 },
   },
   {
+    id: 'telefono',
+    titolo: 'Sul telefono',
+    statico: true,
+    paragrafi: [
+      'Su uno schermo stretto i comandi cambiano. In basso c\'è una barra con quattro tab: «Mappa» riporta alla mappa e chiude ciò che la copre; «Strati» apre i riquadri delle mappe di base, dei layer e dei filtri, con il numero degli strati accesi; «Aggiungi» riunisce «I miei layer», il catalogo RNDT e Geoimage; «Menu» apre le guide e le pagine sul progetto.',
+      'La ricerca sta in alto, sotto il logo, con il pulsante «Filtri»; a destra restano gli strumenti della mappa. Il tema scuro si cambia con l\'interruttore accanto al logo. Per conoscere un luogo si tocca la mappa: la scheda sale dal basso e si alza o si abbassa trascinando la maniglia.',
+    ],
+    immagine: { file: 'img/guida/passi/telefono.webp', alt: 'Tre schermate del telefono: la mappa con la ricerca in alto e la barra dei tab in basso; il foglio «Aggiungi» con «I miei layer», «Catalogo RNDT» e «Geoimage»; il menu a comparsa con le guide e le pagine informative.', didascalia: 'Da telefono: ricerca in alto, quattro tab in basso e menu a comparsa.' },
+  },
+  {
     id: 'dati',
     titolo: 'Con quali dati è realizzata',
     paragrafi: [
       'La mappa usa dati pubblicati da enti pubblici e da progetti di dati aperti: il Comune di Palermo (scuole, uffici, incidenti, carta tecnica), l\'azienda del trasporto pubblico AMAT, il catasto e la zonizzazione del piano regolatore, i dati del censimento e la base cartografica di OpenStreetMap.',
-      'L\'elenco completo è nella scheda «Fonti e avvisi» del menu in alto: per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).',
+      'L\'elenco completo è nella scheda «Fonti e avvisi» del menu (in alto; da telefono nel tab «Menu»): per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).',
     ],
     immagine: { file: 'img/guida/passi/dati.webp', alt: 'La scheda Fonti e avvisi, con l\'elenco delle fonti dei dati, i collegamenti ai dati originali e alle licenze.', didascalia: 'Le fonti dei dati sono elencate in «Fonti e avvisi», con i link alle licenze.' },
     narrazione: 'I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l\'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap. L\'elenco completo si trova nella scheda Fonti e avvisi, con il collegamento al dato originale e alla licenza di ogni fonte.',
@@ -41,7 +51,7 @@ export const PASSI = [
     id: 'strati',
     titolo: 'La barra degli strati',
     paragrafi: [
-      'Gli strati sono i temi che si possono sovrapporre alla mappa. A sinistra una barra verticale ha cinque tab: «Base cartografica», «Layer», «RNDT», «I miei layer» e «Filtri». Il tab «Layer» apre un pannello con i gruppi di strati (Confini, Edifici, Monumenti, Piano PAI, Popolazione, Rilievo, Servizi, Sicurezza, Territorio, Trasporti), sempre in ordine alfabetico: un clic sul gruppo lo apre, e ogni strato ha una casella per accenderlo o spegnerlo. Il pannello resta aperto finché non si preme di nuovo il tab o Esc; da telefono si apre dal pulsante «Strati».',
+      'Gli strati sono i temi che si possono sovrapporre alla mappa. A sinistra una barra verticale ha cinque tab: «Base cartografica», «Layer», «RNDT», «I miei layer» e «Filtri». Il tab «Layer» apre un pannello con i gruppi di strati (Confini, Edifici, Monumenti, Piano PAI, Popolazione, Rilievo, Servizi, Sicurezza, Territorio, Trasporti), sempre in ordine alfabetico: un clic sul gruppo lo apre, e ogni strato ha una casella per accenderlo o spegnerlo. Il pannello resta aperto finché non si preme di nuovo il tab o Esc; da telefono si apre dal tab «Strati», mentre «I miei layer», il catalogo RNDT e Geoimage stanno nel tab «Aggiungi».',
       'Gli strati accesi compaiono come etichette in alto sulla mappa e la legenda in basso a sinistra ne spiega i colori. Accanto a ogni strato i pulsanti permettono di spostarlo su o giù, centrare la mappa sui suoi dati e cambiare i colori; il campo «Cerca strato» filtra l\'elenco. Se ne possono accendere più d\'uno per confrontarli, ad esempio edifici e catasto.',
     ],
     immagine: { file: 'img/guida/passi/strati.webp', alt: 'La barra verticale a sinistra con il tab Layer aperto: il gruppo Territorio mostra l\'elenco degli strati, tra cui catasto, piano regolatore e incendi.', didascalia: 'Il tab «Layer» con il gruppo «Territorio» aperto e il catasto acceso.' },
@@ -194,7 +204,7 @@ export const PASSI = [
     titolo: 'Stampare la mappa',
     paragrafi: [
       'Il pulsante con la stampante, nella barra degli strumenti in alto a destra, prepara un foglio con il titolo, l\'immagine della mappa che stai guardando, le legende dei soli strati accesi e le attribuzioni delle fonti. Prima di stampare si sceglie il formato, da A4 ad A0, l\'orientamento, orizzontale o verticale, e la scala, da 1:1.000 a 1:25.000, con la barra grafica in metri e chilometri; «Vista attuale» stampa la mappa com\'è.',
-      'Negli altri pulsanti della barra: la casa riporta alla vista iniziale, le frecce agli angoli attivano lo schermo intero e la luna passa dal tema chiaro al tema scuro.',
+      'Negli altri pulsanti della barra: la casa riporta alla vista iniziale, le frecce agli angoli attivano lo schermo intero e la luna passa dal tema chiaro al tema scuro (da telefono si usa l\'interruttore accanto al logo, e stampa, vista iniziale e schermo intero stanno in colonna a destra).',
     ],
     immagine: { file: 'img/guida/passi/strumenti.webp', alt: 'La barra degli strumenti con il pulsante di stampa premuto e il menu aperto: formato, orientamento, scala e il pulsante Stampa.', didascalia: 'Il menu di stampa: formato, orientamento e scala.' },
     narrazione: 'Il pulsante con la stampante prepara un foglio con il titolo, la mappa che stai guardando, le legende degli strati accesi e le fonti. Scegli il formato, da A quattro ad A zero, l\'orientamento e la scala. Gli altri pulsanti della barra riportano alla vista iniziale, attivano lo schermo intero o passano al tema scuro.',

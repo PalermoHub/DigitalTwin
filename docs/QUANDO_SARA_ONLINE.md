@@ -66,7 +66,8 @@ Che cosa dipende dal dominio e che cosa no:
 
 ## 5. Altro in sospeso (non dipende dall'online)
 
-- [ ] **Guida, screenshot e video per il telefono:** descrivono solo il desktop; il telefono ora ha la barra a quattro tab (Mappa, Strati, Aggiungi, Menu). `scripts/guida_screenshot*.py` e `scripts/video_tour.py` usano gli id dei pulsanti.
+- [x] **Guida per il telefono** (2026-10-07): nuovo passo statico «Sul telefono» (`telefono` in `js/core/guida-contenuti.js`, immagine con tre schermate fatta da `scripts/guida_screenshot_telefono.py`) e frasi aggiornate nei passi `cos-e`, `dati`, `strati`, `strumenti`. Il passo è statico: **non è nel video né nei caroselli** (restano com'erano, solo desktop). Se un giorno si rigenera il video con la voce, valutare di raccontare anche il telefono.
+- [ ] **Screenshot degli altri passi e video:** descrivono solo il desktop (`scripts/guida_screenshot*.py`, `scripts/video_tour.py` usano gli id dei pulsanti).
 - [ ] **Pagina di anteprima del mobile** (artifact «Punti d'ingresso: oggi e proposta», `https://claude.ai/artifact/EoECqKQtmEKFwneR6oMyiE`): la tavola «Proposta, mobile» è precedente alle scelte finali (tab «Menu» al posto di «Info», interruttore del tema nell'header, menù a comparsa a mezza larghezza).
 - [ ] **Tablet (721-960 px):** oggi hanno ancora l'icona a tre righe e la barra laterale; decidere se estendere lo schema del telefono.
 - [ ] **Fase 3:** `esbuild` (119 richieste di moduli, CSS e JS non usati) da valutare dopo le misure sul sito vero; non migliora il TBT.

@@ -6,7 +6,7 @@ import { PASSI as SOLO_GUIDA, PASSI_RNDT } from '../../js/core/guida-contenuti.j
 const PASSI = [...SOLO_GUIDA, ...PASSI_RNDT]; // i test di contenuto valgono per entrambi
 
 test('i passi nell\'ordine previsto', () => {
-  assert.deepEqual(SOLO_GUIDA.map(p => p.id), ['cos-e', 'dati', 'strati', 'ordine-layer', 'mappe-storiche', 'miei-layer', 'colori', 'clic', 'tutto-in-un-punto', 'scheda', 'monumenti', 'uffici', 'pai', 'incendi', 'isole-calore', 'filtri', 'strumenti', 'avvertenze']);
+  assert.deepEqual(SOLO_GUIDA.map(p => p.id), ['cos-e', 'telefono', 'dati', 'strati', 'ordine-layer', 'mappe-storiche', 'miei-layer', 'colori', 'clic', 'tutto-in-un-punto', 'scheda', 'monumenti', 'uffici', 'pai', 'incendi', 'isole-calore', 'filtri', 'strumenti', 'avvertenze']);
   assert.deepEqual(PASSI_RNDT.map(p => p.id), ['rndt-catalogo', 'rndt-gruppo', 'rndt-info']);
 });
 
