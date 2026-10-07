@@ -1280,8 +1280,8 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 }
 #app-logo { flex: none; display: block; line-height: 0; }
 #menu-info { display: flex; align-items: center; gap: 2px; margin-left: auto; min-width: 0; }
-#menu-info button { padding: 10px 12px; border: 0; border-bottom: 3px solid transparent; border-radius: var(--r-sm) var(--r-sm) 0 0; background: none; color: var(--text-muted); font: inherit; font-weight: 600; white-space: nowrap; cursor: pointer; }
-#menu-info button:hover { background: var(--surface-hover); color: var(--text); }
+#menu-info button, #menu-info a { display: block; box-sizing: border-box; text-decoration: none; padding: 10px 12px; border: 0; border-bottom: 3px solid transparent; border-radius: var(--r-sm) var(--r-sm) 0 0; background: none; color: var(--text-muted); font: inherit; font-weight: 600; white-space: nowrap; cursor: pointer; }
+#menu-info button:hover, #menu-info a:hover { background: var(--surface-hover); color: var(--text); }
 #menu-info button[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
 #menu-info-toggle { display: none; margin-left: auto; width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; border: 0; border-radius: var(--r-sm); background: none; color: var(--text); cursor: pointer; }
 #menu-info-toggle:hover { background: var(--surface-hover); }
@@ -1289,9 +1289,15 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
   #menu-info-toggle { display: flex; }
   #menu-info { display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: calc(var(--z-header) + 1); flex-direction: column; align-items: stretch; gap: 0; margin: 0; padding: 4px 0 8px; background: var(--surface); border-bottom: 1px solid var(--border-ui); box-shadow: 0 8px 20px rgba(0, 0, 0, .15); }
   #menu-info.aperto { display: flex; }
-  #menu-info button { min-height: 48px; padding: 12px 16px; border-bottom: 0; border-left: 3px solid transparent; border-radius: 0; text-align: left; }
+  #menu-info button, #menu-info a { min-height: 48px; padding: 12px 16px; border-bottom: 0; border-left: 3px solid transparent; border-radius: 0; text-align: left; }
   #menu-info button[aria-current="page"] { border-left-color: var(--accent); background: var(--surface-hover); }
 }
+/* nove voci nell'intestazione: tra 961 e 1180 px gli spazi si stringono perché stiano su una riga */
+@media (min-width: 961px) and (max-width: 1180px) {
+  #menu-info button, #menu-info a { padding-inline: 7px; font-size: .9063rem; }
+}
+/* sotto i 1100 px non c'è posto per la nona voce: «Presentazione» resta nel menu a tre righe e nel tab Menu del telefono */
+@media (min-width: 961px) and (max-width: 1099px) { #menu-info #link-presentazione { display: none; } }
 #app-logo img { display: block; height: 44px; width: auto; }
 
 #app-footer {
@@ -1447,7 +1453,7 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
     flex-direction: column; align-items: stretch; margin: 0; padding: 10px 0; z-index: calc(var(--z-header) + 1); text-align: right;
     background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra);
   }
-  #menu-info button { text-align: right; border-left-width: 0; border-right: 3px solid transparent; }
+  #menu-info button, #menu-info a { text-align: right; border-left-width: 0; border-right: 3px solid transparent; }
   #menu-info button[aria-current="page"] { border-left-color: transparent; border-right-color: var(--accent); }
   #menu-info [data-scheda="mappa"] { display: none; }
   #menu-info .menu-gruppo { display: block; }
@@ -1456,5 +1462,5 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #menu-info [data-scheda="guida"] { order: 2; } #menu-info [data-scheda="plugin"] { order: 3; } #menu-info [data-scheda="geoimage"] { order: 4; }
   #menu-info .menu-gruppo[data-gruppo="info"] { order: 5; margin-top: 12px; }
   #menu-info [data-scheda="digitaltwin"] { order: 6; } #menu-info [data-scheda="argomenti"] { order: 7; }
-  #menu-info [data-scheda="fonti"] { order: 8; } #menu-info [data-scheda="about"] { order: 9; }
+  #menu-info [data-scheda="fonti"] { order: 8; } #menu-info [data-scheda="about"] { order: 9; } #menu-info #link-presentazione { order: 10; }
 }
