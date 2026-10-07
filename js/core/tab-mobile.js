@@ -51,6 +51,10 @@ export function collegaTabMobile(doc, { barraTitolo, suCambio = () => {}, suMapp
     bottoni.set(t.id, b);
     barra.append(b);
   }
+  // il menù a comparsa si chiude toccando fuori (la mappa) o con Esc
+  const fuori = e => { if (!e.target.closest?.('#menu-info, #barra-tab')) imposta(null); };
+  doc.addEventListener('pointerdown', e => { if (corrente === 'info') fuori(e); });
+  doc.addEventListener('keydown', e => { if (e.key === 'Escape' && corrente === 'info') imposta(null); });
   imposta(null);
   // se la finestra si allarga oltre i 720 px (rotazione, ridimensionamento) il foglio si chiude e il titolo torna quello della barra laterale
   const stretto = doc.defaultView?.matchMedia?.('(max-width: 720px)');

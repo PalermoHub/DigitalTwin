@@ -1402,11 +1402,15 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #barra-tab .conta-strati[hidden] { display: none; }
 
   /* tema scuro: interruttore nell'header, a destra */
-  #switch-tema { display: flex; align-items: center; margin-left: auto; width: 56px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
-  #switch-tema .switch-pista { position: relative; width: 44px; height: 24px; box-sizing: border-box; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface-alt); transition: background var(--t-rapida), border-color var(--t-rapida); }
-  #switch-tema .switch-manopola { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--text-muted); transition: transform var(--t-rapida), background var(--t-rapida); }
+  #switch-tema { display: flex; align-items: center; margin-left: auto; width: 64px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
+  #switch-tema .switch-pista { position: relative; width: 56px; height: 28px; box-sizing: border-box; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface-alt); transition: background var(--t-rapida), border-color var(--t-rapida); }
+  #switch-tema .switch-sole, #switch-tema .switch-luna { position: absolute; top: 6px; color: var(--text-muted); }
+  #switch-tema .switch-sole { left: 7px; }
+  #switch-tema .switch-luna { right: 7px; }
+  #switch-tema .switch-manopola { position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-ui); box-shadow: var(--ombra); transition: transform var(--t-rapida), background var(--t-rapida); }
   #switch-tema[aria-checked="true"] .switch-pista { background: var(--accent); border-color: var(--accent); }
-  #switch-tema[aria-checked="true"] .switch-manopola { transform: translateX(20px); background: var(--accent-ink); }
+  #switch-tema[aria-checked="true"] .switch-sole, #switch-tema[aria-checked="true"] .switch-luna { color: var(--accent-ink); }
+  #switch-tema[aria-checked="true"] .switch-manopola { transform: translateX(28px); }
   #switch-tema:focus-visible .switch-pista { outline: 2px solid var(--focus); outline-offset: 2px; }
 
   /* il pulsante «Strati» in alto e l'icona a tre righe lasciano il posto ai tab */
@@ -1437,15 +1441,17 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   body[data-foglio="aggiungi"] #barra-gruppi > :is(#btn-gruppo-base, #btn-gruppo-layer, #btn-gruppo-filtri) { display: none; }
   #btn-gruppo-miei { order: 1; } #btn-rndt-m { order: 2; } #btn-geoimage-m { order: 3; }
 
-  /* foglio «Info»: il menu diventa un foglio dal basso, a due gruppi */
+  /* foglio «Menu»: un menù a comparsa sopra il tab Menu, mezza larghezza, testo a destra, a due gruppi */
   body.info-aperto #menu-info {
-    display: flex; position: fixed; top: auto; left: 0; right: 0; bottom: calc(var(--tab-h) + var(--footer-h)); max-height: 70dvh; overflow-y: auto;
-    flex-direction: column; align-items: stretch; margin: 0; padding: 12px 0; z-index: calc(var(--z-header) + 1);
-    background: var(--surface); border-top: 1px solid var(--border-ui); border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: 0 -8px 32px rgba(0, 0, 0, .2);
+    display: flex; position: fixed; top: auto; left: auto; right: 8px; bottom: calc(var(--tab-h) + var(--footer-h) + 8px); width: 50%; min-width: 190px; max-height: 70dvh; overflow-y: auto;
+    flex-direction: column; align-items: stretch; margin: 0; padding: 10px 0; z-index: calc(var(--z-header) + 1); text-align: right;
+    background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra);
   }
+  #menu-info button { text-align: right; border-left-width: 0; border-right: 3px solid transparent; }
+  #menu-info button[aria-current="page"] { border-left-color: transparent; border-right-color: var(--accent); }
   #menu-info [data-scheda="mappa"] { display: none; }
   #menu-info .menu-gruppo { display: block; }
-  #menu-info .menu-gruppo { margin: 4px 0; padding: 0 16px; font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+  #menu-info .menu-gruppo { margin: 4px 0; padding: 0 19px 0 16px; font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
   #menu-info .menu-gruppo[data-gruppo="guide"] { order: 1; }
   #menu-info [data-scheda="guida"] { order: 2; } #menu-info [data-scheda="plugin"] { order: 3; } #menu-info [data-scheda="geoimage"] { order: 4; }
   #menu-info .menu-gruppo[data-gruppo="info"] { order: 5; margin-top: 12px; }
