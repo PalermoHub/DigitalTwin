@@ -625,7 +625,8 @@ dialog li { margin: 4px 0; }
 #legende-box:not(:has(#legende > :not([hidden]))) { display: none; }
 #legende-riduci { width: 100%; padding: 8px 10px; border: 0; background: none; text-align: left; font-size: var(--fs-xs); font-weight: 700; color: var(--text); }
 #legende-box.ridotta #legende { display: none; }
-#legende { position: static; max-width: none; padding: 0 10px 8px; }
+#legende { position: static; max-width: none; padding: 0 10px 8px; overflow-y: auto; min-height: 0; }
+#legende-box { --legende-bottom: 28px; --legende-alto: 172px; display: flex; flex-direction: column; max-height: calc(100dvh - var(--legende-bottom) - var(--legende-alto)); }
 #legende .legenda { padding: 0; border: 0; box-shadow: none; background: none; }
 
 .scheda-intestazione { padding-bottom: 0; }
@@ -645,7 +646,7 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
 @media (min-width: 721px) {
   #area-ricerca { left: calc(var(--sx) + (100% - var(--sx) - var(--scheda-l)) / 2); }
 }
-@media (min-width: 721px) and (max-width: 1320px) { #legende-box { bottom: 100px; } }
+@media (min-width: 721px) and (max-width: 1320px) { #legende-box { --legende-bottom: 100px; bottom: 100px; } }
 
 @media (max-width: 720px) {
   #barra-strati { display: none; }
@@ -664,7 +665,7 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
   #barra-strumenti { top: 12px; right: 12px; left: auto; max-height: none; flex-direction: row; align-items: center; gap: 8px; padding: 0; overflow: visible; background: none; border: 0; border-radius: 0; box-shadow: none; }
   #barra-strumenti > button { width: 44px; height: 44px; min-height: 44px; padding: 0; flex-direction: row; background: var(--surface); border: 1px solid var(--border-ui); border-radius: 50%; box-shadow: var(--ombra); }
   #barra-strumenti .et { display: none; }
-  #legende-box { left: 8px; bottom: 72px; width: 220px; }
+  #legende-box { --legende-bottom: 72px; --legende-alto: 112px; left: 8px; bottom: 72px; width: 220px; }
 
   #scheda { top: auto; bottom: 64px; left: 0; right: 0; width: auto; max-height: none; border-width: 1px 0 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: 0 -8px 32px rgba(0, 0, 0, .2); }
   #scheda[data-altezza="peek"] { height: 168px; }
@@ -1454,7 +1455,7 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   body.strati-aperti #barra-strati { bottom: var(--tab-h); }
   #scheda { bottom: var(--tab-h); }
   #rndt-pannello, #geoimage-pannello { bottom: var(--tab-h); }
-  #legende-box { bottom: calc(var(--tab-h) + 12px); }
+  #legende-box { --legende-bottom: calc(var(--tab-h) + 12px); bottom: calc(var(--tab-h) + 12px); }
 
   /* foglio «Strati»: basi, layer, filtri. Foglio «Aggiungi»: i miei layer, catalogo RNDT, Geoimage */
   #btn-gruppo-rndt { display: none !important; } /* l'elenco dei layer RNDT aggiunti è in cima al pannello del catalogo */
