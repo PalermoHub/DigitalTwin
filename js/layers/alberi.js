@@ -1,4 +1,5 @@
 import { urlDati } from '../core/config.js';
+import { registraTooltipStrati } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { voceAlbero, modelloPopupAlbero } from './scheda-alberi.js';
 
@@ -37,6 +38,7 @@ function collegaPopup(map) {
     popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
       .setLngLat(e.lngLat).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
   });
+  registraTooltipStrati(map, [{ layers: [PUNTI], modello: p => modelloPopupAlbero(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }

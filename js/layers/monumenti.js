@@ -1,5 +1,6 @@
 import { urlDati, pmt } from '../core/config.js';
 import { collegamento } from '../core/url-sicuro.js';
+import { registraTooltipStrati } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { voceMonumento, modelloPopup } from './scheda-monumenti.js';
@@ -77,6 +78,7 @@ function contenutoPopup(p) {
 
 function collegaPopup(map) {
   let popup = null;
+  registraTooltipStrati(map, [{ layers: [POLI, PUNTI], modello: p => ({ titolo: completo(p).nome, sottotitolo: completo(p).categoria }) }]);
   map.on('click', e => {
     if (map.getLayoutProperty(POLI, 'visibility') !== 'visible') return;
     const f = map.queryRenderedFeatures(e.point, { layers: LAYERS.filter(id => map.getLayer(id)) })[0];

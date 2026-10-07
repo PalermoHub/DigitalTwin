@@ -1480,3 +1480,6 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #menu-info [data-scheda="fonti"] { order: 8; } #menu-info [data-scheda="privacy"] { order: 9; } #menu-info #link-presentazione { order: 10; } #menu-info [data-scheda="about"] { order: 11; }
 }
 .btn-consenso { min-height: 44px; padding: 8px 16px; border: 2px solid var(--accent-strong, #b45309); border-radius: var(--r-md); background: transparent; color: inherit; font-weight: 700; cursor: pointer; }
+.strati-tooltip-corpo strong { color: var(--tooltip-enfasi); }
+.strati-tooltip-corpo > div + div { margin-top: 4px; }
+.strati-tooltip-altre { color: var(--text-muted); }

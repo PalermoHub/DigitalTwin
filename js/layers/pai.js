@@ -1,4 +1,5 @@
 import { urlDati, pmt } from '../core/config.js';
+import { registraTooltipStrati } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { chiavePai, modelloPopup, vociPai } from './scheda-pai.js';
@@ -229,6 +230,7 @@ export default {
       popup = new maplibregl.Popup({ maxWidth: '300px', className: 'monumento-popup-box', offset: 8 })
         .setLngLat(e.lngLat).setDOMContent(contenutoPopup(lista)).addTo(map);
     });
+    registraTooltipStrati(map, TEMI.map(tema => ({ layers: layerDelTema(tema).slice(0, 1), modello: p => modelloPopup(tema.ds, tema.t, p) })));
     const tuttiLayer = TEMI.flatMap(layerDelTema);
     for (const id of tuttiLayer) {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });

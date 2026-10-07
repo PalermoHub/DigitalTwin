@@ -1,4 +1,5 @@
 import { urlDati } from '../core/config.js';
+import { registraTooltipStrati } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { modelloPopupSede, voceUffici } from './scheda-uffici.js';
@@ -171,6 +172,7 @@ export default {
       popup = new maplibregl.Popup({ maxWidth: '340px', className: 'monumento-popup-box', offset: 8 })
         .setLngLat(f.geometry.coordinates).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
     });
+    registraTooltipStrati(map, [{ layers: [PUNTI], modello: p => modelloPopupSede(completo(p)) }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
   },

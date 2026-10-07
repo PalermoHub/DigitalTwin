@@ -1,4 +1,5 @@
 import { urlDati } from '../core/config.js';
+import { registraTooltipStrati } from '../core/tooltip.js';
 import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
 import { voceScuola, voceSeggio, voceIndirizzo, modelloPopupScuola } from './scheda-scuole.js';
 import { voceUsoEdificio } from './scheda-uso.js';
@@ -40,6 +41,7 @@ function contenutoPopup(p) {
 
 function collegaPopup(map, s) {
   const { punti, poli } = ids(s.chiave);
+  registraTooltipStrati(map, [{ layers: [punti, poli], modello: p => modelloPopupScuola(completo(p)) }]);
   let popup = null;
   map.on('click', e => {
     if (map.getLayoutProperty(poli, 'visibility') !== 'visible') return;
