@@ -128,10 +128,11 @@ def scrivi_ass(path, voce_inizio, frasi):
              "[V4+ Styles]",
              "Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding",
              "Style: Basso,Montserrat,40,&H00FFFFFF,&H000000FF,&H28231F1B,&H28231F1B,-1,0,0,0,100,100,0,0,3,14,0,2,330,330,58,1",
+             "Style: AltoAlto,Montserrat,40,&H00FFFFFF,&H000000FF,&H28231F1B,&H28231F1B,-1,0,0,0,100,100,0,0,3,14,0,8,330,330,30,1",
              "Style: Alto,Montserrat,40,&H00FFFFFF,&H000000FF,&H28231F1B,&H28231F1B,-1,0,0,0,100,100,0,0,3,14,0,8,330,330,150,1",
              "", "[Events]", "Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text"]
     for sid, t0 in voce_inizio.items():
-        stile = "Alto" if sid in SOTTOTITOLI_ALTI else "Basso"
+        stile = "AltoAlto" if sid == "5-saluti" else ("Alto" if sid in SOTTOTITOLI_ALTI else "Basso")
         for f in frasi.get(sid, []):
             pezzi = spezza(f["testo"])
             tot = sum(len(p) for p in pezzi)
@@ -244,7 +245,7 @@ def main():
            "-loop", "1", "-framerate", str(FPS), "-i", f"{HERE}/assets/chiusura.png",
            "-i", f"{OUT}/mix.wav",
            "-filter_complex_script", f"{OUT}/grafo.txt", "-map", "[v]", "-map", "3:a",
-           "-af", "loudnorm=I=-16:TP=-1.5:LRA=11",
+           "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "48000",
            "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-r", str(FPS),
            "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest"]
     if ANTEPRIMA:

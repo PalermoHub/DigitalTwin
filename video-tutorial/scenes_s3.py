@@ -23,7 +23,7 @@ def rndt_layer_id(r):
 @sc("3-cose")
 def _(r):
     r.chip(1)
-    r.card("Sezione 2", "Plugin RNDT", "Il catalogo nazionale dei dati territoriali", hold=2.8, durante=lambda: pulisci(r))
+    r.card("Sezione 2", "Plugin RNDT", "Il catalogo nazionale dei dati territoriali", hold=2.8, durante=lambda: pulisci(r, vista=True))
     r.lower("Plugin RNDT", "Il catalogo nazionale dei dati territoriali")
     r.sync(0.22)
     r.ring("#btn-rndt", "Catalogo RNDT", pos="below", hold=2.0)
@@ -168,6 +168,7 @@ def _(r):
 
 @sc("3-limiti")
 def _(r):
+    r.fly(13.36, 38.15, 11.6, ms=1800)
     r.sync(0.10)
     r.big("<b>WFS · massimo 10.000 oggetti</b><br>per strati molto densi<br>(come le particelle catastali)<br>meglio il WMS", wait=False)
     r.sync(0.58)

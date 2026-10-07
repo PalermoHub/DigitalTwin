@@ -23,9 +23,13 @@ def sc(sid):
     return deco
 
 
-def pulisci(r):
-    """Stato pulito tra una sezione e l'altra: niente scheda, ricerca, filtri o strati rimasti accesi."""
+def pulisci(r, vista=False):
+    """Stato pulito tra una sezione e l'altra: niente scheda, ricerca, filtri, layer RNDT o strati rimasti accesi.
+    Con vista=True riporta anche la mappa sulla veduta d'insieme."""
     r.key("Escape")
     r.pg.evaluate("""()=>{const i=document.getElementById('cerca-testo');if(i){i.value='';i.dispatchEvent(new Event('input',{bubbles:true}))}
-        document.querySelectorAll('#filtri-chips button').forEach(b=>b.click())}""")
+        document.querySelectorAll('#filtri-chips button').forEach(b=>b.click());
+        document.querySelectorAll('button[title^="Rimuovi "]').forEach(b=>b.click())}""")
     r.layers_off(keep=("circoscrizioni", "edificato"))
+    if vista:
+        r.jump(*CENTRO, 12)

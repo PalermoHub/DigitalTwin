@@ -25,7 +25,7 @@ def pannello_gi(r):
 @sc("4-cose")
 def _(r):
     r.chip(2)
-    r.card("Sezione 3", "Geoimage", "Mappe storiche sulla città di oggi", hold=2.6, durante=lambda: pulisci(r))
+    r.card("Sezione 3", "Geoimage", "Mappe storiche sulla città di oggi", hold=2.6, durante=lambda: pulisci(r, vista=True))
     r.lower("Geoimage", "Mappe storiche sulla città di oggi")
     r.sync(0.34)
     r.click('button.rail-tab[data-pannello="geoimage"]', after=1.5)
@@ -45,7 +45,7 @@ def _(r):
     r.click("#cerca-risultati li", after=1.5)
     r.layers_off(keep=("circoscrizioni", "edificato"))
     r.key("Escape")
-    r.jump(VISTA_GCP[0], VISTA_GCP[1], VISTA_GCP[2])
+    r.fly(VISTA_GCP[0], VISTA_GCP[1], VISTA_GCP[2], ms=1600)
 
 
 @sc("4-carica")
