@@ -219,15 +219,10 @@ def _(r):
     r.sync(0.52)
     r.scegli(r.pg.locator("#pannello select:visible").nth(1), "graduata")
     r.pause(1.2)
-    sel = r.pg.locator("#pannello select:visible").nth(3) if r.pg.locator("#pannello select:visible").count() > 3 else None
-    if sel is not None:
-        ops = sel.evaluate("s=>[...s.options].map(o=>o.text)")
-        gia = [o for o in ops if "batlow" in o.lower()]
-        if gia:
-            r.scegli(sel, label=gia[0])
-        else:
-            r.warn.append("2-colori: rampa Batlow non trovata nel menu " + str(ops[:12]))
-    r.pause(1.2)
+    r.click("button.rampa-scelta", after=0.8)
+    if not r.click_text("Batlow", css="li, button, div, span, label", root=None, after=1.0):
+        r.key("Escape")
+    r.pause(0.6)
     r.shot("graduata")
     r.sync(0.74)
     r.ring("#legende-box", "Legenda del tema", pos="right", hold=1.8)
@@ -237,7 +232,7 @@ def _(r):
 @sc("2-clic")
 def _(r):
     # chiude il pannello dei temi e riporta i colori originali
-    r.click(r.pg.locator("#pannello button", has_text=re.compile(r"^Ripristina$")), after=0.5)
+    r.click(r.pg.locator("#pannello button:visible", has_text=re.compile(r"^\s*Ripristina\s*$")), after=0.5)
     r.layers_off(keep=("circoscrizioni", "edificato"))
     r.jump(*MAQUEDA, 17)
     r.sync(0.10)
