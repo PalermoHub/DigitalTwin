@@ -1350,10 +1350,9 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #condividi-menu input { flex: 1; min-width: 0; padding: 5px 8px; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-pill); }
 #condividi-menu button { padding: 5px 14px; font: inherit; font-weight: 600; color: var(--accent-ink); background: var(--accent); border: 1px solid var(--accent); border-radius: var(--r-pill); cursor: pointer; text-decoration: none; }
 #condividi-menu .condividi-reti { display: flex; flex-wrap: wrap; gap: 8px; }
-#condividi-menu .condividi-rete { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: #fff; background: var(--rete); border: 2px solid transparent; border-radius: 50%; }
-#condividi-menu .condividi-rete:hover { filter: brightness(1.12); }
-#condividi-menu .condividi-rete:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
-:root[data-tema="scuro"] #condividi-menu .condividi-rete { border-color: #fff3; }
+#condividi-menu .condividi-rete { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; color: var(--text-muted); background: transparent; border: 1px solid var(--border-ui); border-radius: 50%; transition: background var(--t-rapida), color var(--t-rapida); }
+#condividi-menu .condividi-rete:hover { background: var(--surface-hover); color: var(--text); }
+#condividi-menu .condividi-rete:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #condividi-menu .condividi-nota { margin: 0; color: var(--text-muted); }
 #condividi-menu .condividi-nota[hidden] { display: none; }
 @media print {
