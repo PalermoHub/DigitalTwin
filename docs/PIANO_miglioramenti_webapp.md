@@ -113,8 +113,8 @@ Audit di accessibilità (axe-core, 24 scene: chiaro/scuro, desktop/mobile, fogli
 - [x] Contrasto in tema scuro di chip e badge: verificato con axe-core, nessun problema.
 - [x] Pannello Strati su mobile: i sei riquadri (Mappe di base, Layer, RNDT, I miei layer, Filtri, Geoimage) erano 4 + 2; ora 3 + 3 (`css/app.css`, segnalato dall'utente con le schermate del 2026-10-07). Verificato a 360, 440 e 700 px.
 - [ ] Scheda del luogo su mobile: nello stato «metà» la parte scorrevole è di 206 px su 956 (22%); titolo e pulsanti, riga della circoscrizione e linguette ne consumano circa 200, la nota legale fissa 65. Da decidere con l'utente come recuperare spazio.
-- [ ] Etichette testuali (o tooltip visibili) per Filtri e Ripristina, oggi solo icone nella barra di ricerca; su touch il tooltip non c'è.
-- [ ] Landmark: racchiudere barra strumenti, zoom e chip in un `role="region"`/`nav` con etichetta (avviso `region` di axe).
+- [x] Pulsante Filtri con etichetta testuale visibile (pillola «Filtri», 72x44 px su mobile; il nome accessibile resta «Filtri: zona e catasto»); segnaposto della ricerca con puntini invece del taglio a metà parola. Resta il pulsante di ripristino (icona ↻, con nome accessibile): da valutare se spostarlo nel pannello Filtri.
+- [x] Landmark: `#corpo` è ora un `<main>`; axe-core non segnala più nessun avviso (0 violazioni a 360, 440 e 1350 px).
 - [ ] Mappa dei punti d'ingresso attuali (menu, rail, Strati, barra strumenti, Filtri) e proposta di unificazione, da provare con 3-5 utenti reali prima di cambiare.
 - [ ] Spiegare in legenda il limite di zoom 12-18, se dipende dai dati.
 - [ ] Onboarding: estendere `collegaInvito` con 3 passi (cerca, accendi uno strato, apri la scheda) e opzione «non mostrare più».

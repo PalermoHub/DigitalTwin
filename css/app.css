@@ -272,8 +272,9 @@ dialog li { margin: 4px 0; }
 .cerca-icona { flex-shrink: 0; padding: 0 10px 0 16px; color: var(--text-muted); display: flex; align-items: center; pointer-events: none; }
 #cerca-testo { flex: 1; min-width: 0; padding: 0; background: transparent; border: 0; outline: 0; font: inherit; font-size: var(--fs-sm); color: var(--text); }
 #cerca-testo::placeholder { color: var(--text-muted); }
+#cerca-testo { text-overflow: ellipsis; } /* il segnaposto lungo si accorcia con i puntini invece di tagliare a metà parola */
 .cerca-sep { width: 1px; height: 22px; margin: 0 4px; flex-shrink: 0; background: var(--border-ui); }
-#cerca-filtri { flex-shrink: 0; width: 36px; height: 36px; margin-right: 8px; display: flex; align-items: center; justify-content: center; background: var(--accent); border: 0; border-radius: 50%; color: var(--accent-ink); }
+#cerca-filtri { flex-shrink: 0; height: 36px; padding: 0 14px 0 11px; gap: 6px; margin-right: 8px; display: flex; align-items: center; justify-content: center; background: var(--accent); border: 0; border-radius: var(--r-pill); color: var(--accent-ink); font-size: var(--fs-sm); font-weight: 600; }
 #cerca-ripristina { flex-shrink: 0; width: 36px; height: 36px; margin-right: 4px; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; border-radius: 50%; color: inherit; cursor: pointer; }
 #cerca-ripristina:hover { background: var(--border-ui); }
 #cerca-filtri:hover { filter: brightness(1.1); }
@@ -720,7 +721,7 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
   .scheda-tabs-freccia { width: 40px; }
   #legende-riduci, #cerca-risultati button, #cerca-particella input, #cerca-particella button, .sotto-pannello select, #pannello-filtri select { min-height: 44px; }
   #avvisi button { width: 44px; height: 44px; }
-  #cerca-filtri { width: 44px; height: 44px; margin-right: 2px; }
+  #cerca-filtri { height: 44px; margin-right: 2px; }
   #cerca-ripristina { width: 44px; height: 44px; }
   #barra-strumenti button { width: 44px; height: 44px; }
   .sotto-pannello label, #pannello-filtri label { min-height: 36px; display: flex; align-items: center; gap: 8px; }
