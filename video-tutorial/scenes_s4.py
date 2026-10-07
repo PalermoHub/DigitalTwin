@@ -4,7 +4,7 @@ from scenes_base import *
 
 IMMAGINE = os.path.join(HERE, "assets", "pianta_1891_demo.png")
 META = json.load(open(os.path.join(HERE, "assets", "pianta_1891_demo.json")))
-VISTA_GCP = (13.3596, 38.1138, 15.7)
+VISTA_GCP = (13.3597, 38.1148, 15.35)
 
 IMG2SCREEN = """([u,v,W,H])=>{const g=window.dt.geoimage.stato.angoli;const s=u/W,t=v/H;
   const lat=(1-s)*(1-t)*g[0].lat+s*(1-t)*g[1].lat+(1-s)*t*g[2].lat+s*t*g[3].lat;
@@ -56,6 +56,7 @@ def _(r):
     r.hover("#gi-zona", hold=0.6)
     r.pg.locator('#geoimage-pannello input[type=file]').first.set_input_files(IMMAGINE)
     r.pause(2.5)
+    r.fly(VISTA_GCP[0], VISTA_GCP[1], VISTA_GCP[2], ms=1200)
     r.shot("caricata")
     r.sync(0.55)
     boxes = [r.pg.locator(".gi-angolo").nth(i).bounding_box() for i in range(4)]
@@ -68,20 +69,19 @@ def _(r):
 @sc("4-posiziona")
 def _(r):
     cx, cy = centro_di(r, ".gi-centro")
-    r.sync(0.06)
-    r.drag(cx, cy, cx - 60, cy + 40, dur=0.9)
-    r.sync(0.28)
+    r.sync(0.05)
+    r.drag(cx, cy, cx - 40, cy + 25, dur=0.8)
+    r.sync(0.22)
     rx, ry = centro_di(r, ".gi-rota")
-    r.drag(rx, ry, rx + 70, ry + 25, dur=0.9)
-    r.sync(0.50)
-    ax, ay = centro_di(r, ".gi-angolo")
-    r.drag(ax, ay, ax - 25, ay - 25, dur=0.8)
-    r.sync(0.68)
-    r.click("#gi-modo", after=0.6)
-    r.ring("#gi-modo", "Scala ⇄ deforma", pos="left", hold=1.2)
-    r.click("#gi-modo", after=0.4)
-    r.sync(0.86)
-    r.click("#gi-reset", after=1.0)
+    r.drag(rx, ry, rx + 50, ry + 15, dur=0.8)
+    r.sync(0.40)
+    r.click("#gi-modo", after=0.5)
+    r.ring("#gi-modo", "Scala ⇄ deforma", pos="left", hold=1.0)
+    r.click("#gi-modo", after=0.3)
+    r.sync(0.62)
+    for _ in range(8):
+        r.click("#gi-piu", move=0.25, after=0.15)
+    r.shot("ingrandita")
 
 
 @sc("4-gcp")
@@ -97,6 +97,12 @@ def _(r):
         r.click_xy(a["x"], a["y"], 0.9, 0.7)
         b = r.px(v["lng"], v["lat"])
         r.click_xy(b["x"], b["y"], 0.9, 0.9)
+        righe = r.pg.evaluate("()=>document.querySelectorAll('#geoimage-pannello tbody tr').length")
+        if righe < n:      # il secondo clic non è stato registrato: riprova una volta
+            r.click_xy(b["x"], b["y"], 0.3, 0.9)
+            righe = r.pg.evaluate("()=>document.querySelectorAll('#geoimage-pannello tbody tr').length")
+            if righe < n:
+                r.warn.append(f"4-gcp: GCP {n} ({nome}) non registrato")
         r.shot(f"gcp{n}")
     r.sync(0.92)
     r.key("Escape")
