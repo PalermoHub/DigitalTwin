@@ -131,12 +131,12 @@ class Rec:
 
     def jump(self, lng, lat, zoom, pitch=None, bearing=None):
         self.pg.evaluate("""([a,b,z,p,br])=>new Promise(res=>{const m=window.dt.map;const o={center:[a,b],zoom:z};if(p!=null)o.pitch=p;if(br!=null)o.bearing=br;
-            m.jumpTo(o);m.once('idle',()=>res(1));setTimeout(()=>res(0),6000)})""", [lng, lat, zoom, pitch, bearing])
+            m.jumpTo(o);m.once('idle',()=>res(1));setTimeout(()=>res(0),4000)})""", [lng, lat, zoom, pitch, bearing])
         self.pg.wait_for_timeout(int(600 * K))
 
     def fly(self, lng, lat, zoom, ms=2200, pitch=None, bearing=None):
         self.pg.evaluate("""([a,b,z,ms,p,br])=>new Promise(res=>{const m=window.dt.map;const o={center:[a,b],zoom:z,duration:ms,essential:true};
-            if(p!=null)o.pitch=p;if(br!=null)o.bearing=br;m.once('moveend',()=>m.once('idle',()=>res(1)));m.flyTo(o);setTimeout(()=>res(0),ms+9000)})""",
+            if(p!=null)o.pitch=p;if(br!=null)o.bearing=br;m.once('moveend',()=>m.once('idle',()=>res(1)));m.flyTo(o);setTimeout(()=>res(0),ms+5000)})""",
                          [lng, lat, zoom, int(ms * K), pitch, bearing])
         self.pg.wait_for_timeout(int(500 * K))
 
@@ -145,20 +145,29 @@ class Rec:
         self.click_xy(p["x"], p["y"], move, after)
 
     def feature_px(self, layer_id, filtro=None, near=None, attesa=9.0):
-        """Pixel (x,y) di un punto interno a un elemento visibile del layer (il più vicino a `near`=(lng,lat), se dato).
+        """Pixel (x,y) di un punto che cade davvero dentro un elemento visibile del layer (il più vicino a `near`=(lng,lat)).
         Riprova finché i tile non sono caricati."""
         js = """([id,f,near])=>{const m=window.dt.map;const o={layers:[id]};if(f)o.filter=f;
           const fs=m.queryRenderedFeatures(o);if(!fs.length)return null;
           const r=m.getContainer().getBoundingClientRect();
-          const tg=near?m.project(near):{x:(r.width)/2,y:(r.height)/2};
-          let best=null;
-          for(const ft of fs.slice(0,400)){
-            const pts=[];const walk=c=>typeof c[0]==='number'?pts.push(c):c.forEach(walk);walk(ft.geometry.coordinates);
-            const vis=pts.map(p=>m.project(p)).filter(q=>q.x>420&&q.x<1450&&q.y>150&&q.y<950);
-            if(!vis.length)continue;
+          const tg=near?m.project(near):{x:r.width/2,y:r.height/2};
+          const ok=q=>q.x>420&&q.x<1450&&q.y>150&&q.y<950;
+          const hit=(x,y)=>m.queryRenderedFeatures([[x-3,y-3],[x+3,y+3]],{layers:[id]}).length>0;
+          const cand=[];
+          for(const ft of fs.slice(0,500)){
+            const pts=[];const w=c=>typeof c[0]==='number'?pts.push(c):c.forEach(w);w(ft.geometry.coordinates);
+            const pr=pts.map(p=>m.project(p));const vis=pr.filter(ok);if(!vis.length)continue;
             const a=vis.reduce((s,q)=>({x:s.x+q.x,y:s.y+q.y}),{x:0,y:0});const c={x:a.x/vis.length,y:a.y/vis.length};
-            const d=Math.hypot(c.x-tg.x,c.y-tg.y);if(!best||d<best.d)best={d,c};}
-          return best?{x:best.c.x+r.left,y:best.c.y+r.top}:null}"""
+            cand.push({d:Math.hypot(c.x-tg.x,c.y-tg.y),c,vis});}
+          cand.sort((a,b)=>a.d-b.d);
+          for(const k of cand.slice(0,40)){
+            if(ok(k.c)&&hit(k.c.x,k.c.y))return {x:k.c.x+r.left,y:k.c.y+r.top};
+            const xs=k.vis.map(q=>q.x),ys=k.vis.map(q=>q.y);
+            const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+            for(let i=1;i<9;i++)for(let j=1;j<9;j++){const x=x0+(x1-x0)*i/9,y=y0+(y1-y0)*j/9;
+              if(ok({x,y})&&hit(x,y))return {x:x+r.left,y:y+r.top};}
+          }
+          return null}"""
         fine = time.monotonic() + attesa
         while True:
             p = self.pg.evaluate(js, [layer_id, filtro, list(near) if near else None])
@@ -196,15 +205,19 @@ class Rec:
         self.pg.wait_for_timeout(int(400 * K))
 
     def group(self, nome):
-        """Apre un gruppo del tab Layer se è chiuso (clic sull'intestazione)."""
-        loc = self.pg.locator("#pannello").get_by_text(nome, exact=True).first
+        """Apre (se chiuso) il gruppo del tab Layer: <details id="gruppo-<nome>">; non lo richiude se è già aperto."""
+        slug = re.sub(r"[^a-z0-9]+", "-", nome.lower()).strip("-")
+        det = self.pg.locator(f"#pannello details#gruppo-{slug}")
         try:
-            loc.wait_for(state="visible", timeout=5000)
+            det.wait_for(state="attached", timeout=5000)
         except PWTimeout:
-            self.warn.append(f"{self.sid}: gruppo {nome} non visibile"); return
-        loc.scroll_into_view_if_needed()
-        b = loc.bounding_box()
-        self.click_xy(b["x"] + b["width"] / 2, b["y"] + b["height"] / 2, 0.6, 0.5)
+            self.warn.append(f"{self.sid}: gruppo {nome} non trovato"); return
+        det.scroll_into_view_if_needed()
+        if not det.evaluate("d=>d.open"):
+            b = det.locator("summary").first.bounding_box()
+            self.click_xy(b["x"] + min(120, b["width"] / 2), b["y"] + b["height"] / 2, 0.6, 0.5)
+        else:
+            self.pause(0.3)
 
     def close_scheda(self):
         self.pg.keyboard.press("Escape")
@@ -246,9 +259,15 @@ class Rec:
     def chip(self, att):
         self.pg.evaluate("([v,a])=>window.__v.chip(v,a)", [["La mappa", "Plugin RNDT", "Geoimage"], att])
 
-    def card(self, num, titolo, sotto="", hold=2.6):
+    def card(self, num, titolo, sotto="", hold=2.6, durante=None):
         self.pg.evaluate("([a,b,c])=>window.__v.card(a,b,c)", [num, titolo, sotto])
-        time.sleep(hold * K)
+        t_ini = time.monotonic()
+        if durante:
+            time.sleep(0.5 * K)
+            durante()
+        resto = hold * K - (time.monotonic() - t_ini)
+        if resto > 0:
+            time.sleep(resto)
         self.pg.evaluate("()=>window.__v.cardOff()")
 
     def big(self, html, hold=3.0, wait=True):

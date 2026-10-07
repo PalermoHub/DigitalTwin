@@ -25,7 +25,7 @@ def pannello_gi(r):
 @sc("4-cose")
 def _(r):
     r.chip(2)
-    r.card("Sezione 3", "Geoimage", "Mappe storiche sulla città di oggi", hold=2.6)
+    r.card("Sezione 3", "Geoimage", "Mappe storiche sulla città di oggi", hold=2.6, durante=lambda: pulisci(r))
     r.lower("Geoimage", "Mappe storiche sulla città di oggi")
     r.sync(0.34)
     r.click('button.rail-tab[data-pannello="geoimage"]', after=1.5)
@@ -40,13 +40,12 @@ def _(r):
 @sc("4-inquadra")
 def _(r):
     r.sync(0.05)
-    r.type("#cerca-testo", "Teatro Massimo")
-    r.pause(1.2)
-    r.click("#cerca-risultati li", after=2.5)
-    r.pg.evaluate("()=>new Promise(res=>{const m=window.dt.map;m.once('idle',()=>res(1));setTimeout(()=>res(0),8000)})")
+    r.type("#cerca-testo", "Teatro Massimo", per=0.05)
+    r.pause(0.6)
+    r.click("#cerca-risultati li", after=1.5)
     r.layers_off(keep=("circoscrizioni", "edificato"))
     r.key("Escape")
-    r.fly(VISTA_GCP[0], VISTA_GCP[1], VISTA_GCP[2], ms=2000)
+    r.jump(VISTA_GCP[0], VISTA_GCP[1], VISTA_GCP[2])
 
 
 @sc("4-carica")
@@ -70,17 +69,17 @@ def _(r):
 def _(r):
     cx, cy = centro_di(r, ".gi-centro")
     r.sync(0.05)
-    r.drag(cx, cy, cx - 40, cy + 25, dur=0.8)
+    r.drag(cx, cy, cx - 40, cy + 25, dur=0.6)
     r.sync(0.22)
     rx, ry = centro_di(r, ".gi-rota")
-    r.drag(rx, ry, rx + 50, ry + 15, dur=0.8)
+    r.drag(rx, ry, rx + 50, ry + 15, dur=0.6)
     r.sync(0.40)
     r.click("#gi-modo", after=0.5)
     r.ring("#gi-modo", "Scala ⇄ deforma", pos="left", hold=1.0)
     r.click("#gi-modo", after=0.3)
     r.sync(0.62)
     for _ in range(8):
-        r.click("#gi-piu", move=0.25, after=0.15)
+        r.click("#gi-piu", move=0.2, after=0.05)
     r.shot("ingrandita")
 
 
@@ -94,9 +93,9 @@ def _(r):
         n += 1
         r.sync(0.10 + 0.20 * (n - 1))
         a = r.pg.evaluate(IMG2SCREEN, [v["px"][0], v["px"][1], W, H])
-        r.click_xy(a["x"], a["y"], 0.9, 0.7)
+        r.click_xy(a["x"], a["y"], 0.6, 0.5)
         b = r.px(v["lng"], v["lat"])
-        r.click_xy(b["x"], b["y"], 0.9, 0.9)
+        r.click_xy(b["x"], b["y"], 0.6, 0.7)
         righe = r.pg.evaluate("()=>document.querySelectorAll('#geoimage-pannello tbody tr').length")
         if righe < n:      # il secondo clic non è stato registrato: riprova una volta
             r.click_xy(b["x"], b["y"], 0.3, 0.9)
@@ -187,7 +186,7 @@ def _(r):
 @sc("5-riepilogo")
 def _(r):
     r.pg.evaluate("()=>window.__v.chipOff()")
-    r.key("Escape")
+    pulisci(r)
     r.click("#gi-rimuovi", after=0.5) if r.pg.locator("#gi-rimuovi").is_visible() else None
     r.click("#btn-home", after=1.5)
     r.layers_off(keep=("circoscrizioni", "edificato"))

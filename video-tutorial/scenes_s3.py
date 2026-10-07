@@ -23,7 +23,7 @@ def rndt_layer_id(r):
 @sc("3-cose")
 def _(r):
     r.chip(1)
-    r.card("Sezione 2", "Plugin RNDT", "Il catalogo nazionale dei dati territoriali", hold=2.8)
+    r.card("Sezione 2", "Plugin RNDT", "Il catalogo nazionale dei dati territoriali", hold=2.8, durante=lambda: pulisci(r))
     r.lower("Plugin RNDT", "Il catalogo nazionale dei dati territoriali")
     r.sync(0.22)
     r.ring("#btn-rndt", "Catalogo RNDT", pos="below", hold=2.0)

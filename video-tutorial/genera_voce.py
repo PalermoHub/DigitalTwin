@@ -5,7 +5,7 @@ from piper import PiperVoice
 from piper.config import SynthesisConfig
 import storyboard as sb
 
-LENGTH = float(os.environ.get("LENGTH", "1.38"))   # 1.0 = ~212 parole/min; 1.38 ≈ 150
+LENGTH = float(os.environ.get("LENGTH", "1.27"))   # 1.0 = ~212 parole/min; 1.38 ≈ 150
 PAUSA_FRASE = 0.28                                  # secondi di silenzio dopo ogni frase
 voce = PiperVoice.load("voci/it_IT-paola-medium.onnx")
 cfg = SynthesisConfig(length_scale=LENGTH, noise_scale=0.6, noise_w_scale=0.7)

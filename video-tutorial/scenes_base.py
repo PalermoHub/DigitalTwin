@@ -21,3 +21,11 @@ def sc(sid):
         SCENE[sid] = f
         return f
     return deco
+
+
+def pulisci(r):
+    """Stato pulito tra una sezione e l'altra: niente scheda, ricerca, filtri o strati rimasti accesi."""
+    r.key("Escape")
+    r.pg.evaluate("""()=>{const i=document.getElementById('cerca-testo');if(i){i.value='';i.dispatchEvent(new Event('input',{bubbles:true}))}
+        document.querySelectorAll('#filtri-chips button').forEach(b=>b.click())}""")
+    r.layers_off(keep=("circoscrizioni", "edificato"))

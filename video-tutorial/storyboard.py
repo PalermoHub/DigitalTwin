@@ -70,7 +70,7 @@ def per_voce(testo: str) -> str:
 
 S = []
 def scena(**k):
-    k.setdefault("extra", 1.0)
+    k.setdefault("extra", 0.5)
     S.append(k)
 
 # ───────────────────────── 1 · APERTURA (0:00–0:45) ─────────────────────────
@@ -219,7 +219,7 @@ scena(id="4-cose", sez=4,
 scena(id="4-inquadra", sez=4,
       vista="Nel campo di ricerca si scrive «Teatro Massimo»: la mappa si porta sull'area che l'immagine rappresenta.",
       azioni=["Cerca «Teatro Massimo» (o via Maqueda) e scegli il risultato; zoom 15."],
-      testo="Primo passo: inquadra la zona con la ricerca, così l'immagine si carica già vicina al posto giusto.")
+      testo="Primo passo: inquadra la zona con la ricerca, per esempio il Teatro Massimo, così l'immagine si carica già vicina al posto giusto.")
 scena(id="4-carica", sez=4,
       vista="Il file della pianta del 1891 viene trascinato nel riquadro «Carica mappa storica»; l'immagine appare al centro, con le maniglie arancioni.",
       azioni=["Carica il file (pianta_1891_demo.png) nel riquadro «Carica mappa storica» (trascinamento).", "Evidenzia le maniglie."],
