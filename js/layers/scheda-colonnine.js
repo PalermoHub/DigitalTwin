@@ -42,7 +42,7 @@ export function vociColonnine(punti, aggiornato = '', grafici = null) {
       riassunto: `${piu(punti.length, 'colonnina', 'colonnine')}${disponibili ? ` · ${piu(disponibili, 'disponibile', 'disponibili')}` : ''}`,
       elementi: punti.map(p => ({ strato: 'colonnine', titolo: p.indirizzo || p.operatore || 'Colonnina di ricarica', anteprima: p.stato, righe: righeColonnina(p) })),
     },
-    link: { testo: 'Statistiche e serie storica', url: APPROFONDISCI, icona: 'esterno', suggerimento: 'EVChargingLogSicilia (PalermoHub): uso, trend e previsioni delle colonnine' },
+    link: { testo: 'Colonnine di ricarica in Sicilia', url: APPROFONDISCI, icona: 'esterno', suggerimento: 'EVChargingLogSicilia (PalermoHub): uso, trend e previsioni delle colonnine' },
     fonte: quando ? `${FONTE}\nStato aggiornato al ${quando}` : FONTE,
   }];
 }
