@@ -19,7 +19,7 @@ from guida_screenshot import ROOT, _avvia_server, controlla_requisiti  # noqa: E
 
 LARGHEZZA, ALTEZZA = 1200, 630
 ARANCIONE = "#f5a623"
-TESTO = "Catasto, PRG, popolazione, edifici e trasporto pubblico su una sola mappa."
+TESTO = "Catasto, PRG, popolazione, edifici, rilievo, trasporto pubblico e tanti altri dati su una sola mappa."
 FIRMA = "OPEN DATA SICILIA"
 STRATI_SFONDO = ["edificato", "coropletico"]
 CENTRO, ZOOM = [13.3380, 38.1157], 13.4
