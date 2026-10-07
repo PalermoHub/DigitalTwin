@@ -1,0 +1,156 @@
+Guida
+
+Come usare la mappa, passo dopo passo.
+
+Cos'è la mappa e a cosa serve
+Sul telefono
+Con quali dati è realizzata
+La barra degli strati
+Mettere un layer sopra o sotto un altro
+Mappe di base e mappe storiche
+Aggiungere i propri dati e servizi
+Cambiare i colori di uno strato
+Fare clic sulla mappa
+Tutto in un punto
+Cosa si legge nella scheda
+Monumenti e luoghi storici
+Uffici comunali
+Pericolosità e rischio idrogeologico (PAI)
+Incendi
+Isole di calore
+Cercare e filtrare
+Stampare la mappa
+Avvertenze
+Cos'è la mappa e a cosa serve
+
+Il Digital Twin di Palermo, realizzato da Open Data Sicilia, è una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città: catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico, sicurezza stradale e uffici comunali.
+
+Serve a leggere un luogo da più punti di vista: chi cerca una particella, chi vuole capire come è fatto un quartiere, chi studia la mobilità o i servizi. Ogni informazione resta collegata alla fonte da cui proviene.
+
+In alto, accanto al logo, il menu porta alle altre schede (Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e avvisi, About); la mappa sta al centro, con la barra degli strati a sinistra e la scheda del luogo a destra. Funziona anche da telefono, con una barra di quattro tab in basso: vedi il passo «Sul telefono».
+
+La vista iniziale: il centro di Palermo.
+Sul telefono
+
+Su uno schermo stretto i comandi cambiano. In basso c'è una barra con quattro tab: «Mappa» riporta alla mappa e chiude ciò che la copre; «Strati» apre i riquadri delle mappe di base, dei layer e dei filtri, con il numero degli strati accesi; «Aggiungi» riunisce «I miei layer», il catalogo RNDT e Geoimage; «Menu» apre le guide e le pagine sul progetto.
+
+La ricerca sta in alto, sotto il logo, con il pulsante «Filtri»; a destra restano gli strumenti della mappa. Il tema scuro si cambia con l'interruttore accanto al logo. Per conoscere un luogo si tocca la mappa: la scheda sale dal basso e si alza o si abbassa trascinando la maniglia.
+
+Da telefono: ricerca in alto, quattro tab in basso e menu a comparsa.
+Con quali dati è realizzata
+
+La mappa usa dati pubblicati da enti pubblici e da progetti di dati aperti: il Comune di Palermo (scuole, uffici, incidenti, carta tecnica), l'azienda del trasporto pubblico AMAT, il catasto e la zonizzazione del piano regolatore, i dati del censimento e la base cartografica di OpenStreetMap.
+
+L'elenco completo è nella scheda «Fonti e avvisi» del menu (in alto; da telefono nel tab «Menu»): per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).
+
+Le fonti dei dati sono elencate in «Fonti e avvisi», con i link alle licenze.
+La barra degli strati
+
+Gli strati sono i temi che si possono sovrapporre alla mappa. A sinistra una barra verticale ha cinque tab: «Base cartografica», «Layer», «RNDT», «I miei layer» e «Filtri». Il tab «Layer» apre un pannello con i gruppi di strati (Confini, Edifici, Monumenti, Piano PAI, Popolazione, Rilievo, Servizi, Sicurezza, Territorio, Trasporti), sempre in ordine alfabetico: un clic sul gruppo lo apre, e ogni strato ha una casella per accenderlo o spegnerlo. Il pannello resta aperto finché non si preme di nuovo il tab o Esc; da telefono si apre dal tab «Strati», mentre «I miei layer», il catalogo RNDT e Geoimage stanno nel tab «Aggiungi».
+
+Gli strati accesi compaiono come etichette in alto sulla mappa e la legenda in basso a sinistra ne spiega i colori. Accanto a ogni strato i pulsanti permettono di spostarlo su o giù, centrare la mappa sui suoi dati e cambiare i colori; il campo «Cerca strato» filtra l'elenco. Se ne possono accendere più d'uno per confrontarli, ad esempio edifici e catasto.
+
+Il tab «Layer» con il gruppo «Territorio» aperto e il catasto acceso.
+Mettere un layer sopra o sotto un altro
+
+In cima al tab «Layer», sotto «Cerca strato», la scheda arancione «Ordine layer in mappa» elenca tutti gli strati accesi, di qualsiasi gruppo, con accanto il gruppo di provenienza. Il contatore dice quanti sono, anche a scheda chiusa; servono almeno due strati accesi per cambiare l'ordine.
+
+In alto nell'elenco vuol dire sopra sulla mappa. Si riordina con le frecce su e giù oppure trascinando la maniglia. Vale anche per i layer di «I miei layer» e del catalogo RNDT, e un layer appena aggiunto parte in cima a tutto. «Ripristina ordine» riporta l'ordine di partenza; l'ordine scelto è salvato nel browser e ritrovato alla visita successiva.
+
+La scheda «Ordine layer in mappa», con tre strati accesi.
+Mappe di base e mappe storiche
+
+Il tab «Base cartografica» cambia la mappa che sta sotto gli strati: mappe stradali (chiara, scura e altre), immagini aeree e topografiche. Il pulsante con la luna, nella barra degli strumenti, passa dal tema chiaro al tema scuro, e la mappa di base cambia di conseguenza.
+
+In fondo c'è la sezione «Mappe storiche»: quindici carte di Palermo, dal 1580 al 1993, tratte dall'Atlante delle carte tecniche storiche di Palermo di OpenDataSicilia. Il pallino colorato dice quanto bene la carta si sovrappone alla città di oggi: verde alta, giallo media, rosso bassa. Il pulsante «Apri l'Atlante storico di Palermo» apre l'atlante completo, già posizionato sulla zona che stai guardando. Per confrontare una carta con la città di oggi si usa la «Guida Geoimage».
+
+Una mappa storica come base: Palermo nel 1891.
+Aggiungere i propri dati e servizi
+
+Il tab «I miei layer» funziona come il Browser di QGIS. Sotto «I miei dati» si caricano file dal computer (GeoJSON, KML, KMZ, GPX, Shapefile in zip, CSV con latitudine e longitudine) o da un indirizzo https, anche un foglio Google Sheets condiviso con «Chiunque abbia il link». Sotto «Servizi» c'è un ramo per tipo: XYZ, WMS, WMTS, WFS e ArcGIS REST; il pulsante «+» aggiunge un servizio e «Leggi il servizio» ne mostra i layer da spuntare.
+
+I servizi aggiunti restano salvati nel browser (fino a cinquanta): un clic su una riga li rimette in mappa, il cestino li toglie dall'elenco. Per i servizi protetti ci sono i campi utente e password, che restano in memoria solo finché la pagina è aperta: alla riapertura il servizio mostra un lucchetto e la password va inserita di nuovo. Per ArcGIS REST si può incollare un token nell'indirizzo. I dati si vedono entro l'area di Palermo e i layer aggiunti compaiono sotto «Layer in mappa», con casella, opacità e frecce per l'ordine.
+
+Il tab «I miei layer»: file, indirizzi web e servizi.
+Cambiare i colori di uno strato
+
+Il pulsante con la tavolozza, accanto a uno strato, apre il pannello dei colori: riempimento e bordo, e «Colora per attributo», che colora gli elementi secondo un campo dei dati. Il tipo «Per categorie» dà un colore a ogni valore; il tipo «Graduata» divide un campo numerico in classi (da tre a nove, a quantili o a intervalli uguali).
+
+La rampa si sceglie da un elenco con l'anteprima dei colori: oltre alle cinque di ColorBrewer ci sono le scale scientifiche di Fabio Crameri, uniformi per percezione e leggibili anche con il daltonismo e in bianco e nero. Le sequenziali vanno dal chiaro allo scuro; le divergenti vanno usate solo con dati che hanno un valore di riferimento. La casella «Inverti la scala dei colori» la legge dal fondo. In basso a sinistra compare la legenda del tema, con le classi e i colori scelti; «Ripristina» riporta i colori originali, «Esporta JSON» salva il tema.
+
+Edificato colorato per densità di popolazione con la scala Batlow.
+Fare clic sulla mappa
+
+Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono: all'apertura un invito a tutto schermo lo ricorda, sparisce al primo clic e, con «Non mostrare più», non si ripresenta (il pulsante «Ripristina» accanto alla ricerca lo riaccende). Il punto scelto viene evidenziato e si apre la scheda del luogo.
+
+Le aree evidenziate (edificio, particella, fermate vicine e altro) hanno in basso una legenda «Selezione in mappa» con un colore per ogni voce: un clic su una voce lascia in mappa solo quella, un secondo clic le riaccende tutte. Passando con il mouse su un'area compare un fumetto con il nome del layer e il dato che identifica l'elemento; il pulsante a fumetto della legenda li accende e li spegne.
+
+Un clic in via Maqueda evidenzia il punto, mostra la legenda della selezione e apre la scheda.
+Tutto in un punto
+
+Un solo clic interroga insieme tutti gli strati: catasto, vincoli del piano regolatore, sicurezza stradale, beni culturali e trasporto pubblico. Il risultato è la scheda del luogo, che mette in fila ciò che si sovrappone in quel punto.
+
+Un clic, cinque letture dello stesso luogo.
+Cosa si legge nella scheda
+
+La scheda è organizzata in sezioni, che si scelgono dalle linguette in alto: Luogo, Strumenti urbanistici, Mercato, Popolazione e altre. «Luogo» riassume ciò che c'è nel punto scelto: indirizzo, circoscrizione e quartiere, monumenti, rischio di incidenti e fermate vicine.
+
+La sezione «Strumenti urbanistici» comincia dall'edificio e mostra poi la particella con foglio e numero e il collegamento alla visura. Ogni sezione indica la fonte: i dati catastali, urbanistici e i vincoli sono solo informativi.
+
+La scheda del luogo, qui sulla sezione «Strumenti urbanistici».
+Monumenti e luoghi storici
+
+Lo strato «Monumenti» (gruppo Territorio) mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane, teatri. Dove è stato possibile abbinarli, anche l'edificio è colorato sulla mappa.
+
+Un clic su un monumento apre la sua scheda, con foto, descrizione, categoria e il collegamento al Portale del Turismo del Comune di Palermo, da cui provengono i testi.
+
+La scheda di un monumento: il Teatro Massimo.
+Uffici comunali
+
+Lo strato «Uffici comunali (sedi)» mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede.
+
+La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando pubblicati. I dati provengono dal sito istituzionale del Comune.
+
+La scheda di una sede comunale: Palazzo Palagonia.
+Pericolosità e rischio idrogeologico (PAI)
+
+Il gruppo «Piano PAI» riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti, siti di attenzione ed erosione costiera, con la simbologia ufficiale.
+
+Un clic su un'area apre la scheda: nella sezione «Strumenti urbanistici» compare il riquadro «Vincoli PAI», con la classe più grave tra quelle sovrapposte, accanto alla zonizzazione e ai vincoli del piano regolatore. Sono dati informativi: per usi legali vale la cartografia ufficiale dell'Autorità di Bacino.
+
+Clic su un'area PAI: la scheda, sezione «Strumenti urbanistici».
+Incendi
+
+Lo strato «Incendi» mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l'anno.
+
+La scheda di un incendio riporta data, località, superficie totale e boscata e, quando disponibili, le squadre intervenute. Se più incendi si sovrappongono, la scheda li elenca tutti.
+
+La scheda di un incendio: Bellolampo, duemilaventitré.
+Isole di calore
+
+Lo strato «Isole di calore» (gruppo Territorio) mostra la temperatura superficiale estiva ricavata dai satelliti Landsat 8 e 9 (USGS) per ognuna delle 3600 sezioni di censimento del 2021; in mappa c'è l'anno 2025. È la temperatura della superficie, non quella dell'aria che si misura con il termometro.
+
+La legenda permette di scegliere il metodo di classificazione (Jenks, quantili, intervalli uguali) e da tre a nove classi, e mostra il grafico dell'andamento comunale dal 2019 al 2025. Un clic su una sezione apre la scheda con la voce «Isola di calore»: temperatura estiva, differenza rispetto alla media comunale e variazione dal 2019. Il link porta allo studio completo di PalermoHub.
+
+Isole di calore: temperatura superficiale estiva per sezione di censimento.
+Cercare e filtrare
+
+Il campo di ricerca in basso permette di cercare una via, un civico, un quartiere o una particella. Il tab «Filtri» della barra a sinistra apre il pannello per limitare la ricerca a una circoscrizione, a un quartiere o a una UPL, per scegliere una linea del trasporto pubblico, l'anno e la gravità degli incidenti, o per cercare una particella catastale da foglio e numero. Un numero sul tab dice quanti filtri sono attivi.
+
+Esempio: scegliendo una circoscrizione e digitando «Maqueda», i risultati si restringono alle vie con quel nome dentro la zona scelta; un clic su un risultato porta la mappa sul posto e apre la scheda. Il pulsante con la freccia circolare, accanto alla ricerca, ripristina colori, schede e ordine degli strati.
+
+Una ricerca di esempio: circoscrizione scelta e testo «Maqueda».
+Stampare la mappa
+
+Il pulsante con la stampante, nella barra degli strumenti in alto a destra, prepara un foglio con il titolo, l'immagine della mappa che stai guardando, le legende dei soli strati accesi e le attribuzioni delle fonti. Prima di stampare si sceglie il formato, da A4 ad A0, l'orientamento, orizzontale o verticale, e la scala, da 1:1.000 a 1:25.000, con la barra grafica in metri e chilometri; «Vista attuale» stampa la mappa com'è.
+
+Negli altri pulsanti della barra: la casa riporta alla vista iniziale, le frecce agli angoli attivano lo schermo intero e la luna passa dal tema chiaro al tema scuro (da telefono si usa l'interruttore accanto al logo, e stampa, vista iniziale e schermo intero stanno in colonna a destra).
+
+Il menu di stampa: formato, orientamento e scala.
+Avvertenze
+
+Catasto, zonizzazione e vincoli hanno valore solo informativo e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. Il piano regolatore è la variante generale del duemilaquattro: varianti successive potrebbero non essere incluse.
+
+I dati del censimento sono stime campionarie, quindi i valori per sezione non sono conteggi esatti.
+
+In fondo a ogni scheda, l'avviso sul valore informativo dei dati.

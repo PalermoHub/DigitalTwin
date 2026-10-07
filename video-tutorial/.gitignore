@@ -1,0 +1,4 @@
+.venv/
+voci/*.onnx
+verifica/*.png
+__pycache__/

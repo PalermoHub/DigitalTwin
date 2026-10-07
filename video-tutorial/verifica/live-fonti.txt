@@ -1,0 +1,43 @@
+Fonti e avvisi
+
+Da dove vengono i dati e cosa tenere presente quando li si usa.
+
+Avvisi
+Catasto, zonizzazione PRG e vincoli sono solo informativi e non hanno valore legale: per usi legali servono il certificato di destinazione urbanistica e le visure ufficiali.
+Il PRG vigente è la Variante generale 2004: varianti puntuali successive potrebbero non essere incluse.
+I dati del censimento 2023 sono stime campionarie (censimento permanente): i valori per sezione non sono conteggi esatti.
+La popolazione per edificio è una stima.
+Fonti dei dati
+S.I.T.R. Regione Siciliana e Agenzia delle Entrate — particelle catastali (2026-09). Fonte dati: SITR Regione Siciliana, Geoportale cartografico catastale, Agenzia delle Entrate, Open data del Comune di Palermo — licenza da verificare
+Comune di Palermo — Variante generale al PRG 2004: zonizzazione e vincoli (2004). Fonte dati: Geocatalogo del Comune di Palermo, Open data del Comune di Palermo, SITR Regione Siciliana — licenza da verificare
+Comune di Palermo — numeri civici (2026-02). Fonte dati: ANNCSU, Archivio nazionale dei numeri civici, Mappa ANNCSU di PalermoHub — licenza da verificare
+Agenzia delle Entrate — Osservatorio del Mercato Immobiliare, zone OMI (2025-S2) — licenza da verificare
+Comune di Palermo — immobili comunali (2024) — licenza da verificare
+Comune di Palermo — unità volumetriche CTC; popolazione per edificio: stima (2026) — licenza da verificare
+ISTAT / Comune di Palermo — circoscrizioni, quartieri, UPL (2021). Fonte dati: ISTAT, Basi territoriali e variabili censuarie, Popolazione residente a Palermo, open data del Comune — licenza da verificare
+ISTAT — sezioni di censimento 2021 (2021). Fonte dati: ISTAT, Basi territoriali e variabili censuarie, Popolazione residente a Palermo, open data del Comune — licenza da verificare
+ISTAT — Censimento permanente 2023 (stime campionarie), via Cruscotto Statistico Comunale (2023) — CC BY 4.0. Fonte dati: Cruscotto Statistico Comunale (Palermo)
+ISTAT — Censimento permanente della popolazione e delle abitazioni 2021 (2021). Fonte dati: ISTAT, Basi territoriali e variabili censuarie, Popolazione residente a Palermo, open data del Comune — licenza da verificare
+Comune di Palermo — numeri civici (indice per la ricerca) (2026-02). Fonte dati: ANNCSU, Archivio nazionale dei numeri civici, Mappa ANNCSU di PalermoHub — licenza da verificare
+Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): zonizzazione (2004). Fonte dati: Geocatalogo del Comune di Palermo, Open data del Comune di Palermo, SITR Regione Siciliana — licenza da verificare
+Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): PPE (2004). Fonte dati: Geocatalogo del Comune di Palermo, Open data del Comune di Palermo, SITR Regione Siciliana — licenza da verificare
+Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): vincoli areali (2004). Fonte dati: Geocatalogo del Comune di Palermo, Open data del Comune di Palermo, SITR Regione Siciliana — licenza da verificare
+Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): vincoli lineari (2004). Fonte dati: Geocatalogo del Comune di Palermo, Open data del Comune di Palermo, SITR Regione Siciliana — licenza da verificare
+HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub: rilievo 3D (codifica Terrarium) (2026) — CC BY 4.0. Fonte dati: Dati su Zenodo, DOI del dataset, Articolo (Scientific Data), Repository del progetto
+HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub: raster di elevazione (2026) — CC BY 4.0. Fonte dati: Dati su Zenodo, DOI del dataset, Articolo (Scientific Data), Repository del progetto
+HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub: griglia di punti a passo 50 m con indici morfologici (2026) — CC BY 4.0. Fonte dati: Dati su Zenodo, DOI del dataset, Articolo (Scientific Data), Repository del progetto
+Base cartografica: OpenFreeMap, © OpenMapTiles, dati © OpenStreetMap contributors. Fonte dati: OpenFreeMap, OpenStreetMap — licenza da verificare
+Carte tecniche (CSG 2k 1989/91, CTC 2k 2007/09, CTR 10k 2012/13): SiciliaHub / PalermoHub, Comune di Palermo e Regione Siciliana (SITR). Fonte dati: SITR Regione Siciliana, Geocatalogo del Comune di Palermo, Atlante delle carte tecniche — licenza da verificare
+Mappe storiche (1580–1993): Atlante delle carte tecniche storiche di Palermo, OpenDataSicilia (A. Borruso, F. P. Paolicelli, C. Spataro, G. B. Vitrano), georeferenziate su Map Warper — CC BY 4.0; le fonti originali (BnF Gallica, Library of Congress, Harvard Map Collection, U.S. Army Map Service, Comune di Palermo) sono indicate nell'attribuzione di ogni mappa. Fonte dati: Dataset del Comune di Palermo, SITR, Repertorio cartografico CRICD, University of Texas, Perry-Castañeda Library Map Collection
+Scuole, asili comunali e sedi delle sezioni elettorali: Comune di Palermo, dati aperti (2017) — condizioni d'uso da verificare. Fonte dati: Anagrafe edilizia scolastica, MIUR (scuole), Open data del Comune di Palermo (licenze: IODL 2.0)
+Trasporto pubblico (linee, fermate, orari): AMAT Palermo S.p.A., feed GTFS valido dal 25/08/2026 al 31/10/2026 — condizioni d'uso da verificare. Fonte dati: Progetto OpenAMAT
+Sicurezza stradale: incidenti 2015–2023 del Comune di Palermo (Polizia Municipale), rete stradale © OpenStreetMap contributors, elaborazione PalermoHub / OpenDataSicilia (studio «Rete stradale») — condizioni d'uso da verificare. Fonte dati: Sinistri 2022, open data del Comune, Dataset sugli incidenti di Palermo su dati.gov.it, OpenStreetMap
+Colonnine di ricarica: GSE, Piattaforma Unica Nazionale (PUN), serie storica PalermoHub/evcharginglogsicilia, stato aggiornato in continuo — CC BY 4.0. Fonte dati: Piattaforma Unica Nazionale, EV Charging Log Sicilia, Rete di ricarica, onData
+Uffici comunali (struttura, responsabili, sedi e contatti): sito istituzionale del Comune di Palermo, comune.palermo.it/amministrazione/uffici — condizioni d'uso da verificare. Fonte dati: Uffici del Comune di Palermo
+Fontanelle: AMAP S.p.A., fontanelle pubbliche di Palermo (elaborazione PalermoHub / OpenDataSicilia) — condizioni d'uso da verificare. Fonte dati: Dataset sul portale open data del Comune, Libro delle fontane AMAP (PDF), Progetto Fontanelle, onData
+Distretti idrici: AMAP S.p.A., Palermo — condizioni d'uso da verificare. Fonte dati: Emergenza idrica, AMAP, Emergenza idrica in Sicilia, OpenDataSicilia
+Alberi monumentali: Ministero dell'agricoltura, della sovranità alimentare e delle foreste (MASAF), Elenco degli alberi monumentali d'Italia — condizioni d'uso da verificare. Fonte dati: Elenco degli alberi monumentali d'Italia, MASAF, Dove sono gli alberi monumentali d'Italia?
+Monumenti: Portale del Turismo del Comune di Palermo (testi, foto e link) e «Mappa monumentale di Palermo e dell'Agro Palermitano» di Marcello Petrucci (posizioni, testi e foto) — condizioni d'uso da verificare. Fonte dati: Mappa monumentale di Palermo, M. Petrucci
+Isole di calore: temperatura superficiale da satellite Landsat (USGS), elaborazione PalermoHub / OpenDataSicilia, 2019–2025 — CC BY 4.0. Fonte dati: USGS Landsat, Dati su Zenodo, Isole di calore urbane 2019-2025
+Pericolosità e rischio idrogeologico (PAI): Regione Siciliana, Piano di assetto idrogeologico, bacini 039-040. Fonte dati: PAI, SITR Regione Siciliana, Dati PAI aggiornati al 12/05/2026 — licenza da verificare
+Incendi: catasto dei soprassuoli percorsi dal fuoco, Comune di Palermo e Sistema Informativo Forestale (SIF) della Regione Siciliana. Fonte dati: SIF Regione Siciliana (licenze: CC BY 3.0 IT)

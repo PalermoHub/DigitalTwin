@@ -1,0 +1,67 @@
+Plugin RNDT
+
+Il catalogo nazionale dei dati territoriali, direttamente sulla mappa.
+
+Un lavoro di Andrea Borruso
+Cos’è l’RNDT
+Cosa fa questo plugin
+Come si usa
+Strati aggiunti
+Cosa è stato adattato per Palermo
+Dove saperne di più
+Cercare nel catalogo RNDT
+Il gruppo RNDT e i tuoi file
+Interrogare i layer RNDT
+Un lavoro di Andrea Borruso
+
+Il catalogo RNDT di questa mappa si basa interamente sul plugin openrndt-geolibre, ideato e scritto da Andrea Borruso (onData). Senza il suo lavoro questa funzione non esisterebbe: l’ho solo adattata a questo progetto.
+
+Grazie alla sua ottima architettura è stato possibile adattarlo con pochissimi interventi: il plugin nasceva per un’altra applicazione di mappe, ma è pensato così bene da poter essere ospitato anche qui senza riscriverlo.
+
+Cos’è l’RNDT
+
+Il Repertorio Nazionale dei Dati Territoriali (RNDT) è il catalogo ufficiale italiano dei dati geografici: raccoglie le schede di migliaia di mappe e dati pubblicati da Comuni, Regioni, ministeri, enti parco, agenzie e altri enti. È un po’ come una biblioteca: dice che cosa esiste, chi lo ha prodotto e dove si può consultare.
+
+Cosa fa questo plugin
+Cerca nel catalogo nazionale per parola, tema, ente che ha pubblicato il dato, data e tipo di dato.
+Per ogni risultato mostra la scheda: titolo, descrizione, ente responsabile e servizi disponibili.
+Aggiunge alla mappa i servizi di mappe che trova: WMS (immagini della mappa, come un livello da sovrapporre) e WFS (i dati veri e propri, con le informazioni sugli oggetti).
+Scarica i dati WFS in formato GeoJSON, così si possono vedere e interrogare direttamente sulla mappa.
+Come si usa
+Apri la scheda di un luogo e premi l’icona del catalogo RNDT, in alto accanto all’ingranaggio: il pannello si sovrappone alla scheda.
+Scrivi cosa cerchi (per esempio «idrografia», «rischio frane», «zone protette») e, se vuoi, filtra per tipo o per ente.
+Scegli un risultato, poi il servizio (WMS o WFS) e premi per aggiungerlo: compare come nuovo strato sulla mappa.
+Con il tab «Scheda» nella barra a destra (o con il tasto Esc) chiudi il catalogo e torni alla scheda: gli strati aggiunti restano sulla mappa.
+Strati aggiunti
+In cima al pannello c’è l’elenco «Layer aggiunti»: puoi mostrarli, nasconderli o rimuoverli.
+Gli strati si ricordano da una visita all’altra, in questo browser. Se un servizio non risponde più, resta nell’elenco segnato come «non disponibile» e non viene cancellato.
+Cliccando un punto della mappa, la scheda mostra anche le informazioni degli strati RNDT attivi in quel punto, nel tab «Altri dati (RNDT)».
+Cosa è stato adattato per Palermo
+La ricerca e i download sono sempre limitati all’area di Palermo: non si può cercare «in tutta Italia».
+I servizi pubblici spesso non permettono l’uso da altri siti web: un piccolo servizio intermedio (proxy) li rende raggiungibili, con controlli di sicurezza su indirizzi e dimensioni.
+Gli strati molto densi (come le particelle catastali) si vedono meglio con il WMS: il download WFS ha un tetto di 10.000 oggetti.
+Dove saperne di più
+
+Codice, istruzioni e segnalazioni: github.com/ondata/openrndt-geolibre. Autore: Andrea Borruso su LinkedIn.
+
+Cercare nel catalogo RNDT
+
+Il pulsante con l'icona dei due layer, nella barra degli strumenti in alto a destra, apre il catalogo del Repertorio Nazionale dei Dati Territoriali (RNDT): l'elenco dei dati geografici pubblicati dagli enti di tutta Italia. Il pannello si affianca alla scheda del luogo nella barra verticale a destra: i tab «Scheda» e «RNDT» passano dall'uno all'altro, il tasto Esc chiude il catalogo.
+
+Si cerca per testo, tema o ente, sempre entro l'area di Palermo. Un servizio WMS si aggiunge come livello di immagini; un servizio WFS come elementi geografici che si possono interrogare. Il catalogo usa il plugin openrndt-geolibre, sviluppato da Andrea Borruso di onData.
+
+Il catalogo RNDT, limitato all'area di Palermo.
+Il gruppo RNDT e i tuoi file
+
+I dati aggiunti compaiono nel gruppo «RNDT» della barra degli strati, e anche tra gli Argomenti del foglio Info. Ogni layer ha l'icona con l'occhio per accenderlo o spegnerlo e il cestino per rimuoverlo. Si salvano da soli e, riaprendo la mappa, tornano al loro posto, accesi o spenti come li avevi lasciati. Accanto al nome, «solo questa sessione» avverte che quel layer non si è potuto salvare.
+
+I tuoi file non stanno più qui: si caricano dall’albero del gruppo «I miei layer» (icona di caricamento accanto a «I miei dati») e compaiono nello stesso gruppo, insieme ai servizi XYZ, WMS, WMTS, WFS e ArcGIS REST aggiunti per indirizzo, anche con utente e password. «Carica file dal computer» accetta: GeoJSON, KML, KMZ, GPX, Shapefile (un file zip con anche il .prj) e CSV con le colonne di latitudine e longitudine. GeoJSON e CSV devono essere in WGS84. Di ogni file restano solo gli elementi dentro il Comune di Palermo, e un layer si salva fino a 5 MB: oltre, vale solo finché la pagina è aperta. Puoi anche incollare un indirizzo https nel campo «Da indirizzo web» di «I miei dati»: per un foglio Google Sheets condividilo prima con «Chiunque abbia il link» (ruolo Lettore) e ricorda le colonne lat e lon; il file, al massimo 10 MB, è una copia che non si aggiorna da sola.
+
+Il gruppo RNDT con un layer aggiunto dal catalogo: le aree PAI da frana.
+Interrogare i layer RNDT
+
+Un clic sulla mappa interroga anche i layer RNDT accesi. Le risposte arrivano nella linguetta «Altri dati (RNDT)» della scheda, con un riquadro per ogni layer. Per i servizi WFS la scheda mostra gli attributi dell'elemento cliccato, per esempio la classe di pericolosità di un'area PAI da frana: bisogna cliccare proprio sull'elemento.
+
+Per i servizi WMS la scheda chiede al servizio le informazioni sul punto (GetFeatureInfo) e riporta la risposta; se il livello è solo grafico, lo dice. I dati dei servizi esterni hanno valore informativo: la fonte è indicata sotto ogni riquadro.
+
+Clic su un'area PAI da frana: gli attributi del layer RNDT.
