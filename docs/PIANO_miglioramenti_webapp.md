@@ -46,7 +46,7 @@ Obiettivo: chiudere i difetti già misurati, senza rischi.
 
 - [x] `#strati-chip`: rimuovere `role="list"` oppure dare `role="listitem"` ai figli (audit `aria-required-children`). Rimisurare l'accessibilità desktop.
 - [x] `intersezione.svg`: `width` e `height` aggiunti in `js/core/invito.js` (l'immagine è creata dal codice).
-- [x] `index.html`: aggiunti `og:image` (usa `img/social_card.jpg`, già presente), `og:url`, `twitter:card` e canonical su `https://palermohub.github.io/DigitalTwin/` (da cambiare se l'indirizzo pubblico sarà un altro), `og:url`, `twitter:card` e `link rel="canonical"`; l'immagine di anteprima è 1200x750.
+- [x] `index.html`: aggiunti `og:image` (usa `img/social-card.jpg`, generata da `scripts/social_card.py` il 2026-10-07: la `social_card.jpg` che c'era apparteneva a un'altra app ed è stata tolta), `og:url`, `twitter:card` e canonical su `https://palermohub.github.io/DigitalTwin/` (da cambiare se l'indirizzo pubblico sarà un altro), `og:url`, `twitter:card` e `link rel="canonical"`; l'immagine di anteprima è 1200x630.
 - [x] `index.html`: aggiunto `<link rel="manifest">` con un `manifest.webmanifest` minimo (nome, icone, colori) in preparazione alla Fase 5.
 - [x] Piè di pagina: rendere leggibili ai lettori di schermo le coordinate (`#piede-coord`), oppure lasciarle `aria-hidden` ma documentare la scelta. Scelta: restano `aria-hidden`, perché cambiano a ogni movimento della mappa e un lettore di schermo le annuncerebbe di continuo.
 
