@@ -325,6 +325,11 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   const ctl = new AbortController();
   document.getElementById('pannello')?.addEventListener('change', aggiorna, { signal: ctl.signal });
   dialog.addEventListener('close', () => ctl.abort(), { once: true });
-  if (!dialog.open) dialog.show();
+  if (!dialog.open) {
+    // chi chiude il foglio torna dove era (il menu in testata): il focus non si perde nel nulla
+    const apertoDa = document.activeElement;
+    dialog.addEventListener('close', () => { if (apertoDa?.isConnected) apertoDa.focus?.({ preventScroll: true }); }, { once: true });
+    dialog.show();
+  }
   vaiA(tab);
 }

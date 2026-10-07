@@ -369,6 +369,16 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
   const indice = el('nav', 'scheda-indice');
   indice.setAttribute('role', 'tablist');
   indice.setAttribute('aria-label', 'Argomenti della scheda');
+  // frecce, Home e Fine passano da una linguetta all'altra (come in ogni tablist)
+  indice.addEventListener('keydown', e => {
+    const tab = [...indice.querySelectorAll('[role=tab]')];
+    const i = tab.indexOf(document.activeElement);
+    if (i < 0 || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+    e.preventDefault();
+    const j = e.key === 'Home' ? 0 : e.key === 'End' ? tab.length - 1 : (i + (e.key === 'ArrowRight' ? 1 : -1) + tab.length) % tab.length;
+    tab[j].focus();
+    tab[j].click();
+  });
   tabs.append(prev, indice, next);
   const frecce = () => {
     const troppo = indice.scrollWidth > indice.clientWidth + 1;
