@@ -43,6 +43,9 @@ def _(r):
     r.type("#cerca-testo", "Teatro Massimo")
     r.pause(1.2)
     r.click("#cerca-risultati li", after=2.5)
+    r.pg.evaluate("()=>new Promise(res=>{const m=window.dt.map;m.once('idle',()=>res(1));setTimeout(()=>res(0),8000)})")
+    r.layers_off(keep=("circoscrizioni", "edificato"))
+    r.key("Escape")
     r.fly(VISTA_GCP[0], VISTA_GCP[1], VISTA_GCP[2], ms=2000)
 
 
@@ -66,21 +69,18 @@ def _(r):
 def _(r):
     cx, cy = centro_di(r, ".gi-centro")
     r.sync(0.06)
-    r.drag(cx, cy, cx - 70, cy + 40, dur=1.0)
-    r.drag(cx - 70, cy + 40, cx, cy, dur=0.8)
-    r.sync(0.30)
+    r.drag(cx, cy, cx - 60, cy + 40, dur=0.9)
+    r.sync(0.28)
     rx, ry = centro_di(r, ".gi-rota")
-    r.drag(rx, ry, rx + 90, ry + 30, dur=1.0)
-    r.drag(rx + 90, ry + 30, rx, ry, dur=0.8)
-    r.sync(0.52)
+    r.drag(rx, ry, rx + 70, ry + 25, dur=0.9)
+    r.sync(0.50)
     ax, ay = centro_di(r, ".gi-angolo")
-    r.drag(ax, ay, ax - 30, ay - 30, dur=0.8)
-    r.sync(0.66)
-    r.click("#gi-modo", after=0.8)
-    r.ring("#gi-modo", "Scala ⇄ deforma", pos="left", hold=1.4)
-    r.drag(ax - 30, ay - 30, ax - 55, ay + 10, dur=0.8)
+    r.drag(ax, ay, ax - 25, ay - 25, dur=0.8)
+    r.sync(0.68)
     r.click("#gi-modo", after=0.6)
-    r.sync(0.88)
+    r.ring("#gi-modo", "Scala ⇄ deforma", pos="left", hold=1.2)
+    r.click("#gi-modo", after=0.4)
+    r.sync(0.86)
     r.click("#gi-reset", after=1.0)
 
 
@@ -132,7 +132,7 @@ def _(r):
 def _(r):
     r.sync(0.06)
     r.click("#gi-swipe", after=1.0)
-    sw = r.pg.locator('[class*="swipe"]:not(#gi-swipe)').first
+    sw = r.pg.locator(".gi-divisore-maniglia").first
     b = sw.bounding_box() if sw.count() else None
     if b:
         x, y = b["x"] + b["width"] / 2, b["y"] + b["height"] / 2

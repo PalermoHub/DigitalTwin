@@ -8,7 +8,7 @@
   const st = document.createElement('style');
   st.textContent = `
   #v-root{position:fixed;inset:0;z-index:2147483000;pointer-events:none;font-family:Montserrat,system-ui,sans-serif}
-  #v-cur{position:absolute;left:0;top:0;width:34px;height:34px;margin:-3px 0 0 -3px;transition:transform .05s linear;will-change:transform;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))}
+  #v-cur{position:absolute;left:0;top:0;width:34px;height:34px;margin:-3px 0 0 -3px;will-change:transform;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))}
   .v-rip{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:4px solid ${A};background:${A}55;animation:vrip .7s ease-out forwards}
   @keyframes vrip{from{transform:scale(.4);opacity:1}to{transform:scale(3.4);opacity:0}}
   .v-ring{position:absolute;border:4px solid ${A};border-radius:14px;box-shadow:0 0 0 6px ${A}44,0 0 24px ${A}aa;animation:vpulse 1.1s ease-in-out infinite;opacity:0;transition:opacity .25s}
@@ -48,7 +48,6 @@
   const cur = root.querySelector('#v-cur');
   let cx = -100, cy = -100;
   const place = () => { cur.style.transform = `translate(${cx}px,${cy}px)`; };
-  addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; cur.style.display = 'block'; place(); }, true);
   const rings = [];
   const rect = t => {
     if (Array.isArray(t)) return { left: t[0], top: t[1], width: t[2], height: t[3] };
@@ -58,6 +57,12 @@
     return { left: r.left, top: r.top, width: r.width, height: r.height };
   };
   window.__v = {
+    glide(x0, y0, x1, y1, ms) {
+      const t0 = performance.now(); cur.style.display = 'block';
+      const f = now => { const u = Math.min(1, (now - t0) / Math.max(1, ms)), e = u * u * (3 - 2 * u);
+        cx = x0 + (x1 - x0) * e; cy = y0 + (y1 - y0) * e; place(); if (u < 1) requestAnimationFrame(f); };
+      requestAnimationFrame(f);
+    },
     cursor(x, y) { cx = x; cy = y; cur.style.display = 'block'; place(); },
     ripple(x, y) { const d = document.createElement('div'); d.className = 'v-rip'; d.style.left = x + 'px'; d.style.top = y + 'px'; root.appendChild(d); setTimeout(() => d.remove(), 800); },
     ring(t, label, pos = 'below', pad = 8) {

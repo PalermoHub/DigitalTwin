@@ -54,15 +54,13 @@ class Rec:
 
     # ───── cursore e clic ─────
     def move(self, x, y, dur=0.7):
+        """Cursore finto fluido (animato nella pagina) + un solo movimento reale del mouse alla fine:
+        ogni mossa reale costa 150-180 ms con la mappa accesa, quindi non si può spezzare in tanti passi."""
         dur *= K
         x0, y0 = self.cur
-        n = max(2, int(dur * 30))
-        for i in range(1, n + 1):
-            u = ease(i / n)
-            xx, yy = x0 + (x - x0) * u, y0 + (y - y0) * u
-            self.pg.mouse.move(xx, yy)
-            self.pg.evaluate("([x,y])=>window.__v&&window.__v.cursor(x,y)", [xx, yy])
-            time.sleep(dur / n)
+        self.pg.evaluate("([a,b,c,d,ms])=>window.__v.glide(a,b,c,d,ms)", [x0, y0, x, y, int(dur * 1000)])
+        time.sleep(dur)
+        self.pg.mouse.move(x, y)
         self.cur = (x, y)
 
     def box(self, target, timeout=8000):
@@ -106,11 +104,20 @@ class Rec:
             time.sleep(per * K)
 
     def drag(self, x0, y0, x1, y1, dur=1.0, hold=0.2):
-        """Trascinamento visibile: premi in (x0,y0), muovi fino a (x1,y1), rilascia."""
+        """Trascinamento visibile: premi in (x0,y0), muovi a passi fino a (x1,y1), rilascia."""
         self.move(x0, y0, 0.6)
         self.pg.mouse.down()
         time.sleep(0.08 * K)
-        self.move(x1, y1, dur)
+        n = max(6, int(dur * 10 * K) + 4)
+        t_ini = time.monotonic()
+        self.pg.evaluate("([a,b,c,d,ms])=>window.__v.glide(a,b,c,d,ms)", [x0, y0, x1, y1, int(max(dur * K, n * 0.09) * 1000)])
+        for i in range(1, n + 1):
+            u = ease(i / n)
+            self.pg.mouse.move(x0 + (x1 - x0) * u, y0 + (y1 - y0) * u)
+        resto = max(dur * K, n * 0.09) - (time.monotonic() - t_ini)
+        if resto > 0:
+            time.sleep(resto)
+        self.cur = (x1, y1)
         time.sleep(hold * K)
         self.pg.mouse.up()
         time.sleep(0.3 * K)
@@ -123,12 +130,15 @@ class Rec:
         return self.pg.evaluate("([a,b])=>{const m=window.dt.map;const p=m.project([a,b]);const r=m.getContainer().getBoundingClientRect();return {x:p.x+r.left,y:p.y+r.top}}", [lng, lat])
 
     def jump(self, lng, lat, zoom, pitch=None, bearing=None):
-        self.pg.evaluate("([a,b,z,p,br])=>{const o={center:[a,b],zoom:z};if(p!=null)o.pitch=p;if(br!=null)o.bearing=br;window.dt.map.jumpTo(o)}", [lng, lat, zoom, pitch, bearing])
-        self.pg.wait_for_timeout(int(1500 * K))
+        self.pg.evaluate("""([a,b,z,p,br])=>new Promise(res=>{const m=window.dt.map;const o={center:[a,b],zoom:z};if(p!=null)o.pitch=p;if(br!=null)o.bearing=br;
+            m.jumpTo(o);m.once('idle',()=>res(1));setTimeout(()=>res(0),6000)})""", [lng, lat, zoom, pitch, bearing])
+        self.pg.wait_for_timeout(int(600 * K))
 
     def fly(self, lng, lat, zoom, ms=2200, pitch=None, bearing=None):
-        self.pg.evaluate("([a,b,z,ms,p,br])=>{const o={center:[a,b],zoom:z,duration:ms,essential:true};if(p!=null)o.pitch=p;if(br!=null)o.bearing=br;window.dt.map.flyTo(o)}", [lng, lat, zoom, int(ms * K), pitch, bearing])
-        self.pg.wait_for_timeout(int(ms * K + 900 * K))
+        self.pg.evaluate("""([a,b,z,ms,p,br])=>new Promise(res=>{const m=window.dt.map;const o={center:[a,b],zoom:z,duration:ms,essential:true};
+            if(p!=null)o.pitch=p;if(br!=null)o.bearing=br;m.once('moveend',()=>m.once('idle',()=>res(1)));m.flyTo(o);setTimeout(()=>res(0),ms+9000)})""",
+                         [lng, lat, zoom, int(ms * K), pitch, bearing])
+        self.pg.wait_for_timeout(int(500 * K))
 
     def map_click(self, lng, lat, move=0.9, after=2.0):
         p = self.px(lng, lat)
