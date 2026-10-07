@@ -42,8 +42,8 @@ docs/PIANO_DigitalTwin_Palermo.md
 docs/RIPARTENZA.md
 docs/schermata-fase1.png
 
-# test: restano solo in locale (non servono all'app; vedi docs/DA_FARE_PRIMA_DELLA_PRODUZIONE.md)
-tests/
-package.json
+# test: i test JS sono in git (li esegue la CI); i test Python restano solo in locale perché servono dati e file generati
+tests/*
+!tests/js/
 pytest.ini
 docs/PROCEDURA_DEPLOY_WORKER.md

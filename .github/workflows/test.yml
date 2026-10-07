@@ -1,0 +1,26 @@
+name: Test
+
+# Ad ogni push e pull request esegue i test JS (nessuna dipendenza da installare).
+# I test Python restano in locale: richiedono dati pesanti e file generati che non stanno in git.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  js:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run test:js
