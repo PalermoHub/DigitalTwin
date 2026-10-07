@@ -58,6 +58,7 @@ function contenutoPopup(p) {
     const img = el('img', 'monumento-foto');
     img.src = m.foto;
     img.alt = m.titolo;
+    img.loading = 'lazy';
     img.addEventListener('error', () => img.remove());
     radice.append(img);
   }
