@@ -1,4 +1,4 @@
-# Piano di miglioramento della webapp Digital Twin Palermo
+# Piano di miglioramento della webapp Palermo Digital Twin
 
 Data: 2026-10-07. Basato su analisi del codice, audit `innerHTML` e Lighthouse (server locale, Chromium headless senza GPU).
 

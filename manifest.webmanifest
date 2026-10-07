@@ -1,6 +1,6 @@
 {
-  "name": "Digital Twin Palermo",
-  "short_name": "DT Palermo",
+  "name": "Palermo Digital Twin",
+  "short_name": "Palermo DT",
   "description": "Mappa interattiva di Palermo: catasto, PRG, popolazione, edifici, rilievo e trasporto pubblico, da dati aperti.",
   "lang": "it",
   "start_url": "./",
