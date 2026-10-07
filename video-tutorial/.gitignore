@@ -2,3 +2,4 @@
 voci/*.onnx
 verifica/*.png
 __pycache__/
+*.bundle
