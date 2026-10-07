@@ -49,3 +49,23 @@ tests/*
 !tests/js/
 pytest.ini
 docs/PROCEDURA_DEPLOY_WORKER.md
+
+# pulizia repo: su GitHub resta solo ciò che serve all'app, ai workflow e ai test JS; il resto è solo in locale
+media/
+docs/
+stampa.png
+img/varianti-logo/
+img/pa_hub000.*
+img/gb.svg
+img/logoods.svg
+dati/MANIFEST.tsv
+dati/README.md
+dati/pai/README.md
+scripts/*
+!scripts/serve.py
+!scripts/estrai_stile_omi.mjs
+!scripts/colonnine.py
+!scripts/incendi.py
+!scripts/pai.py
+!scripts/uffici_build.py
+!scripts/uffici_scrape.py

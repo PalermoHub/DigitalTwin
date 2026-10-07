@@ -5,7 +5,7 @@ popolazione ISTAT 2021 e 2023, edifici 3D, rilievo 3D, elevazione e civici. Un c
 (indirizzo, particella con link a SISTER, edificio, zonizzazione, vincoli, quotazioni OMI, sezione di censimento e terreno
 DTM 5 m); la casella di ricerca porta su una via e un civico.
 
-Stili e formati sono quelli delle app originali (vedi `docs/STILI.md`). Nessun backend, nessun bundler.
+Nessun backend, nessun bundler.
 
 ## Avvio
 
@@ -18,17 +18,7 @@ Serve la rete: base cartografica (OpenFreeMap), tile PRG/terreno e PMTiles sono 
 
 ## Dati
 
-- I file già pubblicati su GitHub Pages **non sono copiati**: stanno in `dati/MANIFEST.tsv` con il loro `url`
-  (verificati per hash prima di rimuovere le copie). `dati/catalogo.json` è la fonte unica per il viewer e per i crediti.
-- Restano in `dati/` (non in git) solo i file senza link (≈ 350 MB: gpkg, geoparquet, DTM…). Vedi `dati/README.md`.
-- I **tileset** (cartelle `z/x/y`: PRG, terreno, elevazione, griglia DTM) sono voci `tileset` del catalogo.
-
-## Dati
-
-```bash
-python3 scripts/valida_dati.py      # rigenera dati/catalogo.json e docs/catalogo.md; controlla link, CORS e tileset
-python3 scripts/valida_dati.py --completo   # in più scarica i file remoti e ne verifica l'hash (≈ 270 MB)
-```
+`dati/catalogo.json` è la fonte unica per il viewer e per i crediti. In git stanno solo i dati leggeri usati dall'app; i sorgenti pesanti restano fuori.
 
 ## Avvisi
 
@@ -37,15 +27,8 @@ stime campionarie (censimento permanente).
 
 ## Struttura
 
-`js/core/` nucleo (mappa, catalogo, pannello, scheda, ricerca) · `js/layers/` un modulo per tema · `js/geoimage/` mappe storiche
-georeferenziate sulla base (`docs/GEOIMAGE.md`) · `worker/` proxy CORS (Cloudflare Worker) · `scripts/` validazione dei dati, server e aggiornamento dei dati · `docs/` catalogo, stili e guide d'uso (`RNDT.md`, `AGGIUNGI_LAYER.md`).
+`js/core/` nucleo (mappa, catalogo, pannello, scheda, ricerca) · `js/layers/` un modulo per tema · `js/geoimage/` mappe storiche georeferenziate sulla base · `worker/` proxy CORS (Cloudflare Worker) · `scripts/` server locale e aggiornamento automatico dei dati · `tests/js/` test (eseguiti dalla CI).
 
 ## Licenza
 
 Codice sotto [EUPL-1.2](LICENSE). Dati e documentazione prodotti dal progetto sotto [CC BY 4.0](LICENSE-DATA.md). I dati di terzi mantengono la licenza della fonte: vedi [NOTICE.md](NOTICE.md).
-
-## Rigenerare la guida
-1. Rivedi i testi in `js/core/guida-contenuti.js`.
-2. `python3 scripts/guida_screenshot.py` (immagini in `img/guida/passi/`; serve la rete per la base cartografica).
-3. `python3 scripts/guida_video.py` (video, sottotitoli e la versione ridotta per gli stati WhatsApp, sotto i 9 MB, in `media/guida/`; richiede `ffmpeg`, `piper-tts` e il modello vocale: `python3 -m piper.download_voices it_IT-paola-medium --data-dir ~/.cache/piper`).
-   Per rifare solo la versione WhatsApp: `python3 scripts/guida_video.py --whatsapp`.

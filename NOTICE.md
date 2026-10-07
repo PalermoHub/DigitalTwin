@@ -3,7 +3,7 @@
 | Cosa | Licenza |
 |---|---|
 | Codice (`js/`, `scripts/`, `tests/`, `css/`, `index.html`, workflow) | [EUPL-1.2](LICENSE) |
-| Dati e documentazione prodotti da questo progetto (`docs/`, `dati/catalogo.json`, `dati/MANIFEST.tsv`, `dati/uffici/`, `dati/incedi/`) | [CC BY 4.0](LICENSE-DATA.md) |
+| Dati e documentazione prodotti da questo progetto (`dati/catalogo.json`, `dati/uffici/`, `dati/incedi/`) | [CC BY 4.0](LICENSE-DATA.md) |
 
 ## Dati di terzi
 
@@ -22,7 +22,7 @@ Attribuzione richiesta per i dati CC BY: «Digital Twin Palermo, PalermoHub».
 ## Software di terzi
 
 - `js/vendor/openrndt-geolibre/`: plugin [openrndt-geolibre](https://github.com/ondata/openrndt-geolibre) 0.3.1 di Andrea Borruso (ricerca nel catalogo RNDT), incluso senza modifiche, licenza MIT (`js/vendor/openrndt-geolibre/LICENSE`). Contiene proj4 (MIT).
-- `js/geoimage/`: porting in MapLibre di [Geoimage](https://github.com/gbvitrano/Geoimage) di @gbvitrano (nel repository originale: GPL-2.0), con le modifiche descritte in `docs/GEOIMAGE.md`.
+- `js/geoimage/`: porting in MapLibre di [Geoimage](https://github.com/gbvitrano/Geoimage) di @gbvitrano (nel repository originale: GPL-2.0).
 - `js/vendor/proj4.js`: [proj4js](https://github.com/proj4js/proj4js) 2.11.0, licenza MIT (`js/vendor/LICENSE-proj4.txt`).
 - `js/vendor/jszip.min.js`: [JSZip](https://stuk.github.io/jszip/) 3.10.1, licenza MIT o GPL-3.0 a scelta (`js/vendor/LICENSE-jszip.txt`).
 
