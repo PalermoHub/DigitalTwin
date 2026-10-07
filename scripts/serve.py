@@ -2,7 +2,15 @@ import os
 import re
 import sys
 import shutil
+import gzip
+import io
 from http.server import SimpleHTTPRequestHandler, test
+
+# Tipi di testo che un hosting reale (GitHub Pages, Apache con deflate, nginx con gzip) comprime:
+# comprimerli anche qui rende le misure locali (Lighthouse) vicine a quelle in produzione.
+COMPRIMIBILI = {'html', 'js', 'mjs', 'css', 'json', 'geojson', 'svg', 'webmanifest', 'xml', 'txt', 'md', 'tsv'}
+_cache_gzip = {}  # percorso -> (data di modifica, byte compressi)
+
 
 class RangeRequestHandler(SimpleHTTPRequestHandler):
     """
@@ -19,6 +27,28 @@ class RangeRequestHandler(SimpleHTTPRequestHandler):
             self.send_header('Pragma', 'no-cache')
         super().end_headers()
 
+    def _invia_gzip(self, path):
+        """Risposta compressa per i file di testo se il client accetta gzip; None negli altri casi."""
+        ext = path.rsplit('.', 1)[-1].lower()
+        if ext not in COMPRIMIBILI or 'gzip' not in self.headers.get('Accept-Encoding', ''):
+            return None
+        try:
+            mtime = os.stat(path).st_mtime
+            voce = _cache_gzip.get(path)
+            if not voce or voce[0] != mtime:
+                with open(path, 'rb') as f:
+                    voce = (mtime, gzip.compress(f.read(), compresslevel=6))
+                _cache_gzip[path] = voce
+        except OSError:
+            return None
+        self.send_response(200)
+        self.send_header('Content-Type', self.guess_type(path))
+        self.send_header('Content-Encoding', 'gzip')
+        self.send_header('Vary', 'Accept-Encoding')
+        self.send_header('Content-Length', str(len(voce[1])))
+        self.end_headers()
+        return io.BytesIO(voce[1])
+
     def send_head(self):
         path = self.translate_path(self.path)
         if os.path.isdir(path):
@@ -27,7 +57,7 @@ class RangeRequestHandler(SimpleHTTPRequestHandler):
         # Check for Range header
         range_header = self.headers.get('Range')
         if not range_header:
-            return super().send_head()
+            return self._invia_gzip(path) or super().send_head()
             
         match = re.match(r'bytes=(\d+)-(\d*)', range_header)
         if not match:

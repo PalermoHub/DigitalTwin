@@ -56,13 +56,18 @@ Chiusura: Lighthouse accessibilità 100 su desktop e mobile (verificato). Resta 
 
 Obiettivo: ridurre i byte e il lavoro prima del primo layer visibile.
 
-- [ ] `dati/monumenti/monumenti.geojson` (1,7 MB): ridurre la precisione delle coordinate, togliere i campi non usati dalla scheda, valutare PMTiles o un file compatto come già fatto in `compatta_dati.py`.
-- [ ] Controllare gli altri GeoJSON differiti (alberi, fontanelle, scuole, uffici, colonnine) con la stessa procedura.
-- [ ] `edificato.pmtiles` è richiesto 3 volte in range diversi: verificare se il layer parte anche da spento e rinviare le richieste finché lo strato non è acceso.
-- [ ] Controllare che il server di produzione serva dati e JS con compressione (brotli o gzip) e `Cache-Control` lungo per i file con hash o versione.
-- [ ] Aggiornare `scripts/valida_dati.py` con un limite di peso per file, così un dato troppo grande non rientra per sbaglio.
+Esito dell'analisi (2026-10-07):
+- I byte erano gonfiati da `scripts/serve.py`, che non comprimeva. `monumenti.geojson` pesa 1,7 MB ma 250 KB con gzip: GitHub Pages e Apache con `deflate` (già nelle istruzioni server) lo comprimono, quindi in produzione non è un problema. Riscrivere i dati per risparmiare qualche decina di KB compressi non vale il rischio sulla scheda dei monumenti.
+- `edificato.pmtiles`: le 3 richieste grosse sono 3 tile diversi (risposte 206 con range distinti), non un doppione. L'edificato è acceso di default (`edifici.js`), quindi serve alla prima vista: nessun intervento.
+- `valida_dati.py` ha già un limite di peso per file (`MAX_BYTE`, 100 MB).
 
-Chiusura: byte iniziali ridotti di almeno il 30%, test dati verdi, nuova misura.
+- [x] `scripts/serve.py` comprime con gzip i file di testo (html, js, css, json, geojson, svg...) quando il client lo accetta; PMTiles e richieste Range restano invariati. Le misure locali ora si avvicinano alla produzione.
+- [x] Rimisura: byte totali mobile da 8,5 a 4,5 MiB, locali 2,3 MiB. LCP desktop da 4,7 a 3,4 s. TBT invariato (è lavoro di CPU, tema della Fase 3).
+- [x] Compressione e cache in produzione: già documentate in `docs/ISTRUZIONI_SERVER.md` (modulo `deflate`) e `docs/ARCHITETTURA_HOSTING.md`. Da verificare dopo la pubblicazione con `curl -H 'Accept-Encoding: gzip' -I <url>/dati/monumenti/monumenti.geojson`.
+- [ ] Facoltativo: esaminare gli altri GeoJSON differiti (alberi, fontanelle, scuole, uffici, colonnine) solo se, rimisurati sul sito pubblico, risultano pesanti anche compressi.
+- [ ] Facoltativo: i dati di altri repository (`gbvitrano.github.io` 3,7 MiB, `palermohub.github.io` 2 MiB al caricamento) sono fuori dal nostro controllo; valutare di copiarli sul nostro host solo se la latenza lo giustifica.
+
+Chiusura: compressione verificata in produzione.
 
 ## Fase 3. JavaScript e CSS: build leggera
 
