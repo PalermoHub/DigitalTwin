@@ -1,0 +1,2398 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Corso Calatafimi, 241<br>sezioni: 247*, 248, 249, 251, 254, 256, 2 73, 279<br>circoscrizione: 4",
+        "indirizzo": "Corso Calatafimi, 241",
+        "sezioni": "247*, 248, 249, 251, 254, 256, 2 73, 279",
+        "circoscrizione": "4",
+        "name": "Circolo Didattico LOMBARDO RADICE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3439469,
+          38.1087374,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Perez Francesco Paolo, 1<br>sezioni: 297*, 305, 308, 309, 590<br>circoscrizione: 3",
+        "indirizzo": "Via Perez Francesco Paolo, 1",
+        "sezioni": "297*, 305, 308, 309, 590",
+        "circoscrizione": "3",
+        "name": "Circolo Didattico PEREZ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3641817,
+          38.1097125,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Damiano Almejda, 27<br>sezioni: 176, 178, 470<br>circoscrizione: 8",
+        "indirizzo": "Via Damiano Almejda, 27",
+        "sezioni": "176, 178, 470",
+        "circoscrizione": "8",
+        "name": "Direzione Didattica ALMEJDA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3438316,
+          38.1302821,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Schifani Vito, 3<br>sezioni: 23*, 124, 146, 151, 223, 471<br>circoscrizione: 4",
+        "indirizzo": "Via Schifani Vito, 3",
+        "sezioni": "23*, 124, 146, 151, 223, 471",
+        "circoscrizione": "4",
+        "name": "Direzione Didattica ARCULEO ETTORE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3379522,
+          38.1012575,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza San Paolo, 4<br>sezioni: 6, 258, 271, 380, 550<br>circoscrizione: 5",
+        "indirizzo": "Piazza San Paolo, 4",
+        "sezioni": "6, 258, 271, 380, 550",
+        "circoscrizione": "5",
+        "name": "Direzione Didattica BASILE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2918692,
+          38.129607,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via San Lorenzo, 85<br>sezioni: 411, 412, 445, 478<br>circoscrizione: 6",
+        "indirizzo": "Via San Lorenzo, 85",
+        "sezioni": "411, 412, 445, 478",
+        "circoscrizione": "6",
+        "name": "Direzione Didattica BENTIVEGNA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3277678,
+          38.1607768,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Del Castoro, 13<br>sezioni: 82*, 345<br>circoscrizione: 3",
+        "indirizzo": "Via Del Castoro, 13",
+        "sezioni": "82*, 345",
+        "circoscrizione": "3",
+        "name": "Direzione Didattica BONAGIA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.358334,
+          38.08415,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Ortigia, 19<br>sezioni: 188, 189, 336, 342, 343, 356, 419, 459,<br>circoscrizione: 3",
+        "indirizzo": "Via Ortigia, 19",
+        "sezioni": "188, 189, 336, 342, 343, 356, 419, 459,",
+        "circoscrizione": "3",
+        "name": "Direzione Didattica BORGO ULIVIA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.361542,
+          38.091278,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Giotto, 41<br>sezioni: 174, 238, 240, 260, 573<br>circoscrizione: 8",
+        "indirizzo": "Via Giotto, 41",
+        "sezioni": "174, 238, 240, 260, 573",
+        "circoscrizione": "8",
+        "name": "Direzione Didattica BORSELLINO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.33413,
+          38.1311219,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Cimabue, 20<br>sezioni: 27, 61, 163, 243, 548<br>circoscrizione: 5",
+        "indirizzo": "Via Cimabue, 20",
+        "sezioni": "27, 61, 163, 243, 548",
+        "circoscrizione": "5",
+        "name": "Direzione Didattica BUTTITTA IGNAZIO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3269417,
+          38.1314974,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazzale Carpino Francesco Card., 3<br>sezioni: 14, 25, 86, 302, 357, 360, 468, 491, 504, 567<br>circoscrizione: 4",
+        "indirizzo": "Piazzale Carpino Francesco Card., 3",
+        "sezioni": "14, 25, 86, 302, 357, 360, 468, 491, 504, 567",
+        "circoscrizione": "4",
+        "name": "Direzione Didattica CAP. BASILE - PAULSEN"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3249623,
+          38.1002676,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Narbone Alessio 55<br>sezioni: 207*, 217, 219, 220, 221, 224, 226<br>circoscrizione: 5",
+        "indirizzo": "Via Narbone Alessio 55",
+        "sezioni": "207*, 217, 219, 220, 221, 224, 226",
+        "circoscrizione": "5",
+        "name": "Direzione Didattica CAPUANA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3445692,
+          38.1200782,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Corso dei Mille, 793<br>sezioni: 54, 59, 69, 287, 315<br>circoscrizione: 2",
+        "indirizzo": "Corso dei Mille, 793",
+        "sezioni": "54, 59, 69, 287, 315",
+        "circoscrizione": "2",
+        "name": "Direzione didattica CAVALLARI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.390102386474611,
+          38.09917212458053
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Imera, 32<br>sezioni: 58, 202, 205, 206, 211<br>circoscrizione: 5",
+        "indirizzo": "Via Imera, 32",
+        "sezioni": "58, 202, 205, 206, 211",
+        "circoscrizione": "5",
+        "name": "Direzione Didattica COLOZZA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.349593,
+          38.1161089,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Salerno, 19<br>sezioni: 51, 105, 108, 196<br>circoscrizione: 6",
+        "indirizzo": "Via Salerno, 19",
+        "sezioni": "51, 105, 108, 196",
+        "circoscrizione": "6",
+        "name": "Direzione didattica CRUILLAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3199197,
+          38.14232,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Rosso di San Secondo, 1<br>sezioni: 443, 446, 447, 519<br>circoscrizione: 5",
+        "indirizzo": "Via Rosso di San Secondo, 1",
+        "sezioni": "443, 446, 447, 519",
+        "circoscrizione": "5",
+        "name": "Direzione Didattica DE AMICIS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3297594,
+          38.1202175,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazzale Giovanni Paolo II Papa, 24, Piazza De Gasperi<br>sezioni: 87*, 145, 147, 310, 407, 576<br>circoscrizione: 6",
+        "indirizzo": "Piazzale Giovanni Paolo II Papa, 24, Piazza De Gasperi",
+        "sezioni": "87*, 145, 147, 310, 407, 576",
+        "circoscrizione": "6",
+        "name": "Direzione Didattica DE GASPERI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3386093,
+          38.1522466,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Alia, 16<br>sezioni: 7, 31, 73*, 203, 257, 572<br>circoscrizione: 5",
+        "indirizzo": "Via Alia, 16",
+        "sezioni": "7, 31, 73*, 203, 257, 572",
+        "circoscrizione": "5",
+        "name": "Direzione Didattica DON BOSCO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2946962,
+          38.1333224,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Barisano da Trani, 7<br>sezioni: 71, 75, 155, 199, 255, 361, 401<br>circoscrizione: 6",
+        "indirizzo": "Via Barisano da Trani, 7",
+        "sezioni": "71, 75, 155, 199, 255, 361, 401",
+        "circoscrizione": "6",
+        "name": "Direzione Didattica F. CRISPI – INGR.PADIGLIONE 1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3111569,
+          38.1360249,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Ughetti Giovan Battista, 27<br>sezioni: 175, 339, 482, 536, 594<br>circoscrizione: 4",
+        "indirizzo": "Via Ughetti Giovan Battista, 27",
+        "sezioni": "175, 339, 482, 536, 594",
+        "circoscrizione": "4",
+        "name": "Direzione Didattica G. COSTA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.356387,
+          38.0994317,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Eugenio l’Emiro, 30<br>sezioni: 39*, 134, 237, 244, 474, 542<br>circoscrizione: 5",
+        "indirizzo": "Via Eugenio l’Emiro, 30",
+        "sezioni": "39*, 134, 237, 244, 474, 542",
+        "circoscrizione": "5",
+        "name": "Direzione Didattica GABELLI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3394918,
+          38.1145431,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Isonzo, 7<br>sezioni: 364, 464, 554, 555, 558, 577<br>circoscrizione: 8",
+        "indirizzo": "Via Isonzo, 7",
+        "sezioni": "364, 464, 554, 555, 558, 577",
+        "circoscrizione": "8",
+        "name": "Direzione Didattica GARZILLI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.342866,
+          38.1410669,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Sampolo, 63<br>sezioni: 33, 153, 428*, 429, 511, 532, 533<br>circoscrizione: 8",
+        "indirizzo": "Via Sampolo, 63",
+        "sezioni": "33, 153, 428*, 429, 511, 532, 533",
+        "circoscrizione": "8",
+        "name": "Direzione Didattica GIOVANNI XXIII"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3521062,
+          38.1398623,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: via dell'Arsenale 62<br>sezioni: 152, 154, 158<br>circoscrizione: 8",
+        "indirizzo": "via dell'Arsenale 62",
+        "sezioni": "152, 154, 158",
+        "circoscrizione": "8",
+        "name": "Direzione Didattica KAROL WOJTYLA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3637899,
+          38.1356705,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via La Masa Giuseppe, 17<br>sezioni: 116, 117, 118, 119, 122<br>circoscrizione: 8",
+        "indirizzo": "Via La Masa Giuseppe, 17",
+        "sezioni": "116, 117, 118, 119, 122",
+        "circoscrizione": "8",
+        "name": "Direzione Didattica LA MASA G."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3617461,
+          38.1255253,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Di Giorni, Ferdinando, 48<br>sezioni: 26*, 52, 65, 165, 358, 546, 578<br>circoscrizione: 5",
+        "indirizzo": "Via Di Giorni, Ferdinando, 48",
+        "sezioni": "26*, 52, 65, 165, 358, 546, 578",
+        "circoscrizione": "5",
+        "name": "Direzione Didattica LEONARDO DAVINCI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3261719,
+          38.1261109,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Filippo Parlatore, 56<br>sezioni: 2, 432*, 435, 545<br>circoscrizione: 5",
+        "indirizzo": "Via Filippo Parlatore, 56",
+        "sezioni": "2, 432*, 435, 545",
+        "circoscrizione": "5",
+        "name": "Direzione Didattica MANZONI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3431584,
+          38.125807,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Roccella Gustavo, 37  <br>sezioni: 129, 368, 373, 402*, 473, 560, 566, 597<br>circoscrizione: 4",
+        "indirizzo": "Via Roccella Gustavo, 37  ",
+        "sezioni": "129, 368, 373, 402*, 473, 560, 566, 597",
+        "circoscrizione": "4",
+        "name": "Direzione Didattica MONTEGRAPPA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3514571,
+          38.1013377,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Mongitore Antonino, 4<br>sezioni: 89*, 95, 98, 582,<br>circoscrizione: 1",
+        "indirizzo": "Via Mongitore Antonino, 4",
+        "sezioni": "89*, 95, 98, 582,",
+        "circoscrizione": "1",
+        "name": "Direzione Didattica NUCCIO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3577131,
+          38.1104554,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via San Ciro, 48<br>sezioni: 229, 332*, 333, 335, 354, 509, 528, 586<br>circoscrizione: 2",
+        "indirizzo": "Via San Ciro, 48",
+        "sezioni": "229, 332*, 333, 335, 354, 509, 528, 586",
+        "circoscrizione": "2",
+        "name": "Direzione Didattica ORESTANO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.383397,
+          38.094267,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Ragusa Moleti, 8 <br>sezioni: 181, 505, 549<br>circoscrizione: 4",
+        "indirizzo": "Via Ragusa Moleti, 8 ",
+        "sezioni": "181, 505, 549",
+        "circoscrizione": "4",
+        "name": "Direzione Didattica RAGUSA MOLETI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3398914,
+          38.1061816,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Caltanissetta, 27<br>sezioni: 177*, 180, 182, 183, 184, 185<br>circoscrizione: 8",
+        "indirizzo": "Via Caltanissetta, 27",
+        "sezioni": "177*, 180, 182, 183, 184, 185",
+        "circoscrizione": "8",
+        "name": "Direzione Didattica RAPISARDI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3494642,
+          38.1285267,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Paratore Giuseppe, 34<br>sezioni: 56*, 90, 99, 250, 538<br>circoscrizione: 3",
+        "indirizzo": "Via Paratore Giuseppe, 34",
+        "sezioni": "56*, 90, 99, 250, 538",
+        "circoscrizione": "3",
+        "name": "Direzione Didattica SALGARI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.373526,
+          38.094714,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Viale Amedeo D’Aosta , 20<br><br>sezioni: 317*, 318, 322, 531<br>circoscrizione: 2",
+        "indirizzo": "Viale Amedeo D’Aosta , 20\n",
+        "sezioni": "317*, 318, 322, 531",
+        "circoscrizione": "2",
+        "name": "Direzione Didattica SAURO NAZARIO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.386401,
+          38.10374,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Abruzzi, 2<br>sezioni: 68, 212, 405*, 525, 526<br>circoscrizione: 8",
+        "indirizzo": "Via Abruzzi, 2",
+        "sezioni": "68, 212, 405*, 525, 526",
+        "circoscrizione": "8",
+        "name": "Direzione Didattica TOMASELLI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3358225,
+          38.1418242,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Gran Cancelliere, 1<br><br>sezioni: 12, 57, 63, 72, 76<br>circoscrizione: 1",
+        "indirizzo": "Piazza Gran Cancelliere, 1\n",
+        "sezioni": "12, 57, 63, 72, 76",
+        "circoscrizione": "1",
+        "name": "Direzione Didattica TURRISI COLONNA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.360158,
+          38.115187,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Rinaldo D’Aquino, 8<br>sezioni: 195, 344, 366, 369<br>circoscrizione: 5",
+        "indirizzo": "Via Rinaldo D’Aquino, 8",
+        "sezioni": "195, 344, 366, 369",
+        "circoscrizione": "5",
+        "name": "Istituto Comprensivo D’AQUINO RINALDO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.335679,
+          38.1174479,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Lungomare Colombo Cristofolo, 240<br>sezioni: 418, 497<br>circoscrizione: 7",
+        "indirizzo": "Lungomare Colombo Cristofolo, 240",
+        "sezioni": "418, 497",
+        "circoscrizione": "7",
+        "name": "Istituto Comprensivo DI BARTOLO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3658163,
+          38.1663485,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Basile Ernesto, 170<br>sezioni: 275, 277, 278 <br>circoscrizione: 4",
+        "indirizzo": "Via Basile Ernesto, 170",
+        "sezioni": "275, 277, 278 ",
+        "circoscrizione": "4",
+        "name": "Istituto Comprensivo FALCONE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.348496,
+          38.1019308,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Pier delle Vigne, 13<br>sezioni: 126, 132, 135, 139, 140, 553<br>circoscrizione: 8",
+        "indirizzo": "Via Pier delle Vigne, 13",
+        "sezioni": "126, 132, 135, 139, 140, 553",
+        "circoscrizione": "8",
+        "name": "Istituto comprensivo FEDERICO II"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3584898,
+          38.1307674,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Smith Adamo, 19<br>sezioni: 111, 112, 399, 480, 564, 580<br>circoscrizione: 7",
+        "indirizzo": "Via Smith Adamo, 19",
+        "sezioni": "111, 112, 399, 480, 564, 580",
+        "circoscrizione": "7",
+        "name": "Istituto comprensivo L. SCIASCIA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3122191,
+          38.1767937,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: via Fiume 14,                                                         <br>sezioni: 1,5, 581<br>circoscrizione: 1",
+        "indirizzo": "via Fiume, 14                                                      ",
+        "sezioni": "1,5, 581",
+        "circoscrizione": "1",
+        "name": "Istituto Comprensivo MADRE TERESA DI CALCUTTA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.365158,
+          38.112528,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Bologni 4, Boccadifalco <br>sezioni: 9*, 74, 374, 375, 377, 378 <br>circoscrizione: 4",
+        "indirizzo": "Via Bologni 4, Boccadifalco ",
+        "sezioni": "9*, 74, 374, 375, 377, 378 ",
+        "circoscrizione": "4",
+        "name": "Istituto Comprensivo MANTEGNA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3086249,
+          38.1103371,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Serradifalco, 3<br>sezioni: 232, 233, 440, 441, 537<br>circoscrizione: 5",
+        "indirizzo": "Via Serradifalco, 3",
+        "sezioni": "232, 233, 440, 441, 537",
+        "circoscrizione": "5",
+        "name": "Istituto Comprensivo P. IMPASTATO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3408839,
+          38.1206606,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Baviera Giovanni, 22<br>sezioni: 133*, 253<br>circoscrizione: 5",
+        "indirizzo": "Via Baviera Giovanni, 22",
+        "sezioni": "133*, 253",
+        "circoscrizione": "5",
+        "name": "Istituto Comprensivo PRINCIPESSA ELENA DI NAPOLI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3255953,
+          38.1203399,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Bonagia, 14<br>sezioni: 80, 101, 104, 110, 125, 430, 457, 568,<br>circoscrizione: 3",
+        "indirizzo": "Via Bonagia, 14",
+        "sezioni": "80, 101, 104, 110, 125, 430, 457, 568,",
+        "circoscrizione": "3",
+        "name": "Istituto.comprensivo MATTARELLA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.36446,
+          38.076888,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Casa Professa, 3,<br>sezioni: 67, 85, 114,<br>circoscrizione: 1",
+        "indirizzo": "Piazza Casa Professa, 3",
+        "sezioni": "67, 85, 114,",
+        "circoscrizione": "1",
+        "name": "Liceo Classico V.E. II"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.360662,
+          38.113785,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Messina Marine, 197<br>sezioni: 510<br>circoscrizione: 2",
+        "indirizzo": "Via Messina Marine, 197",
+        "sezioni": "510",
+        "circoscrizione": "2",
+        "name": "OSPEDALE BUCCHERI LA FERLA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.386058,
+          38.106112,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Trabucco, 180<br>sezioni: 485<br>circoscrizione: 6",
+        "indirizzo": "Via Trabucco, 180",
+        "sezioni": "485",
+        "circoscrizione": "6",
+        "name": "Ospedale Cervello"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3133322,
+          38.1545878,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Leotta Bicola, 1  <br>sezioni: 487, 488<br>circoscrizione: 4",
+        "indirizzo": "Piazza Leotta Bicola, 1  ",
+        "sezioni": "487, 488",
+        "circoscrizione": "4",
+        "name": "OSPEDALE CIVICO BENFRATELLI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3575457,
+          38.1048287,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Corso Calatafimi, 1004<br>sezioni: 484<br>circoscrizione: 4",
+        "indirizzo": "Corso Calatafimi, 1004",
+        "sezioni": "484",
+        "circoscrizione": "4",
+        "name": "Ospedale Ingrassia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3101484,
+          38.0933378,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via del Vespro, 129<br>sezioni: 486<br>circoscrizione: 3",
+        "indirizzo": "Via del Vespro, 129",
+        "sezioni": "486",
+        "circoscrizione": "3",
+        "name": "OSPEDALE POLICLINICO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.362787,
+          38.104331,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Salerno, 1<br>sezioni: 492<br>circoscrizione: 6",
+        "indirizzo": "Piazza Salerno, 1",
+        "sezioni": "492",
+        "circoscrizione": "6",
+        "name": "OSPEDALE VILLA SOFIA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3376062,
+          38.1548029,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Dietro la Parrocchia, 53<br>sezioni: 38*, 64<br>circoscrizione: 7",
+        "indirizzo": "Via Dietro la Parrocchia, 53",
+        "sezioni": "38*, 64",
+        "circoscrizione": "7",
+        "name": "Scuola dell’infanzia comunale LAGIOSTRA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3326361,
+          38.1747969,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: V. Regina Maria di Sicilia, 7<br>sezioni: 49, 319, 320, 323, 327, 408, 449, 529<br>circoscrizione: 2",
+        "indirizzo": "V. Regina Maria di Sicilia, 7",
+        "sezioni": "49, 319, 320, 323, 327, 408, 449, 529",
+        "circoscrizione": "2",
+        "name": "Scuola dell’infanzia DIAZ VECCHIO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.391744,
+          38.09929,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Cellini Benvenuto, 4<br>sezioni: 48*, 438<br>circoscrizione: 6",
+        "indirizzo": "Piazza Cellini Benvenuto, 4",
+        "sezioni": "48*, 438",
+        "circoscrizione": "6",
+        "name": "Scuola dell’infanzia PALADINI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3087081,
+          38.1372823,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Passaggio dei Picciotti, 3<br>sezioni: 47, 314, 316, 321, 571<br>circoscrizione: 2",
+        "indirizzo": "Passaggio dei Picciotti, 3",
+        "sezioni": "47, 314, 316, 321, 571",
+        "circoscrizione": "2",
+        "name": "Scuola dell’infanzia PASSAGGIO DEI PICCIOTTI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.383987,
+          38.104618,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Magione 1, <br><br>sezioni: 13, 29<br>circoscrizione: 1",
+        "indirizzo": "Piazza Magione 1, \n",
+        "sezioni": "13, 29",
+        "circoscrizione": "1",
+        "name": "Scuola elementare FERRARA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.367422,
+          38.112823,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Largo Di Vittorio Giuseppe, 7<br>sezioni: 288*, 406, 410, 475, 483, 556, 569<br>circoscrizione: 2",
+        "indirizzo": "Largo Di Vittorio Giuseppe, 7",
+        "sezioni": "288*, 406, 410, 475, 483, 556, 569",
+        "circoscrizione": "2",
+        "name": "Scuola elementare MATTARELLA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.405595,
+          38.096538,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Zisa, 17<br>sezioni: 214, 239<br>circoscrizione: 5",
+        "indirizzo": "Via Zisa, 17",
+        "sezioni": "214, 239",
+        "circoscrizione": "5",
+        "name": "Scuola materna comunale WHITAKER"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3419594,
+          38.115805,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Salemi Francesco Generale n. 22   <br>sezioni: 215, 512, 559<br>circoscrizione: 4",
+        "indirizzo": "Via Salemi Francesco Generale n. 22   ",
+        "sezioni": "215, 512, 559",
+        "circoscrizione": "4",
+        "name": "SCUOLA MEDIA ANNESSA ALL’ISTITUTO D’ARTE "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3327353,
+          38.1121162,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Danae, 30<br>sezioni: 392, 395, 396, 466<br>circoscrizione: 7",
+        "indirizzo": "Via Danae, 30",
+        "sezioni": "392, 395, 396, 466",
+        "circoscrizione": "7",
+        "name": "Scuola Media BORGESE PLESSOCERERE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3359191,
+          38.191244,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Villani Giovanni, 36<br>sezioni: 190, 329, 454, 456<br>circoscrizione: 4",
+        "indirizzo": "Via Villani Giovanni, 36",
+        "sezioni": "190, 329, 454, 456",
+        "circoscrizione": "4",
+        "name": "Scuola primaria “MANCINI NUOVO”"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3349803,
+          38.0924449,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Giordano Calcedonio,1<br>sezioni: 17, 131, 424, 425, 427<br>circoscrizione: 8",
+        "indirizzo": "Via Giordano Calcedonio,1",
+        "sezioni": "17, 131, 424, 425, 427",
+        "circoscrizione": "8",
+        "name": "Scuola primaria ABBA CESARE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3661985,
+          38.1439,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Ingrassia Gian Filippo, 33<br>sezioni: 261, 263, 267, 496, 539, 583<br>circoscrizione: 2",
+        "indirizzo": "Via Ingrassia Gian Filippo, 33",
+        "sezioni": "261, 263, 267, 496, 539, 583",
+        "circoscrizione": "2",
+        "name": "Scuola primaria AMARI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.373129,
+          38.110291,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Molara, 30<br>sezioni: 11, 362, 516<br>circoscrizione: 4",
+        "indirizzo": "Via Molara, 30",
+        "sezioni": "11, 362, 516",
+        "circoscrizione": "4",
+        "name": "Scuola primaria ANDREA SOLE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3111301,
+          38.0808886,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Villagrazia, 40<br>sezioni: 337, 338<br>circoscrizione: 3",
+        "indirizzo": "Via Villagrazia, 40",
+        "sezioni": "337, 338",
+        "circoscrizione": "3",
+        "name": "Scuola primaria ANGELO CUSTODE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.367883,
+          38.097652,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Baglio Barone della Scala, 22<br>sezioni: 347, 348<br>circoscrizione: 3",
+        "indirizzo": "Baglio Barone della Scala, 22",
+        "sezioni": "347, 348",
+        "circoscrizione": "3",
+        "name": "Scuola primaria BARONE DELLA SCALA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.347777,
+          38.086,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Papaleo Pietro, 8<br>sezioni: 77*, 252, 452<br>circoscrizione: 5",
+        "indirizzo": "Via Papaleo Pietro, 8",
+        "sezioni": "77*, 252, 452",
+        "circoscrizione": "5",
+        "name": "Scuola primaria BERNINI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3219984,
+          38.1362106,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Cassaro, 2<br>sezioni: 330*, 477, 489, 587,<br>circoscrizione: 2",
+        "indirizzo": "Via Cassaro, 2",
+        "sezioni": "330*, 477, 489, 587,",
+        "circoscrizione": "2",
+        "name": "Scuola primaria BIXIO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.40066,
+          38.079312,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Largo Camastra, 4<br>sezioni: 15, 28, 359, 476, 520, 521, 551<br>circoscrizione: 5",
+        "indirizzo": "Largo Camastra, 4",
+        "sezioni": "15, 28, 359, 476, 520, 521, 551",
+        "circoscrizione": "5",
+        "name": "Scuola primaria BORSELLINO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2969144,
+          38.1275815,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Bragaglia Marinella, 23 <br>sezioni: 88, 328, 355, 467, 541<br>circoscrizione: 4",
+        "indirizzo": "Via Bragaglia Marinella, 23 ",
+        "sezioni": "88, 328, 355, 467, 541",
+        "circoscrizione": "4",
+        "name": "Scuola primaria BRAGAGLIA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3222532,
+          38.1029102,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Castellana, 40<br>sezioni: 3*, 24, 167, 204, 303, 481<br>circoscrizione: 5",
+        "indirizzo": "Via Castellana, 40",
+        "sezioni": "3*, 24, 167, 204, 303, 481",
+        "circoscrizione": "5",
+        "name": "Scuola primaria CASTELLANA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3064926,
+          38.1256024,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Briuccia, 89<br>sezioni: 109, 144, 213, 283<br>circoscrizione: 6",
+        "indirizzo": "Via Briuccia, 89",
+        "sezioni": "109, 144, 213, 283",
+        "circoscrizione": "6",
+        "name": "Scuola primaria COLLODI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3321291,
+          38.1514219,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via San Lorenzo, 295<br>sezioni: 46, 100, 266, 431<br>circoscrizione: 7",
+        "indirizzo": "Via San Lorenzo, 295",
+        "sezioni": "46, 100, 266, 431",
+        "circoscrizione": "7",
+        "name": "Scuola primaria D’ANGELO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3041081,
+          38.172254,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Sauro Nazario, 11<br>sezioni: 50, 372, 439, 442, 444, 448, 500<br>circoscrizione: 5",
+        "indirizzo": "Via Sauro Nazario, 11",
+        "sezioni": "50, 372, 439, 442, 444, 448, 500",
+        "circoscrizione": "5",
+        "name": "Scuola primaria DE AMICIS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3325475,
+          38.1228171,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via OS.1, n. 2<br>sezioni: 259, 265, 286, 291<br>circoscrizione: 3",
+        "indirizzo": "Via OS.1,  2",
+        "sezioni": "259, 265, 286, 291",
+        "circoscrizione": "3",
+        "name": "Scuola primaria DEL VESPRO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.370436,
+          38.098235,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Donaudy Stefano, 16<br>sezioni: 353*, 469, 543<br>circoscrizione: 4",
+        "indirizzo": "Piazza Donaudy Stefano, 16",
+        "sezioni": "353*, 469, 543",
+        "circoscrizione": "4",
+        "name": "Scuola primaria DONAUDY"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.335274,
+          38.1007478,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Pitrè Giuseppe, 183<br>sezioni: 40*, 234, 370, 371, 507, 544<br>circoscrizione: 4",
+        "indirizzo": "Via Pitrè Giuseppe, 183",
+        "sezioni": "40*, 234, 370, 371, 507, 544",
+        "circoscrizione": "4",
+        "name": "Scuola primaria e dell’infanzia BONANNO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3281755,
+          38.1106368,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Don Giovanni Minzoni,1<br>sezioni: 296, 426, 502, 503, 514<br>circoscrizione: 8",
+        "indirizzo": "Via Don Giovanni Minzoni,1",
+        "sezioni": "296, 426, 502, 503, 514",
+        "circoscrizione": "8",
+        "name": "Scuola primaria e dell’infanzia LAMBRUSCHINI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3501469,
+          38.1455464,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Sardegna, 55<br>sezioni: 21, 209, 561, 575<br>circoscrizione: 6",
+        "indirizzo": "Via Sardegna, 55",
+        "sezioni": "21, 209, 561, 575",
+        "circoscrizione": "6",
+        "name": "Scuola primaria e dell’infanzia M.GANDHI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.330788,
+          38.1449357,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Barisano da Trani, 7<br>sezioni: 55, 78, 107, 524, 599<br>circoscrizione: 6",
+        "indirizzo": "Via Barisano da Trani, 7",
+        "sezioni": "55, 78, 107, 524, 599",
+        "circoscrizione": "6",
+        "name": "Scuola primaria F. CRISPI – INGR. PADIGLIONE 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3112267,
+          38.135679,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Marchese Nicolò Pensabene, 30<br>sezioni: 10, 115, 136, 493, 534, 591<br>circoscrizione: 7",
+        "indirizzo": "Via Marchese Nicolò Pensabene, 30",
+        "sezioni": "10, 115, 136, 493, 534, 591",
+        "circoscrizione": "7",
+        "name": "SCUOLA PRIMARIA G. FALCONE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3208317,
+          38.1786365,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Monte San Calogero, 20<br>sezioni: 20, 96, 149, 216, 307<br>circoscrizione: 6",
+        "indirizzo": "Via Monte San Calogero, 20",
+        "sezioni": "20, 96, 149, 216, 307",
+        "circoscrizione": "6",
+        "name": "Scuola primaria G. FAVA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3259171,
+          38.152776,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Lazzaro Carmelo, 1   <br>sezioni: 53, 281, 284, 289<br>circoscrizione: 4",
+        "indirizzo": "Via Lazzaro Carmelo, 1   ",
+        "sezioni": "53, 281, 284, 289",
+        "circoscrizione": "4",
+        "name": "Scuola primaria GIOBERTI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3563843,
+          38.1061478,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Daidone, 24<br>sezioni: 18, 44, 97, 168<br>circoscrizione: 8",
+        "indirizzo": "Via Daidone, 24",
+        "sezioni": "18, 44, 97, 168",
+        "circoscrizione": "8",
+        "name": "Scuola primaria GIORDANO UMBERTO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3391941,
+          38.1365502,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Corso dei Mille, 1672<br>sezioni: 331, 490,<br>circoscrizione: 2",
+        "indirizzo": "Corso dei Mille, 1672",
+        "sezioni": "331, 490,",
+        "circoscrizione": "2",
+        "name": "Scuola primaria ILARIA ALPI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.426656,
+          38.083602,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Rallo Alberto, 9<br>sezioni: 120, 156*, 159, 160,164, 166, 218, 222,  295<br>circoscrizione: 8",
+        "indirizzo": "Via Rallo Alberto, 9",
+        "sezioni": "120, 156*, 159, 160,164, 166, 218, 222,  295",
+        "circoscrizione": "8",
+        "name": "Scuola primaria MARVUGLIA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3642164,
+          38.1402484,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Deodato Pier Luigi, 7 <br>sezioni: 227, 228, 276, 517, 570 593<br>circoscrizione: 4",
+        "indirizzo": "Via Deodato Pier Luigi, 7 ",
+        "sezioni": "227, 228, 276, 517, 570 593",
+        "circoscrizione": "4",
+        "name": "Scuola primaria MEDAGLIE D’ORO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3460444,
+          38.0956471,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Corso dei Mille, 1486<br>sezioni: 130, 138, 282, 326, 585<br>circoscrizione: 2",
+        "indirizzo": "Corso dei Mille, 1486",
+        "sezioni": "130, 138, 282, 326, 585",
+        "circoscrizione": "2",
+        "name": "Scuola primaria NATOLI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.414822,
+          38.090982,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Vittorio E. Orlando 3<br>sezioni: 193, 194, 201<br>circoscrizione: 8",
+        "indirizzo": "Piazza Vittorio E. Orlando 3",
+        "sezioni": "193, 194, 201",
+        "circoscrizione": "8",
+        "name": "Scuola primaria NICOLO’ TURRISI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3526587,
+          38.1197912,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Spica Pietro, 5<br>sezioni: 19*, 186, 341, 540, 589<br>circoscrizione: 3",
+        "indirizzo": "Via Spica Pietro, 5",
+        "sezioni": "19*, 186, 341, 540, 589",
+        "circoscrizione": "3",
+        "name": "Scuola primaria OBERDAN"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.37064,
+          38.100126,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: via Tacito 34<br>sezioni: 264, 385*, 386, 387, 388<br>circoscrizione: 7",
+        "indirizzo": "via Tacito 34",
+        "sezioni": "264, 385*, 386, 387, 388",
+        "circoscrizione": "7",
+        "name": "Scuola primaria ONORATO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2745649,
+          38.1969693,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Giannotta Nicolò, 4<br>sezioni: 379, 417, 588<br>circoscrizione: 2",
+        "indirizzo": "Via Giannotta Nicolò, 4",
+        "sezioni": "379, 417, 588",
+        "circoscrizione": "2",
+        "name": "Scuola primaria PADRE PUGLISI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.408545,
+          38.095803,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Principe di Palagonia, 46<br>sezioni: 92, 208, 574*<br>circoscrizione: 8",
+        "indirizzo": "Via Principe di Palagonia, 46",
+        "sezioni": "92, 208, 574*",
+        "circoscrizione": "8",
+        "name": "Scuola primaria PALAGONIA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3349723,
+          38.1361905,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Nettuno, 7<br>sezioni: 35, 66, 91, 367, 389*, 390, 391, 433<br>circoscrizione: 7",
+        "indirizzo": "Via Nettuno, 7",
+        "sezioni": "35, 66, 91, 367, 389*, 390, 391, 433",
+        "circoscrizione": "7",
+        "name": "Scuola primaria PASCOLI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3164704,
+          38.1966942,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via La Franca Sebastiano, 70<br>sezioni: 225, 269*, 290, 300, 304<br>circoscrizione: 3",
+        "indirizzo": "Via La Franca Sebastiano, 70",
+        "sezioni": "225, 269*, 290, 300, 304",
+        "circoscrizione": "3",
+        "name": "Scuola primaria PILO ROSOLINO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.365662,
+          38.102034,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Sperone, 79<br>sezioni: 324, 325<br>circoscrizione: 2",
+        "indirizzo": "Via Sperone, 79",
+        "sezioni": "324, 325",
+        "circoscrizione": "2",
+        "name": "Scuola primaria RANDAZZO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.405477,
+          38.09853,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Caduti sul Lavoro, 70<br>sezioni: 8, 32, 79*, 84, 384, 522<br>circoscrizione: 7",
+        "indirizzo": "Via Caduti sul Lavoro, 70",
+        "sezioni": "8, 32, 79*, 84, 384, 522",
+        "circoscrizione": "7",
+        "name": "Scuola primaria RODARI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2935321,
+          38.1877993,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Cruillas, 4<br>sezioni: 381, 416, 434, 453<br>circoscrizione: 6",
+        "indirizzo": "Via Cruillas, 4",
+        "sezioni": "381, 416, 434, 453",
+        "circoscrizione": "6",
+        "name": "Scuola primaria ROSMINI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.327387,
+          38.1405701,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Viale della Resurrezione, 1<br>sezioni: 268, 397, 398*, 494, 563, 600<br>circoscrizione: 7",
+        "indirizzo": "Viale della Resurrezione, 1",
+        "sezioni": "268, 397, 398*, 494, 563, 600",
+        "circoscrizione": "7",
+        "name": "Scuola primaria SAN DOMENICOSAVIO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3275667,
+          38.170761,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via San Lorenzo, 89<br>sezioni: 81, 106, 210, 409<br>circoscrizione: 6",
+        "indirizzo": "Via San Lorenzo, 89",
+        "sezioni": "81, 106, 210, 409",
+        "circoscrizione": "6",
+        "name": "Scuola primaria SAN LORENZO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3268452,
+          38.1609656,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Di Castro Scipione, 22<br>sezioni: 235, 241, 242, 245, 246<br>circoscrizione: 5",
+        "indirizzo": "Via Di Castro Scipione, 22",
+        "sezioni": "235, 241, 242, 245, 246",
+        "circoscrizione": "5",
+        "name": "Scuola primaria SCIPIONE DI CASTRO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3428124,
+          38.1126522,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Sunseri Giuseppe, 19 <br>sezioni: 42, 365, 506<br>circoscrizione: 4",
+        "indirizzo": "Via Sunseri Giuseppe, 19 ",
+        "sezioni": "42, 365, 506",
+        "circoscrizione": "4",
+        "name": "Scuola primaria SUNSERI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3392236,
+          38.1074395,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Viale Leonardo da Vinci, 504<br>sezioni: 451, 455, 472, 552<br>circoscrizione: 5",
+        "indirizzo": "Viale Leonardo da Vinci, 504",
+        "sezioni": "451, 455, 472, 552",
+        "circoscrizione": "5",
+        "name": "Scuola primaria TOMASI DI LAMPEDUSA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3107975,
+          38.1264822,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via S. Maria di Gesù, 89<br>sezioni: 230, 334, 423<br>circoscrizione: 3",
+        "indirizzo": "Via S. Maria di Gesù, 89",
+        "sezioni": "230, 334, 423",
+        "circoscrizione": "3",
+        "name": "Scuola primaria TOMASINO BARTOLOMEO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.375382,
+          38.088491,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: via del Limone 19<br>sezioni: 285, 382, 383, 565<br>circoscrizione: ",
+        "indirizzo": "via del Limone 19",
+        "sezioni": "285, 382, 383, 565",
+        "circoscrizione": "",
+        "name": "Scuola primaria TOMMASONATALE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2842638,
+          38.1890737,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Trinacria, 1<br>sezioni: 62, 94, 404*, 513, 557<br>circoscrizione: 6",
+        "indirizzo": "Via Trinacria, 1",
+        "sezioni": "62, 94, 404*, 513, 557",
+        "circoscrizione": "6",
+        "name": "Scuola primaria TRINACRIA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3385852,
+          38.1469269,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Valverde, 2<br>sezioni: 36, 37, 41, 43<br>circoscrizione: 1",
+        "indirizzo": "Via Valverde, 2",
+        "sezioni": "36, 37, 41, 43",
+        "circoscrizione": "1",
+        "name": "Scuola primaria VALVERDE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.362079,
+          38.120251,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: via Uditore 21<br>sezioni: 200, 450<br>circoscrizione: 5",
+        "indirizzo": "via Uditore 21",
+        "sezioni": "200, 450",
+        "circoscrizione": "5",
+        "name": "Scuola primaria VERGA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3233798,
+          38.1324859,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Villagrazia, 298<br>sezioni: 231*, 349, 352<br>circoscrizione: 3",
+        "indirizzo": "Via Villagrazia, 298",
+        "sezioni": "231*, 349, 352",
+        "circoscrizione": "3",
+        "name": "Scuola primaria VILLAGRAZIA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.333776,
+          38.078459,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Inserra, 1<br>sezioni: 4, 83, 103, 437, 460, 595<br>circoscrizione: 6",
+        "indirizzo": "Via Inserra, 1",
+        "sezioni": "4, 83, 103, 437, 460, 595",
+        "circoscrizione": "6",
+        "name": "Scuola primaria VITALI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3148101,
+          38.1451192,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: via Mondello 5<br>sezioni: 393*, 394<br>circoscrizione: 7",
+        "indirizzo": "via Mondello 5",
+        "sezioni": "393*, 394",
+        "circoscrizione": "7",
+        "name": "Scuola RISO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3218536,
+          38.2034087,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Sergio Papa I, 21/D<br>sezioni: 262*, 420, 421, 498, 562, 598<br>circoscrizione: 7",
+        "indirizzo": "Via Sergio Papa I, 21/D",
+        "sezioni": "262*, 420, 421, 498, 562, 598",
+        "circoscrizione": "7",
+        "name": "Scuola RIZZO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3709085,
+          38.1506225,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Ustica 46<br>sezioni: 129, 368, 373, 402*, 473, 560, 566, 597<br>circoscrizione: 4",
+        "indirizzo": "Via Ustica 46",
+        "sezioni": "129, 368, 373, 402*, 473, 560, 566, 597",
+        "circoscrizione": "4",
+        "name": "Scuola secondaria di grado  PRINCIPESSA ELENA DI NAPOLI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3240288,
+          38.1172316,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Giuseppe Arcoleo, 78 <br>sezioni: 93, 351, 495<br>circoscrizione: 4",
+        "indirizzo": "Via Giuseppe Arcoleo, 78 ",
+        "sezioni": "93, 351, 495",
+        "circoscrizione": "4",
+        "name": "Scuola secondaria di I grado  GRAMSCI ANTONIO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3333629,
+          38.1069688,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via del Fervore, 5<br>sezioni: 179, 187, 197, 198<br>circoscrizione: 8",
+        "indirizzo": "Via del Fervore, 5",
+        "sezioni": "179, 187, 197, 198",
+        "circoscrizione": "8",
+        "name": "Scuola secondaria di I grado ARCHIMEDE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.349719,
+          38.1242942,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Castelnuovo, 40<br>sezioni: 128, 192<br>circoscrizione: 8",
+        "indirizzo": "Piazza Castelnuovo, 40",
+        "sezioni": "128, 192",
+        "circoscrizione": "8",
+        "name": "Scuola secondaria di I grado ARCHIMEDE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.353961,
+          38.1243859,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via del Vespro, 72<br><br>sezioni: 292, 294, 298, 299, 301, 306<br>circoscrizione: 3",
+        "indirizzo": "Via del Vespro, 72\n",
+        "sezioni": "292, 294, 298, 299, 301, 306",
+        "circoscrizione": "3",
+        "name": "Scuola secondaria di I grado BOCCONE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.362626,
+          38.105943,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Piazza Ferrini Contardo, 13<br>sezioni: 376, 400, 461, 523<br>circoscrizione: 7",
+        "indirizzo": "Piazza Ferrini Contardo, 13",
+        "sezioni": "376, 400, 461, 523",
+        "circoscrizione": "7",
+        "name": "Scuola secondaria di I grado BORGESE – GIOVANNI XXIII"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3218214,
+          38.1699703,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Ruggero Marturano, 79<br>sezioni: 102, 161, 162, 169<br>circoscrizione: 8",
+        "indirizzo": "Via Ruggero Marturano, 79",
+        "sezioni": "102, 161, 162, 169",
+        "circoscrizione": "8",
+        "name": "Scuola secondaria di I grado DANTE ALIGHIERI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3620143,
+          38.1470831,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Astorino Gerardo, 21<br>sezioni: 312, 413, 414, 415<br>circoscrizione: 6",
+        "indirizzo": "Via Astorino Gerardo, 21",
+        "sezioni": "312, 413, 414, 415",
+        "circoscrizione": "6",
+        "name": "Scuola secondaria di I grado FLORIOIGNAZIO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3243185,
+          38.1641416,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Delle Croci, 5<br>sezioni: 142, 518<br>circoscrizione: 8",
+        "indirizzo": "Via Delle Croci, 5",
+        "sezioni": "142, 518",
+        "circoscrizione": "8",
+        "name": "Scuola secondaria di I grado GARIBALDI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3550566,
+          38.1318856,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Lo Jacono Francesco, 1<br>sezioni: 60, 171, 173, 191<br>circoscrizione: 8",
+        "indirizzo": "Via Lo Jacono Francesco, 1",
+        "sezioni": "60, 171, 173, 191",
+        "circoscrizione": "8",
+        "name": "Scuola secondaria di I grado GENTILI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3464307,
+          38.1316008,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Serradifalco, 190<br>sezioni: 30*, 150, 236, 462, 547, 579, 596<br>circoscrizione: 5",
+        "indirizzo": "Via Serradifalco, 190",
+        "sezioni": "30*, 150, 236, 462, 547, 579, 596",
+        "circoscrizione": "5",
+        "name": "Scuola secondaria di I grado LEONARDO DA VINCI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3377188,
+          38.1268367,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Di Giorgio A. Gen., 4<br>sezioni: 350, 403, 422, 465, 479<br>circoscrizione: 8",
+        "indirizzo": "Via Di Giorgio A. Gen., 4",
+        "sezioni": "350, 403, 422, 465, 479",
+        "circoscrizione": "8",
+        "name": "Scuola secondaria di I grado MARCONI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3437189,
+          38.1438514,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via De Maria Federico,  36<br>sezioni: 270, 272, 340<br>circoscrizione: 4",
+        "indirizzo": "Via De Maria Federico,  36",
+        "sezioni": "270, 272, 340",
+        "circoscrizione": "4",
+        "name": "Scuola secondaria di I grado MAZZINI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.341659,
+          38.1096217,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Rutelli Mario, 50<br>sezioni: 148, 170, 172, 363, 501, 530, 535<br>circoscrizione: 8",
+        "indirizzo": "Via Rutelli Mario, 50",
+        "sezioni": "148, 170, 172, 363, 501, 530, 535",
+        "circoscrizione": "8",
+        "name": "Scuola secondaria di I grado PIAZZI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3481714,
+          38.139624,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via dell’Usignolo, 5<br>sezioni: 16*, 280, 458, 515, 527, 592<br>circoscrizione: 3",
+        "indirizzo": "Via dell’Usignolo, 5",
+        "sezioni": "16*, 280, 458, 515, 527, 592",
+        "circoscrizione": "3",
+        "name": "Scuola secondaria di I grado PIRANDELLO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.353163,
+          38.08909,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Lussemburgo, 103<br>sezioni: 137*, 141, 143, 293, 508<br>circoscrizione: 6",
+        "indirizzo": "Via Lussemburgo, 103",
+        "sezioni": "137*, 141, 143, 293, 508",
+        "circoscrizione": "6",
+        "name": "Scuola secondaria di I grado V. E.ORLANDO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.328087,
+          38.1531472,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Casella Alfredo, 35<br>sezioni: 22, 436, 463, 499<br>circoscrizione: 8",
+        "indirizzo": "Via Casella Alfredo, 35",
+        "sezioni": "22, 436, 463, 499",
+        "circoscrizione": "8",
+        "name": "Scuola Secondaria di I grado VERDI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.339587,
+          38.1276817,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Fermi Enrico, 2<br>sezioni: 34, 157, 346<br>circoscrizione: 8",
+        "indirizzo": "Via Fermi Enrico, 2",
+        "sezioni": "34, 157, 346",
+        "circoscrizione": "8",
+        "name": "Scuola secondaria di I grado VERDI "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3344734,
+          38.1269084,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "descrizion": "descrizione: Via Galletti, 78<br>sezioni: 113, 127, 311, 313, 584<br>circoscrizione: 2",
+        "indirizzo": "Via Galletti, 78",
+        "sezioni": "113, 127, 311, 313, 584",
+        "circoscrizione": "2",
+        "name": "Scuola secondaria RENATO GUTTUSO"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.431526,
+          38.091885,
+          0
+        ]
+      }
+    }
+  ]
+}

@@ -5,7 +5,7 @@ node_modules/
 .superpowers/
 # i dati pesanti non vanno in git: restano MANIFEST, README e catalogo
 dati/*/
-# dati leggeri usati dall'app e aggiunti a git con «git add -f» (restano tracciati anche se la cartella è ignorata): alberi, distretti AMAP, indice dei civici,
+# dati leggeri usati dall'app e aggiunti a git con «git add -f» (restano tracciati anche se la cartella è ignorata): alberi, distretti AMAP, civici, fontanelle, monumenti (punti, edifici e foto), scuole e seggi, popolazione (compatti), sicurezza stradale (pmtiles), classifica, trasporto. I sorgenti pesanti (gpkg, dsm, geojson grezzi, gtfs) restano fuori.
 # fontanelle, monumenti (punti, edifici e foto), civici (sezioni di ricerca), classifica della popolazione, trasporto (fermate, linee, orari).
 # eccezione: uffici (piccoli, rigenerati dal workflow «Aggiorna uffici»)
 !dati/uffici/
