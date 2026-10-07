@@ -77,8 +77,10 @@ function icona(lista) {
 }
 
 // Ridisegna le sedi in base alle aree accese in legenda (le sedi senza aree accese spariscono).
+// Le icone (una per sede, disegnate su canvas) servono solo a strato acceso: a strato spento non si disegnano.
+let stratoAcceso = false;
 function aggiorna() {
-  if (!mappa) return;
+  if (!mappa || !stratoAcceso) return;
   const features = [];
   for (const [id, p] of dettagli) {
     const lista = fette(p.uffici, accese);
@@ -201,6 +203,9 @@ export default {
       return aree.length ? [{ titolo: 'Aree', voci: aree.map(a => ({ id: `area:${a.area}`, etichetta: a.area })) }] : [];
     },
     suCambio(attivo) {
+      const prima = stratoAcceso;
+      stratoAcceso = attivo;
+      if (attivo && !prima) aggiorna();
       if (legenda) legenda.hidden = !attivo;
       for (const { pannello } of caselle.values()) pannello.disabled = !attivo;
     },
