@@ -73,6 +73,51 @@ def spezza(testo, massimo=88):
     return spezza(testo[:k].strip(), massimo) + spezza(testo[k:].strip(), massimo)
 
 
+SETUP_SPEED, TAIL_SPEED = 3.0, 2.5
+LEAD_TENUTO = 0.3
+
+
+def mappa_tempi(scene, s0, fine, extra):
+    """Punti (t_sorgente, t_uscita) di una mappa lineare a tratti: la parte di preparazione prima della voce e la coda dopo la voce
+    vengono accelerate (timelapse), la voce resta a velocità normale. Tempi relativi a s0."""
+    pts, out = [(0.0, 0.0)], 0.0
+    def tratto(a, b, vel):
+        nonlocal out
+        if b - a <= 1e-3:
+            return
+        out += (b - a) / vel
+        pts.append((b, out))
+    for i, sc in enumerate(scene):
+        S = sc["start"] - s0
+        X = (scene[i + 1]["start"] - s0) if i + 1 < len(scene) else fine
+        V = sc["voice_start"] - s0
+        E = V + sc["voice_dur"] + min(extra.get(sc["id"], 0.5), 0.6)
+        a1 = max(S, V - LEAD_TENUTO)
+        if pts[-1][0] < S:                      # eventuale spazio fra scene
+            tratto(pts[-1][0], S, 1.0)
+        tratto(S, a1, SETUP_SPEED if a1 - S > 1.2 else 1.0)
+        tratto(a1, min(E, X), 1.0)
+        if X > E:
+            tratto(E, X, TAIL_SPEED if X - E > 1.5 else 1.0)
+    return pts
+
+
+def f_uscita(pts, t):
+    for (a, oa), (b, ob) in zip(pts, pts[1:]):
+        if t <= b:
+            return oa + (t - a) * (ob - oa) / (b - a)
+    return pts[-1][1]
+
+
+def espr_mappa(pts):
+    """Espressione ffmpeg per setpts: tempo di uscita (in unità del timebase) a partire da T (secondi sorgente)."""
+    expr = f"{pts[-1][1]:.4f}"
+    for (a, oa), (b, ob) in reversed(list(zip(pts, pts[1:]))):
+        k = (ob - oa) / (b - a)
+        expr = f"if(lt(T,{b:.4f}),{oa:.4f}+(T-{a:.4f})*{k:.5f},{expr})"
+    return expr
+
+
 def tc_ass(t):
     t = max(0, t)
     return f"{int(t // 3600)}:{int(t % 3600 // 60):02d}:{t % 60:05.2f}"
@@ -82,8 +127,8 @@ def scrivi_ass(path, voce_inizio, frasi):
     righe = ["[Script Info]", "ScriptType: v4.00+", "PlayResX: 1920", "PlayResY: 1080", "WrapStyle: 0", "",
              "[V4+ Styles]",
              "Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding",
-             "Style: Basso,Montserrat,40,&H00FFFFFF,&H000000FF,&HC8231F1B,&HC8231F1B,-1,0,0,0,100,100,0,0,3,14,0,2,330,330,58,1",
-             "Style: Alto,Montserrat,40,&H00FFFFFF,&H000000FF,&HC8231F1B,&HC8231F1B,-1,0,0,0,100,100,0,0,3,14,0,8,330,330,150,1",
+             "Style: Basso,Montserrat,40,&H00FFFFFF,&H000000FF,&H28231F1B,&H28231F1B,-1,0,0,0,100,100,0,0,3,14,0,2,330,330,58,1",
+             "Style: Alto,Montserrat,40,&H00FFFFFF,&H000000FF,&H28231F1B,&H28231F1B,-1,0,0,0,100,100,0,0,3,14,0,8,330,330,150,1",
              "", "[Events]", "Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text"]
     for sid, t0 in voce_inizio.items():
         stile = "Alto" if sid in SOTTOTITOLI_ALTI else "Basso"
@@ -163,17 +208,19 @@ def main():
     scene = log["scene"]
     s0 = scene[0]["start"]
     fine_main = max(s["end"] for s in scene) + 0.4
-    Tm = fine_main - s0
+    Tsrc = fine_main - s0
+    pts = mappa_tempi(scene, s0, Tsrc, extra)
+    Tm = pts[-1][1]
     D1 = intro["dur"] - 0.3
     Dc = dur["5-saluti"] + extra["5-saluti"] + 0.7 + 0.5
     totale = D1 + Tm + Dc
-    print(f"intro {D1:.1f}s · registrazione {Tm:.1f}s · chiusura {Dc:.1f}s · TOTALE {totale / 60:.2f} min")
+    print(f"intro {D1:.1f}s · registrazione {Tsrc:.1f}s → {Tm:.1f}s dopo la compressione dei tempi morti · chiusura {Dc:.1f}s · TOTALE {totale / 60:.2f} min")
 
     voci = {"1-titolo": 0.4}
-    for s in scene:
-        voci[s["id"]] = D1 + (s["voice_start"] - s0)
+    for sc_ in scene:
+        voci[sc_["id"]] = D1 + f_uscita(pts, sc_["voice_start"] - s0)
     voci["5-saluti"] = D1 + Tm + 0.7
-    clicks = [D1 + (t - s0) for t in log.get("clicks", []) if s0 <= t <= fine_main]
+    clicks = [D1 + f_uscita(pts, t - s0) for t in log.get("clicks", []) if s0 <= t <= fine_main]
 
     scrivi_ass(f"{OUT}/sottotitoli.ass", voci, frasi)
     mix_audio(f"{OUT}/mix.wav", totale, voci, clicks)
@@ -182,8 +229,8 @@ def main():
     ms = s0 + vm
     graf = (
         f"[0:v]trim=start=0.3,setpts=PTS-STARTPTS,fps={FPS},scale=1920:1080,format=yuv420p,fade=t=out:st={D1 - 0.5:.2f}:d=0.5[v0];"
-        f"[1:v]trim=start={ms:.3f}:duration={Tm:.3f},setpts=PTS-STARTPTS,fps={FPS},scale=1920:1080,format=yuv420p"
-        + ("," + zf if zf else "") + f",fade=t=in:st=0:d=0.5,fade=t=out:st={Tm - 0.5:.2f}:d=0.5[v1];"
+        f"[1:v]trim=start={ms:.3f}:duration={Tsrc:.3f},setpts=PTS-STARTPTS,scale=1920:1080,format=yuv420p"
+        + ("," + zf if zf else "") + f",setpts='({espr_mappa(pts)})/TB',fps={FPS},fade=t=in:st=0:d=0.5,fade=t=out:st={Tm - 0.5:.2f}:d=0.5[v1];"
         f"[2:v]fps={FPS},scale=1920:1080,format=yuv420p,trim=duration={Dc:.2f},fade=t=in:st=0:d=0.6[v2];"
         f"[v0][v1][v2]concat=n=3:v=1:a=0[vc];"
         f"[vc]ass={OUT}/sottotitoli.ass:fontsdir={HERE}/assets/fonts[v]"

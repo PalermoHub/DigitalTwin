@@ -88,12 +88,15 @@ def _(r):
     r.zoom_box([0, 980, 1000, 100], 1.6)
     r.ring(".piede-avviso", "Senza valore legale", pos="above", hold=2.4)
     r.zoom_out()
+    # prepara in silenzio la mappa del telefono (finestra nascosta) così è già carica quando entra in scena
+    fr = r.pg.query_selector("#v-phone iframe").content_frame()
+    fr.evaluate("""()=>new Promise(res=>{const m=window.dt.map;m.jumpTo({center:[13.3586,38.1203],zoom:16});m.once('idle',()=>res(1));setTimeout(()=>res(0),9000)})""")
 
 
 @sc("2-telefono")
 def _(r):
     fr = r.pg.query_selector("#v-phone iframe").content_frame()
-    fr.evaluate("()=>{window.dt.map.jumpTo({center:[13.3586,38.1203],zoom:16})}")
+    fr.evaluate("""()=>new Promise(res=>{const m=window.dt.map;m.once('idle',()=>res(1));setTimeout(()=>res(0),3000)})""")
     r.pg.evaluate(TELEFONO_SU)
     r.sync(0.14)
     bb = fr.locator("#barra-tab").bounding_box()
