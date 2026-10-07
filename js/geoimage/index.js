@@ -96,6 +96,8 @@ export function collegaGeoimage(map, elemento) {
   const sessione = collegaSessione(ctx);
   collegaEsporta(ctx);
   ctx.cambiato(); // stato iniziale dei pulsanti
+  // il modulo si carica al primo clic sul tab: il pannello può essere già aperto, e l'osservatore sopra non vedrebbe alcun cambiamento
+  if (aperto()) { ctx.maniglie.mostra(); ascoltatori.visibilita.forEach(fn => fn(true)); }
 
   return {
     stato, // sola lettura: lo usano i test del browser

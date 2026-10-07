@@ -9,7 +9,7 @@ import { collegaRndt } from './rndt/index.js';
 import { creaGruppo, creaGruppoRndt, OPZIONI_MIEI } from './rndt/gruppo.js';
 import { collegaAggiungi } from './aggiungi/index.js';
 import { migraFileLocali } from './aggiungi/migrazione.js';
-import { collegaGeoimage } from './geoimage/index.js';
+import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaStampa } from './core/stampa.js';
@@ -54,8 +54,48 @@ const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti,
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
 
+// Gli strati puntuali nascono spenti, ma la scheda li interroga anche da spenti: i loro dati (GeoJSON) non bloccano l'avvio.
+// Partono in secondo piano poco dopo (o alla prima accensione, o al primo clic sulla mappa, se arriva prima).
+// Il trasporto resta fuori perché il filtro Linea ha bisogno dei suoi dati subito.
+const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine']);
+const VUOTO = { type: 'FeatureCollection', features: [] };
+const carica = new Map(); // id modulo → funzione che scarica i dati (una sola volta)
+const fontiDifferite = [];
+let promessaDifferiti = null;
+// Promessa dei dati differiti: la scheda la attende prima di rispondere a un clic arrivato troppo presto.
+const caricaDifferiti = () => promessaDifferiti ??= (async () => {
+  for (const f of carica.values()) f();
+  await new Promise(ok => {
+    const t = setInterval(() => { if (fontiDifferite.every(id => map.getSource(id) && map.isSourceLoaded(id))) { clearInterval(t); ok(); } }, 150);
+    setTimeout(() => { clearInterval(t); ok(); }, 20000);
+  });
+  window.dt.differitiPronti = true;
+})();
+
+// Aggiunge le sorgenti del modulo con i GeoJSON da URL vuoti, ricordando gli indirizzi da caricare dopo.
+function aggiungiSorgentiDifferite(map, m) {
+  const urls = new Map();
+  map.addSource = (id, spec) => {
+    if (spec.type === 'geojson' && typeof spec.data === 'string') { urls.set(id, spec.data); return Object.getPrototypeOf(map).addSource.call(map, id, { ...spec, data: VUOTO }); }
+    return Object.getPrototypeOf(map).addSource.call(map, id, spec);
+  };
+  try { m.aggiungiSorgenti(map); } finally { delete map.addSource; }
+  fontiDifferite.push(...urls.keys());
+  let fatto = false;
+  carica.set(m.id, () => {
+    if (fatto) return;
+    fatto = true;
+    for (const [id, url] of urls) map.getSource(id)?.setData(url);
+    Promise.resolve(m.avvia?.(map)).catch(e => segnala(`Strato non caricato: ${e?.message ?? e}`));
+  });
+  for (const strato of m.strati) {
+    const suCambio = strato.suCambio;
+    strato.suCambio = function (attivo, mp) { if (attivo) carica.get(m.id)(); return suCambio?.call(this, attivo, mp); };
+  }
+}
+
 const map = creaMappa('mappa', () => segnala('Base cartografica non disponibile: mappa semplificata'));
-window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false };
+window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false, differitiPronti: false, differiti: () => caricaDifferiti() };
 
 // Un errore su una sorgente disattiva solo gli strati che la usano e li nomina nell'avviso
 // (con l'etichetta del pannello, non con l'id tecnico).
@@ -75,7 +115,7 @@ map.once('style.load', async () => {
   if (catalogo) impostaCatalogo(catalogo);
   else segnala('Catalogo dati non disponibile: uso le copie locali dei dati');
 
-  for (const m of MODULI) m.aggiungiSorgenti(map);
+  for (const m of MODULI) { if (DIFFERITI.has(m.id)) aggiungiSorgentiDifferite(map, m); else m.aggiungiSorgenti(map); }
   for (const m of MODULI) m.aggiungiLayer(map);
   try { migraFileLocali(window.localStorage); } catch { /* storage bloccato: niente da spostare */ }
   const gruppoRndt = creaGruppoRndt(); // ultimi gruppi della barra: i loro layer arrivano a runtime
@@ -84,11 +124,31 @@ map.once('style.load', async () => {
   const rndt = collegaRndt(map, document.getElementById('rndt-pannello'), gruppoRndt);
   const aggiungi = collegaAggiungi(map, gruppoMiei);
   collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt });
-  const geoimage = collegaGeoimage(map, document.getElementById('geoimage-pannello'));
+  // Geoimage (circa 100 KB di moduli) si carica al primo clic sul suo tab, o all'avvio solo se c'è un progetto da ripristinare.
+  const pannelloGeo = document.getElementById('geoimage-pannello');
+  let geoPronto = null;
+  const caricaGeoimage = () => geoPronto ??= import('./geoimage/index.js').then(({ collegaGeoimage }) => {
+    const g = collegaGeoimage(map, pannelloGeo);
+    window.dt.geoimage = g;
+    return g;
+  });
+  const geoimage = {
+    async apri() { // il pannello si apre subito, con un segnaposto che il modulo sostituisce appena caricato
+      if (!geoPronto) pannelloGeo.textContent = 'Caricamento…';
+      pannelloGeo.hidden = false;
+      try { await caricaGeoimage(); } catch (e) { geoPronto = null; pannelloGeo.hidden = true; segnala(`Geoimage non disponibile: ${e.message}`); }
+    },
+    chiudi() { pannelloGeo.hidden = true; },
+    async ripristina() {
+      let salvato = null;
+      try { salvato = window.localStorage.getItem(CHIAVE_GEOIMAGE); } catch { /* storage bloccato: niente da ripristinare */ }
+      if (salvato) (await caricaGeoimage().catch(() => null))?.ripristina();
+    },
+  };
   const rail = collegaRail(document.getElementById('rail-pannelli'), [
     { id: 'scheda', etichetta: 'Scheda', pannello: document.getElementById('scheda') },
     { id: 'rndt', etichetta: 'RNDT', pannello: document.getElementById('rndt-pannello'), apri: rndt.apri, chiudi: rndt.chiudi },
-    { id: 'geoimage', etichetta: 'Geoimage', pannello: document.getElementById('geoimage-pannello'), apri: geoimage.apri, chiudi: geoimage.chiudi },
+    { id: 'geoimage', etichetta: 'Geoimage', pannello: pannelloGeo, apri: geoimage.apri, chiudi: geoimage.chiudi },
   ]);
   // su mobile la barra laterale non c'è: Geoimage si apre dal pannello Strati
   const btnGeo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-geoimage-m', className: 'btn-pannello-mobile', title: 'Geoimage: mappe storiche' });
@@ -99,7 +159,7 @@ map.once('style.load', async () => {
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
   geoimage.ripristina(); // e la mappa storica di Geoimage, se c'era
-  window.dt.geoimage = geoimage;
+  window.dt.geoimage ??= geoimage;
   const vaiParticella = collegaRicercaParticella(map, document.getElementById('cerca-foglio'), document.getElementById('cerca-numero'),
     document.getElementById('cerca-particella-vai'), document.getElementById('cerca-particella-esito'));
   const zone = collegaZone(map, {
@@ -124,7 +184,7 @@ map.once('style.load', async () => {
   aggiornaCoord();
   collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })());
 
-  const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia).map(m => m.avvia(map)));
+  const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia && !DIFFERITI.has(m.id)).map(m => m.avvia(map)));
   esiti.forEach(e => { if (e.status === 'rejected') segnala(`Strato non caricato: ${e.reason?.message ?? e.reason}`); });
   // il filtro Linea ha bisogno dei dati del trasporto, caricati da `avvia`
   collegaFiltroLinea(map, { select: document.getElementById('f-linea'), chips: document.getElementById('filtri-linea-chips'), ...trasporto.filtro() });
@@ -165,4 +225,5 @@ map.once('style.load', async () => {
   });
   collegaInvito(map, document, (() => { try { return window.localStorage; } catch { return null; } })(), { url: location.search });
   window.dt.pronto = true;
+  setTimeout(() => (window.requestIdleCallback ?? (f => f()))(() => caricaDifferiti()), 3000);
 });

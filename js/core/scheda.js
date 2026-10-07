@@ -654,7 +654,9 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && !contenitore.hidden) contenitore.querySelector('.scheda-x')?.click();
   });
-  map.on('click', e => {
+  map.on('click', async e => {
+    // i dati degli strati puntuali si scaricano in secondo piano: un clic arrivato prima li attende
+    if (window.dt && window.dt.differitiPronti === false) await window.dt.differiti();
     const voci = [];
     const trovatiTutti = [];
     for (const m of conScheda) {
