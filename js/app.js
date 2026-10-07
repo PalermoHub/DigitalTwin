@@ -12,6 +12,7 @@ import { migraFileLocali } from './aggiungi/migrazione.js';
 import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
+import { collegaCursorePunti } from './core/cursore-punti.js';
 import { collegaStampa } from './core/stampa.js';
 import { collegaZone } from './core/zone.js';
 import { collegaRipristino } from './core/ripristino.js';
@@ -155,6 +156,7 @@ map.once('style.load', async () => {
     collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti)));
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
+  collegaCursorePunti(map);
   collegaStampa(map, document.getElementById('btn-stampa'), document.getElementById('stampa-menu'));
   const archivioLocale = (() => { try { return window.localStorage; } catch { return null; } })();
   window.dt.condivisione = collegaCondivisione(map, document.getElementById('btn-condividi'), { storage: archivioLocale });
