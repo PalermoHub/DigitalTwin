@@ -43,7 +43,10 @@ OVERLAY = """
     <div style="margin-top:22px;width:150px;height:8px;background:@ARANCIONE@"></div>
   </div>
   <p style="position:absolute;left:58px;top:318px;width:560px;margin:0;font-size:27px;line-height:1.38;font-weight:500;color:#fff">@TESTO@</p>
-  <div style="position:absolute;left:58px;bottom:38px;font-size:27px;font-weight:700;letter-spacing:.02em;color:@ARANCIONE@">@FIRMA@</div>
+  <div style="position:absolute;left:58px;bottom:30px;display:flex;align-items:center;gap:18px">
+    <img src="img/opendatasicilia.png" alt="" style="height:78px;width:auto;display:block;filter:invert(1)">
+    <span style="font-size:27px;font-weight:700;letter-spacing:.02em;color:@ARANCIONE@">@FIRMA@</span>
+  </div>
   <img src="@SCHERMATA@" alt="" style="position:absolute;right:44px;bottom:74px;width:468px;height:auto;border:6px solid @ARANCIONE@;box-shadow:0 10px 36px rgba(0,0,0,.45);display:block">
 </div>
 """
