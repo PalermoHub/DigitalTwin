@@ -9,11 +9,13 @@ Promemoria di lavoro (scritto il 2026-10-07 dopo le fasi 0-6 di `PIANO_miglioram
 - `main` locale è avanti rispetto a `origin/main` e **il bot** (`github-actions[bot]`) fa un commit orario sui dati delle colonnine: prima di ogni push `git pull --rebase origin main`.
 - Il service worker NON si registra in locale (solo HTTPS o `?sw`).
 
-## 0 bis. Stato online (2026-10-07, ore 17)
+## 0 bis. Stato online (2026-10-07, ore 18)
 
-Il repository è **pubblico** (la CI `Test` passa). **GitHub Pages non è attivo** (`has_pages: false`): `https://palermohub.github.io/DigitalTwin/` dà 404. Attivarlo: Settings, Pages, Source «Deploy from a branch», branch `main`, cartella `/ (root)`. L'utente ha visto una pagina di errore 500 di GitHub nelle impostazioni: riprovare, o verificare che l'organizzazione PalermoHub consenta Pages.
+Repository pubblico, GitHub Pages attivo su `https://palermohub.github.io/DigitalTwin/`. CI `Test` verde. Verificati: gzip su HTML/JS/GeoJSON, cache 10 minuti (anche `sw.js`, accettabile), canonical, `og:*`, sitemap, robots, icone. Dati principali online; aggiunti a git (commit 2fa6926) anche `civici-omi/civici/*.json` (ricerca indirizzi) e `monumenti/foto/` (53 MB).
 
-**Dati che mancherebbero online** (ignorati da git, usati da percorsi locali): `alberi_monumentali/alberi.geojson`, `amap/amap_distretti.geojson`, `civici-omi/civici_vie.json` (e `civici/<00-31>.json`: ricerca indirizzi), `fontanelle/fontanelle.geojson`, `monumenti/monumenti.geojson` e `monumenti_edifici.pmtiles`, `monumenti/foto/` (2054 file, 53 MB), `popolazione/classifica.json`, `trasporto/fermate.geojson`, `linee.geojson`, `orari.json`. I dieci file principali pesano 5,8 MB in totale.
+Lighthouse sul sito vero (`docs/misure/2026-10-07-online`, Chromium senza GPU): desktop perf 33, mobile 43 (LCP 5,1 s, TBT 11 s), a11y 100, SEO 100. Obiettivi del piano non raggiunti: TBT dominato dal render software; misurare su telefono vero.
+
+Ancora da fare: Worker CORS (passo 2), anteprime social, mobile vero, installabilità PWA, test aggiornamento service worker.
 
 ## 1. Prima di rendere pubblico (blocchi da risolvere con l'utente)
 
