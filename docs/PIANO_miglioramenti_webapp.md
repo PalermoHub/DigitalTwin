@@ -32,11 +32,11 @@ Esito audit `innerHTML`: 29 punti, tutti con contenuto statico (icone SVG, `<opt
 
 Obiettivo: numeri confrontabili e test automatici ad ogni push.
 
-- [ ] Misurare Lighthouse sul sito pubblicato (o su un server locale con gzip/brotli e cache) e salvare i report in `docs/misure/2026-10-07/`.
-- [ ] Salvare lo script di misura (Chromium di Playwright + `lighthouse --port`) in `scripts/lighthouse.sh`, così si ripete uguale.
-- [ ] Aggiungere `.github/workflows/test.yml`: su push e pull request lancia `npm run test:js` e `pytest`.
-- [ ] Verificare il `.gitignore`: c'è `!dati/incedi/` ma il layer si chiama `incendi`. Se la cartella reale è `dati/incendi`, correggere l'eccezione e controllare che i dati siano tracciati.
-- [ ] Eliminare o spostare fuori dal repo `dati/delete` (257 MB, già ignorato da git).
+- [x] Misura di base in `docs/misure/2026-10-07/` (locale). Resta da rifare sul sito pubblicato.
+- [x] Script di misura: `scripts/lighthouse.sh`.
+- [x] `.github/workflows/test.yml`: lancia i test JS (621). Test JS e `package.json` ora in git; i test Python restano locali.
+- [x] `.gitignore`: nessun bug. La cartella si chiama davvero `dati/incedi` (refuso nel nome, ma coerente in codice e workflow). Rinominarla è facoltativo.
+- [x] `dati/delete` (257 MB, ignorato da git, non usato dal codice): lasciato com'è su decisione dell'utente.
 
 Chiusura: workflow verde, report di base committati.
 
