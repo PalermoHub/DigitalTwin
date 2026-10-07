@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palermo Digital Twin: la mappa dei dati aperti di Palermo</title>
+<meta name="description" content="Catasto, piano regolatore, popolazione, edifici, trasporto pubblico e molto altro su una sola mappa di Palermo, da dati aperti.">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151a20" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://palermohub.github.io/DigitalTwin/presentazione.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://palermohub.github.io/DigitalTwin/presentazione.html">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Palermo Digital Twin">
+<meta property="og:title" content="Palermo Digital Twin">
+<meta property="og:description" content="Catasto, PRG, popolazione, edifici, rilievo, trasporto pubblico e tanti altri dati di Palermo su una sola mappa, da dati aperti.">
+<meta property="og:image" content="https://palermohub.github.io/DigitalTwin/img/social-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Digital Twin Palermo: il titolo su fondo scuro e, a destra, la schermata dell'app con la scheda di un luogo sulla mappa di Palermo">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/icona-192.png">
+<link rel="preload" href="css/fonts/montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<script>try{var t=localStorage.getItem('dt-tema');if(t==='scuro'||t==='chiaro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<link rel="stylesheet" href="css/presentazione.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Palermo Digital Twin",
+  "url": "https://palermohub.github.io/DigitalTwin/",
+  "description": "Mappa interattiva di Palermo con catasto, piano regolatore, popolazione, edifici, trasporto pubblico e altri dati aperti.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Qualsiasi (browser)",
+  "inLanguage": "it",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "license": "https://creativecommons.org/licenses/by-sa/4.0/deed.it",
+  "creator": { "@type": "Organization", "name": "OpenDataSicilia", "url": "https://opendatasicilia.it/" },
+  "image": "https://palermohub.github.io/DigitalTwin/img/social-card.jpg"
+}
+</script>
+</head>
+<body>
+<a class="salta" href="#contenuto">Vai al contenuto</a>
+
+<header class="testata">
+  <div class="contenitore">
+    <a class="logo" href="presentazione.html" aria-label="Palermo Digital Twin, inizio pagina">
+      <img class="chiaro" src="img/logo-palermo-digital-twin.svg" alt="" width="186" height="40">
+      <img class="scuro" src="img/logo-palermo-digital-twin-scuro.svg" alt="" width="186" height="40">
+    </a>
+    <nav class="menu" aria-label="Sezioni della pagina">
+      <a href="#video">Video</a>
+      <a href="#cosa-trovi">Cosa trovi</a>
+      <a href="#telefono">Telefono</a>
+      <a href="#dati">Dati e fonti</a>
+    </nav>
+    <a class="bottone bottone--primario bottone--piccolo" href="./">Apri la mappa</a>
+  </div>
+</header>
+
+<main id="contenuto">
+  <section class="apertura" aria-labelledby="titolo">
+    <div class="contenitore">
+      <div>
+        <h1 id="titolo">Palermo <span>Digital Twin</span></h1>
+        <p>La mappa dei dati aperti di Palermo: catasto, piano regolatore, popolazione, edifici, trasporto pubblico e molto altro.</p>
+        <div class="azioni">
+          <a class="bottone bottone--primario" href="./">Apri la mappa</a>
+          <a class="bottone bottone--secondario" href="#video">Guarda il video</a>
+        </div>
+      </div>
+      <figure class="schermata">
+        <picture>
+          <source id="hero-scuro" media="(prefers-color-scheme: dark)" srcset="img/landing/hero-scuro-720.webp 720w, img/landing/hero-scuro.webp 1440w" sizes="(min-width: 960px) 760px, 100vw">
+          <img id="hero" src="img/landing/hero-chiaro.webp" srcset="img/landing/hero-chiaro-720.webp 720w, img/landing/hero-chiaro.webp 1440w" sizes="(min-width: 960px) 760px, 100vw" width="1440" height="900" fetchpriority="high" alt="L'app aperta su via Imera: la mappa con gli edifici e, a destra, la scheda del luogo con edificio, scuola, rifugio e zona a incidenti concentrati.">
+        </picture>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sezione sezione--alt" id="video" aria-labelledby="titolo-video">
+    <div class="contenitore">
+      <h2 id="titolo-video">Il tour dell'app</h2>
+      <p class="intro">La mappa, il plugin RNDT e Geoimage, passo dopo passo.</p>
+      <div class="video" id="video-lettore">
+        <button type="button" class="video-bottone" aria-label="Guarda il video: Palermo Digital Twin, il tour dell'app">
+          <img src="img/landing/video-locandina.webp" width="960" height="540" loading="lazy" alt="">
+          <span class="avvia" aria-hidden="true"></span>
+        </button>
+      </div>
+      <noscript><p><a href="https://youtu.be/Mzj1xk1l2QM" rel="noopener">Guarda il video su YouTube</a></p></noscript>
+    </div>
+  </section>
+
+  <section class="sezione" id="cosa-trovi" aria-labelledby="titolo-cosa">
+    <div class="contenitore">
+      <h2 id="titolo-cosa">Cosa trovi sulla mappa</h2>
+      <p class="intro">Ogni strato si accende o si spegne, e ogni clic apre la scheda del luogo.</p>
+      <div class="riquadri">
+        <figure class="riquadro riquadro--scheda">
+          <img src="img/guida/passi/scheda.webp" srcset="img/landing/scheda-640.webp 640w, img/guida/passi/scheda.webp 1280w" sizes="(min-width: 900px) 700px, 100vw" width="1280" height="720" loading="lazy" alt="La scheda del luogo aperta su via Maqueda 435, con edificio, particella catastale e zonizzazione del piano regolatore.">
+          <figcaption>
+            <h3>Un clic, tutto su un punto</h3>
+            <p>Catasto, vincoli, sicurezza, cultura e trasporti per l'indirizzo che scegli, riuniti in una sola scheda.</p>
+          </figcaption>
+        </figure>
+        <figure class="riquadro riquadro--calore">
+          <img src="img/guida/passi/isole-calore.webp" srcset="img/landing/isole-calore-640.webp 640w, img/guida/passi/isole-calore.webp 1280w" sizes="(min-width: 900px) 480px, 100vw" width="1280" height="720" loading="lazy" alt="La mappa delle isole di calore: temperatura superficiale estiva per sezione censuaria, dal giallo al rosso.">
+          <figcaption>
+            <h3>Isole di calore</h3>
+            <p>La temperatura superficiale estiva di ogni sezione censuaria, dal 2019 al 2025.</p>
+          </figcaption>
+        </figure>
+        <figure class="riquadro riquadro--storiche">
+          <img src="img/guida/passi/mappe-storiche.webp" srcset="img/landing/mappe-storiche-640.webp 640w, img/guida/passi/mappe-storiche.webp 1280w" sizes="(min-width: 900px) 480px, 100vw" width="1280" height="720" loading="lazy" alt="Una pianta storica di Palermo sovrapposta alla mappa di oggi, con l'elenco delle mappe disponibili.">
+          <figcaption>
+            <h3>Mappe storiche</h3>
+            <p>Sovrapponi e confronta le piante antiche di Palermo con la città di oggi.</p>
+          </figcaption>
+        </figure>
+        <figure class="riquadro riquadro--monumenti">
+          <img src="img/guida/passi/monumenti.webp" srcset="img/landing/monumenti-640.webp 640w, img/guida/passi/monumenti.webp 1280w" sizes="(min-width: 900px) 480px, 100vw" width="1280" height="720" loading="lazy" alt="Il Teatro Massimo evidenziato tra i monumenti, con foto e collegamento al sito del Comune.">
+          <figcaption>
+            <h3>Monumenti e cultura</h3>
+            <p>Chiese, palazzi, teatri e musei, con foto e collegamento al sito del Comune.</p>
+          </figcaption>
+        </figure>
+        <figure class="riquadro riquadro--pai">
+          <img src="img/guida/passi/pai.webp" srcset="img/landing/pai-640.webp 640w, img/guida/passi/pai.webp 1280w" sizes="(min-width: 900px) 700px, 100vw" width="1280" height="720" loading="lazy" alt="Le aree a pericolosità idraulica del Piano di Assetto Idrogeologico sulla mappa, con la legenda delle classi P1, P2, P3 e P4.">
+          <figcaption>
+            <h3>Rischio idrogeologico</h3>
+            <p>I vincoli del Piano di Assetto Idrogeologico: pericolosità e rischio idraulico e geomorfologico.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sezione sezione--alt" id="telefono" aria-labelledby="titolo-telefono">
+    <div class="contenitore telefono">
+      <div>
+        <h2 id="titolo-telefono">Funziona anche sul telefono</h2>
+        <p class="intro">Quattro tab in basso: Mappa, Strati, Aggiungi e Menu. La ricerca sta in alto e la scheda sale dal basso.</p>
+        <a class="bottone bottone--secondario" href="./#guida">Leggi la guida</a>
+      </div>
+      <figure>
+        <img src="img/guida/passi/telefono.webp" srcset="img/landing/telefono-640.webp 640w, img/guida/passi/telefono.webp 1280w" sizes="(min-width: 900px) 640px, 100vw" width="1280" height="720" loading="lazy" alt="Tre schermate del telefono: la mappa con la barra dei tab in basso, il foglio Aggiungi e il menu a comparsa.">
+      </figure>
+    </div>
+  </section>
+
+  <section class="sezione" id="dati" aria-labelledby="titolo-dati">
+    <div class="contenitore fonti">
+      <h2 id="titolo-dati">Dati aperti, con le fonti</h2>
+      <p>I dati arrivano dal Comune di Palermo, dall'azienda del trasporto pubblico AMAT, dal catasto, dal censimento e da OpenStreetMap.</p>
+      <p>Per ogni fonte trovi la data, il collegamento al dato originale e la licenza.</p>
+      <div class="azioni">
+        <a class="bottone bottone--primario" href="./#fonti">Vedi le fonti</a>
+        <a class="bottone bottone--secondario" href="./">Apri la mappa</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="piede">
+  <div class="contenitore">
+    <div class="firma">
+      <a href="https://opendatasicilia.it/" rel="noopener" aria-label="OpenDataSicilia"><img src="img/opendatasicilia.png" alt="" width="45" height="52"></a>
+      <p>© 2026 OpenDataSicilia, licenza <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.it" rel="noopener">CC BY-SA 4.0</a></p>
+    </div>
+    <ul>
+      <li><a href="./#guida">Guida</a></li>
+      <li><a href="./#fonti">Fonti e avvisi</a></li>
+      <li><a href="./#about">About</a></li>
+    </ul>
+    <p>Catasto, PRG e vincoli sono dati informativi, senza valore legale.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // la scelta del tema fatta nell'app vale anche qui: se è esplicita, la schermata dell'intestazione la segue
+  var tema = document.documentElement.dataset.tema, sorgente = document.getElementById('hero-scuro');
+  if (tema === 'scuro') sorgente.media = 'all'; else if (tema === 'chiaro') sorgente.media = 'not all';
+  // il video si carica solo al clic (nessun contenuto di YouTube prima)
+  var lettore = document.getElementById('video-lettore');
+  lettore.querySelector('button').addEventListener('click', function () {
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/Mzj1xk1l2QM?autoplay=1&rel=0';
+    f.title = 'Video: Palermo Digital Twin, il tour dell\'app';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    lettore.replaceChildren(f);
+    f.focus();
+  }, { once: true });
+})();
+</script>
+</body>
+</html>

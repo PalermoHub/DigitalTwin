@@ -9,6 +9,12 @@ Promemoria di lavoro (scritto il 2026-10-07 dopo le fasi 0-6 di `PIANO_miglioram
 - `main` locale è avanti rispetto a `origin/main` e **il bot** (`github-actions[bot]`) fa un commit orario sui dati delle colonnine: prima di ogni push `git pull --rebase origin main`.
 - Il service worker NON si registra in locale (solo HTTPS o `?sw`).
 
+## 0 bis. Stato online (2026-10-07, ore 17)
+
+Il repository è **pubblico** (la CI `Test` passa). **GitHub Pages non è attivo** (`has_pages: false`): `https://palermohub.github.io/DigitalTwin/` dà 404. Attivarlo: Settings, Pages, Source «Deploy from a branch», branch `main`, cartella `/ (root)`. L'utente ha visto una pagina di errore 500 di GitHub nelle impostazioni: riprovare, o verificare che l'organizzazione PalermoHub consenta Pages.
+
+**Dati che mancherebbero online** (ignorati da git, usati da percorsi locali): `alberi_monumentali/alberi.geojson`, `amap/amap_distretti.geojson`, `civici-omi/civici_vie.json` (e `civici/<00-31>.json`: ricerca indirizzi), `fontanelle/fontanelle.geojson`, `monumenti/monumenti.geojson` e `monumenti_edifici.pmtiles`, `monumenti/foto/` (2054 file, 53 MB), `popolazione/classifica.json`, `trasporto/fermate.geojson`, `linee.geojson`, `orari.json`. I dieci file principali pesano 5,8 MB in totale.
+
 ## 1. Prima di rendere pubblico (blocchi da risolvere con l'utente)
 
 1. **Ramo `pulizia-repo`** (non unito, molto indietro): toglie dall'indice 316 file (89 MB) e alleggerisce `.git` (648 MB). **Unirlo cancella dal disco** i file tolti dall'indice: serve prima il backup in `../DigitalTwin-locale-backup` (vedi `DA_FARE_PRIMA_DELLA_PRODUZIONE.md`, sezione 4). Non farlo senza ok esplicito.
@@ -36,9 +42,7 @@ Eseguire nell'ordine; confrontare con la base in `docs/misure/2026-10-07/RIASSUN
 
 Si possono preparare subito con `https://palermohub.github.io/DigitalTwin/`:
 
-- [ ] **Landing** statica (pagina di presentazione) con il video del tour (`https://youtu.be/Mzj1xk1l2QM`), link all'app, descrizione e dati strutturati `WebApplication`. Progettarla con la skill `design-taste-frontend` (solo per la landing, non per l'app). Rispettare: italiano, accenti, niente trattino lungo, contrasto, tema chiaro e scuro, mobile.
-- [ ] **`sitemap.xml` e `robots.txt`** (con `Sitemap:` assoluto).
-- [ ] **`scripts/imposta_indirizzo.py <nuovo indirizzo>`**: sostituisce l'indirizzo assoluto in `index.html` (`canonical`, `og:url`, `og:image`), `sitemap.xml`, `robots.txt`, landing e dati strutturati. Un solo comando per il cambio di dominio (vedi sezione 4).
+- [x] **Landing, `sitemap.xml`, `robots.txt`, `scripts/imposta_indirizzo.py`**: fatti il 2026-10-07 (vedi il piano). Per il cambio di dominio: `python scripts/imposta_indirizzo.py <nuovo indirizzo>/` (con `--prova` per vedere prima).
 - [ ] **Search Console**: registrare la proprietà e inviare la sitemap (lo fa l'utente).
 
 ## 4. Se ci sarà un reindirizzamento su un altro dominio

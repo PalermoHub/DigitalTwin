@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://palermohub.github.io/DigitalTwin/sitemap.xml
