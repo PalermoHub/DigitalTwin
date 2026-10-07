@@ -15,7 +15,9 @@ Repository pubblico, GitHub Pages attivo su `https://palermohub.github.io/Digita
 
 Lighthouse sul sito vero (`docs/misure/2026-10-07-online`, Chromium senza GPU): desktop perf 33, mobile 43 (LCP 5,1 s, TBT 11 s), a11y 100, SEO 100. Obiettivi del piano non raggiunti: TBT dominato dal render software; misurare su telefono vero.
 
-Ancora da fare: Worker CORS (passo 2), anteprime social, mobile vero, installabilità PWA, test aggiornamento service worker.
+Worker pubblicato (2026-10-07): `https://rndt-proxy.coseerobe.workers.dev`, prove curl ok (preflight con authorization, 401 senza WWW-Authenticate, 403 origine non ammessa); `PROXY_PREDEFINITO` allineato. Da provare dall'app online: XYZ, WMS, WFS, catalogo RNDT.
+
+Ancora da fare: anteprime social, mobile vero, installabilità PWA, test aggiornamento service worker.
 
 ## 1. Prima di rendere pubblico (blocchi da risolvere con l'utente)
 
