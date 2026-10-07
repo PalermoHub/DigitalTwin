@@ -61,6 +61,8 @@ const catalogoPromessa = caricaCatalogo().catch(() => null);
 // Il trasporto resta fuori perché il filtro Linea ha bisogno dei suoi dati subito.
 const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine']);
 
+// la mappa (hash: true) riscrive subito l'hash con la vista: la scheda richiesta dall'indirizzo (#guida, #fonti…) va letta prima
+const SCHEDA_INDIRIZZO = location.hash.slice(1);
 const map = creaMappa('mappa', () => segnala('Base cartografica non disponibile: mappa semplificata'));
 const differiti = creaDifferiti(map, { segnala });
 const caricaDifferiti = () => differiti.tutti().then(() => { window.dt.differitiPronti = true; });
@@ -197,7 +199,7 @@ map.once('style.load', async () => {
   foglio.addEventListener('scheda', e => { segna(e.detail); indirizzo(e.detail); });
   foglio.addEventListener('close', () => { segna(null); indirizzo(null); });
   document.getElementById('app-logo').addEventListener('click', e => { if (foglio.open) { e.preventDefault(); foglio.close(); } });
-  const iniziale = location.hash.slice(1);
+  const iniziale = SCHEDA_INDIRIZZO;
   if (menu.querySelector(`[data-scheda="${iniziale}"]`) && iniziale !== 'mappa') commuta(iniziale);
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
