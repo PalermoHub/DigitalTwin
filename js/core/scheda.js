@@ -1,5 +1,6 @@
 import { unisci, sezioniConRitardo, testoContesto, titoloScheda, separaMancanti, dividiDettaglio, valoreLungo, NOTA_LEGALE } from './scheda-modello.js';
 import { svgIcona } from './icone.js';
+import { collegamento } from './url-sicuro.js';
 import { segnala } from './pannello.js';
 import {
   applicaPreferenze, registraVisti, elencoPannello, commutaSezione, commutaRiga, azzera, nascondiTutto, tuttoNascosto, nessunaPreferenza,
@@ -30,7 +31,7 @@ function disegnaRiga(r) {
   if (r.url) { // etichetta-collegamento (es. scheda di un ufficio sul sito del Comune); il valore va a capo
     const et = el('span', 'scheda-et');
     const a = el('a', null, r.etichetta);
-    a.href = r.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    collegamento(a, r.url);
     et.append(a);
     riga.append(et);
     riga.classList.add('scheda-riga--lunga');
@@ -94,9 +95,7 @@ function disegnaAccordion(a) {
 
 function disegnaLink(l) {
   const a = el('a', 'scheda-link');
-  a.href = l.url;
-  a.target = '_blank';
-  a.rel = 'noopener noreferrer';
+  collegamento(a, l.url);
   if (l.suggerimento) a.title = l.suggerimento;
   const testo = el('span');
   if (l.icona) testo.append(icona(l.icona));

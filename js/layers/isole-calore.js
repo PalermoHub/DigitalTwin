@@ -1,4 +1,5 @@
 import { urlDati, pmt } from '../core/config.js';
+import { collegamento } from '../core/url-sicuro.js';
 import { coloriRampa } from '../core/tema-attributo.js';
 import { tutti } from '../core/scheda-util.js';
 import { coloriClassi, espressioneColore, etichetteClassi, NODATA } from './isole-calore-classi.js';
@@ -122,9 +123,7 @@ function riempiLegenda() {
   legenda.append(etichetta, el('div', 'ic-scala'));
 
   const link = el('a', 'ic-link', 'Approfondisci: studio completo sulle isole di calore ↗');
-  link.href = dati.link;
-  link.target = '_blank';
-  link.rel = 'noopener';
+  collegamento(link, dati.link);
   legenda.append(graficoAndamento(null, dati.serie, `Media comunale ${dati.anni[0]}–${dati.anno}`), link);
   disegnaScala();
 }

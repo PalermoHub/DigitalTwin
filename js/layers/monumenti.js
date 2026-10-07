@@ -1,4 +1,5 @@
 import { urlDati, pmt } from '../core/config.js';
+import { collegamento } from '../core/url-sicuro.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { voceMonumento, modelloPopup } from './scheda-monumenti.js';
@@ -66,9 +67,7 @@ function contenutoPopup(p) {
   if (m.descrizione) radice.append(el('p', 'monumento-desc', m.descrizione));
   if (m.url) {
     const a = el('a', 'monumento-link', 'Vai al sito del Comune');
-    a.href = m.url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
+    collegamento(a, m.url);
     radice.append(a);
   } else {
     radice.append(el('p', 'monumento-fonte', `Fonte: ${m.fonte}`));
