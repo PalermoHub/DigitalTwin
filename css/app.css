@@ -1343,6 +1343,15 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #stampa-menu select { width: auto; margin: 0; padding: 4px 8px; }
 #stampa-menu button { padding: 5px 14px; font: inherit; font-weight: 600; color: var(--accent-ink); background: var(--accent); border: 1px solid var(--accent); border-radius: var(--r-pill); cursor: pointer; }
 #stampa-menu button:disabled { opacity: .6; cursor: wait; }
+#condividi-menu { position: fixed; z-index: var(--z-barra); top: 70px; right: calc(var(--scheda-l) + 12px); width: min(360px, calc(100vw - 24px)); display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-lg); box-shadow: var(--ombra); font-size: var(--fs-sm); color: var(--text); }
+#condividi-menu[hidden] { display: none; }
+#condividi-menu h2 { margin: 0; font-size: var(--fs-sm); font-weight: 700; }
+#condividi-menu .condividi-link { display: flex; gap: 6px; }
+#condividi-menu input { flex: 1; min-width: 0; padding: 5px 8px; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-pill); }
+#condividi-menu button, #condividi-menu .condividi-rete { padding: 5px 14px; font: inherit; font-weight: 600; color: var(--accent-ink); background: var(--accent); border: 1px solid var(--accent); border-radius: var(--r-pill); cursor: pointer; text-decoration: none; }
+#condividi-menu .condividi-reti { display: flex; flex-wrap: wrap; gap: 6px; }
+#condividi-menu .condividi-nota { margin: 0; color: var(--text-muted); }
+#condividi-menu .condividi-nota[hidden] { display: none; }
 @media print {
   #foglio-stampa.in-scala .stampa-mappa { width: var(--mappa-l); height: var(--mappa-a); max-height: none; object-fit: fill; }
   #foglio-stampa .stampa-scala { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 8pt; }

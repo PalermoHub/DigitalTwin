@@ -15,6 +15,7 @@ import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaStampa } from './core/stampa.js';
 import { collegaZone } from './core/zone.js';
 import { collegaRipristino } from './core/ripristino.js';
+import { preparaCondivisione, collegaCondivisione } from './core/condivisione.js';
 import { creaDifferiti } from './core/differiti.js';
 import { collegaTabMobile } from './core/tab-mobile.js';
 import confini from './layers/confini.js';
@@ -55,6 +56,7 @@ riduciLegenda.addEventListener('click', () => {
 const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, alberi, fontanelle, trasporto, sicurezza, colonnine, uffici, scuole, incendi, isoleCalore, confini];
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
+const condivisionePromessa = preparaCondivisione(window); // un link condiviso porta le preferenze del mittente: va letto prima dei pannelli
 
 // Gli strati puntuali nascono spenti, ma la scheda li interroga anche da spenti: i loro dati (GeoJSON) non bloccano l'avvio.
 // Partono in secondo piano poco dopo (o alla prima accensione, o al primo clic sulla mappa, se arriva prima): vedi core/differiti.js.
@@ -83,6 +85,7 @@ map.on('error', e => {
 // così una base lenta o irraggiungibile non blocca il viewer.
 map.once('style.load', async () => {
   const catalogo = await catalogoPromessa;
+  const condivisione = await condivisionePromessa;
   if (catalogo) impostaCatalogo(catalogo);
   else segnala('Catalogo dati non disponibile: uso le copie locali dei dati');
 
@@ -153,6 +156,9 @@ map.once('style.load', async () => {
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
   collegaStampa(map, document.getElementById('btn-stampa'), document.getElementById('stampa-menu'));
+  const archivioLocale = (() => { try { return window.localStorage; } catch { return null; } })();
+  window.dt.condivisione = collegaCondivisione(map, document.getElementById('btn-condividi'), { storage: archivioLocale });
+  if (condivisione.invalido) segnala('Il link condiviso non è valido: si apre la mappa predefinita');
   // coordinate del centro mappa e zoom nel piè di pagina
   const piedeCoord = document.getElementById('piede-coord');
   const aggiornaCoord = () => { const c = map.getCenter(); piedeCoord.textContent = `${c.lat.toFixed(4)}, ${c.lng.toFixed(4)} · zoom ${map.getZoom().toFixed(1)}`; };
@@ -207,6 +213,10 @@ map.once('style.load', async () => {
     else chiudiMenu();
   });
   collegaInvito(map, document, (() => { try { return window.localStorage; } catch { return null; } })(), { url: location.search });
+  if (condivisione.stato) {
+    const ignorati = window.dt.condivisione.applica(condivisione.stato);
+    if (ignorati.length) segnala(`Alcuni elementi del link non esistono più: ${ignorati.join(', ')}`);
+  }
   window.dt.pronto = true;
   setTimeout(() => (window.requestIdleCallback ?? (f => f()))(() => caricaDifferiti()), 3000);
 });
