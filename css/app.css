@@ -144,6 +144,10 @@ html, body { overflow: hidden; overscroll-behavior: none; }
 button { cursor: pointer; }
 label { display: block; padding: 2px 0; }
 select { width: 100%; margin: 2px 0 6px; }
+/* campo di testo e select: un solo aspetto per tutta l'interfaccia (le singole regole aggiungono solo le dimensioni) */
+.sotto-pannello select, #pannello-filtri select, #cerca-particella input, .strato-cerca, .strato-tema select, .gi-campo select, .agg-campo input, #stampa-menu select {
+  border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit;
+}
 
 /* focus da tastiera visibile ovunque; la ricerca lo mostra sul contenitore */
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
@@ -227,7 +231,7 @@ dialog li { margin: 4px 0; }
 .colonnine-filtri h3 { margin: 6px 0 2px; }
 .colonnine-filtri input:disabled + * , .colonnine-filtri label:has(input:disabled) { opacity: .5; }
 .sotto-pannello h3 { margin: 10px 0 6px; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text); }
-.sotto-pannello select { padding: 5px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); font: inherit; background: var(--surface-alt); color: var(--text); }
+.sotto-pannello select { padding: 5px; }
 
 /* selettore delle cartografie di base (cerchi con miniatura, come nell'atlante) */
 .base-suggerimento { margin: 0 0 6px; font-size: var(--fs-xs); color: var(--text-muted); }
@@ -288,9 +292,9 @@ dialog li { margin: 4px 0; }
 #cerca-filtri { position: relative; }
 #cerca-filtri[data-attivo="true"]::after { content: attr(data-n); position: absolute; top: -4px; right: -4px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: var(--r-pill); background: var(--text); color: var(--surface); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; }
 #pannello-filtri label { font-size: var(--fs-xs); color: var(--text-muted); }
-#pannello-filtri select { width: 100%; margin: 2px 0 6px; padding: 5px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); font: inherit; color: var(--text); background: var(--surface-alt); }
+#pannello-filtri select { width: 100%; margin: 2px 0 6px; padding: 5px; }
 #cerca-particella { display: flex; gap: 6px; }
-#cerca-particella input { width: 30%; min-width: 0; padding: 6px 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); font: inherit; }
+#cerca-particella input { width: 30%; min-width: 0; padding: 6px 8px; }
 #cerca-particella button { flex: 1; padding: 6px; border: 0; border-radius: var(--r-sm); background: var(--accent); color: var(--accent-ink); font-weight: 600; }
 #cerca-particella-esito { margin: 0; padding: 6px 12px; font-size: var(--fs-xs); color: var(--text-muted); background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
 #pannello-filtri[hidden], #cerca-particella-esito[hidden], #filtri-chips[hidden], #filtri-linea-chips[hidden] { display: none; }
@@ -739,7 +743,7 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
 }
 
 /* campo di ricerca negli strati e chip degli strati accesi */
-.strato-cerca { display: block; width: 100%; margin: 0 0 8px; padding: 8px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; font-size: var(--fs-sm); }
+.strato-cerca { display: block; width: 100%; margin: 0 0 8px; padding: 8px 10px; font-size: var(--fs-sm); }
 .sotto-pannello label[hidden] { display: none; }
 /* interruttore a occhio: acceso = icona piena con alone, spento = occhio barrato attenuato */
 .sotto-pannello label.strato, .sotto-pannello label.sotto-voce { position: relative; display: flex; align-items: center; gap: 8px; padding: 3px 6px; min-height: 0; border-radius: var(--r-sm); cursor: pointer; font-size: var(--fs-sm); transition: background var(--t-media), box-shadow var(--t-media); }
@@ -774,7 +778,7 @@ label.sotto-voce:has(input:checked) .occhio { box-shadow: none; }
 .strato-tema .tema-riga[hidden] { display: none; }
 .strato-tema input[type=color] { width: 36px; height: 24px; padding: 0; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: none; cursor: pointer; }
 .tema-attributo { display: grid; gap: 6px; padding-top: 4px; border-top: 1px solid var(--border); }
-.strato-tema select { min-width: 0; max-width: 11em; padding: 2px 4px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
+.strato-tema select { min-width: 0; max-width: 11em; padding: 2px 4px; }
 .strato-tema .tema-riga[hidden] { display: none; }
 .rampa-riga { position: relative; }
 .rampa-inverti { display: flex; align-items: center; gap: 6px; margin: 4px 0 8px; font-size: var(--fs-xs); }
@@ -803,7 +807,6 @@ button.strato-chip:hover i { color: var(--text); }
 
 /* azioni della scheda, contatore sui tab, stampa */
 .scheda-azione { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--text-muted); }
-.scheda-azione:hover { background: var(--surface-hover); color: var(--text); }
 @media (pointer: coarse), (max-width: 720px) { .scheda-azione { width: 44px; height: 44px; } }
 .scheda-tab-n { display: inline-block; min-width: 18px; margin-left: 6px; padding: 0 5px; border-radius: var(--r-pill); background: var(--accent-soft); color: var(--accent-strong); font-size: var(--fs-2xs); font-weight: 700; line-height: 18px; text-align: center; }
 .scheda-disclaimer { display: none; }
@@ -887,9 +890,9 @@ button.strato-chip:hover i { color: var(--text); }
 #rndt-pannello { position: fixed; z-index: var(--z-foglio); left: 0; right: 0; bottom: 0; top: 8vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm) var(--r-sm) 0 0; box-shadow: var(--ombra); overflow: hidden; }
 #rndt-pannello[hidden] { display: none; }
 @media (min-width: 721px) { #rndt-pannello { top: 0; left: auto; right: var(--rail-w); width: var(--scheda-w); border-radius: 0; } }
-.rndt-testata { flex: none; display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: var(--surface); border-bottom: 1px solid var(--border); }
-.rndt-testata h2 { margin: 0; font-size: var(--fs-lg); font-weight: 700; letter-spacing: -.01em; }
-.rndt-autore { flex: none; margin: 0; padding: 6px 14px; background: var(--surface-alt); font-size: var(--fs-sm); color: var(--text-muted); border-bottom: 1px solid var(--border); }
+.rndt-testata, .gi-testata { flex: none; display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: var(--surface); border-bottom: 1px solid var(--border); }
+.rndt-testata h2, .gi-testata h2 { flex: 1; min-width: 0; margin: 0; font-size: var(--fs-lg); font-weight: 700; letter-spacing: -.01em; }
+.rndt-autore, .gi-autore { flex: none; margin: 0; padding: 6px 14px; background: var(--surface-alt); font-size: var(--fs-sm); color: var(--text-muted); border-bottom: 1px solid var(--border); }
 .rndt-autore a { color: inherit; font-weight: 600; }
 .plugin-merito-titolo { margin: 0 0 4px; font-weight: 700; font-size: var(--fs-md); }
 .plugin-merito p { margin: 0 0 6px; }
@@ -1043,7 +1046,6 @@ button.strato-chip:hover i { color: var(--text); }
 .albero-chiuso { display: none !important; }
 .strato-azioni { position: relative; z-index: 2; margin-left: auto; display: inline-flex; align-items: center; gap: 2px; flex: none; }
 .strato-btn { width: 22px; height: 22px; padding: 0; display: inline-grid; place-items: center; border: 0; border-radius: var(--r-sm); background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-3xs); line-height: 1; cursor: pointer; }
-.strato-btn:hover:not(:disabled) { background: var(--surface-hover); color: var(--text); }
 .strato-btn:disabled { opacity: .3; cursor: default; }
 .strato-btn--su::before { content: '▲'; }
 .strato-btn--giu::before { content: '▼'; }
@@ -1109,9 +1111,7 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 #geoimage-pannello { position: fixed; z-index: var(--z-foglio); left: 0; right: 0; bottom: 0; top: 8vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm) var(--r-sm) 0 0; box-shadow: var(--ombra); overflow: hidden; }
 #geoimage-pannello[hidden] { display: none; }
 @media (min-width: 721px) { #geoimage-pannello { top: 0; left: auto; right: var(--rail-w); width: var(--scheda-w); border-radius: 0; } }
-.gi-testata { flex: none; display: flex; align-items: center; flex-wrap: wrap; padding: 10px 12px 0; }
-.gi-testata h2 { flex: 1; min-width: 0; margin: 0; font-size: var(--fs-md); font-weight: 700; }
-.gi-autore { flex: none; margin: 0; padding: 4px 12px 8px; font-size: var(--fs-sm); color: var(--text-muted); border-bottom: 1px solid var(--border); }
+/* .gi-autore: stile condiviso con .rndt-autore (sopra) */
 .gi-autore a { color: inherit; font-weight: 600; }
 .gi-stato { flex: none; margin: 0; padding: 6px 12px; font-size: var(--fs-sm); background: var(--accent-soft); border-bottom: 1px solid var(--border); }
 .gi-corpo { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 12px 16px; }
@@ -1135,7 +1135,7 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .gi-zona.trascina, .gi-zona.ha-immagine { border-color: var(--accent); background: var(--accent-soft); }
 .gi-campo { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); }
 .gi-campo input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); }
-.gi-campo select { flex: 1; min-width: 0; min-height: 32px; padding: 2px 6px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: inherit; font: inherit; }
+.gi-campo select { flex: 1; min-width: 0; min-height: 32px; padding: 2px 6px; }
 .gi-campo-colonna { flex-direction: column; align-items: stretch; gap: 2px; }
 .gi-valore { min-width: 3ch; text-align: right; font-variant-numeric: tabular-nums; color: var(--text-muted); }
 .gi-frecce { display: grid; grid-template-columns: repeat(3, 40px); gap: 4px; justify-content: center; }
@@ -1235,7 +1235,10 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .agg-nome { flex: 1; min-width: 0; }
 .agg-conteggio { flex: none; color: var(--text-muted); font-weight: 400; font-size: var(--fs-sm); }
 .agg-azione { flex: none; width: 26px; height: 26px; border: 0; border-radius: var(--r-pill); background: none; color: var(--text-muted); display: inline-grid; place-items: center; cursor: pointer; }
-.agg-azione:hover { background: var(--surface-hover); color: var(--text); }
+/* pulsanti-icona senza bordo: stesso hover ovunque */
+.scheda-azione:hover, .strato-btn:hover:not(:disabled), .agg-azione:hover { background: var(--surface-hover); color: var(--text); }
+/* su touch le azioni di riga diventano un bersaglio comodo */
+@media (pointer: coarse) { .strato-btn, .agg-azione { width: 32px; height: 32px; } }
 .agg-figli { padding-left: 16px; }
 .agg-tipo > summary { font-weight: 500; }
 .agg-nota { margin: 2px 0 6px; color: var(--text-muted); font-size: var(--fs-sm); }
@@ -1245,7 +1248,7 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .agg-info > summary { cursor: pointer; color: var(--text-muted); font-size: var(--fs-sm); }
 .agg-info > .agg-nota { margin-top: 4px; }
 .agg-campo { display: grid; gap: 2px; font-size: var(--fs-sm); }
-.agg-campo input { width: 100%; box-sizing: border-box; }
+.agg-campo input { width: 100%; box-sizing: border-box; padding: 6px 8px; }
 .agg-bottone { padding: 6px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: inherit; font: inherit; cursor: pointer; }
 .agg-primario { background: var(--accent); color: var(--accent-ink); border-color: transparent; font-weight: 600; }
 .agg-bottone:disabled { opacity: .6; cursor: progress; }
@@ -1329,7 +1332,7 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #stampa-menu { width: max-content; top: 70px; right: calc(var(--scheda-l) + 12px); left: auto; transform: none; flex-wrap: wrap; justify-content: center; max-width: calc(100vw - 24px); position: fixed; z-index: var(--z-barra); display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-lg); box-shadow: var(--ombra); font-size: var(--fs-sm); color: var(--text); }
 #stampa-menu[hidden] { display: none; }
 #stampa-menu label { display: inline; padding: 0; }
-#stampa-menu select { width: auto; margin: 0; padding: 4px 8px; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
+#stampa-menu select { width: auto; margin: 0; padding: 4px 8px; }
 #stampa-menu button { padding: 5px 14px; font: inherit; font-weight: 600; color: var(--accent-ink); background: var(--accent); border: 1px solid var(--accent); border-radius: var(--r-pill); cursor: pointer; }
 #stampa-menu button:disabled { opacity: .6; cursor: wait; }
 @media print {

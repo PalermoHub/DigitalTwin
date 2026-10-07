@@ -1,4 +1,5 @@
 import { urlDati } from './config.js';
+import { svgIcona } from './icone.js';
 import { schedaArgomenti } from './argomenti.js';
 import { collegaIngrandimento } from './ingrandisci.js';
 import { schedaGuida, passiRndt, indiceLaterale } from './guida.js';
@@ -315,7 +316,7 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   chiudi.className = 'crediti-x';
   chiudi.setAttribute('aria-label', 'Chiudi');
   chiudi.title = 'Chiudi';
-  chiudi.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
+  chiudi.innerHTML = svgIcona('chiudi', 18);
   chiudi.addEventListener('click', () => dialog.close());
   dialog.replaceChildren(corpo, chiudi, inCima);
   collegaIngrandimento(corpo);
