@@ -30,8 +30,11 @@
 <body>
 <header id="app-header">
 <a id="app-logo" href="./" title="Palermo Digital Twin" aria-label="Palermo Digital Twin, pagina iniziale"><img class="logo-chiaro" src="img/logo-palermo-digital-twin.svg" alt="Palermo Digital Twin" width="214" height="46"><img class="logo-scuro" src="img/logo-palermo-digital-twin-scuro.svg" alt="" width="214" height="46"></a>
+<button id="switch-tema" type="button" role="switch" aria-checked="false" aria-label="Tema scuro" title="Tema scuro"><span class="switch-pista"><span class="switch-manopola"></span></span></button>
 <button id="menu-info-toggle" type="button" aria-expanded="false" aria-controls="menu-info" aria-label="Menu informazioni"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button>
 <nav id="menu-info" aria-label="Informazioni">
+  <p class="menu-gruppo" data-gruppo="guide">Guide</p>
+  <p class="menu-gruppo" data-gruppo="info">Informazioni</p>
   <button type="button" title="Digital Twin" data-scheda="mappa" aria-current="page">Mappa</button>
   <button type="button" title="Cos’è per noi un Digital Twin" data-scheda="digitaltwin">Digital Twin</button>
   <button type="button" title="Argomenti" data-scheda="argomenti">Argomenti</button>

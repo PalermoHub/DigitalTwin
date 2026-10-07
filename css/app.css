@@ -1378,3 +1378,77 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
 .viewer-img-succ { right: 6px; }
 .viewer-img button[hidden] { display: none; }
 @media (max-width: 720px) { .viewer-img { padding: 52px 8px 14px; } .viewer-img-nav { top: auto; bottom: 14px; margin: 0; } }
+
+/* ==========================================================================
+   Telefono (fino a 720 px): barra a quattro tab (Mappa, Strati, Aggiungi, Info), ricerca in alto,
+   strumenti della mappa in colonna a destra. Sopra i 720 px resta l'interfaccia a barre laterali.
+   ========================================================================== */
+:root { --tab-h: 60px; --footer-h: 36px; }
+#barra-tab, #switch-tema, .menu-gruppo { display: none; }
+@media (max-width: 720px) {
+  #barra-tab {
+    position: fixed; z-index: calc(var(--z-foglio) + 1); left: 0; right: 0; bottom: 0; height: var(--tab-h); display: flex;
+    background: var(--surface); border-top: 1px solid var(--border-ui);
+  }
+  #barra-tab button {
+    position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    border: 0; border-top: 3px solid transparent; background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-xs); font-weight: 600;
+  }
+  #barra-tab button[aria-pressed="true"] { color: var(--text); border-top-color: var(--accent); }
+  #barra-tab .conta-strati {
+    position: absolute; top: 4px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 4px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+    border-radius: var(--r-pill); background: var(--text); color: var(--surface); font-size: 11px; font-style: normal; font-weight: 700; line-height: 1;
+  }
+  #barra-tab .conta-strati[hidden] { display: none; }
+
+  /* tema scuro: interruttore nell'header, a destra */
+  #switch-tema { display: flex; align-items: center; margin-left: auto; width: 56px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
+  #switch-tema .switch-pista { position: relative; width: 44px; height: 24px; box-sizing: border-box; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface-alt); transition: background var(--t-rapida), border-color var(--t-rapida); }
+  #switch-tema .switch-manopola { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--text-muted); transition: transform var(--t-rapida), background var(--t-rapida); }
+  #switch-tema[aria-checked="true"] .switch-pista { background: var(--accent); border-color: var(--accent); }
+  #switch-tema[aria-checked="true"] .switch-manopola { transform: translateX(20px); background: var(--accent-ink); }
+  #switch-tema:focus-visible .switch-pista { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  /* il pulsante «Strati» in alto e l'icona a tre righe lasciano il posto ai tab */
+  #apri-strati, #menu-info-toggle { display: none; }
+
+  /* ricerca in alto, sotto il titolo; i risultati si aprono verso il basso */
+  #area-ricerca { top: 8px; bottom: auto; left: 8px; right: 8px; width: auto; transform: none; }
+  #cerca { order: -1; }
+  #cerca-risultati { bottom: auto; top: calc(100% + 8px); }
+
+  /* l'invito a toccare la mappa non copre la colonna degli strumenti a destra */
+  .invito-clic { left: calc(50% - 32px); max-width: calc(100% - 88px); }
+  .invito-clic p { text-align: center; }
+
+  /* strumenti della mappa: colonna a destra sotto la ricerca; tema scuro e catalogo RNDT stanno nei tab */
+  #barra-strumenti { top: 68px; right: 12px; left: auto; flex-direction: column; align-items: center; gap: 8px; }
+  #barra-strumenti > #btn-rndt, #barra-strumenti > #btn-tema { display: none; }
+
+  /* i fogli e i pannelli finiscono sopra la barra dei tab */
+  body.strati-aperti #barra-strati { bottom: var(--tab-h); }
+  #scheda { bottom: var(--tab-h); }
+  #rndt-pannello, #geoimage-pannello { bottom: var(--tab-h); }
+  #legende-box { bottom: calc(var(--tab-h) + 12px); }
+
+  /* foglio «Strati»: basi, layer, filtri. Foglio «Aggiungi»: i miei layer, catalogo RNDT, Geoimage */
+  #btn-gruppo-rndt { display: none !important; } /* l'elenco dei layer RNDT aggiunti è in cima al pannello del catalogo */
+  body[data-foglio="strati"] #barra-gruppi > :is(#btn-gruppo-miei, #btn-rndt-m, #btn-geoimage-m),
+  body[data-foglio="aggiungi"] #barra-gruppi > :is(#btn-gruppo-base, #btn-gruppo-layer, #btn-gruppo-filtri) { display: none; }
+  #btn-gruppo-miei { order: 1; } #btn-rndt-m { order: 2; } #btn-geoimage-m { order: 3; }
+
+  /* foglio «Info»: il menu diventa un foglio dal basso, a due gruppi */
+  body.info-aperto #menu-info {
+    display: flex; position: fixed; top: auto; left: 0; right: 0; bottom: calc(var(--tab-h) + var(--footer-h)); max-height: 70dvh; overflow-y: auto;
+    flex-direction: column; align-items: stretch; margin: 0; padding: 12px 0; z-index: calc(var(--z-header) + 1);
+    background: var(--surface); border-top: 1px solid var(--border-ui); border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: 0 -8px 32px rgba(0, 0, 0, .2);
+  }
+  #menu-info [data-scheda="mappa"] { display: none; }
+  #menu-info .menu-gruppo { display: block; }
+  #menu-info .menu-gruppo { margin: 4px 0; padding: 0 16px; font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+  #menu-info .menu-gruppo[data-gruppo="guide"] { order: 1; }
+  #menu-info [data-scheda="guida"] { order: 2; } #menu-info [data-scheda="plugin"] { order: 3; } #menu-info [data-scheda="geoimage"] { order: 4; }
+  #menu-info .menu-gruppo[data-gruppo="info"] { order: 5; margin-top: 12px; }
+  #menu-info [data-scheda="digitaltwin"] { order: 6; } #menu-info [data-scheda="argomenti"] { order: 7; }
+  #menu-info [data-scheda="fonti"] { order: 8; } #menu-info [data-scheda="about"] { order: 9; }
+}

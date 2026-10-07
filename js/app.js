@@ -16,6 +16,7 @@ import { collegaStampa } from './core/stampa.js';
 import { collegaZone } from './core/zone.js';
 import { collegaRipristino } from './core/ripristino.js';
 import { creaDifferiti } from './core/differiti.js';
+import { collegaTabMobile } from './core/tab-mobile.js';
 import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
 import territorio from './layers/territorio.js';
@@ -38,11 +39,11 @@ import { collegaFiltroLinea } from './layers/trasporto-filtro.js';
 import terreno from './layers/terreno.js';
 import base from './layers/base.js';
 
-// strati (mobile) e legenda riducibile
-const apriStrati = document.getElementById('apri-strati');
-const impostaStrati = on => { document.body.classList.toggle('strati-aperti', on); apriStrati.setAttribute('aria-expanded', String(on)); };
-apriStrati.addEventListener('click', () => impostaStrati(true));
-document.getElementById('chiudi-strati').addEventListener('click', () => impostaStrati(false));
+// telefono: barra a quattro tab (Mappa, Strati, Aggiungi, Info) e foglio degli strati; la legenda si può ridurre
+let tornaAllaMappa = () => {}; // si completa quando i pannelli laterali esistono
+const tab = collegaTabMobile(document, { barraTitolo: document.querySelector('#barra-strati .barra-titolo'), suMappa: () => tornaAllaMappa() });
+document.getElementById('corpo').append(tab.barra);
+document.getElementById('chiudi-strati').addEventListener('click', () => tab.imposta(null));
 const riduciLegenda = document.getElementById('legende-riduci');
 riduciLegenda.addEventListener('click', () => {
   const ridotta = document.getElementById('legende-box').classList.toggle('ridotta');
@@ -121,9 +122,14 @@ map.once('style.load', async () => {
   // su mobile la barra laterale non c'è: Geoimage si apre dal pannello Strati
   const btnGeo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-geoimage-m', className: 'btn-pannello-mobile', title: 'Geoimage: mappe storiche' });
   btnGeo.innerHTML = `${ICONE_RAIL.geoimage}<span class="et">Geoimage</span>`;
-  btnGeo.addEventListener('click', () => { impostaStrati(false); rail.commuta('geoimage'); });
-  document.getElementById('barra-gruppi').append(btnGeo);
+  btnGeo.addEventListener('click', () => { tab.imposta(null); rail.commuta('geoimage'); });
+  // il catalogo RNDT sta tra i riquadri di «Aggiungi»; l'elenco dei layer RNDT aggiunti è in cima al suo pannello
+  const btnCatalogo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-rndt-m', className: 'btn-pannello-mobile', title: 'Catalogo RNDT: aggiungi dati alla mappa' });
+  btnCatalogo.innerHTML = `${ICONE_RAIL.rndt}<span class="et">Catalogo RNDT</span>`;
+  btnCatalogo.addEventListener('click', () => { tab.imposta(null); rail.commuta('rndt'); });
+  document.getElementById('barra-gruppi').append(btnCatalogo, btnGeo);
   document.getElementById('btn-rndt').addEventListener('click', () => rail.commuta('rndt'));
+  tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); document.getElementById('crediti').open && document.getElementById('crediti').close(); };
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
   geoimage.ripristina(); // e la mappa storica di Geoimage, se c'era
@@ -174,7 +180,14 @@ map.once('style.load', async () => {
     if (!b) return;
     commuta(b.dataset.scheda);
     chiudiMenu();
+    tab.imposta(null); // sul telefono la pagina scelta si apre sopra la mappa e il foglio Info si chiude
   });
+  // interruttore del tema scuro nell'header (sul telefono il pulsante della barra strumenti non c'è): segue lo stesso pulsante
+  const interruttoreTema = document.getElementById('switch-tema');
+  const mostraInterruttore = scuro => interruttoreTema.setAttribute('aria-checked', String(scuro));
+  mostraInterruttore(document.documentElement.dataset.tema === 'scuro');
+  interruttoreTema.addEventListener('click', () => document.getElementById('btn-tema').click());
+  document.addEventListener('tema', e => mostraInterruttore(e.detail));
   toggle.addEventListener('click', () => {
     const aperto = menu.classList.toggle('aperto');
     toggle.setAttribute('aria-expanded', String(aperto));
