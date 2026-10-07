@@ -237,14 +237,14 @@ def main():
         + ("," + zf if zf else "") + f",setpts='({espr_mappa(pts)})/TB',fps={FPS},fade=t=in:st=0:d=0.5,fade=t=out:st={Tm - 0.5:.2f}:d=0.5[v1];"
         f"[2:v]fps={FPS},scale=1920:1080,format=yuv420p,trim=duration={Dc:.2f},fade=t=in:st=0:d=0.6[v2];"
         f"[v0][v1][v2]concat=n=3:v=1:a=0[vc];"
-        f"[vc]ass={OUT}/sottotitoli.ass:fontsdir={HERE}/assets/fonts[v]"
+        "[vc]ass=out/sottotitoli.ass:fontsdir=assets/fonts[v]"
     )
     open(f"{OUT}/grafo.txt", "w").write(graf)
     cmd = ["ffmpeg", "-y", "-v", "error", "-stats",
            "-i", f"{OUT}/intro.webm", "-i", f"{OUT}/main.webm",
            "-loop", "1", "-framerate", str(FPS), "-i", f"{HERE}/assets/chiusura.png",
            "-i", f"{OUT}/mix.wav",
-           "-filter_complex_script", f"{OUT}/grafo.txt", "-map", "[v]", "-map", "3:a",
+           "-filter_complex_script", "out/grafo.txt", "-map", "[v]", "-map", "3:a",
            "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "48000",
            "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-r", str(FPS),
            "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest"]
@@ -253,7 +253,7 @@ def main():
         dest = f"{OUT}/anteprima.mp4"
     else:
         dest = f"{OUT}/palermo-digital-twin-tutorial.mp4"
-    subprocess.run(cmd + [dest], check=True)
+    subprocess.run(cmd + [dest], check=True, cwd=HERE)
     info = dict(intro=D1, registrazione=Tm, chiusura=Dc, totale=totale, vm=vm, file=dest)
     json.dump(info, open(f"{OUT}/montaggio_info.json", "w"), indent=1)
     print("fatto:", dest, f"{totale / 60:.2f} min")

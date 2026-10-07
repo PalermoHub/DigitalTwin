@@ -1,0 +1,7 @@
+playwright==1.63.0
+piper-tts==1.8.0
+numpy==2.5.3
+pillow==12.3.0
+requests==2.34.2
+fonttools==4.66.1
+brotli==1.2.0

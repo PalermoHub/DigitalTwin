@@ -22,7 +22,7 @@ def prep(r, sid):
 def run():
     video = not FAST
     with sync_playwright() as p:
-        b = p.chromium.launch(executable_path="/opt/pw-browsers/chromium", args=["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist", "--force-device-scale-factor=1"])
+        b = p.chromium.launch(executable_path=os.environ.get("CHROMIUM_PATH") or None, args=["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist", "--force-device-scale-factor=1"])
         kw = dict(viewport={"width": 1920, "height": 1080}, locale="it-IT")
         if video:
             kw.update(record_video_dir=f"{OUT}/video", record_video_size={"width": 1920, "height": 1080})

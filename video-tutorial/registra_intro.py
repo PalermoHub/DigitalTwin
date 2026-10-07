@@ -5,7 +5,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "out"); os.makedirs(OUT, exist_ok=True)
 dur = json.load(open(f"{HERE}/audio/durate.json"))["1-titolo"] + 0.3 + 1.5
 with sync_playwright() as p:
-    b = p.chromium.launch(executable_path="/opt/pw-browsers/chromium", args=["--allow-file-access-from-files"])
+    b = p.chromium.launch(executable_path=os.environ.get("CHROMIUM_PATH") or None, args=["--allow-file-access-from-files"])
     ctx = b.new_context(viewport={"width": 1920, "height": 1080}, record_video_dir=f"{OUT}/video_intro", record_video_size={"width": 1920, "height": 1080})
     pg = ctx.new_page()
     t0 = time.monotonic()
