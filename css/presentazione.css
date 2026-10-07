@@ -1,4 +1,4 @@
-/* Pagina di presentazione (presentazione.html): HTML e CSS nativi, stessi colori e carattere dell'app.
+/* Pagina di presentazione (presentazione.html): HTML e CSS nativi, stesso tema dell'app: chiaro, scuro solo se scelto nell'app (dt-tema), mai dal sistema.
    Regole di forma: pulsanti a pillola, riquadri e immagini con raggio 16 px (--r). Un solo accento (ambra). */
 @font-face { font-family: 'Montserrat'; font-weight: 400; font-style: normal; font-display: swap; src: url('fonts/montserrat-Regular.woff2') format('woff2'); }
 @font-face { font-family: 'Montserrat'; font-weight: 500; font-style: normal; font-display: swap; src: url('fonts/montserrat-Medium.woff2') format('woff2'); }
@@ -15,27 +15,12 @@
   --bordo: #d0d7de;
   --accento: #f5a623;
   --accento-inchiostro: #1a1206;
-  --accento-forte: #9a4a07;
+  --accento-forte: #b45309;
   --fuoco: #0b5fff;
   --ombra: 0 12px 40px rgba(20, 30, 60, .14);
   --r: 16px;
   --larghezza: 1200px;
   --logo-ods: none;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-tema="chiaro"]) {
-    color-scheme: dark;
-    --sfondo: #151a20;
-    --sfondo-alt: #1c2128;
-    --superficie: #1c2128;
-    --testo: #e6e9ed;
-    --testo-tenue: #aab4bf;
-    --bordo: #38414c;
-    --accento-forte: #f5a623;
-    --fuoco: #6ea0ff;
-    --ombra: 0 12px 40px rgba(0, 0, 0, .5);
-    --logo-ods: invert(1);
-  }
 }
 :root[data-tema="scuro"] {
   color-scheme: dark;
@@ -70,7 +55,6 @@ a { color: inherit; }
 .logo { display: block; line-height: 0; }
 .logo img { display: block; height: 40px; width: auto; }
 .logo .scuro { display: none; }
-@media (prefers-color-scheme: dark) { :root:not([data-tema="chiaro"]) .logo .chiaro { display: none; } :root:not([data-tema="chiaro"]) .logo .scuro { display: block; } }
 :root[data-tema="scuro"] .logo .chiaro { display: none; }
 :root[data-tema="scuro"] .logo .scuro { display: block; }
 .menu { display: none; align-items: center; gap: 28px; font-size: .9375rem; font-weight: 600; }

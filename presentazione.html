@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Palermo Digital Twin: la mappa dei dati aperti di Palermo</title>
 <meta name="description" content="Catasto, piano regolatore, popolazione, edifici, trasporto pubblico e molto altro su una sola mappa di Palermo, da dati aperti.">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#151a20" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="https://palermohub.github.io/DigitalTwin/presentazione.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://palermohub.github.io/DigitalTwin/presentazione.html">
@@ -24,7 +23,7 @@
 <link rel="apple-touch-icon" href="img/icona-192.png">
 <link rel="preload" href="css/fonts/montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="css/fonts/montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
-<script>try{var t=localStorage.getItem('dt-tema');if(t==='scuro'||t==='chiaro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('dt-tema');if(t==='scuro')document.documentElement.dataset.tema=t}catch(e){}</script>
 <link rel="stylesheet" href="css/presentazione.css">
 <script type="application/ld+json">
 {
@@ -59,7 +58,7 @@
       <a href="#telefono">Telefono</a>
       <a href="#dati">Dati e fonti</a>
     </nav>
-    <a class="bottone bottone--primario bottone--piccolo" href="./">Apri la mappa</a>
+    <a class="bottone bottone--primario bottone--piccolo" href="index.html#mappa">Apri la mappa</a>
   </div>
 </header>
 
@@ -70,13 +69,13 @@
         <h1 id="titolo">Palermo <span>Digital Twin</span></h1>
         <p>La mappa dei dati aperti di Palermo: catasto, piano regolatore, popolazione, edifici, trasporto pubblico e molto altro.</p>
         <div class="azioni">
-          <a class="bottone bottone--primario" href="./">Apri la mappa</a>
+          <a class="bottone bottone--primario" href="index.html#mappa">Apri la mappa</a>
           <a class="bottone bottone--secondario" href="#video">Guarda il video</a>
         </div>
       </div>
       <figure class="schermata">
         <picture>
-          <source id="hero-scuro" media="(prefers-color-scheme: dark)" srcset="img/landing/hero-scuro-720.webp 720w, img/landing/hero-scuro.webp 1440w" sizes="(min-width: 960px) 760px, 100vw">
+          <source id="hero-scuro" media="not all" srcset="img/landing/hero-scuro-720.webp 720w, img/landing/hero-scuro.webp 1440w" sizes="(min-width: 960px) 760px, 100vw">
           <img id="hero" src="img/landing/hero-chiaro.webp" srcset="img/landing/hero-chiaro-720.webp 720w, img/landing/hero-chiaro.webp 1440w" sizes="(min-width: 960px) 760px, 100vw" width="1440" height="900" fetchpriority="high" alt="L'app aperta su via Imera: la mappa con gli edifici e, a destra, la scheda del luogo con edificio, scuola, rifugio e zona a incidenti concentrati.">
         </picture>
       </figure>
@@ -161,7 +160,7 @@
       <p>Per ogni fonte trovi la data, il collegamento al dato originale e la licenza.</p>
       <div class="azioni">
         <a class="bottone bottone--primario" href="./#fonti">Vedi le fonti</a>
-        <a class="bottone bottone--secondario" href="./">Apri la mappa</a>
+        <a class="bottone bottone--secondario" href="index.html#mappa">Apri la mappa</a>
       </div>
     </div>
   </section>
@@ -186,7 +185,7 @@
 (function () {
   // la scelta del tema fatta nell'app vale anche qui: se è esplicita, la schermata dell'intestazione la segue
   var tema = document.documentElement.dataset.tema, sorgente = document.getElementById('hero-scuro');
-  if (tema === 'scuro') sorgente.media = 'all'; else if (tema === 'chiaro') sorgente.media = 'not all';
+  if (tema === 'scuro') { sorgente.media = 'all'; document.querySelector('meta[name=theme-color]').content = '#151a20'; }
   // il video si carica solo al clic (nessun contenuto di YouTube prima)
   var lettore = document.getElementById('video-lettore');
   lettore.querySelector('button').addEventListener('click', function () {
