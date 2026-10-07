@@ -29,7 +29,7 @@ function docFinto() {
   return {
     nodi,
     createElement(tag) {
-      const e = { tag, figli: [], testo: '', append(...c) { this.figli.push(...c); }, setAttribute() {}, addEventListener() {}, set textContent(t) { this.testo = t; }, get textContent() { return this.testo; } };
+      const e = { tag, figli: [], testo: '', append(...c) { this.figli.push(...c); }, insertBefore(n, rif) { this.figli.splice(this.figli.indexOf(rif), 0, n); }, setAttribute() {}, addEventListener() {}, set textContent(t) { this.testo = t; }, get textContent() { return this.testo; } };
       nodi.push(e);
       return e;
     },

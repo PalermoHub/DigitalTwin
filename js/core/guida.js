@@ -99,8 +99,8 @@ export function indiceLaterale(doc, radice, voci) {
     ol.append(li);
   }
   nav.append(ol);
-  // sotto titolo e introduzione, prima della prima sezione: su schermi stretti l'indice sta in alto (su quelli larghi la griglia lo porta a destra)
-  const primaSezione = [...radice.children].find(n => n.tagName === 'SECTION');
+  // prima della prima sezione indicizzata (sotto titolo e introduzione): su schermi stretti l'indice sta in alto, su quelli larghi la griglia lo porta a destra
+  const primaSezione = voci[0]?.sezione;
   if (primaSezione) radice.insertBefore(nav, primaSezione); else radice.append(nav);
   return nav;
 }

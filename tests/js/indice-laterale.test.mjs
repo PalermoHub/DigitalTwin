@@ -17,8 +17,8 @@ const ordine = r => r.children.map(n => (n.className === 'guida-indice' ? 'INDIC
 
 test('indice: sotto titolo e introduzione, prima della prima sezione (su telefono sta in alto)', () => {
   const r = pagina('h2', 'p', 'section', 'section', 'section');
-  const sezione = r.children[2];
-  indiceLaterale(doc, r, [{ titolo: 'Uno', sezione }]);
+  const voci = [2, 3, 4].map(i => ({ titolo: `Voce ${i}`, sezione: r.children[i] }));
+  indiceLaterale(doc, r, voci);
   assert.deepEqual(ordine(r), ['H2', 'P', 'INDICE', 'SECTION', 'SECTION', 'SECTION']);
   assert.equal(r.className, 'guida-pagina');
 });
