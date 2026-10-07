@@ -1346,6 +1346,9 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #condividi-menu { position: fixed; z-index: var(--z-barra); top: 70px; right: calc(var(--scheda-l) + 12px); width: min(360px, calc(100vw - 24px)); display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-lg); box-shadow: var(--ombra); font-size: var(--fs-sm); color: var(--text); }
 #condividi-menu[hidden] { display: none; }
 #condividi-menu h2 { margin: 0; font-size: var(--fs-sm); font-weight: 700; }
+#condividi-menu .condividi-testa { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+#condividi-menu .condividi-chiudi { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; color: var(--text-muted); background: transparent; border: 1px solid var(--border-ui); border-radius: 50%; }
+#condividi-menu .condividi-chiudi:hover { background: var(--surface-hover); color: var(--text); }
 #condividi-menu .condividi-link { display: flex; gap: 6px; }
 #condividi-menu input { flex: 1; min-width: 0; padding: 5px 8px; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-pill); }
 #condividi-menu button { padding: 5px 14px; font: inherit; font-weight: 600; color: var(--accent-ink); background: var(--accent); border: 1px solid var(--accent); border-radius: var(--r-pill); cursor: pointer; text-decoration: none; }

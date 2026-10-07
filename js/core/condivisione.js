@@ -4,6 +4,9 @@ import { codifica, decodifica, costruisciLink, PARAMETRO } from './condivisione-
 import { RETI, TESTO_CONDIVISIONE } from './condivisione-reti.js';
 import { installaOverlay } from './condivisione-storage.js';
 import { raccogli, applica } from './condivisione-stato.js';
+import { svgIcona } from './icone.js';
+
+const ICONA_X = svgIcona('chiudi', 16);
 
 // Va chiamata prima di costruire i pannelli: se la pagina arriva da un link condiviso, installa l'overlay del
 // localStorage con le preferenze del mittente. Senza `?v=` non cambia nulla.
@@ -38,8 +41,10 @@ export function collegaCondivisione(map, bottone, { storage }) {
   const reti = el('div', { className: 'condividi-reti' });
   const nota = el('p', { className: 'condividi-nota', hidden: true });
   nota.setAttribute('role', 'status');
+  const chiudiBtn = el('button', { type: 'button', className: 'condividi-chiudi', title: 'Chiudi', innerHTML: ICONA_X });
+  chiudiBtn.setAttribute('aria-label', 'Chiudi');
   const menu = el('div', { id: 'condividi-menu', hidden: true },
-    el('h2', { textContent: 'Condividi questa vista' }), el('div', { className: 'condividi-link' }, campo, copiaBtn), ...(nativo ? [nativo] : []), reti, nota);
+    el('div', { className: 'condividi-testa' }, el('h2', { textContent: 'Condividi questa vista' }), chiudiBtn), el('div', { className: 'condividi-link' }, campo, copiaBtn), ...(nativo ? [nativo] : []), reti, nota);
   menu.setAttribute('role', 'dialog');
   menu.setAttribute('aria-label', 'Condividi questa vista');
   document.body.append(menu);
@@ -71,6 +76,7 @@ export function collegaCondivisione(map, bottone, { storage }) {
   }
 
   bottone.addEventListener('click', () => (menu.hidden ? apri() : chiudi()));
+  chiudiBtn.addEventListener('click', () => { chiudi(); bottone.focus(); });
   copiaBtn.addEventListener('click', async () => {
     copiaBtn.textContent = (await copia(campo.value)) ? 'Copiato' : 'Seleziona e copia';
     setTimeout(() => { copiaBtn.textContent = 'Copia'; }, 1800);
