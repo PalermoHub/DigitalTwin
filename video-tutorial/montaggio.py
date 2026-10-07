@@ -158,8 +158,11 @@ def clic_suono():
 
 
 def smooth(x, n):
-    k = np.ones(n) / n
-    return np.convolve(x, k, mode="same")
+    """Media mobile in tempo lineare (somma cumulata): np.convolve su 14 minuti di audio impiegherebbe minuti."""
+    c = np.cumsum(np.insert(x.astype(np.float64), 0, 0.0))
+    y = (c[n:] - c[:-n]) / n
+    sx = n // 2
+    return np.pad(y, (sx, n - 1 - sx), mode="edge").astype(np.float32)
 
 
 def mix_audio(path, totale, voci_inizio, clicks_t):
