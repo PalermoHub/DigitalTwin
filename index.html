@@ -26,15 +26,7 @@
 <script>try{if(localStorage.getItem('dt-tema')==='scuro')document.documentElement.dataset.tema='scuro'}catch(e){}</script>
 <link rel="stylesheet" href="css/vendor/maplibre-gl.css">
 <link rel="stylesheet" href="css/app.css">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JFYEGEZ41L"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-JFYEGEZ41L');
-</script>
+<script src="js/consenso.js"></script>
 </head>
 <body>
 <header id="app-header">
@@ -51,6 +43,7 @@
   <button type="button" title="Plugin RNDT di Andrea Borruso e guida all'uso" data-scheda="plugin">Plugin RNDT</button>
   <button type="button" title="Guida per Geoimage" data-scheda="geoimage">Guida Geoimage</button>
   <button type="button" title="Fonti dei dati e avvisi" data-scheda="fonti">Fonti e avvisi</button>
+  <button type="button" title="Informativa privacy (UE)" data-scheda="privacy">Privacy</button>
   <button type="button" title="Chi siamo" data-scheda="about">About</button>
   <a id="link-presentazione" href="presentazione.html" title="Presentazione del progetto">Presentazione</a>
 </nav>

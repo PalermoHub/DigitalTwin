@@ -1462,5 +1462,6 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #menu-info [data-scheda="guida"] { order: 2; } #menu-info [data-scheda="plugin"] { order: 3; } #menu-info [data-scheda="geoimage"] { order: 4; }
   #menu-info .menu-gruppo[data-gruppo="info"] { order: 5; margin-top: 12px; }
   #menu-info [data-scheda="digitaltwin"] { order: 6; } #menu-info [data-scheda="argomenti"] { order: 7; }
-  #menu-info [data-scheda="fonti"] { order: 8; } #menu-info [data-scheda="about"] { order: 9; } #menu-info #link-presentazione { order: 10; }
+  #menu-info [data-scheda="fonti"] { order: 8; } #menu-info [data-scheda="privacy"] { order: 9; } #menu-info [data-scheda="about"] { order: 10; } #menu-info #link-presentazione { order: 11; }
 }
+.btn-consenso { min-height: 44px; padding: 8px 16px; border: 2px solid var(--accent-strong, #b45309); border-radius: var(--r-md); background: transparent; color: inherit; font-weight: 700; cursor: pointer; }
