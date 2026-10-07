@@ -1,0 +1,52 @@
+Titolo (proposta):
+Digital Twin Palermo: il tour completo, dalla guida a RNDT e Geoimage
+
+Descrizione:
+Un giro di 11 minuti nel Digital Twin di Palermo, la mappa interattiva di Open Data Sicilia che mette insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico, sicurezza e rischio idrogeologico, sempre con la fonte dei dati.
+
+Nel video seguo la guida generale passo per passo, poi ti mostro come cercare e aggiungere dati dal catalogo nazionale RNDT e come sovrapporre una mappa storica con Geoimage.
+
+🗺️ Esplora la mappa: https://palermodigitaltwin.opendatasicilia.it
+🌐 Open Data Sicilia: https://opendatasicilia.it
+
+⏱️ CAPITOLI
+0:00 Introduzione
+0:26 Il menu e la mappa
+0:37 La vista 3D
+0:46 Da dove arrivano i dati
+1:00 La barra degli strati
+1:30 Layer sopra o sotto: l'ordine
+1:58 Mappe di base e mappe storiche
+2:37 Tema chiaro e scuro
+2:46 I miei layer: aggiungere i propri dati
+2:59 Cambiare i colori di uno strato
+3:28 Un clic, tutte le informazioni: la scheda del luogo
+4:15 Monumenti
+4:29 Uffici comunali
+4:46 Rischio idrogeologico (PAI)
+5:03 Incendi
+5:12 Isole di calore
+5:20 Cercare un luogo
+5:35 Filtrare per zona
+5:48 Stampare la mappa
+5:56 Avvertenze: dati senza valore legale
+6:09 Il catalogo nazionale RNDT
+6:33 Cercare un dato nel catalogo
+7:01 Aggiungere un layer dal catalogo
+8:15 Geoimage: mappe storiche sulla mappa
+9:29 Punti di controllo (GCP)
+9:57 Allineare l'immagine
+10:24 Esportare il risultato
+10:44 Saluti
+
+🙏 CREDITI
+• Catalogo RNDT: plugin openrndt-geolibre, ideato e scritto da Andrea Borruso (onData). Senza il suo lavoro questa funzione non esisterebbe: nel Digital Twin è stato solo adattato.
+• Geoimage: idea e codice di @gbvitrano (github.com/gbvitrano/Geoimage).
+• Mappe storiche: Atlante delle carte tecniche storiche di Palermo, OpenDataSicilia.
+• Basi cartografiche: © OpenStreetMap contributors, OpenFreeMap.
+
+⚠️ Catasto, piano regolatore e vincoli sono dati informativi, senza valore legale. Per usi legali servono la visura e il certificato di destinazione urbanistica.
+
+Licenza dei contenuti: CC BY-SA 4.0
+
+#Palermo #DigitalTwin #OpenData #OpenDataSicilia #GIS #Cartografia #DatiAperti #RNDT #Geoimage #MappeStoriche
