@@ -15,7 +15,7 @@ Vista: Dissolvenza sulla mappa viva. Quattro tappe compaiono una alla volta, con
 1. Apri l'app; accetta/rifiuta il banner cookie prima di registrare (non deve comparire a video).
 2. Sovrapponi la lista animata delle quattro tappe.
 
-### 3. `2-guida` · 0:35
+### 3. `2-guida` · 0:34
 
 Vista: Menu in alto: clic su «Guida». Si apre la pagina con l'indice dei 19 passi; scorrimento lento sull'indice, poi chiusura (Esc) e ritorno alla mappa.
 
@@ -47,7 +47,7 @@ Vista: Menu → «Fonti e avvisi». Si vedono in alto i quattro avvisi (evidenzi
 3. Scorri l'elenco delle fonti; zoom su una voce con licenza.
 4. Esc.
 
-### 7. `2-strati` · 1:51
+### 7. `2-strati` · 1:50
 
 Vista: Zoom su via Maqueda. Tab «Layer» a sinistra: si aprono i gruppi in ordine alfabetico; si apre «Territorio» e si accende il catasto, poi gli edifici. Le etichette in alto e la legenda in basso si evidenziano.
 
@@ -75,7 +75,7 @@ Vista: Tab «Base cartografica»: si provano mappa stradale, aerea, scura. Scorr
 4. Seleziona la carta 1891; evidenzia il pallino di precisione.
 5. Ripristina la base chiara.
 
-### 10. `2-miei-layer` · 2:46
+### 10. `2-miei-layer` · 2:54
 
 Vista: Tab «I miei layer»: si aprono «I miei dati» e il ramo «Servizi» con i tipi XYZ, WMS, WMTS, WFS, ArcGIS REST. Nessun file viene caricato.
 
@@ -83,7 +83,7 @@ Vista: Tab «I miei layer»: si aprono «I miei dati» e il ramo «Servizi» con
 2. Evidenzia «I miei dati» e il campo «Da indirizzo web».
 3. Apri il ramo «Servizi» e mostra i tipi.
 
-### 11. `2-colori` · 3:00
+### 11. `2-colori` · 3:07
 
 Vista: Accanto a «Edificato» il pulsante tavolozza: si apre il pannello colori, «Colora per attributo» con campo densità di popolazione, tipo «Graduata», rampa dall'elenco; gli edifici si colorano e compare la legenda del tema.
 
@@ -92,7 +92,7 @@ Vista: Accanto a «Edificato» il pulsante tavolozza: si apre il pannello colori
 3. «Colora per attributo» → campo densità di popolazione → «Graduata».
 4. Apri l'elenco delle rampe e scegli una rampa Crameri.
 
-### 12. `2-clic` · 3:22
+### 12. `2-clic` · 3:32
 
 Vista: Clic su un punto di via Maqueda: il punto si evidenzia, la scheda si apre a destra, in basso la legenda «Selezione in mappa». Il mouse passa su un'area: compare il fumetto con il nome del layer.
 
@@ -101,21 +101,21 @@ Vista: Clic su un punto di via Maqueda: il punto si evidenzia, la scheda si apre
 3. Clic su una voce della legenda «Selezione in mappa» (solo quella), poi di nuovo (tutte).
 4. Passa il mouse su un'area evidenziata.
 
-### 13. `2-tutto` · 3:44
+### 13. `2-tutto` · 3:53
 
 Vista: La scheda a schermo intero sul lato: cinque riquadri evidenziati in sequenza che escono dal punto (catasto, vincoli, sicurezza, cultura, trasporti).
 
 1. Scorri la scheda dall'alto.
 2. Evidenzia in ordine: particella catastale, zonizzazione PRG, rischio incidenti, bene culturale, fermata.
 
-### 14. `2-scheda` · 4:00
+### 14. `2-scheda` · 4:07
 
 Vista: Le linguette della scheda (Luogo, Strumenti urbanistici, Mercato, Popolazione): si passa da una all'altra; in «Strumenti urbanistici» si evidenziano particella, foglio, numero e il link alla visura.
 
 1. Clic sulle linguette: Luogo → Strumenti urbanistici → Mercato → Popolazione.
 2. In «Strumenti urbanistici» evidenzia foglio, particella, link visura.
 
-### 15. `2-monumenti` · 4:18
+### 15. `2-monumenti` · 4:26
 
 Vista: Strato «Monumenti» acceso; zoom sul Teatro Massimo; clic: la scheda mostra foto, descrizione, categoria e il link al Portale del Turismo.
 
@@ -124,7 +124,7 @@ Vista: Strato «Monumenti» acceso; zoom sul Teatro Massimo; clic: la scheda mos
 3. Clic sul monumento.
 4. Evidenzia foto e link al Portale del Turismo.
 
-### 16. `2-uffici` · 4:34
+### 16. `2-uffici` · 4:47
 
 Vista: Strato «Uffici comunali (sedi)»: clic su Palazzo Palagonia; la scheda elenca aree e uffici con responsabili e contatti.
 
@@ -132,7 +132,7 @@ Vista: Strato «Uffici comunali (sedi)»: clic su Palazzo Palagonia; la scheda e
 2. Vola su Palazzo Palagonia (13.3700, 38.1167), zoom 16,5.
 3. Clic sulla sede; apri «Uffici e responsabili».
 
-### 17. `2-pai` · 4:46
+### 17. `2-pai` · 5:05
 
 Vista: Gruppo «Piano PAI»: si accende «Pericolosità idraulica»; clic su un'area; nella scheda, «Strumenti urbanistici», il riquadro «Vincoli PAI» con la classe più grave.
 
@@ -141,7 +141,7 @@ Vista: Gruppo «Piano PAI»: si accende «Pericolosità idraulica»; clic su un'
 3. Clic su un'area colorata.
 4. Scheda → «Strumenti urbanistici» → evidenzia «Vincoli PAI».
 
-### 18. `2-incendi` · 5:05
+### 18. `2-incendi` · 5:31
 
 Vista: Strato «Incendi»: aree colorate per anno; clic su un incendio del 2023: la scheda riporta data, località, superfici.
 
@@ -149,7 +149,7 @@ Vista: Strato «Incendi»: aree colorate per anno; clic su un incendio del 2023:
 2. Vola su (13.33, 38.10), zoom 12.
 3. Clic su un'area bruciata del 2023.
 
-### 19. `2-calore` · 5:16
+### 19. `2-calore` · 5:46
 
 Vista: Strato «Isole di calore»: sezioni di censimento colorate per temperatura. Nella legenda si cambia il metodo di classificazione e si vede il grafico 2019–2025. Un clic apre la scheda «Isola di calore».
 
@@ -158,7 +158,7 @@ Vista: Strato «Isole di calore»: sezioni di censimento colorate per temperatur
 3. Evidenzia il grafico dell'andamento.
 4. Clic su una sezione: scheda «Isola di calore».
 
-### 20. `2-filtri` · 5:35
+### 20. `2-filtri` · 6:12
 
 Vista: Tab «Filtri»: si sceglie una circoscrizione; nel campo di ricerca si digita «Maqueda»; compare l'elenco; clic su un risultato: la mappa vola sul posto e si apre la scheda.
 
@@ -167,7 +167,7 @@ Vista: Tab «Filtri»: si sceglie una circoscrizione; nel campo di ricerca si di
 3. Digita «Maqueda» nel campo di ricerca in basso.
 4. Clic sul primo risultato.
 
-### 21. `2-strumenti` · 5:59
+### 21. `2-strumenti` · 6:36
 
 Vista: Barra strumenti in alto a destra: casa, tasto 3D (la mappa si inclina), schermo intero, luna (tema scuro), stampante con il menu formato/orientamento/scala.
 
@@ -175,28 +175,28 @@ Vista: Barra strumenti in alto a destra: casa, tasto 3D (la mappa si inclina), s
 2. Clic sulla luna: tema scuro, poi torna chiaro.
 3. Clic sulla stampante: si apre il menu; mostra formato, orientamento, scala; chiudi senza stampare.
 
-### 22. `2-avvertenze` · 6:20
+### 22. `2-avvertenze` · 6:57
 
 Vista: Di nuovo la scheda del luogo, sezione «Strumenti urbanistici», con in fondo l'avviso «dato informativo, senza valore legale»; evidenziato anche l'avviso a piè di pagina.
 
 1. Clic su via Maqueda; scheda → «Strumenti urbanistici» → scorri in fondo.
 2. Evidenzia l'avviso nella scheda e quello nel piè di pagina.
 
-### 23. `3-cose` · 6:35
+### 23. `3-cose` · 7:17
 
 Vista: Cartello di sezione «Plugin RNDT». Sulla mappa, il pulsante RNDT lampeggia. Una definizione animata: «RNDT = Repertorio Nazionale dei Dati Territoriali», con l'immagine di una biblioteca di mappe.
 
 1. Stacco di sezione (lower third «Plugin RNDT»).
 2. Mappa in vista iniziale, nessuna interazione.
 
-### 24. `3-merito` · 6:57
+### 24. `3-merito` · 7:42
 
 Vista: Si apre il pannello «Catalogo RNDT · Palermo». Zoom sulla riga in alto: «Plugin openrndt-geolibre di Andrea Borruso (onData)».
 
 1. Clic su «Catalogo RNDT» (icona dei due layer, barra strumenti in alto a destra).
 2. Zoom e callout sulla riga del credito in cima al pannello.
 
-### 25. `3-dove` · 7:12
+### 25. `3-dove` · 7:59
 
 Vista: Callout sul pulsante nella barra strumenti, poi sul pannello sul lato destro e sui tab «Scheda» e «RNDT» della barra verticale. Si ricorda che l'interfaccia è in inglese.
 
@@ -204,7 +204,7 @@ Vista: Callout sul pulsante nella barra strumenti, poi sul pannello sul lato des
 2. Evidenzia i tab «Scheda» e «RNDT» nella barra verticale a destra.
 3. Esc chiude il pannello; riapri con il pulsante.
 
-### 26. `3-cerca` · 7:32
+### 26. `3-cerca` · 8:18
 
 Vista: Nel campo di ricerca si scrive «zone protette» e si preme «Search». Si evidenziano i filtri: Type (All/Data/Services), Where, Available as (WMS, WFS, ArcGIS REST), Advanced filters.
 
@@ -212,7 +212,7 @@ Vista: Nel campo di ricerca si scrive «zone protette» e si preme «Search». S
 2. Digita «zone protette» e premi «Search».
 3. Evidenzia Type, Where, Available as, Advanced filters (apri e richiudi).
 
-### 27. `3-risultato` · 7:50
+### 27. `3-risultato` · 8:41
 
 Vista: L'elenco dei risultati; clic su uno: scheda con titolo, descrizione, ente responsabile e servizi. «Open» sul servizio: compare l'elenco dei layer; si spunta «Riserve Regionali».
 
@@ -220,7 +220,7 @@ Vista: L'elenco dei risultati; clic su uno: scheda con titolo, descrizione, ente
 2. Evidenzia titolo, ente, servizi.
 3. Clic su «Open» della riga ArcGIS REST; spunta «Riserve Regionali»; evidenzia «Add to map» e «Add features».
 
-### 28. `3-aggiungi` · 8:13
+### 28. `3-aggiungi` · 9:07
 
 Vista: Si preme «Add features»: le Riserve regionali compaiono in arancione sulla mappa (Monte Pellegrino, Capo Gallo…). Il tab «RNDT» della barra a sinistra mostra il layer nel gruppo, con occhio, cursore opacità e cestino.
 
@@ -228,7 +228,7 @@ Vista: Si preme «Add features»: le Riserve regionali compaiono in arancione su
 2. Attendi: «Added 16 features».
 3. Apri il tab «RNDT» a sinistra: evidenzia occhio, opacità, cestino.
 
-### 29. `3-interroga` · 8:30
+### 29. `3-interroga` · 9:24
 
 Vista: Clic su una riserva: la scheda si apre e si passa alla linguetta «Altri dati (RNDT)», con il riquadro del layer (denominazione, tipologia, gestore).
 
@@ -236,46 +236,46 @@ Vista: Clic su una riserva: la scheda si apre e si passa alla linguetta «Altri 
 2. Clic proprio sulla riserva.
 3. Scheda → linguetta «Altri dati (RNDT)»; evidenzia denominazione, tipologia, gestore e fonte.
 
-### 30. `3-limiti` · 8:46
+### 30. `3-limiti` · 9:44
 
 Vista: Testo animato a schermo con due promemoria: «WFS: massimo 10.000 oggetti → per strati densi, meglio il WMS» e «Servizio non raggiungibile → resta in elenco come “non disponibile”».
 
 1. Mappa ferma con il layer acceso; cartello animato con i due promemoria.
 
-### 31. `3-file` · 9:02
+### 31. `3-file` · 10:02
 
 Vista: Tab «I miei layer»: evidenziata l'icona di caricamento accanto a «I miei dati»; elenco dei formati accettati a schermo.
 
 1. Clic sul tab «I miei layer».
 2. Evidenzia l'icona di caricamento e «Carica file dal computer» (senza caricare nulla).
 
-### 32. `3-sintesi` · 9:16
+### 32. `3-sintesi` · 10:17
 
 Vista: Quattro icone in fila: cerca, scegli, aggiungi, clicca. Sullo sfondo la mappa con il layer RNDT.
 
 1. Stacco grafico di riepilogo; nessuna interazione.
 
-### 33. `4-cose` · 9:24
+### 33. `4-cose` · 10:27
 
 Vista: Cartello di sezione «Geoimage». Apertura del pannello dal tab «Geoimage» della barra a destra. Callout sul riquadro «Carica mappa storica».
 
 1. Lower third «Geoimage».
 2. Clic sul tab «Geoimage» nella barra verticale a destra.
 
-### 34. `4-inquadra` · 9:37
+### 34. `4-inquadra` · 10:43
 
 Vista: Nel campo di ricerca si scrive «Teatro Massimo»: la mappa si porta sull'area che l'immagine rappresenta.
 
 1. Cerca «Teatro Massimo» (o via Maqueda) e scegli il risultato; zoom 15.
 
-### 35. `4-carica` · 9:46
+### 35. `4-carica` · 10:54
 
 Vista: Il file della pianta del 1891 viene trascinato nel riquadro «Carica mappa storica»; l'immagine appare al centro, con le maniglie arancioni.
 
 1. Carica il file (pianta_1891_demo.png) nel riquadro «Carica mappa storica» (trascinamento).
 2. Evidenzia le maniglie.
 
-### 36. `4-posiziona` · 9:58
+### 36. `4-posiziona` · 11:07
 
 Vista: Si trascina il cerchio centrale (sposta), il cerchio con la freccia (ruota), un angolo (scala); si passa a «deforma» con il pulsante «Maniglie: scala / deforma»; si regola l'opacità.
 
@@ -284,7 +284,7 @@ Vista: Si trascina il cerchio centrale (sposta), il cerchio con la freccia (ruot
 3. Trascina un angolo in modalità scala; clic su «Maniglie: scala / deforma»; trascina un angolo in modalità deforma.
 4. Abbassa l'opacità.
 
-### 37. `4-gcp` · 10:09
+### 37. `4-gcp` · 11:22
 
 Vista: Modalità GCP: per ciascun punto, un clic sull'immagine storica (cerchio arancione) e uno sullo stesso luogo nella mappa di base (il cerchio diventa rosso e numerato). Quattro punti agli angoli.
 
@@ -292,46 +292,46 @@ Vista: Modalità GCP: per ciascun punto, un clic sull'immagine storica (cerchio 
 2. Per 4 punti (Teatro Massimo, Quattro Canti, Porta Nuova, Stazione Centrale): clic sul punto dell'immagine, poi sul punto della base.
 3. Attiva Spotlight un istante per scegliere con precisione il secondo clic.
 
-### 38. `4-allinea` · 10:29
+### 38. `4-allinea` · 11:47
 
 Vista: Clic su «Allinea immagine ai GCP»: l'immagine scorre e si sovrappone alla città di oggi.
 
 1. Clic su «Allinea immagine ai GCP» (trasformazione affine).
 
-### 39. `4-rmse` · 10:37
+### 39. `4-rmse` · 11:57
 
 Vista: Zoom sul pannello: valore dell'RMSE e tabella dei GCP con i residui colorati (verde, arancione, rosso).
 
 1. Zoom sul valore RMSE e sulla tabella dei residui.
 2. Trascina un GCP impreciso per ridurre l'errore (se serve).
 
-### 40. `4-confronto` · 10:54
+### 40. `4-confronto` · 12:15
 
 Vista: Swipe: la linea verticale scorre, a sinistra la carta storica e a destra la base moderna. Poi Spotlight: il cerchio segue il mouse e scopre la base sotto l'immagine.
 
 1. Clic su «Swipe»: trascina la maniglia da sinistra a destra.
 2. Clic su «Swipe» per spegnere; clic su «Spotlight»: muovi il mouse in cerchio; regola «Raggio».
 
-### 41. `4-esporta` · 11:09
+### 41. `4-esporta` · 12:32
 
 Vista: Sezione «Export»: si vedono KMZ, GeoTIFF, .points, World file, GCP GeoJSON, JSON. Un clic su GeoTIFF apre le impostazioni (sistema di riferimento, ricampionamento, risoluzione, compressione).
 
 1. Scorri fino a «Export».
 2. Clic su «GeoTIFF»: mostra le impostazioni; chiudi senza scaricare.
 
-### 42. `4-chiusura` · 11:21
+### 42. `4-chiusura` · 12:45
 
 Vista: Callout sul salvataggio automatico e testo «Più precisione? MapWarper».
 
 1. Cartello animato con i due promemoria.
 
-### 43. `5-riepilogo` · 11:29
+### 43. `5-riepilogo` · 12:53
 
 Vista: Zoom indietro sulla mappa di Palermo. Tre punti numerati compaiono a schermo, uno per frase.
 
 1. Home; cartelli animati 1-2-3.
 
-### 44. `5-saluti` · 11:45
+### 44. `5-saluti` · 13:08
 
 Vista: Schermata finale fornita (assets/chiusura.png): «Grazie per l'attenzione», indirizzo palermodigitaltwin.opendatasicilia.it, Open Data Sicilia, crediti. Dissolvenza in entrata.
 

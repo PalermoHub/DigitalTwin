@@ -1,0 +1,867 @@
+1
+00:00:00,400 --> 00:00:03,260
+Ciao, e benvenuto nel Digital Twin di Palermo.
+
+2
+00:00:03,420 --> 00:00:05,860
+Una mappa con i dati aperti della città:
+
+3
+00:00:06,020 --> 00:00:11,110
+catasto, piano regolatore, monumenti, trasporti e molto altro, tutti nello stesso posto.
+
+4
+00:00:12,670 --> 00:00:15,050
+In questo video vediamo quattro cose.
+
+5
+00:00:15,210 --> 00:00:15,900
+Primo:
+
+6
+00:00:16,060 --> 00:00:20,190
+come usare la mappa, dalla ricerca di un luogo alla scheda con tutti i dati.
+
+7
+00:00:20,350 --> 00:00:21,400
+Secondo:
+
+8
+00:00:21,560 --> 00:00:25,040
+il plugin che porta in mappa il catalogo nazionale dei dati.
+
+9
+00:00:25,200 --> 00:00:25,890
+Terzo:
+
+10
+00:00:26,050 --> 00:00:30,000
+Geoimage, per sovrapporre le mappe storiche alla Palermo di oggi.
+
+11
+00:00:30,160 --> 00:00:31,030
+Quarto:
+
+12
+00:00:31,190 --> 00:00:33,620
+dove trovare tutto, e come dare una mano.
+
+13
+00:00:35,080 --> 00:00:37,770
+Tutto parte dalla Guida, nel menu in alto.
+
+14
+00:00:37,930 --> 00:00:39,720
+Ha 19 passi:
+
+15
+00:00:39,880 --> 00:00:42,920
+li facciamo davvero, uno alla volta, sulla mappa.
+
+16
+00:00:44,520 --> 00:00:46,370
+Questa è la vista iniziale:
+
+17
+00:00:46,530 --> 00:00:48,080
+il centro di Palermo.
+
+18
+00:00:48,240 --> 00:00:50,610
+In alto il logo e il menu con le guide.
+
+19
+00:00:50,770 --> 00:00:53,130
+A sinistra la barra degli strati.
+
+20
+00:00:53,290 --> 00:00:54,900
+In basso la ricerca.
+
+21
+00:00:55,060 --> 00:00:57,720
+E a piè di pagina un avviso che ti anticipo:
+
+22
+00:00:57,880 --> 00:01:03,240
+catasto, piano regolatore e vincoli sono dati informativi, senza valore legale.
+
+23
+00:01:04,200 --> 00:01:06,050
+Sul telefono i comandi cambiano.
+
+24
+00:01:06,210 --> 00:01:07,830
+In basso hai quattro tab:
+
+25
+00:01:07,990 --> 00:01:10,130
+Mappa, Strati, Aggiungi e Menu.
+
+26
+00:01:10,290 --> 00:01:13,310
+Strati apre mappe di base, layer e filtri.
+
+27
+00:01:13,470 --> 00:01:17,650
+Aggiungi riunisce i tuoi layer, il catalogo nazionale e Geoimage.
+
+28
+00:01:17,810 --> 00:01:19,570
+Menu apre le guide.
+
+29
+00:01:19,730 --> 00:01:23,520
+Per conoscere un luogo, tocchi la mappa e la scheda sale dal basso.
+
+30
+00:01:25,820 --> 00:01:29,640
+I dati arrivano da enti pubblici e da progetti di dati aperti:
+
+31
+00:01:29,800 --> 00:01:33,200
+il Comune di Palermo, l'azienda del trasporto pubblico,
+
+32
+00:01:33,240 --> 00:01:37,140
+il catasto, il piano regolatore, il censimento e OpenStreetMap.
+
+33
+00:01:37,300 --> 00:01:39,480
+L'elenco è in Fonti e avvisi:
+
+34
+00:01:39,640 --> 00:01:44,080
+per ogni fonte trovi la data, il link al dato originale e la licenza.
+
+35
+00:01:44,240 --> 00:01:46,300
+In cima ci sono gli avvisi:
+
+36
+00:01:46,460 --> 00:01:50,300
+catasto, piano regolatore e vincoli non hanno valore legale.
+
+37
+00:01:52,760 --> 00:01:55,750
+Gli strati sono i temi che si sovrappongono alla mappa.
+
+38
+00:01:55,910 --> 00:01:57,290
+Apri il tab Layer:
+
+39
+00:01:57,450 --> 00:01:59,910
+i gruppi sono in ordine alfabetico.
+
+40
+00:02:00,070 --> 00:02:03,350
+Apri Territorio e accendi il catasto con la casella.
+
+41
+00:02:03,510 --> 00:02:07,410
+Compare in alto come etichetta, e la legenda in basso ne spiega i colori.
+
+42
+00:02:07,570 --> 00:02:10,120
+Puoi accenderne più d'uno e confrontarli:
+
+43
+00:02:10,280 --> 00:02:12,580
+ad esempio edifici e catasto.
+
+44
+00:02:13,840 --> 00:02:18,690
+Con più strati accesi, la scheda arancione Ordine layer in mappa li elenca tutti.
+
+45
+00:02:18,850 --> 00:02:21,230
+In alto vuol dire sopra, sulla mappa.
+
+46
+00:02:21,390 --> 00:02:25,240
+Li sposti con le frecce o trascinandoli, e l'ordine viene ricordato.
+
+47
+00:02:28,720 --> 00:02:32,750
+Il tab Base cartografica cambia la mappa che sta sotto gli strati:
+
+48
+00:02:32,910 --> 00:02:35,390
+stradale, aerea, topografica.
+
+49
+00:02:35,550 --> 00:02:37,780
+In fondo ci sono le mappe storiche:
+
+50
+00:02:37,940 --> 00:02:42,660
+15 carte di Palermo, dal 1580 al 1993.
+
+51
+00:02:42,820 --> 00:02:47,320
+Il pallino colorato dice quanto la carta si sovrappone bene alla città di oggi.
+
+52
+00:02:47,480 --> 00:02:50,210
+Qui, Palermo nel 1891.
+
+53
+00:02:54,320 --> 00:02:56,860
+Nel tab I miei layer aggiungi i tuoi dati:
+
+54
+00:02:57,020 --> 00:03:01,530
+un file dal computer, un indirizzo web, oppure un servizio di mappe.
+
+55
+00:03:01,690 --> 00:03:04,090
+Funziona come il Browser di QGIS.
+
+56
+00:03:04,250 --> 00:03:07,150
+I servizi restano salvati nel tuo browser.
+
+57
+00:03:12,370 --> 00:03:15,590
+Il pulsante con la tavolozza apre il pannello dei colori.
+
+58
+00:03:15,750 --> 00:03:20,680
+Con Colora per attributo scegli un campo dei dati e la mappa si colora di conseguenza.
+
+59
+00:03:20,840 --> 00:03:23,890
+Qui gli edifici, per densità di popolazione.
+
+60
+00:03:24,050 --> 00:03:27,000
+La rampa si sceglie da un elenco con l'anteprima,
+
+61
+00:03:27,040 --> 00:03:32,060
+comprese le scale scientifiche di Fabio Crameri, leggibili anche con il daltonismo.
+
+62
+00:03:35,080 --> 00:03:37,840
+Per conoscere un luogo basta fare clic sulla mappa.
+
+63
+00:03:38,000 --> 00:03:41,350
+Il punto viene evidenziato e si apre la scheda del luogo.
+
+64
+00:03:41,520 --> 00:03:45,570
+Le aree evidenziate hanno una legenda con un colore per ogni voce:
+
+65
+00:03:45,730 --> 00:03:48,300
+un clic su una voce lascia in mappa solo quella.
+
+66
+00:03:48,460 --> 00:03:51,970
+Passando con il mouse compare un fumetto con il nome del layer.
+
+67
+00:03:53,530 --> 00:03:55,510
+Ed è qui la forza della mappa:
+
+68
+00:03:55,670 --> 00:03:59,990
+un solo clic interroga insieme catasto, vincoli del piano regolatore,
+
+69
+00:04:00,030 --> 00:04:03,540
+sicurezza stradale, beni culturali e trasporto pubblico.
+
+70
+00:04:03,700 --> 00:04:07,180
+La scheda mette in fila tutto ciò che si sovrappone in quel punto.
+
+71
+00:04:08,140 --> 00:04:11,950
+La scheda è divisa in sezioni, che scegli dalle linguette in alto.
+
+72
+00:04:12,110 --> 00:04:17,310
+Luogo riassume indirizzo, quartiere, monumenti, rischio di incidenti e fermate vicine.
+
+73
+00:04:17,470 --> 00:04:21,170
+Strumenti urbanistici parte dall'edificio, poi mostra la particella,
+
+74
+00:04:21,210 --> 00:04:23,970
+con foglio e numero, e il collegamento alla visura.
+
+75
+00:04:24,130 --> 00:04:26,190
+Ogni sezione indica la fonte.
+
+76
+00:04:32,300 --> 00:04:36,270
+Lo strato Monumenti mostra chiese, palazzi, fontane e teatri.
+
+77
+00:04:36,430 --> 00:04:39,260
+Un clic sul Teatro Massimo apre la sua scheda:
+
+78
+00:04:39,420 --> 00:04:41,230
+foto, descrizione, categoria,
+
+79
+00:04:41,270 --> 00:04:46,860
+e il collegamento al Portale del Turismo del Comune di Palermo, da cui arrivano i testi.
+
+80
+00:04:52,610 --> 00:04:57,520
+Lo strato Uffici comunali mostra dove sono gli uffici del Comune, raggruppati per sede.
+
+81
+00:04:57,680 --> 00:05:01,120
+La scheda di Palazzo Palagonia elenca aree e uffici,
+
+82
+00:05:01,160 --> 00:05:04,600
+con responsabili e contatti, quando sono pubblicati.
+
+83
+00:05:09,930 --> 00:05:15,360
+Il gruppo Piano PAI riporta il Piano di assetto idrogeologico della Regione Siciliana:
+
+84
+00:05:15,520 --> 00:05:18,910
+pericolosità e rischio idraulico e geomorfologico.
+
+85
+00:05:19,070 --> 00:05:24,850
+Un clic su un'area apre la scheda, con il riquadro Vincoli PAI e la classe più grave.
+
+86
+00:05:25,010 --> 00:05:26,760
+Sono dati informativi:
+
+87
+00:05:26,920 --> 00:05:29,920
+per usi legali vale la cartografia ufficiale.
+
+88
+00:05:35,630 --> 00:05:40,650
+Lo strato Incendi mostra le aree percorse dal fuoco dal 2007, anno per anno:
+
+89
+00:05:40,810 --> 00:05:42,490
+il colore indica l'anno.
+
+90
+00:05:42,650 --> 00:05:46,340
+La scheda riporta data, località e superfici bruciate.
+
+91
+00:05:51,120 --> 00:05:55,130
+Le isole di calore mostrano la temperatura della superficie in estate,
+
+92
+00:05:55,170 --> 00:05:58,790
+ricavata dai satelliti Landsat, per ogni sezione di censimento.
+
+93
+00:05:58,950 --> 00:06:04,310
+Nella legenda scegli il metodo di classificazione e il numero di classi,
+
+94
+00:06:04,350 --> 00:06:07,020
+e vedi l'andamento dal 2019 al 2025.
+
+95
+00:06:07,180 --> 00:06:08,600
+Attenzione:
+
+96
+00:06:08,760 --> 00:06:12,040
+è la temperatura della superficie, non quella dell'aria.
+
+97
+00:06:14,680 --> 00:06:17,630
+Per cercare, scrivi nel campo in basso una via,
+
+98
+00:06:17,670 --> 00:06:20,240
+un civico, un quartiere o una particella.
+
+99
+00:06:20,400 --> 00:06:25,140
+Il tab Filtri limita la ricerca a una circoscrizione, un quartiere o una zona,
+
+100
+00:06:25,180 --> 00:06:28,510
+oppure ti fa trovare una particella da foglio e numero.
+
+101
+00:06:28,670 --> 00:06:29,810
+Per esempio:
+
+102
+00:06:29,970 --> 00:06:32,870
+scegli una circoscrizione e scrivi Maqueda.
+
+103
+00:06:33,030 --> 00:06:35,950
+Un clic sul risultato porta la mappa sul posto.
+
+104
+00:06:36,910 --> 00:06:38,920
+Gli strumenti in alto a destra.
+
+105
+00:06:39,080 --> 00:06:41,880
+La casa riporta alla vista iniziale.
+
+106
+00:06:42,040 --> 00:06:44,390
+Il pulsante 3D inclina la mappa.
+
+107
+00:06:44,550 --> 00:06:47,750
+Poi lo schermo intero e la luna, per il tema scuro.
+
+108
+00:06:47,910 --> 00:06:52,070
+La stampante prepara un foglio con la mappa, le legende e le fonti:
+
+109
+00:06:52,230 --> 00:06:56,050
+scegli formato, da A4 ad A0, orientamento e scala.
+
+110
+00:06:59,020 --> 00:07:01,440
+Un'ultima avvertenza, importante.
+
+111
+00:07:01,600 --> 00:07:05,840
+Catasto, zonizzazione e vincoli hanno valore solo informativo:
+
+112
+00:07:06,000 --> 00:07:10,890
+non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali.
+
+113
+00:07:11,050 --> 00:07:13,320
+I dati del censimento sono stime.
+
+114
+00:07:13,480 --> 00:07:17,090
+Per usi legali, rivolgiti sempre agli uffici competenti.
+
+115
+00:07:18,040 --> 00:07:20,100
+Passiamo al catalogo nazionale.
+
+116
+00:07:20,260 --> 00:07:22,190
+Prima, due frasi su cos'è.
+
+117
+00:07:22,350 --> 00:07:25,940
+L'RNDT, il Repertorio Nazionale dei Dati Territoriali,
+
+118
+00:07:25,980 --> 00:07:29,500
+è il catalogo ufficiale italiano dei dati geografici:
+
+119
+00:07:29,660 --> 00:07:33,420
+raccoglie le schede di migliaia di mappe pubblicate da Comuni,
+
+120
+00:07:33,460 --> 00:07:35,380
+Regioni, ministeri e altri enti.
+
+121
+00:07:35,540 --> 00:07:37,270
+È come una biblioteca:
+
+122
+00:07:37,430 --> 00:07:41,370
+ti dice che cosa esiste, chi l'ha prodotto e dove consultarlo.
+
+123
+00:07:42,320 --> 00:07:46,800
+Dentro questa mappa, il catalogo è il plugin openrndt-geolibre,
+
+124
+00:07:46,840 --> 00:07:50,020
+ideato e scritto da Andrea Borruso di onData.
+
+125
+00:07:50,180 --> 00:07:53,210
+Senza il suo lavoro questa funzione non esisterebbe:
+
+126
+00:07:53,370 --> 00:07:56,490
+è stato adattato a Palermo con pochissimi interventi,
+
+127
+00:07:56,530 --> 00:07:58,640
+grazie alla sua ottima architettura.
+
+128
+00:07:59,600 --> 00:08:02,760
+Lo trovi nella barra degli strumenti in alto a destra:
+
+129
+00:08:02,920 --> 00:08:04,770
+è l'icona con i due layer.
+
+130
+00:08:04,930 --> 00:08:07,140
+Il pannello si apre sul lato destro,
+
+131
+00:08:07,180 --> 00:08:10,750
+e i tab Scheda e RNDT ti fanno passare dall'uno all'altro.
+
+132
+00:08:10,910 --> 00:08:12,460
+Con Esc lo chiudi.
+
+133
+00:08:12,620 --> 00:08:15,400
+L'interfaccia del plugin è in inglese:
+
+134
+00:08:15,560 --> 00:08:18,170
+sono poche parole, non spaventarti.
+
+135
+00:08:19,120 --> 00:08:23,040
+Scrivi cosa cerchi, per esempio zone protette, e premi Search.
+
+136
+00:08:23,200 --> 00:08:26,240
+La ricerca è sempre limitata all'area di Palermo.
+
+137
+00:08:26,400 --> 00:08:30,150
+Puoi filtrare per tipo, dati o servizi, e per formato:
+
+138
+00:08:30,310 --> 00:08:36,320
+WMS, WFS o ArcGIS REST.
+
+139
+00:08:36,480 --> 00:08:39,570
+Nei filtri avanzati ci sono tema, ente e date.
+
+140
+00:08:41,940 --> 00:08:43,490
+Scegli un risultato:
+
+141
+00:08:43,650 --> 00:08:49,640
+si apre la scheda, con titolo, descrizione, ente responsabile e servizi disponibili.
+
+142
+00:08:49,800 --> 00:08:53,340
+Premi Open sul servizio e spunta il layer che ti interessa:
+
+143
+00:08:53,500 --> 00:08:55,580
+qui, le Riserve regionali.
+
+144
+00:08:55,740 --> 00:08:59,260
+I servizi WMS si aggiungono come immagini.
+
+145
+00:08:59,420 --> 00:09:02,210
+Con Add features, e con i servizi WFS,
+
+146
+00:09:02,250 --> 00:09:07,280
+porti in mappa gli elementi veri e propri, con le loro informazioni.
+
+147
+00:09:08,240 --> 00:09:10,260
+Ecco le riserve sulla mappa.
+
+148
+00:09:10,420 --> 00:09:15,610
+Le ritrovi tra i layer aggiunti e nel gruppo RNDT della barra degli strati:
+
+149
+00:09:15,770 --> 00:09:19,600
+con l'occhio le accendi e le spegni, con il cestino le rimuovi.
+
+150
+00:09:19,760 --> 00:09:21,410
+Si ricordano da sole:
+
+151
+00:09:21,570 --> 00:09:23,910
+riapri la mappa e sono ancora lì.
+
+152
+00:09:24,870 --> 00:09:27,950
+Un clic sulla mappa interroga anche questi layer.
+
+153
+00:09:28,110 --> 00:09:32,520
+Le risposte arrivano nella linguetta Altri dati RNDT della scheda,
+
+154
+00:09:32,560 --> 00:09:34,610
+con un riquadro per ogni layer.
+
+155
+00:09:34,760 --> 00:09:38,430
+Qui, per esempio, Monte Pellegrino, con tipologia e gestore.
+
+156
+00:09:38,590 --> 00:09:41,020
+Bisogna cliccare proprio sull'elemento.
+
+157
+00:09:45,020 --> 00:09:46,450
+Due cose da sapere.
+
+158
+00:09:46,610 --> 00:09:50,690
+Il download WFS ha un tetto di 10.000 oggetti:
+
+159
+00:09:50,850 --> 00:09:55,910
+per strati molto densi, come le particelle catastali, meglio il WMS.
+
+160
+00:09:56,070 --> 00:09:57,850
+E se un servizio non risponde,
+
+161
+00:09:57,890 --> 00:10:01,600
+resta in elenco come non disponibile, senza essere cancellato.
+
+162
+00:10:02,570 --> 00:10:03,890
+E i tuoi file?
+
+163
+00:10:04,050 --> 00:10:05,940
+Si caricano da I miei layer:
+
+164
+00:10:06,100 --> 00:10:13,190
+GeoJSON, KML, GPX, Shapefile in zip, CSV con latitudine e longitudine.
+
+165
+00:10:13,350 --> 00:10:17,250
+Di ogni file restano solo gli elementi dentro il Comune di Palermo.
+
+166
+00:10:18,210 --> 00:10:19,380
+In breve:
+
+167
+00:10:19,540 --> 00:10:21,510
+cerchi, scegli, aggiungi, clicchi.
+
+168
+00:10:21,670 --> 00:10:25,920
+Quattro passi per portare in mappa i dati ufficiali che riguardano Palermo.
+
+169
+00:10:27,890 --> 00:10:29,410
+Ultima funzione:
+
+170
+00:10:29,570 --> 00:10:30,740
+Geoimage.
+
+171
+00:10:30,900 --> 00:10:35,060
+Ti permette di sovrapporre una mappa storica, o qualsiasi immagine,
+
+172
+00:10:35,100 --> 00:10:38,060
+alla cartografia moderna, e di georeferenziarla:
+
+173
+00:10:38,220 --> 00:10:43,060
+cioè darle coordinate geografiche reali, usando i punti di controllo, i GCP.
+
+174
+00:10:44,020 --> 00:10:45,240
+Primo passo:
+
+175
+00:10:45,400 --> 00:10:48,950
+inquadra la zona con la ricerca, per esempio il Teatro Massimo,
+
+176
+00:10:48,990 --> 00:10:51,970
+così l'immagine si carica già vicina al posto giusto.
+
+177
+00:10:54,940 --> 00:10:59,130
+Trascina il file nel riquadro Carica mappa storica, oppure cliccalo.
+
+178
+00:10:59,290 --> 00:11:02,530
+Qui una pianta di Palermo del 1891:
+
+179
+00:11:02,690 --> 00:11:06,770
+appare subito al centro della mappa, con le maniglie di posizionamento.
+
+180
+00:11:07,730 --> 00:11:11,160
+Con le maniglie la sposti, la ruoti e la ridimensioni.
+
+181
+00:11:11,320 --> 00:11:14,290
+Gli angoli hanno due modalità, scala e deforma,
+
+182
+00:11:14,330 --> 00:11:17,180
+utile per le carte che non sono rettangolari.
+
+183
+00:11:23,270 --> 00:11:25,040
+Ora i punti di controllo.
+
+184
+00:11:25,200 --> 00:11:26,790
+Premi Aggiungi GCP.
+
+185
+00:11:26,950 --> 00:11:28,940
+Per ogni punto servono due clic:
+
+186
+00:11:29,100 --> 00:11:32,780
+il primo su un luogo riconoscibile dell'immagine storica,
+
+187
+00:11:32,820 --> 00:11:35,330
+un incrocio, un edificio, un monumento.
+
+188
+00:11:35,490 --> 00:11:38,330
+Il secondo sullo stesso luogo nella mappa moderna.
+
+189
+00:11:38,490 --> 00:11:41,230
+Ne servono almeno tre, meglio se agli angoli.
+
+190
+00:11:47,890 --> 00:11:51,120
+Con tre punti puoi premere Allinea immagine ai GCP:
+
+191
+00:11:51,280 --> 00:11:55,410
+l'app calcola la trasformazione e sposta l'immagine al posto giusto.
+
+192
+00:11:58,270 --> 00:11:59,710
+Controlla l'errore.
+
+193
+00:11:59,870 --> 00:12:02,770
+L'RMSE è l'errore medio in metri:
+
+194
+00:12:02,930 --> 00:12:04,680
+più è basso, meglio è.
+
+195
+00:12:04,840 --> 00:12:07,370
+Nella tabella ogni punto ha il suo residuo:
+
+196
+00:12:07,530 --> 00:12:10,900
+verde se è nella norma, rosso se è molto più alto.
+
+197
+00:12:11,060 --> 00:12:14,890
+Se è alto, sposta i punti meno precisi o aggiungine altri.
+
+198
+00:12:15,850 --> 00:12:18,210
+Per verificare, usa lo Swipe:
+
+199
+00:12:18,370 --> 00:12:23,270
+una linea divide la mappa, a sinistra la carta storica, a destra la base di oggi.
+
+200
+00:12:23,430 --> 00:12:24,980
+Oppure lo Spotlight:
+
+201
+00:12:25,140 --> 00:12:28,550
+un cerchio che segue il mouse scopre la base sotto l'immagine.
+
+202
+00:12:32,340 --> 00:12:34,560
+Quando sei soddisfatto, esporta:
+
+203
+00:12:34,720 --> 00:12:39,340
+KMZ per Google Earth e QGIS, GeoTIFF con le coordinate incorporate,
+
+204
+00:12:39,380 --> 00:12:45,170
+i punti per il georeferenziatore di QGIS, il world file, oppure il progetto in JSON.
+
+205
+00:12:46,130 --> 00:12:48,790
+Il progetto si salva da solo nel browser.
+
+206
+00:12:48,950 --> 00:12:52,170
+E se vuoi più precisione, ti consigliamo MapWarper.
+
+207
+00:12:54,130 --> 00:12:56,040
+Riassumiamo in tre punti.
+
+208
+00:12:56,200 --> 00:12:56,780
+Uno:
+
+209
+00:12:56,940 --> 00:12:59,770
+un clic ti dice tutto di un luogo, con la fonte.
+
+210
+00:12:59,930 --> 00:13:00,510
+Due:
+
+211
+00:13:00,670 --> 00:13:03,840
+il catalogo nazionale porta in mappa i dati ufficiali.
+
+212
+00:13:04,000 --> 00:13:04,510
+Tre:
+
+213
+00:13:04,670 --> 00:13:07,910
+Geoimage confronta la Palermo di oggi con quella di ieri.
+
+214
+00:13:09,670 --> 00:13:14,400
+Trovi l'app su palermodigitaltwin.opendatasicilia.it.
+
+215
+00:13:14,560 --> 00:13:21,450
+La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia.
+
+216
+00:13:21,610 --> 00:13:23,650
+Trovi un errore, o hai un'idea?
+
+217
+00:13:23,810 --> 00:13:25,720
+Segnalalo e contribuisci.
