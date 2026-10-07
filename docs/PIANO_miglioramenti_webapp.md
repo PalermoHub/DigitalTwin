@@ -116,7 +116,7 @@ Audit di accessibilità (axe-core, 24 scene: chiaro/scuro, desktop/mobile, fogli
 - [x] Pulsante Filtri con etichetta testuale visibile (pillola «Filtri», 72x44 px su mobile; il nome accessibile resta «Filtri: zona e catasto»); segnaposto della ricerca con puntini invece del taglio a metà parola. Il pulsante di ripristino (icona ↻, con nome accessibile) resta com'è, su decisione dell'utente.
 - [x] Landmark: `#corpo` è ora un `<main>`; axe-core non segnala più nessun avviso (0 violazioni a 360, 440 e 1350 px).
 - [ ] Mappa dei punti d'ingresso attuali (menu, rail, Strati, barra strumenti, Filtri) e proposta di unificazione, da provare con 3-5 utenti reali prima di cambiare.
-- [ ] Spiegare in legenda il limite di zoom 12-18, se dipende dai dati.
+- [x] Limite di zoom 12-18: è una scelta d'interfaccia (`ZOOM_SLIDER` in `js/core/config.js`; la mappa arriva a 19) e i layer pesanti dichiarano già «da zoom 12» nell'etichetta. Nessuna modifica.
 - [ ] Onboarding: estendere `collegaInvito` con 3 passi (cerca, accendi uno strato, apri la scheda) e opzione «non mostrare più».
 - [ ] Alternativa testuale alla mappa: elenco dei risultati di ricerca navigabile da tastiera come vista tabellare.
 - [ ] `prefers-contrast`.
