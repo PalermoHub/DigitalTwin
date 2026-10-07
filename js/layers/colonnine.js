@@ -158,6 +158,8 @@ export default {
   },
   scheda: {
     layers: [HIT],
+    // con lo strato acceso, cliccare una colonnina apre subito il suo tab della scheda
+    tabAlClic: map => (map.getLayoutProperty(PUNTI, 'visibility') === 'visible' ? 'servizi' : null),
     voci(trovati) { // tutte le colonnine sotto il clic in una sola sezione
       const viste = new Map();
       for (const f of trovati) { const p = completo(f.properties); viste.set(p.id, p); }

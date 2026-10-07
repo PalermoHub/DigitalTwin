@@ -36,7 +36,7 @@ function copiaTesto(testo) {
   return Promise.resolve();
 }
 
-function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
+function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabIniziale = null) {
   const { contesto, sezioni, legale } = dati;
   let corrente = dati; // le sezioni RNDT arrivano dopo: `aggiungi` le fonde qui e ridisegna il corpo
   const titoloTesto = titoloScheda(sezioni);
@@ -114,7 +114,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref) {
     e.preventDefault();
   }, { passive: false });
   const corpo = el('div', 'scheda-corpo');
-  let attiva = new URLSearchParams(location.search).get('tab');
+  let attiva = tabIniziale ?? new URLSearchParams(location.search).get('tab'); // il tab chiesto da uno strato vince su quello ricordato
   let sunti = new Map(); // riepilogo in testa a certe schede: id -> celle { valore, chiave }
   const mostraTab = id => {
     attiva = id;
@@ -388,10 +388,12 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     if (window.dt && window.dt.differitiPronti === false) await window.dt.differiti();
     const voci = [];
     const trovatiTutti = [];
+    let tabIniziale = null; // lo strato cliccato può chiedere il suo tab; solo per un clic vero (non per il ripristino da un link condiviso)
     for (const m of conScheda) {
       const layers = m.scheda.layers.filter(id => map.getLayer(id));
       if (!layers.length) continue;
       const trovati = trovaFeature(map, e.point, layers);
+      if (trovati.length && e.originalEvent) tabIniziale ??= m.scheda.tabAlClic?.(map) ?? null;
       trovatiTutti.push(...trovati);
       voci.push(...m.scheda.voci(trovati, e.lngLat));
     }
@@ -413,7 +415,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     for (const m of conScheda) m.scheda.suEvidenza?.(base); // chi ridisegna l'evidenza dopo il clic (es. percorso di una linea) tiene anche questa
     const scelte = [...base, ...extra];
     evidenzia(map, scelte);
-    const scheda = mostra(contenitore, e.lngLat, dati, chiudiScheda, adattaVista, pref);
+    const scheda = mostra(contenitore, e.lngLat, dati, chiudiScheda, adattaVista, pref, tabIniziale);
     if (risposte) {
       const punto = contenitore.dataset.punto;
       risposte.then(nuove => {
