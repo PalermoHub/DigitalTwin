@@ -69,18 +69,23 @@ Esito dell'analisi (2026-10-07):
 
 Chiusura: compressione verificata in produzione.
 
-## Fase 3. JavaScript e CSS: build leggera
+## Fase 3. Lavoro sul main thread
 
-Obiettivo: meno codice da scaricare e da eseguire. Il main thread è il collo di bottiglia (TBT e TTI).
+Obiettivo: ridurre il blocco del main thread (TBT e TTI).
 
-- [ ] Introdurre `esbuild` come unica dipendenza di sviluppo: bundle e minificazione di `js/` e `css/app.css` in `dist/`, con source map.
-- [ ] Mantenere l'app funzionante anche senza build in sviluppo (`scripts/serve.py` serve i sorgenti, la build serve solo alla pubblicazione).
-- [ ] Spostare in `import()` lazy i moduli non necessari all'avvio, sul modello già usato per Geoimage: catalogo RNDT, pannello Aggiungi, stampa, guida, temi dei pannelli, grafici (colonnine, isole di calore).
-- [ ] Ridurre il CSS non usato (circa 155 KiB): separare gli stili dei pannelli secondari e caricarli con il modulo.
-- [ ] Analizzare la trace (DevTools) per `forced-reflow` e LCP discovery; correggere letture di layout dentro cicli.
-- [ ] Valutare la sostituzione di `maplibre-gl.js` completo con la build CSP/minimale se compatibile.
+Esito del profilo (CPU profile con Playwright, 14 s di caricamento):
+- Il JS pesa poco: 1,6 s in tutto, di cui MapLibre 1,15 s e il nostro codice circa 0,35 s. Parsing e compilazione: 33 ms. Minificare o dividere i moduli **non** sposta il TBT.
+- Il grosso è lavoro nativo del browser (stile, layout, rendering: `(program)` 5 s), legato al **DOM: 8.700 nodi**. Il pannello degli strati ne aveva 7.400, perché ogni strato costruiva subito il suo pannello nascosto «Colori» (selettori colore, 33 `option`, 21 pulsanti rampa: circa 150 nodi per strato, 48 strati). Con 23 regole CSS `:has()` ogni modifica del DOM costa di più.
 
-Chiusura: JS non usato sotto 200 KiB, TBT dimezzato rispetto alla base, test JS verdi.
+- [x] `js/core/pannello-tema.js`: la sezione «per attributo» e i campi «colori per categoria» si costruiscono alla prima apertura del pannello. Verificato su 9 strati: stesso contenuto di prima, nessun errore. DOM all'avvio da 8.704 a 3.275 nodi.
+- [x] Rimisura locale: mobile performance 29 → 44, FCP mobile 5,9 → 1,7 s, LCP mobile 6,2 → 4,6 s; TBT desktop 9,0 → 6,6 s.
+- [ ] Altri nodi: ogni strato ha ancora circa 25 nodi fissi (opacità, zoom, occhio) e 600 nodi sono `[hidden]`. Valutare di costruire le sezioni `details` chiuse solo all'apertura.
+- [ ] `js/layers/uffici.js` `icona()`: 112 ms al caricamento (la più costosa del nostro codice). Memorizzare le icone già create.
+- [ ] CSS: 23 regole `:has()`, tra cui `body:has(#scheda:not([hidden])...)` che il browser rivaluta a ogni cambio del DOM. Sostituire con una classe sul `body` impostata da JS quando il pannello si apre o si chiude.
+- [ ] Build con esbuild (bundle + minificazione + source map): serve a ridurre le **119 richieste** di moduli e i 96 KiB non minificati, soprattutto con rete lenta e cache fredda. Non migliora il TBT: farla per ultima e misurarla sul sito pubblicato, dove l'HTTP/2 già attenua il costo delle richieste.
+- [ ] CSS non usato (~155 KiB): separare gli stili dei pannelli secondari.
+
+Chiusura: DOM all'avvio sotto 2.500 nodi, TBT desktop sotto 4 s in locale, test JS verdi.
 
 ## Fase 4. Struttura del codice
 

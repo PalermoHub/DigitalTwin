@@ -84,20 +84,29 @@ export function creaPannelloTema(map, strato, stato) {
   msg.className = 'tema-msg';
   msg.setAttribute('role', 'status');
   azioni.append(reset, esporta, importa, file);
+  // La sezione «per attributo» (rampe, elenchi di campi: oltre cento nodi per strato) si costruisce alla prima apertura del pannello:
+  // all'avvio c'è solo il segnaposto, e il DOM resta leggero anche con decine di strati.
   // Il tema viene dichiarato più sotto: la sezione lo legge e lo modifica solo a eventi, dopo la costruzione.
-  const sezioneAttributo = creaSezioneAttributo({
-    map,
-    layers: () => [...parti.riempimenti, ...parti.punti, ...parti.linee],
-    leggi: () => tema?.attributo ?? null,
-    cambia: a => {
-      const nuovo = { ...(tema ?? {}) };
-      if (a) nuovo.attributo = a; else delete nuovo.attributo;
-      tema = validaTema(nuovo);
-      applica();
-      salva();
-    },
-  });
-  pannello.append(riempimento.riga, bordo.riga, rigaSpessore, categorie, sezioneAttributo.el, azioni, msg);
+  const segnapostoAttributo = document.createElement('div');
+  segnapostoAttributo.hidden = true;
+  let sezioneAttributo = null;
+  const costruisciAttributo = () => sezioneAttributo ??= (() => {
+    const sezione = creaSezioneAttributo({
+      map,
+      layers: () => [...parti.riempimenti, ...parti.punti, ...parti.linee],
+      leggi: () => tema?.attributo ?? null,
+      cambia: a => {
+        const nuovo = { ...(tema ?? {}) };
+        if (a) nuovo.attributo = a; else delete nuovo.attributo;
+        tema = validaTema(nuovo);
+        applica();
+        salva();
+      },
+    });
+    segnapostoAttributo.replaceWith(sezione.el);
+    return sezione;
+  })();
+  pannello.append(riempimento.riga, bordo.riga, rigaSpessore, categorie, segnapostoAttributo, azioni, msg);
 
   // categorie del colore (valore → colore originale), senza ripetizioni tra i layer dello strato
   const vociCategorie = () => [...new Map(parti.categorie.flatMap(c => c.voci)).entries()];
@@ -105,7 +114,7 @@ export function creaPannelloTema(map, strato, stato) {
   const costruisciCategorie = () => {
     const voci = vociCategorie();
     categorie.hidden = !voci.length;
-    if (!voci.length || categorie.dataset.pronta) return;
+    if (!voci.length || categorie.dataset.pronta || pannello.hidden) return; // i campi si costruiscono quando il pannello si apre
     categorie.dataset.pronta = '1';
     const titolo = document.createElement('strong');
     titolo.textContent = 'Colori per categoria';
@@ -186,7 +195,7 @@ export function creaPannelloTema(map, strato, stato) {
     for (const [nome, input] of campiCategorie) input.value = tema?.categorie?.[nome] ?? comeEsadecimale(orig.get(nome));
     aggiornaPallini();
     aggiornaLegenda();
-    sezioneAttributo.sincronizza();
+    sezioneAttributo?.sincronizza();
   };
 
   const salva = () => {
@@ -243,7 +252,7 @@ export function creaPannelloTema(map, strato, stato) {
   bottone.addEventListener('click', () => {
     pannello.hidden = !pannello.hidden;
     bottone.setAttribute('aria-expanded', String(!pannello.hidden));
-    if (!pannello.hidden) { sezioneAttributo.rileva(); mostraValori(); }
+    if (!pannello.hidden) { costruisciAttributo().rileva(); mostraValori(); }
   });
 
   registro.set(strato.id, { ricarica: aggiorna });
