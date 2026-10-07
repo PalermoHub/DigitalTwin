@@ -44,13 +44,13 @@ Chiusura: workflow verde, report di base committati.
 
 Obiettivo: chiudere i difetti già misurati, senza rischi.
 
-- [ ] `#strati-chip`: rimuovere `role="list"` oppure dare `role="listitem"` ai figli (audit `aria-required-children`). Rimisurare l'accessibilità desktop.
-- [ ] `img/guida/passi/intersezione.svg`: aggiungere `width` e `height`.
-- [ ] `index.html`: aggiungere `og:image`, `og:url`, `twitter:card` e `link rel="canonical"`; creare l'immagine di anteprima 1200x630 in `img/`.
-- [ ] `index.html`: aggiungere `<link rel="manifest">` con un `manifest.webmanifest` minimo (nome, icone, colori) in preparazione alla Fase 5.
-- [ ] Piè di pagina: rendere leggibili ai lettori di schermo le coordinate (`#piede-coord`), oppure lasciarle `aria-hidden` ma documentare la scelta.
+- [x] `#strati-chip`: rimuovere `role="list"` oppure dare `role="listitem"` ai figli (audit `aria-required-children`). Rimisurare l'accessibilità desktop.
+- [x] `intersezione.svg`: `width` e `height` aggiunti in `js/core/invito.js` (l'immagine è creata dal codice).
+- [x] `index.html`: aggiunti `og:image` (usa `img/social_card.jpg`, già presente), `og:url`, `twitter:card` e canonical su `https://palermohub.github.io/DigitalTwin/` (da cambiare se l'indirizzo pubblico sarà un altro), `og:url`, `twitter:card` e `link rel="canonical"`; l'immagine di anteprima è 1200x750.
+- [x] `index.html`: aggiunto `<link rel="manifest">` con un `manifest.webmanifest` minimo (nome, icone, colori) in preparazione alla Fase 5.
+- [x] Piè di pagina: rendere leggibili ai lettori di schermo le coordinate (`#piede-coord`), oppure lasciarle `aria-hidden` ma documentare la scelta. Scelta: restano `aria-hidden`, perché cambiano a ogni movimento della mappa e un lettore di schermo le annuncerebbe di continuo.
 
-Chiusura: Lighthouse accessibilità 100 su desktop e mobile, anteprima social verificata con un debugger di link.
+Chiusura: Lighthouse accessibilità 100 su desktop e mobile (verificato). Resta da verificare l'anteprima social con un debugger di link dopo la pubblicazione.
 
 ## Fase 2. Peso dei dati caricati all'avvio
 

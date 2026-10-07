@@ -6,9 +6,20 @@
 <title>Digital Twin Palermo</title>
 <meta name="description" content="Mappa interattiva di Palermo: catasto, PRG, popolazione, edifici, rilievo e trasporto pubblico, con schede del luogo da dati aperti.">
 <meta name="theme-color" content="#ffffff">
+<link rel="canonical" href="https://palermohub.github.io/DigitalTwin/">
+<link rel="manifest" href="manifest.webmanifest">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://palermohub.github.io/DigitalTwin/">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Digital Twin Palermo">
 <meta property="og:title" content="Digital Twin Palermo">
 <meta property="og:description" content="Catasto, PRG, popolazione, edifici, rilievo e trasporto pubblico di Palermo su una sola mappa, da dati aperti.">
+<meta property="og:image" content="https://palermohub.github.io/DigitalTwin/img/social_card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="750">
+<meta property="og:image:alt" content="Digital Twin Palermo: la mappa con catasto, PRG, popolazione, edifici e trasporto pubblico">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="apple-touch-icon" href="img/icona-192.png">
 <link rel="icon" href="img/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
@@ -57,7 +68,7 @@
 
 <div id="zoom-box" role="group" aria-label="Zoom"><div id="zoom-badge" aria-live="off">12</div><div class="zoom-wrap"><input type="range" id="zoom-slider" min="12" max="18" step="0.1" value="12" aria-label="Zoom"></div></div>
 
-<div id="strati-chip" role="list" aria-label="Strati accesi"></div>
+<div id="strati-chip" role="group" aria-label="Strati accesi"></div>
 
 <div id="area-ricerca">
   <div id="avvisi" role="status"></div>

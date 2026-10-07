@@ -17,6 +17,8 @@ export function collegaInvito(map, doc, archivio, { url = '' } = {}) {
   const schema = doc.createElement('img');
   schema.src = SCHEMA_INVITO;
   schema.alt = '';
+  schema.width = 960; // dimensioni dello schema SVG: riservano lo spazio ed evitano lo spostamento del layout
+  schema.height = 536;
   schema.onerror = () => schema.remove(); // deploy senza lo schema: resta il pill
   const mai = doc.createElement('button');
   mai.type = 'button';
