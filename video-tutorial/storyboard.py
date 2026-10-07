@@ -22,6 +22,7 @@ SEZIONI = {
 
 # Pronuncia per il TTS italiano (applicata solo alla voce, non ai sottotitoli).
 PRON = [
+    (r"palermodigitaltwin\.opendatasicilia\.it", "palermo digital twin, punto, open data sicilia, punto, it"),
     (r"openrndt-geolibre", "open erre enne di ti geo libre"),
     (r"onData", "on data"),
     (r"RNDT", "erre enne di ti"),
@@ -260,9 +261,9 @@ scena(id="5-riepilogo", sez=5,
       azioni=["Home; cartelli animati 1-2-3."],
       testo="Riassumiamo in tre punti. Uno: un clic ti dice tutto di un luogo, con la fonte. Due: il catalogo nazionale porta in mappa i dati ufficiali. Tre: Geoimage confronta la Palermo di oggi con quella di ieri.")
 scena(id="5-saluti", sez=5,
-      vista="Schermata finale fornita (assets/chiusura.png): «Grazie per l'attenzione», indirizzo, Open Data Sicilia, crediti. Dissolvenza in entrata.",
+      vista="Schermata finale fornita (assets/chiusura.png): «Grazie per l'attenzione», indirizzo palermodigitaltwin.opendatasicilia.it, Open Data Sicilia, crediti. Dissolvenza in entrata.",
       azioni=["Dissolvenza sulla schermata finale e tienila fino alla fine."],
-      testo="L'indirizzo è sullo schermo. La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia. Trovi un errore, o hai un'idea? Segnalalo e contribuisci.",
+      testo="Trovi l'app su palermodigitaltwin.opendatasicilia.it. La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia. Trovi un errore, o hai un'idea? Segnalalo e contribuisci.",
       extra=3.0)
 
 def conteggio():

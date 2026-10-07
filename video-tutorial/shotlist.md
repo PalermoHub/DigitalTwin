@@ -333,7 +333,7 @@ Vista: Zoom indietro sulla mappa di Palermo. Tre punti numerati compaiono a sche
 
 ### 44. `5-saluti` · 11:53
 
-Vista: Schermata finale fornita (assets/chiusura.png): «Grazie per l'attenzione», indirizzo, Open Data Sicilia, crediti. Dissolvenza in entrata.
+Vista: Schermata finale fornita (assets/chiusura.png): «Grazie per l'attenzione», indirizzo palermodigitaltwin.opendatasicilia.it, Open Data Sicilia, crediti. Dissolvenza in entrata.
 
 1. Dissolvenza sulla schermata finale e tienila fino alla fine.
 

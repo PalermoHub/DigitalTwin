@@ -71,12 +71,13 @@ Voce: italiano femminile, tono colloquiale, dai del «tu». Le sigle nei sottoti
 | Timecode | Cosa si vede e quali azioni compiere nell'app | Testo della voce |
 |---|---|---|
 | 11:37 `5-riepilogo` | **Vista:** Zoom indietro sulla mappa di Palermo. Tre punti numerati compaiono a schermo, uno per frase.<br>**Azioni:** Home; cartelli animati 1-2-3. | Riassumiamo in tre punti. Uno: un clic ti dice tutto di un luogo, con la fonte. Due: il catalogo nazionale porta in mappa i dati ufficiali. Tre: Geoimage confronta la Palermo di oggi con quella di ieri. |
-| 11:53 `5-saluti` | **Vista:** Schermata finale fornita (assets/chiusura.png): «Grazie per l'attenzione», indirizzo, Open Data Sicilia, crediti. Dissolvenza in entrata.<br>**Azioni:** Dissolvenza sulla schermata finale e tienila fino alla fine. | L'indirizzo è sullo schermo. La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia. Trovi un errore, o hai un'idea? Segnalalo e contribuisci. |
+| 11:53 `5-saluti` | **Vista:** Schermata finale fornita (assets/chiusura.png): «Grazie per l'attenzione», indirizzo palermodigitaltwin.opendatasicilia.it, Open Data Sicilia, crediti. Dissolvenza in entrata.<br>**Azioni:** Dissolvenza sulla schermata finale e tienila fino alla fine. | Trovi l'app su palermodigitaltwin.opendatasicilia.it. La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia. Trovi un errore, o hai un'idea? Segnalalo e contribuisci. |
 
 ## Tabella di pronuncia (TTS)
 
 | Sigla o parola | Pronuncia nella voce |
 |---|---|
+| `palermodigitaltwin.opendatasicilia.it` | palermo digital twin, punto, open data sicilia, punto, it |
 | `openrndt-geolibre` | open erre enne di ti geo libre |
 | `onData` | on data |
 | `RNDT` | erre enne di ti |
