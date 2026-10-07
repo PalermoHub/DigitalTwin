@@ -105,7 +105,7 @@ test('schedaGuida: ogni immagine è lazy, ha alt e didascalia', () => {
 test('schedaGuida: il video è quello di YouTube, in un iframe', () => {
   const radice = schedaGuida(doc);
   const [video] = tutti(radice, 'iframe');
-  assert.equal(video.src, 'https://www.youtube-nocookie.com/embed/Mzj1xk1l2QM');
+  assert.equal(video.src, 'https://www.youtube-nocookie.com/embed/5kSHNPcjeQc');
   assert.ok(video.title);
   assert.equal(tutti(radice, 'video').length + tutti(radice, 'audio').length, 0);
 });

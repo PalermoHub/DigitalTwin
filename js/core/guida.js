@@ -32,7 +32,7 @@ export function schedaGuida(doc = document, passi = PASSI) {
   const media = doc.createElement('div');
   media.className = 'guida-media';
   const video = doc.createElement('iframe');
-  Object.assign(video, { src: 'https://www.youtube-nocookie.com/embed/Mzj1xk1l2QM', title: 'Video guida: la mappa, il plugin RNDT e Geoimage', loading: 'lazy', allowFullscreen: true });
+  Object.assign(video, { src: 'https://www.youtube-nocookie.com/embed/5kSHNPcjeQc', title: 'Video guida: la mappa, il plugin RNDT e Geoimage', loading: 'lazy', allowFullscreen: true });
   video.setAttribute('allow', 'accelerometer; encrypted-media; picture-in-picture; fullscreen');
   video.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
   media.append(video);
