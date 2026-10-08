@@ -13,7 +13,7 @@ condizioni aggiornate presso il titolare. Fonti usate:
 - ISTAT (sezioni censuarie, indicatori, censimento permanente): in genere CC BY
 - Comune di Palermo (catasto/SITR, PRG, civici, GTFS, uffici): condizioni del portale open data del Comune
 - Agenzia delle Entrate, OMI: condizioni dell'Osservatorio del Mercato Immobiliare
-- OpenStreetMap (verde, strade): ODbL, © contributori OpenStreetMap, con obbligo di attribuzione e share-alike
+- OpenStreetMap (solo le mappe di base): ODbL, © contributori OpenStreetMap, con obbligo di attribuzione e share-alike
 - Dati incendi: servizio ArcGIS del titolare, secondo le sue condizioni
 - Isole di calore: Landsat 8/9 (USGS, dominio pubblico) elaborati per sezione censuaria ISTAT; studio di OpenDataSicilia / PalermoHub, CC BY 4.0
 
