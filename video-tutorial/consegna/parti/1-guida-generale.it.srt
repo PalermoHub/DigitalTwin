@@ -35,7 +35,7 @@ il plugin che porta in mappa il catalogo nazionale dei dati.
 Terzo:
 
 10
-00:00:26,050 --> 00:00:30,000
+00:00:26,050 --> 00:00:29,999
 Geoimage, per sovrapporre le mappe storiche alla Palermo di oggi.
 
 11
@@ -453,3 +453,19 @@ I dati del censimento sono stime.
 114
 00:07:13,480 --> 00:07:17,090
 Per usi legali, rivolgiti sempre agli uffici competenti.
+
+115
+00:07:17,720 --> 00:07:22,450
+Trovi l'app su palermodigitaltwin.opendatasicilia.it.
+
+116
+00:07:22,610 --> 00:07:29,500
+La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia.
+
+117
+00:07:29,660 --> 00:07:31,700
+Trovi un errore, o hai un'idea?
+
+118
+00:07:31,860 --> 00:07:33,770
+Segnalalo e contribuisci.

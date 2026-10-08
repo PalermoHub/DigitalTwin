@@ -213,3 +213,19 @@ cerchi, scegli, aggiungi, clicchi.
 54
 00:03:04,070 --> 00:03:08,320
 Quattro passi per portare in mappa i dati ufficiali che riguardano Palermo.
+
+55
+00:03:09,420 --> 00:03:14,150
+Trovi l'app su palermodigitaltwin.opendatasicilia.it.
+
+56
+00:03:14,310 --> 00:03:21,200
+La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia.
+
+57
+00:03:21,360 --> 00:03:23,400
+Trovi un errore, o hai un'idea?
+
+58
+00:03:23,560 --> 00:03:25,470
+Segnalalo e contribuisci.

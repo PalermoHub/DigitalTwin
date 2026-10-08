@@ -149,3 +149,19 @@ Il progetto si salva da solo nel browser.
 38
 00:02:21,450 --> 00:02:24,670
 E se vuoi più precisione, ti consigliamo MapWarper.
+
+39
+00:02:26,120 --> 00:02:30,850
+Trovi l'app su palermodigitaltwin.opendatasicilia.it.
+
+40
+00:02:31,010 --> 00:02:37,900
+La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia.
+
+41
+00:02:38,060 --> 00:02:40,100
+Trovi un errore, o hai un'idea?
+
+42
+00:02:40,260 --> 00:02:42,170
+Segnalalo e contribuisci.
