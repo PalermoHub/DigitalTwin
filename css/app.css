@@ -1571,12 +1571,16 @@ body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-left { bottom: var
 body:has(#tabella-dati:not([hidden])) #legende-box { bottom: calc(var(--legende-bottom) + var(--tabella-h)); max-height: calc(100dvh - var(--legende-bottom) - var(--tabella-h) - var(--legende-alto)); }
 /* ricerca e avvisi (#avvisi sta dentro #area-ricerca) salgono sopra il cassetto; su telefono la ricerca è in alto e non si sposta */
 body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(safe-area-inset-bottom, 0px) + var(--tabella-h)); }
-/* telefono: a tutta larghezza, sopra la barra a tab; i fogli (scheda, strati, RNDT) restano sopra al cassetto */
+/* telefono: a tutta larghezza sopra la barra a tab. I fogli (scheda, strati, menu, RNDT, geoimage) stanno dentro #corpo, che è uno
+   stacking context sotto il cassetto (figlio di body) e occupano la stessa fascia: con un foglio aperto il cassetto si nasconde
+   e --tabella-h torna a 0 (!important batte il valore scritto in linea da ui.js) */
 @media (max-width: 720px) {
-  #tabella-dati { z-index: 1; left: 0; right: 0; bottom: calc(var(--tab-h) + var(--footer-h)); max-height: min(60dvh, calc(100dvh - 64px - var(--tab-h) - var(--footer-h) - 8px)); }
+  #tabella-dati { left: 0; right: 0; bottom: calc(var(--tab-h) + var(--footer-h)); max-height: min(60dvh, calc(100dvh - 64px - var(--tab-h) - var(--footer-h) - 8px)); }
   body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: auto; }
-  body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-right,
-  body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-left { bottom: calc(var(--tabella-h) + var(--tab-h)); }
+  body:has(#tabella-dati:not([hidden])):not(.strati-aperti):not(.info-aperto):not(:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato))) :is(.maplibregl-ctrl-bottom-right, .maplibregl-ctrl-bottom-left) { bottom: calc(var(--tabella-h) + var(--tab-h)); }
+  body.strati-aperti #tabella-dati, body.info-aperto #tabella-dati,
+  body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) #tabella-dati { display: none; }
+  body.strati-aperti, body.info-aperto, body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) { --tabella-h: 0px !important; }
   .tabella-strumento { padding: 8px 12px; }
 }
 .tabella-titolo { font-weight: 600; }
