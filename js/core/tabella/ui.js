@@ -8,6 +8,7 @@ import { nuovoStato, commutaRiga, tutte, nessuna, inverti, statoTutte, righeDaEs
 import { csv, geojson, nomeFile } from './esporta.js';
 import { attiva, leggiVista, righeIn, evidenziaRighe, cancellaEvidenza, vaiA } from './mappa.js';
 import { collegaStrumenti } from './strumenti.js';
+import { svgTabella } from './icone.js';
 
 const CHIAVE_ALTEZZA = 'dt-tabella-altezza';
 const CHIAVE_COLONNE = id => `dt-tabella-colonne-${id}`;
@@ -22,6 +23,16 @@ const el = (tag, classe, testo) => {
   if (classe) e.className = classe;
   if (testo != null) e.textContent = testo;
   return e;
+};
+// Pulsante solo icona (stile barra QGIS): il nome per tutti è in aria-label e title.
+const pulsanteIcona = (classe, icona, testo, azione) => {
+  const b = el('button', classe);
+  b.type = 'button';
+  b.innerHTML = svgTabella(icona);
+  b.setAttribute('aria-label', testo);
+  b.title = testo;
+  b.addEventListener('click', azione);
+  return b;
 };
 const pulsante = (classe, testo, aria, azione) => {
   const b = el('button', classe, testo);
@@ -187,8 +198,20 @@ export function collegaTabella(map, { pulsante: bottone }) {
   function disegnaColonne(s) {
     const dettagli = el('details', 'tabella-colonne');
     dettagli.open = dettagliAperti;
-    dettagli.addEventListener('toggle', () => { dettagliAperti = dettagli.open; });
-    const sommario = el('summary', null, t('tabella.colonne'));
+    // il menu è fixed (la barra scorre in orizzontale e lo taglierebbe): lo si ancora sopra il pulsante
+    const posiziona = () => {
+      if (!dettagli.open) return;
+      const r = dettagli.querySelector('summary').getBoundingClientRect();
+      const menu = dettagli.querySelector('.tabella-colonne-elenco');
+      menu.style.left = `${Math.max(4, Math.min(r.left, window.innerWidth - menu.offsetWidth - 4))}px`;
+      menu.style.bottom = `${window.innerHeight - r.top + 4}px`;
+    };
+    dettagli.addEventListener('toggle', () => { dettagliAperti = dettagli.open; posiziona(); });
+    requestAnimationFrame(posiziona);
+    const sommario = el('summary', null);
+    sommario.innerHTML = svgTabella('colonne');
+    sommario.setAttribute('aria-label', t('tabella.colonne'));
+    sommario.title = t('tabella.colonne');
     sommario.dataset.focus = 'colonne';
     dettagli.append(sommario);
     const elenco = el('ul', 'tabella-colonne-elenco');
@@ -218,7 +241,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
     const azioni = el('div', 'tabella-azioni-righe');
     const ordine = () => ordinate(s).map(r => r.chiave);
     for (const [id, testo, f] of [['tutte', t('tabella.riga.tutte'), tutte], ['svuota', t('tabella.svuota'), nessuna], ['inverti', t('tabella.inverti'), inverti]]) {
-      const b = pulsante('tabella-azione', testo, null, () => { s.sel = f(s.sel, ordine()); dopoSelezione(s); });
+      const b = pulsanteIcona('tabella-azione', id, testo, () => { s.sel = f(s.sel, ordine()); dopoSelezione(s); });
       b.dataset.focus = `azione:${id}`;
       azioni.append(b);
     }
@@ -230,7 +253,10 @@ export function collegaTabella(map, { pulsante: bottone }) {
     const colonne = colonneDaEsportare(s.colonne);
     const formati = [['csv', t('tabella.csv')], ['geojson', t('tabella.geojson')]];
     const pulsanti = crea ? formati.map(([f]) => {
-      const b = pulsante('tabella-esporta', '', null, () => esportaFile(s, f));
+      const b = el('button', 'tabella-esporta');
+      b.type = 'button';
+      b.innerHTML = `${svgTabella('esporta')}<span class="tabella-esporta-nome"></span><span class="tabella-esporta-n"></span>`;
+      b.addEventListener('click', () => esportaFile(s, f));
       b.dataset.focus = `esporta:${f}`;
       esportazioni.set(f, b);
       return b;
@@ -238,10 +264,13 @@ export function collegaTabella(map, { pulsante: bottone }) {
     for (const [f, nome] of formati) {
       const b = esportazioni.get(f);
       if (!b) continue;
-      b.textContent = t('tabella.esporta', { formato: nome, righe: righe.length, colonne: colonne.length });
+      const completo = t('tabella.esporta', { formato: nome, righe: righe.length, colonne: colonne.length });
+      b.querySelector('.tabella-esporta-nome').textContent = nome;
+      b.querySelector('.tabella-esporta-n').textContent = `${righe.length} × ${colonne.length}`;
+      b.setAttribute('aria-label', completo);
       // senza righe o senza colonne scelte non c'è nulla da esportare
       b.disabled = !righe.length || !colonne.length || !s.sorgente.esporta;
-      b.title = s.sorgente.esporta ? '' : t('tabella.nessunaEsportazione');
+      b.title = s.sorgente.esporta ? completo : t('tabella.nessunaEsportazione');
     }
     return pulsanti;
   }
@@ -272,7 +301,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
     gruppo.setAttribute('role', 'group');
     gruppo.setAttribute('aria-label', t('tabella.strumenti'));
     for (const modo of ['click', 'riquadro', 'poligono', 'area']) {
-      const b = pulsante('tabella-strumento', t(`tabella.strumento.${modo}`), null, () => {
+      const b = pulsanteIcona('tabella-strumento', modo, t(`tabella.strumento.${modo}`), () => {
         strumenti.imposta(strumenti.modo() === modo ? null : modo);
         disegnaBarra(s);
       });
@@ -288,7 +317,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
     livello.value = livelloArea;
     livello.addEventListener('change', () => { livelloArea = livello.value; strumenti.livello(livelloArea); });
     gruppo.append(livello);
-    const torna = criterio.length ? pulsante('tabella-azione', t('tabella.tornaVista'), null, () => {
+    const torna = criterio.length ? pulsanteIcona('tabella-azione', 'torna', t('tabella.tornaVista'), () => {
       criterio = [];
       messaggio = '';
       aggiorna(true);
@@ -302,7 +331,9 @@ export function collegaTabella(map, { pulsante: bottone }) {
     filtro.addEventListener('input', () => { s.filtro = filtro.value; disegnaGriglia(s); disegnaEsporta(s); });
     if (torna) torna.dataset.focus = 'torna';
     barra.append(gruppo, ...(torna ? [torna] : []), filtro);
-    barra.append(...disegnaColonne(s), ...disegnaEsporta(s, true));
+    const esporti = el('div', 'tabella-esporti');
+    esporti.append(...disegnaEsporta(s, true));
+    barra.append(...disegnaColonne(s), esporti);
     ripristina();
   }
 

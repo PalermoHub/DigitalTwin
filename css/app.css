@@ -1535,19 +1535,31 @@ dialog.streetview-finestra.trascinata iframe { pointer-events: none; }
 .tabella-scheda { padding: 4px 10px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; white-space: nowrap; cursor: pointer; }
 .tabella-scheda:hover { background: var(--surface-hover); }
 .tabella-scheda[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.tabella-barra { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 6px 8px; flex: none; }
-.tabella-strumenti { display: flex; gap: 4px; align-items: center; }
+.tabella-barra { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; padding: 6px 8px; flex: none; overflow-x: auto; scrollbar-width: thin; } /* una sola riga: se manca spazio scorre */
+.tabella-barra > * { flex: none; }
+.tabella-barra > .tabella-filtro { flex: 0 1 170px; width: 170px; min-width: 120px; }
+.tabella-barra > .tabella-esporti { margin-left: auto; }
+.tabella-strumenti, .tabella-azioni-righe, .tabella-esporti { display: flex; flex-wrap: nowrap; gap: 4px; align-items: center; }
+.tabella-azioni-righe, .tabella-colonne, .tabella-esporti { padding-left: 8px; border-left: 1px solid var(--border-ui); } /* separatori tra i gruppi, come la barra di QGIS */
 .tabella-strumento, .tabella-azione, .tabella-esporta, .tabella-sposta, .tabella-colonne summary {
-  padding: 4px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 32px; height: 32px; padding: 0 6px; box-sizing: border-box;
+  border: 1px solid transparent; border-radius: var(--r-sm); background: transparent; color: var(--text); font: inherit; cursor: pointer;
 }
-.tabella-strumento:hover, .tabella-azione:hover, .tabella-esporta:hover, .tabella-sposta:hover, .tabella-colonne summary:hover { background: var(--surface-hover); }
+.tabella-esporta { padding: 0 8px; }
+.tabella-esporta-nome { font-size: var(--fs-xs); font-weight: 600; }
+.tabella-esporta-n { font-size: var(--fs-2xs); color: var(--text-muted); font-variant-numeric: tabular-nums; padding: 1px 5px; border-radius: 8px; background: var(--surface-hover); }
+.tabella-sposta { min-width: 0; height: auto; padding: 2px 6px; border-color: var(--border-ui); background: var(--surface); }
+.tabella-strumento svg, .tabella-azione svg, .tabella-esporta svg, .tabella-colonne summary svg { flex: none; display: block; }
+.tabella-strumento:hover, .tabella-azione:hover, .tabella-esporta:hover, .tabella-sposta:hover, .tabella-colonne summary:hover { background: var(--surface-hover); border-color: var(--border-ui); }
 .tabella-strumento[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 .tabella-strumento:focus-visible, .tabella-azione:focus-visible, .tabella-esporta:focus-visible, .tabella-sposta:focus-visible,
 .tabella-colonne summary:focus-visible, .tabella-livello:focus-visible, .tabella-filtro:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .tabella-azione:disabled, .tabella-esporta:disabled, .tabella-sposta:disabled { opacity: .5; cursor: default; }
+.tabella-esporta:disabled:hover { background: transparent; border-color: transparent; }
 .tabella-azioni-righe { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 .tabella-livello, .tabella-filtro { padding: 4px 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
-.tabella-filtro { min-width: 140px; }
+.tabella-livello, .tabella-filtro { height: 32px; box-sizing: border-box; padding-top: 0; padding-bottom: 0; }
+.tabella-livello { width: 130px; }
 .tabella-nota { margin: 0; padding: 0 8px 4px; color: var(--text-muted); font-size: var(--fs-xs); flex: none; }
 .tabella-corpo { flex: 1; min-height: 0; overflow: auto; }
 .tabella-vuota { margin: 0; padding: 16px; color: var(--text-muted); }
@@ -1559,9 +1571,8 @@ dialog.streetview-finestra.trascinata iframe { pointer-events: none; }
 .tabella-ordina { all: unset; cursor: pointer; font-weight: 600; }
 .tabella-ordina:focus-visible { outline: 2px solid var(--focus); }
 .tabella-casella { width: 28px; text-align: center; }
-.tabella-colonne { position: relative; }
 .tabella-colonne summary { display: inline-block; list-style: none; }
-.tabella-colonne-elenco { position: absolute; z-index: 2; bottom: 100%; margin: 0 0 4px; padding: 6px; list-style: none; max-height: 240px; overflow: auto; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-sm); box-shadow: var(--ombra); }
+.tabella-colonne-elenco { position: fixed; z-index: 30; margin: 0; padding: 6px; list-style: none; max-height: 240px; overflow: auto; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-sm); box-shadow: var(--ombra); }
 .tabella-colonne-elenco li { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
 .tabella-colonna-nome { flex: 1; min-width: 100px; }
 .tabella-riquadro { position: absolute; z-index: 2; border: 2px dashed var(--accent-strong); background: var(--accent-soft); pointer-events: none; }
@@ -1582,7 +1593,12 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
   body.strati-aperti #tabella-dati, body.info-aperto #tabella-dati,
   body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) #tabella-dati { display: none; }
   body.strati-aperti, body.info-aperto, body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) { --tabella-h: 0px !important; }
-  .tabella-strumento { padding: 8px 12px; }
+  .tabella-barra { flex-wrap: wrap; overflow-x: visible; }
+  .tabella-barra > .tabella-filtro { flex: 1 1 170px; width: auto; }
+  .tabella-barra > .tabella-esporti { margin-left: 0; }
+  .tabella-strumenti, .tabella-azioni-righe, .tabella-esporti { flex-wrap: wrap; }
+  .tabella-livello, .tabella-filtro { height: 38px; }
+  .tabella-strumento, .tabella-azione, .tabella-esporta, .tabella-colonne summary { min-width: 38px; height: 38px; }
   .tabella-strumento[data-modo="riquadro"], .tabella-strumento[data-modo="poligono"] { display: none; } /* senza tocco: solo clic e area */
 }
 .tabella-titolo { font-weight: 600; }
