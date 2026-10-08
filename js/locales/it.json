@@ -1609,7 +1609,7 @@
   "tabella.righe.altri": "{n} righe",
   "tabella.annuncio": "{righe}, {sel} selezionate",
   "tabella.vuota": "Nessuna feature in vista. Accendi un layer della scheda e avvicina la mappa.",
-  "tabella.spento": "Layer spento: accendilo per vederne le righe.",
+  "tabella.nessunLayer": "Nessun layer acceso: accendine uno per vederne le righe.",
   "tabella.troppe": "Più di {max} righe: restringi la vista o la selezione.",
   "tabella.mostrate": "Mostrate le prime {n} righe: filtra o restringi per vedere le altre.",
   "tabella.soloVista": "Solo le feature caricate in vista.",

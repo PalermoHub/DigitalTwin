@@ -136,9 +136,10 @@ export function collegaTabella(map, { pulsante: bottone }) {
       s.colonne = unisciColonne(s.colonne, s.righe);
       if (prima) s.colonne = applicaPreferenze(s.colonne, lette(s.sorgente.id));
     }
-    // la scheda corrente resta se ha righe, altrimenti si passa alla prima che ne ha
+    // la scheda corrente resta se ha righe, altrimenti si passa alla prima che ne ha, o alla prima accesa
     if (!stato.get(corrente).righe.length) {
-      const prima = [...stato.values()].find(s => s.righe.length);
+      const tutte = [...stato.values()];
+      const prima = tutte.find(s => s.righe.length) ?? tutte.find(accesa);
       if (prima) corrente = prima.sorgente.id;
     }
     if (!forza && firmaVista(stato.values(), corrente, accesa) === ultimaFirma) return;
@@ -183,7 +184,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
     schede.replaceChildren();
     for (const s of stato.values()) {
       const n = s.righe.length;
-      if (!n && s.sorgente.id !== corrente) continue;
+      if (!accesa(s) || (!n && s.sorgente.id !== corrente)) continue; // un layer spento non ha scheda
       const b = el('button', 'tabella-scheda', `${s.sorgente.nome} · ${n}`);
       b.type = 'button';
       b.dataset.focus = `scheda:${s.sorgente.id}`;
@@ -346,7 +347,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
   function costruisciGriglia(s) {
     corpo.replaceChildren();
     const righe = ordinate(s);
-    if (!attiva(map, s.sorgente)) { nota.textContent = messaggio; corpo.append(el('p', 'tabella-vuota', t('tabella.spento'))); return; }
+    if (!accesa(s)) { nota.textContent = messaggio; corpo.append(el('p', 'tabella-vuota', t('tabella.nessunLayer'))); return; }
     if (!s.righe.length) { nota.textContent = messaggio; corpo.append(el('p', 'tabella-vuota', t('tabella.vuota'))); return; }
     const avvisi = [messaggio, criterio.length ? '' : t('tabella.soloVista'), s.sorgente.approssimata ? t('tabella.approssimata') : '',
       s.troppe ? t('tabella.troppe', { max: LIMITE_RIGHE }) : '', righe.length > MAX_DOM ? t('tabella.mostrate', { n: MAX_DOM }) : ''];

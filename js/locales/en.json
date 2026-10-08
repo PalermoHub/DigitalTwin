@@ -1609,7 +1609,7 @@
   "tabella.righe.altri": "{n} rows",
   "tabella.annuncio": "{righe}, {sel} selected",
   "tabella.vuota": "No features in view. Turn on a layer from the card and zoom in.",
-  "tabella.spento": "Layer is off: turn it on to see its rows.",
+  "tabella.nessunLayer": "No layer is on: turn one on to see its rows.",
   "tabella.troppe": "More than {max} rows: narrow the view or the selection.",
   "tabella.mostrate": "Showing the first {n} rows: filter or narrow down to see the others.",
   "tabella.soloVista": "Only the features loaded in view.",
