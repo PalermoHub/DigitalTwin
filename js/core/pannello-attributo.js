@@ -2,7 +2,7 @@
 // per categorie o in classi numeriche. Il risultato ({campo, tipo, ...}) lo salva e applica pannello-tema.js.
 import { rilevaAttributi, calcolaSoglie, etichetteClassi, coloriRampa, RAMPE, GRUPPI_RAMPE, TAVOLOZZA } from './tema-attributo.js';
 import { comeEsadecimale } from './tema.js';
-import { t as tr } from './i18n.js';
+import { t as tr, tl } from './i18n.js';
 
 function selezione(testo, nome, opzioni) {
   const riga = document.createElement('label');
@@ -27,7 +27,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
   const classi = selezione(tr('attributo.classi'), 'classi', Array.from({ length: 7 }, (_, i) => [String(i + 3), String(i + 3)]));
   const metodo = selezione(tr('attributo.metodo'), 'metodo', [['quantili', tr('attributo.quantili')], ['intervalli', tr('attributo.intervalli')]]);
   const rampa = selezione(tr('attributo.rampa'), 'rampa', []);
-  rampa.select.append(...GRUPPI_RAMPE.flatMap(([, rampe]) => rampe).map(n => new Option(n, n)));
+  rampa.select.append(...GRUPPI_RAMPE.flatMap(([, rampe]) => rampe).map(n => new Option(tl(n), n)));
   rampa.select.value = 'Blu'; // i18n-ok: chiave della rampa di colori
   const inverti = document.createElement('label');
   inverti.className = 'rampa-inverti';
@@ -52,7 +52,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
     const v = document.createElement(ruolo === 'option' ? 'button' : 'span');
     if (ruolo === 'option') { v.type = 'button'; v.setAttribute('role', 'option'); v.dataset.rampa = nome; }
     const t = document.createElement('span');
-    t.textContent = nome;
+    t.textContent = tl(nome);
     const barra = document.createElement('i');
     barra.style.background = sfumatura(nome);
     v.append(t, barra);
@@ -109,7 +109,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
     campi = rilevaAttributi(feature);
     const corrente = leggi()?.campo ?? attivo();
     const nomi = new Set([...campi.keys(), ...(corrente ? [corrente] : [])]);
-    campo.select.replaceChildren(new Option(tr('attributo.nessuno'), ''), ...[...nomi].sort((a, b) => a.localeCompare(b)).map(n => new Option(n, n)));
+    campo.select.replaceChildren(new Option(tr('attributo.nessuno'), ''), ...[...nomi].sort((a, b) => a.localeCompare(b)).map(n => new Option(tl(n), n)));
     campo.select.value = corrente && nomi.has(corrente) ? corrente : '';
     msg.textContent = campi.size ? '' : tr('attributo.nessunaFeature');
   };

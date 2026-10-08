@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  rilevaLingua, impostaDizionari, lingua, localeIntl, t, tn, applicaDom, impostaLingua,
+  rilevaLingua, impostaDizionari, lingua, localeIntl, t, tn, tl, applicaDom, impostaLingua,
 } from '../../js/core/i18n.js';
 
 const memoria = (iniziale = {}) => {
@@ -98,4 +98,18 @@ test('impostaLingua: salva e ricarica solo se cambia; storage rotto non blocca',
   const rotto = { setItem() { throw new Error('negato'); } };
   impostaLingua('en', { storage: rotto, ricarica: () => { ricaricata++; } });
   assert.equal(ricaricata, 2);
+});
+
+test('tl: in italiano restituisce il testo com\'è; in inglese cerca «lbl.<testo>» e ripiega sull\'italiano senza avvisi', () => {
+  impostaDizionari('it', { 'lbl.Indirizzo': 'Indirizzo' }, {});
+  assert.equal(tl('Indirizzo'), 'Indirizzo');
+  assert.equal(tl('Non in dizionario'), 'Non in dizionario');
+  impostaDizionari('en', { 'lbl.Indirizzo': 'Address' }, { 'lbl.Indirizzo': 'Indirizzo' });
+  assert.equal(tl('Indirizzo'), 'Address');
+  const avvisi = [];
+  const orig = console.warn; console.warn = m => avvisi.push(m);
+  try { assert.equal(tl('Nome della via'), 'Nome della via'); } finally { console.warn = orig; }
+  assert.equal(avvisi.length, 0, 'un testo-dato non tradotto non è un errore');
+  assert.equal(tl(undefined), undefined);
+  assert.equal(tl(''), '');
 });

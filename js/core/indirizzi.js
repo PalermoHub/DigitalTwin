@@ -1,5 +1,6 @@
 // Ricerca per via e civico su un indice {VIA: {civico: [lon, lat]}}. Logica pura.
 // I civici possono avere la lettera ("4A": 21% dell'indice reale) e alcune vie finiscono con un numero.
+import { t as tr } from './i18n.js';
 
 export function normalizza(s) {
   return s
@@ -57,7 +58,7 @@ function conCivico(voci, testoVia, numero, lettera, max) {
       }
     }
     const [lon, lat] = primoPunto(v);
-    risultati.push({ etichetta: v.via, lon, lat, nota: `civico ${chiave} non trovato` });
+    risultati.push({ etichetta: v.via, lon, lat, nota: tr('indirizzi.civicoNonTrovato', { chiave }) });
   }
   return risultati.slice(0, max);
 }

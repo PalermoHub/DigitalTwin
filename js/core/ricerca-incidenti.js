@@ -1,4 +1,5 @@
 import { normalizza } from './indirizzi.js';
+import { t as tr, tn } from './i18n.js';
 
 // Ricerca degli incidenti nella barra: una riga per via (sempre) e una riga per incidente (solo con «incidente»/«sinistro»).
 // Logica pura: i dati arrivano da vie.json e incidenti.geojson (scripts/sicurezza_stradale.py).
@@ -7,7 +8,7 @@ const GRAVITA_PAROLE = {
   MORTALE: 'M', MORTALI: 'M', RISERVATA: 'R', RISERVATO: 'R', FERITO: 'F', FERITI: 'F', FERITE: 'F', COSE: 'C', DANNI: 'C', DANNO: 'C',
 };
 const ORDINE_GRAVITA = { M: 0, R: 1, F: 2, C: 3 };
-const NOME_GRAVITA = { M: 'mortale', R: 'con prognosi riservata', F: 'con feriti', C: 'solo danni a cose' };
+const NOME_GRAVITA = { M: tr('incidenti.gravita.M'), R: tr('incidenti.gravita.R'), F: tr('incidenti.gravita.F'), C: tr('incidenti.gravita.C') };
 
 // «incidente mortale roma 2018» → { gravita: 'M', anno: 2018, token: ['ROMA'] }; null se manca la parola «incidente»/«sinistro»
 export function leggiQuery(testo) {
@@ -25,7 +26,6 @@ export function leggiQuery(testo) {
   return { gravita, anno, token };
 }
 
-const plurale = (n, uno, molti) => `${n} ${n === 1 ? uno : molti}`;
 
 // Fino a `max` vie con incidenti che contengono tutte le parole: prima quelle che iniziano con il testo, poi le più colpite.
 export function cercaVie(vie, testo, max = 2) {
@@ -40,7 +40,7 @@ export function cercaVie(vie, testo, max = 2) {
     .slice(0, max)
     .map(({ v }) => ({
       etichetta: v.nome,
-      nota: [plurale(v.incidenti, 'incidente', 'incidenti'), v.mortali ? plurale(v.mortali, 'mortale', 'mortali') : null].filter(Boolean).join(', ')
+      nota: [tn('ricerca.incidenti.n', v.incidenti), v.mortali ? tn('ricerca.incidenti.mortali', v.mortali) : null].filter(Boolean).join(', ')
         + (v.rango ? ` (#${v.rango} tra le più pericolose)` : ''),
       via: v.nome, lon: v.lon, lat: v.lat, bbox: v.bbox,
     }));
@@ -60,5 +60,5 @@ export function cercaIncidenti(voci, query, max = 6) {
     .filter(v => (!query.gravita || v.tip === query.gravita) && (!query.anno || v.anno === query.anno) && query.token.every(t => v.norm.includes(t)))
     .sort((a, b) => (ORDINE_GRAVITA[a.tip] ?? 9) - (ORDINE_GRAVITA[b.tip] ?? 9) || b.anno - a.anno)
     .slice(0, max)
-    .map(v => ({ etichetta: v.etichetta, nota: `Incidente ${NOME_GRAVITA[v.tip] ?? ''} ${v.anno}`.replace(/\s+/g, ' '), strato: 'sicurezza-incidenti', zoom: 18, lon: v.lon, lat: v.lat, prefisso: true }));
+    .map(v => ({ etichetta: v.etichetta, nota: tr('ricerca.incidente', { gravita: NOME_GRAVITA[v.tip] ?? '', anno: v.anno }).replace(/\s+/g, ' '), strato: 'sicurezza-incidenti', zoom: 18, lon: v.lon, lat: v.lat, prefisso: true }));
 }

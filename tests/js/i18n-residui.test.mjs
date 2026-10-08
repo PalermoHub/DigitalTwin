@@ -10,6 +10,12 @@ export const MIGRATI = [
   'js/core/pannello-comune.js', 'js/core/pannello-tema.js', 'js/core/strumenti.js', 'js/core/stampa.js',
   'js/core/ripristino.js', 'js/core/rail.js', 'js/core/tab-mobile.js', 'js/core/invito.js',
   'js/core/ingrandisci.js', 'js/core/evidenza.js',
+  'js/core/scheda.js', 'js/core/scheda-modello.js', 'js/core/scheda-disegno.js', 'js/core/scheda-pannello-preferenze.js',
+  'js/core/ricerca.js', 'js/core/ricerca-incidenti.js', 'js/core/luoghi.js', 'js/core/indirizzi.js',
+  'js/core/condivisione.js', 'js/core/condivisione-stato.js', 'js/core/condivisione-reti.js', 'js/core/differiti.js',
+  'js/core/tema.js', 'js/core/indicatori.js', 'js/core/tema-attributo.js',
+  // non in elenco, di proposito: palette.js (copia identica dell'originale, vedi test), scheda-preferenze.js (le etichette
+  // sono identità delle preferenze salvate: si traducono al render con tl()), consenso.js (tabella propria, non usa i dizionari)
 ];
 
 const ACCENTATE = /[àèéìòùÀÈÉÌÒÙ]/;

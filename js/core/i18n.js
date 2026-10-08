@@ -35,6 +35,11 @@ export function t(chiave, vars) {
   return vars ? s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m)) : s;
 }
 
+// Testi del modello dati (etichette di riga, titoli di sezione, note delle schede): restano italiani nei moduli che li
+// producono, perché fanno da identità (preferenze salvate, confronti); si traducono solo al momento di mostrarli.
+// In inglese cerca «lbl.<testo italiano>»; se manca (un nome proprio, un dato) restituisce il testo senza avvisi.
+export const tl = testo => (corrente === 'it' || !testo ? testo : dizionario[`lbl.${testo}`] ?? testo);
+
 // plurale: usa <base>.uno per n === 1, <base>.altri altrimenti; {n} è sempre disponibile
 export const tn = (base, n, vars) => t(`${base}.${n === 1 ? 'uno' : 'altri'}`, { n, ...vars });
 

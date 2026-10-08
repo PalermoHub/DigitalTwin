@@ -5,6 +5,7 @@ import { RETI, TESTO_CONDIVISIONE } from './condivisione-reti.js';
 import { installaOverlay } from './condivisione-storage.js';
 import { raccogli, applica } from './condivisione-stato.js';
 import { svgIcona } from './icone.js';
+import { t as tr } from './i18n.js';
 
 const ICONA_X = svgIcona('chiudi', 16);
 
@@ -35,18 +36,18 @@ const el = (tag, props = {}, ...figli) => { const e = Object.assign(document.cre
 
 export function collegaCondivisione(map, bottone, { storage }) {
   const campo = el('input', { type: 'text', readOnly: true });
-  campo.setAttribute('aria-label', 'Link alla vista corrente');
-  const copiaBtn = el('button', { type: 'button', textContent: 'Copia' });
-  const nativo = navigator.share ? el('button', { type: 'button', textContent: 'Condividi…' }) : null;
+  campo.setAttribute('aria-label', tr('condividi.link'));
+  const copiaBtn = el('button', { type: 'button', textContent: tr('condividi.copia') });
+  const nativo = navigator.share ? el('button', { type: 'button', textContent: tr('condividi.nativo') }) : null;
   const reti = el('div', { className: 'condividi-reti' });
   const nota = el('p', { className: 'condividi-nota', hidden: true });
   nota.setAttribute('role', 'status');
-  const chiudiBtn = el('button', { type: 'button', className: 'condividi-chiudi', title: 'Chiudi', innerHTML: ICONA_X });
-  chiudiBtn.setAttribute('aria-label', 'Chiudi');
+  const chiudiBtn = el('button', { type: 'button', className: 'condividi-chiudi', title: tr('comune.chiudi'), innerHTML: ICONA_X });
+  chiudiBtn.setAttribute('aria-label', tr('comune.chiudi'));
   const menu = el('div', { id: 'condividi-menu', hidden: true },
-    el('div', { className: 'condividi-testa' }, el('h2', { textContent: 'Condividi questa vista' }), chiudiBtn), el('div', { className: 'condividi-link' }, campo, copiaBtn), ...(nativo ? [nativo] : []), reti, nota);
+    el('div', { className: 'condividi-testa' }, el('h2', { textContent: tr('html.btn.condividi') }), chiudiBtn), el('div', { className: 'condividi-link' }, campo, copiaBtn), ...(nativo ? [nativo] : []), reti, nota);
   menu.setAttribute('role', 'dialog');
-  menu.setAttribute('aria-label', 'Condividi questa vista');
+  menu.setAttribute('aria-label', tr('html.btn.condividi'));
   document.body.append(menu);
 
   async function link() {
@@ -60,13 +61,13 @@ export function collegaCondivisione(map, bottone, { storage }) {
     const r = await link();
     campo.value = r.link;
     reti.replaceChildren(...RETI.map(rete => {
-      const a = el('a', { className: 'condividi-rete', href: rete.url(r.link, TESTO_CONDIVISIONE), target: '_blank', rel: 'noopener noreferrer', title: `Condividi su ${rete.nome}`, innerHTML: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="${rete.icona}"/></svg>` });
-      a.setAttribute('aria-label', `Condividi su ${rete.nome}`);
+      const a = el('a', { className: 'condividi-rete', href: rete.url(r.link, TESTO_CONDIVISIONE), target: '_blank', rel: 'noopener noreferrer', title: tr('condividi.su', { rete: rete.nome }), innerHTML: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="${rete.icona}"/></svg>` });
+      a.setAttribute('aria-label', tr('condividi.su', { rete: rete.nome }));
       return a;
     }));
     const avvisi = [];
-    if (r.scartati) avvisi.push(`${r.scartati} layer aggiunti da te (file o servizi con credenziali) non sono nel link.`);
-    if (r.troncato) avvisi.push('La vista è molto ricca: colori personalizzati o layer aggiunti non sono nel link.');
+    if (r.scartati) avvisi.push(tr('condividi.scartati', { n: r.scartati }));
+    if (r.troncato) avvisi.push(tr('condividi.troncato'));
     nota.textContent = avvisi.join(' ');
     nota.hidden = !avvisi.length;
     menu.hidden = false;
@@ -78,8 +79,8 @@ export function collegaCondivisione(map, bottone, { storage }) {
   bottone.addEventListener('click', () => (menu.hidden ? apri() : chiudi()));
   chiudiBtn.addEventListener('click', () => { chiudi(); bottone.focus(); });
   copiaBtn.addEventListener('click', async () => {
-    copiaBtn.textContent = (await copia(campo.value)) ? 'Copiato' : 'Seleziona e copia';
-    setTimeout(() => { copiaBtn.textContent = 'Copia'; }, 1800);
+    copiaBtn.textContent = (await copia(campo.value)) ? tr('scheda.copiato') : tr('condividi.selezionaECopia');
+    setTimeout(() => { copiaBtn.textContent = tr('condividi.copia'); }, 1800);
   });
   nativo?.addEventListener('click', () => navigator.share({ title: TESTO_CONDIVISIONE, url: campo.value }).catch(() => { /* annullata dall'utente */ }));
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { chiudi(); bottone.focus(); } });

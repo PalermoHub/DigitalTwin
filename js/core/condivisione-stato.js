@@ -2,6 +2,7 @@
 // così ogni modulo reagisce come se l'utente avesse cliccato, senza che i moduli sappiano della condivisione.
 import { CHIAVI_STORAGE } from './condivisione-codec.js';
 import { condivisibili } from './condivisione-esterni.js';
+import { t as tr } from './i18n.js';
 
 // layer aggiunti dall'utente: la loro casella nasce solo quando l'archivio viene ripristinato
 export const ESTERNO = /^(rndt|miei|srv)-/;
@@ -71,7 +72,7 @@ export function applica(stato, doc, map) {
   if (stato.i?.gravita) impostaSelect(doc, 'sicurezza-gravita', stato.i.gravita);
   if (stato.a) {
     const accesi = new Set(stato.a);
-    for (const id of accesi) if (!doc.getElementById(`strato-${id}`) && !ESTERNO.test(id)) ignorati.push(`strato ${id}`);
+    for (const id of accesi) if (!doc.getElementById(`strato-${id}`) && !ESTERNO.test(id)) ignorati.push(tr('condividi.ignorato.strato', { id }));
     for (const x of doc.querySelectorAll('input[id^="strato-"]')) {
       const voluto = accesi.has(x.id.slice(7));
       if (x.checked !== voluto && !x.disabled) { x.checked = voluto; evento(x, 'change'); }

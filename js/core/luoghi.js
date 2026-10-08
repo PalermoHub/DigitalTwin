@@ -1,21 +1,22 @@
 import { normalizza } from './indirizzi.js';
+import { t as tr } from './i18n.js';
 
 // Luoghi cercabili per nome: sorgente e strato da accendere quando si sceglie il risultato (`strato`: nome o funzione sulle proprietà;
 // `zoom`: opzionale, altrimenti la ricerca zooma a 18; `numero`: funzione, per cercare una linea dal solo numero o sigla).
 // L'ordine è anche quello di parità: scuole, sezioni elettorali, monumenti, fermate, linee, sedi, uffici.
 export const FONTI = [
   { file: 'scuole/scuole.geojson', strato: 'scuole', nota: p => p.tipo, campi: p => [p.nome, p.indirizzo], sezioni: p => p.seggio_sezioni },
-  { file: 'scuole/seggi.geojson', strato: 'seggi', nota: () => 'Sezioni elettorali', campi: p => [p.nome, p.indirizzo], sezioni: p => p.sezioni },
+  { file: 'scuole/seggi.geojson', strato: 'seggi', nota: () => tr('luoghi.sezioniElettorali'), campi: p => [p.nome, p.indirizzo], sezioni: p => p.sezioni },
   { file: 'monumenti/monumenti.geojson', strato: 'monumenti', nota: p => p.categoria, campi: p => [p.nome] },
-  { file: 'alberi_monumentali/alberi.geojson', strato: 'alberi', zoom: 18, nota: p => `Albero monumentale, ${p.localita}`, campi: p => [p.nome, p.specie, p.localita] },
-  { file: 'fontanelle/fontanelle.geojson', strato: 'fontanelle', zoom: 18, nota: () => 'Fontanella', campi: p => ['Fontanella', p.indirizzo] },
-  { file: 'trasporto/fermate.geojson', strato: 'trasporto-fermate', nota: p => `Fermata${p.linee.length ? `, linee ${p.linee.join(', ')}` : ''}`, campi: p => [p.nome] },
+  { file: 'alberi_monumentali/alberi.geojson', strato: 'alberi', zoom: 18, nota: p => tr('luoghi.albero', { localita: p.localita }), campi: p => [p.nome, p.specie, p.localita] },
+  { file: 'fontanelle/fontanelle.geojson', strato: 'fontanelle', zoom: 18, nota: () => tr('luoghi.fontanella'), campi: p => ['Fontanella', p.indirizzo] },
+  { file: 'trasporto/fermate.geojson', strato: 'trasporto-fermate', nota: p => tr('luoghi.fermata', { linee: p.linee.length ? tr('luoghi.fermata.linee', { elenco: p.linee.join(', ') }) : '' }), campi: p => [p.nome] },
   // le linee si trovano per numero o nome; lo strato da accendere è bus o tram
   { file: 'trasporto/linee.geojson', strato: p => (p.tipo === 'tram' ? 'trasporto-tram' : 'trasporto-bus'), zoom: 14, numero: p => p.numero,
-    nota: p => `${p.tipo === 'tram' ? 'Tram' : 'Bus'}, ${p.da} → ${p.a}`, campi: p => [`Linea ${p.numero} ${p.nome}`] },
-  { file: 'colonnine/colonnine.geojson', strato: 'colonnine', zoom: 17, nota: p => `Colonnina ${p.stato.toLowerCase()}, ${p.potenza_kw} kW`, campi: p => [p.operatore, p.indirizzo] },
+    nota: p => tr('luoghi.linea', { tipo: p.tipo === 'tram' ? 'Tram' : 'Bus', da: p.da, a: p.a }), campi: p => [`Linea ${p.numero} ${p.nome}`] },
+  { file: 'colonnine/colonnine.geojson', strato: 'colonnine', zoom: 17, nota: p => tr('luoghi.colonnina', { stato: p.stato.toLowerCase(), kw: p.potenza_kw }), campi: p => [p.operatore, p.indirizzo] },
   // sedi degli uffici (es. «Polo Tecnico»), prima degli uffici che ospitano
-  { file: 'uffici/sedi.geojson', strato: 'uffici', zoom: 17, nota: p => `Sede comunale, ${p.n_uffici} uffici`, campi: p => [p.nome, p.indirizzo] },
+  { file: 'uffici/sedi.geojson', strato: 'uffici', zoom: 17, nota: p => tr('luoghi.sede', { n: p.n_uffici }), campi: p => [p.nome, p.indirizzo] },
   // uffici comunali: per nome, sede o responsabile; le coordinate stanno nella geometria
   { file: 'uffici/uffici.geojson', strato: 'uffici', nota: p => [p.area, p.sede].filter(Boolean).join(' · '), campi: p => [p.nome, p.sede, p.indirizzo, p.responsabile] },
 ];
@@ -47,7 +48,7 @@ export function cercaLuoghi(voci, testo, max = 6) {
   if (sez) {
     const n = String(+sez[1]);
     const sedi = voci.filter(v => v.sezioni.includes(n)).slice(0, max)
-      .map(v => ({ etichetta: `Sezione ${n} — ${v.etichetta}`, nota: v.extra ? `Sede elettorale, ${v.extraOrig}` : 'Sede elettorale', strato: v.strato, lon: v.lon, lat: v.lat, prefisso: true }));
+      .map(v => ({ etichetta: tr('luoghi.sezione', { n, nome: v.etichetta }), nota: v.extra ? tr('luoghi.sedeElettorale.extra', { orig: v.extraOrig }) : tr('luoghi.sedeElettorale'), strato: v.strato, lon: v.lon, lat: v.lat, prefisso: true }));
     // un numero può essere sia una sezione sia una linea («100»): compaiono entrambe; senza nessuna delle due si cerca nel testo
     if (sedi.length || linee.length) return [...sedi, ...linee].slice(0, max);
   }

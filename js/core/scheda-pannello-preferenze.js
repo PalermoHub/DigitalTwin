@@ -2,15 +2,16 @@
 import { elencoPannello, commutaSezione, commutaRiga, azzera, nascondiTutto, tuttoNascosto, nessunaPreferenza } from './scheda-preferenze.js';
 import { svgIcona } from './icone.js';
 import { el } from './scheda-disegno.js';
+import { t, tl } from './i18n.js';
 
 
 export const ICONA_INGRANAGGIO = svgIcona('ingranaggio', 18);
 
 export const ICONA_X = svgIcona('chiudi', 18);
 
-const NOTA_SALVATE = 'Scegli cosa mostrare nelle schede. Le scelte restano salvate in questo browser.';
-const NOTA_LAYER = 'Attenzione: la scelta non attiva il layer dell\u2019argomento sulla mappa, ma solo le sue informazioni nella scheda. Il layer va attivato a mano.';
-const NOTA_NON_SALVATE = 'Non riesco a salvare: la scelta vale finché la pagina resta aperta.';
+const NOTA_SALVATE = t('pref.notaSalvate');
+const NOTA_LAYER = t('pref.notaLayer');
+const NOTA_NON_SALVATE = t('pref.notaNonSalvate');
 
 // Pannello «Personalizza»: una casella per sezione e una per riga. Ogni scelta si salva subito e vale per tutte le schede.
 // `pref` = { leggi(), scrivi(p) → salvato? }; `aggiorna()` ridisegna il corpo della scheda con le nuove scelte.
@@ -23,8 +24,8 @@ export function creaPannelloPreferenze(pref, aggiorna) {
   const notaLayer = el('p', 'scheda-pref-nota scheda-pref-nota-layer', NOTA_LAYER);
   const cerca = el('input', 'scheda-pref-cerca');
   cerca.type = 'search';
-  cerca.placeholder = 'Cerca argomento…';
-  cerca.setAttribute('aria-label', 'Cerca argomento');
+  cerca.placeholder = t('pref.cerca.placeholder');
+  cerca.setAttribute('aria-label', t('pref.cerca.aria'));
   pannello.append(nota, notaLayer, cerca, spazioAzioni, elenco); // i pulsanti sopra la lista: la lista scorre, loro restano a vista
 
   const casella = (attributo, valore, testo, spuntata) => {
@@ -43,8 +44,8 @@ export function creaPannelloPreferenze(pref, aggiorna) {
     b.addEventListener('click', azione);
     return b;
   };
-  const tutto = bottone('scheda-pref-tutto', 'Seleziona tutto', () => cambia(azzera(pref.leggi())));
-  const niente = bottone('scheda-pref-niente', 'Deseleziona tutto', () => cambia(nascondiTutto(pref.leggi())));
+  const tutto = bottone('scheda-pref-tutto', t('pref.tutto'), () => cambia(azzera(pref.leggi())));
+  const niente = bottone('scheda-pref-niente', t('pref.niente'), () => cambia(nascondiTutto(pref.leggi())));
   spazioAzioni.append(tutto, niente);
 
   // le caselle seguono sempre lo stato salvato; «Seleziona tutto» mostra anche le righe nascoste a mano
@@ -69,12 +70,12 @@ export function creaPannelloPreferenze(pref, aggiorna) {
 
   for (const sez of elencoPannello(pref.leggi())) {
     const gruppo = el('fieldset', 'scheda-pref-sez');
-    const intestazione = casella('sezione', sez.tipo, sez.titolo, sez.visibile);
+    const intestazione = casella('sezione', sez.tipo, tl(sez.titolo), sez.visibile);
     intestazione.classList.add('scheda-pref-titolo');
     intestazione.querySelector('input').addEventListener('change', e => cambia(commutaSezione(pref.leggi(), sez.tipo, e.target.checked)));
     gruppo.append(intestazione);
     for (const r of sez.righe) {
-      const voce = casella('riga', `${sez.tipo}/${r.etichetta}`, r.etichetta, r.visibile);
+      const voce = casella('riga', `${sez.tipo}/${r.etichetta}`, tl(r.etichetta), r.visibile);
       voce.querySelector('input').addEventListener('change', e => cambia(commutaRiga(pref.leggi(), sez.tipo, r.etichetta, e.target.checked)));
       gruppo.append(voce);
     }

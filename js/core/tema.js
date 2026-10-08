@@ -1,6 +1,7 @@
 // Colore uniforme di poligoni, punti e linee per strato: parte pura (validazione, applicazione alla mappa, salvataggio e file JSON).
 // Il pannello che lo usa sta in pannello-tema.js.
 import { validaAttributo, espressioneAttributo } from './tema-attributo.js';
+import { t as tr } from './i18n.js';
 
 export const CHIAVE = 'dt-temi-strati';
 const VERSIONE = 1;
@@ -147,9 +148,9 @@ export function esportaTemi(temi) {
 }
 export function importaTemi(testo) {
   let o;
-  try { o = JSON.parse(testo); } catch { throw new Error('File non valido: non è un JSON'); }
-  if (o?.versione !== VERSIONE || !o.strati || typeof o.strati !== 'object') throw new Error('File non valido: non è un tema di strati');
+  try { o = JSON.parse(testo); } catch { throw new Error(tr('tema.fileNonJson')); }
+  if (o?.versione !== VERSIONE || !o.strati || typeof o.strati !== 'object') throw new Error(tr('tema.fileNonTema'));
   const temi = Object.fromEntries(Object.entries(o.strati).map(([id, t]) => [id, validaTema(t)]).filter(([, t]) => t));
-  if (!Object.keys(temi).length) throw new Error('Il file non contiene temi validi');
+  if (!Object.keys(temi).length) throw new Error(tr('tema.fileVuoto'));
   return temi;
 }

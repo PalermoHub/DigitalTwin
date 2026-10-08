@@ -1,6 +1,7 @@
 // Indirizzi e loghi (monocolore) per condividere un link sulle reti più usate. Puro.
 // I loghi sono i percorsi SVG (viewBox 24×24) di Simple Icons (CC0); la posta usa l'icona Material.
-export const TESTO_CONDIVISIONE = 'Palermo Digital Twin: la mia vista della mappa';
+import { t as tr } from './i18n.js';
+export const TESTO_CONDIVISIONE = tr('condividi.testo');
 
 const enc = encodeURIComponent;
 export const RETI = [
