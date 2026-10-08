@@ -9,11 +9,12 @@ import { archivioIndexedDB } from './dati.js';
 import { scegliProxy } from './proxy.js';
 import { urlDati } from '../core/config.js';
 import { segnala } from '../core/pannello.js';
-import { t } from '../core/i18n.js';
+import { t, lingua } from '../core/i18n.js';
 
 // Indirizzo del Worker (vedi docs/RNDT.md e proxy.js): in produzione è fisso
 export const PROXY_RNDT = scegliProxy(location.search, location.hostname);
-const PLUGIN = 'js/vendor/openrndt-geolibre/index.js';
+// due bundle dello stesso plugin: l'originale in inglese e la traduzione italiana (scripts/traduci_rndt.py)
+const PLUGIN = `js/vendor/openrndt-geolibre/index.${lingua()}.js`;
 const STILE = 'js/vendor/openrndt-geolibre/style.css';
 
 export function collegaRndt(map, elementoPannello, gruppo) {
