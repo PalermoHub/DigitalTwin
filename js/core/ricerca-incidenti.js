@@ -41,7 +41,7 @@ export function cercaVie(vie, testo, max = 2) {
     .map(({ v }) => ({
       etichetta: v.nome,
       nota: [tn('ricerca.incidenti.n', v.incidenti), v.mortali ? tn('ricerca.incidenti.mortali', v.mortali) : null].filter(Boolean).join(', ')
-        + (v.rango ? ` (#${v.rango} tra le più pericolose)` : ''),
+        + (v.rango ? tr('ricerca.incidenti.rango', { rango: v.rango }) : ''),
       via: v.nome, lon: v.lon, lat: v.lat, bbox: v.bbox,
     }));
 }

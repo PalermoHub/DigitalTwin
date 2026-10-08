@@ -147,7 +147,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
       casella.type = 'checkbox';
       casella.disabled = v.supportato === false;
       label.append(casella, ' ', v.titolo);
-      if (v.supportato === false) label.append(' ', el('em', null, tipo === 'wmts' ? '(non supportato: serve EPSG:3857, tile 256)' : '(non supportato: serve EPSG:3857)'));
+      if (v.supportato === false) label.append(' ', el('em', null, tipo === 'wmts' ? tr('aggiungi.nonSupportato.wmts') : tr('aggiungi.nonSupportato')));
       return { v, casella, label };
     });
     const vai = bottone(tr('aggiungi.aggiungiSelezionati'), 'agg-bottone agg-primario');
@@ -248,7 +248,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     riga.append(apri, togli, esitoRiga);
     const fatto = ({ errori }) => (errori.length
       ? esito(esitoRiga, errori.map(e => `«${e.nome}»: ${e.messaggio}.`).join(' '), true)
-      : avvisa(`«${s.nome}» è in mappa.`));
+      : avvisa(tr('aggiungi.inMappa', { nome: s.nome })));
     apri.addEventListener('click', async () => {
       if (!serve) { apri.disabled = true; fatto(await controllo.riaggiungi(s.id)); apri.disabled = false; return; }
       if (riga.querySelector('form')) return;

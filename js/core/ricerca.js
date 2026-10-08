@@ -47,7 +47,7 @@ let promessaLuoghi = null;
 function luoghi() {
   promessaLuoghi ??= Promise.all(FONTI.map(async f => {
     const r = await fetch(urlDati(f.file));
-    if (!r.ok) throw new Error(`${f.file} non disponibile`);
+    if (!r.ok) throw new Error(t('sicurezza.fileNd', { file: f.file }));
     return { ...f, features: (await r.json()).features };
   })).then(preparaLuoghi).catch(err => { promessaLuoghi = null; throw err; });
   return promessaLuoghi;

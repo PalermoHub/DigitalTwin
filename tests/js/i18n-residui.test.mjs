@@ -65,6 +65,9 @@ export const MIGRATI = [
 const ACCENTATE = /[àèéìòùÀÈÉÌÒÙ]/;
 const PAROLE = /\b(il|lo|la|le|gli|dei|del|della|delle|nel|nella|per|con|non|che|una|uno|di|da|sul|sulla|più|solo|tutti|nessun[oa]?|su|giù|sposta|apri|chiudi|aggiungi|elimina|salva|cerca|mostra|nascondi|accendi|spegni|tutto|tutte|nessuna|ordine|valori|colori|strato|strati|mappa|scheda|dati|fonte|fonti|vista|errore|ripristina|scegli|carica|leggi|seleziona|apre|sopra|sotto|dal|dalla|alle|agli|degli|sono|anche|oppure|quando|come|dopo|prima|oltre|entro|senza|tra|fra|più|molto|poco|ogni|quale|quali)\b/i;
 
+// selettori CSS e nomi di classe (non prosa): ogni parola è un selettore, una classe con trattini o un combinatore
+const SOLO_CSS = l => /^\s*</.test(l) || l.trim().split(/\s+/).map(tok => tok.replace(/,$/, '')).every(tok => /^[.#:[>~+*]/.test(tok) || /^[a-z][\w-]*([.#:[][\w\-[\]=*"'^$|~.]+)+$/.test(tok) || /^[a-z]+(-{1,2}[a-z0-9]*)+$/.test(tok));
+
 // estrae i letterali di una riga ignorando il commento a fine riga
 function letterali(riga) {
   const out = [];
@@ -76,7 +79,7 @@ function letterali(riga) {
     if (c === "'" || c === '"' || c === '`') {
       let j = i + 1;
       while (j < riga.length && riga[j] !== c) j += riga[j] === '\\' ? 2 : 1;
-      out.push(riga.slice(i + 1, j));
+      out.push(c === '`' ? riga.slice(i + 1, j).replace(/\$\{[^}]*\}/g, '') : riga.slice(i + 1, j)); // nei template contano solo i testi fuori dalle espressioni
       i = j + 1;
     } else i++;
   }
@@ -90,7 +93,7 @@ export function residui(sorgente) {
     if (s.startsWith('//') || s.startsWith('*') || s.startsWith('/*') || riga.includes('// i18n-ok') || /^\s*import\b/.test(riga)) return;
     for (const l of letterali(riga)) {
       if (/^(https?:|\.{0,2}\/|#|[\w-]+\.[a-z]{2,4}$)/.test(l)) continue;
-      if (/^[^A-ZÀ-Ý]/.test(l) && /[.:#[\]>=_-]/.test(l)) continue; // selettori CSS e nomi di classe
+      if (/^[^A-ZÀ-Ý]/.test(l) && /[.:#[\]>=_-]/.test(l) && SOLO_CSS(l)) continue; // selettori CSS e nomi di classe
       if (ACCENTATE.test(l) || (/\s/.test(l.trim()) && PAROLE.test(l))) trovati.push(`${n + 1}: ${l.slice(0, 60)}`);
     }
   });

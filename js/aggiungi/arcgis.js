@@ -35,7 +35,7 @@ function cacheUtilizzabile(j) {
 export function descriviArcgis(json, { tipo, layerId }) {
   if (json?.error) {
     const e = json.error;
-    if (e.code === 498 || e.code === 499) throw new Error('il servizio richiede un token valido: aggiungilo all’indirizzo (…?token=…)');
+    if (e.code === 498 || e.code === 499) throw new Error(tr('err.tokenValido'));
     throw new Error(e.message || tr('err.risposta'));
   }
   if (layerId !== null) {

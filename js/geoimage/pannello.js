@@ -139,7 +139,7 @@ export function creaPannello(elemento) {
   testata.append(x);
   const autore = el('p', 'gi-autore', tr('gi.autore'));
   const link = Object.assign(el('a', null, 'Geoimage'), { href: 'https://palermohub.opendatasicilia.it/geoimage.html', target: '_blank', rel: 'noopener' });
-  autore.append(link, ' di @gbvitrano.');
+  autore.append(link, tr('gi.autore.fine'));
   const stato = Object.assign(el('p', 'gi-stato', tr('gi.stato.iniziale')), { id: 'gi-stato' });
   stato.setAttribute('role', 'status');
   const corpo = el('div', 'gi-corpo');

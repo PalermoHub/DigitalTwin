@@ -61,7 +61,7 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     const errori = [];
     const voci = [];
     for (const l of scelti) {
-      if (l.supportato === false) { errori.push({ nome: l.titolo, messaggio: 'non offre EPSG:3857, la proiezione della mappa' }); continue; }
+      if (l.supportato === false) { errori.push({ nome: l.titolo, messaggio: tr('err.noEpsg3857') }); continue; }
       try {
         const opz = opzioniWms(servizio, l);
         host.addWmsLayer(l.titolo, opz);
@@ -91,7 +91,7 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     const errori = [];
     const voci = [];
     for (const l of scelti) {
-      if (!l.supportato || !l.tile) { errori.push({ nome: l.titolo, messaggio: 'non ha una piramide di tile compatibile con la mappa (serve EPSG:3857, tile 256)' }); continue; }
+      if (!l.supportato || !l.tile) { errori.push({ nome: l.titolo, messaggio: tr('err.noPiramide') }); continue; }
       try {
         host.addTileLayer(l.titolo, l.tile, {});
         voci.push({ chiave: l.nome, nome: l.titolo, tile: l.tile });

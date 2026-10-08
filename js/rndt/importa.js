@@ -34,7 +34,7 @@ function controllaGradi(fc) {
     const p = primoPunto(f.geometry);
     if (!p) continue;
     if (Math.abs(p[0]) > 180 || Math.abs(p[1]) > 90) {
-      throw new Error('le coordinate non sono in gradi (longitudine e latitudine WGS84); se è uno shapefile manca il .prj');
+      throw new Error(tr('err.coordinateNonGradi'));
     }
     return;
   }
@@ -105,12 +105,12 @@ export async function importaFile(file, lib) {
   } else if (ext === '.csv') {
     const r = daCsv(await file.text());
     fc = r.fc;
-    if (r.saltate) avvisi.push(`${r.saltate} righe senza coordinate valide sono state saltate`);
+    if (r.saltate) avvisi.push(tr('rndt.righeSaltate', { n: r.saltate }));
   } else if (ext === '.kml') fc = await lib.kml(await file.text());
   else if (ext === '.gpx') fc = await lib.gpx(await file.text());
   else if (ext === '.kmz') fc = await lib.kml(await lib.kmz(await file.arrayBuffer()));
   else if (ext === '.zip') fc = unisci(await lib.shp(await file.arrayBuffer()));
-  else throw new Error(`formato ${ext || 'senza estensione'} non supportato (accettati: ${ESTENSIONI.join(', ')})`);
+  else throw new Error(tr('err.formato', { ext: ext || tr('err.senzaEstensione'), elenco: ESTENSIONI.join(', ') }));
   if (!fc?.features?.length) throw new Error(tr('err.fileSenzaElementi'));
   controllaGradi(fc);
   return { nome: nomeLayer(file.name), fc, avvisi };

@@ -40,8 +40,8 @@ export async function scaricaComeFile(testo, proxy, fetchFn = fetch) {
   let r;
   try { r = await fetchFn(urlViaProxy(proxy, url), { headers: { accept: '*/*' } }); } catch { throw new Error(t('err.raggiungere')); }
   if (r.status === 413) throw new Error(t('err.supera10'));
-  if (foglio && [401, 403, 404].includes(r.status)) throw new Error('foglio non trovato o non condiviso: condividilo con «chiunque abbia il link»');
-  if (!r.ok) throw new Error(`il server ha risposto ${r.status}`);
+  if (foglio && [401, 403, 404].includes(r.status)) throw new Error(t('err.foglioNonCondiviso'));
+  if (!r.ok) throw new Error(t('err.serverRisposto', { stato: r.status }));
   const tipo = r.headers.get('content-type') ?? '';
   if (/text\/html/i.test(tipo)) {
     throw new Error(foglio ? t('err.foglioNonLeggibile') : t('err.paginaWeb'));

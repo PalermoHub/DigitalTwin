@@ -25,7 +25,7 @@ export function hash(testo) {
 // https://host/percorso?query → <proxy>/t/host/percorso?query. Le graffe dei segnaposto ({z}, {bbox-epsg-3857}) restano com'erano.
 export function urlProxy(proxy, url) {
   const m = String(url).match(/^https?:\/\/([^/?#]+)([^#]*)/i);
-  if (!m) throw new Error(`indirizzo non valido: ${url}`);
+  if (!m) throw new Error(tr('err.indirizzoNonValidoUrl', { url }));
   return `${proxy.replace(/\/$/, '')}/t/${m[1]}${m[2] || '/'}`;
 }
 
@@ -102,8 +102,8 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     if (filtrato && !dati.features.length) throw new Error(tr('err.nessunaFeaturePalermo'));
     if (salva && filtrato) {
       const fuori = fc.features.length - dati.features.length;
-      if (fuori === 1) notifica(`«${nome}»: 1 elemento su ${fc.features.length} è fuori dal Comune di Palermo e non viene mostrato.`);
-      else if (fuori > 1) notifica(`«${nome}»: ${fuori} elementi su ${fc.features.length} sono fuori dal Comune di Palermo e non vengono mostrati.`);
+      if (fuori === 1) notifica(tr('rndt.fuori.uno', { nome, n: fc.features.length }));
+      else if (fuori > 1) notifica(tr('rndt.fuori.altri', { nome, fuori, n: fc.features.length }));
     }
     const testo = url ? '' : JSON.stringify(dati);
     const id = idSalvato ?? `${prefisso}-${hash(url ? `geojson|${url}` : `geojson|${nome}|${testo}`)}`;
@@ -121,7 +121,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     // senza URL: i dati si salvano a parte, dopo che il layer è in mappa
     rec.sorgente = { dati: true };
     if (!salva) rec.salvato = true; // ripristino: i dati vengono dall'archivio
-    else if (testo.length > TETTO_DATI) notifica(`«${nome}» è troppo grande per essere salvato: resta finché la pagina è aperta.`);
+    else if (testo.length > TETTO_DATI) notifica(tr('rndt.troppoGrande', { nome }));
     else inAttesa(salvaDati(rec, dati));
     return registra(rec, { salva: false });
   }
@@ -208,8 +208,8 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
         throw errore;
       }
       if (fc?.type !== 'FeatureCollection' || !Array.isArray(fc.features)) throw new Error(tr('err.noGeojson'));
-      if (fc.exceededTransferLimit) throw new Error('il servizio ha troncato la risposta: troppi elementi nell’area di Palermo');
-      if (fc.features.length > TETTO_WFS) throw new Error(`più di ${TETTO_WFS} elementi nell’area di Palermo: il servizio è troppo grande`);
+      if (fc.exceededTransferLimit) throw new Error(tr('err.troncato'));
+      if (fc.features.length > TETTO_WFS) throw new Error(tr('err.piuDi', { n: TETTO_WFS }));
       if (!fc.features.length) throw new Error(tr('err.nessunElementoPalermo'));
       return creaGeoJson(nome, fc, richiesta, true);
     },

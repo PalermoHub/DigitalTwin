@@ -13,6 +13,16 @@ const CONTESTI = [
   /\[\s*'([A-ZÀ-Ý][^'\\]*(?:\\.[^'\\]*)*)'\s*,/g,
 ];
 
+// decodifica gli escape di una stringa JS: \u2019, \u{1F601}, \n, \'…
+const decodifica = t => t
+  .replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+  .replace(/\\u([0-9a-fA-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)))
+  .replace(/\\n/g, '\n')
+  .replace(/\\(.)/g, '$1');
+
+// selettori CSS e nomi di classe (non prosa): ogni parola è un selettore, una classe con trattini o un combinatore
+const SOLO_CSS = l => /^\s*</.test(l) || l.trim().split(/\s+/).map(tok => tok.replace(/,$/, '')).every(tok => /^[.#:[>~+*]/.test(tok) || /^[a-z][\w-]*([.#:[][\w\-[\]=*"'^$|~.]+)+$/.test(tok) || /^[a-z]+(-{1,2}[a-z0-9]*)+$/.test(tok));
+
 function letterali(riga) {
   const out = [];
   let i = 0;
@@ -23,13 +33,13 @@ function letterali(riga) {
     if (c === "'" || c === '"') {
       let j = i + 1;
       while (j < riga.length && riga[j] !== c) j += riga[j] === '\\' ? 2 : 1;
-      out.push(riga.slice(i + 1, j).replace(/\\(.)/g, '$1'));
+      out.push(decodifica(riga.slice(i + 1, j)));
       i = j + 1;
     } else if (c === '`') {
       let j = i + 1;
       while (j < riga.length && riga[j] !== c) j += riga[j] === '\\' ? 2 : 1;
       const corpo = riga.slice(i + 1, j);
-      if (!corpo.includes('${')) out.push(corpo.replace(/\\(.)/g, '$1')); // i template con variabili si traducono alla fonte con t()
+      if (!corpo.includes('${')) out.push(decodifica(corpo)); // i template con variabili si traducono alla fonte con t()
       i = j + 1;
     } else i++;
   }
@@ -43,14 +53,14 @@ export function daTradurre(sorgente) {
     if (s.startsWith('//') || s.startsWith('*') || s.startsWith('/*') || riga.includes('// i18n-ok') || /^\s*import\b/.test(riga)) continue;
     for (const l of letterali(riga)) {
       if (/^(https?:|\.{0,2}\/|#|[\w-]+\.[a-z]{2,4}$)/.test(l)) continue;
-      if (/^[^A-ZÀ-Ý]/.test(l) && /[.:#[\]>=_-]/.test(l)) continue;
+      if (/^[^A-ZÀ-Ý]/.test(l) && /[.:#[\]>=_-]/.test(l) && SOLO_CSS(l)) continue;
       if (ACCENTATE.test(l) || (/\s/.test(l.trim()) && PAROLE.test(l))) trovati.add(l);
     }
     const senzaCommento = riga.replace(/\s\/\/.*$/, '');
     for (const re of CONTESTI) {
       re.lastIndex = 0;
       for (const m of senzaCommento.matchAll(re)) {
-        const l = m[1].replace(/\\(.)/g, '$1');
+        const l = decodifica(m[1]);
         if (/^[A-ZÀ-Ý]/.test(l) && l.length > 1 && /[A-Za-zÀ-ÿ]{2}/.test(l) && !/^[\w-]+\.[a-z]{2,4}$/.test(l)) trovati.add(l);
       }
     }
@@ -61,7 +71,7 @@ export function daTradurre(sorgente) {
 export function fileModelli(radice) {
   const out = [];
   for (const dir of ['js/layers']) for (const n of readdirSync(join(radice, dir))) if (n.endsWith('.js')) out.push(`${dir}/${n}`);
-  out.push('js/rndt/info.js', 'js/core/scheda-preferenze.js');
+  out.push('js/rndt/info.js', 'js/core/scheda-preferenze.js', 'js/core/catalogo.js');
   return out;
 }
 
