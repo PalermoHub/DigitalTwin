@@ -89,37 +89,37 @@
       <p class="intro" data-i18n="pres.video.intro">Tre video: la mappa, il plugin RNDT e Geoimage, passo dopo passo.</p>
       <div class="video-tre">
         <figure class="video-scheda">
-          <div class="video" data-video="gBEs65lum8A">
+          <div class="video" data-video="H8oNAYFxHeQ">
             <button type="button" class="video-bottone" data-i18n-aria="pres.video1.aria" aria-label="Guarda il video">
-              <img src="img/video/gBEs65lum8A.webp" width="640" height="360" loading="lazy" alt="">
+              <img src="img/video/H8oNAYFxHeQ.webp" width="640" height="360" loading="lazy" alt="">
               <span class="avvia" aria-hidden="true"></span>
               <span hidden data-titolo-video data-i18n="pres.video1.iframe">Video</span>
             </button>
           </div>
           <figcaption data-i18n="pres.video1.breve">Video</figcaption>
-          <noscript><p><a href="https://youtu.be/gBEs65lum8A" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
+          <noscript><p><a href="https://youtu.be/H8oNAYFxHeQ" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
         </figure>
         <figure class="video-scheda">
-          <div class="video" data-video="S2kQbQazqv4">
+          <div class="video" data-video="uP7hDqpVDNw">
             <button type="button" class="video-bottone" data-i18n-aria="pres.video2.aria" aria-label="Guarda il video">
-              <img src="img/video/S2kQbQazqv4.webp" width="640" height="360" loading="lazy" alt="">
+              <img src="img/video/uP7hDqpVDNw.webp" width="640" height="360" loading="lazy" alt="">
               <span class="avvia" aria-hidden="true"></span>
               <span hidden data-titolo-video data-i18n="pres.video2.iframe">Video</span>
             </button>
           </div>
           <figcaption data-i18n="pres.video2.breve">Video</figcaption>
-          <noscript><p><a href="https://youtu.be/S2kQbQazqv4" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
+          <noscript><p><a href="https://youtu.be/uP7hDqpVDNw" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
         </figure>
         <figure class="video-scheda">
-          <div class="video" data-video="mEubBkPeNYU">
+          <div class="video" data-video="CADYohEEGhM">
             <button type="button" class="video-bottone" data-i18n-aria="pres.video3.aria" aria-label="Guarda il video">
-              <img src="img/video/mEubBkPeNYU.webp" width="640" height="360" loading="lazy" alt="">
+              <img src="img/video/CADYohEEGhM.webp" width="640" height="360" loading="lazy" alt="">
               <span class="avvia" aria-hidden="true"></span>
               <span hidden data-titolo-video data-i18n="pres.video3.iframe">Video</span>
             </button>
           </div>
           <figcaption data-i18n="pres.video3.breve">Video</figcaption>
-          <noscript><p><a href="https://youtu.be/mEubBkPeNYU" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
+          <noscript><p><a href="https://youtu.be/CADYohEEGhM" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
         </figure>
       </div>
     </div>
@@ -196,23 +196,19 @@
 </main>
 
 <footer class="piede">
-  <div class="contenitore">
-    <div class="firma">
-      <a href="https://opendatasicilia.it/" rel="noopener" aria-label="OpenDataSicilia"><img src="img/opendatasicilia.png" alt="" width="45" height="52"></a>
-      <p data-i18n-html="pres.piede.copyright">© 2026 OpenDataSicilia, licenza <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.it" rel="noopener">CC BY-SA 4.0</a></p>
-    </div>
-    <ul>
-      <li><a href="./#guida" data-i18n="pres.piede.guida">Guida</a></li>
-      <li><a href="./#fonti" data-i18n="pres.piede.fonti">Fonti e avvisi</a></li>
-      <li><a href="./#privacy" data-i18n="pres.piede.privacy">Privacy</a></li>
-      <li><a href="./#about" data-i18n="pres.piede.about">About</a></li>
-    </ul>
-    <p data-i18n="pres.piede.avviso">Catasto, PRG e vincoli sono dati informativi, senza valore legale.</p>
-  </div>
+<span id="piede-copyright" data-i18n-html="html.piede.copyright"></span>
+<p class="piede-avviso" data-i18n-html="html.piede.avviso">Catasto, PRG e vincoli sono dati informativi, <strong>senza valore legale</strong>.</p>
+<a id="logo-ods" href="https://opendatasicilia.it/" title="Open Data Sicilia" target="_blank" rel="noopener"><img src="img/opendatasicilia.png" alt="Open Data Sicilia" width="21" height="24"></a>
 </footer>
+
+<button type="button" class="in-cima" id="in-cima" hidden data-i18n-aria="catalogo.inCima" data-i18n-title="catalogo.inCima" aria-label="Torna in cima" title="Torna in cima"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V5M5.5 11.5 12 5l6.5 6.5"/></svg></button>
 
 <script>
 (function () {
+  // «torna in cima» compare dopo un po' di scorrimento
+  var su = document.getElementById('in-cima');
+  su.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  window.addEventListener('scroll', function () { su.hidden = window.scrollY < 400; }, { passive: true });
   // la scelta del tema fatta nell'app vale anche qui: se è esplicita, la schermata dell'intestazione la segue
   var tema = document.documentElement.dataset.tema, sorgente = document.getElementById('hero-scuro');
   if (tema === 'scuro') { sorgente.media = 'all'; document.querySelector('meta[name=theme-color]').content = '#151a20'; }

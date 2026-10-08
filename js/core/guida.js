@@ -4,9 +4,9 @@ import { collegaTrascinamento } from './streetview.js';
 
 // I tre video della guida (YouTube, id dopo youtu.be/): mappa, plugin RNDT, Geoimage.
 export const VIDEO = [
-  { id: 'gBEs65lum8A', chiave: 'guida.video1' },
-  { id: 'S2kQbQazqv4', chiave: 'guida.video2' },
-  { id: 'mEubBkPeNYU', chiave: 'guida.video3' },
+  { id: 'H8oNAYFxHeQ', chiave: 'guida.video1' },
+  { id: 'uP7hDqpVDNw', chiave: 'guida.video2' },
+  { id: 'CADYohEEGhM', chiave: 'guida.video3' },
 ];
 
 // Il video si apre in una finestra flottante (come Street View): si sposta dalla barra e si ridimensiona dall'angolo.

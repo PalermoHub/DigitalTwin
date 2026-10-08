@@ -336,7 +336,9 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   inCima.type = 'button';
   inCima.className = 'in-cima';
   inCima.hidden = true;
-  inCima.textContent = tr('catalogo.inCima');
+  inCima.setAttribute('aria-label', tr('catalogo.inCima'));
+  inCima.title = tr('catalogo.inCima');
+  inCima.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V5M5.5 11.5 12 5l6.5 6.5"/></svg>';
   inCima.addEventListener('click', () => corpo.scrollTo({ top: 0, behavior: 'smooth' }));
   corpo.addEventListener('scroll', () => { inCima.hidden = corpo.scrollTop < 40; });
   const chiudi = document.createElement('button');
