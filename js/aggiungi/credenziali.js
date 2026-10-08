@@ -1,6 +1,7 @@
 // js/aggiungi/credenziali.js
 // Utente e password dei servizi protetti: solo in memoria, per la sessione. Mai in localStorage, IndexedDB o URL.
 // Ogni host ha la sua intestazione `Authorization: Basic …`.
+import { t } from '../core/i18n.js';
 
 export function ospiteDi(url) {
   try { return new URL(String(url).replace(/[{}]/g, '')).hostname; } catch { return null; }
@@ -26,12 +27,12 @@ export function creaCredenziali() {
   const aggiungiToken = (url, token) => (!token || /[?&]token=/i.test(url) ? url : `${url}${url.includes('?') ? '&' : '?'}token=${encodeURIComponent(token)}`);
   return {
     imposta(host, utente, password) {
-      if (!utente) throw new Error('manca il nome utente');
-      if (utente.includes(':')) throw new Error('il nome utente non può contenere due punti');
+      if (!utente) throw new Error(t('err.manca.utente'));
+      if (utente.includes(':')) throw new Error(t('err.utente.dueppunti'));
       mappa.set(host, { utente, intestazione: `Basic ${base64(`${utente}:${password ?? ''}`)}` });
     },
     impostaToken(host, valore) {
-      if (!valore) throw new Error('manca il token');
+      if (!valore) throw new Error(t('err.manca.token'));
       tokens.set(host, valore);
     },
     token: host => tokens.get(host) ?? null,

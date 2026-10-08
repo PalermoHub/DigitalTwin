@@ -1,6 +1,7 @@
 // js/rndt/dati.js
 // Dati dei layer senza URL (file dal computer): localStorage tiene solo l'elenco, i dati stanno qui, in IndexedDB,
 // che regge molto più dei 5 MB di localStorage. Interfaccia asincrona { leggi, scrivi, elimina }.
+import { t as tr } from '../core/i18n.js';
 
 export function archivioInMemoria() {
   const m = new Map();
@@ -20,11 +21,11 @@ export function archivioIndexedDB(idb = globalThis.indexedDB, { tempoMassimoMs =
     r.onupgradeneeded = () => r.result.createObjectStore('dati');
     r.onsuccess = () => ok(r.result);
     r.onerror = () => ko(r.error);
-    r.onblocked = () => ko(new Error('IndexedDB bloccato (un’altra scheda tiene aperto l’archivio)'));
+    r.onblocked = () => ko(new Error(tr('err.indexeddbBloccato')));
   });
   // senza risposta entro il tempo massimo si rinuncia: il layer resta solo in sessione invece di restare appeso
   const entro = promessa => new Promise((ok, ko) => {
-    const timer = setTimeout(() => ko(new Error('IndexedDB: nessuna risposta')), tempoMassimoMs);
+    const timer = setTimeout(() => ko(new Error(tr('err.indexeddbNoRisposta'))), tempoMassimoMs);
     promessa.then(ok, ko).finally(() => clearTimeout(timer));
   });
   // una transazione per operazione; si chiude il db a fine lavoro

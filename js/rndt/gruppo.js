@@ -5,6 +5,7 @@
 
 import { ESTENSIONI } from './importa.js';
 import { occhio, sliderOpacita, abilitaRiordino } from '../core/pannello.js';
+import { t } from '../core/i18n.js';
 
 const ordina = (a, b) => a.nome.localeCompare(b.nome, 'it', { sensitivity: 'base' });
 
@@ -16,7 +17,7 @@ export function righeGruppo(elenco) {
     layers: l.idMappa ?? [],
     acceso: l.visibile && !l.indisponibile,
     disabilitato: l.indisponibile,
-    nota: l.indisponibile ? 'non disponibile' : !l.salvato ? 'solo questa sessione' : l.errore ? 'errori di caricamento' : '',
+    nota: l.indisponibile ? t('rndt.nonDisponibile') : !l.salvato ? t('rndt.soloSessione') : l.errore ? t('rndt.erroriCaricamento') : '',
   }));
 }
 
@@ -39,16 +40,16 @@ function el(tag, classe, testo) {
 export const OPZIONI_RNDT = {
   id: 'rndt',
   titolo: 'RNDT',
-  argomento: { titolo: 'RNDT', descrizione: 'Dati aggiunti dal catalogo RNDT, anche richiamati dal salvataggio. Si aggiungono dal pulsante del catalogo nella barra strumenti.' },
-  vuoto: 'Nessun layer RNDT: cercalo nel catalogo.',
-  azioni: [{ id: 'rndt-catalogo-apri', testo: '＋ Dal catalogo RNDT', tipo: 'apri' }],
+  argomento: { titolo: 'RNDT', descrizione: t('rndt.gruppo.descrizione') },
+  vuoto: t('rndt.gruppo.vuoto'),
+  azioni: [{ id: 'rndt-catalogo-apri', testo: t('rndt.gruppo.dalCatalogo'), tipo: 'apri' }],
 };
 
 export const OPZIONI_MIEI = {
   id: 'miei',
-  titolo: 'I miei layer',
-  argomento: { titolo: 'I miei layer', descrizione: 'File caricati dal computer e servizi XYZ, WMS e WFS aggiunti per indirizzo, anche richiamati dal salvataggio. Si aggiungono dall’albero in cima al gruppo.' },
-  vuoto: 'Nessun layer in mappa: carica un file o aggiungi un servizio dall’albero qui sopra.',
+  titolo: t('gruppo.miei'),
+  argomento: { titolo: t('gruppo.miei'), descrizione: t('miei.gruppo.descrizione') },
+  vuoto: t('miei.gruppo.vuoto'),
   azioni: [],
   ripiego: 'miei-cerca',
 };
@@ -110,8 +111,8 @@ export function creaGruppo({ id, titolo, argomento, vuoto, azioni, ripiego }) {
         togli.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg>';
         togli.type = 'button';
         togli.id = `${id}-togli-${r.id}`;
-        togli.title = `Rimuovi ${r.nome}`;
-        togli.setAttribute('aria-label', `Rimuovi il layer ${r.nome}`);
+        togli.title = t('rndt.rimuoviNome', { nome: r.nome });
+        togli.setAttribute('aria-label', t('rndt.rimuoviLayer', { nome: r.nome }));
         togli.addEventListener('click', () => { opacita.delete(r.id); host.elimina(r.id); });
         riga.append(label, togli);
         if (!opacita.has(r.id)) opacita.set(r.id, { originali: new Map(), valore: 1 });

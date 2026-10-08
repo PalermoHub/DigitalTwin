@@ -3,6 +3,7 @@
 //   centro → sposta · punto sopra il lato nord → ruota · angoli → scala (proporzionale) o deforma (libera).
 // Non conoscono l'overlay: leggono e scrivono i 4 angoli tramite `leggi`, `scrivi` e `alFine`, che le collegano allo stato.
 import { centro, sposta, ruota, scalaDaAngolo, postoRotazione } from './geometria.js';
+import { t } from '../core/i18n.js';
 
 const copia = a => a.map(p => ({ lat: p.lat, lng: p.lng }));
 const lngLat = p => [p.lng, p.lat];
@@ -41,7 +42,7 @@ export function creaManiglie(map, { leggi, scrivi, alFine }) {
       k.on('dragend', () => { inizio = null; riposiziona(); alFine(); });
     });
     // centro: sposta
-    const kc = nuovo(Object.assign(crea('gi-centro'), { title: 'Trascina per spostare l\'immagine' }), centro(a));
+    const kc = nuovo(Object.assign(crea('gi-centro'), { title: t('gi.maniglia.sposta') }), centro(a));
     let base = null, da = null;
     // MapLibre emette dragstart dopo il primo movimento: il punto di partenza è dove stava la maniglia, non dove si trova ora
     kc.on('dragstart', () => { base = copia(leggi()); da = centro(base); });
@@ -53,7 +54,7 @@ export function creaManiglie(map, { leggi, scrivi, alFine }) {
     });
     kc.on('dragend', () => { base = null; riposiziona(); alFine(); });
     // rotazione: l'angolo si misura sullo schermo, quindi funziona anche con la mappa ruotata o inclinata
-    const kr = nuovo(Object.assign(crea('gi-rota'), { title: 'Trascina per ruotare l\'immagine' }), postoRotazione(a));
+    const kr = nuovo(Object.assign(crea('gi-rota'), { title: t('gi.maniglia.ruota') }), postoRotazione(a));
     let inizioRot = null, cs = null, a0 = 0;
     kr.on('dragstart', () => {
       inizioRot = copia(leggi());

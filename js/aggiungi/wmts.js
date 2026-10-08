@@ -3,6 +3,7 @@
 // origine in alto a sinistra) perché è quella che MapLibre sa disegnare coi suoi tile XYZ.
 // Moduli puri, senza DOM né rete.
 import { leggiXml, figli, primo, testoDi, erroreDelServizio, urlBase } from './servizi.js';
+import { t } from '../core/i18n.js';
 
 const ORIGINE = 20037508.342789244;
 const CRS_WEB = /(3857|900913|102100|102113)(?!\d)/;
@@ -90,11 +91,11 @@ export function capabilitiesWmts(testo, urlServizio) {
   const radice = leggiXml(testo);
   const errore = erroreDelServizio(radice);
   if (errore) throw new Error(errore);
-  if (radice.nome !== 'Capabilities' || !/WMTS/i.test(testoDi(primo(radice, 'ServiceIdentification'), 'ServiceType'))) throw new Error('l’indirizzo non è un servizio WMTS');
+  if (radice.nome !== 'Capabilities' || !/WMTS/i.test(testoDi(primo(radice, 'ServiceIdentification'), 'ServiceType'))) throw new Error(t('err.noWmts'));
   const contenuti = primo(radice, 'Contents');
   const insiemi = new Map(figli(contenuti, 'TileMatrixSet').map(s => [testoDi(s, 'Identifier'), s]));
   const base = baseGetTile(radice, urlServizio);
   const layer = figli(contenuti, 'Layer').map(n => descriviLayer(n, insiemi, base)).filter(Boolean);
-  if (!layer.length) throw new Error('il servizio non ha nessun layer');
+  if (!layer.length) throw new Error(t('err.nessunLayer'));
   return { versione: radice.attr.version ?? '1.0.0', layer };
 }

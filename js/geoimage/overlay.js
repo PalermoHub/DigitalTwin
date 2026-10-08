@@ -3,6 +3,7 @@
 // A ogni render della mappa (pan, zoom, rotazione, inclinazione) si riproiettano gli angoli, quindi segue anche il 3D.
 // Sta sopra tutti gli strati: è un confronto con la base, e Swipe e Spotlight sono ritagli CSS del contenitore.
 import { omografia, css3d, davanti } from './omografia.js';
+import { t as tr } from '../core/i18n.js';
 
 // Lato lungo massimo dell'immagine mostrata: oltre, un matrix3d su un'immagine enorme appesantisce la mappa.
 // L'originale resta in memoria per l'export.
@@ -29,7 +30,7 @@ export function trasformazione(map, angoli, larghezza, altezza) {
 export function preparaSchermo(dataUrl) {
   return new Promise((ok, ko) => {
     const img = new Image();
-    img.onerror = () => ko(new Error('immagine non leggibile'));
+    img.onerror = () => ko(new Error(tr('err.immagineNonLeggibile')));
     img.onload = () => {
       const originaleL = img.naturalWidth, originaleA = img.naturalHeight;
       if (!originaleL || !originaleA) return ko(new Error('immagine vuota'));

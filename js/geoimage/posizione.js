@@ -1,6 +1,7 @@
 // js/geoimage/posizione.js
 // Sezione «Posiziona overlay»: frecce, rotazione, scala, adatta, reset, blocco delle maniglie, scala/deforma, Annulla e Ripeti.
 import { sposta, ruota, scala, passo } from './geometria.js';
+import { t } from '../core/i18n.js';
 
 const copia = a => a.map(p => ({ lat: p.lat, lng: p.lng }));
 
@@ -21,7 +22,7 @@ export function collegaPosizione(ctx) {
     if (!stato.angoliIniziali) return;
     cambia(() => copia(stato.angoliIniziali));
     ctx.inquadra(stato.angoli);
-    ctx.messaggio('Immagine riportata alla posizione iniziale.');
+    ctx.messaggio(t('gi.posizione.reset'));
   });
 
   $('blocca').addEventListener('click', () => { maniglie.blocca(!maniglie.bloccate()); ctx.cambiato(); });
@@ -45,9 +46,9 @@ export function collegaPosizione(ctx) {
     $('annulla').disabled = !storico.puoAnnullare();
     $('ripeti').disabled = !storico.puoRipetere();
     const bloccate = maniglie.bloccate();
-    $('blocca').textContent = bloccate ? 'Sblocca (L)' : 'Blocca (L)';
+    $('blocca').textContent = bloccate ? t('gi.sblocca') : t('gi.blocca');
     $('blocca').setAttribute('aria-pressed', String(bloccate));
-    $('modo').textContent = maniglie.modo() === 'scala' ? 'Maniglie: scala' : 'Maniglie: deforma';
+    $('modo').textContent = maniglie.modo() === 'scala' ? t('gi.maniglie.scala') : t('gi.maniglie.deforma');
     $('modo').disabled = bloccate;
   });
 }

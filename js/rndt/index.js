@@ -9,6 +9,7 @@ import { archivioIndexedDB } from './dati.js';
 import { scegliProxy } from './proxy.js';
 import { urlDati } from '../core/config.js';
 import { segnala } from '../core/pannello.js';
+import { t } from '../core/i18n.js';
 
 // Indirizzo del Worker (vedi docs/RNDT.md e proxy.js): in produzione è fisso
 export const PROXY_RNDT = scegliProxy(location.search, location.hostname);
@@ -37,10 +38,10 @@ export function collegaRndt(map, elementoPannello, gruppo) {
       document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: new URL(STILE, document.baseURI).href }));
       const modulo = await import(new URL(PLUGIN, document.baseURI).href);
       plugin = modulo.default;
-      if (plugin.activate(host) === false) throw new Error('il plugin non è compatibile con questa mappa');
+      if (plugin.activate(host) === false) throw new Error(t('err.pluginIncompatibile'));
     } catch (errore) {
       plugin = null;
-      pannello.errore(`Catalogo RNDT non disponibile: ${errore.message}`);
+      pannello.errore(t('rndt.nonDisponibileMsg', { msg: errore.message }));
     }
   }
 

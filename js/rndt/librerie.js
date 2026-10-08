@@ -1,6 +1,7 @@
 // js/rndt/librerie.js
 // Le librerie per KML, GPX, KMZ e Shapefile (js/vendor/) si caricano solo quando serve il formato: l'avvio dell'app non cambia.
 // Adatta le loro interfacce a quella che importaFile si aspetta in `lib`.
+import { t } from '../core/i18n.js';
 const carica = nome => import(new URL(`../vendor/${nome}`, import.meta.url).href);
 const xml = testo => new DOMParser().parseFromString(testo, 'text/xml');
 
@@ -12,7 +13,7 @@ export const librerie = {
     const { unzipSync } = await carica('fflate.esm.js');
     const file = unzipSync(new Uint8Array(buffer));
     const nome = Object.keys(file).find(n => /\.kml$/i.test(n));
-    if (!nome) throw new Error('il KMZ non contiene un file KML');
+    if (!nome) throw new Error(t('err.kmz'));
     return new TextDecoder().decode(file[nome]);
   },
   // shpjs legge shp, dbf e prj dallo zip e riproietta in WGS84; con più shapefile nello zip restituisce un array

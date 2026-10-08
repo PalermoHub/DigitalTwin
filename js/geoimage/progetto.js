@@ -3,6 +3,7 @@
 // immagine incorporata come data URL, 4 angoli [lat, lng] nell'ordine NO, NE, SO, SE, opacità e GCP.
 // `transformType` è un'aggiunta facoltativa: i file di Geoimage senza il campo si aprono con l'affine.
 import { TIPI } from './trasformazioni.js';
+import { t } from '../core/i18n.js';
 
 const numero = v => typeof v === 'number' && Number.isFinite(v);
 const coordinataValida = ([lat, lng]) => numero(lat) && numero(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180;
@@ -24,10 +25,10 @@ export function serializza(s) {
 
 // oggetto (già letto da JSON) → stato; lancia un Error con un messaggio per l'utente se il file non è un progetto valido
 export function leggi(dati) {
-  if (!dati || typeof dati !== 'object') throw new Error('il file non è un progetto Geoimage');
+  if (!dati || typeof dati !== 'object') throw new Error(t('err.noProgetto'));
   if (typeof dati.imageDataUrl !== 'string' || !dati.imageDataUrl.startsWith('data:image/')) throw new Error('manca l\'immagine');
   const c = dati.overlayCorners;
-  if (!Array.isArray(c) || c.length !== 4 || !c.every(p => Array.isArray(p) && coordinataValida(p))) throw new Error('le coordinate dell\'immagine non sono valide');
+  if (!Array.isArray(c) || c.length !== 4 || !c.every(p => Array.isArray(p) && coordinataValida(p))) throw new Error(t('err.coordinateImmagine'));
   const gcp = (dati.gcps ?? []).filter(g => g && [g.px, g.py, g.lat, g.lng].every(numero) && coordinataValida([g.lat, g.lng]));
   const opacita = numero(dati.opacity) ? Math.min(1, Math.max(0, dati.opacity)) : 0.7;
   const angoli = c.map(([lat, lng]) => ({ lat, lng }));
@@ -44,6 +45,6 @@ export function leggi(dati) {
 // testo del file → stato
 export function daTesto(testo) {
   let dati;
-  try { dati = JSON.parse(testo); } catch { throw new Error('il file non è un JSON valido'); }
+  try { dati = JSON.parse(testo); } catch { throw new Error(t('err.noJson')); }
   return leggi(dati);
 }

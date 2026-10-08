@@ -3,6 +3,7 @@
 // I servizi esterni passano dal Worker proxy (CORS); i layer aggiunti si ricordano in archivio.js.
 import { BBOX_PALERMO, intersezione, vistaPalermo, filtraSuConfine } from './area.js';
 import { aggiungi as salvaAggiungi, rimuovi as salvaRimuovi, aggiorna as salvaAggiorna } from './archivio.js';
+import { t as tr } from '../core/i18n.js';
 
 const COLORI = ['#1c7ed6', '#e8590c', '#2f9e44', '#ae3ec9', '#c92a2a', '#0c8599'];
 const FINESTRA_DOWNLOAD_MS = 30000;
@@ -42,7 +43,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
   const persisti = () => {
     if (scrivi(stato) || avvisatoSalvataggio) return;
     avvisatoSalvataggio = true;
-    notifica(`Non riesco a salvare i layer ${etichetta}: restano finché la pagina è aperta.`);
+    notifica(tr('rndt.salvataggio.layers', { etichetta }));
   };
   const daSalvare = ({ id, tipo, nome, visibile, sorgente }) => ({ id, tipo, nome, visibile, sorgente });
 
@@ -65,11 +66,11 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
   function verificaInMappa(id) {
     if (map.getLayer(id)) return;
     if (map.getSource(id)) map.removeSource(id);
-    throw new Error('la mappa non accetta questo layer (indirizzo o opzioni non validi)');
+    throw new Error(tr('err.mappaNonAccetta'));
   }
 
   function creaWms(nome, opz, salva) {
-    if (opz.crs && opz.crs !== 'EPSG:3857') throw new Error(`CRS ${opz.crs} non supportato dalla mappa`);
+    if (opz.crs && opz.crs !== 'EPSG:3857') throw new Error(tr('err.crs', { crs: opz.crs }));
     const id = `${prefisso}-${hash(`wms|${opz.url}|${opz.layers}`)}`;
     liberaSeNonDisponibile(id);
     if (layers.has(id)) return id;
@@ -98,7 +99,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
 
   function creaGeoJson(nome, fc, url, salva, idSalvato) {
     const { fc: dati, filtrato } = filtraSuConfine(fc, anelli());
-    if (filtrato && !dati.features.length) throw new Error('nessuna feature dentro il Comune di Palermo');
+    if (filtrato && !dati.features.length) throw new Error(tr('err.nessunaFeaturePalermo'));
     if (salva && filtrato) {
       const fuori = fc.features.length - dati.features.length;
       if (fuori === 1) notifica(`«${nome}»: 1 elemento su ${fc.features.length} è fuori dal Comune di Palermo e non viene mostrato.`);
@@ -127,9 +128,9 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
 
   // Scrive i dati, poi mette il layer nell'elenco salvato: un layer non entra mai nell'elenco senza i suoi dati
   async function salvaDati(rec, fc) {
-    const nonSalvato = () => notifica(`Non riesco a salvare «${rec.nome}»: resta finché la pagina è aperta.`);
+    const nonSalvato = () => notifica(tr('rndt.salvataggio.nome', { nome: rec.nome }));
     try {
-      if (!archivioDati) throw new Error('archivio dei dati non disponibile');
+      if (!archivioDati) throw new Error(tr('err.archivio'));
       await archivioDati.scrivi(rec.id, fc);
     } catch {
       return nonSalvato();
@@ -154,7 +155,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     const auth = autorizzazione(url);
     const daScaricare = urlProxy(proxy, riscrivi(url)); // il token (se c'è) viaggia solo nella richiesta: l'URL del layer resta senza
     const risposta = await (auth ? fetchFn(daScaricare, { headers: { authorization: auth } }) : fetchFn(daScaricare));
-    if (risposta.status === 401) throw new Error('il servizio richiede utente e password');
+    if (risposta.status === 401) throw new Error(tr('err.richiedePassword'));
     if (!risposta.ok) throw new Error(`HTTP ${risposta.status}`);
     const buffer = await risposta.arrayBuffer();
     if (SEMBRA_DATI.test(url) && !SOLO_CONTEGGIO.test(url)) ultimoDownload = { url, t: Date.now() };
@@ -174,7 +175,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     const rec = e?.sourceId && layers.get(e.sourceId);
     if (!rec || rec.errore) return;
     rec.errore = true; // un solo avviso per layer; non si disattiva (un tile mancante non è un layer rotto)
-    notifica(`Layer ${etichetta} con errori di caricamento: ${rec.nome}`);
+    notifica(tr('rndt.erroriLayer', { etichetta, nome: rec.nome }));
     cambio();
   });
 
@@ -203,13 +204,13 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
       if (layers.has(id)) return id;
       let fc;
       try { fc = JSON.parse(new TextDecoder().decode(await fetchArrayBuffer(richiesta))); } catch (errore) {
-        if (errore instanceof SyntaxError) throw new Error('il servizio non produce GeoJSON');
+        if (errore instanceof SyntaxError) throw new Error(tr('err.noGeojson'));
         throw errore;
       }
-      if (fc?.type !== 'FeatureCollection' || !Array.isArray(fc.features)) throw new Error('il servizio non produce GeoJSON');
+      if (fc?.type !== 'FeatureCollection' || !Array.isArray(fc.features)) throw new Error(tr('err.noGeojson'));
       if (fc.exceededTransferLimit) throw new Error('il servizio ha troncato la risposta: troppi elementi nell’area di Palermo');
       if (fc.features.length > TETTO_WFS) throw new Error(`più di ${TETTO_WFS} elementi nell’area di Palermo: il servizio è troppo grande`);
-      if (!fc.features.length) throw new Error('nessun elemento nell’area di Palermo');
+      if (!fc.features.length) throw new Error(tr('err.nessunElementoPalermo'));
       return creaGeoJson(nome, fc, richiesta, true);
     },
     attendi: async () => { while (scritture.size) await Promise.allSettled([...scritture]); },
@@ -256,7 +257,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
           else if (salvato.tipo === 'tile') id = creaTile(salvato.nome, salvato.sorgente.url, { attribution: salvato.sorgente.attribution }, false);
           else if (salvato.sorgente.dati === true) {
             const fc = await archivioDati?.leggi(salvato.id);
-            if (!fc) throw new Error('dati non trovati');
+            if (!fc) throw new Error(tr('err.datiNonTrovati'));
             id = creaGeoJson(salvato.nome, fc, undefined, false, salvato.id);
           } else if (salvato.sorgente.dati) {
             // vecchio formato: i dati stavano nell'elenco in localStorage; passano all'archivio dati

@@ -9,6 +9,7 @@ import { capabilitiesWmts } from './wmts.js';
 import { leggiUrlArcgis, urlInfo, descriviArcgis, urlExport, urlTileCache, urlQuery } from './arcgis.js';
 import { leggiServizi, salvaServizi, aggiungiServizio, rimuoviServizio, filtraServizi } from './salvati.js';
 import { creaCredenziali, ospiteDi } from './credenziali.js';
+import { t as tr } from '../core/i18n.js';
 
 const nomeDaUrl = url => new URL(url.replace(/[{}]/g, '')).hostname;
 const messaggio = e => (e instanceof Error ? e.message : String(e));
@@ -37,7 +38,7 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
       if (p.token) credenziali.impostaToken(ospiteDi(p.base), p.token);
       const grezzo = new TextDecoder().decode(await host.fetchArrayBuffer(urlInfo(p)));
       let json;
-      try { json = JSON.parse(grezzo); } catch { throw new Error('l’indirizzo non è un servizio ArcGIS REST'); }
+      try { json = JSON.parse(grezzo); } catch { throw new Error(tr('err.noArcgis')); }
       return { url: p.base, conToken: credenziali.token(ospiteDi(p.base)) !== null, ...descriviArcgis(json, p) };
     }
     const testo = new TextDecoder().decode(await host.fetchArrayBuffer(urlCapabilities(urlUtente, tipo)));

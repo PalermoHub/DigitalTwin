@@ -1,6 +1,7 @@
 // js/rndt/importa.js
 // Dai file GIS dell'utente a una FeatureCollection WGS84. Il modulo non tocca DOM né librerie: KML, GPX, KMZ e Shapefile
 // arrivano da `lib` (vedi librerie.js), così si prova in Node. Il tipo di file si decide dall'estensione.
+import { t as tr } from '../core/i18n.js';
 
 export const ESTENSIONI = ['.geojson', '.json', '.kml', '.kmz', '.gpx', '.zip', '.csv'];
 
@@ -12,11 +13,11 @@ const CRS_WGS84 = /(CRS84|4326)$/i;
 
 function daGeoJson(o) {
   const crs = o?.crs?.properties?.name;
-  if (typeof crs === 'string' && !CRS_WGS84.test(crs)) throw new Error(`il file usa il sistema di coordinate ${crs}, non WGS84`);
+  if (typeof crs === 'string' && !CRS_WGS84.test(crs)) throw new Error(tr('err.crsFile', { crs }));
   if (o?.type === 'FeatureCollection' && Array.isArray(o.features)) return o;
   if (o?.type === 'Feature') return { type: 'FeatureCollection', features: [o] };
   if (GEOMETRIE.includes(o?.type)) return { type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry: o }] };
-  throw new Error('non è un GeoJSON valido');
+  throw new Error(tr('err.noGeojsonValido'));
 }
 
 // Il primo punto trovato basta per capire se le coordinate sono gradi o metri
@@ -70,12 +71,12 @@ const NOMI_LON = ['lon', 'lng', 'long', 'longitude', 'longitudine'];
 
 function daCsv(testo) {
   const [intestazione, ...righe] = righeCsv(testo);
-  if (!intestazione) throw new Error('il file è vuoto');
+  if (!intestazione) throw new Error(tr('err.fileVuoto'));
   const nomi = intestazione.map(n => n.trim());
   const cerca = elenco => nomi.findIndex(n => elenco.includes(n.toLowerCase()));
   const iLat = cerca(NOMI_LAT) >= 0 ? cerca(NOMI_LAT) : cerca(['y']);
   const iLon = cerca(NOMI_LON) >= 0 ? cerca(NOMI_LON) : cerca(['x']);
-  if (iLat < 0 || iLon < 0) throw new Error('nessuna colonna di latitudine e longitudine (per esempio lat e lon)');
+  if (iLat < 0 || iLon < 0) throw new Error(tr('err.colonneLatLon'));
   const numero = v => (String(v ?? '').trim() === '' ? NaN : Number(String(v).trim().replace(',', '.')));
   const features = [];
   let saltate = 0;
@@ -87,7 +88,7 @@ function daCsv(testo) {
     nomi.forEach((n, i) => { if (n && i !== iLat && i !== iLon) properties[n] = r[i] ?? ''; });
     features.push({ type: 'Feature', properties, geometry: { type: 'Point', coordinates: [lon, lat] } });
   }
-  if (!features.length) throw new Error('nessuna riga con coordinate valide');
+  if (!features.length) throw new Error(tr('err.nessunaRiga'));
   return { fc: { type: 'FeatureCollection', features }, saltate };
 }
 
@@ -99,7 +100,7 @@ export async function importaFile(file, lib) {
   let fc;
   if (ext === '.geojson' || ext === '.json') {
     let o;
-    try { o = JSON.parse((await file.text()).replace(/^﻿/, '')); } catch { throw new Error('il file non è un JSON valido'); }
+    try { o = JSON.parse((await file.text()).replace(/^﻿/, '')); } catch { throw new Error(tr('err.noJson')); }
     fc = daGeoJson(o);
   } else if (ext === '.csv') {
     const r = daCsv(await file.text());
@@ -110,7 +111,7 @@ export async function importaFile(file, lib) {
   else if (ext === '.kmz') fc = await lib.kml(await lib.kmz(await file.arrayBuffer()));
   else if (ext === '.zip') fc = unisci(await lib.shp(await file.arrayBuffer()));
   else throw new Error(`formato ${ext || 'senza estensione'} non supportato (accettati: ${ESTENSIONI.join(', ')})`);
-  if (!fc?.features?.length) throw new Error('il file non contiene elementi');
+  if (!fc?.features?.length) throw new Error(tr('err.fileSenzaElementi'));
   controllaGradi(fc);
   return { nome: nomeLayer(file.name), fc, avvisi };
 }
