@@ -76,6 +76,11 @@ export function schedaGuida(doc = document, passi = PASSI) {
     const btn = doc.createElement('button');
     btn.type = 'button';
     btn.className = 'guida-video';
+    const img = doc.createElement('img');
+    img.className = 'guida-video-img';
+    img.src = immagine(`img/video/${v.id}.webp`);
+    img.alt = '';
+    img.loading = 'lazy';
     const play = doc.createElement('span');
     play.className = 'guida-video-play';
     play.setAttribute('aria-hidden', 'true');
@@ -84,7 +89,7 @@ export function schedaGuida(doc = document, passi = PASSI) {
     cap.textContent = tr(`${v.chiave}.breve`);
     btn.setAttribute('aria-label', tr(`${v.chiave}.titolo`));
     btn.addEventListener('click', () => apriVideo(v.id, tr(`${v.chiave}.titolo`)));
-    btn.append(play, cap);
+    btn.append(img, play, cap);
     media.append(btn);
   }
   radice.append(media);

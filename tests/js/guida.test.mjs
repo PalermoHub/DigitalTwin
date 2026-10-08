@@ -92,7 +92,7 @@ test('schedaGuida: una sezione per passo con id ancora, e un link nell\'indice p
 });
 
 test('schedaGuida: ogni immagine è lazy, ha alt e didascalia', () => {
-  const imgs = tutti(schedaGuida(doc), 'img');
+  const imgs = tutti(schedaGuida(doc), 'img').filter(i => i.className !== 'guida-video-img');
   assert.equal(imgs.length, SOLO_GUIDA.length);
   imgs.forEach((img, i) => {
     assert.equal(img.loading, 'lazy');

@@ -362,6 +362,7 @@ dialog li { margin: 4px 0; }
 .info-sezione h2.pagina-sezione + .info-blocco { margin-top: 14px; }
 .guida-media { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 14px; }
 .guida-video { position: relative; display: block; min-width: 0; padding: 0; border: 1px solid var(--border); border-radius: var(--r-sm); overflow: hidden; background: linear-gradient(135deg, #0e141f, #24405f); cursor: pointer; aspect-ratio: 16 / 9; }
+.guida-video-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .guida-video-play { position: absolute; left: 50%; top: 40%; width: 36px; height: 36px; margin: -18px 0 0 -18px; border-radius: 50%; background: var(--accent); }
 .guida-video-play::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 14px; margin: -7px 0 0 -3px; background: var(--accent-ink); clip-path: polygon(0 0, 100% 50%, 0 100%); }
 .guida-video-titolo { position: absolute; left: 0; right: 0; bottom: 0; padding: 4px 6px; font-size: .8125rem; line-height: 1.25; color: #fff; background: rgb(0 0 0 / .65); text-align: left; }
