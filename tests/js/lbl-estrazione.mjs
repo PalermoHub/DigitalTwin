@@ -21,7 +21,7 @@ const decodifica = t => t
   .replace(/\\(.)/g, '$1');
 
 // selettori CSS e nomi di classe (non prosa): ogni parola è un selettore, una classe con trattini o un combinatore
-const SOLO_CSS = l => /^\s*</.test(l) || l.trim().split(/\s+/).map(tok => tok.replace(/,$/, '')).every(tok => /^[.#:[>~+*]/.test(tok) || /^[a-z][\w-]*([.#:[][\w\-[\]=*"'^$|~.]+)+$/.test(tok) || /^[a-z]+(-{1,2}[a-z0-9]*)+$/.test(tok));
+const SOLO_CSS = l => l.trim().split(/\s+/).map(tok => tok.replace(/,$/, '')).every(tok => /^[.#:[>~+*]/.test(tok) || /^[a-z][\w-]*([.#:[][\w\-[\]=*"'^$|~.]+)+$/.test(tok) || /^[a-z]+(-{1,2}[a-z0-9]*)+$/.test(tok));
 
 function letterali(riga) {
   const out = [];
@@ -33,17 +33,31 @@ function letterali(riga) {
     if (c === "'" || c === '"') {
       let j = i + 1;
       while (j < riga.length && riga[j] !== c) j += riga[j] === '\\' ? 2 : 1;
-      out.push(decodifica(riga.slice(i + 1, j)));
+      out.push(senzaTag(decodifica(riga.slice(i + 1, j))));
       i = j + 1;
     } else if (c === '`') {
       let j = i + 1;
       while (j < riga.length && riga[j] !== c) j += riga[j] === '\\' ? 2 : 1;
       const corpo = riga.slice(i + 1, j);
-      if (!corpo.includes('${')) out.push(decodifica(corpo)); // i template con variabili si traducono alla fonte con t()
+      if (!corpo.includes('${')) out.push(senzaTag(decodifica(corpo))); // i template con variabili si traducono alla fonte con t()
       i = j + 1;
     } else i++;
   }
   return out;
+}
+
+// un frammento HTML si valuta per la prosa fuori dai tag
+const senzaTag = l => (/^\s*</.test(l) ? l.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : l);
+
+// assegnazioni dirette di testo (textContent, innerHTML, title, aria-label…) con un letterale italiano non passato da t()/tl()
+export function sinkDiretti(sorgente) {
+  const trovati = [];
+  sorgente.split('\n').forEach((riga, n) => {
+    if (!/(\.textContent|\.innerHTML|\.title|\.placeholder|\.ariaLabel)\s*=[^=]|setAttribute\(\s*['"](?:aria-label|title|placeholder)['"]/.test(riga)) return;
+    if (/\b(?:tl|tr|t|tn)\(/.test(riga) || riga.includes('// i18n-ok')) return;
+    for (const l of daTradurre(riga)) trovati.push(`${n + 1}: ${l.slice(0, 60)}`);
+  });
+  return trovati;
 }
 
 export function daTradurre(sorgente) {

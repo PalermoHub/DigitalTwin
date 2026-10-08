@@ -24,6 +24,7 @@ function strategia(richiesta, origine) {
   if (richiesta.mode === 'navigate') return 'pagina';
   if (/\.pmtiles$|\.(mp4|webm|vtt)$/.test(url.pathname)) return 'ignora'; // file pesanti: sempre dalla rete, anche se dentro dati/
   if (/\/dati\//.test(url.pathname)) return 'dati';
+  if (/\/locales\/[a-z]+\.json$/.test(url.pathname)) return 'dati'; // dizionari IT/EN: rete prima, devono andare di pari passo con il codice
   return 'statico';
 }
 

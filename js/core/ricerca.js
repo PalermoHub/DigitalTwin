@@ -174,7 +174,7 @@ export function collegaRicercaParticella(map, campoFoglio, campoNumero, bottone,
     if (casella && !casella.checked) { casella.checked = true; casella.dispatchEvent(new Event('change')); }
     map.fitBounds(limiti, { padding: 50, maxZoom: 18 });
     new maplibregl.Popup({ closeOnClick: true }).setLngLat(limiti.getCenter())
-      .setHTML(`<div style="text-align:center"><b>Particella catastale</b><br>Foglio ${foglio} · Particella ${numero}</div>`).addTo(map);
+      .setHTML(`<div style="text-align:center"><b>${t('evidenza.particella')}</b><br>${t('ricerca.particella.riga', { foglio, numero })}</div>`).addTo(map);
   }
   bottone.addEventListener('click', cerca);
   return (foglio, numero) => { campoFoglio.value = foglio; campoNumero.value = numero; cerca(); };

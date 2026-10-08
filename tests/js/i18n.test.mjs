@@ -113,3 +113,28 @@ test('tl: in italiano restituisce il testo com\'è; in inglese cerca «lbl.<test
   assert.equal(tl(undefined), undefined);
   assert.equal(tl(''), '');
 });
+
+test('applicaDom: se la chiave manca nei dizionari lascia il testo che c\'era (HTML italiano di partenza)', () => {
+  impostaDizionari('it', {}, {});
+  const e1 = elemento({ 'data-i18n': 'k.assente' }); e1.textContent = 'Guida';
+  const e2 = elemento({ 'data-i18n-title': 'k.assente', title: 'Titolo originale' });
+  const e3 = elemento({ 'data-i18n-html': 'k.assente' }); e3.innerHTML = '<b>Originale</b>';
+  const avvisi = [];
+  const orig = console.warn; console.warn = m => avvisi.push(m);
+  try { applicaDom(radiceCon([e1, e2, e3])); } finally { console.warn = orig; }
+  assert.equal(e1.textContent, 'Guida');
+  assert.equal(e2.attrs.title, 'Titolo originale');
+  assert.equal(e3.innerHTML, '<b>Originale</b>');
+  assert.ok(avvisi.length >= 1, 'la chiave mancante resta segnalata in console');
+});
+
+test('senza localStorage la scelta si ricorda per la sessione (sessionStorage) e rilevaLingua la rilegge', () => {
+  const rotto = { getItem() { throw new Error('negato'); }, setItem() { throw new Error('negato'); } };
+  const sessione = memoria();
+  impostaDizionari('it', {}, {});
+  let ricaricata = 0;
+  impostaLingua('en', { storage: rotto, sessione, ricarica: () => { ricaricata++; } });
+  assert.equal(sessione.d['dt-lingua'], 'en');
+  assert.equal(ricaricata, 1);
+  assert.equal(rilevaLingua(rotto, { language: 'it-IT' }, sessione), 'en');
+});

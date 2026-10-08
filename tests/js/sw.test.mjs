@@ -24,6 +24,7 @@ test('strategia: la pagina si chiede alla rete prima', () => {
 test('strategia: i dati dell\'app rete prima, i file statici copia salvata', () => {
   assert.equal(strategia(r('dati/colonnine/colonnine.geojson'), ORIGINE), 'dati');
   assert.equal(strategia(r('dati/catalogo.json'), ORIGINE), 'dati');
+  assert.equal(strategia(r('js/locales/en.json'), ORIGINE), 'dati', 'i dizionari delle lingue: rete prima, così non restano indietro rispetto al codice');
   for (const f of ['js/app.js', 'css/app.css', 'img/logo-palermo-digital-twin.svg', 'manifest.webmanifest']) assert.equal(strategia(r(f), ORIGINE), 'statico', f);
 });
 

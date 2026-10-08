@@ -50,9 +50,9 @@ export function costruisciClassifica(dati, luogo = {}) {
   radice.append(el('div', 'pop-classifica-titolo'));
   const bottoni = el('div', 'pop-livelli');
   bottoni.setAttribute('role', 'group');
-  bottoni.setAttribute('aria-label', 'Livello della classifica');
+  bottoni.setAttribute('aria-label', tl('Livello della classifica'));
   const legenda = el('div', 'pop-legenda');
-  legenda.innerHTML = '<span><i class="pop-dot pop-it"></i>Italiani</span><span><i class="pop-dot pop-st"></i>Stranieri</span><span class="pop-legenda-pct">% str.</span>';
+  legenda.innerHTML = `<span><i class="pop-dot pop-it"></i>${tr('popolazione.italiani')}</span><span><i class="pop-dot pop-st"></i>${tr('popolazione.stranieri')}</span><span class="pop-legenda-pct">${tr('popolazione.pctStr')}</span>`;
   const lista = el('div', 'pop-lista');
   const totale = el('div', 'pop-totale');
   const fonte = el('p', 'scheda-nota scheda-fonte', 'Fonte: ISTAT, Censimento permanente 2021 — sezioni di censimento. Tendenza: aggiornamento 2023, Cruscotto Statistico Comunale (dati.gov.it).');

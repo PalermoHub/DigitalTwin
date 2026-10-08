@@ -24,13 +24,13 @@ function creaLegendaOmi(_gruppo, map) {
   legendaOmi.className = 'legenda legenda-omi';
   legendaOmi.hidden = true;
   const titolo = document.createElement('strong');
-  titolo.textContent = 'Zone OMI 2025 (fascia)';
+  titolo.textContent = tl('Zone OMI 2025 (fascia)');
   legendaOmi.append(titolo);
   const accese = new Set(FASCE_OMI.map(([lettera]) => lettera));
   for (const [lettera, nome, colore] of FASCE_OMI) {
     const campione = document.createElement('i');
     campione.style.background = colore;
-    legendaOmi.append(voceFiltro(campione, `${lettera} · ${nome}`, acceso => {
+    legendaOmi.append(voceFiltro(campione, `${lettera} · ${tl(nome)}`, acceso => {
       acceso ? accese.add(lettera) : accese.delete(lettera);
       const codici = new Set(CODICI_OMI.filter(c => accese.has(c[0])));
       const filtro = filtroInsieme(['get', 'Zona_OMI'], codici, CODICI_OMI.length);
@@ -51,7 +51,7 @@ function creaLegendaCatasto(_gruppo, map) {
   legendaCatasto.className = 'legenda legenda-catasto';
   legendaCatasto.hidden = true;
   const titolo = document.createElement('strong');
-  titolo.textContent = 'Catasto';
+  titolo.textContent = tl('Catasto');
   const simbolo = (classe, testo) => {
     const i = document.createElement('i');
     i.className = classe;

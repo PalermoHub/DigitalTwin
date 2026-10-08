@@ -1,5 +1,5 @@
 import { normalizza } from './indirizzi.js';
-import { t as tr } from './i18n.js';
+import { t as tr, tl } from './i18n.js';
 
 // Luoghi cercabili per nome: sorgente e strato da accendere quando si sceglie il risultato (`strato`: nome o funzione sulle proprietà;
 // `zoom`: opzionale, altrimenti la ricerca zooma a 18; `numero`: funzione, per cercare una linea dal solo numero o sigla).
@@ -14,7 +14,7 @@ export const FONTI = [
   // le linee si trovano per numero o nome; lo strato da accendere è bus o tram
   { file: 'trasporto/linee.geojson', strato: p => (p.tipo === 'tram' ? 'trasporto-tram' : 'trasporto-bus'), zoom: 14, numero: p => p.numero,
     nota: p => tr('luoghi.linea', { tipo: p.tipo === 'tram' ? 'Tram' : 'Bus', da: p.da, a: p.a }), campi: p => [`Linea ${p.numero} ${p.nome}`] },
-  { file: 'colonnine/colonnine.geojson', strato: 'colonnine', zoom: 17, nota: p => tr('luoghi.colonnina', { stato: p.stato.toLowerCase(), kw: p.potenza_kw }), campi: p => [p.operatore, p.indirizzo] },
+  { file: 'colonnine/colonnine.geojson', strato: 'colonnine', zoom: 17, nota: p => tr('luoghi.colonnina', { stato: tl(p.stato).toLowerCase(), kw: p.potenza_kw }), campi: p => [p.operatore, p.indirizzo] },
   // sedi degli uffici (es. «Polo Tecnico»), prima degli uffici che ospitano
   { file: 'uffici/sedi.geojson', strato: 'uffici', zoom: 17, nota: p => tr('luoghi.sede', { n: p.n_uffici }), campi: p => [p.nome, p.indirizzo] },
   // uffici comunali: per nome, sede o responsabile; le coordinate stanno nella geometria

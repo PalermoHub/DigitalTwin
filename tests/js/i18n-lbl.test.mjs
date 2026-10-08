@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { daTradurre, fileModelli, leggiFile } from './lbl-estrazione.mjs';
+import { daTradurre, sinkDiretti, fileModelli, leggiFile } from './lbl-estrazione.mjs';
 
 const RADICE = new URL('../../', import.meta.url).pathname;
 const leggi = f => JSON.parse(readFileSync(`${RADICE}js/locales/${f}`, 'utf8'));
@@ -33,4 +33,19 @@ test('ogni testo del modello ha la sua voce lbl.* in italiano e in inglese', () 
 
 test('in it.json ogni lbl.<testo> vale il testo stesso (l\'italiano non si altera)', () => {
   for (const [k, v] of Object.entries(it)) if (k.startsWith('lbl.')) assert.equal(v, k.slice(4), k);
+});
+
+test('sinkDiretti: trova textContent/aria-label con letterale italiano non tradotto', () => {
+  assert.equal(sinkDiretti("nota.textContent = 'Ogni zona ha una tonalità propria nella fascia.';").length, 1);
+  assert.equal(sinkDiretti("nota.textContent = tl('Ogni zona ha una tonalità propria nella fascia.');").length, 0);
+  assert.equal(sinkDiretti("b.setAttribute('aria-label', 'Metodo di classificazione');").length, 1);
+  assert.equal(sinkDiretti("o.innerHTML = '<span class=\"et\">Catalogo RNDT</span>';").length, 0, 'una sola parola senza accenti: la prende il controllo visivo');
+});
+
+test('i testi assegnati direttamente (textContent, innerHTML, aria-label…) nei layer passano da t()/tl()', () => {
+  const trovati = [];
+  for (const f of fileModelli(RADICE).filter(x => x.startsWith('js/layers/'))) {
+    for (const r of sinkDiretti(leggiFile(RADICE, f))) trovati.push(`${f}:${r}`);
+  }
+  assert.deepEqual(trovati, []);
 });
