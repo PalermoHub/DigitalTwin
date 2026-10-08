@@ -2,11 +2,11 @@
 // Il cassetto «Tabella»: schede per layer, griglia, selezione di righe e colonne, export.
 import { t, tn, tl } from '../i18n.js';
 import { scarica as scaricaFile } from '../../geoimage/scarica.js';
-import { SORGENTI, LIMITE_RIGHE, MAX_DOM } from './sorgenti.js';
+import { SORGENTI, LIMITE_RIGHE, MAX_DOM, sincronizzaEsterne } from './sorgenti.js';
 import { unisciColonne, preferenzeIniziali, applicaPreferenze, ordina, filtra, cella } from './modello.js';
 import { nuovoStato, commutaRiga, tutte, nessuna, inverti, statoTutte, righeDaEsportare, commutaColonna, spostaColonna, colonneDaEsportare } from './selezione.js';
 import { csv, geojson, nomeFile } from './esporta.js';
-import { attiva, leggiVista, righeIn, evidenziaRighe, cancellaEvidenza, vaiA } from './mappa.js';
+import { attiva, leggiEsterni, leggiVista, righeIn, evidenziaRighe, cancellaEvidenza, vaiA } from './mappa.js';
 import { collegaStrumenti } from './strumenti.js';
 import { svgTabella } from './icone.js';
 
@@ -52,9 +52,8 @@ export function firmaVista(stati, corrente, accesa = () => true) {
 export const firmaEvidenza = s => `${s.sorgente.id}|${s.righe.filter(r => s.sel.sel.has(r.chiave)).map(r => r.chiave).join(',')}`;
 
 export function collegaTabella(map, { pulsante: bottone }) {
-  const stato = new Map(SORGENTI.map(s => [s.id, {
-    sorgente: s, righe: [], colonne: [], sel: nuovoStato(), ordine: null, filtro: '', troppe: false,
-  }]));
+  const schedaVuota = s => ({ sorgente: s, righe: [], colonne: [], sel: nuovoStato(), ordine: null, filtro: '', troppe: false });
+  const stato = new Map(SORGENTI.map(s => [s.id, schedaVuota(s)]));
   const accesa = s => attiva(map, s.sorgente);
   const esportazioni = new Map(); // pulsanti correnti, per aggiornare il conteggio senza ridisegnare la barra
   let corrente = SORGENTI[0].id;
@@ -126,6 +125,11 @@ export function collegaTabella(map, { pulsante: bottone }) {
   // --- lettura delle righe ---
   function aggiorna(forza = false) {
     if (!aperto) return;
+    // i layer esterni nascono e spariscono: il registro e le schede si allineano a ogni lettura
+    const { uscite } = sincronizzaEsterne(leggiEsterni(map));
+    for (const id of uscite) stato.delete(id);
+    for (const s of SORGENTI) if (!stato.has(s.id)) stato.set(s.id, schedaVuota(s));
+    if (!stato.has(corrente)) corrente = SORGENTI[0].id;
     for (const s of stato.values()) {
       if (!attiva(map, s.sorgente)) { s.righe = []; s.troppe = false; continue; }
       let righe = leggiVista(map, s.sorgente);

@@ -6,6 +6,20 @@ import { interseca } from './geom.js';
 const STRATO_AREE = 'confini-upl-fill'; // ha le proprietà UPL, Quartiere e Circoscrizione (vedi js/layers/confini.js)
 const CAMPO_AREA = { circoscrizione: 'Circoscrizione', quartiere: 'Quartiere', upl: 'UPL' };
 
+// Layer aggiunti dall'utente (host «miei» e RNDT): `${id}-fill|line|pt`; il nome sta nei metadati dello strato.
+const STRATO_ESTERNO = /^((?:miei|rndt)-.+)-(?:fill|line|pt)$/;
+export function leggiEsterni(map) {
+  const per = new Map();
+  for (const l of map.getStyle?.()?.layers ?? []) {
+    const m = STRATO_ESTERNO.exec(l.id);
+    if (!m) continue;
+    const e = per.get(m[1]) ?? { id: m[1], nome: l.metadata?.dtNome ?? m[1], strati: [] };
+    e.strati.push(l.id);
+    per.set(m[1], e);
+  }
+  return [...per.values()];
+}
+
 export function attiva(map, sorgente) {
   if (!sorgente.strati.every(id => map.getLayer(id))) return false;
   return sorgente.visibili.some(id => map.getLayer(id) && map.getLayoutProperty(id, 'visibility') !== 'none');
@@ -14,6 +28,7 @@ export function attiva(map, sorgente) {
 export function leggiVista(map, sorgente) {
   let feature = [];
   try { feature = map.queryRenderedFeatures({ layers: sorgente.strati.filter(id => map.getLayer(id)) }); } catch { feature = []; }
+  if (sorgente.filtro) feature = feature.filter(f => sorgente.filtro(f.properties ?? {}));
   return normalizza(feature, sorgente);
 }
 

@@ -55,3 +55,15 @@ test('poligoniArea: raccoglie tutti i pezzi dell’area con lo stesso valore, pe
   assert.deepEqual(poligoniArea(mappaFinta(), { x: 1, y: 1 }, 'quartiere'), [], 'strato assente');
   assert.deepEqual(poligoniArea(m, { x: 1, y: 1 }, 'inesistente'), []);
 });
+
+test('leggiEsterni raggruppa gli strati dei layer aggiunti e legge il nome dai metadati', async () => {
+  const { leggiEsterni } = await import('../../js/core/tabella/mappa.js');
+  const mappa = { getStyle: () => ({ layers: [
+    { id: 'miei-1a2b-fill', metadata: { dtNome: 'Ciclabili' } }, { id: 'miei-1a2b-line' }, { id: 'miei-1a2b-pt' },
+    { id: 'rndt-zz-line' }, { id: 'rndt-raster' }, { id: 'colonnine-punti' },
+  ] }) };
+  const e = leggiEsterni(mappa);
+  assert.equal(e.length, 2);
+  assert.deepEqual(e[0], { id: 'miei-1a2b', nome: 'Ciclabili', strati: ['miei-1a2b-fill', 'miei-1a2b-line', 'miei-1a2b-pt'] });
+  assert.equal(e[1].id, 'rndt-zz');
+});

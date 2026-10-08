@@ -68,10 +68,12 @@ export function applicaPreferenze(colonne, pref) {
 }
 
 // Colonne di partenza di una sorgente con `colonne`: quelle elencate in testa e visibili, tutte le altre nascoste.
+// `campi` è un elenco, o una funzione che dai campi presenti ricava l'elenco (per i dataset dal manifest).
 export function preferenzeIniziali(colonne, campi) {
-  if (!Array.isArray(campi)) return null;
+  const lista = typeof campi === 'function' ? campi(colonne.map(c => c.campo)) : campi;
+  if (!Array.isArray(lista)) return null;
   const note = new Set(colonne.map(c => c.campo));
-  const scelte = campi.filter(c => note.has(c));
+  const scelte = lista.filter(c => note.has(c));
   const altre = colonne.map(c => c.campo).filter(c => !scelte.includes(c));
   return [...scelte.map(campo => ({ campo, visibile: true, esporta: true })), ...altre.map(campo => ({ campo, visibile: false, esporta: false }))];
 }
