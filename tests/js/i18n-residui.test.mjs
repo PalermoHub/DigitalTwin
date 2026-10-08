@@ -2,67 +2,17 @@
 // Un letterale volutamente italiano (messaggio solo per la console, nome proprio, dato) si marca con `// i18n-ok` a fine riga.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 
-// Si estende a ogni task di migrazione: percorsi relativi alla radice del repo.
-export const MIGRATI = [
-  'js/app.js', 'js/core/pannello.js', 'js/core/pannello-riordino.js', 'js/core/pannello-attributo.js',
-  'js/core/pannello-comune.js', 'js/core/pannello-tema.js', 'js/core/strumenti.js', 'js/core/stampa.js',
-  'js/core/ripristino.js', 'js/core/rail.js', 'js/core/tab-mobile.js', 'js/core/invito.js',
-  'js/core/ingrandisci.js', 'js/core/evidenza.js',
-  'js/core/scheda.js', 'js/core/scheda-modello.js', 'js/core/scheda-disegno.js', 'js/core/scheda-pannello-preferenze.js',
-  'js/core/ricerca.js', 'js/core/ricerca-incidenti.js', 'js/core/luoghi.js', 'js/core/indirizzi.js',
-  'js/core/condivisione.js', 'js/core/condivisione-stato.js', 'js/core/condivisione-reti.js', 'js/core/differiti.js',
-  'js/core/tema.js', 'js/core/indicatori.js', 'js/core/tema-attributo.js',
-  // Task 7: Aggiungi, RNDT (interfaccia nostra, tranne info.js: modello schede, vedi Task 8) e Geoimage (tranne le guide)
-  'js/aggiungi/albero.js',
-  'js/aggiungi/arcgis.js',
-  'js/aggiungi/controllo.js',
-  'js/aggiungi/credenziali.js',
-  'js/aggiungi/da-url.js',
-  'js/aggiungi/index.js',
-  'js/aggiungi/migrazione.js',
-  'js/aggiungi/salvati.js',
-  'js/aggiungi/servizi.js',
-  'js/aggiungi/wmts.js',
-  'js/rndt/archivio.js',
-  'js/rndt/area.js',
-  'js/rndt/dati.js',
-  'js/rndt/gruppo.js',
-  'js/rndt/host.js',
-  'js/rndt/importa.js',
-  'js/rndt/index.js',
-  'js/rndt/librerie.js',
-  'js/rndt/pannello.js',
-  'js/rndt/proxy.js',
-  'js/geoimage/archivio.js',
-  'js/geoimage/confronto-clip.js',
-  'js/geoimage/confronto.js',
-  'js/geoimage/esporta.js',
-  'js/geoimage/export-geotiff.js',
-  'js/geoimage/export.js',
-  'js/geoimage/gcp.js',
-  'js/geoimage/geometria.js',
-  'js/geoimage/immagine.js',
-  'js/geoimage/index.js',
-  'js/geoimage/librerie.js',
-  'js/geoimage/maniglie.js',
-  'js/geoimage/omografia.js',
-  'js/geoimage/overlay.js',
-  'js/geoimage/pannello.js',
-  'js/geoimage/posizione.js',
-  'js/geoimage/progetto.js',
-  'js/geoimage/richieste.js',
-  'js/geoimage/scarica.js',
-  'js/geoimage/sessione.js',
-  'js/geoimage/sospensione.js',
-  'js/geoimage/storico.js',
-  'js/geoimage/trasformazioni.js',
-  'js/core/guida.js', 'js/geoimage/guida.js', 'js/core/argomenti.js', 'js/core/traduci-moduli.js',
-  // catalogo.js e i file di contenuto delle guide non sono qui: i loro testi si traducono al render con tl() e sono
-  // controllati da i18n-lbl.test.mjs
-  // non in elenco, di proposito: palette.js (copia identica dell'originale, vedi test), scheda-preferenze.js (le etichette
-  // sono identità delle preferenze salvate: si traducono al render con tl()), consenso.js (tabella propria, non usa i dizionari)
+// Tutti i file di js/ sono controllati, tranne queste eccezioni (motivate). I file nuovi sono quindi controllati da soli.
+export const ECCEZIONI = [
+  'js/vendor/', // librerie di terzi (il plugin RNDT ha la sua traduzione, vedi rndt-traduzione.test.mjs)
+  'js/locales/', // i dizionari
+  'js/layers/', // i testi del modello dati si traducono al render con tl(): li controlla i18n-lbl.test.mjs
+  'js/core/catalogo.js', 'js/core/guida-contenuti.js', 'js/geoimage/guida-contenuti.js', 'js/rndt/info.js', 'js/core/scheda-preferenze.js', // idem
+  'js/core/palette.js', // copia identica dell'originale (vedi il test «palette.js è la copia identica…»)
+  'js/consenso.js', // script classico con la propria tabella IT/EN
+  'js/core/gerarchia.js', 'js/core/zone.js', // nomi propri di circoscrizioni, quartieri e UPL (dati)
 ];
 
 const ACCENTATE = /[àèéìòùÀÈÉÌÒÙ]/;
@@ -113,10 +63,18 @@ test('residui: riconosce italiano, ignora commenti, url, import e i18n-ok', () =
   assert.equal(residui("const u = 'https://example.org/più';").length, 0);
 });
 
-test('i file migrati non hanno letterali italiani residui', () => {
-  const radice = new URL('../../', import.meta.url);
-  for (const f of MIGRATI) {
-    const r = residui(readFileSync(new URL(f, radice), 'utf8'));
-    assert.deepEqual(r, [], `${f}: stringhe italiane da portare nei dizionari`);
+function tuttiIFile(radice, dir = 'js', out = []) {
+  for (const n of readdirSync(new URL(`${dir}/`, radice))) {
+    const p = `${dir}/${n}`;
+    if (statSync(new URL(p, radice)).isDirectory()) { if (!ECCEZIONI.includes(`${p}/`)) tuttiIFile(radice, p, out); }
+    else if (n.endsWith('.js') && !ECCEZIONI.includes(p)) out.push(p);
   }
+  return out;
+}
+
+test('nessun file di js/ ha letterali italiani residui (salvo le eccezioni motivate)', () => {
+  const radice = new URL('../../', import.meta.url);
+  const trovati = [];
+  for (const f of tuttiIFile(radice)) for (const r of residui(readFileSync(new URL(f, radice), 'utf8'))) trovati.push(`${f} ${r}`);
+  assert.deepEqual(trovati, [], 'stringhe italiane da portare nei dizionari (o da marcare // i18n-ok se sono messaggi di console)');
 });

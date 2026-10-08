@@ -29,7 +29,7 @@ export const localeIntl = () => LOCALE[corrente];
 export function t(chiave, vars) {
   const s = dizionario[chiave] ?? riserva[chiave];
   if (s === undefined) {
-    console.warn(`i18n: manca la chiave «${chiave}»`);
+    console.warn(`i18n: manca la chiave «${chiave}»`); // i18n-ok: messaggio solo per la console
     return chiave;
   }
   return vars ? s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m)) : s;
