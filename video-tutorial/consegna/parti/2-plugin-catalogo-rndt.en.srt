@@ -1,0 +1,215 @@
+1
+00:00:00,440 --> 00:00:02,500
+Let's move on to the national catalogue.
+
+2
+00:00:02,660 --> 00:00:04,590
+First, a couple of sentences on what it is.
+
+3
+00:00:04,750 --> 00:00:08,340
+The RNDT, the National Register of Spatial Data,
+
+4
+00:00:08,380 --> 00:00:11,900
+is the official Italian catalogue of geographic data:
+
+5
+00:00:12,060 --> 00:00:15,820
+it collects the records of thousands of maps published by municipalities,
+
+6
+00:00:15,860 --> 00:00:17,780
+regions, ministries and other bodies.
+
+7
+00:00:17,940 --> 00:00:19,670
+It's like a library:
+
+8
+00:00:19,830 --> 00:00:23,770
+it tells you what exists, who produced it and where to consult it.
+
+9
+00:00:24,720 --> 00:00:29,200
+Inside this map, the catalogue is the openrndt-geolibre plugin,
+
+10
+00:00:29,240 --> 00:00:32,420
+conceived and written by Andrea Borruso of onData.
+
+11
+00:00:32,580 --> 00:00:35,610
+Without his work this feature would not exist:
+
+12
+00:00:35,770 --> 00:00:38,890
+it was adapted to Palermo with very few changes,
+
+13
+00:00:38,930 --> 00:00:41,040
+thanks to its excellent architecture.
+
+14
+00:00:42,000 --> 00:00:45,160
+You find it in the toolbar at the top right:
+
+15
+00:00:45,320 --> 00:00:47,170
+it's the icon with the two layers.
+
+16
+00:00:47,330 --> 00:00:49,540
+The panel opens on the right side,
+
+17
+00:00:49,580 --> 00:00:53,150
+and the Card and RNDT tabs let you switch between them.
+
+18
+00:00:53,310 --> 00:00:54,860
+With Esc you close it.
+
+19
+00:00:55,020 --> 00:00:57,800
+The plugin interface is in English:
+
+20
+00:00:57,960 --> 00:01:00,570
+it's only a few words, don't be put off.
+
+21
+00:01:01,520 --> 00:01:05,440
+Type what you're looking for, for example protected areas, and press Search.
+
+22
+00:01:05,600 --> 00:01:08,640
+The search is always limited to the Palermo area.
+
+23
+00:01:08,800 --> 00:01:12,550
+You can filter by type, data or services, and by format:
+
+24
+00:01:12,710 --> 00:01:18,720
+WMS, WFS or ArcGIS REST.
+
+25
+00:01:18,880 --> 00:01:21,970
+In the advanced filters there are theme, body and dates.
+
+26
+00:01:24,340 --> 00:01:25,890
+Choose a result:
+
+27
+00:01:26,050 --> 00:01:32,040
+the card opens, with title, description, responsible body and available services.
+
+28
+00:01:32,200 --> 00:01:35,740
+Press Open on the service and tick the layer you're interested in:
+
+29
+00:01:35,900 --> 00:01:37,980
+here, the Regional reserves.
+
+30
+00:01:38,140 --> 00:01:41,660
+WMS services are added as images.
+
+31
+00:01:41,820 --> 00:01:44,610
+With Add features, and with WFS services,
+
+32
+00:01:44,650 --> 00:01:49,680
+you bring onto the map the actual features, with their information.
+
+33
+00:01:50,640 --> 00:01:52,660
+Here are the reserves on the map.
+
+34
+00:01:52,820 --> 00:01:58,010
+You find them among the added layers and in the RNDT group of the layers bar:
+
+35
+00:01:58,170 --> 00:02:02,000
+with the eye you switch them on and off, with the bin you remove them.
+
+36
+00:02:02,160 --> 00:02:03,810
+They remember themselves:
+
+37
+00:02:03,970 --> 00:02:06,310
+reopen the map and they are still there.
+
+38
+00:02:07,270 --> 00:02:10,350
+A click on the map also queries these layers.
+
+39
+00:02:10,510 --> 00:02:14,920
+The answers arrive in the Other RNDT data tab of the card,
+
+40
+00:02:14,960 --> 00:02:17,010
+with a box for each layer.
+
+41
+00:02:17,160 --> 00:02:20,830
+Here, for example, Monte Pellegrino, with type and manager.
+
+42
+00:02:20,990 --> 00:02:23,420
+You have to click right on the feature.
+
+43
+00:02:27,420 --> 00:02:28,850
+Two things to know.
+
+44
+00:02:29,010 --> 00:02:33,090
+The WFS download has a cap of 10,000 objects:
+
+45
+00:02:33,250 --> 00:02:38,310
+for very dense layers, like cadastral parcels, WMS is better.
+
+46
+00:02:38,470 --> 00:02:40,250
+And if a service doesn't respond,
+
+47
+00:02:40,290 --> 00:02:44,000
+it stays in the list as unavailable, without being deleted.
+
+48
+00:02:44,970 --> 00:02:46,290
+And your files?
+
+49
+00:02:46,450 --> 00:02:48,340
+They are loaded from My layers:
+
+50
+00:02:48,500 --> 00:02:55,590
+GeoJSON, KML, GPX, zipped Shapefile, CSV with latitude and longitude.
+
+51
+00:02:55,750 --> 00:02:59,650
+Of each file only the features inside the Municipality of Palermo are kept.
+
+52
+00:03:00,610 --> 00:03:01,780
+In short:
+
+53
+00:03:01,940 --> 00:03:03,910
+search, choose, add, click.
+
+54
+00:03:04,070 --> 00:03:08,320
+Four steps to bring onto the map the official data about Palermo.

@@ -1,0 +1,455 @@
+1
+00:00:00,400 --> 00:00:03,260
+Hello, and welcome to the Palermo Digital Twin.
+
+2
+00:00:03,420 --> 00:00:05,860
+A map with the city's open data:
+
+3
+00:00:06,020 --> 00:00:11,110
+land registry, zoning plan, monuments, transport and much more, all in one place.
+
+4
+00:00:12,670 --> 00:00:15,050
+In this video we look at four things.
+
+5
+00:00:15,210 --> 00:00:15,900
+First:
+
+6
+00:00:16,060 --> 00:00:20,190
+how to use the map, from searching for a place to the card with all its data.
+
+7
+00:00:20,350 --> 00:00:21,400
+Second:
+
+8
+00:00:21,560 --> 00:00:25,040
+the plugin that brings the national data catalogue onto the map.
+
+9
+00:00:25,200 --> 00:00:25,890
+Third:
+
+10
+00:00:26,050 --> 00:00:30,000
+Geoimage, to overlay historical maps on today's Palermo.
+
+11
+00:00:30,160 --> 00:00:31,030
+Fourth:
+
+12
+00:00:31,190 --> 00:00:33,620
+where to find everything, and how to help.
+
+13
+00:00:35,080 --> 00:00:37,770
+Everything starts from the Guide, in the top menu.
+
+14
+00:00:37,930 --> 00:00:39,720
+It has 19 steps:
+
+15
+00:00:39,880 --> 00:00:42,920
+we actually do them, one at a time, on the map.
+
+16
+00:00:44,520 --> 00:00:46,370
+This is the initial view:
+
+17
+00:00:46,530 --> 00:00:48,080
+the centre of Palermo.
+
+18
+00:00:48,240 --> 00:00:50,610
+At the top, the logo and the menu with the guides.
+
+19
+00:00:50,770 --> 00:00:53,130
+On the left, the layers bar.
+
+20
+00:00:53,290 --> 00:00:54,900
+At the bottom, the search.
+
+21
+00:00:55,060 --> 00:00:57,720
+And in the footer, a notice I'll mention up front:
+
+22
+00:00:57,880 --> 00:01:03,240
+land registry, zoning plan and constraints are informational data, with no legal value.
+
+23
+00:01:04,200 --> 00:01:06,050
+On the phone the controls change.
+
+24
+00:01:06,210 --> 00:01:07,830
+At the bottom there are four tabs:
+
+25
+00:01:07,990 --> 00:01:10,130
+Map, Layers, Add and Menu.
+
+26
+00:01:10,290 --> 00:01:13,310
+Layers opens base maps, layers and filters.
+
+27
+00:01:13,470 --> 00:01:17,650
+Add brings together your layers, the national catalogue and Geoimage.
+
+28
+00:01:17,810 --> 00:01:19,570
+Menu opens the guides.
+
+29
+00:01:19,730 --> 00:01:23,520
+To learn about a place, tap the map and the card slides up from the bottom.
+
+30
+00:01:25,820 --> 00:01:29,640
+The data comes from public bodies and open data projects:
+
+31
+00:01:29,800 --> 00:01:33,200
+the Municipality of Palermo, the public transport company,
+
+32
+00:01:33,240 --> 00:01:37,140
+the land registry, the zoning plan, the census and OpenStreetMap.
+
+33
+00:01:37,300 --> 00:01:39,480
+The list is in Sources and notices:
+
+34
+00:01:39,640 --> 00:01:44,080
+for each source you'll find the date, the link to the original data and the licence.
+
+35
+00:01:44,240 --> 00:01:46,300
+At the top are the notices:
+
+36
+00:01:46,460 --> 00:01:50,300
+land registry, zoning plan and constraints have no legal value.
+
+37
+00:01:52,760 --> 00:01:55,750
+Layers are the themes that overlay the map.
+
+38
+00:01:55,910 --> 00:01:57,290
+Open the Layers tab:
+
+39
+00:01:57,450 --> 00:01:59,910
+the groups are in alphabetical order.
+
+40
+00:02:00,070 --> 00:02:03,350
+Open Territory and switch on the land registry with the checkbox.
+
+41
+00:02:03,510 --> 00:02:07,410
+It appears at the top as a label, and the legend at the bottom explains its colours.
+
+42
+00:02:07,570 --> 00:02:10,120
+You can switch on more than one and compare them:
+
+43
+00:02:10,280 --> 00:02:12,580
+for example buildings and land registry.
+
+44
+00:02:13,840 --> 00:02:18,690
+With several layers on, the orange Layer order on map card lists them all.
+
+45
+00:02:18,850 --> 00:02:21,230
+At the top means above, on the map.
+
+46
+00:02:21,390 --> 00:02:25,240
+You move them with the arrows or by dragging, and the order is remembered.
+
+47
+00:02:28,720 --> 00:02:32,750
+The Base map tab changes the map beneath the layers:
+
+48
+00:02:32,910 --> 00:02:35,390
+streets, aerial, topographic.
+
+49
+00:02:35,550 --> 00:02:37,780
+At the bottom are the historical maps:
+
+50
+00:02:37,940 --> 00:02:42,660
+15 maps of Palermo, from 1580 to 1993.
+
+51
+00:02:42,820 --> 00:02:47,320
+The coloured dot tells you how well the map overlaps with today's city.
+
+52
+00:02:47,480 --> 00:02:50,210
+Here, Palermo in 1891.
+
+53
+00:02:54,320 --> 00:02:56,860
+In the My layers tab you add your own data:
+
+54
+00:02:57,020 --> 00:03:01,530
+a file from your computer, a web address, or a map service.
+
+55
+00:03:01,690 --> 00:03:04,090
+It works like the QGIS Browser.
+
+56
+00:03:04,250 --> 00:03:07,150
+Services stay saved in your browser.
+
+57
+00:03:12,370 --> 00:03:15,590
+The palette button opens the colour panel.
+
+58
+00:03:15,750 --> 00:03:20,680
+With Colour by attribute you choose a data field and the map is coloured accordingly.
+
+59
+00:03:20,840 --> 00:03:23,890
+Here, buildings by population density.
+
+60
+00:03:24,050 --> 00:03:27,000
+The colour ramp is chosen from a list with a preview,
+
+61
+00:03:27,040 --> 00:03:32,060
+including Fabio Crameri's scientific scales, readable even with colour blindness.
+
+62
+00:03:35,080 --> 00:03:37,840
+To learn about a place, just click on the map.
+
+63
+00:03:38,000 --> 00:03:41,350
+The point is highlighted and the place card opens.
+
+64
+00:03:41,520 --> 00:03:45,570
+Highlighted areas have a legend with a colour for each entry:
+
+65
+00:03:45,730 --> 00:03:48,300
+a click on an entry leaves only that one on the map.
+
+66
+00:03:48,460 --> 00:03:51,970
+Hovering with the mouse shows a tooltip with the layer name.
+
+67
+00:03:53,530 --> 00:03:55,510
+And this is the strength of the map:
+
+68
+00:03:55,670 --> 00:03:59,990
+a single click queries land registry, zoning constraints,
+
+69
+00:04:00,030 --> 00:04:03,540
+road safety, cultural heritage and public transport together.
+
+70
+00:04:03,700 --> 00:04:07,180
+The card lists everything that overlaps at that point.
+
+71
+00:04:08,140 --> 00:04:11,950
+The card is divided into sections, which you choose from the tabs at the top.
+
+72
+00:04:12,110 --> 00:04:17,310
+Place summarises address, neighbourhood, monuments, accident risk and nearby stops.
+
+73
+00:04:17,470 --> 00:04:21,170
+Planning tools starts from the building, then shows the parcel,
+
+74
+00:04:21,210 --> 00:04:23,970
+with sheet and number, and the link to the cadastral extract.
+
+75
+00:04:24,130 --> 00:04:26,190
+Every section states its source.
+
+76
+00:04:32,300 --> 00:04:36,270
+The Monuments layer shows churches, palaces, fountains and theatres.
+
+77
+00:04:36,430 --> 00:04:39,260
+A click on the Teatro Massimo opens its card:
+
+78
+00:04:39,420 --> 00:04:41,230
+photo, description, category,
+
+79
+00:04:41,270 --> 00:04:46,860
+and the link to the Palermo Municipality Tourism Portal, where the texts come from.
+
+80
+00:04:52,610 --> 00:04:57,520
+The Municipal offices layer shows where the Municipality's offices are, grouped by location.
+
+81
+00:04:57,680 --> 00:05:01,120
+The card for Palazzo Palagonia lists areas and offices,
+
+82
+00:05:01,160 --> 00:05:04,600
+with managers and contacts, when published.
+
+83
+00:05:09,930 --> 00:05:15,360
+The PAI Plan group reports the Hydrogeological Plan of the Sicilian Region:
+
+84
+00:05:15,520 --> 00:05:18,910
+hydraulic and geomorphological hazard and risk.
+
+85
+00:05:19,070 --> 00:05:24,850
+A click on an area opens the card, with the PAI constraints box and the most severe class.
+
+86
+00:05:25,010 --> 00:05:26,760
+This is informational data:
+
+87
+00:05:26,920 --> 00:05:29,920
+for legal use, the official cartography prevails.
+
+88
+00:05:35,630 --> 00:05:40,650
+The Fires layer shows the areas burned since 2007, year by year:
+
+89
+00:05:40,810 --> 00:05:42,490
+the colour indicates the year.
+
+90
+00:05:42,650 --> 00:05:46,340
+The card reports date, location and burned areas.
+
+91
+00:05:51,120 --> 00:05:55,130
+Heat islands show the surface temperature in summer,
+
+92
+00:05:55,170 --> 00:05:58,790
+derived from Landsat satellites, for each census section.
+
+93
+00:05:58,950 --> 00:06:04,310
+In the legend you choose the classification method and the number of classes,
+
+94
+00:06:04,350 --> 00:06:07,020
+and see the trend from 2019 to 2025.
+
+95
+00:06:07,180 --> 00:06:08,600
+Note:
+
+96
+00:06:08,760 --> 00:06:12,040
+it is the surface temperature, not the air temperature.
+
+97
+00:06:14,680 --> 00:06:17,630
+To search, type in the field at the bottom a street,
+
+98
+00:06:17,670 --> 00:06:20,240
+a house number, a neighbourhood or a parcel.
+
+99
+00:06:20,400 --> 00:06:25,140
+The Filters tab limits the search to a district, a neighbourhood or a zone,
+
+100
+00:06:25,180 --> 00:06:28,510
+or lets you find a parcel by sheet and number.
+
+101
+00:06:28,670 --> 00:06:29,810
+For example:
+
+102
+00:06:29,970 --> 00:06:32,870
+choose a district and type Maqueda.
+
+103
+00:06:33,030 --> 00:06:35,950
+A click on the result takes the map to the spot.
+
+104
+00:06:36,910 --> 00:06:38,920
+The tools at the top right.
+
+105
+00:06:39,080 --> 00:06:41,880
+The house returns to the initial view.
+
+106
+00:06:42,040 --> 00:06:44,390
+The 3D button tilts the map.
+
+107
+00:06:44,550 --> 00:06:47,750
+Then full screen and the moon, for the dark theme.
+
+108
+00:06:47,910 --> 00:06:52,070
+The printer prepares a sheet with the map, legends and sources:
+
+109
+00:06:52,230 --> 00:06:56,050
+choose format, from A4 to A0, orientation and scale.
+
+110
+00:06:59,020 --> 00:07:01,440
+One last warning, an important one.
+
+111
+00:07:01,600 --> 00:07:05,840
+Land registry, zoning and constraints are for information only:
+
+112
+00:07:06,000 --> 00:07:10,890
+they do not replace the urban planning certificate or the official cadastral extracts.
+
+113
+00:07:11,050 --> 00:07:13,320
+Census data are estimates.
+
+114
+00:07:13,480 --> 00:07:17,090
+For legal use, always contact the competent offices.

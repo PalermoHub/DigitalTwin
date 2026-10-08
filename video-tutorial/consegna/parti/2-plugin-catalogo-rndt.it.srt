@@ -1,0 +1,215 @@
+1
+00:00:00,440 --> 00:00:02,500
+Passiamo al catalogo nazionale.
+
+2
+00:00:02,660 --> 00:00:04,590
+Prima, due frasi su cos'è.
+
+3
+00:00:04,750 --> 00:00:08,340
+L'RNDT, il Repertorio Nazionale dei Dati Territoriali,
+
+4
+00:00:08,380 --> 00:00:11,900
+è il catalogo ufficiale italiano dei dati geografici:
+
+5
+00:00:12,060 --> 00:00:15,820
+raccoglie le schede di migliaia di mappe pubblicate da Comuni,
+
+6
+00:00:15,860 --> 00:00:17,780
+Regioni, ministeri e altri enti.
+
+7
+00:00:17,940 --> 00:00:19,670
+È come una biblioteca:
+
+8
+00:00:19,830 --> 00:00:23,770
+ti dice che cosa esiste, chi l'ha prodotto e dove consultarlo.
+
+9
+00:00:24,720 --> 00:00:29,200
+Dentro questa mappa, il catalogo è il plugin openrndt-geolibre,
+
+10
+00:00:29,240 --> 00:00:32,420
+ideato e scritto da Andrea Borruso di onData.
+
+11
+00:00:32,580 --> 00:00:35,610
+Senza il suo lavoro questa funzione non esisterebbe:
+
+12
+00:00:35,770 --> 00:00:38,890
+è stato adattato a Palermo con pochissimi interventi,
+
+13
+00:00:38,930 --> 00:00:41,040
+grazie alla sua ottima architettura.
+
+14
+00:00:42,000 --> 00:00:45,160
+Lo trovi nella barra degli strumenti in alto a destra:
+
+15
+00:00:45,320 --> 00:00:47,170
+è l'icona con i due layer.
+
+16
+00:00:47,330 --> 00:00:49,540
+Il pannello si apre sul lato destro,
+
+17
+00:00:49,580 --> 00:00:53,150
+e i tab Scheda e RNDT ti fanno passare dall'uno all'altro.
+
+18
+00:00:53,310 --> 00:00:54,860
+Con Esc lo chiudi.
+
+19
+00:00:55,020 --> 00:00:57,800
+L'interfaccia del plugin è in inglese:
+
+20
+00:00:57,960 --> 00:01:00,570
+sono poche parole, non spaventarti.
+
+21
+00:01:01,520 --> 00:01:05,440
+Scrivi cosa cerchi, per esempio zone protette, e premi Search.
+
+22
+00:01:05,600 --> 00:01:08,640
+La ricerca è sempre limitata all'area di Palermo.
+
+23
+00:01:08,800 --> 00:01:12,550
+Puoi filtrare per tipo, dati o servizi, e per formato:
+
+24
+00:01:12,710 --> 00:01:18,720
+WMS, WFS o ArcGIS REST.
+
+25
+00:01:18,880 --> 00:01:21,970
+Nei filtri avanzati ci sono tema, ente e date.
+
+26
+00:01:24,340 --> 00:01:25,890
+Scegli un risultato:
+
+27
+00:01:26,050 --> 00:01:32,040
+si apre la scheda, con titolo, descrizione, ente responsabile e servizi disponibili.
+
+28
+00:01:32,200 --> 00:01:35,740
+Premi Open sul servizio e spunta il layer che ti interessa:
+
+29
+00:01:35,900 --> 00:01:37,980
+qui, le Riserve regionali.
+
+30
+00:01:38,140 --> 00:01:41,660
+I servizi WMS si aggiungono come immagini.
+
+31
+00:01:41,820 --> 00:01:44,610
+Con Add features, e con i servizi WFS,
+
+32
+00:01:44,650 --> 00:01:49,680
+porti in mappa gli elementi veri e propri, con le loro informazioni.
+
+33
+00:01:50,640 --> 00:01:52,660
+Ecco le riserve sulla mappa.
+
+34
+00:01:52,820 --> 00:01:58,010
+Le ritrovi tra i layer aggiunti e nel gruppo RNDT della barra degli strati:
+
+35
+00:01:58,170 --> 00:02:02,000
+con l'occhio le accendi e le spegni, con il cestino le rimuovi.
+
+36
+00:02:02,160 --> 00:02:03,810
+Si ricordano da sole:
+
+37
+00:02:03,970 --> 00:02:06,310
+riapri la mappa e sono ancora lì.
+
+38
+00:02:07,270 --> 00:02:10,350
+Un clic sulla mappa interroga anche questi layer.
+
+39
+00:02:10,510 --> 00:02:14,920
+Le risposte arrivano nella linguetta Altri dati RNDT della scheda,
+
+40
+00:02:14,960 --> 00:02:17,010
+con un riquadro per ogni layer.
+
+41
+00:02:17,160 --> 00:02:20,830
+Qui, per esempio, Monte Pellegrino, con tipologia e gestore.
+
+42
+00:02:20,990 --> 00:02:23,420
+Bisogna cliccare proprio sull'elemento.
+
+43
+00:02:27,420 --> 00:02:28,850
+Due cose da sapere.
+
+44
+00:02:29,010 --> 00:02:33,090
+Il download WFS ha un tetto di 10.000 oggetti:
+
+45
+00:02:33,250 --> 00:02:38,310
+per strati molto densi, come le particelle catastali, meglio il WMS.
+
+46
+00:02:38,470 --> 00:02:40,250
+E se un servizio non risponde,
+
+47
+00:02:40,290 --> 00:02:44,000
+resta in elenco come non disponibile, senza essere cancellato.
+
+48
+00:02:44,970 --> 00:02:46,290
+E i tuoi file?
+
+49
+00:02:46,450 --> 00:02:48,340
+Si caricano da I miei layer:
+
+50
+00:02:48,500 --> 00:02:55,590
+GeoJSON, KML, GPX, Shapefile in zip, CSV con latitudine e longitudine.
+
+51
+00:02:55,750 --> 00:02:59,650
+Di ogni file restano solo gli elementi dentro il Comune di Palermo.
+
+52
+00:03:00,610 --> 00:03:01,780
+In breve:
+
+53
+00:03:01,940 --> 00:03:03,910
+cerchi, scegli, aggiungi, clicchi.
+
+54
+00:03:04,070 --> 00:03:08,320
+Quattro passi per portare in mappa i dati ufficiali che riguardano Palermo.

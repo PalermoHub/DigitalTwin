@@ -1,0 +1,151 @@
+1
+00:00:00,390 --> 00:00:01,910
+Last feature:
+
+2
+00:00:02,070 --> 00:00:03,240
+Geoimage.
+
+3
+00:00:03,400 --> 00:00:07,560
+It lets you overlay a historical map, or any image,
+
+4
+00:00:07,600 --> 00:00:10,560
+on modern cartography, and georeference it:
+
+5
+00:00:10,720 --> 00:00:15,560
+that is, give it real geographic coordinates, using control points, the GCPs.
+
+6
+00:00:16,520 --> 00:00:17,740
+First step:
+
+7
+00:00:17,900 --> 00:00:21,450
+frame the area with the search, for example the Teatro Massimo,
+
+8
+00:00:21,490 --> 00:00:24,470
+so the image loads already close to the right place.
+
+9
+00:00:27,440 --> 00:00:31,630
+Drag the file into the Upload historical map box, or click it.
+
+10
+00:00:31,790 --> 00:00:35,030
+Here, a plan of Palermo from 1891:
+
+11
+00:00:35,190 --> 00:00:39,270
+it appears right away in the centre of the map, with the positioning handles.
+
+12
+00:00:40,230 --> 00:00:43,660
+With the handles you move it, rotate it and resize it.
+
+13
+00:00:43,820 --> 00:00:46,790
+The corners have two modes, scale and distort,
+
+14
+00:00:46,830 --> 00:00:49,680
+useful for maps that are not rectangular.
+
+15
+00:00:55,770 --> 00:00:57,540
+Now the control points.
+
+16
+00:00:57,700 --> 00:00:59,290
+Press Add GCP.
+
+17
+00:00:59,450 --> 00:01:01,440
+For each point you need two clicks:
+
+18
+00:01:01,600 --> 00:01:05,280
+the first on a recognisable place in the historical image,
+
+19
+00:01:05,320 --> 00:01:07,830
+a crossroads, a building, a monument.
+
+20
+00:01:07,990 --> 00:01:10,830
+The second on the same place in the modern map.
+
+21
+00:01:10,990 --> 00:01:13,730
+You need at least three, ideally at the corners.
+
+22
+00:01:20,390 --> 00:01:23,620
+With three points you can press Align image to GCPs:
+
+23
+00:01:23,780 --> 00:01:27,910
+the app calculates the transformation and moves the image to the right place.
+
+24
+00:01:30,770 --> 00:01:32,210
+Check the error.
+
+25
+00:01:32,370 --> 00:01:35,270
+The RMSE is the mean error in metres:
+
+26
+00:01:35,430 --> 00:01:37,180
+the lower, the better.
+
+27
+00:01:37,340 --> 00:01:39,870
+In the table each point has its residual:
+
+28
+00:01:40,030 --> 00:01:43,400
+green if it's normal, red if it's much higher.
+
+29
+00:01:43,560 --> 00:01:47,390
+If it's high, move the less precise points or add more.
+
+30
+00:01:48,350 --> 00:01:50,710
+To check, use the Swipe:
+
+31
+00:01:50,870 --> 00:01:55,770
+a line divides the map, on the left the historical map, on the right today's base.
+
+32
+00:01:55,930 --> 00:01:57,480
+Or the Spotlight:
+
+33
+00:01:57,640 --> 00:02:01,050
+a circle that follows the mouse reveals the base beneath the image.
+
+34
+00:02:04,840 --> 00:02:07,060
+When you're satisfied, export:
+
+35
+00:02:07,220 --> 00:02:11,840
+KMZ for Google Earth and QGIS, GeoTIFF with embedded coordinates,
+
+36
+00:02:11,880 --> 00:02:17,670
+the points for the QGIS georeferencer, the world file, or the project in JSON.
+
+37
+00:02:18,630 --> 00:02:21,290
+The project saves itself in the browser.
+
+38
+00:02:21,450 --> 00:02:24,670
+And if you want more accuracy, we recommend MapWarper.
