@@ -2,7 +2,7 @@
 // Compare a ogni apertura e sparisce al clic (o tocco) sulla mappa; solo «Non mostrare più» lo spegne per sempre.
 // «Ripristina» nella barra di ricerca lo riaccende (la chiave è tra le personalizzazioni).
 // Non compare se l'indirizzo apre già una scheda.
-import { t } from './i18n.js';
+import { t, immagine } from './i18n.js';
 export const CHIAVE_INVITO = 'dt.invito.no';
 export const SCHEMA_INVITO = 'img/guida/passi/intersezione.svg';
 
@@ -16,7 +16,7 @@ export function collegaInvito(map, doc, archivio, { url = '' } = {}) {
   const pill = doc.createElement('p');
   pill.textContent = t('invito.pill');
   const schema = doc.createElement('img');
-  schema.src = SCHEMA_INVITO;
+  schema.src = immagine(SCHEMA_INVITO);
   schema.alt = '';
   schema.width = 960; // dimensioni dello schema SVG: riservano lo spazio ed evitano lo spostamento del layout
   schema.height = 536;

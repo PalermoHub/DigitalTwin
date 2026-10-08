@@ -134,7 +134,7 @@ map.once('style.load', async () => {
   btnGeo.addEventListener('click', () => { tab.imposta(null); rail.commuta('geoimage'); });
   // il catalogo RNDT sta tra i riquadri di «Aggiungi»; l'elenco dei layer RNDT aggiunti è in cima al suo pannello
   const btnCatalogo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-rndt-m', className: 'btn-pannello-mobile', title: t('html.btn.rndt') });
-  btnCatalogo.innerHTML = `${ICONE_RAIL.rndt}<span class="et">Catalogo RNDT</span>`;
+  btnCatalogo.innerHTML = `${ICONE_RAIL.rndt}<span class="et">${t('html.btn.rndt.aria')}</span>`;
   btnCatalogo.addEventListener('click', () => { tab.imposta(null); rail.commuta('rndt'); });
   document.getElementById('barra-gruppi').append(btnCatalogo, btnGeo);
   document.getElementById('btn-rndt').addEventListener('click', () => rail.commuta('rndt'));

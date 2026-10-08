@@ -1,5 +1,5 @@
 import { PASSI, PASSI_RNDT } from './guida-contenuti.js';
-import { t as tr, tl } from './i18n.js';
+import { t as tr, tl, immagine } from './i18n.js';
 
 // Tab «Guida» del foglio Info: indice, poi un passo per sezione con testo e figura.
 export function schedaGuida(doc = document, passi = PASSI) {
@@ -63,7 +63,7 @@ function creaPasso(doc, p) {
   const fig = doc.createElement('figure');
   fig.className = 'guida-figura';
   const img = doc.createElement('img');
-  img.src = p.immagine.file;
+  img.src = immagine(p.immagine.file);
   img.alt = p.immagine.alt;
   img.title = tr('catalogo.ingrandisci', { alt: tl(p.immagine.didascalia) });
   img.loading = 'lazy';

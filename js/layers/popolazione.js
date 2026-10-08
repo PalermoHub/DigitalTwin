@@ -7,7 +7,7 @@ import { voceFiltro } from '../core/legenda.js';
 import { primo, righe } from '../core/scheda-util.js';
 import { SRC_SEZIONI } from './confini.js';
 import { classificaDinamica } from './popolazione-classifica.js';
-import { t, localeIntl } from '../core/i18n.js';
+import { t, localeIntl, tl } from '../core/i18n.js';
 
 const FILE = { 2021: 'popolazione/sezioni_indicatori.compatto.json', 2023: 'popolazione/sezioni_indicatori_2023.compatto.json' };
 const fmt = v => v.toLocaleString(localeIntl(), { maximumFractionDigits: 1 });
@@ -69,7 +69,7 @@ function disegnaLegenda(map, rampa, anno) {
   if (anno === 2023) {
     const nota = document.createElement('div');
     nota.className = 'nota-stime';
-    nota.textContent = 'Censimento permanente 2023: stime campionarie';
+    nota.textContent = tl('Censimento permanente 2023: stime campionarie');
     righe.push(nota);
   }
   legenda.replaceChildren(...righe);
@@ -121,11 +121,11 @@ export default {
   pannello(el) {
     const anno = document.createElement('select');
     anno.id = 'pop-anno';
-    anno.setAttribute('aria-label', 'Anno');
-    anno.innerHTML = '<option value="2021">Censimento 2021</option><option value="2023">Censimento permanente 2023 (stime)</option>';
+    anno.setAttribute('aria-label', t('popolazione.anno.aria'));
+    anno.innerHTML = `<option value="2021">${t('popolazione.opzione.2021')}</option><option value="2023">${t('popolazione.opzione.2023')}</option>`;
     const ind = document.createElement('select');
     ind.id = 'pop-indicatore';
-    ind.setAttribute('aria-label', 'Indicatore');
+    ind.setAttribute('aria-label', t('popolazione.indicatore.aria'));
     for (const [k, v] of Object.entries(INDICATORI)) ind.add(new Option(v.unita ? `${v.etichetta} (${v.unita})` : v.etichetta, k));
     legenda = document.createElement('div');
     legenda.className = 'legenda';

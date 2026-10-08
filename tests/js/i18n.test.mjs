@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
 import {
-  rilevaLingua, impostaDizionari, lingua, localeIntl, t, tn, tl, applicaDom, impostaLingua,
+  rilevaLingua, impostaDizionari, lingua, localeIntl, t, tn, tl, immagine, applicaDom, impostaLingua,
 } from '../../js/core/i18n.js';
 
 const memoria = (iniziale = {}) => {
@@ -112,4 +113,47 @@ test('tl: in italiano restituisce il testo com\'è; in inglese cerca «lbl.<test
   assert.equal(avvisi.length, 0, 'un testo-dato non tradotto non è un errore');
   assert.equal(tl(undefined), undefined);
   assert.equal(tl(''), '');
+});
+
+test('applicaDom: se la chiave manca nei dizionari lascia il testo che c\'era (HTML italiano di partenza)', () => {
+  impostaDizionari('it', {}, {});
+  const e1 = elemento({ 'data-i18n': 'k.assente' }); e1.textContent = 'Guida';
+  const e2 = elemento({ 'data-i18n-title': 'k.assente', title: 'Titolo originale' });
+  const e3 = elemento({ 'data-i18n-html': 'k.assente' }); e3.innerHTML = '<b>Originale</b>';
+  const avvisi = [];
+  const orig = console.warn; console.warn = m => avvisi.push(m);
+  try { applicaDom(radiceCon([e1, e2, e3])); } finally { console.warn = orig; }
+  assert.equal(e1.textContent, 'Guida');
+  assert.equal(e2.attrs.title, 'Titolo originale');
+  assert.equal(e3.innerHTML, '<b>Originale</b>');
+  assert.ok(avvisi.length >= 1, 'la chiave mancante resta segnalata in console');
+});
+
+test('senza localStorage la scelta si ricorda per la sessione (sessionStorage) e rilevaLingua la rilegge', () => {
+  const rotto = { getItem() { throw new Error('negato'); }, setItem() { throw new Error('negato'); } };
+  const sessione = memoria();
+  impostaDizionari('it', {}, {});
+  let ricaricata = 0;
+  impostaLingua('en', { storage: rotto, sessione, ricarica: () => { ricaricata++; } });
+  assert.equal(sessione.d['dt-lingua'], 'en');
+  assert.equal(ricaricata, 1);
+  assert.equal(rilevaLingua(rotto, { language: 'it-IT' }, sessione), 'en');
+});
+
+test('immagine: in inglese sceglie la variante .en.svg degli schemi con testo; il resto non cambia', () => {
+  impostaDizionari('it', {}, {});
+  assert.equal(immagine('img/guida/passi/intersezione.svg'), 'img/guida/passi/intersezione.svg');
+  impostaDizionari('en', {}, {});
+  assert.equal(immagine('img/guida/passi/intersezione.svg'), 'img/guida/passi/intersezione.en.svg');
+  assert.equal(immagine('img/guida/passi/scheda.webp'), 'img/guida/passi/scheda.webp');
+  impostaDizionari('it', {}, {});
+});
+
+test('lo schema inglese esiste, è un SVG valido e non ha più il testo italiano', () => {
+  const f = new URL('../../img/guida/passi/intersezione.en.svg', import.meta.url);
+  assert.ok(existsSync(f));
+  const svg = readFileSync(f, 'utf8');
+  assert.ok(svg.includes('<svg') && svg.trim().endsWith('</svg>'));
+  for (const it of ['Catasto', 'Vincoli', 'Sicurezza', 'Cultura', 'Trasporti', 'Particella', 'Foglio', 'Clic su', 'Un singolo clic']) assert.ok(!svg.includes(it), `resta «${it}»`);
+  assert.ok(svg.includes('Cadastre') && svg.includes('Click on Via Maqueda'));
 });
