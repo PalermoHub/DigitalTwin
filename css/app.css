@@ -1521,7 +1521,7 @@ dialog.streetview-finestra.trascinata iframe { pointer-events: none; }
 :root { --tabella-h: 0px; }
 #tabella-dati {
   position: fixed; z-index: var(--z-barra); left: var(--sx); right: var(--scheda-l); bottom: var(--footer-h, 36px);
-  box-sizing: border-box; display: flex; flex-direction: column; min-height: 160px; max-height: 70vh;
+  box-sizing: border-box; display: flex; flex-direction: column; min-height: 160px; max-height: calc(100dvh - 64px - var(--footer-h, 36px) - 8px);
   background: var(--surface); border: 1px solid var(--border-ui); border-bottom: 0; border-radius: var(--r-lg) var(--r-lg) 0 0;
   box-shadow: var(--ombra); font-size: var(--fs-sm); color: var(--text); transition: left var(--t-rapida), right var(--t-rapida);
 }
@@ -1569,9 +1569,14 @@ body:has(#tabella-dati:not([hidden])) #zoom-box { bottom: calc(54px + var(--tabe
 body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-right,
 body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-left { bottom: var(--tabella-h); }
 body:has(#tabella-dati:not([hidden])) #legende-box { bottom: calc(var(--legende-bottom) + var(--tabella-h)); max-height: calc(100dvh - var(--legende-bottom) - var(--tabella-h) - var(--legende-alto)); }
-/* telefono: a tutta larghezza, sopra la barra a tab */
+/* ricerca e avvisi (#avvisi sta dentro #area-ricerca) salgono sopra il cassetto; su telefono la ricerca è in alto e non si sposta */
+body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(safe-area-inset-bottom, 0px) + var(--tabella-h)); }
+/* telefono: a tutta larghezza, sopra la barra a tab; i fogli (scheda, strati, RNDT) restano sopra al cassetto */
 @media (max-width: 720px) {
-  #tabella-dati { left: 0; right: 0; bottom: calc(var(--tab-h) + var(--footer-h)); max-height: 60vh; }
+  #tabella-dati { z-index: 1; left: 0; right: 0; bottom: calc(var(--tab-h) + var(--footer-h)); max-height: min(60dvh, calc(100dvh - 64px - var(--tab-h) - var(--footer-h) - 8px)); }
+  body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: auto; }
+  body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-right,
+  body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-left { bottom: calc(var(--tabella-h) + var(--tab-h)); }
   .tabella-strumento { padding: 8px 12px; }
 }
 .tabella-testata { justify-content: space-between; padding: 0 8px 4px; }
