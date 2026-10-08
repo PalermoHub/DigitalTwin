@@ -2,64 +2,64 @@
  "1-titolo": [
   {
    "t": 0.0,
-   "d": 3.02,
+   "d": 3.032,
    "testo": "Ciao, e benvenuto nel Digital Twin di Palermo."
   },
   {
-   "t": 3.02,
-   "d": 2.602,
+   "t": 3.032,
+   "d": 2.625,
    "testo": "Una mappa con i dati aperti della città:"
   },
   {
-   "t": 5.622,
-   "d": 5.249,
+   "t": 5.657,
+   "d": 5.33,
    "testo": "catasto, piano regolatore, monumenti, trasporti e molto altro, tutti nello stesso posto."
   }
  ],
  "1-indice": [
   {
    "t": 0.0,
-   "d": 2.544,
+   "d": 2.532,
    "testo": "In questo video vediamo quattro cose."
   },
   {
-   "t": 2.544,
+   "t": 2.532,
    "d": 0.849,
    "testo": "Primo:"
   },
   {
-   "t": 3.393,
-   "d": 4.285,
+   "t": 3.381,
+   "d": 4.262,
    "testo": "come usare la mappa, dalla ricerca di un luogo alla scheda con tutti i dati."
   },
   {
-   "t": 7.678,
-   "d": 1.209,
+   "t": 7.643,
+   "d": 1.174,
    "testo": "Secondo:"
   },
   {
-   "t": 8.887,
-   "d": 3.647,
+   "t": 8.817,
+   "d": 3.624,
    "testo": "il plugin che porta in mappa il catalogo nazionale dei dati."
   },
   {
-   "t": 12.534,
-   "d": 0.849,
+   "t": 12.441,
+   "d": 0.826,
    "testo": "Terzo:"
   },
   {
-   "t": 13.383,
-   "d": 4.111,
+   "t": 13.267,
+   "d": 3.949,
    "testo": "Geoimage, per sovrapporre le mappe storiche alla Palermo di oggi."
   },
   {
-   "t": 17.494,
-   "d": 1.023,
+   "t": 17.216,
+   "d": 0.953,
    "testo": "Quarto:"
   },
   {
-   "t": 18.517,
-   "d": 2.59,
+   "t": 18.169,
+   "d": 2.776,
    "testo": "dove trovare tutto, e come dare una mano."
   }
  ],
@@ -71,386 +71,386 @@
   },
   {
    "t": 2.846,
-   "d": 1.952,
+   "d": 1.929,
    "testo": "Ha 19 passi:"
   },
   {
-   "t": 4.798,
-   "d": 3.206,
+   "t": 4.774,
+   "d": 3.391,
    "testo": "li facciamo davvero, uno alla volta, sulla mappa."
   }
  ],
  "2-cos-e": [
   {
    "t": 0.0,
-   "d": 2.01,
+   "d": 1.952,
    "testo": "Questa è la vista iniziale:"
   },
   {
-   "t": 2.01,
-   "d": 1.708,
+   "t": 1.952,
+   "d": 1.662,
    "testo": "il centro di Palermo."
   },
   {
-   "t": 3.718,
-   "d": 2.532,
+   "t": 3.613,
+   "d": 2.439,
    "testo": "In alto il logo e il menu con le guide."
   },
   {
-   "t": 6.25,
-   "d": 2.521,
+   "t": 6.053,
+   "d": 2.567,
    "testo": "A sinistra la barra degli strati."
   },
   {
-   "t": 8.771,
-   "d": 1.766,
+   "t": 8.62,
+   "d": 1.859,
    "testo": "In basso la ricerca."
   },
   {
-   "t": 10.537,
-   "d": 2.823,
+   "t": 10.479,
+   "d": 2.985,
    "testo": "E a piè di pagina un avviso che ti anticipo:"
   },
   {
-   "t": 13.36,
-   "d": 5.516,
+   "t": 13.464,
+   "d": 5.493,
    "testo": "catasto, piano regolatore e vincoli sono dati informativi, senza valore legale."
   }
  ],
  "2-telefono": [
   {
    "t": 0.0,
-   "d": 2.01,
+   "d": 2.08,
    "testo": "Sul telefono i comandi cambiano."
   },
   {
-   "t": 2.01,
-   "d": 1.778,
+   "t": 2.08,
+   "d": 1.673,
    "testo": "In basso hai quattro tab:"
   },
   {
-   "t": 3.788,
-   "d": 2.3,
+   "t": 3.753,
+   "d": 2.254,
    "testo": "Mappa, Strati, Aggiungi e Menu."
   },
   {
-   "t": 6.088,
-   "d": 3.182,
+   "t": 6.006,
+   "d": 3.171,
    "testo": "Strati apre mappe di base, layer e filtri."
   },
   {
-   "t": 9.27,
-   "d": 4.343,
+   "t": 9.177,
+   "d": 4.39,
    "testo": "Aggiungi riunisce i tuoi layer, il catalogo nazionale e Geoimage."
   },
   {
-   "t": 13.614,
-   "d": 1.917,
+   "t": 13.567,
+   "d": 1.952,
    "testo": "Menu apre le guide."
   },
   {
-   "t": 15.531,
-   "d": 3.949,
+   "t": 15.519,
+   "d": 3.995,
    "testo": "Per conoscere un luogo, tocchi la mappa e la scheda sale dal basso."
   }
  ],
  "2-dati": [
   {
    "t": 0.0,
-   "d": 3.984,
+   "d": 4.111,
    "testo": "I dati arrivano da enti pubblici e da progetti di dati aperti:"
   },
   {
-   "t": 3.984,
-   "d": 7.501,
+   "t": 4.111,
+   "d": 7.722,
    "testo": "il Comune di Palermo, l'azienda del trasporto pubblico, il catasto, il piano regolatore, il censimento e OpenStreetMap."
   },
   {
-   "t": 11.485,
-   "d": 2.335,
+   "t": 11.833,
+   "d": 2.277,
    "testo": "L'elenco è in Fonti e avvisi:"
   },
   {
-   "t": 13.82,
-   "d": 4.599,
+   "t": 14.11,
+   "d": 4.448,
    "testo": "per ogni fonte trovi la data, il link al dato originale e la licenza."
   },
   {
-   "t": 18.419,
-   "d": 2.219,
+   "t": 18.558,
+   "d": 2.103,
    "testo": "In cima ci sono gli avvisi:"
   },
   {
-   "t": 20.638,
-   "d": 4.007,
+   "t": 20.661,
+   "d": 4.053,
    "testo": "catasto, piano regolatore e vincoli non hanno valore legale."
   }
  ],
  "2-strati": [
   {
    "t": 0.0,
-   "d": 3.148,
+   "d": 3.171,
    "testo": "Gli strati sono i temi che si sovrappongono alla mappa."
   },
   {
-   "t": 3.148,
-   "d": 1.545,
+   "t": 3.171,
+   "d": 1.627,
    "testo": "Apri il tab Layer:"
   },
   {
-   "t": 4.693,
-   "d": 2.614,
+   "t": 4.798,
+   "d": 2.625,
    "testo": "i gruppi sono in ordine alfabetico."
   },
   {
-   "t": 7.307,
-   "d": 3.438,
+   "t": 7.423,
+   "d": 3.357,
    "testo": "Apri Territorio e accendi il catasto con la casella."
   },
   {
-   "t": 10.745,
-   "d": 4.065,
+   "t": 10.78,
+   "d": 4.076,
    "testo": "Compare in alto come etichetta, e la legenda in basso ne spiega i colori."
   },
   {
-   "t": 14.81,
-   "d": 2.706,
+   "t": 14.856,
+   "d": 2.846,
    "testo": "Puoi accenderne più d'uno e confrontarli:"
   },
   {
-   "t": 17.516,
-   "d": 2.463,
+   "t": 17.702,
+   "d": 2.451,
    "testo": "ad esempio edifici e catasto."
   }
  ],
  "2-ordine": [
   {
    "t": 0.0,
-   "d": 5.005,
+   "d": 4.796,
    "testo": "Con più strati accesi, la scheda arancione Ordine layer in mappa li elenca tutti."
   },
   {
-   "t": 5.005,
+   "t": 4.796,
    "d": 2.544,
    "testo": "In alto vuol dire sopra, sulla mappa."
   },
   {
-   "t": 7.549,
-   "d": 4.007,
+   "t": 7.34,
+   "d": 3.984,
    "testo": "Li sposti con le frecce o trascinandoli, e l'ordine viene ricordato."
   }
  ],
  "2-storiche": [
   {
    "t": 0.0,
-   "d": 4.193,
+   "d": 4.053,
    "testo": "Il tab Base cartografica cambia la mappa che sta sotto gli strati:"
   },
   {
-   "t": 4.193,
-   "d": 2.637,
+   "t": 4.053,
+   "d": 2.439,
    "testo": "stradale, aerea, topografica."
   },
   {
-   "t": 6.829,
+   "t": 6.493,
    "d": 2.393,
    "testo": "In fondo ci sono le mappe storiche:"
   },
   {
-   "t": 9.222,
-   "d": 4.878,
+   "t": 8.886,
+   "d": 4.68,
    "testo": "15 carte di Palermo, dal 1580 al 1993."
   },
   {
-   "t": 14.1,
-   "d": 4.657,
+   "t": 13.566,
+   "d": 4.785,
    "testo": "Il pallino colorato dice quanto la carta si sovrappone bene alla città di oggi."
   },
   {
-   "t": 18.757,
-   "d": 2.892,
+   "t": 18.351,
+   "d": 2.915,
    "testo": "Qui, Palermo nel 1891."
   }
  ],
  "2-miei-layer": [
   {
    "t": 0.0,
-   "d": 2.706,
+   "d": 2.823,
    "testo": "Nel tab I miei layer aggiungi i tuoi dati:"
   },
   {
-   "t": 2.706,
-   "d": 4.669,
+   "t": 2.823,
+   "d": 4.552,
    "testo": "un file dal computer, un indirizzo web, oppure un servizio di mappe."
   },
   {
    "t": 7.375,
-   "d": 2.556,
+   "d": 2.486,
    "testo": "Funziona come il Browser di QGIS."
   },
   {
-   "t": 9.931,
-   "d": 3.066,
+   "t": 9.861,
+   "d": 3.124,
    "testo": "I servizi restano salvati nel tuo browser."
   }
  ],
  "2-colori": [
   {
    "t": 0.0,
-   "d": 3.38,
+   "d": 3.299,
    "testo": "Il pulsante con la tavolozza apre il pannello dei colori."
   },
   {
-   "t": 3.38,
+   "t": 3.299,
    "d": 5.087,
    "testo": "Con Colora per attributo scegli un campo dei dati e la mappa si colora di conseguenza."
   },
   {
-   "t": 8.466,
-   "d": 3.217,
+   "t": 8.385,
+   "d": 3.206,
    "testo": "Qui gli edifici, per densità di popolazione."
   },
   {
-   "t": 11.684,
-   "d": 8.163,
+   "t": 11.591,
+   "d": 8.372,
    "testo": "La rampa si sceglie da un elenco con l'anteprima, comprese le scale scientifiche di Fabio Crameri, leggibili anche con il daltonismo."
   }
  ],
  "2-clic": [
   {
    "t": 0.0,
-   "d": 2.915,
+   "d": 3.159,
    "testo": "Per conoscere un luogo basta fare clic sulla mappa."
   },
   {
-   "t": 2.915,
-   "d": 3.519,
+   "t": 3.159,
+   "d": 3.624,
    "testo": "Il punto viene evidenziato e si apre la scheda del luogo."
   },
   {
-   "t": 6.435,
-   "d": 4.216,
+   "t": 6.783,
+   "d": 4.413,
    "testo": "Le aree evidenziate hanno una legenda con un colore per ogni voce:"
   },
   {
-   "t": 10.65,
-   "d": 2.73,
+   "t": 11.196,
+   "d": 2.788,
    "testo": "un clic su una voce lascia in mappa solo quella."
   },
   {
-   "t": 13.38,
-   "d": 3.67,
+   "t": 13.984,
+   "d": 3.74,
    "testo": "Passando con il mouse compare un fumetto con il nome del layer."
   }
  ],
  "2-tutto": [
   {
    "t": 0.0,
-   "d": 2.138,
+   "d": 2.056,
    "testo": "Ed è qui la forza della mappa:"
   },
   {
-   "t": 2.138,
-   "d": 8.035,
+   "t": 2.056,
+   "d": 8.186,
    "testo": "un solo clic interroga insieme catasto, vincoli del piano regolatore, sicurezza stradale, beni culturali e trasporto pubblico."
   },
   {
-   "t": 10.173,
-   "d": 3.635,
+   "t": 10.243,
+   "d": 3.833,
    "testo": "La scheda mette in fila tutto ciò che si sovrappone in quel punto."
   }
  ],
  "2-scheda": [
   {
    "t": 0.0,
-   "d": 3.972,
+   "d": 3.995,
    "testo": "La scheda è divisa in sezioni, che scegli dalle linguette in alto."
   },
   {
-   "t": 3.972,
-   "d": 5.365,
+   "t": 3.995,
+   "d": 5.551,
    "testo": "Luogo riassume indirizzo, quartiere, monumenti, rischio di incidenti e fermate vicine."
   },
   {
-   "t": 9.337,
-   "d": 6.654,
+   "t": 9.546,
+   "d": 6.921,
    "testo": "Strumenti urbanistici parte dall'edificio, poi mostra la particella, con foglio e numero, e il collegamento alla visura."
   },
   {
-   "t": 15.991,
-   "d": 2.219,
+   "t": 16.467,
+   "d": 2.312,
    "testo": "Ogni sezione indica la fonte."
   }
  ],
  "2-monumenti": [
   {
    "t": 0.0,
-   "d": 4.135,
+   "d": 4.065,
    "testo": "Lo strato Monumenti mostra chiese, palazzi, fontane e teatri."
   },
   {
-   "t": 4.135,
-   "d": 2.985,
+   "t": 4.065,
+   "d": 3.02,
    "testo": "Un clic sul Teatro Massimo apre la sua scheda:"
   },
   {
-   "t": 7.12,
-   "d": 7.606,
+   "t": 7.085,
+   "d": 7.467,
    "testo": "foto, descrizione, categoria, e il collegamento al Portale del Turismo del Comune di Palermo, da cui arrivano i testi."
   }
  ],
  "2-uffici": [
   {
    "t": 0.0,
-   "d": 5.063,
+   "d": 5.191,
    "testo": "Lo strato Uffici comunali mostra dove sono gli uffici del Comune, raggruppati per sede."
   },
   {
-   "t": 5.063,
-   "d": 7.083,
+   "t": 5.191,
+   "d": 7.234,
    "testo": "La scheda di Palazzo Palagonia elenca aree e uffici, con responsabili e contatti, quando sono pubblicati."
   }
  ],
  "2-pai": [
   {
    "t": 0.0,
-   "d": 5.597,
+   "d": 5.458,
    "testo": "Il gruppo Piano PAI riporta il Piano di assetto idrogeologico della Regione Siciliana:"
   },
   {
-   "t": 5.597,
-   "d": 3.542,
+   "t": 5.458,
+   "d": 3.786,
    "testo": "pericolosità e rischio idraulico e geomorfologico."
   },
   {
-   "t": 9.14,
-   "d": 5.946,
+   "t": 9.244,
+   "d": 5.818,
    "testo": "Un clic su un'area apre la scheda, con il riquadro Vincoli PAI e la classe più grave."
   },
   {
-   "t": 15.085,
-   "d": 1.905,
+   "t": 15.062,
+   "d": 1.975,
    "testo": "Sono dati informativi:"
   },
   {
-   "t": 16.991,
-   "d": 3.159,
+   "t": 17.037,
+   "d": 3.206,
    "testo": "per usi legali vale la cartografia ufficiale."
   }
  ],
  "2-incendi": [
   {
    "t": 0.0,
-   "d": 5.179,
+   "d": 5.028,
    "testo": "Lo strato Incendi mostra le aree percorse dal fuoco dal 2007, anno per anno:"
   },
   {
-   "t": 5.179,
-   "d": 1.847,
+   "t": 5.028,
+   "d": 1.917,
    "testo": "il colore indica l'anno."
   },
   {
-   "t": 7.027,
+   "t": 6.945,
    "d": 3.844,
    "testo": "La scheda riporta data, località e superfici bruciate."
   }
@@ -458,519 +458,519 @@
  "2-calore": [
   {
    "t": 0.0,
-   "d": 7.826,
+   "d": 8.152,
    "testo": "Le isole di calore mostrano la temperatura della superficie in estate, ricavata dai satelliti Landsat, per ogni sezione di censimento."
   },
   {
-   "t": 7.826,
-   "d": 8.233,
+   "t": 8.152,
+   "d": 8.128,
    "testo": "Nella legenda scegli il metodo di classificazione e il numero di classi, e vedi l'andamento dal 2019 al 2025."
   },
   {
-   "t": 16.059,
-   "d": 1.58,
+   "t": 16.28,
+   "d": 1.522,
    "testo": "Attenzione:"
   },
   {
-   "t": 17.64,
-   "d": 3.438,
+   "t": 17.802,
+   "d": 3.531,
    "testo": "è la temperatura della superficie, non quella dell'aria."
   }
  ],
  "2-filtri": [
   {
    "t": 0.0,
-   "d": 5.713,
+   "d": 5.876,
    "testo": "Per cercare, scrivi nel campo in basso una via, un civico, un quartiere o una particella."
   },
   {
-   "t": 5.713,
+   "t": 5.876,
    "d": 8.268,
    "testo": "Il tab Filtri limita la ricerca a una circoscrizione, un quartiere o una zona, oppure ti fa trovare una particella da foglio e numero."
   },
   {
-   "t": 13.981,
-   "d": 1.302,
+   "t": 14.144,
+   "d": 1.313,
    "testo": "Per esempio:"
   },
   {
-   "t": 15.283,
-   "d": 3.066,
+   "t": 15.457,
+   "d": 3.055,
    "testo": "scegli una circoscrizione e scrivi Maqueda."
   },
   {
-   "t": 18.349,
-   "d": 3.078,
+   "t": 18.512,
+   "d": 3.159,
    "testo": "Un clic sul risultato porta la mappa sul posto."
   }
  ],
  "2-strumenti": [
   {
    "t": 0.0,
-   "d": 2.161,
+   "d": 2.01,
    "testo": "Gli strumenti in alto a destra."
   },
   {
-   "t": 2.161,
-   "d": 2.962,
+   "t": 2.01,
+   "d": 2.823,
    "testo": "La casa riporta alla vista iniziale."
   },
   {
-   "t": 5.123,
-   "d": 2.509,
+   "t": 4.832,
+   "d": 2.498,
    "testo": "Il pulsante 3D inclina la mappa."
   },
   {
-   "t": 7.632,
-   "d": 3.368,
+   "t": 7.33,
+   "d": 3.345,
    "testo": "Poi lo schermo intero e la luna, per il tema scuro."
   },
   {
-   "t": 11.0,
-   "d": 4.32,
+   "t": 10.675,
+   "d": 4.239,
    "testo": "La stampante prepara un foglio con la mappa, le legende e le fonti:"
   },
   {
-   "t": 15.32,
-   "d": 3.972,
+   "t": 14.914,
+   "d": 4.018,
    "testo": "scegli formato, da A4 ad A0, orientamento e scala."
   }
  ],
  "2-avvertenze": [
   {
    "t": 0.0,
-   "d": 2.579,
+   "d": 2.567,
    "testo": "Un'ultima avvertenza, importante."
   },
   {
-   "t": 2.579,
-   "d": 4.402,
+   "t": 2.567,
+   "d": 4.471,
    "testo": "Catasto, zonizzazione e vincoli hanno valore solo informativo:"
   },
   {
-   "t": 6.98,
-   "d": 5.052,
+   "t": 7.038,
+   "d": 4.982,
    "testo": "non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali."
   },
   {
-   "t": 12.032,
-   "d": 2.428,
+   "t": 12.02,
+   "d": 2.451,
    "testo": "I dati del censimento sono stime."
   },
   {
-   "t": 14.46,
-   "d": 3.763,
+   "t": 14.471,
+   "d": 3.717,
    "testo": "Per usi legali, rivolgiti sempre agli uffici competenti."
   }
  ],
  "3-cose": [
   {
    "t": 0.0,
-   "d": 2.219,
+   "d": 2.149,
    "testo": "Passiamo al catalogo nazionale."
   },
   {
-   "t": 2.219,
-   "d": 2.091,
+   "t": 2.149,
+   "d": 2.138,
    "testo": "Prima, due frasi su cos'è."
   },
   {
-   "t": 4.31,
-   "d": 7.304,
+   "t": 4.287,
+   "d": 7.374,
    "testo": "L'RNDT, il Repertorio Nazionale dei Dati Territoriali, è il catalogo ufficiale italiano dei dati geografici:"
   },
   {
-   "t": 11.614,
-   "d": 5.888,
+   "t": 11.66,
+   "d": 5.992,
    "testo": "raccoglie le schede di migliaia di mappe pubblicate da Comuni, Regioni, ministeri e altri enti."
   },
   {
-   "t": 17.502,
-   "d": 1.882,
+   "t": 17.653,
+   "d": 1.894,
    "testo": "È come una biblioteca:"
   },
   {
-   "t": 19.384,
-   "d": 4.1,
+   "t": 19.546,
+   "d": 3.984,
    "testo": "ti dice che cosa esiste, chi l'ha prodotto e dove consultarlo."
   }
  ],
  "3-merito": [
   {
    "t": 0.0,
-   "d": 7.861,
+   "d": 7.745,
    "testo": "Dentro questa mappa, il catalogo è il plugin openrndt-geolibre, ideato e scritto da Andrea Borruso di onData."
   },
   {
-   "t": 7.861,
-   "d": 3.182,
+   "t": 7.745,
+   "d": 3.206,
    "testo": "Senza il suo lavoro questa funzione non esisterebbe:"
   },
   {
-   "t": 11.044,
-   "d": 5.435,
+   "t": 10.951,
+   "d": 5.377,
    "testo": "è stato adattato a Palermo con pochissimi interventi, grazie alla sua ottima architettura."
   }
  ],
  "3-dove": [
   {
    "t": 0.0,
-   "d": 3.322,
+   "d": 3.357,
    "testo": "Lo trovi nella barra degli strumenti in alto a destra:"
   },
   {
-   "t": 3.322,
-   "d": 2.01,
+   "t": 3.357,
+   "d": 1.789,
    "testo": "è l'icona con i due layer."
   },
   {
-   "t": 5.332,
-   "d": 5.98,
+   "t": 5.146,
+   "d": 5.899,
    "testo": "Il pannello si apre sul lato destro, e i tab Scheda e RNDT ti fanno passare dall'uno all'altro."
   },
   {
-   "t": 11.312,
-   "d": 1.708,
+   "t": 11.045,
+   "d": 1.534,
    "testo": "Con Esc lo chiudi."
   },
   {
-   "t": 13.02,
-   "d": 2.939,
+   "t": 12.579,
+   "d": 2.927,
    "testo": "L'interfaccia del plugin è in inglese:"
   },
   {
-   "t": 15.959,
-   "d": 2.765,
+   "t": 15.506,
+   "d": 2.776,
    "testo": "sono poche parole, non spaventarti."
   }
  ],
  "3-cerca": [
   {
    "t": 0.0,
-   "d": 4.076,
+   "d": 3.972,
    "testo": "Scrivi cosa cerchi, per esempio zone protette, e premi Search."
   },
   {
-   "t": 4.076,
-   "d": 3.206,
+   "t": 3.972,
+   "d": 3.043,
    "testo": "La ricerca è sempre limitata all'area di Palermo."
   },
   {
-   "t": 7.282,
+   "t": 7.015,
    "d": 3.902,
    "testo": "Puoi filtrare per tipo, dati o servizi, e per formato:"
   },
   {
-   "t": 11.184,
-   "d": 6.178,
+   "t": 10.917,
+   "d": 6.352,
    "testo": "WMS, WFS o ArcGIS REST."
   },
   {
-   "t": 17.362,
-   "d": 3.241,
+   "t": 17.269,
+   "d": 3.415,
    "testo": "Nei filtri avanzati ci sono tema, ente e date."
   }
  ],
  "3-risultato": [
   {
    "t": 0.0,
-   "d": 1.708,
+   "d": 1.615,
    "testo": "Scegli un risultato:"
   },
   {
-   "t": 1.708,
-   "d": 6.155,
+   "t": 1.615,
+   "d": 5.853,
    "testo": "si apre la scheda, con titolo, descrizione, ente responsabile e servizi disponibili."
   },
   {
-   "t": 7.863,
-   "d": 3.693,
+   "t": 7.468,
+   "d": 3.809,
    "testo": "Premi Open sul servizio e spunta il layer che ti interessa:"
   },
   {
-   "t": 11.556,
-   "d": 2.242,
+   "t": 11.277,
+   "d": 2.138,
    "testo": "qui, le Riserve regionali."
   },
   {
-   "t": 13.798,
-   "d": 3.682,
+   "t": 13.415,
+   "d": 3.74,
    "testo": "I servizi WMS si aggiungono come immagini."
   },
   {
-   "t": 17.48,
-   "d": 8.024,
+   "t": 17.155,
+   "d": 8.268,
    "testo": "Con Add features, e con i servizi WFS, porti in mappa gli elementi veri e propri, con le loro informazioni."
   }
  ],
  "3-aggiungi": [
   {
    "t": 0.0,
-   "d": 2.184,
+   "d": 2.242,
    "testo": "Ecco le riserve sulla mappa."
   },
   {
-   "t": 2.184,
-   "d": 5.342,
+   "t": 2.242,
+   "d": 5.632,
    "testo": "Le ritrovi tra i layer aggiunti e nel gruppo RNDT della barra degli strati:"
   },
   {
-   "t": 7.526,
-   "d": 3.995,
+   "t": 7.874,
+   "d": 4.053,
    "testo": "con l'occhio le accendi e le spegni, con il cestino le rimuovi."
   },
   {
-   "t": 11.521,
-   "d": 1.813,
+   "t": 11.928,
+   "d": 1.871,
    "testo": "Si ricordano da sole:"
   },
   {
-   "t": 13.334,
-   "d": 2.498,
+   "t": 13.798,
+   "d": 2.614,
    "testo": "riapri la mappa e sono ancora lì."
   }
  ],
  "3-interroga": [
   {
    "t": 0.0,
-   "d": 3.241,
+   "d": 3.113,
    "testo": "Un clic sulla mappa interroga anche questi layer."
   },
   {
-   "t": 3.241,
-   "d": 6.654,
+   "t": 3.113,
+   "d": 6.561,
    "testo": "Le risposte arrivano nella linguetta Altri dati RNDT della scheda, con un riquadro per ogni layer."
   },
   {
-   "t": 9.894,
-   "d": 3.821,
+   "t": 9.674,
+   "d": 3.891,
    "testo": "Qui, per esempio, Monte Pellegrino, con tipologia e gestore."
   },
   {
-   "t": 13.715,
-   "d": 2.59,
+   "t": 13.565,
+   "d": 2.614,
    "testo": "Bisogna cliccare proprio sull'elemento."
   }
  ],
  "3-limiti": [
   {
    "t": 0.0,
-   "d": 1.592,
+   "d": 1.627,
    "testo": "Due cose da sapere."
   },
   {
-   "t": 1.592,
-   "d": 4.239,
+   "t": 1.627,
+   "d": 4.262,
    "testo": "Il download WFS ha un tetto di 10.000 oggetti:"
   },
   {
-   "t": 5.831,
-   "d": 5.226,
+   "t": 5.889,
+   "d": 5.354,
    "testo": "per strati molto densi, come le particelle catastali, meglio il WMS."
   },
   {
-   "t": 11.057,
-   "d": 5.69,
+   "t": 11.243,
+   "d": 5.702,
    "testo": "E se un servizio non risponde, resta in elenco come non disponibile, senza essere cancellato."
   }
  ],
  "3-file": [
   {
    "t": 0.0,
-   "d": 1.487,
+   "d": 1.441,
    "testo": "E i tuoi file?"
   },
   {
-   "t": 1.487,
-   "d": 2.045,
+   "t": 1.441,
+   "d": 1.975,
    "testo": "Si caricano da I miei layer:"
   },
   {
-   "t": 3.532,
-   "d": 7.246,
+   "t": 3.416,
+   "d": 7.269,
    "testo": "GeoJSON, KML, GPX, Shapefile in zip, CSV con latitudine e longitudine."
   },
   {
-   "t": 10.778,
-   "d": 4.065,
+   "t": 10.685,
+   "d": 3.891,
    "testo": "Di ogni file restano solo gli elementi dentro il Comune di Palermo."
   }
  ],
  "3-sintesi": [
   {
    "t": 0.0,
-   "d": 1.337,
+   "d": 1.302,
    "testo": "In breve:"
   },
   {
-   "t": 1.337,
-   "d": 2.126,
+   "t": 1.302,
+   "d": 2.312,
    "testo": "cerchi, scegli, aggiungi, clicchi."
   },
   {
-   "t": 3.462,
-   "d": 4.413,
+   "t": 3.613,
+   "d": 4.251,
    "testo": "Quattro passi per portare in mappa i dati ufficiali che riguardano Palermo."
   }
  ],
  "4-cose": [
   {
    "t": 0.0,
-   "d": 1.685,
+   "d": 1.65,
    "testo": "Ultima funzione:"
   },
   {
-   "t": 1.685,
-   "d": 1.325,
+   "t": 1.65,
+   "d": 1.302,
    "testo": "Geoimage."
   },
   {
-   "t": 3.01,
-   "d": 7.327,
+   "t": 2.952,
+   "d": 7.571,
    "testo": "Ti permette di sovrapporre una mappa storica, o qualsiasi immagine, alla cartografia moderna, e di georeferenziarla:"
   },
   {
-   "t": 10.337,
-   "d": 4.994,
+   "t": 10.523,
+   "d": 4.97,
    "testo": "cioè darle coordinate geografiche reali, usando i punti di controllo, i GCP."
   }
  ],
  "4-inquadra": [
   {
    "t": 0.0,
-   "d": 1.383,
+   "d": 1.406,
    "testo": "Primo passo:"
   },
   {
-   "t": 1.383,
-   "d": 6.724,
+   "t": 1.406,
+   "d": 6.991,
    "testo": "inquadra la zona con la ricerca, per esempio il Teatro Massimo, così l'immagine si carica già vicina al posto giusto."
   }
  ],
  "4-carica": [
   {
    "t": 0.0,
-   "d": 4.343,
+   "d": 4.402,
    "testo": "Trascina il file nel riquadro Carica mappa storica, oppure cliccalo."
   },
   {
-   "t": 4.343,
-   "d": 3.403,
+   "t": 4.402,
+   "d": 3.136,
    "testo": "Qui una pianta di Palermo del 1891:"
   },
   {
-   "t": 7.747,
-   "d": 4.239,
+   "t": 7.538,
+   "d": 4.007,
    "testo": "appare subito al centro della mappa, con le maniglie di posizionamento."
   }
  ],
  "4-posiziona": [
   {
    "t": 0.0,
-   "d": 3.589,
+   "d": 3.461,
    "testo": "Con le maniglie la sposti, la ruoti e la ridimensioni."
   },
   {
-   "t": 3.589,
-   "d": 6.015,
+   "t": 3.461,
+   "d": 6.073,
    "testo": "Gli angoli hanno due modalità, scala e deforma, utile per le carte che non sono rettangolari."
   }
  ],
  "4-gcp": [
   {
    "t": 0.0,
-   "d": 1.929,
+   "d": 1.917,
    "testo": "Ora i punti di controllo."
   },
   {
-   "t": 1.929,
+   "t": 1.917,
    "d": 1.754,
    "testo": "Premi Aggiungi GCP."
   },
   {
-   "t": 3.683,
-   "d": 2.149,
+   "t": 3.671,
+   "d": 2.184,
    "testo": "Per ogni punto servono due clic:"
   },
   {
-   "t": 5.832,
-   "d": 6.387,
+   "t": 5.856,
+   "d": 6.294,
    "testo": "il primo su un luogo riconoscibile dell'immagine storica, un incrocio, un edificio, un monumento."
   },
   {
-   "t": 12.219,
-   "d": 3.008,
+   "t": 12.149,
+   "d": 3.148,
    "testo": "Il secondo sullo stesso luogo nella mappa moderna."
   },
   {
-   "t": 15.227,
-   "d": 2.892,
+   "t": 15.297,
+   "d": 3.02,
    "testo": "Ne servono almeno tre, meglio se agli angoli."
   }
  ],
  "4-allinea": [
   {
    "t": 0.0,
-   "d": 3.391,
+   "d": 3.45,
    "testo": "Con tre punti puoi premere Allinea immagine ai GCP:"
   },
   {
-   "t": 3.391,
-   "d": 4.297,
+   "t": 3.45,
+   "d": 4.32,
    "testo": "l'app calcola la trasformazione e sposta l'immagine al posto giusto."
   }
  ],
  "4-rmse": [
   {
    "t": 0.0,
-   "d": 1.604,
+   "d": 1.58,
    "testo": "Controlla l'errore."
   },
   {
-   "t": 1.604,
-   "d": 3.055,
+   "t": 1.58,
+   "d": 3.171,
    "testo": "L'RMSE è l'errore medio in metri:"
   },
   {
-   "t": 4.658,
-   "d": 1.917,
+   "t": 4.751,
+   "d": 1.952,
    "testo": "più è basso, meglio è."
   },
   {
-   "t": 6.575,
-   "d": 2.683,
+   "t": 6.703,
+   "d": 2.73,
    "testo": "Nella tabella ogni punto ha il suo residuo:"
   },
   {
-   "t": 9.259,
-   "d": 3.531,
+   "t": 9.433,
+   "d": 3.415,
    "testo": "verde se è nella norma, rosso se è molto più alto."
   },
   {
-   "t": 12.789,
-   "d": 3.995,
+   "t": 12.847,
+   "d": 3.914,
    "testo": "Se è alto, sposta i punti meno precisi o aggiungine altri."
   }
  ],
  "4-confronto": [
   {
    "t": 0.0,
-   "d": 2.521,
+   "d": 2.358,
    "testo": "Per verificare, usa lo Swipe:"
   },
   {
-   "t": 2.521,
-   "d": 5.063,
+   "t": 2.358,
+   "d": 5.156,
    "testo": "una linea divide la mappa, a sinistra la carta storica, a destra la base di oggi."
   },
   {
-   "t": 7.584,
-   "d": 1.708,
+   "t": 7.514,
+   "d": 1.766,
    "testo": "Oppure lo Spotlight:"
   },
   {
-   "t": 9.292,
-   "d": 3.566,
+   "t": 9.28,
+   "d": 3.484,
    "testo": "un cerchio che segue il mouse scopre la base sotto l'immagine."
   }
  ],
@@ -982,7 +982,7 @@
   },
   {
    "t": 2.381,
-   "d": 10.613,
+   "d": 10.404,
    "testo": "KMZ per Google Earth e QGIS, GeoTIFF con le coordinate incorporate, i punti per il georeferenziatore di QGIS, il world file, oppure il progetto in JSON."
   }
  ],
@@ -994,66 +994,66 @@
   },
   {
    "t": 2.823,
-   "d": 3.38,
+   "d": 3.566,
    "testo": "E se vuoi più precisione, ti consigliamo MapWarper."
   }
  ],
  "5-riepilogo": [
   {
    "t": 0.0,
-   "d": 2.068,
+   "d": 2.08,
    "testo": "Riassumiamo in tre punti."
   },
   {
-   "t": 2.068,
-   "d": 0.744,
+   "t": 2.08,
+   "d": 0.942,
    "testo": "Uno:"
   },
   {
-   "t": 2.812,
-   "d": 2.985,
+   "t": 3.021,
+   "d": 3.078,
    "testo": "un clic ti dice tutto di un luogo, con la fonte."
   },
   {
-   "t": 5.797,
-   "d": 0.744,
+   "t": 6.099,
+   "d": 0.652,
    "testo": "Due:"
   },
   {
-   "t": 6.542,
-   "d": 3.333,
+   "t": 6.751,
+   "d": 3.322,
    "testo": "il catalogo nazionale porta in mappa i dati ufficiali."
   },
   {
-   "t": 9.875,
-   "d": 0.663,
+   "t": 10.073,
+   "d": 0.593,
    "testo": "Tre:"
   },
   {
-   "t": 10.538,
-   "d": 3.403,
+   "t": 10.666,
+   "d": 3.45,
    "testo": "Geoimage confronta la Palermo di oggi con quella di ieri."
   }
  ],
  "5-saluti": [
   {
    "t": 0.0,
-   "d": 4.889,
+   "d": 4.866,
    "testo": "Trovi l'app su palermodigitaltwin.opendatasicilia.it."
   },
   {
-   "t": 4.889,
-   "d": 7.049,
+   "t": 4.866,
+   "d": 7.292,
    "testo": "La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia."
   },
   {
-   "t": 11.938,
-   "d": 2.207,
+   "t": 12.158,
+   "d": 2.161,
    "testo": "Trovi un errore, o hai un'idea?"
   },
   {
-   "t": 14.145,
-   "d": 2.068,
+   "t": 14.319,
+   "d": 2.091,
    "testo": "Segnalalo e contribuisci."
   }
  ]

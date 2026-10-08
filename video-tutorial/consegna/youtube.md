@@ -1,6 +1,6 @@
 # YouTube: titolo, descrizione, capitoli e tag
 
-Durata del video: **13:29** (809 s). I tempi dei capitoli sono calcolati dal montaggio finale e valgono sia per la versione master sia per la copia compressa (differenza < 1 s).
+Durata del video: **13:19** (800 s). I tempi dei capitoli sono calcolati dal montaggio finale e valgono sia per la versione master sia per la copia compressa (differenza < 1 s).
 
 ## Titolo (tre proposte)
 
@@ -46,13 +46,15 @@ CAPITOLI
 9:24 Interrogare i layer RNDT
 9:44 Limiti e file personali
 10:27 Geoimage: cos'è
-10:43 Caricare la mappa storica (Palermo 1891)
-11:07 Posizionare e ruotare l'immagine
-11:22 I punti di controllo (GCP)
-11:47 Allineare e controllare l'errore (RMSE)
-12:15 Swipe e Spotlight
-12:32 Esportare il risultato
-12:53 Riepilogo, dove trovarci e come contribuire
+10:44 Primo passo: inquadrare la zona
+10:55 Caricare la mappa storica (Palermo 1891)
+11:08 Posizionare, ruotare e ridimensionare
+11:18 I punti di controllo (GCP)
+11:39 Allineare l'immagine ai GCP
+11:49 Controllare l'errore (RMSE)
+12:07 Swipe e Spotlight
+12:22 Esportare il risultato
+12:43 Riepilogo, dove trovarci e come contribuire
 
 LINK
 • L'app: https://palermodigitaltwin.opendatasicilia.it/ (indirizzo di reindirizzamento di https://palermohub.github.io/DigitalTwin/)
@@ -76,7 +78,7 @@ Palermo Digital Twin, Palermo, dati aperti, open data, Open Data Sicilia, mappa 
 
 ## Sottotitoli
 
-Carica `sottotitoli.srt` in YouTube Studio → Sottotitoli → Aggiungi → Italiano → Carica file → «Con tempi». I sottotitoli sono già incisi nel video; il file serve solo per accessibilità e ricerca.
+Carica `sottotitoli.srt` (italiano) e `sottotitoli.en.srt` (English) in YouTube Studio → Sottotitoli → Aggiungi → Italiano → Carica file → «Con tempi». I sottotitoli sono già incisi nel video; il file serve solo per accessibilità e ricerca.
 
 ## Note per la pubblicazione
 

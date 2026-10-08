@@ -671,197 +671,197 @@ cerchi, scegli, aggiungi, clicchi.
 Quattro passi per portare in mappa i dati ufficiali che riguardano Palermo.
 
 169
-00:10:27,890 --> 00:10:29,410
+00:10:27,800 --> 00:10:29,290
 Ultima funzione:
 
 170
-00:10:29,570 --> 00:10:30,740
+00:10:29,450 --> 00:10:30,592
 Geoimage.
 
 171
-00:10:30,900 --> 00:10:35,060
+00:10:30,752 --> 00:10:35,053
 Ti permette di sovrapporre una mappa storica, o qualsiasi immagine,
 
 172
-00:10:35,100 --> 00:10:38,060
+00:10:35,093 --> 00:10:38,163
 alla cartografia moderna, e di georeferenziarla:
 
 173
-00:10:38,220 --> 00:10:43,060
+00:10:38,323 --> 00:10:43,133
 cioè darle coordinate geografiche reali, usando i punti di controllo, i GCP.
 
 174
-00:10:44,020 --> 00:10:45,240
+00:10:44,090 --> 00:10:45,336
 Primo passo:
 
 175
-00:10:45,400 --> 00:10:48,950
+00:10:45,496 --> 00:10:49,188
 inquadra la zona con la ricerca, per esempio il Teatro Massimo,
 
 176
-00:10:48,990 --> 00:10:51,970
+00:10:49,228 --> 00:10:52,327
 così l'immagine si carica già vicina al posto giusto.
 
 177
-00:10:54,940 --> 00:10:59,130
+00:10:55,944 --> 00:11:00,186
 Trascina il file nel riquadro Carica mappa storica, oppure cliccalo.
 
 178
-00:10:59,290 --> 00:11:02,530
+00:11:00,346 --> 00:11:03,322
 Qui una pianta di Palermo del 1891:
 
 179
-00:11:02,690 --> 00:11:06,770
+00:11:03,482 --> 00:11:07,329
 appare subito al centro della mappa, con le maniglie di posizionamento.
 
 180
-00:11:07,730 --> 00:11:11,160
+00:11:08,296 --> 00:11:11,597
 Con le maniglie la sposti, la ruoti e la ridimensioni.
 
 181
-00:11:11,320 --> 00:11:14,290
+00:11:11,757 --> 00:11:14,758
 Gli angoli hanno due modalità, scala e deforma,
 
 182
-00:11:14,330 --> 00:11:17,180
+00:11:14,798 --> 00:11:17,670
 utile per le carte che non sono rettangolari.
 
 183
-00:11:23,270 --> 00:11:25,040
+00:11:18,626 --> 00:11:20,383
 Ora i punti di controllo.
 
 184
-00:11:25,200 --> 00:11:26,790
+00:11:20,543 --> 00:11:22,137
 Premi Aggiungi GCP.
 
 185
-00:11:26,950 --> 00:11:28,940
+00:11:22,297 --> 00:11:24,321
 Per ogni punto servono due clic:
 
 186
-00:11:29,100 --> 00:11:32,780
+00:11:24,482 --> 00:11:28,108
 il primo su un luogo riconoscibile dell'immagine storica,
 
 187
-00:11:32,820 --> 00:11:35,330
+00:11:28,148 --> 00:11:30,616
 un incrocio, un edificio, un monumento.
 
 188
-00:11:35,490 --> 00:11:38,330
+00:11:30,775 --> 00:11:33,763
 Il secondo sullo stesso luogo nella mappa moderna.
 
 189
-00:11:38,490 --> 00:11:41,230
+00:11:33,923 --> 00:11:36,783
 Ne servono almeno tre, meglio se agli angoli.
 
 190
-00:11:47,890 --> 00:11:51,120
+00:11:39,430 --> 00:11:42,720
 Con tre punti puoi premere Allinea immagine ai GCP:
 
 191
-00:11:51,280 --> 00:11:55,410
+00:11:42,880 --> 00:11:47,040
 l'app calcola la trasformazione e sposta l'immagine al posto giusto.
 
 192
-00:11:58,270 --> 00:11:59,710
+00:11:49,364 --> 00:11:50,784
 Controlla l'errore.
 
 193
-00:11:59,870 --> 00:12:02,770
+00:11:50,944 --> 00:11:53,955
 L'RMSE è l'errore medio in metri:
 
 194
-00:12:02,930 --> 00:12:04,680
+00:11:54,115 --> 00:11:55,907
 più è basso, meglio è.
 
 195
-00:12:04,840 --> 00:12:07,370
+00:11:56,067 --> 00:11:58,637
 Nella tabella ogni punto ha il suo residuo:
 
 196
-00:12:07,530 --> 00:12:10,900
+00:11:58,797 --> 00:12:02,052
 verde se è nella norma, rosso se è molto più alto.
 
 197
-00:12:11,060 --> 00:12:14,890
+00:12:02,211 --> 00:12:05,965
 Se è alto, sposta i punti meno precisi o aggiungine altri.
 
 198
-00:12:15,850 --> 00:12:18,210
+00:12:06,924 --> 00:12:09,122
 Per verificare, usa lo Swipe:
 
 199
-00:12:18,370 --> 00:12:23,270
+00:12:09,282 --> 00:12:14,278
 una linea divide la mappa, a sinistra la carta storica, a destra la base di oggi.
 
 200
-00:12:23,430 --> 00:12:24,980
+00:12:14,438 --> 00:12:16,044
 Oppure lo Spotlight:
 
 201
-00:12:25,140 --> 00:12:28,550
+00:12:16,204 --> 00:12:19,528
 un cerchio che segue il mouse scopre la base sotto l'immagine.
 
 202
-00:12:32,340 --> 00:12:34,560
+00:12:22,022 --> 00:12:24,243
 Quando sei soddisfatto, esporta:
 
 203
-00:12:34,720 --> 00:12:39,340
+00:12:24,403 --> 00:12:28,926
 KMZ per Google Earth e QGIS, GeoTIFF con le coordinate incorporate,
 
 204
-00:12:39,380 --> 00:12:45,170
+00:12:28,966 --> 00:12:34,647
 i punti per il georeferenziatore di QGIS, il world file, oppure il progetto in JSON.
 
 205
-00:12:46,130 --> 00:12:48,790
+00:12:35,612 --> 00:12:38,275
 Il progetto si salva da solo nel browser.
 
 206
-00:12:48,950 --> 00:12:52,170
+00:12:38,435 --> 00:12:41,841
 E se vuoi più precisione, ti consigliamo MapWarper.
 
 207
-00:12:54,130 --> 00:12:56,040
+00:12:44,532 --> 00:12:46,442
 Riassumiamo in tre punti.
 
 208
-00:12:56,200 --> 00:12:56,780
+00:12:46,602 --> 00:12:47,182
 Uno:
 
 209
-00:12:56,940 --> 00:12:59,770
+00:12:47,342 --> 00:12:50,172
 un clic ti dice tutto di un luogo, con la fonte.
 
 210
-00:12:59,930 --> 00:13:00,510
+00:12:50,332 --> 00:12:50,912
 Due:
 
 211
-00:13:00,670 --> 00:13:03,840
+00:12:51,072 --> 00:12:54,242
 il catalogo nazionale porta in mappa i dati ufficiali.
 
 212
-00:13:04,000 --> 00:13:04,510
+00:12:54,402 --> 00:12:54,912
 Tre:
 
 213
-00:13:04,670 --> 00:13:07,910
+00:12:55,072 --> 00:12:58,312
 Geoimage confronta la Palermo di oggi con quella di ieri.
 
 214
-00:13:09,670 --> 00:13:14,400
+00:13:00,072 --> 00:13:04,802
 Trovi l'app su palermodigitaltwin.opendatasicilia.it.
 
 215
-00:13:14,560 --> 00:13:21,450
+00:13:04,962 --> 00:13:11,852
 La licenza è CC BY-SA 4.0, come indicato nell'app, e il progetto è di Open Data Sicilia.
 
 216
-00:13:21,610 --> 00:13:23,650
+00:13:12,012 --> 00:13:14,052
 Trovi un errore, o hai un'idea?
 
 217
-00:13:23,810 --> 00:13:25,720
+00:13:14,212 --> 00:13:16,122
 Segnalalo e contribuisci.

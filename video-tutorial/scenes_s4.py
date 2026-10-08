@@ -4,8 +4,9 @@ from scenes_base import *
 
 IMMAGINE = os.path.join(HERE, "assets", "pianta_1891_demo.png")
 META = json.load(open(os.path.join(HERE, "assets", "pianta_1891_demo.json")))
-VISTA_GCP = (13.3597, 38.1148, 15.35)
+VISTA_GCP = (13.3597, 38.1138, 15.35)   # tutti e 4 i punti restano liberi da maniglie, barre e pannelli
 
+JITTER = [(3, -2), (-3, 2), (2, 3), (-2, -2)]
 IMG2SCREEN = """([u,v,W,H])=>{const g=window.dt.geoimage.stato.angoli;const s=u/W,t=v/H;
   const lat=(1-s)*(1-t)*g[0].lat+s*(1-t)*g[1].lat+(1-s)*t*g[2].lat+s*t*g[3].lat;
   const lng=(1-s)*(1-t)*g[0].lng+s*(1-t)*g[1].lng+(1-s)*t*g[2].lng+s*t*g[3].lng;
@@ -93,7 +94,8 @@ def _(r):
         a = r.pg.evaluate(IMG2SCREEN, [v["px"][0], v["px"][1], W, H])
         r.click_xy(a["x"], a["y"], 0.6, 0.5)
         b = r.px(v["lng"], v["lat"])
-        r.click_xy(b["x"], b["y"], 0.6, 0.7)
+        dx, dy = JITTER[(n - 1) % 4]       # un clic a mano non e' mai perfetto: qualche pixel di scarto, quindi un errore di pochi metri
+        r.click_xy(b["x"] + dx, b["y"] + dy, 0.6, 0.7)
         righe = r.pg.evaluate("()=>document.querySelectorAll('#geoimage-pannello tbody tr').length")
         if righe < n:      # il secondo clic non è stato registrato: riprova una volta
             r.click_xy(b["x"], b["y"], 0.3, 0.9)

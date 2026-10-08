@@ -54,7 +54,7 @@ def to_img(lng, lat):
 
 PUNTI = {
     "Teatro Massimo": (13.35720, 38.12017),
-    "Quattro Canti": (13.36245, 38.11580),
+    "Piazza Marina": (13.36680, 38.11880),   # a nord-est e dentro la vista; il centro dell immagine (maniglia di spostamento) intercetterebbe il clic
     "Porta Nuova": (13.35250, 38.11130),
     "Stazione Centrale": (13.36680, 38.10930),
 }
