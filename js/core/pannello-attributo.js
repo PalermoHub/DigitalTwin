@@ -2,6 +2,7 @@
 // per categorie o in classi numeriche. Il risultato ({campo, tipo, ...}) lo salva e applica pannello-tema.js.
 import { rilevaAttributi, calcolaSoglie, etichetteClassi, coloriRampa, RAMPE, GRUPPI_RAMPE, TAVOLOZZA } from './tema-attributo.js';
 import { comeEsadecimale } from './tema.js';
+import { t as tr } from './i18n.js';
 
 function selezione(testo, nome, opzioni) {
   const riga = document.createElement('label');
@@ -20,20 +21,20 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
   const el = document.createElement('div');
   el.className = 'tema-attributo';
   const titolo = document.createElement('strong');
-  titolo.textContent = 'Colora per attributo';
-  const campo = selezione('Campo', 'campo', [['', 'Nessuno']]);
-  const modo = selezione('Tipo', 'tipo', [['categorie', 'Per categorie'], ['graduata', 'Graduata (numerico)']]);
-  const classi = selezione('Classi', 'classi', Array.from({ length: 7 }, (_, i) => [String(i + 3), String(i + 3)]));
-  const metodo = selezione('Metodo', 'metodo', [['quantili', 'Quantili'], ['intervalli', 'Intervalli uguali']]);
-  const rampa = selezione('Rampa', 'rampa', []);
+  titolo.textContent = tr('attributo.titolo');
+  const campo = selezione(tr('attributo.campo'), 'campo', [['', tr('attributo.nessuno')]]);
+  const modo = selezione(tr('attributo.tipo'), 'tipo', [['categorie', tr('attributo.categorie')], ['graduata', tr('attributo.graduata')]]);
+  const classi = selezione(tr('attributo.classi'), 'classi', Array.from({ length: 7 }, (_, i) => [String(i + 3), String(i + 3)]));
+  const metodo = selezione(tr('attributo.metodo'), 'metodo', [['quantili', tr('attributo.quantili')], ['intervalli', tr('attributo.intervalli')]]);
+  const rampa = selezione(tr('attributo.rampa'), 'rampa', []);
   rampa.select.append(...GRUPPI_RAMPE.flatMap(([, rampe]) => rampe).map(n => new Option(n, n)));
-  rampa.select.value = 'Blu';
+  rampa.select.value = 'Blu'; // i18n-ok: chiave della rampa di colori
   const inverti = document.createElement('label');
   inverti.className = 'rampa-inverti';
   const invertiCasella = document.createElement('input');
   invertiCasella.type = 'checkbox';
   invertiCasella.dataset.ruolo = 'inverti';
-  inverti.append(invertiCasella, ' Inverti la scala dei colori');
+  inverti.append(invertiCasella, tr('attributo.inverti'));
   // Il <select> nativo non può mostrare i colori: resta nascosto come sede del valore e al suo posto c'è un elenco
   // con la barra di colori accanto a ogni nome (stesso valore, stesso evento `change`).
   const sfumatura = nome => `linear-gradient(to right, ${RAMPE[nome].join(', ')})`;
@@ -89,7 +90,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
   aggiorna.type = 'button';
   aggiorna.className = 'strato-strumento';
   aggiorna.dataset.azione = 'attributo-rileva';
-  aggiorna.textContent = 'Rileva valori';
+  aggiorna.textContent = tr('attributo.rileva');
   const voci = document.createElement('div');
   voci.className = 'tema-categorie';
   const msg = document.createElement('p');
@@ -108,9 +109,9 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
     campi = rilevaAttributi(feature);
     const corrente = leggi()?.campo ?? attivo();
     const nomi = new Set([...campi.keys(), ...(corrente ? [corrente] : [])]);
-    campo.select.replaceChildren(new Option('Nessuno', ''), ...[...nomi].sort((a, b) => a.localeCompare(b)).map(n => new Option(n, n)));
+    campo.select.replaceChildren(new Option(tr('attributo.nessuno'), ''), ...[...nomi].sort((a, b) => a.localeCompare(b)).map(n => new Option(n, n)));
     campo.select.value = corrente && nomi.has(corrente) ? corrente : '';
-    msg.textContent = campi.size ? '' : 'Nessuna feature in vista: accendi lo strato e inquadra l’area, poi «Rileva valori».';
+    msg.textContent = campi.size ? '' : tr('attributo.nessunaFeature');
   };
 
   const mostraLista = a => {
@@ -165,15 +166,15 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
     if (modo.select.value === 'graduata') {
       const soglie = calcolaSoglie(info.numeri, Number(classi.select.value), metodo.select.value);
       if (soglie.length) nuovo = { campo: nome, tipo: 'graduata', rampa: rampa.select.value, ...(invertiCasella.checked && { inverti: true }), soglie };
-      else msg.textContent = 'Valori troppo simili per formare classi.';
+      else msg.textContent = tr('attributo.simili');
     } else {
       const valori = [...(info?.valori ?? [])].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
       const vecchi = prec?.campo === nome && prec.tipo === 'categorie' ? prec.colori : {};
       const tutti = [...new Set([...Object.keys(vecchi), ...valori])];
-      if (tutti.length > 200) msg.textContent = 'Troppi valori distinti (oltre 200): scegli un altro campo o la graduata.';
+      if (tutti.length > 200) msg.textContent = tr('attributo.troppi');
       else if (tutti.length) {
         nuovo = { campo: nome, tipo: 'categorie', colori: Object.fromEntries(tutti.map((v, i) => [v, vecchi[v] ?? TAVOLOZZA[i % TAVOLOZZA.length]])) };
-      } else msg.textContent = 'Nessun valore in vista per questo campo.';
+      } else msg.textContent = tr('attributo.nessunValore');
     }
     if (nuovo) msg.textContent = '';
     cambia(nuovo);

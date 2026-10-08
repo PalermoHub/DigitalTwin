@@ -41,7 +41,7 @@ test('ogni t(\'chiave\') / tn(\'base\') usato nel codice esiste nei dizionari', 
   const mancanti = [];
   for (const f of file(join(RADICE, 'js'))) {
     const src = readFileSync(f, 'utf8');
-    for (const m of src.matchAll(/\bt\(\s*'([\w.-]+)'/g)) if (!(m[1] in it)) mancanti.push(`${f.replace(RADICE, '')}: ${m[1]}`);
+    for (const m of src.matchAll(/\btr?\(\s*'([\w.-]+)'/g)) if (!(m[1] in it)) mancanti.push(`${f.replace(RADICE, '')}: ${m[1]}`);
     for (const m of src.matchAll(/\btn\(\s*'([\w.-]+)'/g)) {
       for (const suf of ['uno', 'altri']) if (!(`${m[1]}.${suf}` in it)) mancanti.push(`${f.replace(RADICE, '')}: ${m[1]}.${suf}`);
     }

@@ -5,10 +5,15 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 // Si estende a ogni task di migrazione: percorsi relativi alla radice del repo.
-export const MIGRATI = [];
+export const MIGRATI = [
+  'js/app.js', 'js/core/pannello.js', 'js/core/pannello-riordino.js', 'js/core/pannello-attributo.js',
+  'js/core/pannello-comune.js', 'js/core/pannello-tema.js', 'js/core/strumenti.js', 'js/core/stampa.js',
+  'js/core/ripristino.js', 'js/core/rail.js', 'js/core/tab-mobile.js', 'js/core/invito.js',
+  'js/core/ingrandisci.js', 'js/core/evidenza.js',
+];
 
 const ACCENTATE = /[àèéìòùÀÈÉÌÒÙ]/;
-const PAROLE = /\b(il|lo|la|le|gli|dei|del|della|delle|nel|nella|per|con|non|che|una|uno|di|da|sul|sulla|più|solo|tutti|nessun[oa]?)\b/i;
+const PAROLE = /\b(il|lo|la|le|gli|dei|del|della|delle|nel|nella|per|con|non|che|una|uno|di|da|sul|sulla|più|solo|tutti|nessun[oa]?|su|giù|sposta|apri|chiudi|aggiungi|elimina|salva|cerca|mostra|nascondi|accendi|spegni|tutto|tutte|nessuna|ordine|valori|colori|strato|strati|mappa|scheda|dati|fonte|fonti|vista|errore|ripristina|scegli|carica|leggi|seleziona|apre|sopra|sotto|dal|dalla|alle|agli|degli|sono|anche|oppure|quando|come|dopo|prima|oltre|entro|senza|tra|fra|più|molto|poco|ogni|quale|quali)\b/i;
 
 // estrae i letterali di una riga ignorando il commento a fine riga
 function letterali(riga) {
@@ -17,6 +22,7 @@ function letterali(riga) {
   while (i < riga.length) {
     const c = riga[i];
     if (c === '/' && riga[i + 1] === '/') break;
+    if (c === '/' && riga[i + 1] === '*') { const f = riga.indexOf('*/', i + 2); if (f < 0) break; i = f + 2; continue; }
     if (c === "'" || c === '"' || c === '`') {
       let j = i + 1;
       while (j < riga.length && riga[j] !== c) j += riga[j] === '\\' ? 2 : 1;
@@ -34,6 +40,7 @@ export function residui(sorgente) {
     if (s.startsWith('//') || s.startsWith('*') || s.startsWith('/*') || riga.includes('// i18n-ok') || /^\s*import\b/.test(riga)) return;
     for (const l of letterali(riga)) {
       if (/^(https?:|\.{0,2}\/|#|[\w-]+\.[a-z]{2,4}$)/.test(l)) continue;
+      if (/^[^A-ZÀ-Ý]/.test(l) && /[.:#[\]>=_-]/.test(l)) continue; // selettori CSS e nomi di classe
       if (ACCENTATE.test(l) || (/\s/.test(l.trim()) && PAROLE.test(l))) trovati.push(`${n + 1}: ${l.slice(0, 60)}`);
     }
   });

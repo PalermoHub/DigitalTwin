@@ -40,6 +40,7 @@ import { collegaRicercaIncidenti } from './layers/sicurezza-ricerca.js';
 import { collegaFiltroLinea } from './layers/trasporto-filtro.js';
 import terreno from './layers/terreno.js';
 import base from './layers/base.js';
+import { t } from './core/i18n.js';
 
 // telefono: barra a quattro tab (Mappa, Strati, Aggiungi, Info) e foglio degli strati; la legenda si può ridurre
 let tornaAllaMappa = () => {}; // si completa quando i pannelli laterali esistono
@@ -50,7 +51,7 @@ const riduciLegenda = document.getElementById('legende-riduci');
 riduciLegenda.addEventListener('click', () => {
   const ridotta = document.getElementById('legende-box').classList.toggle('ridotta');
   riduciLegenda.setAttribute('aria-expanded', String(!ridotta));
-  riduciLegenda.textContent = ridotta ? '▸ Legenda' : '▾ Riduci';
+  riduciLegenda.textContent = ridotta ? t('app.legenda.apri') : t('html.legende.riduci');
 });
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
@@ -66,7 +67,7 @@ const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffic
 
 // la mappa (hash: true) riscrive subito l'hash con la vista: la scheda richiesta dall'indirizzo (#guida, #fonti…) va letta prima
 const SCHEDA_INDIRIZZO = location.hash.slice(1);
-const map = creaMappa('mappa', () => segnala('Base cartografica non disponibile: mappa semplificata'));
+const map = creaMappa('mappa', () => segnala(t('app.basemap.errore')));
 const differiti = creaDifferiti(map, { segnala });
 const caricaDifferiti = () => differiti.tutti().then(() => { window.dt.differitiPronti = true; });
 window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false, differitiPronti: false, differiti: caricaDifferiti };
@@ -77,8 +78,8 @@ const STRATI = MODULI.flatMap(m => m.strati);
 map.on('error', e => {
   if (!e.sourceId || /^(rndt|miei)-/.test(e.sourceId)) return; // gli errori dei layer RNDT e dei «miei layer» li segnalano gli host
   const colpiti = STRATI.filter(s => s.layers.some(id => map.getLayer(id)?.source === e.sourceId));
-  if (!colpiti.length) return segnala(`Strato non caricato: ${e.sourceId}`);
-  segnala(`Strato non caricato: ${colpiti.map(s => s.etichetta).join(', ')}`);
+  if (!colpiti.length) return segnala(t('avviso.stratoNonCaricato.dettaglio', { nome: e.sourceId }));
+  segnala(t('avviso.stratoNonCaricato.dettaglio', { nome: colpiti.map(s => s.etichetta).join(', ') }));
   colpiti.forEach(s => disattivaStrato(map, s));
 });
 
@@ -88,7 +89,7 @@ map.once('style.load', async () => {
   const catalogo = await catalogoPromessa;
   const condivisione = await condivisionePromessa;
   if (catalogo) impostaCatalogo(catalogo);
-  else segnala('Catalogo dati non disponibile: uso le copie locali dei dati');
+  else segnala(t('app.catalogo.errore'));
 
   for (const m of MODULI) { if (DIFFERITI.has(m.id)) differiti.aggiungi(m); else m.aggiungiSorgenti(map); }
   for (const m of MODULI) m.aggiungiLayer(map);
@@ -109,9 +110,9 @@ map.once('style.load', async () => {
   });
   const geoimage = {
     async apri() { // il pannello si apre subito, con un segnaposto che il modulo sostituisce appena caricato
-      if (!geoPronto) pannelloGeo.textContent = 'Caricamento…';
+      if (!geoPronto) pannelloGeo.textContent = t('app.caricamento');
       pannelloGeo.hidden = false;
-      try { await caricaGeoimage(); } catch (e) { geoPronto = null; pannelloGeo.hidden = true; segnala(`Geoimage non disponibile: ${e.message}`); }
+      try { await caricaGeoimage(); } catch (e) { geoPronto = null; pannelloGeo.hidden = true; segnala(t('app.geoimage.errore', { msg: e.message })); }
     },
     chiudi() { pannelloGeo.hidden = true; },
     async ripristina() {
@@ -121,16 +122,16 @@ map.once('style.load', async () => {
     },
   };
   const rail = collegaRail(document.getElementById('rail-pannelli'), [
-    { id: 'scheda', etichetta: 'Scheda', pannello: document.getElementById('scheda') },
+    { id: 'scheda', etichetta: t('app.rail.scheda'), pannello: document.getElementById('scheda') },
     { id: 'rndt', etichetta: 'RNDT', pannello: document.getElementById('rndt-pannello'), apri: rndt.apri, chiudi: rndt.chiudi },
-    { id: 'geoimage', etichetta: 'Geoimage', pannello: pannelloGeo, apri: geoimage.apri, chiudi: geoimage.chiudi },
+    { id: 'geoimage', etichetta: t('app.rail.geoimage'), pannello: pannelloGeo, apri: geoimage.apri, chiudi: geoimage.chiudi },
   ]);
   // su mobile la barra laterale non c'è: Geoimage si apre dal pannello Strati
-  const btnGeo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-geoimage-m', className: 'btn-pannello-mobile', title: 'Geoimage: mappe storiche' });
+  const btnGeo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-geoimage-m', className: 'btn-pannello-mobile', title: t('html.geoimage.aria') });
   btnGeo.innerHTML = `${ICONE_RAIL.geoimage}<span class="et">Geoimage</span>`;
   btnGeo.addEventListener('click', () => { tab.imposta(null); rail.commuta('geoimage'); });
   // il catalogo RNDT sta tra i riquadri di «Aggiungi»; l'elenco dei layer RNDT aggiunti è in cima al suo pannello
-  const btnCatalogo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-rndt-m', className: 'btn-pannello-mobile', title: 'Catalogo RNDT: aggiungi dati alla mappa' });
+  const btnCatalogo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-rndt-m', className: 'btn-pannello-mobile', title: t('html.btn.rndt') });
   btnCatalogo.innerHTML = `${ICONE_RAIL.rndt}<span class="et">Catalogo RNDT</span>`;
   btnCatalogo.addEventListener('click', () => { tab.imposta(null); rail.commuta('rndt'); });
   document.getElementById('barra-gruppi').append(btnCatalogo, btnGeo);
@@ -160,7 +161,7 @@ map.once('style.load', async () => {
   collegaStampa(map, document.getElementById('btn-stampa'), document.getElementById('stampa-menu'));
   const archivioLocale = (() => { try { return window.localStorage; } catch { return null; } })();
   window.dt.condivisione = collegaCondivisione(map, document.getElementById('btn-condividi'), { storage: archivioLocale });
-  if (condivisione.invalido) segnala('Il link condiviso non è valido: si apre la mappa predefinita');
+  if (condivisione.invalido) segnala(t('app.link.invalido'));
   // coordinate sotto il puntatore (a mouse fermo fuori dalla mappa, il centro) e zoom nel piè di pagina
   const piedeCoord = document.getElementById('piede-coord');
   let puntatore = null;
@@ -183,7 +184,7 @@ map.once('style.load', async () => {
   collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })());
 
   const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia && !DIFFERITI.has(m.id)).map(m => m.avvia(map)));
-  esiti.forEach(e => { if (e.status === 'rejected') segnala(`Strato non caricato: ${e.reason?.message ?? e.reason}`); });
+  esiti.forEach(e => { if (e.status === 'rejected') segnala(t('avviso.stratoNonCaricato.dettaglio', { nome: e.reason?.message ?? e.reason })); });
   // il filtro Linea ha bisogno dei dati del trasporto, caricati da `avvia`
   collegaFiltroLinea(map, { select: document.getElementById('f-linea'), chips: document.getElementById('filtri-linea-chips'), ...trasporto.filtro() });
 
@@ -194,7 +195,7 @@ map.once('style.load', async () => {
   const commuta = tab => {
     if (tab === 'mappa') return foglio.open && foglio.close();
     if (catalogo) commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], tab);
-    else segnala('Fonti non disponibili: catalogo dati assente');
+    else segnala(t('app.fonti.errore'));
   };
   const segna = tab => menu.querySelectorAll('button').forEach(b => {
     if (b.dataset.scheda === (tab ?? 'mappa')) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
@@ -231,7 +232,7 @@ map.once('style.load', async () => {
   collegaInvito(map, document, (() => { try { return window.localStorage; } catch { return null; } })(), { url: location.search });
   if (condivisione.stato) {
     const ignorati = window.dt.condivisione.applica(condivisione.stato);
-    if (ignorati.length) segnala(`Alcuni elementi del link non esistono più: ${ignorati.join(', ')}`);
+    if (ignorati.length) segnala(t('app.link.ignorati', { elenco: ignorati.join(', ') }));
   }
   window.dt.pronto = true;
   setTimeout(() => (window.requestIdleCallback ?? (f => f()))(() => caricaDifferiti()), 3000);

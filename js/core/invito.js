@@ -2,6 +2,7 @@
 // Compare a ogni apertura e sparisce al clic (o tocco) sulla mappa; solo «Non mostrare più» lo spegne per sempre.
 // «Ripristina» nella barra di ricerca lo riaccende (la chiave è tra le personalizzazioni).
 // Non compare se l'indirizzo apre già una scheda.
+import { t } from './i18n.js';
 export const CHIAVE_INVITO = 'dt.invito.no';
 export const SCHEMA_INVITO = 'img/guida/passi/intersezione.svg';
 
@@ -13,7 +14,7 @@ export function collegaInvito(map, doc, archivio, { url = '' } = {}) {
   radice.className = 'invito-clic';
   radice.setAttribute('role', 'status');
   const pill = doc.createElement('p');
-  pill.textContent = 'Clicca sulla mappa per scoprire tutto su un punto';
+  pill.textContent = t('invito.pill');
   const schema = doc.createElement('img');
   schema.src = SCHEMA_INVITO;
   schema.alt = '';
@@ -23,7 +24,7 @@ export function collegaInvito(map, doc, archivio, { url = '' } = {}) {
   const mai = doc.createElement('button');
   mai.type = 'button';
   mai.className = 'invito-mai';
-  mai.textContent = 'Non mostrare più';
+  mai.textContent = t('invito.mai');
   radice.append(pill, schema, mai);
   doc.body.append(radice);
   const chiudi = () => { map.off('click', chiudi); radice.remove(); };

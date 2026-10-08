@@ -1,4 +1,5 @@
 import { CENTRO, ZOOM, ZOOM_SLIDER } from './config.js';
+import { t } from './i18n.js';
 
 
 // Barra degli strumenti: vista iniziale, schermo intero, slider dello zoom sincronizzato con la mappa.
@@ -21,7 +22,7 @@ export function collegaStrumenti(map) {
   const btn3d = document.getElementById('btn-3d');
   const segna3d = attivo => {
     btn3d.setAttribute('aria-pressed', String(attivo));
-    btn3d.title = attivo ? 'Torna alla vista 2D' : 'Vista 3D';
+    btn3d.title = attivo ? t('strumenti.vista2d') : t('html.btn.3d');
   };
   document.addEventListener('vista3d', e => segna3d(e.detail));
   btn3d.addEventListener('click', () => {
@@ -69,7 +70,7 @@ function collegaTema(btn) {
   const radice = document.documentElement;
   const mostra = scuro => {
     btn.setAttribute('aria-pressed', String(scuro));
-    btn.title = btn.ariaLabel = scuro ? 'Tema chiaro' : 'Tema scuro';
+    btn.title = btn.ariaLabel = scuro ? t('strumenti.temaChiaro') : t('html.tema');
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', scuro ? '#1c2128' : '#ffffff');
   };
   mostra(radice.dataset.tema === 'scuro');

@@ -3,21 +3,22 @@
 // e «Menu» (guide e pagine sul progetto). «Mappa» chiude tutto. Su schermi più larghi la barra non si vede
 // (CSS) e l'interfaccia resta quella a barre laterali.
 import { svgIcona } from './icone.js';
+import { t as tr } from './i18n.js';
 
 export const TAB = [
-  { id: 'mappa', etichetta: 'Mappa', icona: 'mappa' },
-  { id: 'strati', etichetta: 'Strati', icona: 'base' },
-  { id: 'aggiungi', etichetta: 'Aggiungi', icona: 'miei' },
-  { id: 'info', etichetta: 'Menu', icona: 'menu' },
+  { id: 'mappa', etichetta: tr('tab.mappa'), icona: 'mappa' },
+  { id: 'strati', etichetta: tr('tab.strati'), icona: 'base' },
+  { id: 'aggiungi', etichetta: tr('tab.aggiungi'), icona: 'miei' },
+  { id: 'info', etichetta: tr('tab.menu'), icona: 'menu' },
 ];
 
 // Titolo del foglio «barra degli strati» in base al tab; quali riquadri compaiono lo decide il CSS con body[data-foglio].
-export const TITOLO_FOGLIO = { strati: 'Strati', aggiungi: 'Aggiungi' };
+export const TITOLO_FOGLIO = { strati: tr('tab.strati'), aggiungi: tr('tab.aggiungi') };
 
 export function collegaTabMobile(doc, { barraTitolo, suCambio = () => {}, suMappa = () => {} } = {}) {
   const barra = doc.createElement('nav');
   barra.id = 'barra-tab';
-  barra.setAttribute('aria-label', 'Sezioni');
+  barra.setAttribute('aria-label', tr('tab.sezioni'));
   const bottoni = new Map();
   let corrente = null; // 'strati' | 'aggiungi' | 'info' | null (mappa)
 

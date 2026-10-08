@@ -1,5 +1,6 @@
 // Barra verticale a destra con un tab per pannello (Scheda, RNDT): un solo pannello aperto alla volta,
 // gli altri restano raggiungibili dai tab. Cliccando il tab attivo il pannello si ripiega e resta solo la barra.
+import { t } from './i18n.js';
 export const ICONE_RAIL = {
   scheda: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>',
   rndt: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>',
@@ -34,7 +35,7 @@ export function collegaRail(rail, voci) {
       // come la barra a sinistra, i tab ci sono sempre; quello della scheda è spento finché non c'è una scheda
       const spento = v.id === 'scheda' && !esiste;
       b.setAttribute('aria-disabled', String(spento));
-      b.title = spento ? 'Scheda: tocca la mappa per aprirla' : v.etichetta;
+      b.title = spento ? t('rail.schedaSpenta') : v.etichetta;
       const attivo = esiste && !v.pannello.classList.contains('collassato');
       b.setAttribute('aria-pressed', String(attivo));
       b.classList.toggle('attivo', attivo);
