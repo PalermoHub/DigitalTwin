@@ -111,9 +111,9 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     const colore = COLORI[parseInt(hash(nome), 36) % COLORI.length];
     map.addSource(id, { type: 'geojson', data: dati });
     const strati = [
-      { id: `${id}-fill`, type: 'fill', source: id, filter: ['==', ['geometry-type'], 'Polygon'], paint: { 'fill-color': colore, 'fill-opacity': 0.3 } },
-      { id: `${id}-line`, type: 'line', source: id, filter: ['!=', ['geometry-type'], 'Point'], paint: { 'line-color': colore, 'line-width': 2 } },
-      { id: `${id}-pt`, type: 'circle', source: id, filter: ['==', ['geometry-type'], 'Point'], paint: { 'circle-color': colore, 'circle-radius': 5, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } },
+      { id: `${id}-fill`, metadata: { dtNome: nome }, type: 'fill', source: id, filter: ['==', ['geometry-type'], 'Polygon'], paint: { 'fill-color': colore, 'fill-opacity': 0.3 } },
+      { id: `${id}-line`, metadata: { dtNome: nome }, type: 'line', source: id, filter: ['!=', ['geometry-type'], 'Point'], paint: { 'line-color': colore, 'line-width': 2 } },
+      { id: `${id}-pt`, metadata: { dtNome: nome }, type: 'circle', source: id, filter: ['==', ['geometry-type'], 'Point'], paint: { 'circle-color': colore, 'circle-radius': 5, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } },
     ];
     for (const s of strati) map.addLayer(s);
     const rec = { id, tipo: 'geojson', nome, visibile: true, sorgente: url ? { url } : {}, idMappa: strati.map(s => s.id), idSorgente: id, salvato: Boolean(url) };

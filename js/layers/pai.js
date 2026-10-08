@@ -3,7 +3,8 @@ import { registraTooltipStrati } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { chiavePai, modelloPopup, vociPai } from './scheda-pai.js';
-import { tl } from '../core/i18n.js';
+import { tl, t } from '../core/i18n.js';
+import { registraSorgenti } from '../core/tabella/sorgenti.js';
 
 // Vincoli del PAI (Piano di Assetto Idrogeologico, Regione Siciliana) nel Comune di Palermo: pericolosità e rischio idraulico e geomorfologico,
 // dissesti, siti di attenzione, erosione costiera. Un solo PMTiles (zoom 12–18) con uno strato per dataset.
@@ -42,6 +43,12 @@ const idLinea = t => `pai-${t.id}-linea`;
 const idHit = ds => `pai-${ds.id}-hit`;
 const TEMI = DATASET.flatMap(ds => ds.temi.map(t => ({ ds, t })));
 const layerDelTema = ({ ds, t }) => (ds.geometria === 'linea' ? [idLinea(t)] : [idFill(t), ...(t.classi.some(c => c.bordo) ? [idBordo(t)] : [])]);
+// Una scheda della tabella per dataset del manifest: colonne di stile (col_, bor_, pat_) nascoste.
+registraSorgenti(DATASET.map(ds => ({
+  id: `pai-${ds.id}`, nome: `PAI: ${ds.titolo}`, strati: [idHit(ds)], visibili: ds.temi.flatMap(t => layerDelTema({ ds, t })),
+  chiave: p => chiavePai(ds, p), colonne: campi => campi.filter(c => !/^(col|bor|pat)_/.test(c)),
+  fonte: t('tabella.fonte.pai'), approssimata: true, esporta: true, colore: ds.temi[0].classi.find(c => c.n > 0)?.colore ?? '#2b8a3e',
+})));
 const classiConElementi = t => t.classi.filter(c => c.n > 0);
 const campioneMatch = (t, f) => {
   const c = classiConElementi(t);

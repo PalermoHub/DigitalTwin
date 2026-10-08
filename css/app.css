@@ -656,7 +656,7 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
 @media (max-width: 720px) {
   #barra-strati { display: none; }
   body.strati-aperti #barra-strati { display: flex; top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 70%; z-index: var(--z-foglio); padding: 12px; border-radius: var(--r-lg) var(--r-lg) 0 0; border-width: 1px 0 0; }
-  /* sei riquadri (Mappe di base, Layer, RNDT, I miei layer, Filtri, Geoimage): tre per riga, due righe piene */
+  /* riquadri tre per riga: Strati ha base, layer, filtri e la Tabella (a tutta riga); Aggiungi ha i miei layer, RNDT, Geoimage */
   body.strati-aperti #barra-gruppi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
   body.strati-aperti #barra-gruppi button { border: 1px solid var(--border-ui); min-height: 64px; }
   body.strati-aperti #barra-gruppi button[aria-expanded="true"] { border-color: var(--accent); }
@@ -1468,8 +1468,9 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   /* foglio «Strati»: basi, layer, filtri. Foglio «Aggiungi»: i miei layer, catalogo RNDT, Geoimage */
   #btn-gruppo-rndt { display: none !important; } /* l'elenco dei layer RNDT aggiunti è in cima al pannello del catalogo */
   body[data-foglio="strati"] #barra-gruppi > :is(#btn-gruppo-miei, #btn-rndt-m, #btn-geoimage-m),
-  body[data-foglio="aggiungi"] #barra-gruppi > :is(#btn-gruppo-base, #btn-gruppo-layer, #btn-gruppo-filtri) { display: none; }
+  body[data-foglio="aggiungi"] #barra-gruppi > :is(#btn-gruppo-base, #btn-gruppo-layer, #btn-gruppo-filtri, #btn-tabella-m) { display: none; }
   #btn-gruppo-miei { order: 1; } #btn-rndt-m { order: 2; } #btn-geoimage-m { order: 3; }
+  #btn-tabella-m { order: 4; grid-column: 1 / -1; } /* foglio Strati: base, layer, filtri in riga, la tabella sotto a tutta larghezza (niente riquadro orfano) */
 
   /* foglio «Menu»: un menù a comparsa sopra il tab Menu, mezza larghezza, testo a destra, a due gruppi */
   body.info-aperto #menu-info {
@@ -1512,3 +1513,95 @@ dialog.streetview-finestra.trascinata iframe { pointer-events: none; }
   .streetview-barra button { width: 44px; height: 44px; font-size: 1.1rem; }
   .streetview-barra a { padding: 10px 0; }
 }
+
+/* ==========================================================================
+   Tabella dei dati: cassetto in basso, tra la barra sinistra e la scheda destra.
+   È figlio del body (non di #corpo): poggia sul piè di pagina (36 px) e --tabella-h
+   (impostata da ui.js sul body) fa salire sopra di esso i controlli della mappa.
+   ========================================================================== */
+:root { --tabella-h: 0px; }
+#tabella-dati {
+  position: fixed; z-index: var(--z-barra); left: var(--sx); right: var(--scheda-l); bottom: var(--footer-h, 36px);
+  box-sizing: border-box; display: flex; flex-direction: column; min-height: 160px; max-height: calc(100dvh - 64px - var(--footer-h, 36px) - 8px);
+  background: var(--surface); border: 1px solid var(--border-ui); border-bottom: 0; border-radius: var(--r-lg) var(--r-lg) 0 0;
+  box-shadow: var(--ombra); font-size: var(--fs-sm); color: var(--text); transition: left var(--t-rapida), right var(--t-rapida);
+}
+#tabella-dati[hidden] { display: none; }
+.tabella-maniglia { height: 14px; padding: 0; border: 0; background: none; cursor: ns-resize; flex: none; touch-action: none; }
+.tabella-maniglia::after { content: ''; display: block; width: 40px; height: 4px; margin: 5px auto; border-radius: 2px; background: var(--border-ui); }
+.tabella-maniglia:focus-visible { outline: 2px solid var(--focus); }
+.tabella-testata { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 8px 4px; flex: none; }
+.tabella-schede { display: flex; gap: 4px; padding: 0 8px; overflow-x: auto; flex: none; }
+.tabella-scheda { padding: 4px 10px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; white-space: nowrap; cursor: pointer; }
+.tabella-scheda:hover { background: var(--surface-hover); }
+.tabella-scheda[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.tabella-barra { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; padding: 6px 8px; flex: none; overflow-x: auto; scrollbar-width: thin; } /* una sola riga: se manca spazio scorre */
+.tabella-barra > * { flex: none; }
+.tabella-barra > .tabella-filtro { flex: 0 1 170px; width: 170px; min-width: 120px; }
+.tabella-barra > .tabella-esporti { margin-left: auto; }
+.tabella-strumenti, .tabella-azioni-righe, .tabella-esporti { display: flex; flex-wrap: nowrap; gap: 4px; align-items: center; }
+.tabella-azioni-righe, .tabella-colonne, .tabella-esporti { padding-left: 8px; border-left: 1px solid var(--border-ui); } /* separatori tra i gruppi, come la barra di QGIS */
+.tabella-strumento, .tabella-azione, .tabella-esporta, .tabella-sposta, .tabella-colonne summary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 32px; height: 32px; padding: 0 6px; box-sizing: border-box;
+  border: 1px solid transparent; border-radius: var(--r-sm); background: transparent; color: var(--text); font: inherit; cursor: pointer;
+}
+.tabella-esporta { padding: 0 8px; }
+.tabella-esporta-nome { font-size: var(--fs-xs); font-weight: 600; }
+.tabella-esporta-n { font-size: var(--fs-2xs); color: var(--text-muted); font-variant-numeric: tabular-nums; padding: 1px 5px; border-radius: 8px; background: var(--surface-hover); }
+.tabella-sposta { min-width: 0; height: auto; padding: 2px 6px; border-color: var(--border-ui); background: var(--surface); }
+.tabella-strumento svg, .tabella-azione svg, .tabella-esporta svg, .tabella-colonne summary svg { flex: none; display: block; }
+.tabella-strumento:hover, .tabella-azione:hover, .tabella-esporta:hover, .tabella-sposta:hover, .tabella-colonne summary:hover { background: var(--surface-hover); border-color: var(--border-ui); }
+.tabella-strumento[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.tabella-strumento:focus-visible, .tabella-azione:focus-visible, .tabella-esporta:focus-visible, .tabella-sposta:focus-visible,
+.tabella-colonne summary:focus-visible, .tabella-livello:focus-visible, .tabella-filtro:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.tabella-azione:disabled, .tabella-esporta:disabled, .tabella-sposta:disabled { opacity: .5; cursor: default; }
+.tabella-esporta:disabled:hover { background: transparent; border-color: transparent; }
+.tabella-azioni-righe { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.tabella-livello, .tabella-filtro { padding: 4px 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
+.tabella-livello, .tabella-filtro { height: 32px; box-sizing: border-box; padding-top: 0; padding-bottom: 0; }
+.tabella-livello { width: 130px; }
+.tabella-nota { margin: 0; padding: 0 8px 4px; color: var(--text-muted); font-size: var(--fs-xs); flex: none; }
+.tabella-corpo { flex: 1; min-height: 0; overflow: auto; }
+.tabella-vuota { margin: 0; padding: 16px; color: var(--text-muted); }
+.tabella-griglia { border-collapse: collapse; width: 100%; }
+.tabella-griglia th, .tabella-griglia td { padding: 3px 8px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+.tabella-griglia thead th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.tabella-griglia tbody tr[aria-selected="true"] { background: var(--accent-soft); }
+.tabella-griglia tbody tr:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.tabella-ordina { all: unset; cursor: pointer; font-weight: 600; }
+.tabella-ordina:focus-visible { outline: 2px solid var(--focus); }
+.tabella-casella { width: 28px; text-align: center; }
+.tabella-colonne summary { display: inline-block; list-style: none; }
+.tabella-colonne-elenco { position: fixed; z-index: 30; margin: 0; padding: 6px; list-style: none; max-height: 240px; overflow: auto; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-sm); box-shadow: var(--ombra); }
+.tabella-colonne-elenco li { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
+.tabella-colonna-nome { flex: 1; min-width: 100px; }
+.tabella-riquadro { position: absolute; z-index: 2; border: 2px dashed var(--accent-strong); background: var(--accent-soft); pointer-events: none; }
+/* i controlli della mappa salgono sopra il cassetto aperto */
+body:has(#tabella-dati:not([hidden])) #zoom-box { bottom: calc(54px + var(--tabella-h)); }
+body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-right,
+body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-left { bottom: var(--tabella-h); }
+body:has(#tabella-dati:not([hidden])) #legende-box { bottom: calc(var(--legende-bottom) + var(--tabella-h)); max-height: calc(100dvh - var(--legende-bottom) - var(--tabella-h) - var(--legende-alto)); }
+/* ricerca e avvisi (#avvisi sta dentro #area-ricerca) salgono sopra il cassetto; su telefono la ricerca è in alto e non si sposta */
+body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(safe-area-inset-bottom, 0px) + var(--tabella-h)); }
+/* telefono: a tutta larghezza sopra la barra a tab. I fogli (scheda, strati, menu, RNDT, geoimage) stanno dentro #corpo, che è uno
+   stacking context sotto il cassetto (figlio di body) e occupano la stessa fascia: con un foglio aperto il cassetto si nasconde
+   e --tabella-h torna a 0 (!important batte il valore scritto in linea da ui.js) */
+@media (max-width: 720px) {
+  #tabella-dati { left: 0; right: 0; bottom: calc(var(--tab-h) + var(--footer-h)); max-height: min(60dvh, calc(100dvh - 64px - var(--tab-h) - var(--footer-h) - 8px)); }
+  body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: auto; }
+  body:has(#tabella-dati:not([hidden])):not(.strati-aperti):not(.info-aperto):not(:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato))) :is(.maplibregl-ctrl-bottom-right, .maplibregl-ctrl-bottom-left) { bottom: calc(var(--tabella-h) + var(--tab-h)); }
+  body.strati-aperti #tabella-dati, body.info-aperto #tabella-dati,
+  body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) #tabella-dati { display: none; }
+  body.strati-aperti, body.info-aperto, body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) { --tabella-h: 0px !important; }
+  .tabella-barra { flex-wrap: wrap; overflow-x: visible; }
+  .tabella-barra > .tabella-filtro { flex: 1 1 170px; width: auto; }
+  .tabella-barra > .tabella-esporti { margin-left: 0; }
+  .tabella-strumenti, .tabella-azioni-righe, .tabella-esporti { flex-wrap: wrap; }
+  .tabella-livello, .tabella-filtro { height: 38px; }
+  .tabella-strumento, .tabella-azione, .tabella-esporta, .tabella-colonne summary { min-width: 38px; height: 38px; }
+  .tabella-strumento[data-modo="riquadro"], .tabella-strumento[data-modo="poligono"] { display: none; } /* senza tocco: solo clic e area */
+}
+.tabella-titolo { font-weight: 600; }
+.tabella-chiudi { min-width: 32px; min-height: 32px; padding: 0 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; font-size: 18px; line-height: 1; cursor: pointer; }
+.tabella-chiudi:hover { background: var(--surface-hover); }
+.tabella-chiudi:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
