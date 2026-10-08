@@ -161,7 +161,7 @@ map.once('style.load', async () => {
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
   window.dt.tabella = collegaTabella(map, { pulsante: document.getElementById('btn-tabella') });
-  // su mobile la barra strumenti non c'è: la tabella si apre dal pannello Strati, dopo i pulsanti Geoimage e RNDT
+  // su mobile la barra strumenti non c'è: la tabella si apre dal foglio Strati (riguarda i layer accesi)
   const btnTabella = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-tabella-m', className: 'btn-pannello-mobile', title: t('html.btn.tabella') });
   btnTabella.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg><span class="et">${t('tab.tabella')}</span>`;
   btnTabella.addEventListener('click', () => { tab.imposta(null); window.dt.tabella.apri(); });
