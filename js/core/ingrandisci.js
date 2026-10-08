@@ -1,6 +1,7 @@
 // Visore per le immagini della Guida (Guida, Plugin RNDT, Guida Geoimage): un clic sulla figura la apre a tutto schermo
 // con didascalia, frecce per passare alla figura precedente/successiva della stessa pagina, un clic sull'immagine per
 // ingrandire a doppia dimensione. Chiusura con ×, Esc o clic sullo sfondo.
+import { t } from './i18n.js';
 const SELETTORE = 'figure.guida-figura img, img.dt-fig';
 
 export function collegaIngrandimento(radice, doc = document) {
@@ -18,7 +19,7 @@ function apri(doc, immagini, corrente) {
   velo.className = 'viewer-img';
   velo.setAttribute('role', 'dialog');
   velo.setAttribute('aria-modal', 'true');
-  velo.setAttribute('aria-label', 'Immagine ingrandita');
+  velo.setAttribute('aria-label', t('ingrandisci.aria'));
   const scena = doc.createElement('div');
   scena.className = 'viewer-img-scena';
   const img = doc.createElement('img');
@@ -34,9 +35,9 @@ function apri(doc, immagini, corrente) {
     b.title = etichetta;
     return b;
   };
-  const chiudi = bottone('viewer-img-x', '×', 'Chiudi');
-  const prec = bottone('viewer-img-nav viewer-img-prec', '‹', 'Immagine precedente');
-  const succ = bottone('viewer-img-nav viewer-img-succ', '›', 'Immagine successiva');
+  const chiudi = bottone('viewer-img-x', '×', t('comune.chiudi'));
+  const prec = bottone('viewer-img-nav viewer-img-prec', '‹', t('ingrandisci.prec'));
+  const succ = bottone('viewer-img-nav viewer-img-succ', '›', t('ingrandisci.succ'));
   velo.append(scena, cap, chiudi, prec, succ);
 
   const mostra = () => {

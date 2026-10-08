@@ -6,8 +6,9 @@ import { campionaVicino, campionaBilineare, definisciSr, creaGeoTiff } from './e
 import { calcolaTrasformazione, calcolaAffine, minimoGcp } from './trasformazioni.js';
 import { jszip, proj4 } from './librerie.js';
 import { scarica } from './scarica.js';
+import { t as tr } from '../core/i18n.js';
 
-const caricaImg = src => new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ko(new Error('immagine non leggibile')); i.src = src; });
+const caricaImg = src => new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ko(new Error(tr('err.immagineNonLeggibile'))); i.src = src; });
 
 export function collegaEsporta(ctx) {
   const { $, stato } = ctx;
@@ -30,17 +31,17 @@ export function collegaEsporta(ctx) {
     try {
       const blob = await creaKmz(await jszip(), { nome: stato.immagine.nome, dataUrl: stato.immagine.dataUrl, angoli: stato.angoli, gcp: stato.gcp });
       scarica(blob, `${nomeBase(stato.immagine.nome)}_georef.kmz`);
-      ctx.messaggio('KMZ esportato (immagine incorporata).');
-    } catch (errore) { ctx.avvisa(`Geoimage: KMZ non creato: ${errore.message}`); }
+      ctx.messaggio(tr('gi.esporta.kmz'));
+    } catch (errore) { ctx.avvisa(tr('gi.errore.kmz', { msg: errore.message })); }
   });
-  $('qgis').addEventListener('click', () => { testo(puntiQgis(stato.gcp), 'text/plain', 'gcp_qgis.points'); ctx.messaggio('File dei GCP per il Georeferenziatore di QGIS esportato.'); });
+  $('qgis').addEventListener('click', () => { testo(puntiQgis(stato.gcp), 'text/plain', 'gcp_qgis.points'); ctx.messaggio(tr('gi.esporta.qgis')); });
   $('geojson').addEventListener('click', () => {
     testo(JSON.stringify(geojsonGcp(stato.gcp), null, 2), 'application/json', `${nomeBase(stato.immagine?.nome)}_gcp.geojson`);
-    ctx.messaggio(`GeoJSON dei GCP esportato (${stato.gcp.length} punti).`);
+    ctx.messaggio(tr('gi.esporta.geojson', { n: stato.gcp.length }));
   });
   $('mondo').addEventListener('click', () => {
     const t = calcolaAffine(stato.gcp);
-    if (!t) return ctx.messaggio('Servono almeno 3 GCP non allineati per il world file.');
+    if (!t) return ctx.messaggio(tr('gi.esporta.mondoMin'));
     const ext = estensioneWorldFile(stato.immagine.nome);
     testo(worldFile(t), 'text/plain', `${nomeBase(stato.immagine.nome)}.${ext}`);
     ctx.messaggio(`World file esportato (${ext}).`);
@@ -51,8 +52,8 @@ export function collegaEsporta(ctx) {
     const epsg = Number($('gtiff-sr').value);
     $('gtiff-ricamp-gruppo').classList.toggle('gi-spento', epsg === 4326);
     $('gtiff-nota').textContent = epsg === 4326
-      ? 'EPSG:4326: trasformazione affine incorporata nel file, nessun ricampionamento (con la poly2 l\'immagine si ricampiona).'
-      : `I pixel vengono ricampionati (${$('gtiff-ricamp').selectedOptions[0].text}) per riproiettare l'immagine in EPSG:${epsg}.`;
+      ? tr('gi.gtiff.nota4326')
+      : tr('gi.gtiff.notaRicamp', { metodo: $('gtiff-ricamp').selectedOptions[0].text, epsg });
   };
   $('geotiff').addEventListener('click', () => { $('gtiff').hidden = !$('gtiff').hidden; nota(); });
   $('gtiff-annulla').addEventListener('click', () => { $('gtiff').hidden = true; });
@@ -60,13 +61,13 @@ export function collegaEsporta(ctx) {
   $('gtiff-ricamp').addEventListener('change', nota);
   $('gtiff-vai').addEventListener('click', async () => {
     const t = calcolaTrasformazione(stato.tipo, stato.gcp);
-    if (!t || !stato.immagine) return ctx.messaggio(`Servono almeno ${minimoGcp(stato.tipo)} GCP per il GeoTIFF.`);
+    if (!t || !stato.immagine) return ctx.messaggio(tr('gi.esporta.geotiffMin', { n: minimoGcp(stato.tipo) }));
     const epsg = Number($('gtiff-sr').value), maxRes = Number($('gtiff-max').value), compressione = Number($('gtiff-compr').value);
     const campiona = $('gtiff-ricamp').value === 'nearest' ? campionaVicino : campionaBilineare;
     $('gtiff').hidden = true;
     $('geotiff').disabled = true;
     try {
-      ctx.messaggio('Caricamento immagine…');
+      ctx.messaggio(tr('gi.caricamentoImmagine'));
       const [p4, img] = await Promise.all([proj4(), caricaImg(stato.immagine.dataUrl)]);
       definisciSr(p4);
       let srcW = img.naturalWidth, srcH = img.naturalHeight, sc = 1;
@@ -82,7 +83,7 @@ export function collegaEsporta(ctx) {
       scarica(new Blob([r.buffer], { type: 'image/tiff' }), `${nomeBase(stato.immagine.nome)}_georef_EPSG${epsg}.tif`);
       ctx.messaggio(`GeoTIFF EPSG:${epsg} esportato — ${r.W}×${r.H} px.`);
     } catch (errore) {
-      ctx.avvisa(`Geoimage: GeoTIFF non creato: ${errore.message}`);
+      ctx.avvisa(tr('gi.errore.geotiff', { msg: errore.message }));
     } finally {
       aggiorna();
     }

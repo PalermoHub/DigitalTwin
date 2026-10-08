@@ -1,6 +1,7 @@
 // Tematizzazione per attributo: parte pura (rilevamento dei campi, classi, tavolozze, espressione MapLibre, validazione).
 // Il pannello che la usa sta in pannello-attributo.js; l'applicazione alla mappa in tema.js.
 import { RAMPE_CRAMERI, RAMPE_DIVERGENTI } from './rampe-crameri.js';
+import { t } from './i18n.js';
 
 const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 const MAX_CATEGORIE = 200;
@@ -21,8 +22,8 @@ export const RAMPE = {
 // Gruppi per il selettore: ColorBrewer, Crameri sequenziali (uniformi per percezione, adatte al daltonismo), Crameri divergenti.
 export const GRUPPI_RAMPE = [
   ['ColorBrewer', Object.keys(RAMPE).filter(n => !(n in RAMPE_CRAMERI))],
-  ['Crameri · sequenziali', Object.keys(RAMPE_CRAMERI).filter(n => !RAMPE_DIVERGENTI.includes(n))],
-  ['Crameri · divergenti (serve un valore di riferimento)', RAMPE_DIVERGENTI],
+  [t('rampe.gruppo.sequenziali'), Object.keys(RAMPE_CRAMERI).filter(n => !RAMPE_DIVERGENTI.includes(n))],
+  [t('rampe.gruppo.divergenti'), RAMPE_DIVERGENTI],
 ];
 
 // Colori distinguibili per le categorie (Tableau 10 + 2), riusati in giro.

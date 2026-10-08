@@ -1,6 +1,7 @@
 // js/rndt/info.js
 // Cosa dice un layer RNDT in un punto: richieste GetFeatureInfo (WMS), proprietà delle feature (GeoJSON) e voci
 // nel formato della scheda (scheda-modello.js). Modulo puro: la rete e la mappa arrivano come parametri.
+import { t as tr } from '../core/i18n.js';
 
 const R = 20037508.342789244; // metà circonferenza in Web Mercator
 const PIXEL = 101; // finestra della richiesta, con il punto cliccato al centro
@@ -75,7 +76,7 @@ const fonteDi = layer => {
 
 export function vociDa(layer, esito) {
   const host = fonteDi(layer);
-  const base = { peso: 100, icona: 'mappa', legale: true, sempre: true, ...(host && { fonte: `Fonte: ${host} (catalogo RNDT)` }) };
+  const base = { peso: 100, icona: 'mappa', legale: true, sempre: true, ...(host && { fonte: tr('rndt.info.fonte', { host }) }) };
   const chiave = `rndt:${layer.id}:0`;
   const riga = valore => ({ ...base, chiave, titolo: layer.nome, gruppi: [{ righe: [{ etichetta: 'Esito', valore }] }] });
   if (esito.tipo === 'json' && esito.elementi?.length) {

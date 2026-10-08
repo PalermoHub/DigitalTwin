@@ -13,6 +13,7 @@ import { archivioIndexedDB } from '../rndt/dati.js';
 import { PROXY_RNDT } from '../rndt/index.js';
 import { urlDati } from '../core/config.js';
 import { segnala } from '../core/pannello.js';
+import { t } from '../core/i18n.js';
 
 export function collegaAggiungi(map, gruppo) {
   const storage = (() => { try { return window.localStorage; } catch { return null; } })();
@@ -45,7 +46,7 @@ export function collegaAggiungi(map, gruppo) {
       for (const a of avvisi) segnala(`${file.name}: ${a}`);
       host.addFileLayer(nome, fc);
     } catch (errore) {
-      segnala(`Non carico «${file.name}»: ${errore.message}`);
+      segnala(t('aggiungi.nonCarico', { file: file.name, msg: errore.message }));
     }
   }
 

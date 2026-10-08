@@ -1,3 +1,4 @@
+import { tl } from './i18n.js';
 // Voci di legenda che fanno da filtro: una casella accanto al simbolo, sempre accesa all'inizio.
 // Le legende stanno in #legende e compaiono solo a strato acceso; stile e struttura sono quelli di monumenti.
 // Stato delle caselle di un gruppo dopo il clic sulla voce `k`: la voce diventa l'unica accesa; se era già l'unica accesa
@@ -31,7 +32,7 @@ export function voceFiltro(simbolo, testo, suCambio, attiva = true, esclusivo = 
       if (cambiato) r._filtro.suCambio(dopo[i]);
     });
   });
-  riga.append(casella, simbolo, testo);
+  riga.append(casella, simbolo, tl(testo));
   return riga;
 }
 

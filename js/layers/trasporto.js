@@ -9,6 +9,7 @@ import { fermateVicine, voceTrasportoVicino } from './trasporto-vicino.js';
 import { registraTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { giornoIniziale, oggiISO, colorePerTesto } from './trasporto-orari.js';
+import { t as tr, tl } from '../core/i18n.js';
 
 // Linee bus/tram e fermate AMAT (GTFS). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
 // (da zoom 13) così la scheda di destra mostra fermate e linee anche a strato spento, come per scuole e seggi.
@@ -31,7 +32,7 @@ let promessaOrari = null;
 function caricaOrari() {
   promessaOrari ??= fetch(urlDati('trasporto/orari.json'))
     .then(r => {
-      if (!r.ok) throw new Error('file degli orari non raggiungibile');
+      if (!r.ok) throw new Error(tr('err.orariNonRaggiungibili'));
       return r.json();
     })
     .then(decodificaOrari)
@@ -72,7 +73,7 @@ const ctx = {
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -170,7 +171,7 @@ export default {
       limitiRotta.set(x.properties.route_id, prima ? [[Math.min(prima[0][0], o), Math.min(prima[0][1], s)], [Math.max(prima[1][0], e), Math.max(prima[1][1], n)]] : [[o, s], [e, n]]);
     }
     if (giornoIniziale({ validita: f.validita }, oggiISO()).fuori) {
-      segnala(`Orari del trasporto pubblico validi dal ${f.validita.da} al ${f.validita.a}: oggi sono fuori validità`);
+      segnala(tr('trasporto.orariFuori', { da: f.validita.da, a: f.validita.a }));
     }
   },
   strati: [

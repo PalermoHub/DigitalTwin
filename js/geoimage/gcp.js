@@ -5,6 +5,7 @@
 //   Passo 2: clic sulla mappa nel punto reale corrispondente → coordinate.
 import { geoAPixel } from './geometria.js';
 import { calcolaTrasformazione, minimoGcp, applica, residui, rmse } from './trasformazioni.js';
+import { t as tr } from '../core/i18n.js';
 
 const segno = (classe, testo = '') => Object.assign(document.createElement('div'), { className: classe, textContent: testo });
 const LARGHEZZA_ANTEPRIMA = 800;
@@ -47,16 +48,16 @@ export function collegaGcp(ctx) {
     const { lat, lng } = e.lngLat;
     if (!attesa) {
       const r = geoAPixel(stato.angoli, stato.immagine.larghezza, stato.immagine.altezza, lat, lng);
-      if (!r.valido) return ctx.messaggio('Passo 1: clicca sull\'immagine storica per scegliere il punto.');
+      if (!r.valido) return ctx.messaggio(tr('gi.gcp.p1'));
       attesa = { px: r.px, py: r.py };
       segnoAttesa = new maplibregl.Marker({ element: segno('gi-gcp gi-gcp-attesa') }).setLngLat([lng, lat]).addTo(map);
       ctx.cambiato();
-      return ctx.messaggio(`Pixel (${r.px}, ${r.py}) scelto. Passo 2: clicca sulla mappa nel punto reale corrispondente. Esc per annullare.`);
+      return ctx.messaggio(tr('gi.gcp.p2', { px: r.px, py: r.py }));
     }
     const { px, py } = attesa;
     annullaAttesa();
     aggiungi(lat, lng, px, py);
-    ctx.messaggio(`GCP ${stato.gcp.length} aggiunto. Passo 1: clicca sull'immagine per il prossimo punto, Esc per uscire.`);
+    ctx.messaggio(tr('gi.gcp.aggiunto', { n: stato.gcp.length }));
   }
 
   function imposta(on) {
@@ -66,8 +67,8 @@ export function collegaGcp(ctx) {
     if (on) { sospensione.attiva(clic); map.doubleClickZoom.disable(); } else { sospensione.disattiva(); map.doubleClickZoom.enable(); }
     map.getCanvas().style.cursor = on ? 'crosshair' : '';
     $('gcp-modo').setAttribute('aria-pressed', String(on));
-    $('gcp-modo').textContent = on ? 'Esci dalla modalità GCP (G)' : 'Aggiungi GCP (G)';
-    if (on) ctx.messaggio('Modalità GCP. Passo 1: clicca sull\'immagine storica per scegliere un punto riconoscibile.');
+    $('gcp-modo').textContent = on ? tr('gi.gcp.esci') : tr('gi.gcp.aggiungi');
+    if (on) ctx.messaggio(tr('gi.gcp.modo'));
     ctx.cambiato();
   }
 
@@ -93,7 +94,7 @@ export function collegaGcp(ctx) {
 
   function aggiornaTabella() {
     const n = stato.gcp.length, min = minimoGcp(stato.tipo);
-    $('gcp-conteggio').textContent = n === 0 ? 'Nessun GCP inserito' : n < min ? `${n} GCP: ne servono almeno ${min}` : `${n} GCP`;
+    $('gcp-conteggio').textContent = n === 0 ? tr('gi.gcp.nessuno') : n < min ? tr('gi.gcp.conteggio.pochi', { n, min }) : `${n} GCP`;
     const t = n >= min ? calcolaTrasformazione(stato.tipo, stato.gcp) : null;
     const res = t ? residui(t, stato.gcp) : [];
     const media = res.length ? res.reduce((s, r) => s + r, 0) / res.length : 0;
@@ -103,8 +104,8 @@ export function collegaGcp(ctx) {
       const r = res[i];
       if (r != null) riga.className = r < media * 1.5 ? 'gi-res-buono' : r < media * 3 ? 'gi-res-medio' : 'gi-res-alto';
       for (const testo of [i + 1, g.lat.toFixed(6), g.lng.toFixed(6), g.px, g.py, r != null ? r.toFixed(1) : '—']) riga.append(Object.assign(document.createElement('td'), { textContent: String(testo) }));
-      const x = Object.assign(document.createElement('button'), { type: 'button', className: 'gi-btn gi-x', textContent: '×', title: `Rimuovi il GCP ${i + 1}` });
-      x.setAttribute('aria-label', `Rimuovi il GCP ${i + 1}`);
+      const x = Object.assign(document.createElement('button'), { type: 'button', className: 'gi-btn gi-x', textContent: '×', title: tr('gi.gcp.rimuovi', { n: i + 1 }) });
+      x.setAttribute('aria-label', tr('gi.gcp.rimuovi', { n: i + 1 }));
       x.addEventListener('click', () => rimuovi(i));
       const cella = document.createElement('td');
       cella.append(x);
@@ -130,14 +131,14 @@ export function collegaGcp(ctx) {
     ctx.impostaAngoli(angoli);
     ctx.conferma();
     ctx.inquadra(angoli);
-    ctx.messaggio('Immagine allineata alle coordinate dei GCP.');
+    ctx.messaggio(tr('gi.gcp.allineata'));
   });
 
   ctx.sulTasto(e => {
     if (!stato.immagine) return false;
     if (!e.ctrlKey && !e.metaKey && e.key.toLowerCase() === 'g') { imposta(!attivo); return true; }
     if (e.key === 'Escape') {
-      if (attesa) { annullaAttesa(); ctx.messaggio('Passo 1 annullato: clicca sull\'immagine per scegliere un altro punto.'); ctx.cambiato(); return true; }
+      if (attesa) { annullaAttesa(); ctx.messaggio(tr('gi.gcp.annullato')); ctx.cambiato(); return true; }
       if (attivo) { imposta(false); return true; }
       return false;
     }
@@ -149,7 +150,7 @@ export function collegaGcp(ctx) {
   ctx.sulCaricamento(() => {
     attivo = false; annullaAttesa(); sospensione.disattiva(); map.doubleClickZoom.enable(); map.getCanvas().style.cursor = '';
     $('gcp-modo').setAttribute('aria-pressed', 'false');
-    $('gcp-modo').textContent = 'Aggiungi GCP (G)';
+    $('gcp-modo').textContent = tr('gi.gcp.aggiungi');
     ricostruisci();
     anteprima = null;
     if (stato.immagine) {

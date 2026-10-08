@@ -5,6 +5,7 @@ import { tutti } from '../core/scheda-util.js';
 import { coloriClassi, espressioneColore, etichetteClassi, NODATA } from './isole-calore-classi.js';
 import { graficoAndamento } from './isole-calore-grafico.js';
 import { voceIsolaCalore } from './scheda-isole-calore.js';
+import { t, tl, localeIntl } from '../core/i18n.js';
 
 // Isole di calore: temperatura superficiale estiva (LST, Landsat 8/9) per sezione censuaria. La mappa mostra l'ultimo anno,
 // il grafico 2019–2025 sta nella scheda del luogo (anche a strato spento: layer «hit» trasparente) e nella legenda (media comunale).
@@ -40,7 +41,7 @@ const colori = () => (rampaTema ? coloriRampa(rampaTema, classi, invertiTema) : 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -56,7 +57,7 @@ function applicaClassi() {
   disegnaScala();
 }
 
-const gradi = v => `${v.toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} °C`;
+const gradi = v => `${v.toLocaleString(localeIntl(), { minimumFractionDigits: 1, maximumFractionDigits: 1 })} °C`;
 
 // Barra a classi (una cella per classe, il limite nel suggerimento), estremi sotto e «Nessun dato».
 function disegnaScala() {
@@ -76,7 +77,7 @@ function disegnaScala() {
   const nd = el('div', 'ic-nd');
   const c = el('i');
   c.style.background = NODATA;
-  nd.append(c, 'Nessun dato');
+  nd.append(c, tl('Nessun dato'));
   scala.replaceChildren(barra, assi, nd);
   const n = legenda.querySelector('.ic-n');
   if (n) n.textContent = String(classi);
@@ -91,17 +92,17 @@ function creaLegenda() {
 function riempiLegenda() {
   if (!legenda || !dati || legenda.dataset.pronta) return;
   legenda.dataset.pronta = '1';
-  legenda.append(el('strong', null, `Temperatura superficiale estiva ${dati.anno} (°C)`));
+  legenda.append(el('strong', null, t('isole.legendaTitolo', { anno: dati.anno })));
   legenda.append(el('p', 'uffici-nota', 'Per sezione censuaria, da satellite Landsat: non è la temperatura dell\'aria'));
 
   legenda.append(el('span', 'ic-etichetta', 'Metodo di classificazione'));
   const bottoni = el('div', 'ic-metodi');
   bottoni.setAttribute('role', 'group');
-  bottoni.setAttribute('aria-label', 'Metodo di classificazione');
+  bottoni.setAttribute('aria-label', tl('Metodo di classificazione'));
   for (const [id, nome, aiuto, linee] of METODI) {
     const b = el('button', 'ic-metodo');
     b.type = 'button';
-    b.title = aiuto;
+    b.title = tl(aiuto);
     b.dataset.metodo = id;
     b.innerHTML = iconaMetodo(linee);
     b.append(el('span', null, nome));
@@ -119,12 +120,12 @@ function riempiLegenda() {
   const cursore = el('input');
   Object.assign(cursore, { type: 'range', min: '3', max: '9', step: '1', value: String(classi) });
   cursore.addEventListener('input', () => { classi = Number(cursore.value); applicaClassi(); });
-  etichetta.append('Numero di classi: ', el('span', 'ic-n', String(classi)), cursore);
+  etichetta.append(tl('Numero di classi: '), el('span', 'ic-n', String(classi)), cursore);
   legenda.append(etichetta, el('div', 'ic-scala'));
 
   const link = el('a', 'ic-link', 'Approfondisci: studio completo sulle isole di calore ↗');
   collegamento(link, dati.link);
-  legenda.append(graficoAndamento(null, dati.serie, `Media comunale ${dati.anni[0]}–${dati.anno}`), link);
+  legenda.append(graficoAndamento(null, dati.serie, t('isole.mediaComunale', { da: dati.anni[0], a: dati.anno })), link);
   disegnaScala();
 }
 
@@ -166,7 +167,7 @@ export default {
     layers: [HIT],
     voci: trovati => {
       if (!dati) return [];
-      return distinte(tutti(trovati, HIT)).slice(0, 1).flatMap(f => voceIsolaCalore(f.properties, dati, () => graficoAndamento(f.properties, dati.serie, `Sezione e media comunale ${dati.anni[0]}–${dati.anno}`)) ?? []);
+      return distinte(tutti(trovati, HIT)).slice(0, 1).flatMap(f => voceIsolaCalore(f.properties, dati, () => graficoAndamento(f.properties, dati.serie, t('isole.sezioneEMedia', { da: dati.anni[0], a: dati.anno }))) ?? []);
     },
   },
   strati: [{

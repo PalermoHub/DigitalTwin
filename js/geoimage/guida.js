@@ -2,6 +2,7 @@
 // Tab «Guida Geoimage» del foglio Info: costruisce la guida da guida-contenuti.js.
 import { SEZIONI } from './guida-contenuti.js';
 import { indiceLaterale } from '../core/guida.js';
+import { t as tr, tl } from '../core/i18n.js';
 
 const el = (doc, tag, testo) => {
   const e = doc.createElement(tag);
@@ -19,7 +20,7 @@ function figura(doc, immagine) {
   const fig = el(doc, 'figure');
   fig.className = 'guida-figura';
   const img = el(doc, 'img');
-  Object.assign(img, { src: immagine.file, alt: immagine.alt, title: `${immagine.didascalia} (clic per ingrandire)`, loading: 'lazy', width: 1280, height: 720 });
+  Object.assign(img, { src: immagine.file, alt: immagine.alt, title: tr('catalogo.ingrandisci', { alt: tl(immagine.didascalia) }), loading: 'lazy', width: 1280, height: 720 });
   img.onerror = () => fig.remove();
   fig.append(img, el(doc, 'figcaption', immagine.didascalia));
   return fig;
@@ -27,7 +28,7 @@ function figura(doc, immagine) {
 
 export function schedaGeoimage(doc = document, sezioni = SEZIONI) {
   const radice = el(doc, 'div');
-  radice.append(el(doc, 'h2', 'Guida Geoimage'), Object.assign(el(doc, 'p', 'Come sovrapporre una mappa storica alla cartografia e georeferenziarla.'), { className: 'pagina-intro' }));
+  radice.append(el(doc, 'h2', tr('guida.geoimage.titolo')), Object.assign(el(doc, 'p', tr('guida.geoimage.intro')), { className: 'pagina-intro' }));
   const voci = [];
   for (const s of sezioni) {
     const sezione = el(doc, 'section');

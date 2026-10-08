@@ -3,6 +3,7 @@
 // plugin, l'elenco dei layer aggiunti e fa rispettare l'area di Palermo sui controlli del plugin.
 import { BBOX_PALERMO } from './area.js';
 import { svgIcona } from '../core/icone.js';
+import { t } from '../core/i18n.js';
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -28,22 +29,22 @@ function limitaArea(radice) {
     if (!casella || casella.disabled) continue;
     casella.checked = true;
     casella.disabled = true;
-    label.title = 'Il download è sempre limitato all’area di Palermo';
+    label.title = t('rndt.limitePalermo');
   }
 }
 
 export function creaPannello(elemento) {
   const testata = el('header', 'rndt-testata');
-  testata.append(el('h2', null, 'Catalogo RNDT · Palermo'));
-  const x = Object.assign(el('button', 'pannello-chiudi'), { type: 'button', title: 'Chiudi', ariaLabel: 'Chiudi il catalogo RNDT' });
+  testata.append(el('h2', null, t('rndt.titolo')));
+  const x = Object.assign(el('button', 'pannello-chiudi'), { type: 'button', title: t('comune.chiudi'), ariaLabel: t('rndt.chiudi') });
   x.innerHTML = svgIcona('chiudi', 18);
   x.addEventListener('click', () => { elemento.hidden = true; });
   testata.append(x);
   const elenco = el('details', 'rndt-layer');
   elenco.hidden = true;
   const contenuto = el('div', 'rndt-contenuto');
-  contenuto.append(el('p', 'rndt-attesa', 'Caricamento del catalogo…'));
-  const autore = el('p', 'rndt-autore', 'Plugin openrndt-geolibre di ');
+  contenuto.append(el('p', 'rndt-attesa', t('rndt.caricamento')));
+  const autore = el('p', 'rndt-autore', t('rndt.autore'));
   const aut = el('a', null, 'Andrea Borruso');
   aut.href = 'https://www.linkedin.com/in/andreaborruso/';
   const repo = el('a', null, 'openrndt-geolibre');
@@ -94,10 +95,10 @@ export function creaPannello(elemento) {
         casella.disabled = l.indisponibile;
         casella.addEventListener('change', () => host.mostra(l.id, casella.checked));
         etichetta.append(casella, ' ', l.nome);
-        if (l.indisponibile) etichetta.append(' ', el('em', null, '(non disponibile)'));
-        else if (!l.salvato) etichetta.append(' ', el('em', null, '(solo questa sessione)'));
-        else if (l.errore) etichetta.append(' ', el('em', null, '(errori di caricamento)'));
-        const rimuovi = el('button', 'rndt-rimuovi', 'Rimuovi');
+        if (l.indisponibile) etichetta.append(' ', el('em', null, t('rndt.paren.nonDisponibile')));
+        else if (!l.salvato) etichetta.append(' ', el('em', null, t('rndt.paren.soloSessione')));
+        else if (l.errore) etichetta.append(' ', el('em', null, t('rndt.paren.errori')));
+        const rimuovi = el('button', 'rndt-rimuovi', t('rndt.rimuovi'));
         rimuovi.type = 'button';
         rimuovi.addEventListener('click', () => host.elimina(l.id));
         riga.append(etichetta, rimuovi);

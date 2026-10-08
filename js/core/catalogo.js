@@ -4,6 +4,7 @@ import { schedaArgomenti } from './argomenti.js';
 import { collegaIngrandimento } from './ingrandisci.js';
 import { schedaGuida, passiRndt, indiceLaterale } from './guida.js';
 import { schedaGeoimage } from '../geoimage/guida.js';
+import { t as tr, tl, lingua } from './i18n.js';
 
 const AVVISI = [
   'Catasto, zonizzazione PRG e vincoli sono solo informativi e non hanno valore legale: per usi legali servono il certificato di destinazione urbanistica e le visure ufficiali.',
@@ -20,6 +21,16 @@ export async function caricaCatalogo() {
 
 const PLUGIN_URL = 'https://github.com/ondata/openrndt-geolibre';
 const AUTORE_URL = 'https://www.linkedin.com/in/andreaborruso/';
+
+// Traduce in place i nodi di testo e gli attributi alt/title di un albero DOM già costruito (in italiano non fa nulla).
+function traduciAlbero(radice) {
+  if (lingua() === 'it') return;
+  const w = document.createTreeWalker(radice, NodeFilter.SHOW_TEXT);
+  for (let n = w.nextNode(); n; n = w.nextNode()) n.nodeValue = tl(n.nodeValue);
+  for (const e of radice.querySelectorAll('[alt],[title],[aria-label]')) {
+    for (const a of ['alt', 'title', 'aria-label']) if (e.hasAttribute(a)) e.setAttribute(a, tl(e.getAttribute(a)));
+  }
+}
 
 function el(tag, testo, attr = {}) {
   return Object.assign(document.createElement(tag), testo != null ? { textContent: testo } : {}, attr);
@@ -57,7 +68,7 @@ function schedaPrivacy() {
 
 // Testo del post LinkedIn «Palermo Digital Twin… work in progress», con le immagini del carosello a seguire.
 function schedaDigitalTwin() {
-  const fig = (n, alt) => el('img', null, { className: 'dt-fig', src: `img/dt/dt-${n}.jpg`, alt, title: `${alt} (clic per ingrandire)`, loading: 'lazy', width: 1920, height: 1072 });
+  const fig = (n, alt) => el('img', null, { className: 'dt-fig', src: `img/dt/dt-${n}.jpg`, alt, title: tr('catalogo.ingrandisci', { alt: tl(alt) }), loading: 'lazy', width: 1920, height: 1072 });
   const sezione = (titolo, testi, ...figure) => blocco(titolo, ...testi.map(t => el('p', t)), ...figure);
   return [
     ...titoloPagina('Digital Twin', 'La città a strati: catasto, popolazione, edifici, trasporti, sicurezza e molto altro.'),
@@ -320,18 +331,19 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   const corpo = document.createElement('div');
   corpo.className = 'tab-corpo';
   corpo.append(...pannelli);
+  traduciAlbero(corpo); // le pagine sono scritte in italiano: in inglese ogni testo si traduce con le voci lbl.* dei dizionari
   const inCima = document.createElement('button');
   inCima.type = 'button';
   inCima.className = 'in-cima';
   inCima.hidden = true;
-  inCima.textContent = '↑ In cima';
+  inCima.textContent = tr('catalogo.inCima');
   inCima.addEventListener('click', () => corpo.scrollTo({ top: 0, behavior: 'smooth' }));
   corpo.addEventListener('scroll', () => { inCima.hidden = corpo.scrollTop < 40; });
   const chiudi = document.createElement('button');
   chiudi.type = 'button';
   chiudi.className = 'crediti-x';
-  chiudi.setAttribute('aria-label', 'Chiudi');
-  chiudi.title = 'Chiudi';
+  chiudi.setAttribute('aria-label', tr('comune.chiudi'));
+  chiudi.title = tr('comune.chiudi');
   chiudi.innerHTML = svgIcona('chiudi', 18);
   chiudi.addEventListener('click', () => dialog.close());
   dialog.replaceChildren(corpo, chiudi, inCima);

@@ -1,4 +1,5 @@
 import { righe } from '../core/scheda-util.js';
+import { t, tl } from '../core/i18n.js';
 
 // Modello puro dell'albero monumentale: stesse righe per la voce della scheda di destra e per il popup sulla mappa.
 
@@ -30,7 +31,7 @@ export function voceAlbero(p) {
     sempre: true,
     gruppi: [{ righe: righeAlbero(p) }],
     link: { testo: 'Elenco MASAF degli alberi monumentali', url: LINK, icona: 'esterno', suggerimento: 'Ministero dell\'agricoltura, della sovranità alimentare e delle foreste' },
-    fonte: `Fonte: ${FONTE}`,
+    fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
 }
 

@@ -2,10 +2,11 @@
 // Ogni dataset ha i suoi campi (elencati nel manifest dati/pai/pai.json, con etichetta in italiano): qui si leggono da lì, così un campo
 // nuovo del server compare in scheda senza toccare il codice. Le righe senza valore non compaiono.
 import { righe } from '../core/scheda-util.js';
+import { localeIntl, tn } from '../core/i18n.js';
 
 export const FONTE = 'Fonte: Regione Siciliana, Autorità di Bacino — Piano di Assetto Idrogeologico (PAI), SITR. Vincoli nel Comune di Palermo.';
 
-const num = (v, d = 2) => (v != null && Number.isFinite(Number(v)) ? Number(v).toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: d }) : null);
+const num = (v, d = 2) => (v != null && Number.isFinite(Number(v)) ? Number(v).toLocaleString(localeIntl(), { minimumFractionDigits: 0, maximumFractionDigits: d }) : null);
 
 // «2019-03-05» -> «05/03/2019»
 export function dataIt(iso) {
@@ -73,7 +74,7 @@ export function vociPai(elementi) {
   const peggiore = voci.reduce((m, x) => (gravita(x.v.badge) > gravita(m.v.badge) ? x : m));
   const riassunto = `${elementi.length} vincoli sovrapposti${gravita(peggiore.v.badge) >= 0 ? ` · più grave: ${peggiore.v.badge} (${peggiore.ds.titolo})` : ''}`;
   return [{
-    chiave: 'pai:gruppo', peso: 6, titolo: 'Vincoli PAI', icona: 'pai', badge: `${elementi.length} vincoli`, sempre: true,
+    chiave: 'pai:gruppo', peso: 6, titolo: 'Vincoli PAI', icona: 'pai', badge: tn('pai.vincoli', elementi.length), sempre: true,
     gruppi: [],
     accordion: {
       icona: 'pai', suggerimento: 'Seleziona un vincolo per vedere i dettagli', riassunto,

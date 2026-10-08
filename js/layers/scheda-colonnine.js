@@ -1,4 +1,5 @@
 import { descriviAggiornamento } from './colonnine-live.js';
+import { t, tn } from '../core/i18n.js';
 
 // Modello puro delle colonnine di ricarica: stesse righe per il popup e per la scheda di destra.
 const FONTE = 'Fonte: GSE, Piattaforma Unica Nazionale (PUN), tramite PalermoHub/evcharginglogsicilia — CC BY 4.0';
@@ -17,7 +18,7 @@ export function modelloPopupColonnina(p) {
   };
 }
 
-const piu = (n, uno, molti) => (n === 1 ? `1 ${uno}` : `${n} ${molti}`);
+const piu = (n, base) => tn(base, n);
 
 function righeColonnina(p) {
   return righe([
@@ -34,15 +35,15 @@ export function vociColonnine(punti, aggiornato = '', grafici = null) {
   const quando = descriviAggiornamento(aggiornato).replace(',', '');
   const disponibili = punti.filter(p => p.stato === 'Disponibile').length;
   return [{
-    chiave: 'colonnine:gruppo', peso: PESO_SERVIZI, titolo: 'Colonnine di ricarica', icona: 'colonnina', badge: piu(punti.length, 'colonnina', 'colonnine'), sempre: true,
+    chiave: 'colonnine:gruppo', peso: PESO_SERVIZI, titolo: 'Colonnine di ricarica', icona: 'colonnina', badge: piu(punti.length, 'colonnine.colonnina'), sempre: true,
     gruppi: [],
     ...(grafici && { dinamico: grafici }), // grafici di tutte le colonnine del comune, sopra l'elenco
     accordion: {
       icona: 'colonnina', suggerimento: 'Seleziona una colonnina per vedere i dettagli',
-      riassunto: `${piu(punti.length, 'colonnina', 'colonnine')}${disponibili ? ` · ${piu(disponibili, 'disponibile', 'disponibili')}` : ''}`,
+      riassunto: `${piu(punti.length, 'colonnine.colonnina')}${disponibili ? ` · ${piu(disponibili, 'colonnine.disponibile')}` : ''}`,
       elementi: punti.map(p => ({ strato: 'colonnine', titolo: p.indirizzo || p.operatore || 'Colonnina di ricarica', anteprima: p.stato, righe: righeColonnina(p) })),
     },
     link: { testo: 'Colonnine di ricarica in Sicilia', url: APPROFONDISCI, icona: 'esterno', suggerimento: 'EVChargingLogSicilia (PalermoHub): uso, trend e previsioni delle colonnine' },
-    fonte: quando ? `${FONTE}\nStato aggiornato al ${quando}` : FONTE,
+    fonte: quando ? t('colonnine.statoAggiornato', { fonte: FONTE, quando }) : FONTE,
   }];
 }

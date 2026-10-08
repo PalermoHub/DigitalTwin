@@ -2,6 +2,7 @@
 // Confronto con la base: Swipe (linea verticale trascinabile) e Spotlight (cerchio che scopre la mappa sotto l'immagine).
 // Sono ritagli CSS del contenitore dell'immagine (confronto-clip.js); i due modi si escludono a vicenda.
 import { clipSwipe, clipSpotlight } from './confronto-clip.js';
+import { t } from '../core/i18n.js';
 
 const el = (classe, tag = 'div') => Object.assign(document.createElement(tag), { className: classe });
 
@@ -11,8 +12,8 @@ export function collegaConfronto(ctx) {
   const divisore = el('gi-divisore');
   const maniglia = el('gi-divisore-maniglia', 'button');
   maniglia.type = 'button';
-  maniglia.title = 'Trascina per spostare la linea';
-  maniglia.setAttribute('aria-label', 'Sposta la linea dello Swipe');
+  maniglia.title = t('gi.confronto.trascina');
+  maniglia.setAttribute('aria-label', t('gi.confronto.linea'));
   maniglia.textContent = '↔';
   divisore.append(maniglia);
   divisore.hidden = true;
@@ -50,7 +51,7 @@ export function collegaConfronto(ctx) {
   $('spotlight').addEventListener('click', () => {
     if (!stato.immagine) return;
     imposta(modo === 'spotlight' ? null : 'spotlight');
-    if (modo === 'spotlight') ctx.messaggio('Spotlight: muovi il mouse sulla mappa per vedere la base sotto l\'immagine.');
+    if (modo === 'spotlight') ctx.messaggio(t('gi.confronto.spotlight'));
   });
   $('inverti').addEventListener('click', () => { invertito = !invertito; applica(); });
   $('raggio').addEventListener('input', () => {

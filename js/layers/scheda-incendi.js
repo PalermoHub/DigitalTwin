@@ -1,10 +1,11 @@
 // Modello puro degli incendi (Censimento Incendi della Regione Siciliana, Palermo 2007–): popup breve sulla mappa e sezione della scheda di destra.
 // Superfici in ettari. I campi variano da un anno all'altro (dal 2024 in poi ce ne sono di più): le righe senza valore non compaiono.
 import { righe } from '../core/scheda-util.js';
+import { localeIntl, tn } from '../core/i18n.js';
 
 export const FONTE = 'Fonte: Regione Siciliana, Corpo Forestale — Censimento Incendi (SIF). Perimetri delle aree percorse dal fuoco nel Comune di Palermo.';
 
-const num = (v, d = 2) => (v != null && Number.isFinite(Number(v)) ? Number(v).toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: d }) : null);
+const num = (v, d = 2) => (v != null && Number.isFinite(Number(v)) ? Number(v).toLocaleString(localeIntl(), { minimumFractionDigits: 0, maximumFractionDigits: d }) : null);
 const ettari = v => (num(v) == null ? null : `${num(v)} ha`);
 
 // «2025-05-23» -> «23/05/2025»
@@ -59,7 +60,7 @@ export function vociIncendi(lista) {
   if (lista.length <= 1) return lista.map(voceIncendio);
   const anni = [...new Set(lista.map(p => p.anno))];
   return [{
-    chiave: 'incendio:gruppo', peso: 7, strato: 'incendi', titolo: 'Incendi', icona: 'incendio', badge: `${lista.length} incendi`, sempre: true,
+    chiave: 'incendio:gruppo', peso: 7, strato: 'incendi', titolo: 'Incendi', icona: 'incendio', badge: tn('incendi.n', lista.length), sempre: true,
     gruppi: [],
     accordion: {
       icona: 'incendio', suggerimento: 'Seleziona un incendio per vedere i dettagli',

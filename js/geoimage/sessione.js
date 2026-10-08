@@ -6,6 +6,7 @@ import { preparaSchermo } from './overlay.js';
 import { nomeBase } from './export.js';
 import { scarica } from './scarica.js';
 import { archivioIndexedDB } from '../rndt/dati.js';
+import { t } from '../core/i18n.js';
 
 const storageSicuro = () => { try { return window.localStorage; } catch { return null; } };
 
@@ -26,7 +27,7 @@ export function collegaSessione(ctx) {
 
   function salvaOra() {
     if (!stato.immagine || !immagineInArchivio) return;
-    if (!salva(storage, parametri())) avvisaUnaVolta('Geoimage: il browser non permette di salvare il progetto. Usa «Esporta JSON» per tenerne una copia.');
+    if (!salva(storage, parametri())) avvisaUnaVolta(t('gi.sessione.nonSalva'));
   }
 
   let timer = null;
@@ -40,7 +41,7 @@ export function collegaSessione(ctx) {
       dati?.elimina(ID_IMMAGINE).catch(() => {});
       return;
     }
-    if (!dati) return avvisaUnaVolta('Geoimage: il browser non conserva immagini grandi, il progetto non si ricorderà alla prossima visita. Usa «Esporta JSON».');
+    if (!dati) return avvisaUnaVolta(t('gi.sessione.grande'));
     const questa = stato.immagine;
     dati.scrivi(ID_IMMAGINE, questa.dataUrl).then(() => {
       if (stato.immagine !== questa) return; // nel frattempo è cambiata: ci pensa il suo caricamento
@@ -50,21 +51,21 @@ export function collegaSessione(ctx) {
       // l'archivio può ancora contenere l'immagine precedente: meglio dimenticare tutto che ripristinare un'accoppiata sbagliata
       elimina(storage);
       dati.elimina(ID_IMMAGINE).catch(() => {});
-      avvisaUnaVolta('Geoimage: non riesco a salvare l\'immagine in questo browser, il progetto non si ricorderà. Usa «Esporta JSON».');
+      avvisaUnaVolta(t('gi.sessione.nonSalvaImmagine'));
     });
   });
 
   ctx.sulTasto(e => {
     if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 's' || !stato.immagine) return false;
     salvaOra();
-    ctx.messaggio('Progetto salvato in questo browser.');
+    ctx.messaggio(t('gi.sessione.salvato'));
     return true;
   });
 
   $('json-esporta').addEventListener('click', () => {
     if (!stato.immagine) return;
     scarica(new Blob([JSON.stringify(serializza(stato), null, 2)], { type: 'application/json' }), `${nomeBase(stato.immagine.nome)}_geoimage.json`);
-    ctx.messaggio('Progetto esportato.');
+    ctx.messaggio(t('gi.sessione.esportato'));
   });
   $('json-importa').addEventListener('click', () => $('json-file').click());
   $('json-file').addEventListener('change', async e => {
@@ -78,9 +79,9 @@ export function collegaSessione(ctx) {
       if (!ctx.attuale(id)) return;
       ctx.caricaImmagine({ ...p.immagine, larghezza: schermo.originaleL, altezza: schermo.originaleA }, schermo, p.angoli, { gcp: p.gcp, opacita: p.opacita, tipo: p.tipo, iniziali: p.angoliIniziali, origine: 'progetto' });
       ctx.inquadra(p.angoli, 17);
-      ctx.messaggio('Progetto caricato dal file JSON.');
+      ctx.messaggio(t('gi.sessione.caricato'));
     } catch (errore) {
-      ctx.avvisa(`Geoimage: non apro «${file.name}»: ${errore.message}`);
+      ctx.avvisa(t('gi.errore.nonApro', { file: file.name, msg: errore.message }));
     }
   });
 

@@ -1,5 +1,6 @@
 import { righe } from '../core/scheda-util.js';
 import { PESO_SERVIZI } from './scheda-colonnine.js';
+import { t, tl } from '../core/i18n.js';
 
 // Modello puro della fontanella: stesse righe per la voce della scheda di destra e per il popup sulla mappa.
 // Quartiere e circoscrizione sono già nell'intestazione della scheda: restano solo nel popup.
@@ -25,7 +26,7 @@ export function voceFontanella(p) {
     sempre: true,
     gruppi: [{ righe: righeFontanella(p) }],
     link: { testo: 'Per maggiori dettagli consulta la mappa delle fontanelle', url: LINK, icona: 'esterno', suggerimento: 'Mappa delle fontanelle e copertura a piedi su PalermoHub' },
-    fonte: `Fonte: ${FONTE}`,
+    fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
 }
 

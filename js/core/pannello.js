@@ -7,6 +7,7 @@ import { ordineStrati } from './riordino.js';
 import { abilitaRiordino, creaOrdineDisegno } from './pannello-riordino.js';
 export { abilitaRiordino }; // l'API pubblica resta qui: i gruppi RNDT e «I miei layer» la importano da pannello.js
 import { ETICHETTE } from './pannello-comune.js';
+import { t } from './i18n.js';
 
 
 const mostrati = new Set();
@@ -19,27 +20,27 @@ const errori = new Set();
 // Più strati non caricati si riassumono in un solo avviso (la copia non ha tutti i dati locali).
 export function segnala(testo) {
   let riassunto = false;
-  if (testo.startsWith('Strato non caricato')) {
-    errori.add(testo.replace(/^Strato non caricato:\s*/, ''));
+  if (testo.startsWith(t('avviso.stratoNonCaricato'))) {
+    errori.add(testo.slice(t('avviso.stratoNonCaricato').length).replace(/^:\s*/, ''));
     riassunto = true;
     document.querySelector('#avvisi [data-errori] button')?.click();
-    testo = errori.size === 1 ? `Strato non caricato: ${[...errori][0]}` : `${errori.size} strati non caricati: dati non raggiungibili`;
+    testo = errori.size === 1 ? t('avviso.stratoNonCaricato.dettaglio', { nome: [...errori][0] }) : t('avviso.stratiNonCaricati', { n: errori.size });
   }
   if (mostrati.has(testo)) return;
   mostrati.add(testo);
   const d = document.createElement('div');
   if (riassunto) d.dataset.errori = '1';
-  const t = document.createElement('span');
-  t.textContent = testo;
+  const etichettaEl = document.createElement('span');
+  etichettaEl.textContent = testo;
   const x = document.createElement('button');
   x.type = 'button';
-  x.title = 'Chiudi';
-  x.setAttribute('aria-label', 'Chiudi l\'avviso');
+  x.title = t('comune.chiudi');
+  x.setAttribute('aria-label', t('avviso.chiudi'));
   x.innerHTML = svgIcona('chiudi', 14);
   const chiudi = () => { clearTimeout(timer); d.remove(); mostrati.delete(testo); };
   const timer = setTimeout(chiudi, DURATA_AVVISO);
   x.addEventListener('click', chiudi);
-  d.append(t, x);
+  d.append(etichettaEl, x);
   document.getElementById('avvisi').append(d);
 }
 
@@ -75,14 +76,14 @@ function aggiornaConteggio() {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'strato-chip';
-    b.title = `Spegni: ${nome}`;
-    b.setAttribute('aria-label', `Spegni lo strato ${nome}`);
-    const t = document.createElement('span');
-    t.textContent = nome;
+    b.title = t('pannello.spegniChip', { nome });
+    b.setAttribute('aria-label', t('pannello.spegni', { nome }));
+    const etichettaEl = document.createElement('span');
+    etichettaEl.textContent = nome;
     const x = document.createElement('i');
     x.textContent = '\u00d7';
     x.setAttribute('aria-hidden', 'true');
-    b.append(t, x);
+    b.append(etichettaEl, x);
     b.addEventListener('click', () => { c.checked = false; c.dispatchEvent(new Event('change', { bubbles: true })); });
     return b;
   });
@@ -123,8 +124,8 @@ export function sliderOpacita(map, strato, cb, stato = { originali: new Map(), v
   const { originali } = stato;
   const riga = document.createElement('div');
   riga.className = 'strato-opacita';
-  const t = document.createElement('span');
-  t.textContent = 'Opacità';
+  const etichettaEl = document.createElement('span');
+  etichettaEl.textContent = t('pannello.opacita');
   const r = document.createElement('input');
   r.type = 'range';
   r.min = '0';
@@ -132,7 +133,7 @@ export function sliderOpacita(map, strato, cb, stato = { originali: new Map(), v
   r.step = '0.05';
   r.value = String(stato.valore);
   r.dataset.opacita = strato.id;
-  r.setAttribute('aria-label', `Opacità di ${strato.etichetta}`);
+  r.setAttribute('aria-label', t('pannello.opacita.di', { nome: strato.etichetta }));
   const v = document.createElement('output');
   v.textContent = stato.valore.toFixed(2);
   r.addEventListener('input', () => {
@@ -144,7 +145,7 @@ export function sliderOpacita(map, strato, cb, stato = { originali: new Map(), v
   z.type = 'button';
   z.className = 'strato-zoom';
   z.dataset.zoomStrato = strato.id;
-  z.title = z.ariaLabel = `Zoom su ${strato.etichetta}`;
+  z.title = z.ariaLabel = t('pannello.zoomSu', { nome: strato.etichetta });
   z.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>';
   z.addEventListener('click', async () => {
     const area = map.getMaxBounds()?.toArray(); // area di lavoro: [[o, s], [e, n]]
@@ -158,7 +159,7 @@ export function sliderOpacita(map, strato, cb, stato = { originali: new Map(), v
     else map.fitBounds(riquadro, opzioni);
   });
   const tema = creaPannelloTema(map, strato, stato);
-  riga.append(t, r, v, z, tema.bottone, tema.pannello);
+  riga.append(etichettaEl, r, v, z, tema.bottone, tema.pannello);
   cb.addEventListener('change', tema.aggiorna);
   const mostra = () => { riga.hidden = !cb.checked; };
   cb.addEventListener('change', mostra);
@@ -295,8 +296,8 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     const campo = document.createElement('input');
     campo.type = 'search';
     campo.className = 'strato-cerca';
-    campo.placeholder = 'Cerca strato\u2026';
-    campo.setAttribute('aria-label', 'Cerca strato');
+    campo.placeholder = t('pannello.cerca.placeholder');
+    campo.setAttribute('aria-label', t('pannello.cerca'));
     campo.addEventListener('input', () => {
       cercando = campo.value.trim().toLowerCase();
       for (const el of sezioni) {
@@ -335,6 +336,6 @@ export function disattivaStrato(map, strato) {
   if (!casella) return;
   casella.checked = false;
   casella.disabled = true;
-  casella.title = 'Dato non disponibile';
+  casella.title = t('pannello.dato.nd');
   aggiornaConteggio();
 }

@@ -9,6 +9,7 @@ import { capabilitiesWmts } from './wmts.js';
 import { leggiUrlArcgis, urlInfo, descriviArcgis, urlExport, urlTileCache, urlQuery } from './arcgis.js';
 import { leggiServizi, salvaServizi, aggiungiServizio, rimuoviServizio, filtraServizi } from './salvati.js';
 import { creaCredenziali, ospiteDi } from './credenziali.js';
+import { t as tr } from '../core/i18n.js';
 
 const nomeDaUrl = url => new URL(url.replace(/[{}]/g, '')).hostname;
 const messaggio = e => (e instanceof Error ? e.message : String(e));
@@ -37,7 +38,7 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
       if (p.token) credenziali.impostaToken(ospiteDi(p.base), p.token);
       const grezzo = new TextDecoder().decode(await host.fetchArrayBuffer(urlInfo(p)));
       let json;
-      try { json = JSON.parse(grezzo); } catch { throw new Error('l’indirizzo non è un servizio ArcGIS REST'); }
+      try { json = JSON.parse(grezzo); } catch { throw new Error(tr('err.noArcgis')); }
       return { url: p.base, conToken: credenziali.token(ospiteDi(p.base)) !== null, ...descriviArcgis(json, p) };
     }
     const testo = new TextDecoder().decode(await host.fetchArrayBuffer(urlCapabilities(urlUtente, tipo)));
@@ -60,7 +61,7 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     const errori = [];
     const voci = [];
     for (const l of scelti) {
-      if (l.supportato === false) { errori.push({ nome: l.titolo, messaggio: 'non offre EPSG:3857, la proiezione della mappa' }); continue; }
+      if (l.supportato === false) { errori.push({ nome: l.titolo, messaggio: tr('err.noEpsg3857') }); continue; }
       try {
         const opz = opzioniWms(servizio, l);
         host.addWmsLayer(l.titolo, opz);
@@ -90,7 +91,7 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     const errori = [];
     const voci = [];
     for (const l of scelti) {
-      if (!l.supportato || !l.tile) { errori.push({ nome: l.titolo, messaggio: 'non ha una piramide di tile compatibile con la mappa (serve EPSG:3857, tile 256)' }); continue; }
+      if (!l.supportato || !l.tile) { errori.push({ nome: l.titolo, messaggio: tr('err.noPiramide') }); continue; }
       try {
         host.addTileLayer(l.titolo, l.tile, {});
         voci.push({ chiave: l.nome, nome: l.titolo, tile: l.tile });

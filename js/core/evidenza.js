@@ -2,34 +2,35 @@ import { piuVicino } from './scheda-util.js';
 import { voceFiltro } from './legenda.js';
 import { registraTooltip } from './tooltip.js';
 import { svgIcona } from './icone.js';
+import { t, tl } from './i18n.js';
 
 // Evidenziazione sulla mappa delle aree da cui vengono i dati della scheda del luogo.
 // Ogni layer "hit" ha un'etichetta (mostrata nella scheda) e un colore (usato sulla mappa).
 export const FONTI = {
-  'edifici-hit': { etichetta: 'Edificio', colore: '#e8590c' },
-  'pop-hit': { etichetta: 'Sezione di censimento', colore: '#1c7ed6' },
-  'catasto-hit': { etichetta: 'Particella catastale', colore: '#2f9e44' },
-  'prg-zto-hit': { etichetta: 'Zona PRG', colore: '#9c36b5' },
-  'prg-ns-hit': { etichetta: 'Netto storico PRG', colore: '#9c36b5' },
-  'prg-cs-hit': { etichetta: 'Centro storico PRG', colore: '#9c36b5' },
-  'prg-va-hit': { etichetta: 'Vincolo PRG (area)', colore: '#c2255c' },
-  'prg-vl-hit': { etichetta: 'Vincolo PRG (linea)', colore: '#c2255c' },
-  'omi-hit': { etichetta: 'Zona OMI', colore: '#e67700' },
-  'immobili-hit': { etichetta: 'Immobile comunale', colore: '#0b7285' },
-  'civici-hit': { etichetta: 'Numero civico', colore: '#d6336c' },
-  'monumenti-hit-poli': { etichetta: 'Monumento', colore: '#862e9c' },
-  'monumenti-hit-punti': { etichetta: 'Monumento', colore: '#862e9c' },
-  'alberi-hit-punti': { etichetta: 'Albero monumentale', colore: '#2f7d32' },
-  'fontanelle-hit-punti': { etichetta: 'Fontanella', colore: '#1c7ed6' },
-  'scuole-hit-poli': { etichetta: 'Scuola o asilo', colore: '#1971c2' },
-  'scuole-hit-punti': { etichetta: 'Scuola o asilo', colore: '#1971c2' },
-  'seggi-hit-poli': { etichetta: 'Sede di sezioni elettorali', colore: '#0c8599' },
-  'seggi-hit-punti': { etichetta: 'Sede di sezioni elettorali', colore: '#0c8599' },
-  'colonnine-hit': { etichetta: 'Colonnina di ricarica', colore: '#2b8a3e' },
-  'uffici-hit': { etichetta: 'Sede di uffici comunali', colore: '#a61e4d' },
-  'trasporto-hit-fermate': { etichetta: 'Fermata', colore: '#364fc7' },
-  'trasporto-hit-linee': { etichetta: 'Linea', colore: '#e03131' },
-  'griglia-hit': { etichetta: 'Punto di griglia del terreno (50 m)', colore: '#5c940d' },
+  'edifici-hit': { etichetta: t('evidenza.edificio'), colore: '#e8590c' },
+  'pop-hit': { etichetta: t('evidenza.sezioneCensimento'), colore: '#1c7ed6' },
+  'catasto-hit': { etichetta: t('evidenza.particella'), colore: '#2f9e44' },
+  'prg-zto-hit': { etichetta: t('evidenza.zonaPrg'), colore: '#9c36b5' },
+  'prg-ns-hit': { etichetta: t('evidenza.nettoStorico'), colore: '#9c36b5' },
+  'prg-cs-hit': { etichetta: t('evidenza.centroStorico'), colore: '#9c36b5' },
+  'prg-va-hit': { etichetta: t('evidenza.vincoloArea'), colore: '#c2255c' },
+  'prg-vl-hit': { etichetta: t('evidenza.vincoloLinea'), colore: '#c2255c' },
+  'omi-hit': { etichetta: t('evidenza.zonaOmi'), colore: '#e67700' },
+  'immobili-hit': { etichetta: t('evidenza.immobile'), colore: '#0b7285' },
+  'civici-hit': { etichetta: t('evidenza.civico'), colore: '#d6336c' },
+  'monumenti-hit-poli': { etichetta: t('evidenza.monumento'), colore: '#862e9c' },
+  'monumenti-hit-punti': { etichetta: t('evidenza.monumento'), colore: '#862e9c' },
+  'alberi-hit-punti': { etichetta: t('evidenza.albero'), colore: '#2f7d32' },
+  'fontanelle-hit-punti': { etichetta: t('evidenza.fontanella'), colore: '#1c7ed6' },
+  'scuole-hit-poli': { etichetta: t('evidenza.scuola'), colore: '#1971c2' },
+  'scuole-hit-punti': { etichetta: t('evidenza.scuola'), colore: '#1971c2' },
+  'seggi-hit-poli': { etichetta: t('evidenza.seggio'), colore: '#0c8599' },
+  'seggi-hit-punti': { etichetta: t('evidenza.seggio'), colore: '#0c8599' },
+  'colonnine-hit': { etichetta: t('evidenza.colonnina'), colore: '#2b8a3e' },
+  'uffici-hit': { etichetta: t('evidenza.uffici'), colore: '#a61e4d' },
+  'trasporto-hit-fermate': { etichetta: t('evidenza.fermata'), colore: '#364fc7' },
+  'trasporto-hit-linee': { etichetta: t('evidenza.linea'), colore: '#e03131' },
+  'griglia-hit': { etichetta: t('evidenza.griglia'), colore: '#5c940d' },
 };
 
 // Attributo che identifica la feature (mostrato nel tooltip accanto al nome del layer); undefined se non ce n'è uno.
@@ -106,7 +107,7 @@ function tooltipSelezione(map, punto) {
     const testo = document.createElement('span');
     testo.className = 'selezione-testo';
     const nome = document.createElement('span');
-    nome.textContent = etichetta;
+    nome.textContent = tl(etichetta);
     testo.append(nome);
     if (attributo) {
       const valore = document.createElement('b');
@@ -161,13 +162,13 @@ function aggiornaLegenda(map, scelte) {
   const testa = document.createElement('div');
   testa.className = 'selezione-testa';
   const titolo = document.createElement('strong');
-  titolo.textContent = 'Selezione in mappa';
+  titolo.textContent = t('evidenza.titolo');
   const interruttore = document.createElement('button');
   interruttore.type = 'button';
   interruttore.className = 'selezione-tooltip';
   interruttore.innerHTML = svgIcona('fumetto', 16);
   const aggiorna = () => {
-    const testo = tooltipAttivo ? 'Dettagli al passaggio del mouse: attivi (clic per nasconderli)' : 'Dettagli al passaggio del mouse: nascosti (clic per mostrarli)';
+    const testo = tooltipAttivo ? t('evidenza.tooltipAttivo') : t('evidenza.tooltipNascosto');
     interruttore.setAttribute('aria-pressed', String(tooltipAttivo));
     interruttore.setAttribute('aria-label', testo);
     interruttore.title = testo;

@@ -2,6 +2,7 @@
 // Un file da un indirizzo https (anche un foglio Google condiviso): si riscrive l'indirizzo, si scarica dal proxy CORS e si
 // restituisce un oggetto simile a File, che importaFile() legge come uno scelto dal computer. Nessun DOM, la rete è iniettata.
 import { ESTENSIONI } from '../rndt/importa.js';
+import { t } from '../core/i18n.js';
 
 const DA_TIPO = [
   [/geo\+json/i, '.geojson'], [/json/i, '.json'], [/csv/i, '.csv'], [/kmz/i, '.kmz'], [/kml/i, '.kml'],
@@ -12,7 +13,7 @@ const estensione = nome => (nome.match(/\.[^./\\]+$/)?.[0] ?? '').toLowerCase();
 // Indirizzo incollato → indirizzo da scaricare. `foglio` dice che ci si aspetta un CSV da Google Sheets.
 export function normalizzaUrl(testo) {
   let u;
-  try { u = new URL(String(testo).trim()); } catch { throw new Error('indirizzo non valido'); }
+  try { u = new URL(String(testo).trim()); } catch { throw new Error(t('err.indirizzo')); }
   if (u.protocol !== 'https:') throw new Error('serve un indirizzo https');
   const sheets = u.hostname === 'docs.google.com' && u.pathname.match(/^\/spreadsheets\/d\/([\w-]+)/);
   if (sheets && sheets[1] === 'e') return { url: u.href, nome: 'foglio-pubblicato.csv', foglio: true }; // «Pubblica sul web»: è già un CSV
@@ -37,13 +38,13 @@ export function urlViaProxy(proxy, url) {
 export async function scaricaComeFile(testo, proxy, fetchFn = fetch) {
   const { url, nome, foglio } = normalizzaUrl(testo);
   let r;
-  try { r = await fetchFn(urlViaProxy(proxy, url), { headers: { accept: '*/*' } }); } catch { throw new Error('non riesco a raggiungere l’indirizzo'); }
-  if (r.status === 413) throw new Error('il file supera i 10 MB');
-  if (foglio && [401, 403, 404].includes(r.status)) throw new Error('foglio non trovato o non condiviso: condividilo con «chiunque abbia il link»');
-  if (!r.ok) throw new Error(`il server ha risposto ${r.status}`);
+  try { r = await fetchFn(urlViaProxy(proxy, url), { headers: { accept: '*/*' } }); } catch { throw new Error(t('err.raggiungere')); }
+  if (r.status === 413) throw new Error(t('err.supera10'));
+  if (foglio && [401, 403, 404].includes(r.status)) throw new Error(t('err.foglioNonCondiviso'));
+  if (!r.ok) throw new Error(t('err.serverRisposto', { stato: r.status }));
   const tipo = r.headers.get('content-type') ?? '';
   if (/text\/html/i.test(tipo)) {
-    throw new Error(foglio ? 'il foglio non è leggibile: condividilo con «chiunque abbia il link»' : 'l’indirizzo porta a una pagina web, non a un file di dati');
+    throw new Error(foglio ? t('err.foglioNonLeggibile') : t('err.paginaWeb'));
   }
   const buffer = await r.arrayBuffer();
   const daTipo = DA_TIPO.find(([re]) => re.test(tipo))?.[1];

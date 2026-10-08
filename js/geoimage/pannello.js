@@ -3,6 +3,7 @@
 // Il comportamento sta nei moduli collega* (immagine, posizione, confronto, gcp, sessione, esporta); gli elementi si
 // ritrovano per id (`#gi-<nome>`). Le sezioni con data-richiede="immagine" compaiono dopo aver caricato un'immagine.
 import { svgIcona } from '../core/icone.js';
+import { t as tr } from '../core/i18n.js';
 
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
@@ -45,48 +46,48 @@ function sezione(titolo, figli, richiedeImmagine = true) {
 }
 
 function sezioneImmagine() {
-  const zona = bottone('zona', '', 'Carica una mappa storica', 'gi-zona');
-  zona.append(el('strong', null, 'Carica mappa storica'), el('span', null, 'JPG · PNG · WEBP · BMP — oppure trascina qui'));
-  const rimuovi = bottone('rimuovi', 'Rimuovi immagine', 'Toglie l\'immagine dalla mappa', 'gi-pericolo');
+  const zona = bottone('zona', '', tr('gi.zona.tip'), 'gi-zona');
+  zona.append(el('strong', null, tr('gi.zona')), el('span', null, tr('gi.zona.formati')));
+  const rimuovi = bottone('rimuovi', tr('gi.rimuovi'), tr('gi.rimuovi.tip'), 'gi-pericolo');
   rimuovi.hidden = true;
   return [
-    sezione('Immagine storica', [zona, campo('file', 'file', { accept: 'image/*', hidden: true }), Object.assign(el('p', 'gi-info'), { id: 'gi-info' }), rimuovi], false),
-    sezione('Opacità', [intervallo('Opacità', 'opacita', 0, 100, 70, '%')]),
+    sezione(tr('gi.sez.immagine'), [zona, campo('file', 'file', { accept: 'image/*', hidden: true }), Object.assign(el('p', 'gi-info'), { id: 'gi-info' }), rimuovi], false),
+    sezione(tr('pannello.opacita'), [intervallo(tr('pannello.opacita'), 'opacita', 0, 100, 70, '%')]),
   ];
 }
 
 function sezioneConfronto() {
-  const swipe = bottone('swipe', 'Swipe', 'Linea scorrevole: a sinistra l\'immagine, a destra la mappa di base');
-  const spotlight = bottone('spotlight', 'Spotlight', 'Cerchio che scopre la mappa di base sotto l\'immagine');
-  const inverti = bottone('inverti', '⇄', 'Inverti lo Spotlight: l\'immagine si vede solo nel cerchio');
+  const swipe = bottone('swipe', 'Swipe', tr('gi.swipe.tip'));
+  const spotlight = bottone('spotlight', 'Spotlight', tr('gi.spotlight.tip'));
+  const inverti = bottone('inverti', '⇄', tr('gi.inverti.tip'));
   [swipe, spotlight, inverti].forEach(b => b.setAttribute('aria-pressed', 'false'));
-  return sezione('Confronto visivo', [riga(swipe, spotlight, inverti), intervallo('Raggio', 'raggio', 80, 600, 250)]);
+  return sezione(tr('gi.sez.confronto'), [riga(swipe, spotlight, inverti), intervallo(tr('gi.raggio'), 'raggio', 80, 600, 250)]);
 }
 
 function sezionePosizione() {
   const vuoto = () => el('span');
   const frecce = el('div', 'gi-frecce');
   frecce.append(
-    vuoto(), bottone('su', '↑', 'Sposta su'), vuoto(),
-    bottone('sinistra', '←', 'Sposta a sinistra'), bottone('adatta', '⌖', 'Zoom sull\'immagine'), bottone('destra', '→', 'Sposta a destra'),
-    vuoto(), bottone('giu', '↓', 'Sposta giù'), vuoto(),
+    vuoto(), bottone('su', '↑', tr('gi.su')), vuoto(),
+    bottone('sinistra', '←', tr('gi.sinistra')), bottone('adatta', '⌖', tr('gi.zoomImmagine')), bottone('destra', '→', tr('gi.destra')),
+    vuoto(), bottone('giu', '↓', tr('gi.giu')), vuoto(),
   );
-  const blocca = bottone('blocca', 'Blocca (L)', 'Blocca o sblocca le maniglie');
+  const blocca = bottone('blocca', tr('gi.blocca'), tr('gi.blocca.tip'));
   blocca.setAttribute('aria-pressed', 'false');
-  return sezione('Posiziona overlay', [
-    nota('Trascina le maniglie sulla mappa: il centro sposta, il punto in alto ruota, gli angoli scalano o deformano.'),
+  return sezione(tr('gi.sez.posiziona'), [
+    nota(tr('gi.nota.maniglie')),
     frecce,
-    riga(bottone('ruota-sx', '⟲ 5°', 'Ruota di 5° a sinistra'), bottone('ruota-dx', '⟳ 5°', 'Ruota di 5° a destra'), bottone('meno', '− 10%', 'Rimpicciolisci del 10%'), bottone('piu', '+ 10%', 'Ingrandisci del 10%')),
-    riga(bottone('modo', 'Maniglie: scala', 'Cambia il comportamento degli angoli: scala proporzionale o deformazione libera'), blocca),
-    riga(bottone('annulla', 'Annulla', 'Annulla (Ctrl+Z). Maiusc+clic: 10 passi'), bottone('ripeti', 'Ripeti', 'Ripeti (Ctrl+Y). Maiusc+clic: 10 passi'), bottone('reset', 'Reset', 'Riporta l\'immagine alla posizione iniziale', 'gi-pericolo')),
+    riga(bottone('ruota-sx', '⟲ 5°', tr('gi.ruotaSx')), bottone('ruota-dx', '⟳ 5°', tr('gi.ruotaDx')), bottone('meno', '− 10%', tr('gi.meno')), bottone('piu', '+ 10%', tr('gi.piu'))),
+    riga(bottone('modo', tr('gi.maniglie.scala'), tr('gi.maniglie.tip')), blocca),
+    riga(bottone('annulla', tr('gi.annulla'), tr('gi.annulla.tip')), bottone('ripeti', tr('gi.ripeti'), tr('gi.ripeti.tip')), bottone('reset', 'Reset', tr('gi.reset.tip'), 'gi-pericolo')),
   ]);
 }
 
 function sezioneGcp() {
-  const modo = bottone('gcp-modo', 'Aggiungi GCP (G)', 'Aggiungi un punto di controllo: un clic sull\'immagine, uno sulla mappa');
+  const modo = bottone('gcp-modo', tr('gi.gcp.aggiungi'), tr('gi.gcp.aggiungi.tip'));
   modo.setAttribute('aria-pressed', 'false');
   const anteprima = Object.assign(el('div', 'gi-anteprima'), { id: 'gi-anteprima-box', hidden: true });
-  anteprima.append(Object.assign(el('canvas'), { id: 'gi-anteprima' }), nota('Passo 1: clicca sull\'immagine sulla mappa · Passo 2: clicca la posizione reale sulla mappa'));
+  anteprima.append(Object.assign(el('canvas'), { id: 'gi-anteprima' }), nota(tr('gi.gcp.passi')));
   const tabella = el('table', 'gi-tabella');
   const testata = el('tr');
   for (const t of ['#', 'Lat', 'Lon', 'Px', 'Py', 'Res (m)', '']) testata.append(el('th', null, t));
@@ -95,51 +96,51 @@ function sezioneGcp() {
   tabella.append(thead, Object.assign(el('tbody'), { id: 'gi-gcp-corpo' }));
   const rmse = Object.assign(el('p', 'gi-info'), { id: 'gi-rmse', hidden: true });
   rmse.append('RMSE: ', Object.assign(el('strong', null, '—'), { id: 'gi-rmse-val' }), ' m');
-  const tipo = el('label', 'gi-campo', 'Trasformazione');
-  tipo.append(selezione('tipo', 'Tipo di trasformazione', [['poly1', 'Affine (≥3 GCP)'], ['poly2', 'Polinomiale 2 (≥6 GCP)']]));
+  const tipo = el('label', 'gi-campo', tr('gi.trasformazione'));
+  tipo.append(selezione('tipo', tr('gi.trasformazione.tipo'), [['poly1', tr('gi.trasformazione.affine')], ['poly2', tr('gi.trasformazione.poly2')]]));
   const scorri = el('div', 'gi-scorri');
   scorri.append(tabella);
-  const allinea = Object.assign(bottone('allinea', 'Allinea immagine ai GCP', 'Sposta l\'immagine nelle coordinate calcolate dai GCP', 'gi-primario'), { disabled: true });
-  const svuota = Object.assign(bottone('gcp-svuota', 'Cancella tutti i GCP', 'Rimuove tutti i punti di controllo', 'gi-pericolo'), { disabled: true });
-  return sezione('Ground Control Points', [modo, anteprima, Object.assign(el('p', 'gi-info', 'Nessun GCP inserito'), { id: 'gi-gcp-conteggio' }), scorri, rmse, tipo, allinea, svuota]);
+  const allinea = Object.assign(bottone('allinea', tr('gi.allinea'), tr('gi.allinea.tip'), 'gi-primario'), { disabled: true });
+  const svuota = Object.assign(bottone('gcp-svuota', tr('gi.gcp.svuota'), tr('gi.gcp.svuota.tip'), 'gi-pericolo'), { disabled: true });
+  return sezione('Ground Control Points', [modo, anteprima, Object.assign(el('p', 'gi-info', tr('gi.gcp.nessuno')), { id: 'gi-gcp-conteggio' }), scorri, rmse, tipo, allinea, svuota]);
 }
 
 function sezioneExport() {
-  const kmz = bottone('kmz', 'KMZ', 'Per Google Earth, QGIS, ArcGIS: immagine incorporata', 'gi-primario');
-  const geotiff = bottone('geotiff', 'GeoTIFF', 'Raster georeferenziato per QGIS, ArcGIS, GDAL', 'gi-primario');
-  const qgis = bottone('qgis', 'GCP per QGIS (.points)', 'File dei GCP per il Georeferenziatore di QGIS', 'gi-primario');
-  const mondo = bottone('mondo', 'World file', 'World file affine (richiede almeno 3 GCP)');
-  const geojson = bottone('geojson', 'GCP GeoJSON', 'I punti di controllo in GeoJSON');
-  const esporta = bottone('json-esporta', 'Esporta JSON', 'Salva immagine, posizione e GCP in un file');
+  const kmz = bottone('kmz', 'KMZ', tr('gi.kmz.tip'), 'gi-primario');
+  const geotiff = bottone('geotiff', 'GeoTIFF', tr('gi.geotiff.tip'), 'gi-primario');
+  const qgis = bottone('qgis', tr('gi.qgis'), tr('gi.qgis.tip'), 'gi-primario');
+  const mondo = bottone('mondo', 'World file', tr('gi.mondo.tip'));
+  const geojson = bottone('geojson', 'GCP GeoJSON', tr('gi.geojson.tip'));
+  const esporta = bottone('json-esporta', tr('tema.esporta'), tr('gi.json.esporta.tip'));
   [kmz, geotiff, qgis, mondo, geojson, esporta].forEach(b => { b.disabled = true; });
   const gtiff = Object.assign(el('fieldset', 'gi-gtiff'), { id: 'gi-gtiff', hidden: true });
   const gruppo = (testo, controllo, id) => { const l = el('label', 'gi-campo gi-campo-colonna', testo); l.append(controllo); if (id) l.id = id; return l; };
   gtiff.append(
-    el('legend', null, 'Impostazioni GeoTIFF'),
-    gruppo('Sistema di riferimento', selezione('gtiff-sr', 'Sistema di riferimento', [['4326', 'EPSG:4326 — WGS 84'], ['32632', 'EPSG:32632 — UTM 32N'], ['32633', 'EPSG:32633 — UTM 33N'], ['3857', 'EPSG:3857 — Web Mercator']])),
-    gruppo('Ricampionamento', selezione('gtiff-ricamp', 'Metodo di ricampionamento', [['bilinear', 'Bilineare (2×2)'], ['nearest', 'Vicino più prossimo']]), 'gi-gtiff-ricamp-gruppo'),
-    gruppo('Risoluzione massima (lato lungo)', selezione('gtiff-max', 'Risoluzione massima', [['2000', '2000 px'], ['4000', '4000 px'], ['8000', '8000 px']])),
-    gruppo('Compressione', selezione('gtiff-compr', 'Compressione', [['5', 'LZW (consigliata)'], ['1', 'Nessuna']])),
+    el('legend', null, tr('gi.gtiff.impostazioni')),
+    gruppo(tr('gi.gtiff.sr'), selezione('gtiff-sr', tr('gi.gtiff.sr'), [['4326', 'EPSG:4326 — WGS 84'], ['32632', 'EPSG:32632 — UTM 32N'], ['32633', 'EPSG:32633 — UTM 33N'], ['3857', 'EPSG:3857 — Web Mercator']])),
+    gruppo(tr('gi.gtiff.ricamp'), selezione('gtiff-ricamp', tr('gi.gtiff.ricamp.metodo'), [['bilinear', tr('gi.gtiff.bilineare')], ['nearest', tr('gi.gtiff.nearest')]]), 'gi-gtiff-ricamp-gruppo'),
+    gruppo(tr('gi.gtiff.risoluzione.gruppo'), selezione('gtiff-max', tr('gi.gtiff.risoluzione'), [['2000', '2000 px'], ['4000', '4000 px'], ['8000', '8000 px']])),
+    gruppo(tr('gi.gtiff.compressione'), selezione('gtiff-compr', tr('gi.gtiff.compressione'), [['5', tr('gi.gtiff.lzw')], ['1', tr('gi.gtiff.nessuna')]])),
     Object.assign(nota(''), { id: 'gi-gtiff-nota' }),
-    riga(bottone('gtiff-annulla', 'Annulla', 'Chiudi le impostazioni'), bottone('gtiff-vai', 'Esporta GeoTIFF', 'Crea il file GeoTIFF', 'gi-primario')),
+    riga(bottone('gtiff-annulla', tr('gi.annulla'), tr('gi.gtiff.chiudi')), bottone('gtiff-vai', tr('gi.gtiff.esporta'), tr('gi.gtiff.esporta.tip'), 'gi-primario')),
   );
   gtiff.querySelector('#gi-gtiff-max').value = '4000';
-  const importa = bottone('json-importa', 'Importa JSON', 'Apre un progetto salvato (anche quelli di Geoimage)');
-  const mapwarper = Object.assign(el('a', 'gi-btn gi-link', 'MapWarper ↗'), { href: 'https://mapwarper.net/', target: '_blank', rel: 'noopener', title: 'Per georeferenziazioni più precise usa mapwarper.net' });
+  const importa = bottone('json-importa', tr('tema.importa'), tr('gi.json.importa.tip'));
+  const mapwarper = Object.assign(el('a', 'gi-btn gi-link', 'MapWarper ↗'), { href: 'https://mapwarper.net/', target: '_blank', rel: 'noopener', title: tr('gi.mapwarper.tip') });
   return sezione('Export', [riga(kmz, geotiff), qgis, riga(mondo, geojson), gtiff, riga(esporta, importa), campo('json-file', 'file', { accept: '.json,application/json', hidden: true }), mapwarper], false);
 }
 
 export function creaPannello(elemento) {
   const testata = el('header', 'gi-testata');
-  testata.append(el('h2', null, 'Geoimage · mappe storiche'));
-  const x = Object.assign(el('button', 'pannello-chiudi'), { type: 'button', title: 'Chiudi', ariaLabel: 'Chiudi Geoimage' });
+  testata.append(el('h2', null, tr('gi.titolo')));
+  const x = Object.assign(el('button', 'pannello-chiudi'), { type: 'button', title: tr('comune.chiudi'), ariaLabel: tr('gi.chiudi') });
   x.innerHTML = svgIcona('chiudi', 18);
   x.addEventListener('click', () => { elemento.hidden = true; });
   testata.append(x);
-  const autore = el('p', 'gi-autore', 'Georeferenzia una mappa storica sulla base di Palermo. Da ');
+  const autore = el('p', 'gi-autore', tr('gi.autore'));
   const link = Object.assign(el('a', null, 'Geoimage'), { href: 'https://palermohub.opendatasicilia.it/geoimage.html', target: '_blank', rel: 'noopener' });
-  autore.append(link, ' di @gbvitrano.');
-  const stato = Object.assign(el('p', 'gi-stato', 'Carica un\'immagine storica per iniziare.'), { id: 'gi-stato' });
+  autore.append(link, tr('gi.autore.fine'));
+  const stato = Object.assign(el('p', 'gi-stato', tr('gi.stato.iniziale')), { id: 'gi-stato' });
   stato.setAttribute('role', 'status');
   const corpo = el('div', 'gi-corpo');
   corpo.append(...sezioneImmagine(), sezioneConfronto(), sezionePosizione(), sezioneGcp(), sezioneExport());

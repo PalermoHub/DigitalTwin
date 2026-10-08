@@ -1286,6 +1286,9 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #menu-info button[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
 #menu-info-toggle { display: none; margin-left: auto; width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; border: 0; border-radius: var(--r-sm); background: none; color: var(--text); cursor: pointer; }
 #menu-info-toggle:hover { background: var(--surface-hover); }
+#switch-lingua { display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 10px; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface-alt); color: var(--text); font: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer; }
+#switch-lingua:hover { background: var(--surface-hover); }
+#switch-lingua:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 @media (max-width: 960px) {
   #menu-info-toggle { display: flex; }
   #menu-info { display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: calc(var(--z-header) + 1); flex-direction: column; align-items: stretch; gap: 0; margin: 0; padding: 4px 0 8px; background: var(--surface); border-bottom: 1px solid var(--border-ui); box-shadow: 0 8px 20px rgba(0, 0, 0, .15); }

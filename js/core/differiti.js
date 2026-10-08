@@ -1,6 +1,7 @@
 // Strati puntuali i cui dati (GeoJSON) non devono bloccare l'avvio.
 // La sorgente nasce vuota; l'indirizzo dei dati si ricorda e si scarica dopo: al primo bisogno
 // (accensione dello strato, clic sulla mappa) o in secondo piano poco dopo l'avvio.
+import { t as tr } from './i18n.js';
 const VUOTO = { type: 'FeatureCollection', features: [] };
 const ATTESA_MAX = 20000; // oltre questo tempo la scheda risponde comunque
 const ATTESA_PRIMO_CONTROLLO = 150;
@@ -53,7 +54,7 @@ export function creaDifferiti(map, { segnala = () => {}, attesaMax = ATTESA_MAX 
       if (fatto) return;
       fatto = true;
       for (const [id, url] of urls) map.getSource(id)?.setData(url);
-      Promise.resolve(modulo.avvia?.(map)).catch(e => segnala(`Strato non caricato: ${e?.message ?? e}`));
+      Promise.resolve(modulo.avvia?.(map)).catch(e => segnala(tr('avviso.stratoNonCaricato.dettaglio', { nome: e?.message ?? e })));
     });
     for (const strato of modulo.strati) {
       const suCambio = strato.suCambio;

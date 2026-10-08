@@ -3,6 +3,7 @@ import { decodificaCivici, chiaveSezione } from './compatto.js';
 import { preparaIndiceVie, vieConCivico, cerca } from './indirizzi.js';
 import { FONTI, preparaLuoghi, cercaLuoghi } from './luoghi.js';
 import { segnala } from './pannello.js';
+import { t } from './i18n.js';
 
 let promessa = null;
 
@@ -10,7 +11,7 @@ let promessa = null;
 function indice() {
   promessa ??= fetch(urlDati('civici-omi/civici_vie.json'))
     .then(r => {
-      if (!r.ok) throw new Error('indice civici non disponibile');
+      if (!r.ok) throw new Error(t('ricerca.errore.indice'));
       return r.json();
     })
     .then(preparaIndiceVie)
@@ -24,7 +25,7 @@ function sezione(chiave) {
   if (!sezioni.has(chiave)) {
     sezioni.set(chiave, fetch(urlDati(`civici-omi/civici/${chiave}.json`))
       .then(r => {
-        if (!r.ok) throw new Error('civici non disponibili');
+        if (!r.ok) throw new Error(t('ricerca.errore.civici'));
         return r.json();
       })
       .then(decodificaCivici)
@@ -46,7 +47,7 @@ let promessaLuoghi = null;
 function luoghi() {
   promessaLuoghi ??= Promise.all(FONTI.map(async f => {
     const r = await fetch(urlDati(f.file));
-    if (!r.ok) throw new Error(`${f.file} non disponibile`);
+    if (!r.ok) throw new Error(t('sicurezza.fileNd', { file: f.file }));
     return { ...f, features: (await r.json()).features };
   })).then(preparaLuoghi).catch(err => { promessaLuoghi = null; throw err; });
   return promessaLuoghi;
@@ -112,7 +113,7 @@ export function collegaRicerca(map, form, input, lista, vaiParticella = null, zo
       } catch (err) { errore ??= err; }
     }
     if (errore && !zoneTrovate.length && !luoghiTrovati.length && !incidentiCima.length && !incidentiCoda.length) {
-      segnala(`Ricerca non disponibile: ${errore.message}`);
+      segnala(t('ricerca.nonDisponibile', { msg: errore.message }));
       return [];
     }
     // le zone il cui nome inizia con il testo precedono tutto, poi i luoghi per nome, le vie, e in coda
@@ -121,7 +122,7 @@ export function collegaRicerca(map, form, input, lista, vaiParticella = null, zo
     if (!risultati.length) {
       const vuoto = document.createElement('li');
       vuoto.className = 'cerca-vuoto';
-      vuoto.textContent = 'Nessun risultato';
+      vuoto.textContent = t('ricerca.nessunRisultato');
       lista.replaceChildren(vuoto);
       lista.hidden = false;
       return risultati;
@@ -157,13 +158,13 @@ export function collegaRicercaParticella(map, campoFoglio, campoNumero, bottone,
   function cerca() {
     const foglio = campoFoglio.value.trim();
     const numero = campoNumero.value.trim();
-    if (!foglio || !numero) return mostra('Inserire sia il foglio che la particella');
-    if (map.getZoom() < 12) return mostra('Avvicinati alla zona (zoom 12 o più) e riprova');
+    if (!foglio || !numero) return mostra(t('ricerca.particella.mancano'));
+    if (map.getZoom() < 12) return mostra(t('ricerca.particella.zoom'));
     const trovate = map.querySourceFeatures('catasto', {
       sourceLayer: 'particelle',
       filter: ['all', ['==', ['to-string', ['get', 'Foglio']], foglio], ['==', ['to-string', ['get', 'Paricella']], numero]],
     });
-    if (!trovate.length) return mostra('Nessuna particella trovata: sposta la mappa sulla zona giusta e riprova');
+    if (!trovate.length) return mostra(t('ricerca.particella.nessuna'));
     mostra('');
     const limiti = new maplibregl.LngLatBounds();
     const aggiungi = c => (typeof c[0] === 'number' ? limiti.extend(c) : c.forEach(aggiungi));

@@ -1,6 +1,7 @@
 // js/aggiungi/servizi.js
 // Servizi geografici incollati per URL (XYZ, WMS, WFS): lettura delle capabilities e costruzione delle richieste.
 // Moduli puri, senza DOM né rete (il browser ha DOMParser, Node no: un piccolo lettore XML basta e si prova nei test).
+import { t as tr } from '../core/i18n.js';
 
 const ENTITA = { amp: '&', lt: '<', gt: '>', quot: '"', apos: '\'' };
 const decodifica = t => t.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos);/gi, (m, e) => (e[0] === '#'
@@ -23,7 +24,7 @@ export function leggiXml(testo) {
     else if (m[3]) {
       const nome = senzaPrefisso(m[3]);
       if (m[2]) {
-        if (pila.length < 2 || cima.nome !== nome) throw new Error('XML non valido');
+        if (pila.length < 2 || cima.nome !== nome) throw new Error(tr('err.xml'));
         pila.pop();
       } else {
         const attr = {};
@@ -34,7 +35,7 @@ export function leggiXml(testo) {
       }
     }
   }
-  if (pila.length !== 1 || radice.figli.length !== 1) throw new Error('XML non valido');
+  if (pila.length !== 1 || radice.figli.length !== 1) throw new Error(tr('err.xml'));
   return radice.figli[0];
 }
 
@@ -48,7 +49,7 @@ export function erroreDelServizio(radice) {
   const nodi = [];
   const raccogli = n => { if (/^(ServiceException|ExceptionText)$/.test(n.nome)) nodi.push(n.testo.trim()); n.figli.forEach(raccogli); };
   raccogli(radice);
-  return nodi.find(Boolean) ?? 'il servizio ha risposto con un errore';
+  return nodi.find(Boolean) ?? tr('err.risposta');
 }
 
 const CRS_WEB = new Set(['EPSG:3857', 'EPSG:900913', 'EPSG:102100', 'EPSG:102113']);
@@ -66,7 +67,7 @@ export function capabilitiesWms(testo) {
   const radice = leggiXml(testo);
   const errore = erroreDelServizio(radice);
   if (errore) throw new Error(errore);
-  if (!/^(WMS_Capabilities|WMT_MS_Capabilities)$/.test(radice.nome)) throw new Error('l’indirizzo non è un servizio WMS');
+  if (!/^(WMS_Capabilities|WMT_MS_Capabilities)$/.test(radice.nome)) throw new Error(tr('err.noWms'));
   const cap = primo(radice, 'Capability');
   const formati = figli(primo(primo(cap, 'Request'), 'GetMap'), 'Format').map(f => f.testo.trim()).filter(Boolean);
   const layer = [];
@@ -79,7 +80,7 @@ export function capabilitiesWms(testo) {
     for (const f of figli(n, 'Layer')) visita(f, { crs, bbox });
   };
   for (const l of figli(cap, 'Layer')) visita(l, { crs: new Set(), bbox: null });
-  if (!layer.length) throw new Error('il servizio non ha nessun layer richiedibile');
+  if (!layer.length) throw new Error(tr('err.nessunLayerRichiedibile'));
   return { versione: radice.attr.version ?? '1.1.1', formato: formati.includes('image/png') ? 'image/png' : formati[0] ?? 'image/png', layer };
 }
 
@@ -87,19 +88,19 @@ export function capabilitiesWfs(testo) {
   const radice = leggiXml(testo);
   const errore = erroreDelServizio(radice);
   if (errore) throw new Error(errore);
-  if (radice.nome !== 'WFS_Capabilities') throw new Error('l’indirizzo non è un servizio WFS');
+  if (radice.nome !== 'WFS_Capabilities') throw new Error(tr('err.noWfs'));
   const tipi = figli(primo(radice, 'FeatureTypeList'), 'FeatureType')
     .map(t => ({ nome: testoDi(t, 'Name'), titolo: testoDi(t, 'Title') }))
     .filter(t => t.nome)
     .map(t => ({ nome: t.nome, titolo: t.titolo || t.nome }));
-  if (!tipi.length) throw new Error('il servizio non ha nessun tipo di dati');
+  if (!tipi.length) throw new Error(tr('err.nessunTipoDati'));
   return { versione: radice.attr.version ?? '1.1.0', tipi };
 }
 
 // Il Worker accetta solo https: si rifiuta subito, con un messaggio che dice perché.
 function url(testo) {
   let u;
-  try { u = new URL(String(testo).trim()); } catch { throw new Error('indirizzo non valido'); }
+  try { u = new URL(String(testo).trim()); } catch { throw new Error(tr('err.indirizzo')); }
   if (u.protocol !== 'https:') throw new Error('serve un indirizzo https');
   return u;
 }

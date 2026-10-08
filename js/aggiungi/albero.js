@@ -4,6 +4,7 @@
 // rami aperti e testo digitato restano.
 import { ESTENSIONI } from '../rndt/importa.js';
 import { TETTO_SERVIZI } from './salvati.js';
+import { t as tr, tn } from '../core/i18n.js';
 
 const SVG = d => `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="${d}"/></svg>`;
 // icone dei servizi, nello spirito del Browser di QGIS: tratto colorato, un colore per tipo (leggibile su tema chiaro e scuro)
@@ -78,8 +79,8 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
   const cerca = el('input', 'agg-cerca');
   cerca.id = 'miei-cerca';
   cerca.type = 'search';
-  cerca.placeholder = 'Cerca sorgenti dati…';
-  cerca.setAttribute('aria-label', 'Cerca tra i servizi salvati');
+  cerca.placeholder = tr('aggiungi.cerca');
+  cerca.setAttribute('aria-label', tr('aggiungi.cerca.aria'));
 
   // file dal computer
   const selettore = Object.assign(el('input'), { type: 'file', multiple: true, accept: ESTENSIONI.join(','), hidden: true });
@@ -88,41 +89,41 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     selettore.value = ''; // permette di riscegliere lo stesso file
     for (const file of files) await carica(file);
   });
-  const dati = nodo('I miei dati', { icona: 'cartella', azione: { icona: 'carica', titolo: 'Carica file dal computer', suClic: () => selettore.click() } });
-  dati.figli.append(el('p', 'agg-nota', 'GeoJSON, KML/KMZ, GPX, Shapefile (.zip) e CSV con latitudine e longitudine.'), selettore);
+  const dati = nodo(tr('aggiungi.miei'), { icona: 'cartella', azione: { icona: 'carica', titolo: tr('aggiungi.caricaFile'), suClic: () => selettore.click() } });
+  dati.figli.append(el('p', 'agg-nota', tr('aggiungi.formati')), selettore);
 
   // file da un indirizzo https, anche un foglio Google condiviso con «chiunque abbia il link» (copia al momento del caricamento)
-  const web = campo('Da indirizzo web (https)', 'https://docs.google.com/spreadsheets/d/…', { tipo: 'url' });
-  const scarica = bottone('Carica', 'agg-bottone agg-primario');
+  const web = campo(tr('aggiungi.daWeb'), 'https://docs.google.com/spreadsheets/d/…', { tipo: 'url' });
+  const scarica = bottone(tr('aggiungi.carica'), 'agg-bottone agg-primario');
   const esitoWeb = nuovoEsito();
   const inviaWeb = async () => {
     const testo = web.input.value.trim();
-    if (!testo) return esito(esitoWeb, 'Incolla un indirizzo https.', true);
+    if (!testo) return esito(esitoWeb, tr('aggiungi.incolla'), true);
     scarica.disabled = true;
-    esito(esitoWeb, 'Scarico il file…');
+    esito(esitoWeb, tr('aggiungi.scarico'));
     try {
       await caricaDaUrl(testo);
       web.input.value = '';
       esito(esitoWeb, '');
-    } catch (errore) { esito(esitoWeb, `Non riesco a caricare: ${errore.message}.`, true); } finally { scarica.disabled = false; }
+    } catch (errore) { esito(esitoWeb, tr('aggiungi.errore.carica', { msg: errore.message }), true); } finally { scarica.disabled = false; }
   };
   scarica.addEventListener('click', inviaWeb);
   web.input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); inviaWeb(); } });
   const moduloWeb = el('div', 'agg-modulo agg-da-web');
   moduloWeb.append(web.label, scarica, esitoWeb);
   const infoSheets = el('details', 'agg-info');
-  infoSheets.append(el('summary', null, 'Come condividere un foglio Google'),
-    el('p', 'agg-nota', 'In Condividi → Accesso generale scegli «Chiunque abbia il link» con ruolo Lettore. Il foglio diventa un CSV (solo il foglio indicato nel link) e deve avere colonne lat e lon. Massimo 10 MB.'));
+  infoSheets.append(el('summary', null, tr('aggiungi.foglio.titolo')),
+    el('p', 'agg-nota', tr('aggiungi.foglio.nota')));
   dati.figli.append(moduloWeb, infoSheets);
 
-  const servizi = nodo('Servizi', { icona: 'cartella' });
+  const servizi = nodo(tr('aggiungi.servizi'), { icona: 'cartella' });
   const rami = new Map();
 
   function riferisci(p, { pieno = false, errori = [] }, totale) {
     const ok = totale - errori.length;
     const parti = [];
-    if (ok) parti.push(`${ok} ${ok === 1 ? 'layer aggiunto' : 'layer aggiunti'} alla mappa.`);
-    if (pieno) parti.push(`Limite di ${TETTO_SERVIZI} servizi salvati raggiunto: questo non si salva.`);
+    if (ok) parti.push(tn('aggiungi.layerAggiunti', ok));
+    if (pieno) parti.push(tr('aggiungi.limite', { n: TETTO_SERVIZI }));
     for (const e of errori) parti.push(`«${e.nome}»: ${e.messaggio}.`);
     esito(p, parti.join(' '), errori.length > 0 && !ok);
   }
@@ -133,12 +134,12 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     let modo = null;
     if (tipo === 'arcgis') {
       modo = el('select', 'agg-modo');
-      for (const [v, t] of [['immagini', 'Immagini (come una mappa)'], ['dati', 'Dati (elementi che si possono interrogare)']]) modo.append(Object.assign(el('option', null, t), { value: v }));
+      for (const [v, t] of [['immagini', tr('aggiungi.modo.immagini')], ['dati', tr('aggiungi.modo.dati')]]) modo.append(Object.assign(el('option', null, t), { value: v }));
       if (servizio.tipo === 'FeatureServer') { modo.value = 'dati'; modo.querySelector('[value=immagini]').disabled = true; }
       const etichetta = el('label', 'agg-campo');
-      etichetta.append(el('span', null, 'Mostra come'), modo);
+      etichetta.append(el('span', null, tr('aggiungi.mostraCome')), modo);
       scelta.append(etichetta);
-      if (servizio.cache) scelta.append(el('p', 'agg-nota', 'Il servizio ha una cache a tile: come «Immagini» si aggiunge un solo layer con tutti i livelli.'));
+      if (servizio.cache) scelta.append(el('p', 'agg-nota', tr('aggiungi.cacheTile')));
     }
     const righe = voci.map(v => {
       const label = el('label', 'agg-voce');
@@ -146,17 +147,17 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
       casella.type = 'checkbox';
       casella.disabled = v.supportato === false;
       label.append(casella, ' ', v.titolo);
-      if (v.supportato === false) label.append(' ', el('em', null, tipo === 'wmts' ? '(non supportato: serve EPSG:3857, tile 256)' : '(non supportato: serve EPSG:3857)'));
+      if (v.supportato === false) label.append(' ', el('em', null, tipo === 'wmts' ? tr('aggiungi.nonSupportato.wmts') : tr('aggiungi.nonSupportato')));
       return { v, casella, label };
     });
-    const vai = bottone('Aggiungi selezionati', 'agg-bottone agg-primario');
+    const vai = bottone(tr('aggiungi.aggiungiSelezionati'), 'agg-bottone agg-primario');
     scelta.append(...righe.map(r => r.label), vai);
     scelta.hidden = false;
     vai.addEventListener('click', async () => {
       const scelti = righe.filter(r => r.casella.checked).map(r => r.v);
-      if (!scelti.length) return esito(esitoForm, 'Scegli almeno un elemento.', true);
+      if (!scelti.length) return esito(esitoForm, tr('aggiungi.sceglieUno'), true);
       vai.disabled = true;
-      esito(esitoForm, 'Aggiungo alla mappa…');
+      esito(esitoForm, tr('aggiungi.aggiungo'));
       const comune = { ...dati, servizio, scelti };
       const r = await (tipo === 'wms' ? controllo.aggiungiWms(comune)
         : tipo === 'wmts' ? controllo.aggiungiWmts(comune)
@@ -171,29 +172,29 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     const form = el('form', 'agg-modulo');
     form.noValidate = true;
     form.hidden = true;
-    const nome = campo('Nome (facoltativo)', 'Come lo chiami');
-    const url = campo(tipo.id === 'xyz' ? 'Indirizzo con {z}/{x}/{y}' : tipo.id === 'arcgis' ? 'Indirizzo del servizio (MapServer o FeatureServer; con ?token=… se serve)' : 'Indirizzo del servizio', tipo.esempio, { tipo: 'url' });
-    const utente = campo('Utente (se serve)', 'Nome utente', { complete: 'off' });
-    const password = campo('Password (se serve)', 'Resta solo finché la pagina è aperta', { tipo: 'password', complete: 'new-password' });
+    const nome = campo(tr('aggiungi.nome'), tr('aggiungi.nome.ph'));
+    const url = campo(tipo.id === 'xyz' ? tr('aggiungi.url.xyz') : tipo.id === 'arcgis' ? tr('aggiungi.url.arcgis') : tr('aggiungi.url.servizio'), tipo.esempio, { tipo: 'url' });
+    const utente = campo(tr('aggiungi.utente'), tr('aggiungi.utente.ph'), { complete: 'off' });
+    const password = campo(tr('aggiungi.password'), tr('aggiungi.password.ph'), { tipo: 'password', complete: 'new-password' });
     const esitoForm = nuovoEsito();
     const credenziali = () => ({ utente: utente.input.value.trim() || undefined, password: password.input.value });
     form.append(nome.label, url.label, utente.label, password.label);
     if (tipo.id === 'xyz') {
-      const vai = bottone('Aggiungi', 'agg-bottone agg-primario');
+      const vai = bottone(tr('aggiungi.aggiungi'), 'agg-bottone agg-primario');
       vai.type = 'submit';
       form.append(vai, esitoForm);
       form.addEventListener('submit', e => {
         e.preventDefault();
         try {
           const { pieno } = controllo.aggiungiXyz({ nome: nome.input.value, url: url.input.value, ...credenziali() });
-          esito(esitoForm, pieno ? `Aggiunto alla mappa. Hai raggiunto il limite di ${TETTO_SERVIZI} servizi salvati: questo non si salva.` : 'Aggiunto alla mappa.');
+          esito(esitoForm, pieno ? tr('aggiungi.aggiuntoLimite', { n: TETTO_SERVIZI }) : tr('aggiungi.aggiunto'));
           password.input.value = '';
           if (!pieno) { url.input.value = ''; nome.input.value = ''; }
         } catch (errore) { esito(esitoForm, errore.message, true); }
       });
       return form;
     }
-    const leggi = bottone('Leggi il servizio', 'agg-bottone agg-primario');
+    const leggi = bottone(tr('aggiungi.leggi'), 'agg-bottone agg-primario');
     leggi.type = 'submit';
     const scelta = el('div', 'agg-scelta');
     scelta.hidden = true;
@@ -202,7 +203,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
       e.preventDefault();
       scelta.hidden = true;
       scelta.replaceChildren();
-      esito(esitoForm, 'Leggo il servizio…');
+      esito(esitoForm, tr('aggiungi.leggo'));
       leggi.disabled = true;
       try {
         const { utente: u, password: p } = credenziali();
@@ -210,7 +211,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
         password.input.value = ''; // la password è già in memoria nel controllo: non resta nel campo
         esito(esitoForm, '');
         mostraScelta(tipo.id, scelta, servizio, { nome: nome.input.value, url: servizio.url, utente: u }, esitoForm);
-      } catch (errore) { esito(esitoForm, `Non riesco a leggere il servizio: ${errore.message}`, true); } finally { leggi.disabled = false; }
+      } catch (errore) { esito(esitoForm, tr('aggiungi.errore.leggi', { msg: errore.message }), true); } finally { leggi.disabled = false; }
     });
     return form;
   }
@@ -219,7 +220,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     const modulo = creaModulo(tipo);
     const ramo = nodo(tipo.titolo, {
       icona: tipo.id, apri: false, classe: 'agg-tipo',
-      azione: { icona: 'piu', titolo: `Aggiungi un servizio ${tipo.titolo}`, suClic: () => { ramo.det.open = true; modulo.hidden = !modulo.hidden; if (!modulo.hidden) modulo.querySelector('input')?.focus(); } },
+      azione: { icona: 'piu', titolo: tr('aggiungi.aggiungiServizio', { tipo: tipo.titolo }), suClic: () => { ramo.det.open = true; modulo.hidden = !modulo.hidden; if (!modulo.hidden) modulo.querySelector('input')?.focus(); } },
     });
     const elenco = el('div', 'agg-elenco');
     ramo.figli.append(modulo, elenco);
@@ -237,7 +238,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     apri.append(tipoIco);
     if (serve) { const l = el('span', 'agg-ico'); l.innerHTML = ICONE.lucchetto; apri.append(l); }
     apri.append(el('span', null, s.nome));
-    apri.title = serve ? (s.conToken ? `Serve il token — ${s.url}` : `Serve la password di «${s.utente}» — ${s.url}`) : `Metti in mappa — ${s.url}`;
+    apri.title = serve ? (s.conToken ? tr('aggiungi.serveToken', { url: s.url }) : tr('aggiungi.servePassword', { utente: s.utente, url: s.url })) : tr('aggiungi.mettiInMappa', { url: s.url });
     const togli = bottone('', 'agg-azione');
     togli.innerHTML = ICONE.cestino;
     togli.title = `Togli «${s.nome}» dai servizi salvati`;
@@ -247,13 +248,13 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     riga.append(apri, togli, esitoRiga);
     const fatto = ({ errori }) => (errori.length
       ? esito(esitoRiga, errori.map(e => `«${e.nome}»: ${e.messaggio}.`).join(' '), true)
-      : avvisa(`«${s.nome}» è in mappa.`));
+      : avvisa(tr('aggiungi.inMappa', { nome: s.nome })));
     apri.addEventListener('click', async () => {
       if (!serve) { apri.disabled = true; fatto(await controllo.riaggiungi(s.id)); apri.disabled = false; return; }
       if (riga.querySelector('form')) return;
       const form = el('form', 'agg-modulo');
-      const pw = campo(s.conToken ? 'Token del servizio' : `Password di ${s.utente}`, 'Resta solo finché la pagina è aperta', { tipo: 'password', complete: 'new-password' });
-      const entra = bottone('Entra', 'agg-bottone agg-primario');
+      const pw = campo(s.conToken ? tr('aggiungi.token') : tr('aggiungi.passwordDi', { utente: s.utente }), tr('aggiungi.password.ph'), { tipo: 'password', complete: 'new-password' });
+      const entra = bottone(tr('aggiungi.entra'), 'agg-bottone agg-primario');
       entra.type = 'submit';
       form.append(pw.label, entra);
       form.addEventListener('submit', async e => {
@@ -288,7 +289,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
   controllo.suCambio(disegna);
   disegna();
 
-  const titoloLayer = el('p', 'agg-titolo-layer', 'Layer in mappa');
+  const titoloLayer = el('p', 'agg-titolo-layer', tr('aggiungi.layerInMappa'));
   radice.append(cerca, dati.det, servizi.det, titoloLayer);
   return radice;
 }

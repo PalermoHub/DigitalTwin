@@ -1,4 +1,4 @@
-import { unisci, sezioniConRitardo, testoContesto, titoloScheda, NOTA_LEGALE } from './scheda-modello.js';
+import { unisci, sezioniConRitardo, testoContesto, titoloScheda, NOTA_LEGALE, MANCANTE } from './scheda-modello.js';
 import { applicaPreferenze, registraVisti, leggiPreferenze, salvaPreferenze } from './scheda-preferenze.js';
 import { svgIcona } from './icone.js';
 import { segnala } from './pannello.js';
@@ -6,6 +6,7 @@ import { ZOOM_SCHEDA } from './config.js';
 import { sceltePerLayer, soloCliccato, evidenzia, cancellaEvidenza } from './evidenza.js';
 import { el, icona, sincronizzaStrato, acceseDaScheda, spegniStratiDaScheda, creaInterruttoreStrato, disegnaSezione } from './scheda-disegno.js';
 import { ICONA_INGRANAGGIO, ICONA_X, creaPannelloPreferenze } from './scheda-pannello-preferenze.js';
+import { t as tr, tl } from './i18n.js';
 
 const R = 4; // tolleranza in pixel attorno al clic
 
@@ -43,8 +44,8 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   const titolo = el('h2', null, titoloTesto);
   const x = el('button', 'scheda-x');
   x.type = 'button';
-  x.title = 'Chiudi (Esc)';
-  x.setAttribute('aria-label', 'Chiudi la scheda');
+  x.title = tr('scheda.chiudiEsc');
+  x.setAttribute('aria-label', tr('scheda.chiudi'));
   x.innerHTML = ICONA_X;
   x.addEventListener('click', chiusura);
   // su mobile la scheda è un foglio basso: il pulsante la porta a tutto schermo per leggerla meglio
@@ -53,7 +54,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   const ALT = ['peek', 'meta', 'pieno'];
   const maniglia = el('button', 'scheda-maniglia');
   maniglia.type = 'button';
-  maniglia.setAttribute('aria-label', 'Cambia l\u2019altezza della scheda');
+  maniglia.setAttribute('aria-label', tr('scheda.altezza'));
   maniglia.append(el('i'));
   const imposta = alt => { contenitore.dataset.altezza = alt; contenitore.classList.toggle('scheda-piena', alt === 'pieno'); };
   imposta('meta');
@@ -77,17 +78,17 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   // visibile solo in stampa, sempre, anche se la nota legale è nascosta dalle preferenze
   const disclaimer = el('p', 'scheda-disclaimer', DISCLAIMER_STAMPA);
   // Schede (tab) per argomento: l'ordine è la gerarchia delle informazioni, dal luogo cliccato ai dati di contesto.
-  const SCHEDE = [['luogo', 'Luogo'], ['strumenti', 'Strumenti urbanistici'], ['mercato', 'Mercato'], ['popolazione', 'Popolazione'], ['terreno', 'Terreno'], ['servizi', 'Servizi su strada'], ['rndt', 'Altri dati (RNDT)']];
+  const SCHEDE = [['luogo', tr('scheda.tab.luogo')], ['strumenti', tr('scheda.tab.strumenti')], ['mercato', tr('scheda.tab.mercato')], ['popolazione', tr('scheda.tab.popolazione')], ['terreno', tr('scheda.tab.terreno')], ['servizi', tr('scheda.tab.servizi')], ['rndt', tr('scheda.tab.rndt')]];
   const tabDi = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : 'luogo');
   const tabs = el('div', 'scheda-tabs');
   const prev = el('button', 'scheda-tabs-freccia', '\u2039');
   const next = el('button', 'scheda-tabs-freccia', '\u203a');
   prev.type = next.type = 'button';
-  prev.setAttribute('aria-label', 'Scorri le schede a sinistra');
-  next.setAttribute('aria-label', 'Scorri le schede a destra');
+  prev.setAttribute('aria-label', tr('scheda.scorriSinistra'));
+  next.setAttribute('aria-label', tr('scheda.scorriDestra'));
   const indice = el('nav', 'scheda-indice');
   indice.setAttribute('role', 'tablist');
-  indice.setAttribute('aria-label', 'Argomenti della scheda');
+  indice.setAttribute('aria-label', tr('scheda.argomenti'));
   // frecce, Home e Fine passano da una linguetta all'altra (come in ogni tablist)
   indice.addEventListener('keydown', e => {
     const tab = [...indice.querySelectorAll('[role=tab]')];
@@ -132,7 +133,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
       const box = el('div', 'scheda-sunto');
       for (const c of celle) {
         const cella = el('div');
-        cella.append(el('b', null, c.valore), el('span', null, c.chiave));
+        cella.append(el('b', null, c.valore), el('span', null, tl(c.chiave)));
         box.append(cella);
       }
       corpo.prepend(box);
@@ -142,7 +143,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   const aggiorna = () => {
     const visibili = applicaPreferenze(corrente, pref.leggi());
     corpo.replaceChildren(...visibili.sezioni.map(disegnaSezione));
-    if (!visibili.sezioni.length) corpo.append(el('p', 'scheda-vuota', 'Tutte le informazioni di questa scheda sono nascoste: apri \u00abPersonalizza\u00bb per mostrarle.'));
+    if (!visibili.sezioni.length) corpo.append(el('p', 'scheda-vuota', tr('scheda.tuttoNascosto')));
     // ogni pulsante di approfondimento resta legato al tab della sua sezione: compare solo lì
     const visti = new Set(); // lo stesso indirizzo (es. più zone OMI) compare una volta sola per tab
     const links = [...corpo.querySelectorAll('.scheda-link')].filter(l => {
@@ -161,7 +162,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
       if (!['mercato', 'popolazione', 'terreno'].includes(id) || sunti.has(id)) continue;
       const daAccordion = sez.accordion?.elementi?.filter(x => x.anteprima).slice(0, 3).map(x => ({ valore: x.anteprima, chiave: x.titolo }));
       const celle = daAccordion?.length ? daAccordion
-        : sez.gruppi.flatMap(g => g.righe).filter(r => r.valore && r.valore !== 'senza dato' && String(r.valore).length <= 10 && !/codice|^id\b|sezione/i.test(r.etichetta))
+        : sez.gruppi.flatMap(g => g.righe).filter(r => r.valore && r.valore !== MANCANTE && String(r.valore).length <= 10 && !/codice|^id\b|sezione/i.test(r.etichetta))
           .slice(0, 3).map(r => ({ valore: String(r.valore), chiave: r.etichetta }));
       if (celle.length) sunti.set(id, celle);
     }
@@ -199,15 +200,15 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   const pannelloPref = creaPannelloPreferenze(pref, aggiorna);
   const personalizza = el('button', 'scheda-personalizza');
   personalizza.type = 'button';
-  personalizza.title = 'Personalizza le informazioni';
-  personalizza.setAttribute('aria-label', 'Personalizza le informazioni della scheda');
+  personalizza.title = tr('scheda.personalizza');
+  personalizza.setAttribute('aria-label', tr('scheda.personalizza.aria'));
   personalizza.setAttribute('aria-expanded', 'false');
   personalizza.innerHTML = ICONA_INGRANAGGIO;
   personalizza.addEventListener('click', () => {
     pannelloPref.hidden = !pannelloPref.hidden;
     personalizza.setAttribute('aria-expanded', String(!pannelloPref.hidden));
   });
-  const annuncio = el('p', 'solo-lettori', `Scheda aperta: ${titoloTesto}`);
+  const annuncio = el('p', 'solo-lettori', tr('scheda.aperta', { titolo: titoloTesto }));
   annuncio.setAttribute('role', 'status');
   const azioni = el('div', 'scheda-azioni');
   const azione = (classe, titolo, icona, fn) => {
@@ -219,18 +220,18 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
     b.addEventListener('click', () => fn(b));
     return b;
   };
-  const copia = azione('scheda-copia', 'Copia indirizzo e riferimenti catastali', ICONA_COPIA, async b => {
+  const copia = azione('scheda-copia', tr('scheda.copia'), ICONA_COPIA, async b => {
     const part = sezioni.find(sz => sz.chiave === 'particella')?.gruppi.flatMap(g => g.righe) ?? [];
     const v = nome => part.find(r => r.etichetta === nome)?.valore;
     const righe = [titoloTesto, `${lngLat.lat.toFixed(5)}, ${lngLat.lng.toFixed(5)}`];
-    if (v('Foglio') && v('Particella')) righe.push(`Foglio ${v('Foglio')}, particella ${v('Particella')}`);
+    if (v('Foglio') && v('Particella')) righe.push(tr('scheda.copia.catasto', { foglio: v('Foglio'), particella: v('Particella') }));
     await copiaTesto(righe.join('\n'));
     b.innerHTML = ICONA_OK;
-    b.title = 'Copiato';
-    annuncio.textContent = 'Copiato negli appunti';
-    setTimeout(() => { b.innerHTML = ICONA_COPIA; b.title = 'Copia indirizzo e riferimenti catastali'; annuncio.textContent = ''; }, 1600);
+    b.title = tr('scheda.copiato');
+    annuncio.textContent = tr('scheda.copiato.annuncio');
+    setTimeout(() => { b.innerHTML = ICONA_COPIA; b.title = tr('scheda.copia'); annuncio.textContent = ''; }, 1600);
   });
-  const stampa = azione('scheda-stampa', 'Stampa la scheda', ICONA_STAMPA, () => document.dispatchEvent(new CustomEvent('scheda:stampa')));
+  const stampa = azione('scheda-stampa', tr('scheda.stampa'), ICONA_STAMPA, () => document.dispatchEvent(new CustomEvent('scheda:stampa')));
   azioni.append(copia, stampa, personalizza, x);
   const testata = el('header', 'scheda-intestazione');
   const riga = el('div', 'scheda-testata');
@@ -326,7 +327,7 @@ function stralcioConCerchio(map, punto) {
   return out.toDataURL('image/png');
 }
 
-const DISCLAIMER_STAMPA = 'Disclaimer: Il Digital Twin \u00e8 uno strumento per informarsi, studiare e capire la citt\u00e0. Non sostituisce i documenti ufficiali. Catasto, Piano Regolatore e vincoli hanno qui valore puramente informativo e non hanno valore legale. Per una visura o per un certificato di destinazione urbanistica occorre rivolgersi a SISTER o agli uffici competenti. Anche i dati sulla popolazione per singolo edificio sono stime campionarie e vanno letti come indicazioni, non come conteggi esatti.';
+const DISCLAIMER_STAMPA = tr('scheda.disclaimer');
 
 export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   const rndt = opzioni.rndt;
@@ -346,7 +347,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
       fatto = true;
       try {
         const img = el('img', 'scheda-stralcio');
-        img.alt = 'Stralcio della mappa visualizzata';
+        img.alt = tr('scheda.stralcio');
         img.src = stralcioConCerchio(map, contenitore.dataset.punto);
         await img.decode(); // senza, la stampa parte prima che l'immagine sia pronta
         contenitore.querySelector('.scheda-intestazione')?.after(img);
@@ -404,7 +405,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     const dati = unisci(voci);
     if (!dati.sezioni.length) { // clic su un punto vuoto
       chiudiScheda();
-      segnala(map.getZoom() < 14 ? 'Nessun dato in questo punto: avvicina lo zoom o accendi uno strato.' : 'Nessun dato in questo punto.');
+      segnala(map.getZoom() < 14 ? tr('scheda.nessunDatoZoom') : tr('scheda.nessunDato'));
       return;
     }
     // I layer RNDT si interrogano subito, come i layer nativi (trovaFeature): scheda e evidenza adattano la vista della mappa

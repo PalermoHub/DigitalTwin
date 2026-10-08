@@ -4,6 +4,7 @@ import { svgIcona } from './icone.js';
 import { creaSezioneAttributo } from './pannello-attributo.js';
 import { legendaAttributo } from './tema-attributo.js';
 import { partiStrato, proprietaColore, applicaTema, validaTema, comeEsadecimale, leggiTemi, salvaTemi, esportaTemi, importaTemi } from './tema.js';
+import { t as tr } from './i18n.js';
 
 const partiVuote = () => ({ riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [] });
 const haParti = p => p.riempimenti.length + p.punti.length + p.linee.length > 0;
@@ -37,7 +38,7 @@ export function creaPannelloTema(map, strato, stato) {
   bottone.type = 'button';
   bottone.className = 'strato-zoom strato-tema-btn';
   bottone.dataset.temaStrato = strato.id;
-  bottone.title = bottone.ariaLabel = `Colori di ${strato.etichetta}`;
+  bottone.title = bottone.ariaLabel = tr('tema.coloriDi', { nome: strato.etichetta });
   bottone.setAttribute('aria-expanded', 'false');
   bottone.innerHTML = svgIcona('tavolozza', 14);
   bottone.hidden = true;
@@ -45,13 +46,13 @@ export function creaPannelloTema(map, strato, stato) {
   const pannello = document.createElement('div');
   pannello.className = 'strato-tema';
   pannello.hidden = true;
-  const riempimento = campoColore('Riempimento', 'riempimento');
-  const bordo = campoColore('Bordo', 'bordo');
+  const riempimento = campoColore(tr('tema.riempimento'), 'riempimento');
+  const bordo = campoColore(tr('tema.bordo'), 'bordo');
   const etichettaBordo = bordo.riga.firstChild;
   const rigaSpessore = document.createElement('label');
   rigaSpessore.className = 'tema-riga';
   const ts = document.createElement('span');
-  ts.textContent = 'Spessore';
+  ts.textContent = tr('tema.spessore');
   const spessore = document.createElement('input');
   spessore.type = 'range';
   spessore.min = '0';
@@ -73,9 +74,9 @@ export function creaPannelloTema(map, strato, stato) {
     b.textContent = testo;
     return b;
   };
-  const reset = bottoneAz('Ripristina', 'tema-ripristina');
-  const esporta = bottoneAz('Esporta JSON', 'tema-esporta');
-  const importa = bottoneAz('Importa JSON', 'tema-importa');
+  const reset = bottoneAz(tr('tema.ripristina'), 'tema-ripristina');
+  const esporta = bottoneAz(tr('tema.esporta'), 'tema-esporta');
+  const importa = bottoneAz(tr('tema.importa'), 'tema-importa');
   const file = document.createElement('input');
   file.type = 'file';
   file.accept = '.json,application/json';
@@ -117,7 +118,7 @@ export function creaPannelloTema(map, strato, stato) {
     if (!voci.length || categorie.dataset.pronta || pannello.hidden) return; // i campi si costruiscono quando il pannello si apre
     categorie.dataset.pronta = '1';
     const titolo = document.createElement('strong');
-    titolo.textContent = 'Colori per categoria';
+    titolo.textContent = tr('tema.perCategoria');
     categorie.append(titolo);
     for (const [nome] of voci) {
       const c = campoColore(nome, 'categoria');
@@ -183,7 +184,7 @@ export function creaPannelloTema(map, strato, stato) {
     // il bordo è quello dei poligoni, altrimenti dei punti, altrimenti il colore delle linee
     const [idBordo, propBordo] = f ? [f, 'fill-outline-color'] : pt ? [pt, 'circle-stroke-color'] : [lc, 'line-color'];
     bordo.riga.hidden = !idBordo;
-    etichettaBordo.textContent = f || pt ? 'Bordo' : 'Colore linea';
+    etichettaBordo.textContent = f || pt ? tr('tema.bordo') : tr('tema.coloreLinea');
     if (idBordo) bordo.input.value = tema?.bordo ?? comeEsadecimale(originali.get(`${idBordo}|${propBordo}`) ?? map.getPaintProperty(idBordo, propBordo), u ? riempimento.input.value : '#444444');
     const l = parti.linee[0];
     const w = tema?.spessore ?? originali.get(`${l}|line-width`) ?? (l && map.getPaintProperty(l, 'line-width'));
@@ -226,7 +227,7 @@ export function creaPannelloTema(map, strato, stato) {
     });
   }
 
-  reset.addEventListener('click', () => { tema = null; applica(); salva(); msg.textContent = 'Stile originale ripristinato'; });
+  reset.addEventListener('click', () => { tema = null; applica(); salva(); msg.textContent = tr('tema.ripristinato'); });
   esporta.addEventListener('click', () => {
     const blob = new Blob([esportaTemi(leggiTemi(storage))], { type: 'application/json' });
     const a = document.createElement('a');
@@ -234,7 +235,7 @@ export function creaPannelloTema(map, strato, stato) {
     a.download = 'temi-strati.json';
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    msg.textContent = 'Esportati i temi di tutti gli strati';
+    msg.textContent = tr('tema.esportati');
   });
   importa.addEventListener('click', () => file.click());
   file.addEventListener('change', async () => {

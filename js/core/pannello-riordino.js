@@ -2,6 +2,7 @@
 import { svgIcona } from './icone.js';
 import { ordina, mosseMappa, mosseSequenza, applicaMosse, leggiOrdine, salvaOrdine, azzeraOrdine, ordineStrati, mosseVicino, mosseOrdine, leggiOrdineDisegno, salvaOrdineDisegno, azzeraOrdineDisegno } from './riordino.js';
 import { EVENTO_DISEGNO, EVENTO_GRUPPO, ETICHETTE, intestazione } from './pannello-comune.js';
+import { t } from './i18n.js';
 
 // Blocchi di un gruppo: ogni strato con ciò che lo segue (opacità, filtri, albero) fino allo strato o al titolo di sezione
 // successivi. Il titolo di sezione viaggia con lo strato che lo segue, così gli strati si spostano in tutto il gruppo.
@@ -50,7 +51,7 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
   };
   const aggiornaStrumenti = () => {
     const aperti = blocchi(gruppo).some(b => ramo(b).length && b.riga.dataset.albero !== 'chiuso');
-    if (tutto) tutto.textContent = aperti ? 'Comprimi tutto' : 'Espandi tutto';
+    if (tutto) tutto.textContent = aperti ? t('riordino.comprimi') : t('riordino.espandi');
   };
   const aggiornaFrecce = () => {
     const tutti = blocchi(gruppo);
@@ -99,14 +100,14 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
     const azioni = document.createElement('span');
     azioni.className = 'strato-azioni';
     const nome = b.riga.textContent.trim();
-    const su = bottoneAzione('su', `Sposta su ${nome}`);
-    const giu = bottoneAzione('giu', `Sposta giù ${nome}`);
-    const maniglia = bottoneAzione('trascina', 'Trascina per spostare');
+    const su = bottoneAzione('su', t('riordino.su', { nome }));
+    const giu = bottoneAzione('giu', t('riordino.giu', { nome }));
+    const maniglia = bottoneAzione('trascina', t('riordino.trascina'));
     maniglia.removeAttribute('aria-label');
     maniglia.setAttribute('aria-hidden', 'true');
     maniglia.tabIndex = -1;
     if (ramo(b).length) {
-      const albero = bottoneAzione('albero', 'Apri o chiudi i dati dello strato');
+      const albero = bottoneAzione('albero', t('riordino.albero'));
       albero.setAttribute('aria-expanded', 'true');
       albero.addEventListener('click', e => { e.preventDefault(); impostaRamo(b, b.riga.dataset.albero !== 'chiuso'); aggiornaStrumenti(); });
       azioni.append(albero);
@@ -167,7 +168,7 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
     reset.type = 'button';
     reset.className = 'strato-strumento';
     reset.dataset.azione = 'ripristina';
-    reset.textContent = 'Ripristina ordine';
+    reset.textContent = t('riordino.ripristina');
     reset.addEventListener('click', () => {
       const tutti = blocchi(gruppo);
       const per = new Map(tutti.map(b => [b.id, b]));
@@ -221,7 +222,7 @@ export function creaOrdineDisegno(map, moduli, storage, iniziale) {
   const testi = document.createElement('span');
   testi.className = 'ordine-testi';
   const h = document.createElement('h2');
-  h.textContent = 'Ordine layer in mappa';
+  h.textContent = t('riordino.titolo');
   const sotto = document.createElement('small');
   sotto.className = 'ordine-sotto';
   const conta = document.createElement('span');
@@ -232,14 +233,14 @@ export function creaOrdineDisegno(map, moduli, storage, iniziale) {
   elenco.className = 'ordine-elenco';
   const nota = document.createElement('p');
   nota.className = 'ordine-nota';
-  nota.textContent = 'In alto = sopra sulla mappa. Vale per tutti gli strati accesi, anche di gruppi diversi.';
+  nota.textContent = t('riordino.nota');
   const barra = document.createElement('div');
   barra.className = 'strato-strumenti';
   const reset = document.createElement('button');
   reset.type = 'button';
   reset.className = 'strato-strumento';
   reset.dataset.azione = 'ripristina-disegno';
-  reset.textContent = 'Ripristina ordine';
+  reset.textContent = t('riordino.ripristina');
   barra.append(reset);
   el.append(sommario, nota, elenco, barra);
 
@@ -259,7 +260,7 @@ export function creaOrdineDisegno(map, moduli, storage, iniziale) {
     const n = ordineStrati(stack(), strati).filter(attivo).length;
     conta.textContent = String(n);
     conta.hidden = n === 0;
-    sotto.textContent = n < 2 ? 'Accendi almeno due strati per cambiare l’ordine' : 'Metti un layer sopra o sotto un altro';
+    sotto.textContent = n < 2 ? t('riordino.accendi2') : t('riordino.suggerimento');
   };
   const ridisegna = () => {
     aggiornaTestata();
@@ -300,9 +301,9 @@ export function creaOrdineDisegno(map, moduli, storage, iniziale) {
     nome.append(da);
     const azioni = document.createElement('span');
     azioni.className = 'strato-azioni';
-    const su = bottoneAzione('su', `Sposta su ${s.etichetta}`);
-    const giu = bottoneAzione('giu', `Sposta giù ${s.etichetta}`);
-    const maniglia = bottoneAzione('trascina', 'Trascina per spostare');
+    const su = bottoneAzione('su', t('riordino.su', { nome: s.etichetta }));
+    const giu = bottoneAzione('giu', t('riordino.giu', { nome: s.etichetta }));
+    const maniglia = bottoneAzione('trascina', t('riordino.trascina'));
     maniglia.removeAttribute('aria-label');
     maniglia.setAttribute('aria-hidden', 'true');
     maniglia.tabIndex = -1;

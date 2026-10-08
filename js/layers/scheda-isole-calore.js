@@ -1,11 +1,12 @@
 // Modello puro della scheda «Isola di calore»: temperatura superficiale estiva 2025 della sezione censuaria,
 // scarto dalla media comunale, variazione dal 2019 e, sotto, il grafico 2019–2025 (costruito dal layer).
 import { righe } from '../core/scheda-util.js';
+import { localeIntl } from '../core/i18n.js';
 
 export const FONTE = 'Fonte: Landsat 8/9 (USGS), temperatura superficiale terrestre estiva, elaborata per sezione censuaria ISTAT. Non è la temperatura dell\'aria.';
 export const PESO_ISOLA_CALORE = 80; // tab «Terreno» della scheda
 
-const gradi = v => `${v.toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} °C`;
+const gradi = v => `${v.toLocaleString(localeIntl(), { minimumFractionDigits: 1, maximumFractionDigits: 1 })} °C`;
 // i dati hanno due decimali: si arrotonda la differenza prima, così l'errore dei decimali binari non sposta il decimo mostrato
 const conSegno = d => { const v = Math.round(d * 100) / 100; return `${v > 0 ? '+' : v < 0 ? '−' : ''}${gradi(Math.abs(v))}`; };
 

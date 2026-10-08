@@ -3,6 +3,7 @@ import { registraTooltipStrati } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { chiavePai, modelloPopup, vociPai } from './scheda-pai.js';
+import { tl } from '../core/i18n.js';
 
 // Vincoli del PAI (Piano di Assetto Idrogeologico, Regione Siciliana) nel Comune di Palermo: pericolosità e rischio idraulico e geomorfologico,
 // dissesti, siti di attenzione, erosione costiera. Un solo PMTiles (zoom 12–18) con uno strato per dataset.
@@ -19,7 +20,7 @@ const MAX_PER_DATASET_IN_SCHEDA = 4;
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 };
 
@@ -129,7 +130,7 @@ function riempiLegenda(map) {
     blocco.append(el('strong', null, t.titolo));
     if (t.campo) {
       for (const c of classi) {
-        blocco.append(voceFiltro(campione(ds, c), `${c.label} (${c.n})`, acceso => {
+        blocco.append(voceFiltro(campione(ds, c), `${tl(c.label)} (${c.n})`, acceso => {
           const set = accesi.get(t.id) ?? new Set(classi.map(k => k.label));
           acceso ? set.add(c.label) : set.delete(c.label);
           set.size >= classi.length ? accesi.delete(t.id) : accesi.set(t.id, set);
@@ -138,7 +139,7 @@ function riempiLegenda(map) {
       }
     } else {
       const riga = el('div', 'monumenti-cat');
-      riga.append(campione(ds, classi[0]), `${classi[0].label} (${classi[0].n})`);
+      riga.append(campione(ds, classi[0]), `${tl(classi[0].label)} (${classi[0].n})`);
       blocco.append(riga);
     }
     legenda.append(blocco);

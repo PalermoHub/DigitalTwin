@@ -1,5 +1,6 @@
 // js/geoimage/librerie.js
 // Le librerie dell'export (js/vendor/) si caricano solo al primo uso: l'avvio dell'app non cambia.
+import { t } from '../core/i18n.js';
 const url = nome => new URL(`../vendor/${nome}`, import.meta.url).href;
 const caricate = new Map();
 const unaVolta = (nome, carica) => {
@@ -9,7 +10,7 @@ const unaVolta = (nome, carica) => {
 
 // script classico (UMD): definisce una variabile globale
 const script = src => new Promise((ok, ko) => {
-  const s = Object.assign(document.createElement('script'), { src, onload: ok, onerror: () => ko(new Error(`non riesco a caricare ${src}`)) });
+  const s = Object.assign(document.createElement('script'), { src, onload: ok, onerror: () => ko(new Error(t('err.caricareScript', { src }))) });
   document.head.append(s);
 });
 

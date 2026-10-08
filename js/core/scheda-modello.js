@@ -9,9 +9,10 @@
 //   legale? = la sezione riguarda dati senza valore legale: l'avviso compare una sola volta in fondo alla scheda
 //   aperta? = false: sezione collassabile chiusa all'apertura della scheda
 //   accordion = { riassunto, elementi: [{ titolo, stato?, anteprima?, righe }] }
+import { t } from './i18n.js';
 
-export const NOTA_LEGALE = 'Dato informativo, senza valore legale: per usi legali servono visure e certificato di destinazione urbanistica.';
-export const MANCANTE = 'senza dato';
+export const NOTA_LEGALE = t('scheda.notaLegale');
+export const MANCANTE = 'senza dato'; // i18n-ok: valore del modello dati (identità), mai mostrato così
 
 const pieno = v => v != null && v !== '';
 
@@ -87,9 +88,9 @@ export function sezioniConRitardo(dati, nuovi, prefisso = 'rndt:') {
 
 export function testoContesto({ circoscrizione, quartiere, upl } = {}) {
   return [
-    pieno(circoscrizione) && `Circoscrizione ${circoscrizione}`,
-    pieno(quartiere) && `Quartiere ${quartiere}`,
-    pieno(upl) && `UPL ${upl}`,
+    pieno(circoscrizione) && t('scheda.contesto.circoscrizione', { nome: circoscrizione }),
+    pieno(quartiere) && t('scheda.contesto.quartiere', { nome: quartiere }),
+    pieno(upl) && t('scheda.contesto.upl', { nome: upl }),
   ].filter(Boolean).join(' · ');
 }
 
@@ -106,7 +107,7 @@ export function titoloScheda(sezioni) {
   const righe = sezioni.find(s => s.chiave === 'indirizzo')?.gruppi.flatMap(g => g.righe) ?? [];
   const valore = nome => righe.find(r => r.etichetta === nome)?.valore;
   const via = valore('Via');
-  if (!via) return 'Scheda del luogo';
+  if (!via) return t('scheda.titoloGenerico');
   const civico = valore('Civico');
   return civico ? `${maiuscoleItaliane(via)}, ${civico}` : maiuscoleItaliane(via);
 }

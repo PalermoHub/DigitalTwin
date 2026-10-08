@@ -7,9 +7,10 @@ import { voceFiltro } from '../core/legenda.js';
 import { primo, righe } from '../core/scheda-util.js';
 import { SRC_SEZIONI } from './confini.js';
 import { classificaDinamica } from './popolazione-classifica.js';
+import { t, localeIntl } from '../core/i18n.js';
 
 const FILE = { 2021: 'popolazione/sezioni_indicatori.compatto.json', 2023: 'popolazione/sezioni_indicatori_2023.compatto.json' };
-const fmt = v => v.toLocaleString('it-IT', { maximumFractionDigits: 1 });
+const fmt = v => v.toLocaleString(localeIntl(), { maximumFractionDigits: 1 });
 
 const promesse = {};
 const indici = {};
@@ -130,7 +131,7 @@ export default {
     legenda.className = 'legenda';
     legenda.hidden = true; // il coropletico parte spento
     const cambia = () => this.imposta({ anno: Number(anno.value), indicatore: ind.value }).catch(() => {
-      segnala(`Popolazione ${anno.value} non disponibile: resta visibile ${stato.anno}`);
+      segnala(t('popolazione.annoNd', { anno: anno.value, visibile: stato.anno }));
       anno.value = String(stato.anno);
       ind.value = stato.indicatore;
     });

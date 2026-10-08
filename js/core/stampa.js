@@ -1,4 +1,5 @@
 // Stampa dell'area di mappa visibile: foglio con titolo, immagine della mappa, legende dei layer accesi e attribuzioni.
+import { t as tr, localeIntl } from './i18n.js';
 export function attribuzioniUniche(testi) {
   return [...new Set(testi.map(t => (t ?? '').trim()).filter(Boolean))];
 }
@@ -98,28 +99,28 @@ function costruisciFoglio(map, immagine, { scala = null, centro = map.getCenter(
   const attribuzioni = attribuzioniUniche(
     [...document.querySelectorAll('#mappa .maplibregl-ctrl-attrib-inner')].map(a => a.textContent));
   const legende = document.getElementById('legende');
-  const data = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
-  const dettaglio = scala ? `scala 1:${scala.toLocaleString('it-IT')}` : `zoom ${map.getZoom().toFixed(1)}`;
+  const data = new Date().toLocaleDateString(localeIntl(), { day: 'numeric', month: 'long', year: 'numeric' });
+  const dettaglio = scala ? tr('stampa.dettaglio.scala', { scala: scala.toLocaleString(localeIntl()) }) : `zoom ${map.getZoom().toFixed(1)}`;
   const area = areaMappaMm(formato, direzione);
   const foglio = el('div', { id: 'foglio-stampa', className: scala ? 'in-scala' : '', style: `--mappa-l:${area.larghezza}mm;--mappa-a:${area.altezza}mm` },
     el('style', { textContent: `@page { size: ${formato} ${direzione}; margin: ${MARGINE_MM}mm; }` }),
-    el('header', {}, el('h1', { textContent: 'Palermo Digital Twin' }),
-      el('p', { textContent: `Stampa del ${data} · centro ${centro.lat.toFixed(4)}, ${centro.lng.toFixed(4)} · ${dettaglio}` })),
-    el('img', { className: 'stampa-mappa', src: immagine, alt: 'Area di mappa visualizzata' }));
+    el('header', {}, el('h1', { textContent: tr('stampa.titolo') }),
+      el('p', { textContent: tr('stampa.riga', { data, lat: centro.lat.toFixed(4), lng: centro.lng.toFixed(4), dettaglio }) })),
+    el('img', { className: 'stampa-mappa', src: immagine, alt: tr('stampa.alt') }));
   if (scala) {
     const barra = barraScala(scala, 60);
     foglio.append(el('div', { className: 'stampa-scala' },
       el('span', { className: 'stampa-scala-barra', style: `width:${barra.mm}mm` }),
-      el('span', { textContent: `${barra.etichetta} · scala 1:${scala.toLocaleString('it-IT')} (stampare al 100%, senza adattare alla pagina)` })));
+      el('span', { textContent: tr('stampa.nota.scala', { etichetta: barra.etichetta, scala: scala.toLocaleString(localeIntl()) }) })));
   }
   const copia = legende?.cloneNode(true);
   copia?.querySelectorAll('[hidden]').forEach(n => n.remove()); // restano solo le legende dei layer accesi
   if (copia?.textContent.trim()) {
     copia.removeAttribute('id');
-    foglio.append(el('section', { className: 'stampa-legende' }, el('h2', { textContent: 'Legenda' }), copia));
+    foglio.append(el('section', { className: 'stampa-legende' }, el('h2', { textContent: tr('stampa.legenda') }), copia));
   }
   if (attribuzioni.length) {
-    foglio.append(el('footer', { className: 'stampa-attribuzioni' }, el('h2', { textContent: 'Fonti e attribuzioni' }), el('p', { textContent: attribuzioni.join(' · ') })));
+    foglio.append(el('footer', { className: 'stampa-attribuzioni' }, el('h2', { textContent: tr('stampa.fonti') }), el('p', { textContent: attribuzioni.join(' · ') })));
   }
   return foglio;
 }
@@ -130,10 +131,10 @@ export function collegaStampa(map, bottone, menu) {
   const sceltaFormato = menu.querySelector('#stampa-formato');
   const sceltaDirezione = menu.querySelector('#stampa-direzione');
   const vai = menu.querySelector('#stampa-vai');
-  scelta.replaceChildren(el('option', { value: '', textContent: 'Vista attuale (senza scala)' }),
-    ...SCALE_STAMPA.map(n => el('option', { value: String(n), textContent: `Scala 1:${n.toLocaleString('it-IT')}` })));
+  scelta.replaceChildren(el('option', { value: '', textContent: tr('stampa.vistaAttuale') }),
+    ...SCALE_STAMPA.map(n => el('option', { value: String(n), textContent: tr('stampa.opzioneScala', { n: n.toLocaleString(localeIntl()) }) })));
   sceltaFormato.replaceChildren(...Object.keys(FORMATI).map(f => el('option', { value: f, textContent: f })));
-  sceltaDirezione.replaceChildren(el('option', { value: 'landscape', textContent: 'Orizzontale' }), el('option', { value: 'portrait', textContent: 'Verticale' }));
+  sceltaDirezione.replaceChildren(el('option', { value: 'landscape', textContent: tr('stampa.orizzontale') }), el('option', { value: 'portrait', textContent: tr('stampa.verticale') }));
   const chiudi = () => { menu.hidden = true; bottone.setAttribute('aria-expanded', 'false'); };
   bottone.setAttribute('aria-expanded', 'false');
   bottone.addEventListener('click', () => {
@@ -151,7 +152,7 @@ export function collegaStampa(map, bottone, menu) {
     vai.disabled = true;
     try {
       let esito;
-      try { esito = scala ? await catturaInScala(map, scala, areaMappaMm(formato, direzione), pixelRatioPerFormato(formato)) : { immagine: await catturaMappa(map), centro: map.getCenter() }; } catch (e) { console.error('Stampa: cattura della mappa non riuscita', e); return; }
+      try { esito = scala ? await catturaInScala(map, scala, areaMappaMm(formato, direzione), pixelRatioPerFormato(formato)) : { immagine: await catturaMappa(map), centro: map.getCenter() }; } catch (e) { console.error('Stampa: cattura della mappa non riuscita', e); return; } // i18n-ok: messaggio solo per la console
       chiudi();
       const foglio = costruisciFoglio(map, esito.immagine, { scala, centro: esito.centro, formato, direzione });
       const pulisci = () => { URL.revokeObjectURL(esito.immagine); foglio.remove(); document.body.classList.remove('stampa-mappa'); window.removeEventListener('afterprint', pulisci); };
