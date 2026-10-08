@@ -6,14 +6,22 @@ import { ESTENSIONI } from '../rndt/importa.js';
 import { TETTO_SERVIZI } from './salvati.js';
 
 const SVG = d => `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="${d}"/></svg>`;
-const ICONE = {
+// icone dei servizi, nello spirito del Browser di QGIS: tratto colorato, un colore per tipo (leggibile su tema chiaro e scuro)
+const LINEE = (colore, interno) => `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="${colore}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${interno}</svg>`;
+const GLOBO = '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.5 3.5 3.5 14.5 0 18M12 3c-3.5 3.5-3.5 14.5 0 18"/>';
+export const ICONE = {
   cartella: SVG('M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z'),
   carica: SVG('M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z'),
   piu: SVG('M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'),
   cestino: SVG('M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'),
+  xyz: LINEE('#2e9a57', '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>'),
+  wms: LINEE('#2f7fd0', GLOBO),
+  wmts: LINEE('#7b61c9', `${GLOBO.replace('M3 12h18', 'M4 8h16M4 16h16')}`),
+  wfs: LINEE('#e08a1e', '<path d="M5 17 10 6l9 5-3 8z"/><g fill="currentColor"><rect x="3" y="15" width="4" height="4"/><rect x="8" y="4" width="4" height="4"/><rect x="17" y="9" width="4" height="4"/><rect x="14" y="17" width="4" height="4"/></g>'),
+  arcgis: LINEE('#1f9bb5', '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/>'),
   lucchetto: SVG('M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z'),
 };
-const TIPI = [
+export const TIPI = [
   { id: 'xyz', titolo: 'XYZ', esempio: 'https://tile.example.org/{z}/{x}/{y}.png' },
   { id: 'wms', titolo: 'WMS', esempio: 'https://servizio.example.org/geoserver/ows' },
   { id: 'wmts', titolo: 'WMTS', esempio: 'https://servizio.example.org/wmts' },
@@ -210,7 +218,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
   for (const tipo of TIPI) {
     const modulo = creaModulo(tipo);
     const ramo = nodo(tipo.titolo, {
-      icona: 'cartella', apri: false, classe: 'agg-tipo',
+      icona: tipo.id, apri: false, classe: 'agg-tipo',
       azione: { icona: 'piu', titolo: `Aggiungi un servizio ${tipo.titolo}`, suClic: () => { ramo.det.open = true; modulo.hidden = !modulo.hidden; if (!modulo.hidden) modulo.querySelector('input')?.focus(); } },
     });
     const elenco = el('div', 'agg-elenco');
@@ -224,6 +232,9 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     const riga = el('div', 'agg-salvato');
     const serve = controllo.serveCredenziali(s.id);
     const apri = bottone('', 'agg-salvato-nome');
+    const tipoIco = el('span', 'agg-ico');
+    tipoIco.innerHTML = ICONE[s.tipo] ?? '';
+    apri.append(tipoIco);
     if (serve) { const l = el('span', 'agg-ico'); l.innerHTML = ICONE.lucchetto; apri.append(l); }
     apri.append(el('span', null, s.nome));
     apri.title = serve ? (s.conToken ? `Serve il token — ${s.url}` : `Serve la password di «${s.utente}» — ${s.url}`) : `Metti in mappa — ${s.url}`;
