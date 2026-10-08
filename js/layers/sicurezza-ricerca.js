@@ -1,5 +1,6 @@
 import { urlDati } from '../core/config.js';
 import { leggiQuery, cercaVie, preparaIncidenti, cercaIncidenti } from '../core/ricerca-incidenti.js';
+import { t } from '../core/i18n.js';
 
 // Collega la ricerca degli incidenti alla mappa: `vie.json` (piccolo) si scarica alla prima ricerca, `incidenti.geojson`
 // (qualche MB) solo quando si cerca con «incidente»/«sinistro». `filtro` è quello di sicurezza-filtro.js.
@@ -10,7 +11,7 @@ function caricaUna(file, trasforma) {
   return () => {
     promessa ??= fetch(urlDati(PERCORSO + file))
       .then(r => {
-        if (!r.ok) throw new Error(`${file} non disponibile`);
+        if (!r.ok) throw new Error(t('sicurezza.fileNd', { file }));
         return r.json();
       })
       .then(trasforma)

@@ -1,5 +1,6 @@
 // Grafici delle colonnine di Palermo nella scheda (stile PalermoHub/evcharginglogsicilia, con i colori e i caratteri del viewer):
 // indicatore delle colonnine occupate ora e barre dello stato di tutte le colonnine del comune.
+import { tl, localeIntl } from '../core/i18n.js';
 export const COLORI = { inUso: '#1971c2', reale: '#2b8a3e', stimata: '#94d3a2', nonAttiva: '#c0392b' };
 
 // Conteggi su tutte le colonnine del comune. «Monitorabili» = quelle di cui si sa se sono in uso (attive con stato in tempo reale):
@@ -18,12 +19,12 @@ export function statistiche(punti) {
   return s;
 }
 
-const it = (n, d = 1) => n.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+const it = (n, d = 1) => n.toLocaleString(localeIntl(), { minimumFractionDigits: d, maximumFractionDigits: d });
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -59,7 +60,7 @@ function totali(s) {
   const box = el('div', 'col-graf');
   box.append(el('h4', 'col-graf-titolo', 'Colonnine totali'));
   const t = el('p', 'col-graf-nota');
-  t.append(el('b', null, String(s.totale)), ' colonnine in totale');
+  t.append(el('b', null, String(s.totale)), tl(' colonnine in totale'));
   box.append(t);
   const gruppi = [
     { etichetta: 'Attive', n: s.attive, colore: COLORI.reale },

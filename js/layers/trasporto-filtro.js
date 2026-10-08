@@ -1,4 +1,5 @@
 import { ordineLinea } from './trasporto-orari.js';
+import { t } from '../core/i18n.js';
 
 // Filtro «Linea» del pannello Filtri: restringe tracciati e fermate a una sola linea. La logica dei filtri MapLibre è pura
 // (testabile); `collegaFiltroLinea` la lega al menu e al chip. I filtri di base sono quelli messi da trasporto.js.
@@ -42,7 +43,7 @@ export function collegaFiltroLinea(map, { select, chips, linee, limiti }) {
     for (const o of opzioni.filter(x => x.tipo === tipo)) g.append(new Option(`${o.numero} — ${o.nome}`, o.route_id));
     return g;
   };
-  select.replaceChildren(new Option('— Tutte —', ''), gruppo('bus'), gruppo('tram'));
+  select.replaceChildren(new Option(t('filtro.tutte'), ''), gruppo('bus'), gruppo('tram'));
 
   function scegli(routeId, zoom = true) {
     const linea = opzioni.find(o => o.route_id === routeId) ?? null;
@@ -66,7 +67,7 @@ export function collegaFiltroLinea(map, { select, chips, linee, limiti }) {
     const x = document.createElement('button');
     x.type = 'button';
     x.textContent = '✕';
-    x.setAttribute('aria-label', 'Rimuovi filtro Linea');
+    x.setAttribute('aria-label', t('trasporto.rimuoviFiltro'));
     x.addEventListener('click', () => scegli('', false));
     c.append(x);
     return c;

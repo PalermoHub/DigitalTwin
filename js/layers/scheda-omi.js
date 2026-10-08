@@ -1,5 +1,6 @@
 // Voci «Quotazioni OMI» della scheda: una per zona, con le tipologie in fisarmonica. Logica e
 // formati di buildOMIPopup (pmtiles/js/catasto_script.js). Il tile ha una feature per tipologia.
+import { t, localeIntl } from '../core/i18n.js';
 
 const pulisci = s => String(s ?? '').replace(/^'|'$/g, '').trim();
 const SUPERFICIE = { L: 'sup.lorda', N: 'sup.netta' };
@@ -10,7 +11,7 @@ const numero = v => {
   const n = typeof v === 'string' ? parseFloat(v.replace(',', '.')) : Number(v);
   return Number.isNaN(n) ? null : n;
 };
-const it = n => n.toLocaleString('it-IT');
+const it = n => n.toLocaleString(localeIntl());
 
 function intervallo(min, max, unita, sup) {
   const a = numero(min), b = numero(max);
@@ -56,9 +57,9 @@ function voceZona(features) {
     icona: 'euro',
     badge: `Zona ${zona}`,
     gruppi: [{ righe }],
-    accordion: { aperto: true, icona: 'casa', suggerimento: 'Seleziona una tipologia per vedere compravendita e locazione', riassunto: `Tipo prevalente: ${codice ? `[${codice}] ` : ''}${pulisci(p0.Descr_tip_prev) || '—'}`, elementi },
+    accordion: { aperto: true, icona: 'casa', suggerimento: 'Seleziona una tipologia per vedere compravendita e locazione', riassunto: t('omi.tipoPrevalente', { tipo: `${codice ? `[${codice}] ` : ''}${pulisci(p0.Descr_tip_prev) || '—'}` }), elementi },
     link: { testo: 'Catasto e PRG su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' },
-    fonte: `Fonte: Agenzia delle Entrate — ${semestre}`,
+    fonte: t('omi.fonte', { semestre }),
   };
 }
 

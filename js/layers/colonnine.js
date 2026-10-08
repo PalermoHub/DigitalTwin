@@ -5,6 +5,7 @@ import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { modelloPopupColonnina, vociColonnine } from './scheda-colonnine.js';
 import { graficiColonnine } from './colonnine-grafici.js';
 import { applicaSnapshot, scaricaSnapshot } from './colonnine-live.js';
+import { tl } from '../core/i18n.js';
 
 // Colonnine di ricarica di Palermo (dati/colonnine/colonnine.geojson, rigenerato ogni ora da un workflow dalla serie storica
 // PalermoHub/evcharginglogsicilia). All'apertura lo stato si aggiorna dallo snapshot remoto: se non risponde resta quello del file.
@@ -25,7 +26,7 @@ const accesi = { stato: new Set(STATI.map(([s]) => s)), corrente: new Set(CORREN
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -74,7 +75,7 @@ function pannelloFiltri(gruppo, tipo, titolo, voci) {
     cb.disabled = true; // si abilita con lo strato acceso
     cb.dataset.filtro = `${tipo}:${chiave}`;
     cb.addEventListener('change', () => impostaFiltro(tipo, chiave, cb.checked, 'pannello'));
-    label.append(cb, occhio(), ' ', nome);
+    label.append(cb, occhio(), ' ', tl(nome));
     blocco.append(label);
     caselle.set(`${tipo}:${chiave}`, { ...caselle.get(`${tipo}:${chiave}`), pannello: cb });
   }
@@ -114,7 +115,7 @@ async function aggiornaDalVivo() {
     aggiornato = r.aggiornato || aggiornato;
     mappa?.getSource(SRC)?.setData(dati());
   } catch (e) {
-    console.warn('Colonnine: stato dal vivo non disponibile, uso il file del repository.', e);
+    console.warn('Colonnine: stato dal vivo non disponibile, uso il file del repository.', e); // i18n-ok: messaggio solo per la console
   }
 }
 

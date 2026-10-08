@@ -5,6 +5,7 @@ import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { voceMonumento, modelloPopup } from './scheda-monumenti.js';
 import { voceUsoEdificio } from './scheda-uso.js';
+import { tl, t } from '../core/i18n.js';
 
 // Un colore per categoria (poligono dell'edificio e marker). palette.js è una copia vincolata
 // di quella di palermo_popolazione e non si tocca: questi colori sono specifici del viewer.
@@ -48,7 +49,7 @@ const colore = ['match', ['get', 'categoria'], ...MONUMENTI_CATEGORIE.flat(), '#
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -71,7 +72,7 @@ function contenutoPopup(p) {
     collegamento(a, m.url);
     radice.append(a);
   } else {
-    radice.append(el('p', 'monumento-fonte', `Fonte: ${m.fonte}`));
+    radice.append(el('p', 'monumento-fonte', t('layer.fonte', { fonte: tl(m.fonte) })));
   }
   return radice;
 }

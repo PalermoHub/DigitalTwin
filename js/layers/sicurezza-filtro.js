@@ -1,4 +1,5 @@
 import { GRAVITA } from './scheda-sicurezza.js';
+import { t, tl } from '../core/i18n.js';
 
 // Filtro «Incidenti» del pannello Filtri: anno, gravità e via (quest'ultima scelta dalla ricerca), in AND. La logica dei filtri
 // MapLibre è pura (testabile); `collegaFiltroIncidenti` la lega ai menu e ai chip, come il filtro Linea del trasporto.
@@ -25,16 +26,16 @@ const NOME_GRAVITA_CHIP = { M: 'mortali', R: 'con prognosi riservata', F: 'con f
 
 export function etichetteChip({ anno, gravita, via }) {
   return [
-    pieno(anno) && { chiave: 'anno', testo: `Incidenti ${anno}` },
-    pieno(gravita) && { chiave: 'gravita', testo: `Incidenti ${NOME_GRAVITA_CHIP[gravita] ?? gravita}` },
-    pieno(via) && { chiave: 'via', testo: `Incidenti: ${via}` },
+    pieno(anno) && { chiave: 'anno', testo: t('sicurezza.chip.anno', { anno }) },
+    pieno(gravita) && { chiave: 'gravita', testo: t('sicurezza.chip.gravita', { gravita: tl(NOME_GRAVITA_CHIP[gravita] ?? gravita) }) },
+    pieno(via) && { chiave: 'via', testo: t('sicurezza.chip.via', { via }) },
   ].filter(Boolean);
 }
 
 // `layers`: gli strati dei punti (visibile e «hit»); `strato`: id dello strato da accendere quando un filtro si attiva.
 export function collegaFiltroIncidenti(map, { annoSelect, gravitaSelect, chips, layers, strato }) {
-  annoSelect.replaceChildren(new Option('Tutti gli anni', ''), ...ANNI.map(a => new Option(String(a), String(a))));
-  gravitaSelect.replaceChildren(new Option('Tutte', ''), ...Object.entries(GRAVITA).map(([k, g]) => new Option(g.nome, k)));
+  annoSelect.replaceChildren(new Option(t('sicurezza.tuttiAnni'), ''), ...ANNI.map(a => new Option(String(a), String(a))));
+  gravitaSelect.replaceChildren(new Option(t('sicurezza.tutte'), ''), ...Object.entries(GRAVITA).map(([k, g]) => new Option(tl(g.nome), k)));
   const stato = { anno: '', gravita: '', via: '', tipologie: null };
 
   function chip({ chiave, testo }) {

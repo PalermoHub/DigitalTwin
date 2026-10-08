@@ -2,7 +2,7 @@ import { piuVicino } from './scheda-util.js';
 import { voceFiltro } from './legenda.js';
 import { registraTooltip } from './tooltip.js';
 import { svgIcona } from './icone.js';
-import { t } from './i18n.js';
+import { t, tl } from './i18n.js';
 
 // Evidenziazione sulla mappa delle aree da cui vengono i dati della scheda del luogo.
 // Ogni layer "hit" ha un'etichetta (mostrata nella scheda) e un colore (usato sulla mappa).
@@ -107,7 +107,7 @@ function tooltipSelezione(map, punto) {
     const testo = document.createElement('span');
     testo.className = 'selezione-testo';
     const nome = document.createElement('span');
-    nome.textContent = etichetta;
+    nome.textContent = tl(etichetta);
     testo.append(nome);
     if (attributo) {
       const valore = document.createElement('b');

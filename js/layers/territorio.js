@@ -3,12 +3,13 @@ import { piuVicino, presente, primo, righe, tutti } from '../core/scheda-util.js
 import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
 import { STILE_OMI } from './stile-omi.js';
 import { vociOmi } from './scheda-omi.js';
+import { t, tl } from '../core/i18n.js';
 
 // Come nell'app originale (catasto-app): la vestizione di PRG, PPE e vincoli è fatta di tile
 // raster già pubblicati; i poligoni vettoriali restano trasparenti e servono solo ai dati
 // (scheda del luogo). Zone OMI, particelle e civici sono invece vettoriali con il loro stile.
 
-const ATTRIBUZIONE_PRG = 'Comune di Palermo - Variante Generale al P.R.G. 2004 - Rielaborazione di OpenDataSicilia';
+const ATTRIBUZIONE_PRG = tl('Comune di Palermo - Variante Generale al P.R.G. 2004 - Rielaborazione di OpenDataSicilia');
 const NOTA_PRG = 'Il PRG vigente è la Variante generale 2004: varianti successive potrebbero non essere incluse.';
 const vuoto = { 'fill-opacity': 0 };
 
@@ -38,7 +39,7 @@ function creaLegendaOmi(_gruppo, map) {
   }
   const nota = document.createElement('div');
   nota.className = 'nota-omi';
-  nota.textContent = 'Ogni zona ha una tonalità propria nella fascia.';
+  nota.textContent = tl('Ogni zona ha una tonalità propria nella fascia.');
   legendaOmi.append(nota);
   document.getElementById('legende').append(legendaOmi);
 }
@@ -189,7 +190,7 @@ export default {
           legale: true,
           link: [{
             testo: 'Visura su SISTER', icona: 'esterno', url: 'https://sister3.agenziaentrate.gov.it/', etichetta: `Fg.${p.Foglio} · P.${p.Paricella}`,
-            suggerimento: `Accedi a SISTER con SPID — inserisci Foglio ${p.Foglio} e Particella ${p.Paricella}`,
+            suggerimento: t('territorio.sister', { foglio: p.Foglio, particella: p.Paricella }),
           }, { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' }],
         });
       }

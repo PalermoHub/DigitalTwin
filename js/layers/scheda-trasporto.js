@@ -1,5 +1,6 @@
 // Modello puro di fermate e linee del trasporto pubblico: le righe fisse della scheda di destra.
 // Orari e fermate in sequenza sono interattivi (selettore del giorno): li costruisce `dinamico`, passato da chi disegna.
+import { t } from '../core/i18n.js';
 
 const righe = coppie => coppie.filter(([, valore]) => valore).map(([etichetta, valore]) => ({ etichetta, valore }));
 
@@ -30,7 +31,7 @@ export function voceLinee(linee, costruisci) {
   const gruppi = raggruppaLinee(linee);
   const una = gruppi.length === 1 ? gruppi[0] : null;
   return {
-    chiave: 'linee', peso: 7, titolo: una ? `Linea ${una.numero}` : `Linee (${gruppi.length})`, icona: una?.tipo === 'tram' ? 'tram' : 'bus',
+    chiave: 'linee', peso: 7, titolo: una ? t('trasporto.linea', { numero: una.numero }) : t('trasporto.lineeN', { n: gruppi.length }), icona: una?.tipo === 'tram' ? 'tram' : 'bus',
     badge: una ? (una.tipo === 'tram' ? 'Tram' : 'Bus') : undefined, sempre: true, gruppi: [],
     dinamico: () => costruisci(gruppi),
   };
@@ -38,7 +39,7 @@ export function voceLinee(linee, costruisci) {
 
 // Tooltip al passaggio del mouse: stesse informazioni essenziali della scheda.
 export function tooltipFermata(p) {
-  return { titolo: p.nome, dettaglio: p.linee.length ? `Linee ${p.linee.join(', ')}` : 'Nessuna corsa nel feed' };
+  return { titolo: p.nome, dettaglio: p.linee.length ? t('trasporto.lineeElenco', { elenco: p.linee.join(', ') }) : 'Nessuna corsa nel feed' };
 }
 
 // Una riga per linea (le due direzioni insieme), al massimo `max`: su una strada principale ne passano molte.

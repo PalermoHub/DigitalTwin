@@ -1,5 +1,6 @@
 // Parti pure delle isole di calore: rampe di colori, espressione MapLibre per la classificazione, etichette di legenda
 // e dati del grafico 2019–2025. Le soglie arrivano già calcolate da dati/isole-calore/isole-calore.json (scripts/isole_calore.py).
+import { localeIntl } from '../core/i18n.js';
 
 // ColorBrewer YlOrRd sequenziale (chiaro = fresco, scuro = caldo), come nell'app dello studio.
 export const RAMPE = {
@@ -22,7 +23,7 @@ export function espressioneColore(campo, soglie, colori = coloriClassi(soglie.le
   return ['case', ['==', ['get', campo], null], NODATA, ['step', ['get', campo], colori[0], ...passi]];
 }
 
-const it1 = n => n.toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const it1 = n => n.toLocaleString(localeIntl(), { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 export const etichetteClassi = soglie => soglie.slice(0, -1).map((s, i) => `${it1(s)} – ${it1(soglie[i + 1])}`);
 

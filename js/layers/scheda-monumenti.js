@@ -1,4 +1,5 @@
 import { chiaveLuogo } from '../core/scheda-modello.js';
+import { t, tl } from '../core/i18n.js';
 
 // Modello puro del monumento: stessi campi per la voce della scheda di destra e per il popup sulla mappa.
 // `risolvi` trasforma il percorso relativo della foto (dentro dati/monumenti/) in URL; le foto già assolute
@@ -17,7 +18,7 @@ export function voceMonumento(p, risolvi) {
     icona: 'monumento',
     badge: p.categoria,
     gruppi: [],
-    fonte: `Fonte: ${p.fonte ?? FONTE_COMUNE}`,
+    fonte: t('layer.fonte', { fonte: tl(p.fonte ?? FONTE_COMUNE) }),
   };
   if (p.url) voce.link = { testo: 'Vai al sito del Comune', url: p.url, icona: 'esterno', suggerimento: 'Portale del Turismo del Comune di Palermo' };
   if (p.foto) voce.immagine = { url: urlFoto(p.foto, risolvi), alt: p.nome };

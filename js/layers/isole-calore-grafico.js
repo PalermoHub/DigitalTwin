@@ -1,15 +1,16 @@
 // Grafico a linee 2019–2025 (SVG): temperatura della sezione e media comunale con i quartili (fascia).
 // Senza sezione mostra solo l'andamento comunale (legenda del layer). I dati arrivano da `datiGrafico`.
 import { datiGrafico } from './isole-calore-classi.js';
+import { t as tr, tl, localeIntl } from '../core/i18n.js';
 
 const COLORE_SEZIONE = '#d9480f';
 const L = 300, H = 150, M = { s: 8, d: 10, t: 12, b: 22 }; // viewBox e margini (sinistra con l'asse dei gradi)
-const it = (n, d = 1) => n.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+const it = (n, d = 1) => n.toLocaleString(localeIntl(), { minimumFractionDigits: d, maximumFractionDigits: d });
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -38,8 +39,8 @@ export function graficoAndamento(p, serie, titolo) {
   const anni = g.anni.map((a, i) => `<text x="${x(i).toFixed(1)}" y="${H - 6}" text-anchor="middle" class="ic-asse">${a}</text>`);
   const punti = g.sezione ? g.sezione.map((v, i) => (v == null ? '' : `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.6" fill="${COLORE_SEZIONE}"><title>${g.anni[i]}: ${it(v)} °C</title></circle>`)).join('') : '';
   const etichetta = g.sezione
-    ? `Temperatura superficiale estiva della sezione dal ${g.anni[0]} al ${g.anni.at(-1)}: ${g.sezione.map((v, i) => (v == null ? '' : `${g.anni[i]} ${it(v)} °C`)).filter(Boolean).join(', ')}.`
-    : `Media comunale della temperatura superficiale estiva dal ${g.anni[0]} al ${g.anni.at(-1)}: ${g.comune.map((v, i) => `${g.anni[i]} ${it(v)} °C`).join(', ')}.`;
+    ? tr('isole.grafico.sezione', { da: g.anni[0], a: g.anni.at(-1), valori: g.sezione.map((v, i) => (v == null ? '' : `${g.anni[i]} ${it(v)} °C`)).filter(Boolean).join(', ') })
+    : tr('isole.grafico.comune', { da: g.anni[0], a: g.anni.at(-1), valori: g.comune.map((v, i) => `${g.anni[i]} ${it(v)} °C`).join(', ') });
 
   const box = el('div', 'col-graf ic-graf');
   box.append(el('h4', 'col-graf-titolo', titolo));
@@ -52,9 +53,9 @@ export function graficoAndamento(p, serie, titolo) {
   box.append(svg);
   const legenda = el('div', 'col-legenda');
   if (g.sezione) {
-    const a = el('span'); const ia = el('i'); ia.style.background = COLORE_SEZIONE; a.append(ia, 'Sezione'); legenda.append(a);
+    const a = el('span'); const ia = el('i'); ia.style.background = COLORE_SEZIONE; a.append(ia, tl('Sezione')); legenda.append(a);
   }
-  const b = el('span'); const ib = el('i', 'ic-tratteggio'); b.append(ib, 'Media comunale'); legenda.append(b);
+  const b = el('span'); const ib = el('i', 'ic-tratteggio'); b.append(ib, tl('Media comunale')); legenda.append(b);
   const c = el('span'); const ic = el('i', 'ic-fascia'); c.append(ic, 'Quartili comunali (25°–75°)'); legenda.append(c);
   box.append(legenda);
   return box;

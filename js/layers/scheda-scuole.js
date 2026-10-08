@@ -1,4 +1,5 @@
 import { chiaveLuogo } from '../core/scheda-modello.js';
+import { t } from '../core/i18n.js';
 
 // Modello puro di scuole/asili e sedi delle sezioni elettorali: stesse righe per la scheda di destra e per il popup.
 
@@ -16,7 +17,7 @@ function righeScuola(p, completo) {
 function righeSeggio(p, completo) {
   return righe([
     ...(completo ? [['Indirizzo', p.indirizzo], ['Circoscrizione', p.circoscrizione]] : []),
-    [`Sezioni (${p.n_sezioni})`, p.sezioni],
+    [t('scuole.sezioniN', { n: p.n_sezioni }), p.sezioni],
   ]);
 }
 

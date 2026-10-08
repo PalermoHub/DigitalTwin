@@ -1,4 +1,5 @@
 // Fermate del trasporto pubblico nei dintorni di un punto cliccato: logica pura, senza mappa né rete.
+import { t } from '../core/i18n.js';
 const R_TERRA = 6371008.8;
 const rad = g => g * Math.PI / 180;
 const perNumero = (a, b) => a.numero.localeCompare(b.numero, 'it', { numeric: true });
@@ -33,7 +34,7 @@ export function voceTrasportoVicino(fermate, raggio, costruisci, max = 8) {
   return {
     chiave: 'trasportovicino', peso: 8, titolo: 'Trasporto pubblico vicino', icona: 'bus', gruppi: [], sempre: true,
     dinamico: () => costruisci(mostrate),
-    nota: `Fermate entro ${raggio} m in linea d’aria${altre > 0 ? ` (altre ${altre} più lontane non elencate)` : ''}. Tocca il nome per vederla sulla mappa.`,
+    nota: t('trasporto.vicino.nota', { raggio, altre: altre > 0 ? t('trasporto.vicino.altre', { n: altre }) : '' }),
     evidenza: [{ id: 'trasporto-vicine', etichetta: 'Fermata vicina', colore: '#364fc7', features: mostrate.map(f => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [f.lon, f.lat] }, properties: { attributo: f.nome } })) }],
   };
 }

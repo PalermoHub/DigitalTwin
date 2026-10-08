@@ -1,11 +1,10 @@
 // Modello puro della sicurezza stradale (studio «Rete stradale»): le righe fisse della scheda di destra.
 import { righe } from '../core/scheda-util.js';
+import { localeIntl, t, tn } from '../core/i18n.js';
 
-export const NOTA_DATI = 'Incidenti 2015–2023 del Comune di Palermo, agganciati alla rete stradale di OpenStreetMap: il 2019 non è nel dataset pulito '
-  + 'e la posizione di alcuni incidenti è approssimata. Il tasso per km vale solo per tratti di almeno 20 m. Indicatore di supporto, non una graduatoria ufficiale.';
+export const NOTA_DATI = t('sicurezza.notaDati');
 
-export const NOTA_CLASSIFICA = 'Classifica delle 20 vie con più gravità per km (mortali 5, prognosi riservata 3, feriti 1, solo cose 0,2), tra le vie di almeno 3 km e 30 incidenti. '
-  + 'Le strade senza nome in OpenStreetMap (circa un tratto su tre) non entrano nella classifica.';
+export const NOTA_CLASSIFICA = t('sicurezza.notaClassifica');
 
 export const TOP_VIE = 20;
 
@@ -16,7 +15,7 @@ export const GRAVITA = {
   C: { nome: 'Solo danni a cose', colore: '#9e9e9e' },
 };
 
-const num = (v, d = 1) => Number(v).toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: d });
+const num = (v, d = 1) => Number(v).toLocaleString(localeIntl(), { minimumFractionDigits: 0, maximumFractionDigits: d });
 const ha = v => v != null && Number.isFinite(Number(v));
 const senzaIncidenti = p => !ha(p.n_incidenti) || Number(p.n_incidenti) === 0;
 const NESSUN = /^nessun/i;
@@ -34,9 +33,9 @@ function rigaTasso(p) {
 function gruppoVia(p) {
   if (!ha(p.via_rango)) return [];
   return [{ titolo: 'Via tra le più pericolose', righe: righe([
-    ['Classifica vie pericolose', `${p.via_rango}° su ${TOP_VIE}`],
+    ['Classifica vie pericolose', t('sicurezza.rango', { rango: p.via_rango, n: TOP_VIE })],
     ['Gravità per km (via)', ha(p.via_gravita_km) ? num(p.via_gravita_km) : null],
-    ['Incidenti sulla via', ha(p.via_incidenti) ? `${num(p.via_incidenti, 0)} su ${num(p.via_km)} km` : null],
+    ['Incidenti sulla via', ha(p.via_incidenti) ? t('sicurezza.incidentiSuKm', { n: num(p.via_incidenti, 0), km: num(p.via_km) }) : null],
     ['Mortali sulla via', ha(p.via_mortali) ? num(p.via_mortali, 0) : null],
   ]) }];
 }
@@ -89,6 +88,6 @@ export function tooltipArco(p) {
   const titolo = ha(p.via_rango) ? `#${p.via_rango} · ${nome}` : nome;
   if (senzaIncidenti(p)) return { titolo, dettaglio: 'Nessun incidente registrato' };
   const n = Number(p.n_incidenti);
-  const inc = `${num(n, 0)} ${n === 1 ? 'incidente' : 'incidenti'}`;
-  return { titolo, dettaglio: p.tasso_affidabile ? `${inc} · ${num(p.tasso_km)} per km` : inc };
+  const inc = tn('ricerca.incidenti.n', n, { n: num(n, 0) });
+  return { titolo, dettaglio: p.tasso_affidabile ? t('sicurezza.perKm', { inc, tasso: num(p.tasso_km) }) : inc };
 }

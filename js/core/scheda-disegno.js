@@ -7,7 +7,7 @@ import { t as tr, tl } from './i18n.js';
 export function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo); // testi del modello dati: italiani nel codice, tradotti qui (vedi tl)
   return e;
 }
 
@@ -36,7 +36,7 @@ function disegnaRiga(r) {
     const { valore, dettaglio } = dividiDettaglio(r.valore);
     const badge = el('span', 'scheda-val scheda-badge scheda-badge--c' + r.classe);
     badge.title = tr('scheda.classe', { classe: r.classe });
-    badge.append(el('span', 'scheda-badge-num', String(r.classe)), ` ${valore}`);
+    badge.append(el('span', 'scheda-badge-num', String(r.classe)), ` ${tl(valore)}`);
     riga.append(badge);
     if (dettaglio) riga.append(el('span', 'scheda-dettaglio', dettaglio));
   } else {

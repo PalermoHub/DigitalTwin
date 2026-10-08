@@ -1,4 +1,5 @@
 import { svgIcona } from '../core/icone.js';
+import { t, tl } from '../core/i18n.js';
 
 // Basi cartografiche alternative: Positron (stile di partenza), basi raster classiche (OSM, Esri, Google,
 // OpenTopoMap), carte tecniche comunali e regionali e sfondi neutri. Una sola è visibile alla volta.
@@ -27,21 +28,21 @@ const RASTER = {
 // `precisione` è il giudizio editoriale dell'atlante: alta (rilievo aerofotogrammetrico), media (pre-aerofotogrammetria), bassa (incisioni).
 const ATLANTE = 'https://palermohub.opendatasicilia.it/index_atlante_iframe.html';
 const STORICHE = [
-  { id: 1580, mw: 60119, max: 17, precisione: 'bassa', etichetta: '1580', titolo: 'Città di Palermo 1580 | Fonte: gallica.bnf.fr / BnF', attr: 'Palermo 1580, Maiocco e Bonifacio (BnF Gallica)' },
-  { id: 1754, mw: 60176, max: 17, precisione: 'bassa', etichetta: '1754', titolo: 'Città di Palermo 1754 | Fonte: Library of Congress Geography and Map Division Washington', attr: 'Palermo 1754-59, G. Vasi (Library of Congress)' },
-  { id: 1860, mw: 60203, max: 17, precisione: 'bassa', etichetta: '1860', titolo: 'Pianta topografica | Palermo 1860 circa | Fonte: Harvard Map Collection, Harvard University', attr: 'Palermo 1860 circa (Harvard Map Collection)' },
-  { id: 1877, mw: 60399, max: 17, precisione: 'media', etichetta: '1877', titolo: 'Costa nord, Baia di Palermo 1877 | 1:36,417 | Fonte: Wisconsin-Milwaukee University', attr: 'Baia di Palermo 1877 (Univ. Wisconsin-Milwaukee)' },
-  { id: 1882, mw: 33126, max: 17, precisione: 'media', etichetta: '1882', titolo: 'Città di Palermo 1882 | 1:1k Fonte: gallica.bnf.fr / BnF', attr: 'Nuova pianta di Palermo 1882, L. Pedone Laurieri (BnF Gallica)' },
-  { id: 1891, mw: 60209, max: 17, precisione: 'media', etichetta: '1891', titolo: 'Nuova pianta della Città di Palermo 1891 1:10k | Fonte: Harvard Map Collection, Harvard University', attr: 'Nuova pianta di Palermo 1891, C. Clausen (Harvard Map Collection)' },
-  { id: 1893, mw: 19658, max: 16, precisione: 'media', etichetta: '1893', titolo: 'Carta tecnica 1893 | 1:13k (max zoom 16)', attr: 'Carta tecnica di Palermo 1893' },
-  { id: 1908, mw: 25750, max: 18, precisione: 'media', etichetta: '1908', titolo: 'Carta tecnica Municipale 1908 | 1:8k', attr: 'Carta tecnica di Palermo, Ufficio Tecnico Comunale 1908' },
-  { id: 1935, mw: 19706, max: 18, precisione: 'alta', etichetta: '1935', titolo: 'Carta tecnica Omira 1935 | 1:5k', attr: 'Carta tecnica di Palermo, OMIRA 1935' },
-  { id: 1941, mw: 45321, max: 17, precisione: 'media', etichetta: '1941', titolo: 'U.S. Army Map Service, 1941 Series 4229 | Palermo 1:50k', attr: 'U.S. Army Map Service 1941, Series 4229' },
-  { id: 1943, mw: 45304, max: 17, precisione: 'media', etichetta: '1943', titolo: 'U.S. Army Map Service, 1943-1944 | City Plans Palermo 1:10k', attr: 'U.S. Army Map Service 1943-1944, City Plans' },
-  { id: 1956, mw: 19792, max: 18, precisione: 'alta', etichetta: '1956', titolo: 'Carta tecnica Irta 1956 | 1:5k', attr: 'Carta tecnica di Palermo, IRTA 1956' },
-  { id: 1962, mw: 52666, max: 18, precisione: 'alta', etichetta: '1962', titolo: 'Piano Regolatore Generale 1962 | 1:5k', attr: 'Comune di Palermo, PRG 1962' },
-  { id: 1987, mw: 19785, max: 18, precisione: 'alta', etichetta: '1987', titolo: 'Carta tecnica Sas 1987 | 1:5k', attr: 'Carta tecnica di Palermo, SAS 1987' },
-  { id: 1993, mw: 52867, max: 18, precisione: 'alta', etichetta: '1993', titolo: 'P.P.E. del centro storico 1993 | 1:500', attr: 'Comune di Palermo, PPE del centro storico 1993' },
+  { id: 1580, mw: 60119, max: 17, precisione: 'bassa', etichetta: '1580', titolo: 'Città di Palermo 1580 | Fonte: gallica.bnf.fr / BnF', attr: 'Palermo 1580, Maiocco e Bonifacio (BnF Gallica)' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1754, mw: 60176, max: 17, precisione: 'bassa', etichetta: '1754', titolo: 'Città di Palermo 1754 | Fonte: Library of Congress Geography and Map Division Washington', attr: 'Palermo 1754-59, G. Vasi (Library of Congress)' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1860, mw: 60203, max: 17, precisione: 'bassa', etichetta: '1860', titolo: 'Pianta topografica | Palermo 1860 circa | Fonte: Harvard Map Collection, Harvard University', attr: 'Palermo 1860 circa (Harvard Map Collection)' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1877, mw: 60399, max: 17, precisione: 'media', etichetta: '1877', titolo: 'Costa nord, Baia di Palermo 1877 | 1:36,417 | Fonte: Wisconsin-Milwaukee University', attr: 'Baia di Palermo 1877 (Univ. Wisconsin-Milwaukee)' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1882, mw: 33126, max: 17, precisione: 'media', etichetta: '1882', titolo: 'Città di Palermo 1882 | 1:1k Fonte: gallica.bnf.fr / BnF', attr: 'Nuova pianta di Palermo 1882, L. Pedone Laurieri (BnF Gallica)' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1891, mw: 60209, max: 17, precisione: 'media', etichetta: '1891', titolo: 'Nuova pianta della Città di Palermo 1891 1:10k | Fonte: Harvard Map Collection, Harvard University', attr: 'Nuova pianta di Palermo 1891, C. Clausen (Harvard Map Collection)' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1893, mw: 19658, max: 16, precisione: 'media', etichetta: '1893', titolo: 'Carta tecnica 1893 | 1:13k (max zoom 16)', attr: 'Carta tecnica di Palermo 1893' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1908, mw: 25750, max: 18, precisione: 'media', etichetta: '1908', titolo: 'Carta tecnica Municipale 1908 | 1:8k', attr: 'Carta tecnica di Palermo, Ufficio Tecnico Comunale 1908' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1935, mw: 19706, max: 18, precisione: 'alta', etichetta: '1935', titolo: 'Carta tecnica Omira 1935 | 1:5k', attr: 'Carta tecnica di Palermo, OMIRA 1935' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1941, mw: 45321, max: 17, precisione: 'media', etichetta: '1941', titolo: 'U.S. Army Map Service, 1941 Series 4229 | Palermo 1:50k', attr: 'U.S. Army Map Service 1941, Series 4229' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1943, mw: 45304, max: 17, precisione: 'media', etichetta: '1943', titolo: 'U.S. Army Map Service, 1943-1944 | City Plans Palermo 1:10k', attr: 'U.S. Army Map Service 1943-1944, City Plans' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1956, mw: 19792, max: 18, precisione: 'alta', etichetta: '1956', titolo: 'Carta tecnica Irta 1956 | 1:5k', attr: 'Carta tecnica di Palermo, IRTA 1956' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1962, mw: 52666, max: 18, precisione: 'alta', etichetta: '1962', titolo: 'Piano Regolatore Generale 1962 | 1:5k', attr: 'Comune di Palermo, PRG 1962' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1987, mw: 19785, max: 18, precisione: 'alta', etichetta: '1987', titolo: 'Carta tecnica Sas 1987 | 1:5k', attr: 'Carta tecnica di Palermo, SAS 1987' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
+  { id: 1993, mw: 52867, max: 18, precisione: 'alta', etichetta: '1993', titolo: 'P.P.E. del centro storico 1993 | 1:500', attr: 'Comune di Palermo, PPE del centro storico 1993' }, // i18n-ok: titoli e crediti dei documenti storici, come sono nell'atlante
 ];
 for (const s of STORICHE) {
   RASTER[`st-${s.id}`] = {
@@ -78,7 +79,7 @@ const GRUPPI = [
     { id: 'esri-topo', etichetta: 'Esri Topo', titolo: 'Esri World Topographic Map' },
   ] },
   { titolo: 'Mappe storiche', nota: true, basi: STORICHE.map(s => ({
-    id: `st-${s.id}`, etichetta: s.etichetta, titolo: `${s.titolo} (precisione della sovrapposizione: ${s.precisione})`, precisione: s.precisione,
+    id: `st-${s.id}`, etichetta: s.etichetta, titolo: t('base.storica.titolo', { titolo: s.titolo, precisione: tl(s.precisione) }), precisione: s.precisione,
   })) },
   { titolo: 'Cartografia tecnica', basi: [
     { id: 'ctr-1989', etichetta: 'CSG 1989', titolo: 'Carta Tecnica Comunale CSG 2k (1989/91)' },
@@ -143,13 +144,13 @@ export default {
     const icona = bottone?.querySelector('svg');
     const suggerimento = document.createElement('p');
     suggerimento.className = 'base-suggerimento';
-    suggerimento.textContent = 'Seleziona la cartografia da usare come base.';
+    suggerimento.textContent = t('base.suggerimento');
     // pulsante ben visibile, sotto il titolo «Mappe storiche»: apre l'atlante in un'altra scheda, sulla zona che si sta guardando (hash `#zoom/lat/lng` di leaflet-hash)
     const atlante = Object.assign(document.createElement('a'), {
       className: 'base-atlante', href: ATLANTE, target: '_blank', rel: 'noopener',
-      title: 'Atlante delle carte tecniche storiche di Palermo (OpenDataSicilia): sovrapposizioni, confronto con cursore e cartoline storiche',
+      title: t('base.atlante.tip'),
     });
-    atlante.innerHTML = `<span>Apri l'Atlante storico di Palermo</span>${svgIcona('esterno', 16)}`;
+    atlante.innerHTML = `<span>${t('base.atlante.apri')}</span>${svgIcona('esterno', 16)}`;
     atlante.addEventListener('click', () => {
       const c = map.getCenter();
       atlante.href = `${ATLANTE}#${Math.min(Math.max(Math.round(map.getZoom()), 13), 18)}/${c.lat.toFixed(5)}/${c.lng.toFixed(5)}`;
@@ -157,32 +158,32 @@ export default {
     el.append(suggerimento);
     for (const g of GRUPPI) {
       const h = document.createElement('h3');
-      h.textContent = g.titolo;
+      h.textContent = tl(g.titolo);
       const riga = document.createElement('div');
       riga.className = 'base-griglia';
       let nota = null;
       if (g.nota) {
         nota = document.createElement('p');
         nota.className = 'base-suggerimento';
-        const a = Object.assign(document.createElement('a'), { href: ATLANTE, target: '_blank', rel: 'noopener', textContent: 'Atlante delle carte tecniche storiche' });
-        nota.append('Mappe georeferenziate dell\'', a, ' (OpenDataSicilia). Il pallino indica quanto è affidabile la sovrapposizione: verde alta, giallo media, rosso bassa.');
+        const a = Object.assign(document.createElement('a'), { href: ATLANTE, target: '_blank', rel: 'noopener', textContent: t('base.atlante.nome') });
+        nota.append(t('base.storiche.nota1'), a, t('base.storiche.nota2'));
       }
       for (const b of g.basi) {
         const label = document.createElement('label');
         label.className = 'base-scelta';
-        label.title = b.titolo;
+        label.title = tl(b.titolo);
         const r = document.createElement('input');
         r.type = 'radio';
         r.name = 'base';
         r.id = `base-${b.id}`;
         r.checked = b.id === 'positron';
-        r.setAttribute('aria-label', b.titolo);
+        r.setAttribute('aria-label', tl(b.titolo));
         const cerchio = document.createElement('span');
         cerchio.className = 'base-cerchio';
         cerchio.style.backgroundImage = `url(${miniatura(b.id)})`;
         const et = document.createElement('span');
         et.className = 'base-et';
-        et.textContent = b.etichetta;
+        et.textContent = tl(b.etichetta);
         r.addEventListener('change', () => {
           if (!r.checked) return;
           scegli(map, b.id);

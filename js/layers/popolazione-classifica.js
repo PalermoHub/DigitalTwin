@@ -1,13 +1,14 @@
 // Classifica dei residenti per circoscrizione, quartiere e UPL (italiani/stranieri, tendenza 2021→2023),
 // la stessa di palermo_popolazione. I totali sono precalcolati in dati/popolazione/classifica.json
 // (scripts/compatta_dati.py classifica): [nome, residenti, stranieri] per livello e anno.
+import { t as tr, tl, localeIntl } from '../core/i18n.js';
 export const LIVELLI = {
-  circoscrizioni: { campo: 'circoscrizione', bottone: 'Circoscrizione', titolo: 'circoscrizione', prefisso: 'Circ. ', tip: 'Circoscrizione ' },
-  quartieri: { campo: 'quartiere', bottone: 'Quartieri', titolo: 'quartiere', prefisso: '', tip: 'Quartiere ' },
-  upl: { campo: 'upl', bottone: 'UPL', titolo: 'UPL', prefisso: '', tip: 'UPL ' },
+  circoscrizioni: { campo: 'circoscrizione', bottone: tl('Circoscrizione'), titolo: tl('circoscrizione'), prefisso: tl('Circ. '), tip: tl('Circoscrizione ') },
+  quartieri: { campo: 'quartiere', bottone: tl('Quartieri'), titolo: tl('quartiere'), prefisso: '', tip: tl('Quartiere ') },
+  upl: { campo: 'upl', bottone: tl('UPL'), titolo: tl('UPL'), prefisso: '', tip: tl('UPL ') },
 };
 
-const fmt = v => Math.round(v).toLocaleString('it-IT');
+const fmt = v => Math.round(v).toLocaleString(localeIntl());
 let livello = 'circoscrizioni'; // sopravvive alla riapertura della scheda
 let promessa = null;
 
@@ -22,7 +23,7 @@ function carica() {
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -31,7 +32,7 @@ export function tendenza(prima, dopo) {
   if (dopo == null || !prima) return null;
   const pct = ((dopo - prima) / prima) * 100;
   const verso = Math.abs(pct) < 0.5 ? 'flat' : pct > 0 ? 'up' : 'down';
-  const testo = `${verso === 'up' ? '▲' : verso === 'down' ? '▼' : '≈'} ${pct > 0 ? '+' : ''}${pct.toLocaleString('it-IT', { maximumFractionDigits: 1 })}%`;
+  const testo = `${verso === 'up' ? '▲' : verso === 'down' ? '▼' : '≈'} ${pct > 0 ? '+' : ''}${pct.toLocaleString(localeIntl(), { maximumFractionDigits: 1 })}%`;
   return { pct, verso, testo, titolo: `2021: ${fmt(prima)} → 2023: ${fmt(dopo)}` };
 }
 
@@ -68,14 +69,14 @@ export function costruisciClassifica(dati, luogo = {}) {
     const str = righe.reduce((a, r) => a + r[2], 0);
     const tot23 = dati['2023'] ? [...del23.values()].reduce((a, t) => a + t, 0) : null;
 
-    radice.firstChild.textContent = `Popolazione residente per ${cfg.titolo}`;
+    radice.firstChild.textContent = tr('popolazione.residentePer', { livello: cfg.titolo });
     for (const [l, b] of Object.entries(btn)) b.setAttribute('aria-pressed', String(l === livello));
     lista.classList.toggle('lunga', livello !== 'circoscrizioni');
 
     lista.replaceChildren(...righe.map(([nome, t, st], i) => {
       const pct = t ? (st / t) * 100 : 0;
       const r = el('div', 'pop-riga' + (nome === corrente ? ' corrente' : ''));
-      r.title = `${cfg.tip}${nome}\nTotale: ${fmt(t)}\nItaliani: ${fmt(t - st)}\nStranieri: ${fmt(st)} (${pct.toFixed(1)}%)`;
+      r.title = tr('popolazione.tooltip', { tip: cfg.tip, nome, totale: fmt(t), italiani: fmt(t - st), stranieri: fmt(st), pct: pct.toFixed(1) });
       const barra = el('span', 'pop-barra');
       const it = el('span', 'pop-it'); it.style.width = `${((t - st) / max) * 100}%`;
       const s = el('span', 'pop-st'); s.style.width = `${(st / max) * 100}%`;

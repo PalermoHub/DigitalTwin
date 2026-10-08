@@ -3,6 +3,7 @@ import { registraTooltipStrati } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { modelloPopup, vociIncendi } from './scheda-incendi.js';
+import { tl } from '../core/i18n.js';
 
 // Incendi nel Comune di Palermo dal Censimento Incendi della Regione Siciliana (un layer per anno sul server, un solo PMTiles qui, zoom 12–18).
 // Colori e trasparenza di ogni anno sono quelli della simbologia del server e viaggiano dentro ogni feature (`colore`, `bordo`, `opacita`):
@@ -22,7 +23,7 @@ let accesi = null; // anni accesi in legenda (null = tutti)
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 

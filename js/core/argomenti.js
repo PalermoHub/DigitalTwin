@@ -1,5 +1,6 @@
 // Argomenti trattati: un elemento per modulo con strati, per la tab «Argomenti» del foglio Info.
 // Argomenti e strati sono sempre in ordine alfabetico: i moduli nuovi trovano il loro posto da soli.
+import { t as tr } from './i18n.js';
 const alfabetico = (a, b) => a.localeCompare(b, 'it', { sensitivity: 'base' });
 
 export function elencoArgomenti(moduli) {
@@ -20,10 +21,10 @@ export function elencoArgomenti(moduli) {
 export function schedaArgomenti(moduli, doc = document, chiudi = () => {}) {
   const radice = doc.createElement('div');
   const h = doc.createElement('h2');
-  h.textContent = 'Argomenti';
+  h.textContent = tr('argomenti.titolo');
   const intro = doc.createElement('p');
   intro.className = 'pagina-intro';
-  intro.textContent = 'Di cosa parla il Digital Twin, argomento per argomento.';
+  intro.textContent = tr('argomenti.intro');
   radice.append(h, intro);
   const griglia = doc.createElement('div');
   griglia.className = 'argomenti-griglia';
@@ -49,7 +50,7 @@ export function schedaArgomenti(moduli, doc = document, chiudi = () => {}) {
     const mostra = doc.createElement('button');
     mostra.type = 'button';
     mostra.className = 'argomento-mostra';
-    mostra.textContent = 'Mostra in mappa';
+    mostra.textContent = tr('argomenti.mostra');
     mostra.dataset.argomento = a.id;
     const caselle = () => a.strati.map(s => doc.getElementById(`strato-${s.id}`)).filter(c => c && !c.disabled);
     mostra.addEventListener('click', () => {

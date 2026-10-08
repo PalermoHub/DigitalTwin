@@ -2,6 +2,7 @@ import { urlDati } from '../core/config.js';
 import { registraTooltipStrati } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { voceFontanella, modelloPopupFontanella } from './scheda-fontanelle.js';
+import { tl, t } from '../core/i18n.js';
 
 const COLORE = '#1c7ed6';
 const SRC = 'fontanelle';
@@ -15,7 +16,7 @@ let legenda = null;
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -24,7 +25,7 @@ function contenutoPopup(p) {
   const radice = el('div', 'monumento-popup');
   radice.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.sottotitolo));
   for (const r of m.righe) radice.append(el('p', 'monumento-desc', `${r.etichetta}: ${r.valore}`));
-  radice.append(el('p', 'monumento-fonte', `Fonte: ${m.fonte}`));
+  radice.append(el('p', 'monumento-fonte', t('layer.fonte', { fonte: tl(m.fonte) })));
   return radice;
 }
 

@@ -4,6 +4,7 @@ import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { modelloPopupSede, voceUffici } from './scheda-uffici.js';
 import { fette, raggio, archi, areeDaSedi } from './uffici-fette.js';
+import { tl } from '../core/i18n.js';
 
 // Sedi degli uffici comunali (dati/uffici/sedi.geojson), tematizzate per area. Ogni sede è un'icona disegnata su canvas:
 // cerchio pieno se ospita una sola area, anello a fette colorate (una per area) se ne ospita più d'una; al centro il numero degli uffici.
@@ -28,7 +29,7 @@ const caselle = new Map(); // area -> { pannello, legenda }
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 

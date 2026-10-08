@@ -19,6 +19,7 @@ import { collegaRipristino } from './core/ripristino.js';
 import { preparaCondivisione, collegaCondivisione } from './core/condivisione.js';
 import { creaDifferiti } from './core/differiti.js';
 import { collegaTabMobile } from './core/tab-mobile.js';
+import { traduciModuli } from './core/traduci-moduli.js';
 import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
 import territorio from './layers/territorio.js';
@@ -56,6 +57,7 @@ riduciLegenda.addEventListener('click', () => {
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
 const MODULI = [base, terreno, popolazione, territorio, edifici, pai, monumenti, alberi, fontanelle, trasporto, sicurezza, colonnine, uffici, scuole, incendi, isoleCalore, confini];
+traduciModuli(MODULI); // in inglese: titoli, etichette e descrizioni dei layer dai dizionari (lbl.*)
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
 const condivisionePromessa = preparaCondivisione(window); // un link condiviso porta le preferenze del mittente: va letto prima dei pannelli

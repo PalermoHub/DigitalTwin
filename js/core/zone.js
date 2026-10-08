@@ -1,5 +1,6 @@
 import { GERARCHIA } from './gerarchia.js';
 import { normalizza } from './indirizzi.js';
+import { t } from './i18n.js';
 
 export const MASCHERA = 'filtro-maschera';
 
@@ -25,7 +26,7 @@ export function collegaZone(map, { selezioni, chips }) {
     const s = selezioni[livello];
     const genitore = livello === 'upl' ? (sel.quart || sel.circ) : livello === 'quart' ? sel.circ : '';
     const chiavi = figliDi(livello, genitore);
-    s.replaceChildren(new Option('— Tutte —', ''));
+    s.replaceChildren(new Option(t('filtro.tutte'), ''));
     for (const k of chiavi) s.add(new Option(nomeBreve(livello, k), k));
     s.value = sel[livello];
   }

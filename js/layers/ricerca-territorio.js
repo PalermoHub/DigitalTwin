@@ -1,9 +1,10 @@
 import { urlDati, CENTRO } from '../core/config.js';
 import { normalizza } from '../core/indirizzi.js';
+import { t as tr } from '../core/i18n.js';
 
 // Ricerca di incendi e vincoli PAI nella barra. I due dati sono PMTiles senza elenco: la ricerca usa i manifest
 // (incedi/anni.json, pai/pai.json) per anni, temi e classi, e i tile già caricati per località degli incendi.
-const PAROLE_INCENDIO = new Set(['INCENDIO', 'INCENDI', 'FUOCO', 'ROGO', 'ROGHI']);
+const PAROLE_INCENDIO = new Set(['INCENDIO', 'INCENDI', 'FUOCO', 'ROGO', 'ROGHI']); // i18n-ok: vocabolario di ricerca (parole digitate)
 const MAX = 4;
 // parole d'uso comune → termine dei titoli PAI (normalizzato, maiuscolo)
 const SINONIMI_PAI = { FRANA: 'GEOMORFOLOG', FRANE: 'GEOMORFOLOG', DISSESTO: 'DISSEST', ALLUVIONE: 'IDRAULIC', ALLUVIONI: 'IDRAULIC',
@@ -52,7 +53,7 @@ export function collegaRicercaTerritorio(map, altra = null) {
       const vai = (an) => () => { accendi('incendi'); filtraAnno(an); map.flyTo({ center: CENTRO, zoom: 12 }); };
       if (anno) return lista.filter(a => String(a.anno) === anno).map(a => ({ etichetta: `Incendi ${a.anno}`, nota: `${a.n} aree percorse dal fuoco`, vai: vai(a.anno), prefisso: true }));
       const tot = lista.reduce((s, a) => s + a.n, 0);
-      return [{ etichetta: 'Incendi — tutti gli anni', nota: `${tot} aree percorse dal fuoco dal ${lista[lista.length - 1].anno}`, vai: vai(null), prefisso: true },
+      return [{ etichetta: tr('ricerca.incendiTutti'), nota: tr('ricerca.incendiNota', { n: tot, anno: lista[lista.length - 1].anno }), vai: vai(null), prefisso: true },
         ...lista.slice(0, 3).map(a => ({ etichetta: `Incendi ${a.anno}`, nota: `${a.n} aree percorse dal fuoco`, vai: vai(a.anno), prefisso: true }))];
     }
     // per località o luogo di inizio, tra i tile già caricati (area visibile, zoom 12 o più)

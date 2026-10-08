@@ -2,6 +2,7 @@ import { metri } from './trasporto-vicino.js';
 import {
   giornoIniziale, oggiISO, minutoAdesso, partenzeFermata, prossime, riepilogoLinea, formatoOra, colorePerTesto,
 } from './trasporto-orari.js';
+import { t, tl } from '../core/i18n.js';
 
 // DOM della scheda del trasporto pubblico: selettore del giorno e orari. Gli orari si scaricano alla prima apertura
 // (`ctx.orari()` è una promessa condivisa); finché non arrivano si vede «in caricamento», se falliscono lo si dice.
@@ -11,7 +12,7 @@ const dataIt = iso => iso.split('-').reverse().join('/');
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -41,24 +42,24 @@ function conGiorno(ctx, disegna) {
     scelta.value = data;
     scelta.min = orari.validita.da;
     scelta.max = orari.validita.a;
-    scelta.setAttribute('aria-label', 'Giorno');
+    scelta.setAttribute('aria-label', t('trasporto.giorno'));
     const giorno = el('label', 'trasporto-giorno', 'Giorno ');
     giorno.append(scelta);
     const corpo = el('div');
     const ridisegna = () => { if (scelta.value) corpo.replaceChildren(...disegna(orari, scelta.value)); };
     scelta.addEventListener('change', ridisegna);
     const avviso = fuori
-      ? [el('p', 'scheda-nota', `Gli orari valgono dal ${dataIt(orari.validita.da)} al ${dataIt(orari.validita.a)}: mostro il primo giorno valido.`)]
+      ? [el('p', 'scheda-nota', t('trasporto.orariValgono', { da: dataIt(orari.validita.da), a: dataIt(orari.validita.a) }))]
       : [];
     radice.replaceChildren(...avviso, giorno, corpo);
     ridisegna();
-  }).catch(err => radice.replaceChildren(el('p', 'scheda-nota', `Orari non disponibili: ${err.message}`)));
+  }).catch(err => radice.replaceChildren(el('p', 'scheda-nota', t('trasporto.orariNd', { msg: err.message }))));
   return radice;
 }
 
 function tuttiGliOrari(ctx, partenze) {
   const radice = el('details', 'scheda-acc');
-  radice.append(el('summary', null, `Tutti gli orari del giorno (${partenze.length})`));
+  radice.append(el('summary', null, t('trasporto.tuttiOrari', { n: partenze.length })));
   const gruppi = new Map();
   for (const p of partenze) {
     const k = `${p.route}|${p.dir}`;
@@ -116,7 +117,7 @@ export function orariLinea(linea, ctx) {
         riga('Primo passaggio al capolinea', formatoOra(r.primo)),
         riga('Ultimo passaggio al capolinea', formatoOra(r.ultimo)),
       );
-      if (r.frequenza) blocco.append(riga('Frequenza media', `ogni ${r.frequenza} min`));
+      if (r.frequenza) blocco.append(riga('Frequenza media', t('trasporto.ogni', { n: r.frequenza })));
       return [blocco];
     }), fermateInSequenza(linea, ctx));
     return radice;
@@ -153,7 +154,7 @@ export function elencoFermateVicine(fermate, vai, vaiALinea) {
     const voce = el('div', 'trasporto-vicina');
     const nome = el('button', 'trasporto-vicina-nome', f.nome);
     nome.type = 'button';
-    nome.title = 'Mostra la fermata sulla mappa';
+    nome.title = t('trasporto.mostraFermata');
     nome.addEventListener('click', () => vai(f));
     const testa = el('div', 'scheda-riga');
     testa.append(nome, el('span', 'scheda-val', metri(f.distanza)));
@@ -161,7 +162,7 @@ export function elencoFermateVicine(fermate, vai, vaiALinea) {
     for (const l of f.linee) {
       const b = el('button', 'trasporto-chip-bottone');
       b.type = 'button';
-      b.title = `Mostra il percorso della linea ${l.numero}`;
+      b.title = t('trasporto.mostraPercorso', { numero: l.numero });
       b.addEventListener('click', () => vaiALinea(l.numero));
       b.append(chip({ numero: l.numero, colore: l.colore }));
       righe.append(b);

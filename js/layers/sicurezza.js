@@ -4,6 +4,7 @@ import { voceArco, voceHotspot, voceIncidente, tooltipArco, GRAVITA } from './sc
 import { ZOOM_BASE } from './sicurezza-filtro.js';
 import { registraTooltip } from '../core/tooltip.js';
 import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
+import { t as tr, tl } from '../core/i18n.js';
 
 // Sicurezza stradale (studio «Rete stradale», fase 2): tasso di incidenti per km sugli archi, hotspot Gi* a griglia da 250 m
 // e incidenti puntuali 2015–2023 (il 2019 non è nel dataset pulito). Strati spenti di default; i layer «hit» sono sempre
@@ -24,7 +25,7 @@ export const STRATI_INCIDENTI = [L.incidenti, L.hitIncidenti];
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 
@@ -52,7 +53,7 @@ function creaLegenda(_gruppo, map) {
     }));
   };
   sezione(L.archi, 'Incidenti per km (tratti ≥ 20 m)', gruppoFiltri(
-    COLORI_TASSO.map((c, i) => [i, tratto(c), `Tasso ${ETICHETTE_TASSO[i]}`]),
+    COLORI_TASSO.map((c, i) => [i, tratto(c), tr('sicurezza.tasso', { livello: tl(ETICHETTE_TASSO[i]) })]),
     (accesi, n) => {
       const sel = filtroInsieme(['get', 'classe'], accesi, n);
       map.setFilter(L.archi, sel ? ['all', ['has', 'classe'], sel] : ['has', 'classe']);

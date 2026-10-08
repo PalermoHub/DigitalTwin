@@ -3,6 +3,7 @@ import { registraTooltipStrati } from '../core/tooltip.js';
 import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
 import { voceScuola, voceSeggio, voceIndirizzo, modelloPopupScuola } from './scheda-scuole.js';
 import { voceUsoEdificio } from './scheda-uso.js';
+import { tl } from '../core/i18n.js';
 
 // Due strati con la stessa struttura: punto della sede + poligono dell'edificio abbinato in dati/scuole/.
 // I colori sono propri del viewer (palette.js è una copia vincolata e non si tocca).
@@ -27,7 +28,7 @@ let legenda = null;
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
-  if (testo != null) e.textContent = testo;
+  if (testo != null) e.textContent = tl(testo);
   return e;
 }
 

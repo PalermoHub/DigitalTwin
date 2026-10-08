@@ -1,5 +1,6 @@
 // Stato dal vivo delle colonnine: il file in dati/colonnine/ è il ripiego (aggiornato ogni ora da un workflow), lo snapshot della
 // serie storica di PalermoHub/evcharginglogsicilia (raw.githubusercontent.com, CORS aperto) lo aggiorna all'apertura della mappa.
+import { localeIntl } from '../core/i18n.js';
 export const SNAPSHOT_URL = 'https://raw.githubusercontent.com/PalermoHub/evcharginglogsicilia/main/docs/evcharging_snapshot.json';
 
 // Stesse tre classi di scripts/colonnine.py.
@@ -27,7 +28,7 @@ export function applicaSnapshot(dettagli, snapshot) {
 export function descriviAggiornamento(iso) {
   const d = new Date(iso);
   if (!iso || Number.isNaN(d.getTime())) return '';
-  return d.toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleString(localeIntl(), { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
 export async function scaricaSnapshot(fetcher = fetch) {
