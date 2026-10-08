@@ -276,6 +276,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
         strumenti.imposta(strumenti.modo() === modo ? null : modo);
         disegnaBarra(s);
       });
+      b.dataset.modo = modo; // il CSS su telefono nasconde riquadro e poligono
       b.dataset.focus = `strumento:${modo}`;
       b.setAttribute('aria-pressed', String(strumenti.modo() === modo));
       gruppo.append(b);

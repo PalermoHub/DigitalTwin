@@ -1582,6 +1582,7 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
   body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) #tabella-dati { display: none; }
   body.strati-aperti, body.info-aperto, body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) { --tabella-h: 0px !important; }
   .tabella-strumento { padding: 8px 12px; }
+  .tabella-strumento[data-modo="riquadro"], .tabella-strumento[data-modo="poligono"] { display: none; } /* senza tocco: solo clic e area */
 }
 .tabella-titolo { font-weight: 600; }
 .tabella-chiudi { min-width: 32px; min-height: 32px; padding: 0 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; font-size: 18px; line-height: 1; cursor: pointer; }
