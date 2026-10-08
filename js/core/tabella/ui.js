@@ -3,7 +3,7 @@
 import { t, tn, tl } from '../i18n.js';
 import { scarica as scaricaFile } from '../../geoimage/scarica.js';
 import { SORGENTI, LIMITE_RIGHE, MAX_DOM } from './sorgenti.js';
-import { unisciColonne, applicaPreferenze, ordina, filtra, cella } from './modello.js';
+import { unisciColonne, preferenzeIniziali, applicaPreferenze, ordina, filtra, cella } from './modello.js';
 import { nuovoStato, commutaRiga, tutte, nessuna, inverti, statoTutte, righeDaEsportare, commutaColonna, spostaColonna, colonneDaEsportare } from './selezione.js';
 import { csv, geojson, nomeFile } from './esporta.js';
 import { attiva, leggiVista, righeIn, evidenziaRighe, cancellaEvidenza, vaiA } from './mappa.js';
@@ -134,7 +134,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
       s.righe = s.troppe ? righe.slice(0, LIMITE_RIGHE) : righe;
       const prima = !s.colonne.length;
       s.colonne = unisciColonne(s.colonne, s.righe);
-      if (prima) s.colonne = applicaPreferenze(s.colonne, lette(s.sorgente.id));
+      if (prima) s.colonne = applicaPreferenze(s.colonne, lette(s.sorgente.id) ?? preferenzeIniziali(s.colonne, s.sorgente.colonne));
     }
     // la scheda corrente resta se ha righe, altrimenti si passa alla prima che ne ha, o alla prima accesa
     if (!stato.get(corrente).righe.length) {

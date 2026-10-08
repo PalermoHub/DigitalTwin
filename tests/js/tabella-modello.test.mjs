@@ -89,3 +89,11 @@ test('filtra: cerca in tutte le proprietà senza badare alle maiuscole', () => {
   assert.equal(filtra(righe, '').length, 2);
   assert.equal(filtra(righe, 'zzz').length, 0);
 });
+
+test('preferenzeIniziali: i campi elencati in testa e visibili, gli altri nascosti e fuori dall’export', async () => {
+  const { preferenzeIniziali, applicaPreferenze } = await import('../../js/core/tabella/modello.js');
+  const colonne = ['a', 'b', 'c', 'd'].map(campo => ({ campo, visibile: true, esporta: true }));
+  assert.equal(preferenzeIniziali(colonne, undefined), null);
+  const r = applicaPreferenze(colonne, preferenzeIniziali(colonne, ['c', 'x', 'a']));
+  assert.deepEqual(r.map(c => [c.campo, c.visibile, c.esporta]), [['c', true, true], ['a', true, true], ['b', false, false], ['d', false, false]]);
+});

@@ -67,6 +67,15 @@ export function applicaPreferenze(colonne, pref) {
   return [...scelte, ...colonne.filter(c => !usati.has(c.campo))];
 }
 
+// Colonne di partenza di una sorgente con `colonne`: quelle elencate in testa e visibili, tutte le altre nascoste.
+export function preferenzeIniziali(colonne, campi) {
+  if (!Array.isArray(campi)) return null;
+  const note = new Set(colonne.map(c => c.campo));
+  const scelte = campi.filter(c => note.has(c));
+  const altre = colonne.map(c => c.campo).filter(c => !scelte.includes(c));
+  return [...scelte.map(campo => ({ campo, visibile: true, esporta: true })), ...altre.map(campo => ({ campo, visibile: false, esporta: false }))];
+}
+
 const numerico = v => v !== '' && v != null && Number.isFinite(Number(v));
 
 export function ordina(righe, campo, verso) {

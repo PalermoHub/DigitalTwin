@@ -70,6 +70,10 @@ export default {
     }
     // fill invisibile per il tooltip (come nell'app palermo_popolazione)
     map.addLayer({ id: 'confini-upl-fill', type: 'fill', source: 'confini', 'source-layer': 'upl', paint: { 'fill-opacity': 0 } });
+    // altri due fill invisibili: la tabella dati legge da qui circoscrizioni e quartieri anche con il tratto spento
+    for (const livello of ['circoscrizioni', 'quartieri']) {
+      map.addLayer({ id: `confini-${livello}-hit`, type: 'fill', source: 'confini', 'source-layer': livello, paint: { 'fill-opacity': 0 } });
+    }
     collegaTooltip(map);
     // distretti idrici AMAP: linea rossa appena più spessa di quella delle UPL (1,2)
     map.addLayer({
@@ -78,6 +82,9 @@ export default {
     });
     // fill invisibile e sempre presente: la scheda del luogo legge il distretto anche a strato spento
     map.addLayer({ id: 'amap-distretti-hit', type: 'fill', source: SRC_AMAP, paint: { 'fill-opacity': 0 } });
+    map.addLayer({
+      id: 'confini-sezioni-hit', type: 'fill', source: SRC_SEZIONI, 'source-layer': 'sezioni', minzoom: 13, paint: { 'fill-opacity': 0 },
+    });
     map.addLayer({
       id: 'confini-sezioni', type: 'line', source: SRC_SEZIONI, 'source-layer': 'sezioni', minzoom: 13,
       layout: { visibility: 'none' },

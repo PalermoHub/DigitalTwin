@@ -49,3 +49,14 @@ test('tutte le chiavi tabella.* hanno italiano e inglese', () => {
   assert.ok(chiavi.length > 30, 'dizionari non aggiornati');
   for (const k of chiavi) assert.ok(k in en, `manca in en.json: ${k}`);
 });
+
+test('confini: cinque sorgenti con chiave stabile e colonne di partenza', () => {
+  for (const id of ['circoscrizioni', 'quartieri', 'upl', 'amap-distretti', 'sezioni']) assert.ok(sorgentePer(id)?.colonne?.length, id);
+  assert.equal(sorgentePer('circoscrizioni').chiave({ Circoscrizione: 'I' }), 'I');
+  assert.equal(sorgentePer('quartieri').chiave({ Circoscrizione: 'I', Quartiere: 'Tribunali' }), 'I/Tribunali');
+  assert.equal(sorgentePer('quartieri').chiave({}), null);
+  assert.equal(sorgentePer('upl').chiave({ Quartiere: 'Q', UPL: 'U' }), 'Q/U');
+  assert.equal(sorgentePer('amap-distretti').chiave({ DISTRETTO: 'ZEN' }), 'ZEN');
+  assert.equal(sorgentePer('sezioni').chiave({ SEZ21_ID: 820530000004 }), 820530000004);
+  assert.equal(sorgentePer('amap-distretti').approssimata, false);
+});
