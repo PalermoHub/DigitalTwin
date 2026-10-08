@@ -10,7 +10,12 @@ export function csv(righe, colonne, { fonte = null } = {}) {
   return BOM + [testa, ...corpo].map(r => r.join(',')).join('\r\n') + '\r\n';
 }
 
-const valore = v => (v == null || ['string', 'number', 'boolean'].includes(typeof v) ? v : cella(v));
+// Come nel CSV: numeri e booleani restano, null resta null, il resto diventa testo (anche le stringhe JSON di array).
+const valore = v => {
+  if (v == null) return null;
+  if (typeof v === 'number' || typeof v === 'boolean') return v;
+  return cella(v);
+};
 
 export function geojson(righe, colonne, { layer, fonte, approssimata, data }) {
   return JSON.stringify({

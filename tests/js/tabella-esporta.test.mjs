@@ -47,3 +47,10 @@ test('geojson: riga senza geometria → geometry null; più pezzi → multipolig
 test('nomeFile: layer, data e estensione', () => {
   assert.equal(nomeFile('scuole', 'csv', new Date(2026, 9, 8)), 'scuole-2026-10-08.csv');
 });
+
+test('geojson: stringhe JSON di array diventano testo leggibile; numeri e booleani restano; null resta null', () => {
+  const t = JSON.parse(geojson([riga({ linee: '["104","N1"]', n: 5, v: null })], cols(['linee', 'n', 'v']), { layer: 'l', fonte: 'F', approssimata: false, data: 'd' }));
+  assert.equal(t.features[0].properties.linee, '104; N1');
+  assert.equal(t.features[0].properties.n, 5);
+  assert.equal(t.features[0].properties.v, null);
+});
