@@ -141,3 +141,8 @@ a { color: inherit; }
 .piede a { color: var(--testo); font-weight: 600; text-underline-offset: 3px; }
 .piede p { margin: 0; max-width: 70ch; }
 @media (min-width: 900px) { .piede .contenitore { grid-template-columns: 1fr auto; align-items: start; } .piede .contenitore > :last-child { grid-column: 1 / -1; } }
+
+/* interruttore di lingua IT/EN nella testata (creato da js/i18n-pagina.js) */
+#switch-lingua { display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 10px; border: 1px solid var(--bordo); border-radius: 999px; background: transparent; color: var(--testo); font: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer; }
+#switch-lingua:hover { background: color-mix(in srgb, var(--testo) 8%, transparent); }
+#switch-lingua:focus-visible { outline: 2px solid var(--accento); outline-offset: 2px; }

@@ -35,7 +35,7 @@ export function attributiNonMarcati(html) {
   return trovati;
 }
 
-for (const pagina of ['index.html']) {
+for (const pagina of ['index.html', 'presentazione.html']) {
   const html = () => readFileSync(new URL(pagina, radice), 'utf8');
   test(`${pagina}: ogni chiave data-i18n esiste in it.json e en.json`, () => {
     for (const k of chiaviUsate(html())) {

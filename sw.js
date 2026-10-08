@@ -5,13 +5,13 @@
 //  - file statici dell'app (js, css, immagini, caratteri): copia salvata subito e aggiornamento in secondo piano;
 //  - tutto il resto (altri siti, tile con richieste a intervalli di byte, POST): non si tocca.
 // Per rilasciare una versione nuova basta cambiare VERSIONE: le cache vecchie si cancellano all'attivazione.
-const VERSIONE = 'dt-v5';
+const VERSIONE = 'dt-v6';
 const STATICA = `${VERSIONE}-statica`;
 const DATI = `${VERSIONE}-dati`;
 
 const PRECACHE = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css', 'css/vendor/maplibre-gl.css',
-  'js/vendor/maplibre-gl.js', 'js/vendor/pmtiles.js', 'js/app.js', 'js/avvio.js', 'js/core/i18n.js', 'js/locales/it.json', 'js/locales/en.json',
+  'js/vendor/maplibre-gl.js', 'js/vendor/pmtiles.js', 'js/app.js', 'js/avvio.js', 'js/i18n-pagina.js', 'js/core/i18n.js', 'js/locales/it.json', 'js/locales/en.json',
   'img/logo-palermo-digital-twin.svg', 'img/logo-palermo-digital-twin-scuro.svg', 'img/favicon.png', 'img/icona-192.png',
 ];
 
