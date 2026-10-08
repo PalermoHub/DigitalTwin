@@ -1493,3 +1493,17 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
 @media (min-width: 721px) { .maplibregl-ctrl-bottom-right .maplibregl-ctrl-scale { margin-right: 68px; } }
 #bussola-ago { transition: transform .1s linear; }
 #barra-strumenti button[hidden] { display: none; }
+
+/* Street View: finestra flottante, spostabile e ridimensionabile */
+dialog.streetview-finestra { position: fixed; margin: 0; inset: auto; z-index: 1000; width: min(640px, 94vw); height: min(480px, 70vh); min-width: 280px; min-height: 220px; resize: both; padding: 0; box-shadow: 0 8px 30px rgb(0 0 0 / .35); border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); overflow: hidden; }
+dialog.streetview-finestra[open] { display: flex; flex-direction: column; }
+dialog.streetview-finestra.trascinata iframe { pointer-events: none; }
+.streetview-barra { cursor: move; touch-action: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+.streetview-barra a { color: var(--accent-strong); font-weight: 600; text-decoration: none; }
+.streetview-barra button { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); cursor: pointer; }
+.streetview-finestra iframe { flex: 1; width: 100%; border: 0; }
+@media (max-width: 720px) {
+  dialog.streetview-finestra { width: 94vw; height: 55dvh; }
+  .streetview-barra button { width: 44px; height: 44px; font-size: 1.1rem; }
+  .streetview-barra a { padding: 10px 0; }
+}
