@@ -1574,3 +1574,8 @@ body:has(#tabella-dati:not([hidden])) #legende-box { bottom: calc(var(--legende-
   #tabella-dati { left: 0; right: 0; bottom: calc(var(--tab-h) + var(--footer-h)); max-height: 60vh; }
   .tabella-strumento { padding: 8px 12px; }
 }
+.tabella-testata { justify-content: space-between; padding: 0 8px 4px; }
+.tabella-titolo { font-weight: 600; }
+.tabella-chiudi { min-width: 32px; min-height: 32px; padding: 0 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; font-size: 18px; line-height: 1; cursor: pointer; }
+.tabella-chiudi:hover { background: var(--surface-hover); }
+.tabella-chiudi:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
