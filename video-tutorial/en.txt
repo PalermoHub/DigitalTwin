@@ -1,0 +1,217 @@
+Hello, and welcome to the Palermo Digital Twin.
+A map with the city's open data:
+land registry, zoning plan, monuments, transport and much more, all in one place.
+In this video we look at four things.
+First:
+how to use the map, from searching for a place to the card with all its data.
+Second:
+the plugin that brings the national data catalogue onto the map.
+Third:
+Geoimage, to overlay historical maps on today's Palermo.
+Fourth:
+where to find everything, and how to help.
+Everything starts from the Guide, in the top menu.
+It has 19 steps:
+we actually do them, one at a time, on the map.
+This is the initial view:
+the centre of Palermo.
+At the top, the logo and the menu with the guides.
+On the left, the layers bar.
+At the bottom, the search.
+And in the footer, a notice I'll mention up front:
+land registry, zoning plan and constraints are informational data, with no legal value.
+On the phone the controls change.
+At the bottom there are four tabs:
+Map, Layers, Add and Menu.
+Layers opens base maps, layers and filters.
+Add brings together your layers, the national catalogue and Geoimage.
+Menu opens the guides.
+To learn about a place, tap the map and the card slides up from the bottom.
+The data comes from public bodies and open data projects:
+the Municipality of Palermo, the public transport company,
+the land registry, the zoning plan, the census and OpenStreetMap.
+The list is in Sources and notices:
+for each source you'll find the date, the link to the original data and the licence.
+At the top are the notices:
+land registry, zoning plan and constraints have no legal value.
+Layers are the themes that overlay the map.
+Open the Layers tab:
+the groups are in alphabetical order.
+Open Territory and switch on the land registry with the checkbox.
+It appears at the top as a label, and the legend at the bottom explains its colours.
+You can switch on more than one and compare them:
+for example buildings and land registry.
+With several layers on, the orange Layer order on map card lists them all.
+At the top means above, on the map.
+You move them with the arrows or by dragging, and the order is remembered.
+The Base map tab changes the map beneath the layers:
+streets, aerial, topographic.
+At the bottom are the historical maps:
+15 maps of Palermo, from 1580 to 1993.
+The coloured dot tells you how well the map overlaps with today's city.
+Here, Palermo in 1891.
+In the My layers tab you add your own data:
+a file from your computer, a web address, or a map service.
+It works like the QGIS Browser.
+Services stay saved in your browser.
+The palette button opens the colour panel.
+With Colour by attribute you choose a data field and the map is coloured accordingly.
+Here, buildings by population density.
+The colour ramp is chosen from a list with a preview,
+including Fabio Crameri's scientific scales, readable even with colour blindness.
+To learn about a place, just click on the map.
+The point is highlighted and the place card opens.
+Highlighted areas have a legend with a colour for each entry:
+a click on an entry leaves only that one on the map.
+Hovering with the mouse shows a tooltip with the layer name.
+And this is the strength of the map:
+a single click queries land registry, zoning constraints,
+road safety, cultural heritage and public transport together.
+The card lists everything that overlaps at that point.
+The card is divided into sections, which you choose from the tabs at the top.
+Place summarises address, neighbourhood, monuments, accident risk and nearby stops.
+Planning tools starts from the building, then shows the parcel,
+with sheet and number, and the link to the cadastral extract.
+Every section states its source.
+The Monuments layer shows churches, palaces, fountains and theatres.
+A click on the Teatro Massimo opens its card:
+photo, description, category,
+and the link to the Palermo Municipality Tourism Portal, where the texts come from.
+The Municipal offices layer shows where the Municipality's offices are, grouped by location.
+The card for Palazzo Palagonia lists areas and offices,
+with managers and contacts, when published.
+The PAI Plan group reports the Hydrogeological Plan of the Sicilian Region:
+hydraulic and geomorphological hazard and risk.
+A click on an area opens the card, with the PAI constraints box and the most severe class.
+This is informational data:
+for legal use, the official cartography prevails.
+The Fires layer shows the areas burned since 2007, year by year:
+the colour indicates the year.
+The card reports date, location and burned areas.
+Heat islands show the surface temperature in summer,
+derived from Landsat satellites, for each census section.
+In the legend you choose the classification method and the number of classes,
+and see the trend from 2019 to 2025.
+Note:
+it is the surface temperature, not the air temperature.
+To search, type in the field at the bottom a street,
+a house number, a neighbourhood or a parcel.
+The Filters tab limits the search to a district, a neighbourhood or a zone,
+or lets you find a parcel by sheet and number.
+For example:
+choose a district and type Maqueda.
+A click on the result takes the map to the spot.
+The tools at the top right.
+The house returns to the initial view.
+The 3D button tilts the map.
+Then full screen and the moon, for the dark theme.
+The printer prepares a sheet with the map, legends and sources:
+choose format, from A4 to A0, orientation and scale.
+One last warning, an important one.
+Land registry, zoning and constraints are for information only:
+they do not replace the urban planning certificate or the official cadastral extracts.
+Census data are estimates.
+For legal use, always contact the competent offices.
+Let's move on to the national catalogue.
+First, a couple of sentences on what it is.
+The RNDT, the National Register of Spatial Data,
+is the official Italian catalogue of geographic data:
+it collects the records of thousands of maps published by municipalities,
+regions, ministries and other bodies.
+It's like a library:
+it tells you what exists, who produced it and where to consult it.
+Inside this map, the catalogue is the openrndt-geolibre plugin,
+conceived and written by Andrea Borruso of onData.
+Without his work this feature would not exist:
+it was adapted to Palermo with very few changes,
+thanks to its excellent architecture.
+You find it in the toolbar at the top right:
+it's the icon with the two layers.
+The panel opens on the right side,
+and the Card and RNDT tabs let you switch between them.
+With Esc you close it.
+The plugin interface is in English:
+it's only a few words, don't be put off.
+Type what you're looking for, for example protected areas, and press Search.
+The search is always limited to the Palermo area.
+You can filter by type, data or services, and by format:
+WMS, WFS or ArcGIS REST.
+In the advanced filters there are theme, body and dates.
+Choose a result:
+the card opens, with title, description, responsible body and available services.
+Press Open on the service and tick the layer you're interested in:
+here, the Regional reserves.
+WMS services are added as images.
+With Add features, and with WFS services,
+you bring onto the map the actual features, with their information.
+Here are the reserves on the map.
+You find them among the added layers and in the RNDT group of the layers bar:
+with the eye you switch them on and off, with the bin you remove them.
+They remember themselves:
+reopen the map and they are still there.
+A click on the map also queries these layers.
+The answers arrive in the Other RNDT data tab of the card,
+with a box for each layer.
+Here, for example, Monte Pellegrino, with type and manager.
+You have to click right on the feature.
+Two things to know.
+The WFS download has a cap of 10,000 objects:
+for very dense layers, like cadastral parcels, WMS is better.
+And if a service doesn't respond,
+it stays in the list as unavailable, without being deleted.
+And your files?
+They are loaded from My layers:
+GeoJSON, KML, GPX, zipped Shapefile, CSV with latitude and longitude.
+Of each file only the features inside the Municipality of Palermo are kept.
+In short:
+search, choose, add, click.
+Four steps to bring onto the map the official data about Palermo.
+Last feature:
+Geoimage.
+It lets you overlay a historical map, or any image,
+on modern cartography, and georeference it:
+that is, give it real geographic coordinates, using control points, the GCPs.
+First step:
+frame the area with the search, for example the Teatro Massimo,
+so the image loads already close to the right place.
+Drag the file into the Upload historical map box, or click it.
+Here, a plan of Palermo from 1891:
+it appears right away in the centre of the map, with the positioning handles.
+With the handles you move it, rotate it and resize it.
+The corners have two modes, scale and distort,
+useful for maps that are not rectangular.
+Now the control points.
+Press Add GCP.
+For each point you need two clicks:
+the first on a recognisable place in the historical image,
+a crossroads, a building, a monument.
+The second on the same place in the modern map.
+You need at least three, ideally at the corners.
+With three points you can press Align image to GCPs:
+the app calculates the transformation and moves the image to the right place.
+Check the error.
+The RMSE is the mean error in metres:
+the lower, the better.
+In the table each point has its residual:
+green if it's normal, red if it's much higher.
+If it's high, move the less precise points or add more.
+To check, use the Swipe:
+a line divides the map, on the left the historical map, on the right today's base.
+Or the Spotlight:
+a circle that follows the mouse reveals the base beneath the image.
+When you're satisfied, export:
+KMZ for Google Earth and QGIS, GeoTIFF with embedded coordinates,
+the points for the QGIS georeferencer, the world file, or the project in JSON.
+The project saves itself in the browser.
+And if you want more accuracy, we recommend MapWarper.
+Let's sum up in three points.
+One:
+a click tells you everything about a place, with the source.
+Two:
+the national catalogue brings official data onto the map.
+Three:
+Geoimage compares today's Palermo with yesterday's.
+You find the app at palermodigitaltwin.opendatasicilia.it.
+The licence is CC BY-SA 4.0, as stated in the app, and the project is by Open Data Sicilia.
+Found a mistake, or have an idea?
+Report it and contribute.
