@@ -211,6 +211,27 @@ export const PASSI = [
     scena: { strati: ['edificato'], centro: PUNTO_CLIC, zoom: 16, macro: 'stampa' },
   },
   {
+    id: 'tabella-dati',
+    titolo: 'La tabella dei dati',
+    statico: true,
+    paragrafi: [
+      'Il pulsante con la tabella, nella barra degli strumenti in alto a destra, apre dal basso la «Tabella dei dati»: le righe degli strati accesi, uno per scheda, in stile tabella attributi. Mostra le informazioni caricate nella vista corrente, quindi basta spostare o avvicinare la mappa per aggiornarla; da telefono il pulsante sta nel foglio «Strati». Un layer spento non ha scheda.',
+      'Per scegliere cosa vedere ci sono quattro strumenti di selezione: «Clic» sceglie un elemento, «Riquadro» e «Poligono» quelli dentro l\'area disegnata, «Area» quelli dentro una circoscrizione, un quartiere o una UPL. «Torna alla vista» riporta alle righe visibili in mappa. Il campo «Filtra le righe» cerca nel testo, l\'intestazione ordina e il menu «Colonne» mostra, nasconde e sposta le colonne.',
+      'Le caselle scelgono righe e colonne da esportare; il pulsante CSV o GeoJSON indica quante righe e colonne usciranno (per esempio «33 × 15») e aggiunge la fonte e la licenza del layer. L\'esportazione è attiva per i dati aperti del Comune con licenza che la consente, come incidenti e sicurezza stradale; per gli altri layer, e per quelli aggiunti da te, il pulsante resta spento. La geometria dei layer a tile è semplificata: per dati precisi conviene il CSV.',
+    ],
+    immagine: { file: 'img/guida/passi/tabella-dati.webp', alt: 'La mappa con lo strato Scuole e asili acceso e, in basso, la Tabella dei dati: scheda Scuole e asili, strumenti di selezione, filtro, colonne, pulsanti CSV e GeoJSON e le prime righe selezionate.', didascalia: 'La Tabella dei dati con lo strato Scuole e asili: righe selezionate e pulsanti di esportazione.' },
+  },
+  {
+    id: 'street-view',
+    titolo: 'Street View',
+    statico: true,
+    paragrafi: [
+      'Il pulsante con l\'omino, nella barra degli strumenti in alto a destra, attiva Street View: il cursore diventa un mirino. Si preme sul punto della mappa che interessa e, tenendo premuto, si trascina per scegliere la direzione di sguardo; un cono azzurro mostra verso dove guarderà la panoramica.',
+      'Al rilascio si apre una finestra con la panoramica di Google Street View del punto: si sposta trascinando la barra in alto, si ridimensiona dall\'angolo e si chiude con la croce. «Apri su Google Maps» la apre a tutto schermo in una nuova scheda. Esc spegne lo strumento. Dove Google non ha immagini la finestra resta vuota; la panoramica è un servizio esterno di Google e non fa parte dei dati della mappa.',
+    ],
+    immagine: { file: 'img/guida/passi/street-view.webp', alt: 'La mappa con il cono azzurro di Street View vicino al Teatro Massimo e, a destra, la finestra con la panoramica di Via Maqueda.', didascalia: 'Street View: il cono sceglie la direzione e la panoramica si apre in una finestra.' },
+  },
+  {
     id: 'avvertenze',
     titolo: 'Avvertenze',
     paragrafi: [
