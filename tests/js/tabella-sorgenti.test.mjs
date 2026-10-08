@@ -35,9 +35,8 @@ test('i layer da PMTiles segnalano la geometria approssimata, i GeoJSON no', () 
   assert.equal(sorgentePer('scuole').approssimata, false);
 });
 
-test('export spento per i layer sulla rete stradale OSM (licenza ODbL da chiarire), acceso per gli altri', () => {
-  const osm = id => id === 'incidenti' || id.startsWith('sicurezza-');
-  for (const s of SORGENTI) assert.equal(s.esporta, !osm(s.id), s.id);
+test('export acceso per tutte le sorgenti (incidenti e strade: open data del Comune, CC BY 4.0)', () => {
+  for (const s of SORGENTI) assert.equal(s.esporta, true, s.id);
 });
 
 test('limiti', () => {

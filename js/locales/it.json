@@ -1616,7 +1616,7 @@
   "tabella.layer.pericolose": "Le 20 strade più pericolose",
   "tabella.layer.hotspot": "Hotspot degli incidenti",
   "tabella.fonte.esterna": "Layer aggiunto da te: fonte e licenza sono quelle del file o del servizio di origine",
-  "tabella.fonte.incidenti": "Comune di Palermo, open data; rete stradale © contributori OpenStreetMap (ODbL); vedi NOTICE.md",
+  "tabella.fonte.incidenti": "Comune di Palermo, open data, CC BY 4.0; elaborazione DigitalTwin Palermo, CC BY 4.0; vedi NOTICE.md",
   "tabella.strumenti": "Strumenti di selezione",
   "tabella.strumento.click": "Clic",
   "tabella.strumento.riquadro": "Riquadro",

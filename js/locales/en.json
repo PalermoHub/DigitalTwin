@@ -1616,7 +1616,7 @@
   "tabella.layer.pericolose": "The 20 most dangerous roads",
   "tabella.layer.hotspot": "Accident hotspots",
   "tabella.fonte.esterna": "Layer you added: source and licence are those of the original file or service",
-  "tabella.fonte.incidenti": "City of Palermo, open data; road network © OpenStreetMap contributors (ODbL); see NOTICE.md",
+  "tabella.fonte.incidenti": "City of Palermo, open data, CC BY 4.0; processed by DigitalTwin Palermo, CC BY 4.0; see NOTICE.md",
   "tabella.strumenti": "Selection tools",
   "tabella.strumento.click": "Click",
   "tabella.strumento.riquadro": "Box",
