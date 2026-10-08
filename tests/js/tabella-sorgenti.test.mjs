@@ -35,6 +35,11 @@ test('i layer da PMTiles segnalano la geometria approssimata, i GeoJSON no', () 
   assert.equal(sorgentePer('scuole').approssimata, false);
 });
 
+test('export spento solo per gli incidenti (licenza ODbL della rete OSM da chiarire)', () => {
+  assert.equal(sorgentePer('incidenti').esporta, false);
+  for (const s of SORGENTI.filter(x => x.id !== 'incidenti')) assert.equal(s.esporta, true, s.id);
+});
+
 test('limiti', () => {
   assert.ok(LIMITE_RIGHE >= MAX_DOM && MAX_DOM >= 500);
 });
