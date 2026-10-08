@@ -68,7 +68,7 @@ function schedaPrivacy() {
 
 // Testo del post LinkedIn «Palermo Digital Twin… work in progress», con le immagini del carosello a seguire.
 function schedaDigitalTwin() {
-  const fig = (n, alt) => el('img', null, { className: 'dt-fig', src: `img/dt/dt-${n}.jpg`, alt, title: tr('catalogo.ingrandisci', { alt }), loading: 'lazy', width: 1920, height: 1072 });
+  const fig = (n, alt) => el('img', null, { className: 'dt-fig', src: `img/dt/dt-${n}.jpg`, alt, title: tr('catalogo.ingrandisci', { alt: tl(alt) }), loading: 'lazy', width: 1920, height: 1072 });
   const sezione = (titolo, testi, ...figure) => blocco(titolo, ...testi.map(t => el('p', t)), ...figure);
   return [
     ...titoloPagina('Digital Twin', 'La città a strati: catasto, popolazione, edifici, trasporti, sicurezza e molto altro.'),

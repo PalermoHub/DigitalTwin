@@ -5,10 +5,10 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ACCENTATE = /[àèéìòùÀÈÉÌÒÙ]/;
-const PAROLE = /\b(il|lo|la|le|gli|dei|del|della|delle|nel|nella|per|con|non|che|una|uno|di|da|sul|sulla|più|solo|tutti|nessun[oa]?|su|giù|sposta|apri|chiudi|aggiungi|elimina|salva|cerca|mostra|nascondi|accendi|spegni|tutto|tutte|nessuna|ordine|valori|colori|strato|strati|mappa|scheda|dati|fonte|fonti|vista|errore|ripristina|scegli|carica|leggi|seleziona|apre|sopra|sotto|dal|dalla|alle|agli|degli|sono|anche|oppure|quando|come|dopo|prima|oltre|entro|senza|tra|fra|molto|poco|ogni|quale|quali)\b/i;
+const PAROLE = /\b(il|lo|la|le|gli|dei|del|della|delle|nel|nella|per|con|non|che|una|uno|di|da|sul|sulla|più|solo|tutti|nessun[oa]?|su|giù|sposta|apri|chiudi|aggiungi|elimina|salva|cerca|mostra|nascondi|accendi|spegni|tutto|tutte|nessuna|ordine|valori|colori|strato|strati|mappa|scheda|dati|fonte|fonti|vista|errore|ripristina|scegli|carica|leggi|seleziona|apre|sopra|sotto|dal|dalla|alle|agli|degli|sono|anche|oppure|quando|come|dopo|prima|oltre|entro|senza|tra|fra|molto|poco|ogni|quale|quali|dello|nello|sullo|allo|quello|stesso|stessa|questo|questa|cinque|letture)\b/i;
 // contesti in cui anche una parola sola è testo mostrato: chiavi del modello, righe `['Etichetta', valore]`, riga('Etichetta', …)
 const CONTESTI = [
-  /\b(?:etichetta|titolo|badge|nota|testo|suggerimento|riassunto|stato|anteprima|descrizione|sottotitolo|dettaglio|label|valore)\s*:\s*'([^'\\]*(?:\\.[^'\\]*)*)'/g,
+  /\b(?:etichetta|titolo|badge|nota|testo|suggerimento|riassunto|stato|anteprima|descrizione|sottotitolo|dettaglio|label|valore|didascalia|alt)\s*:\s*'([^'\\]*(?:\\.[^'\\]*)*)'/g,
   /\briga\(\s*'([^'\\]*(?:\\.[^'\\]*)*)'/g,
   /\[\s*'([A-ZÀ-Ý][^'\\]*(?:\\.[^'\\]*)*)'\s*,/g,
 ];
@@ -51,6 +51,7 @@ export function daTradurre(sorgente) {
   for (const riga of sorgente.split('\n')) {
     const s = riga.trim();
     if (s.startsWith('//') || s.startsWith('*') || s.startsWith('/*') || riga.includes('// i18n-ok') || /^\s*import\b/.test(riga)) continue;
+    if (/^\s*narrazione\s*:/.test(riga)) continue; // voce del video: resta in italiano
     for (const l of letterali(riga)) {
       if (/^(https?:|\.{0,2}\/|#|[\w-]+\.[a-z]{2,4}$)/.test(l)) continue;
       if (/^[^A-ZÀ-Ý]/.test(l) && /[.:#[\]>=_-]/.test(l) && SOLO_CSS(l)) continue;
@@ -71,7 +72,7 @@ export function daTradurre(sorgente) {
 export function fileModelli(radice) {
   const out = [];
   for (const dir of ['js/layers']) for (const n of readdirSync(join(radice, dir))) if (n.endsWith('.js')) out.push(`${dir}/${n}`);
-  out.push('js/rndt/info.js', 'js/core/scheda-preferenze.js', 'js/core/catalogo.js');
+  out.push('js/rndt/info.js', 'js/core/scheda-preferenze.js', 'js/core/catalogo.js', 'js/core/guida-contenuti.js', 'js/geoimage/guida-contenuti.js');
   return out;
 }
 

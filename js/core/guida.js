@@ -1,4 +1,5 @@
 import { PASSI, PASSI_RNDT } from './guida-contenuti.js';
+import { t as tr, tl } from './i18n.js';
 
 // Tab «Guida» del foglio Info: indice, poi un passo per sezione con testo e figura.
 export function schedaGuida(doc = document, passi = PASSI) {
@@ -6,15 +7,15 @@ export function schedaGuida(doc = document, passi = PASSI) {
   radice.className = 'guida-pagina'; // su schermi larghi l'indice sta a destra e resta in vista
   const sezioni = {};
   const h = doc.createElement('h2');
-  h.textContent = 'Guida';
+  h.textContent = tr('guida.titolo');
   const intro = doc.createElement('p');
   intro.className = 'pagina-intro';
-  intro.textContent = 'Come usare la mappa, passo dopo passo.';
+  intro.textContent = tr('guida.intro');
   radice.append(h, intro);
 
   const indice = doc.createElement('nav');
   indice.className = 'guida-indice';
-  indice.setAttribute('aria-label', 'Indice della guida');
+  indice.setAttribute('aria-label', tr('guida.indice'));
   const ol = doc.createElement('ol');
   for (const p of passi) {
     const li = doc.createElement('li');
@@ -32,7 +33,7 @@ export function schedaGuida(doc = document, passi = PASSI) {
   const media = doc.createElement('div');
   media.className = 'guida-media';
   const video = doc.createElement('iframe');
-  Object.assign(video, { src: 'https://www.youtube-nocookie.com/embed/5kSHNPcjeQc', title: 'Video guida: la mappa, il plugin RNDT e Geoimage', loading: 'lazy', allowFullscreen: true });
+  Object.assign(video, { src: 'https://www.youtube-nocookie.com/embed/5kSHNPcjeQc', title: tr('guida.video'), loading: 'lazy', allowFullscreen: true });
   video.setAttribute('allow', 'accelerometer; encrypted-media; picture-in-picture; fullscreen');
   video.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
   media.append(video);
@@ -64,7 +65,7 @@ function creaPasso(doc, p) {
   const img = doc.createElement('img');
   img.src = p.immagine.file;
   img.alt = p.immagine.alt;
-  img.title = `${p.immagine.didascalia} (clic per ingrandire)`;
+  img.title = tr('catalogo.ingrandisci', { alt: tl(p.immagine.didascalia) });
   img.loading = 'lazy';
   img.width = 1280;
   img.height = 720;
@@ -87,7 +88,7 @@ export function indiceLaterale(doc, radice, voci) {
   radice.className = 'guida-pagina';
   const nav = doc.createElement('nav');
   nav.className = 'guida-indice';
-  nav.setAttribute('aria-label', 'Indice della pagina');
+  nav.setAttribute('aria-label', tr('guida.indicePagina'));
   const ol = doc.createElement('ol');
   for (const { titolo, sezione } of voci) {
     const li = doc.createElement('li');

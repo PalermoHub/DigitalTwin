@@ -58,6 +58,9 @@ export const MIGRATI = [
   'js/geoimage/sospensione.js',
   'js/geoimage/storico.js',
   'js/geoimage/trasformazioni.js',
+  'js/core/guida.js', 'js/geoimage/guida.js', 'js/core/argomenti.js', 'js/core/traduci-moduli.js',
+  // catalogo.js e i file di contenuto delle guide non sono qui: i loro testi si traducono al render con tl() e sono
+  // controllati da i18n-lbl.test.mjs
   // non in elenco, di proposito: palette.js (copia identica dell'originale, vedi test), scheda-preferenze.js (le etichette
   // sono identità delle preferenze salvate: si traducono al render con tl()), consenso.js (tabella propria, non usa i dizionari)
 ];
