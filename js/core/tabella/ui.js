@@ -32,8 +32,8 @@ const pulsante = (classe, testo, aria, azione) => {
 };
 
 // Firma di ciò che il cassetto mostra: se non cambia, ridisegnare non serve (e non rimette in moto la mappa).
-export function firmaVista(stati, corrente) {
-  const parti = [...stati].map(s => [s.sorgente.id, s.troppe ? 1 : 0, s.righe.map(r => r.chiave).join(','),
+export function firmaVista(stati, corrente, accesa = () => true) {
+  const parti = [...stati].map(s => [s.sorgente.id, accesa(s) ? 1 : 0, s.troppe ? 1 : 0, s.righe.map(r => r.chiave).join(','),
     s.colonne.filter(c => c.visibile).map(c => c.campo).join(',')].join('|'));
   return [corrente, ...parti].join('#');
 }
@@ -44,6 +44,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
   const stato = new Map(SORGENTI.map(s => [s.id, {
     sorgente: s, righe: [], colonne: [], sel: nuovoStato(), ordine: null, filtro: '', troppe: false,
   }]));
+  const accesa = s => attiva(map, s.sorgente);
   const esportazioni = new Map(); // pulsanti correnti, per aggiornare il conteggio senza ridisegnare la barra
   let corrente = SORGENTI[0].id;
   let criterio = []; // poligoni scelti sulla mappa; vuoto = si mostra la vista
@@ -59,6 +60,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
   // --- struttura ---
   const cassetto = el('section', 'tabella-dati');
   cassetto.id = 'tabella-dati';
+  cassetto.tabIndex = -1; // riceve il focus se l'elemento attivo sparisce
   cassetto.hidden = true;
   cassetto.setAttribute('aria-label', t('tabella.titolo'));
   const maniglia = el('div', 'tabella-maniglia');
@@ -128,7 +130,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
       const prima = [...stato.values()].find(s => s.righe.length);
       if (prima) corrente = prima.sorgente.id;
     }
-    if (!forza && firmaVista(stato.values(), corrente) === ultimaFirma) return;
+    if (!forza && firmaVista(stato.values(), corrente, accesa) === ultimaFirma) return;
     disegna();
   }
   const rinviaAggiorna = () => { clearTimeout(rinvio); rinvio = setTimeout(aggiorna, RITARDO); };
@@ -148,52 +150,77 @@ export function collegaTabella(map, { pulsante: bottone }) {
     const filtrate = filtra(s.righe, s.filtro);
     return s.ordine ? ordina(filtrate, s.ordine.campo, s.ordine.verso) : filtrate;
   };
+  // Ricorda dov'era il focus dentro `contenitore` e ritorna la funzione che lo rimette dopo il ridisegno.
+  // Se il focus era altrove (mappa, ricerca) non fa nulla; se l'elemento sparisce, il focus va al cassetto.
+  function ricordaFocus(contenitore) {
+    const att = document.activeElement;
+    if (!att || !contenitore.contains(att)) return () => {};
+    const id = att.closest('[data-focus]')?.dataset.focus ?? null;
+    const sel = typeof att.selectionStart === 'number' ? [att.selectionStart, att.selectionEnd] : null;
+    return () => {
+      const nuovo = id == null ? null : [...contenitore.querySelectorAll('[data-focus]')].find(x => x.dataset.focus === id);
+      nuovo?.focus();
+      if (nuovo && sel) { try { nuovo.setSelectionRange(sel[0], sel[1]); } catch { /* campo senza selezione */ } }
+      if (!cassetto.contains(document.activeElement)) cassetto.focus();
+    };
+  }
   const etichettaRighe = n => tn('tabella.righe', n);
   const dopoSelezione = s => { disegnaGriglia(s); disegnaEsporta(s); evidenziaSelezione(s); };
 
   function disegnaSchede() {
+    const ripristina = ricordaFocus(schede);
     schede.replaceChildren();
     for (const s of stato.values()) {
       const n = s.righe.length;
       if (!n && s.sorgente.id !== corrente) continue;
       const b = el('button', 'tabella-scheda', `${s.sorgente.nome} · ${n}`);
       b.type = 'button';
+      b.dataset.focus = `scheda:${s.sorgente.id}`;
       b.setAttribute('role', 'tab');
       b.setAttribute('aria-selected', String(s.sorgente.id === corrente));
       b.addEventListener('click', () => { corrente = s.sorgente.id; disegna(); });
       schede.append(b);
     }
+    ripristina();
   }
 
   function disegnaColonne(s) {
     const dettagli = el('details', 'tabella-colonne');
     dettagli.open = dettagliAperti;
     dettagli.addEventListener('toggle', () => { dettagliAperti = dettagli.open; });
-    dettagli.append(el('summary', null, t('tabella.colonne')));
+    const sommario = el('summary', null, t('tabella.colonne'));
+    sommario.dataset.focus = 'colonne';
+    dettagli.append(sommario);
     const elenco = el('ul', 'tabella-colonne-elenco');
     s.colonne.forEach(c => {
       const nome = tl(c.campo);
       const voce = el('li');
       const vis = el('input');
       vis.type = 'checkbox';
+      vis.dataset.focus = `col-vis:${c.campo}`;
       vis.checked = c.visibile;
       vis.setAttribute('aria-label', t('tabella.colonna.visibile', { nome }));
       vis.addEventListener('change', () => { s.colonne = commutaColonna(s.colonne, c.campo, 'visibile'); salvaColonne(s); disegna(); });
       const esp = el('input');
       esp.type = 'checkbox';
+      esp.dataset.focus = `col-esp:${c.campo}`;
       esp.checked = c.esporta;
       esp.setAttribute('aria-label', t('tabella.colonna.esporta', { nome }));
       esp.addEventListener('change', () => { s.colonne = commutaColonna(s.colonne, c.campo, 'esporta'); salvaColonne(s); disegnaEsporta(s); });
-      voce.append(vis, el('span', 'tabella-colonna-nome', nome), esp,
-        pulsante('tabella-sposta', '◀', t('tabella.colonna.su', { nome }), () => { s.colonne = spostaColonna(s.colonne, c.campo, -1); salvaColonne(s); disegna(); }),
-        pulsante('tabella-sposta', '▶', t('tabella.colonna.giu', { nome }), () => { s.colonne = spostaColonna(s.colonne, c.campo, 1); salvaColonne(s); disegna(); }));
+      const su = pulsante('tabella-sposta', '◀', t('tabella.colonna.su', { nome }), () => { s.colonne = spostaColonna(s.colonne, c.campo, -1); salvaColonne(s); disegna(); });
+      const giu = pulsante('tabella-sposta', '▶', t('tabella.colonna.giu', { nome }), () => { s.colonne = spostaColonna(s.colonne, c.campo, 1); salvaColonne(s); disegna(); });
+      su.dataset.focus = `col-su:${c.campo}`;
+      giu.dataset.focus = `col-giu:${c.campo}`;
+      voce.append(vis, el('span', 'tabella-colonna-nome', nome), esp, su, giu);
       elenco.append(voce);
     });
     dettagli.append(elenco);
     const azioni = el('div', 'tabella-azioni-righe');
     const ordine = () => ordinate(s).map(r => r.chiave);
-    for (const [testo, f] of [[t('tabella.riga.tutte'), tutte], [t('tabella.svuota'), nessuna], [t('tabella.inverti'), inverti]]) {
-      azioni.append(pulsante('tabella-azione', testo, null, () => { s.sel = f(s.sel, ordine()); dopoSelezione(s); }));
+    for (const [id, testo, f] of [['tutte', t('tabella.riga.tutte'), tutte], ['svuota', t('tabella.svuota'), nessuna], ['inverti', t('tabella.inverti'), inverti]]) {
+      const b = pulsante('tabella-azione', testo, null, () => { s.sel = f(s.sel, ordine()); dopoSelezione(s); });
+      b.dataset.focus = `azione:${id}`;
+      azioni.append(b);
     }
     return [dettagli, azioni];
   }
@@ -204,6 +231,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
     const formati = [['csv', t('tabella.csv')], ['geojson', t('tabella.geojson')]];
     const pulsanti = crea ? formati.map(([f]) => {
       const b = pulsante('tabella-esporta', '', null, () => esportaFile(s, f));
+      b.dataset.focus = `esporta:${f}`;
       esportazioni.set(f, b);
       return b;
     }) : [];
@@ -237,8 +265,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
   }
 
   function disegnaBarra(s) {
-    const sulFiltro = document.activeElement?.classList?.contains('tabella-filtro');
-    const { selectionStart: da, selectionEnd: a } = sulFiltro ? document.activeElement : {};
+    const ripristina = ricordaFocus(barra);
     barra.replaceChildren();
     esportazioni.clear();
     const gruppo = el('div', 'tabella-strumenti');
@@ -249,10 +276,12 @@ export function collegaTabella(map, { pulsante: bottone }) {
         strumenti.imposta(strumenti.modo() === modo ? null : modo);
         disegnaBarra(s);
       });
+      b.dataset.focus = `strumento:${modo}`;
       b.setAttribute('aria-pressed', String(strumenti.modo() === modo));
       gruppo.append(b);
     }
     const livello = el('select', 'tabella-livello');
+    livello.dataset.focus = 'livello';
     livello.setAttribute('aria-label', t('tabella.livello'));
     for (const l of ['circoscrizione', 'quartiere', 'upl']) livello.append(new Option(t(`tabella.livello.${l}`), l));
     livello.value = livelloArea;
@@ -265,25 +294,24 @@ export function collegaTabella(map, { pulsante: bottone }) {
     }) : null;
     const filtro = el('input', 'tabella-filtro');
     filtro.type = 'search';
+    filtro.dataset.focus = 'filtro';
     filtro.placeholder = t('tabella.filtro');
     filtro.setAttribute('aria-label', t('tabella.filtro'));
     filtro.value = s.filtro;
     filtro.addEventListener('input', () => { s.filtro = filtro.value; disegnaGriglia(s); disegnaEsporta(s); });
+    if (torna) torna.dataset.focus = 'torna';
     barra.append(gruppo, ...(torna ? [torna] : []), filtro);
     barra.append(...disegnaColonne(s), ...disegnaEsporta(s, true));
-    if (sulFiltro) { filtro.focus(); try { filtro.setSelectionRange(da, a); } catch { /* selezione non supportata */ } }
+    ripristina();
   }
 
   function disegnaGriglia(s) {
-    // il focus sta in un elemento che sta per sparire: lo si ritrova dopo la ricostruzione
-    const att = document.activeElement;
-    let ripristina = null;
-    if (att && corpo.contains(att)) {
-      const riga = att.closest('[data-chiave]');
-      if (riga) ripristina = { chiave: riga.dataset.chiave, casella: att.tagName === 'INPUT' };
-      else if (att.dataset?.campo) ripristina = { campo: att.dataset.campo };
-      else if (att.tagName === 'INPUT') ripristina = { tutte: true };
-    }
+    const ripristina = ricordaFocus(corpo);
+    costruisciGriglia(s);
+    ripristina();
+  }
+
+  function costruisciGriglia(s) {
     corpo.replaceChildren();
     const righe = ordinate(s);
     if (!attiva(map, s.sorgente)) { nota.textContent = messaggio; corpo.append(el('p', 'tabella-vuota', t('tabella.spento'))); return; }
@@ -302,6 +330,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
     const testa = tabella.createTHead().insertRow();
     const tutteCasella = el('input');
     tutteCasella.type = 'checkbox';
+    tutteCasella.dataset.focus = 'tutte-righe';
     tutteCasella.setAttribute('aria-label', t('tabella.riga.tutte'));
     const st = statoTutte(s.sel, chiavi);
     tutteCasella.checked = st === 'tutte';
@@ -321,7 +350,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
         s.ordine = { campo: c.campo, verso: ordinata && s.ordine.verso === 'su' ? 'giu' : 'su' };
         disegnaGriglia(s);
       });
-      ord.dataset.campo = c.campo;
+      ord.dataset.focus = `ord:${c.campo}`;
       th.append(ord);
       testa.append(th);
     }
@@ -333,11 +362,13 @@ export function collegaTabella(map, { pulsante: bottone }) {
       const tr = corpoTabella.insertRow();
       tr.tabIndex = r.chiave === rigaAttiva ? 0 : -1;
       tr.dataset.chiave = r.chiave;
+      tr.dataset.focus = `riga:${r.chiave}`;
       tr.setAttribute('aria-rowindex', String(i + 2));
       tr.setAttribute('aria-selected', String(s.sel.sel.has(r.chiave)));
       const casella = el('input');
       casella.type = 'checkbox';
       casella.checked = s.sel.sel.has(r.chiave);
+      casella.dataset.focus = `casella:${r.chiave}`;
       casella.tabIndex = -1; // si naviga per righe, non per caselle
       casella.setAttribute('aria-label', t('tabella.riga.seleziona'));
       casella.addEventListener('click', e => {
@@ -360,13 +391,6 @@ export function collegaTabella(map, { pulsante: bottone }) {
     });
     corpo.append(tabella);
     annuncio.textContent = t('tabella.annuncio', { righe: etichettaRighe(righe.length), sel: s.sel.sel.size });
-    if (ripristina) {
-      let bersaglio = null;
-      if (ripristina.chiave != null) { const r = rigaPer(ripristina.chiave); bersaglio = ripristina.casella ? r?.querySelector('input') : r; }
-      else if (ripristina.campo) bersaglio = corpo.querySelector(`[data-campo="${CSS.escape(ripristina.campo)}"]`);
-      else bersaglio = corpo.querySelector('thead input');
-      bersaglio?.focus();
-    }
   }
 
   const rigaPer = chiave => corpo.querySelector(`[data-chiave="${CSS.escape(chiave)}"]`);
@@ -402,7 +426,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
 
   function disegna() {
     const s = stato.get(corrente);
-    ultimaFirma = firmaVista(stato.values(), corrente);
+    ultimaFirma = firmaVista(stato.values(), corrente, accesa);
     disegnaSchede();
     disegnaBarra(s);
     disegnaGriglia(s);

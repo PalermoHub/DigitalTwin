@@ -1529,7 +1529,7 @@ dialog.streetview-finestra.trascinata iframe { pointer-events: none; }
 .tabella-maniglia { height: 14px; padding: 0; border: 0; background: none; cursor: ns-resize; flex: none; touch-action: none; }
 .tabella-maniglia::after { content: ''; display: block; width: 40px; height: 4px; margin: 5px auto; border-radius: 2px; background: var(--border-ui); }
 .tabella-maniglia:focus-visible { outline: 2px solid var(--focus); }
-.tabella-testata { display: flex; align-items: center; gap: 8px; padding: 0 8px; flex: none; }
+.tabella-testata { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 8px 4px; flex: none; }
 .tabella-schede { display: flex; gap: 4px; padding: 0 8px; overflow-x: auto; flex: none; }
 .tabella-scheda { padding: 4px 10px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; white-space: nowrap; cursor: pointer; }
 .tabella-scheda:hover { background: var(--surface-hover); }
@@ -1579,7 +1579,6 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
   body:has(#tabella-dati:not([hidden])) .maplibregl-ctrl-bottom-left { bottom: calc(var(--tabella-h) + var(--tab-h)); }
   .tabella-strumento { padding: 8px 12px; }
 }
-.tabella-testata { justify-content: space-between; padding: 0 8px 4px; }
 .tabella-titolo { font-weight: 600; }
 .tabella-chiudi { min-width: 32px; min-height: 32px; padding: 0 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; font-size: 18px; line-height: 1; cursor: pointer; }
 .tabella-chiudi:hover { background: var(--surface-hover); }

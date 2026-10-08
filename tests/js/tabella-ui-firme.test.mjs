@@ -21,6 +21,10 @@ test('firmaVista cambia con righe, scheda corrente, troppe e colonne visibili', 
   const colonne = insieme(); colonne[0].colonne[0].visibile = false;
   assert.notEqual(firmaVista(colonne, 'x'), base);
 });
+test('firmaVista cambia quando cambia solo lo stato acceso/spento di un layer', () => {
+  const acceso = firmaVista(insieme(), 'x', () => true);
+  assert.notEqual(firmaVista(insieme(), 'x', s => s.sorgente.id !== 'y'), acceso);
+});
 test('firmaEvidenza dipende da layer e righe selezionate, non dalle altre', () => {
   const a = firmaEvidenza(stato('x', ['1', '2'], { sel: ['1'] }));
   assert.equal(a, firmaEvidenza(stato('x', ['1', '2'], { sel: ['1', 'fuori'] })));
