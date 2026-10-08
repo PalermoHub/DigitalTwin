@@ -102,11 +102,12 @@ test('schedaGuida: ogni immagine è lazy, ha alt e didascalia', () => {
   assert.equal(tutti(schedaGuida(doc), 'figcaption').length, SOLO_GUIDA.length);
 });
 
-test('schedaGuida: il video è quello di YouTube, in un iframe', () => {
+test('schedaGuida: i tre video sono pulsanti che aprono una finestra, non iframe incorporati', () => {
   const radice = schedaGuida(doc);
-  const [video] = tutti(radice, 'iframe');
-  assert.equal(video.src, 'https://www.youtube-nocookie.com/embed/5kSHNPcjeQc');
-  assert.ok(video.title);
+  assert.equal(tutti(radice, 'iframe').length, 0);
+  const bottoni = tutti(radice, 'button');
+  assert.equal(bottoni.length, 3);
+  assert.ok(bottoni.every(b => b.attrs['aria-label'] && b.ev?.click));
   assert.equal(tutti(radice, 'video').length + tutti(radice, 'audio').length, 0);
 });
 

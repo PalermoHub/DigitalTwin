@@ -68,7 +68,7 @@ function apriFinestra(lngLat, heading, href) {
   collegaTrascinamento(d, barra);
 }
 
-function collegaTrascinamento(d, barra) {
+export function collegaTrascinamento(d, barra, salva = p => { posizione = p; }) {
   barra.addEventListener('pointerdown', e => {
     if (e.target.closest('a, button') || e.button > 0) return;
     const r = d.getBoundingClientRect();
@@ -79,7 +79,7 @@ function collegaTrascinamento(d, barra) {
       const left = Math.min(Math.max(0, ev.clientX - dx), innerWidth - 80);
       const top = Math.min(Math.max(0, ev.clientY - dy), innerHeight - 40);
       d.style.left = `${left}px`; d.style.top = `${top}px`;
-      posizione = { left, top };
+      salva({ left, top });
     };
     const rilascia = () => {
       d.classList.remove('trascinata');

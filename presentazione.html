@@ -86,15 +86,42 @@
   <section class="sezione sezione--alt" id="video" aria-labelledby="titolo-video">
     <div class="contenitore">
       <h2 id="titolo-video" data-i18n="pres.video.titolo">Il tour dell'app</h2>
-      <p class="intro" data-i18n="pres.video.intro">La mappa, il plugin RNDT e Geoimage, passo dopo passo.</p>
-      <div class="video" id="video-lettore">
-        <button type="button" class="video-bottone" data-i18n-aria="pres.video.aria" aria-label="Guarda il video: Palermo Digital Twin, il tour dell'app">
-          <img src="img/landing/video-locandina.webp" width="960" height="540" loading="lazy" alt="">
-          <span class="avvia" aria-hidden="true"></span>
-          <span hidden data-titolo-video data-i18n="pres.video.iframe">Video: Palermo Digital Twin, il tour dell'app</span>
-        </button>
+      <p class="intro" data-i18n="pres.video.intro">Tre video: la mappa, il plugin RNDT e Geoimage, passo dopo passo.</p>
+      <div class="video-tre">
+        <figure class="video-scheda">
+          <div class="video" data-video="gBEs65lum8A">
+            <button type="button" class="video-bottone" data-i18n-aria="pres.video1.aria" aria-label="Guarda il video">
+              <img src="img/landing/video-locandina.webp" width="960" height="540" loading="lazy" alt="">
+              <span class="avvia" aria-hidden="true"></span>
+              <span hidden data-titolo-video data-i18n="pres.video1.iframe">Video</span>
+            </button>
+          </div>
+          <figcaption data-i18n="pres.video1.breve">Video</figcaption>
+          <noscript><p><a href="https://youtu.be/gBEs65lum8A" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
+        </figure>
+        <figure class="video-scheda">
+          <div class="video" data-video="S2kQbQazqv4">
+            <button type="button" class="video-bottone" data-i18n-aria="pres.video2.aria" aria-label="Guarda il video">
+              <img src="img/landing/video-locandina.webp" width="960" height="540" loading="lazy" alt="">
+              <span class="avvia" aria-hidden="true"></span>
+              <span hidden data-titolo-video data-i18n="pres.video2.iframe">Video</span>
+            </button>
+          </div>
+          <figcaption data-i18n="pres.video2.breve">Video</figcaption>
+          <noscript><p><a href="https://youtu.be/S2kQbQazqv4" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
+        </figure>
+        <figure class="video-scheda">
+          <div class="video" data-video="mEubBkPeNYU">
+            <button type="button" class="video-bottone" data-i18n-aria="pres.video3.aria" aria-label="Guarda il video">
+              <img src="img/landing/video-locandina.webp" width="960" height="540" loading="lazy" alt="">
+              <span class="avvia" aria-hidden="true"></span>
+              <span hidden data-titolo-video data-i18n="pres.video3.iframe">Video</span>
+            </button>
+          </div>
+          <figcaption data-i18n="pres.video3.breve">Video</figcaption>
+          <noscript><p><a href="https://youtu.be/mEubBkPeNYU" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
+        </figure>
       </div>
-      <noscript><p><a href="https://youtu.be/5kSHNPcjeQc" rel="noopener" data-i18n="pres.video.noscript">Guarda il video su YouTube</a></p></noscript>
     </div>
   </section>
 
@@ -190,16 +217,17 @@
   var tema = document.documentElement.dataset.tema, sorgente = document.getElementById('hero-scuro');
   if (tema === 'scuro') { sorgente.media = 'all'; document.querySelector('meta[name=theme-color]').content = '#151a20'; }
   // il video si carica solo al clic (nessun contenuto di YouTube prima)
-  var lettore = document.getElementById('video-lettore');
-  lettore.querySelector('button').addEventListener('click', function () {
-    var f = document.createElement('iframe');
-    f.src = 'https://www.youtube-nocookie.com/embed/5kSHNPcjeQc?autoplay=1&rel=0';
-    f.title = lettore.querySelector('[data-titolo-video]').textContent;
-    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-    f.allowFullscreen = true;
-    lettore.replaceChildren(f);
-    f.focus();
-  }, { once: true });
+  document.querySelectorAll('.video[data-video]').forEach(function (lettore) {
+    lettore.querySelector('button').addEventListener('click', function () {
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + lettore.dataset.video + '?autoplay=1&rel=0';
+      f.title = lettore.querySelector('[data-titolo-video]').textContent;
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      lettore.replaceChildren(f);
+      f.focus();
+    }, { once: true });
+  });
 })();
 </script>
 <script type="module" src="js/i18n-pagina.js"></script>

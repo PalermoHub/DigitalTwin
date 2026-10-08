@@ -1,5 +1,45 @@
 import { PASSI, PASSI_RNDT } from './guida-contenuti.js';
 import { t as tr, tl, immagine } from './i18n.js';
+import { collegaTrascinamento } from './streetview.js';
+
+// I tre video della guida (YouTube, id dopo youtu.be/): mappa, plugin RNDT, Geoimage.
+export const VIDEO = [
+  { id: 'gBEs65lum8A', chiave: 'guida.video1' },
+  { id: 'S2kQbQazqv4', chiave: 'guida.video2' },
+  { id: 'mEubBkPeNYU', chiave: 'guida.video3' },
+];
+
+// Il video si apre in una finestra flottante (come Street View): si sposta dalla barra e si ridimensiona dall'angolo.
+let posizioneVideo = null;
+function apriVideo(id, titolo) {
+  document.querySelector('dialog.video-finestra')?.close();
+  const d = document.createElement('dialog');
+  d.className = 'streetview-finestra video-finestra';
+  d.setAttribute('aria-label', titolo);
+  const barra = document.createElement('div');
+  barra.className = 'streetview-barra';
+  const nome = document.createElement('span');
+  nome.className = 'video-finestra-nome';
+  nome.textContent = titolo;
+  const x = document.createElement('button');
+  x.type = 'button'; x.textContent = '✕'; x.title = x.ariaLabel = tr('strumenti.streetviewChiudi');
+  x.addEventListener('click', () => d.close());
+  barra.append(nome, x);
+  const f = document.createElement('iframe');
+  f.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+  f.title = titolo;
+  f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+  f.allowFullscreen = true;
+  f.referrerPolicy = 'strict-origin-when-cross-origin';
+  d.append(barra, f);
+  d.addEventListener('close', () => d.remove());
+  document.body.append(d);
+  d.show();
+  const r = d.getBoundingClientRect();
+  const pos = posizioneVideo ?? { left: Math.max(8, (innerWidth - r.width) / 2), top: 76 };
+  d.style.left = `${pos.left}px`; d.style.top = `${pos.top}px`;
+  collegaTrascinamento(d, barra, p => { posizioneVideo = p; });
+}
 
 // Tab «Guida» del foglio Info: indice, poi un passo per sezione con testo e figura.
 export function schedaGuida(doc = document, passi = PASSI) {
@@ -32,11 +72,21 @@ export function schedaGuida(doc = document, passi = PASSI) {
 
   const media = doc.createElement('div');
   media.className = 'guida-media';
-  const video = doc.createElement('iframe');
-  Object.assign(video, { src: 'https://www.youtube-nocookie.com/embed/5kSHNPcjeQc', title: tr('guida.video'), loading: 'lazy', allowFullscreen: true });
-  video.setAttribute('allow', 'accelerometer; encrypted-media; picture-in-picture; fullscreen');
-  video.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-  media.append(video);
+  for (const v of VIDEO) {
+    const btn = doc.createElement('button');
+    btn.type = 'button';
+    btn.className = 'guida-video';
+    const play = doc.createElement('span');
+    play.className = 'guida-video-play';
+    play.setAttribute('aria-hidden', 'true');
+    const cap = doc.createElement('span');
+    cap.className = 'guida-video-titolo';
+    cap.textContent = tr(`${v.chiave}.breve`);
+    btn.setAttribute('aria-label', tr(`${v.chiave}.titolo`));
+    btn.addEventListener('click', () => apriVideo(v.id, tr(`${v.chiave}.titolo`)));
+    btn.append(play, cap);
+    media.append(btn);
+  }
   radice.append(media);
 
   for (const p of passi) {
