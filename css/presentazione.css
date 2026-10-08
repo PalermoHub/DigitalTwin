@@ -133,14 +133,6 @@ a { color: inherit; }
 .fonti .azioni { margin-top: 28px; }
 
 /* piè di pagina */
-.piede { border-top: 1px solid var(--bordo); padding: 40px 0 48px; font-size: .9375rem; color: var(--testo-tenue); }
-.piede .contenitore { display: grid; gap: 24px; }
-.piede .firma { display: flex; align-items: center; gap: 16px; }
-.piede .firma img { display: block; flex: none; height: 52px; width: auto; filter: var(--logo-ods); }
-.piede ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px 24px; }
-.piede a { color: var(--testo); font-weight: 600; text-underline-offset: 3px; }
-.piede p { margin: 0; max-width: 70ch; }
-@media (min-width: 900px) { .piede .contenitore { grid-template-columns: 1fr auto; align-items: start; } .piede .contenitore > :last-child { grid-column: 1 / -1; } }
 
 /* interruttore di lingua IT/EN nella testata (creato da js/i18n-pagina.js) */
 #switch-lingua { display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 10px; border: 1px solid var(--bordo); border-radius: 999px; background: transparent; color: var(--testo); font: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer; }
@@ -156,9 +148,20 @@ a { color: inherit; }
 @media (max-width: 640px) { .video-tre { gap: 8px; } .video-scheda figcaption { font-size: .8125rem; } }
 
 /* «torna in cima»: tondo, bianco con anello ambra a riposo, ambra pieno al passaggio del mouse (come nell'app) */
-.in-cima { position: fixed; right: 24px; bottom: 24px; z-index: 20; width: 48px; height: 48px; padding: 0; display: grid; place-items: center; border: 2px solid var(--accento); border-radius: 50%; background: var(--superficie); color: var(--testo); box-shadow: var(--ombra); cursor: pointer; transition: background .15s, color .15s, transform .15s; }
+.in-cima { position: fixed; right: 24px; bottom: 64px; z-index: 20; width: 48px; height: 48px; padding: 0; display: grid; place-items: center; border: 2px solid var(--accento); border-radius: 50%; background: var(--superficie); color: var(--testo); box-shadow: var(--ombra); cursor: pointer; transition: background .15s, color .15s, transform .15s; }
 .in-cima[hidden] { display: none; }
 .in-cima svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
 .in-cima:hover, .in-cima:focus-visible { background: var(--accento); color: #fff; transform: translateY(-2px); }
 .in-cima:focus-visible { outline: 3px solid var(--fuoco); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .in-cima { transition: none; } .in-cima:hover { transform: none; } }
+
+/* piede identico a quello dell'app (index.html) */
+.piede { position: sticky; bottom: 0; z-index: 20; background: var(--sfondo); box-sizing: border-box; min-height: 36px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--bordo); font-size: .8125rem; line-height: 1.4; color: var(--testo-tenue); }
+.piede-avviso { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.piede-avviso strong { color: var(--testo); }
+#piede-copyright { flex: 0 1 auto; min-width: 0; padding-block: 4px; }
+#piede-copyright a { color: var(--testo); font-weight: 600; text-underline-offset: 2px; }
+#piede-copyright .piede-licenza { display: inline-block; }
+#logo-ods { flex: none; display: block; line-height: 0; }
+#logo-ods img { display: block; height: 24px; width: auto; }
+@media (max-width: 720px) { #piede-copyright { font-size: .6875rem; } }
