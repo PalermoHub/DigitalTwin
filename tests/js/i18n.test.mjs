@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
 import {
-  rilevaLingua, impostaDizionari, lingua, localeIntl, t, tn, tl, applicaDom, impostaLingua,
+  rilevaLingua, impostaDizionari, lingua, localeIntl, t, tn, tl, immagine, applicaDom, impostaLingua,
 } from '../../js/core/i18n.js';
 
 const memoria = (iniziale = {}) => {
@@ -137,4 +138,22 @@ test('senza localStorage la scelta si ricorda per la sessione (sessionStorage) e
   assert.equal(sessione.d['dt-lingua'], 'en');
   assert.equal(ricaricata, 1);
   assert.equal(rilevaLingua(rotto, { language: 'it-IT' }, sessione), 'en');
+});
+
+test('immagine: in inglese sceglie la variante .en.svg degli schemi con testo; il resto non cambia', () => {
+  impostaDizionari('it', {}, {});
+  assert.equal(immagine('img/guida/passi/intersezione.svg'), 'img/guida/passi/intersezione.svg');
+  impostaDizionari('en', {}, {});
+  assert.equal(immagine('img/guida/passi/intersezione.svg'), 'img/guida/passi/intersezione.en.svg');
+  assert.equal(immagine('img/guida/passi/scheda.webp'), 'img/guida/passi/scheda.webp');
+  impostaDizionari('it', {}, {});
+});
+
+test('lo schema inglese esiste, è un SVG valido e non ha più il testo italiano', () => {
+  const f = new URL('../../img/guida/passi/intersezione.en.svg', import.meta.url);
+  assert.ok(existsSync(f));
+  const svg = readFileSync(f, 'utf8');
+  assert.ok(svg.includes('<svg') && svg.trim().endsWith('</svg>'));
+  for (const it of ['Catasto', 'Vincoli', 'Sicurezza', 'Cultura', 'Trasporti', 'Particella', 'Foglio', 'Clic su', 'Un singolo clic']) assert.ok(!svg.includes(it), `resta «${it}»`);
+  assert.ok(svg.includes('Cadastre') && svg.includes('Click on Via Maqueda'));
 });
