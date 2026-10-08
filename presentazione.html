@@ -211,8 +211,14 @@
   </div>
 </footer>
 
+<button type="button" class="in-cima" id="in-cima" hidden data-i18n-aria="catalogo.inCima" data-i18n-title="catalogo.inCima" aria-label="Torna in cima" title="Torna in cima"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V5M5.5 11.5 12 5l6.5 6.5"/></svg></button>
+
 <script>
 (function () {
+  // «torna in cima» compare dopo un po' di scorrimento
+  var su = document.getElementById('in-cima');
+  su.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  window.addEventListener('scroll', function () { su.hidden = window.scrollY < 400; }, { passive: true });
   // la scelta del tema fatta nell'app vale anche qui: se è esplicita, la schermata dell'intestazione la segue
   var tema = document.documentElement.dataset.tema, sorgente = document.getElementById('hero-scuro');
   if (tema === 'scuro') { sorgente.media = 'all'; document.querySelector('meta[name=theme-color]').content = '#151a20'; }
