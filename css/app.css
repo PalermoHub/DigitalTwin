@@ -1484,3 +1484,9 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
 .strati-tooltip-corpo strong { color: var(--tooltip-enfasi); }
 .strati-tooltip-corpo > div + div { margin-top: 4px; }
 .strati-tooltip-altre { color: var(--text-muted); }
+
+/* scala: a sinistra del box zoom, con il pannello laterale */
+.maplibregl-ctrl-bottom-right { transition: right var(--t-rapida); }
+@media (min-width: 721px) { .maplibregl-ctrl-bottom-right .maplibregl-ctrl-scale { margin-right: 68px; } }
+#bussola-ago { transition: transform .1s linear; }
+#barra-strumenti button[hidden] { display: none; }

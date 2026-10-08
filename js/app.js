@@ -161,11 +161,25 @@ map.once('style.load', async () => {
   const archivioLocale = (() => { try { return window.localStorage; } catch { return null; } })();
   window.dt.condivisione = collegaCondivisione(map, document.getElementById('btn-condividi'), { storage: archivioLocale });
   if (condivisione.invalido) segnala('Il link condiviso non è valido: si apre la mappa predefinita');
-  // coordinate del centro mappa e zoom nel piè di pagina
+  // coordinate sotto il puntatore (a mouse fermo fuori dalla mappa, il centro) e zoom nel piè di pagina
   const piedeCoord = document.getElementById('piede-coord');
-  const aggiornaCoord = () => { const c = map.getCenter(); piedeCoord.textContent = `${c.lat.toFixed(4)}, ${c.lng.toFixed(4)} · zoom ${map.getZoom().toFixed(1)}`; };
-  map.on('move', aggiornaCoord);
+  let puntatore = null;
+  const aggiornaCoord = () => {
+    const c = puntatore ?? map.getCenter();
+    piedeCoord.textContent = `${c.lat.toFixed(4)}, ${c.lng.toFixed(4)} · zoom ${map.getZoom().toFixed(1)}`;
+  };
+  map.on('mousemove', e => { puntatore = e.lngLat; aggiornaCoord(); });
+  map.getCanvas().addEventListener('mouseleave', () => { puntatore = null; aggiornaCoord(); });
+  map.on('move', () => { if (!puntatore) aggiornaCoord(); });
+  map.on('zoom', aggiornaCoord);
   aggiornaCoord();
+  // scala metrica in basso a destra (segue il pannello via CSS); bussola nella barra strumenti, solo in vista 3D
+  map.addControl(new maplibregl.ScaleControl({ unit: 'metric', maxWidth: 120 }), 'bottom-right');
+  const btnBussola = document.getElementById('btn-bussola');
+  const ago = document.getElementById('bussola-ago');
+  map.on('rotate', () => { ago.style.transform = `rotate(${-map.getBearing()}deg)`; });
+  btnBussola.addEventListener('click', () => map.easeTo({ bearing: 0, duration: 300 }));
+  document.addEventListener('vista3d', e => { btnBussola.hidden = !e.detail; });
   collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })());
 
   const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia && !DIFFERITI.has(m.id)).map(m => m.avvia(map)));
