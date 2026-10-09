@@ -43,9 +43,9 @@ export const PASSI = [
     gruppo: 'funzioni',
     titolo: 'Con quali dati è realizzata',
     paragrafi: [
-      'La mappa usa dati pubblicati da enti pubblici e da progetti di dati aperti: il Comune di Palermo (scuole, uffici, incidenti, carta tecnica), l\'azienda del trasporto pubblico AMAT, il catasto e la zonizzazione del piano regolatore, i dati del censimento e la base cartografica di OpenStreetMap.',
+      'La mappa usa dati pubblicati da enti pubblici e da progetti di dati aperti: il Comune di Palermo (scuole, uffici, incidenti, carta tecnica), l\'azienda del trasporto pubblico AMAT, i dati ferroviari di Trenitalia, il catasto e la zonizzazione del piano regolatore, i dati del censimento e la base cartografica di OpenStreetMap.',
       'L\'elenco completo è nella scheda «Fonti e note» del menu (in alto; da smartphone nel tab «Menu»): per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).',
-      'Gli orari del trasporto pubblico si aggiornano da soli: ogni giorno il sito controlla il portale open data del Comune e, quando AMAT pubblica un nuovo feed, fermate, linee e orari vengono sostituiti. Se il feed in uso è scaduto, la mappa lo segnala.',
+      'Gli orari del trasporto pubblico si aggiornano da soli: ogni giorno il sito controlla il portale open data del Comune e, quando AMAT pubblica un nuovo feed, fermate, linee e orari vengono sostituiti. Lo stesso vale per la ferrovia urbana: ogni giorno il sito controlla il feed GTFS di Trenitalia e, quando esce una nuova versione, stazioni, linee e orari vengono sostituiti. Se il feed in uso è scaduto, la mappa lo segnala.',
     ],
     immagine: { file: 'img/guida/passi/dati.webp', alt: 'La scheda Fonti e note, con l\'elenco delle fonti dei dati, i collegamenti ai dati originali e alle licenze.', didascalia: 'Le fonti dei dati sono elencate in «Fonti e note», con i link alle licenze.' },
     narrazione: 'I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l\'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap. L\'elenco completo si trova nella scheda Fonti e note, con il collegamento al dato originale e alla licenza di ogni fonte.',
