@@ -31,6 +31,7 @@ jobs:
         run: python3 scripts/gtfs_scarica.py | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Scarica e converti il feed Trenitalia
+        continue-on-error: true  # un feed Trenitalia scaduto o incompleto non deve bloccare l'aggiornamento di AMAT
         run: python3 scripts/gtfs_trenitalia_scarica.py | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Salva nel repository
