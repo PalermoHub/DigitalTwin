@@ -1,0 +1,42 @@
+name: Aggiorna GTFS
+
+# Ogni giorno (e a mano): legge il catalogo open data del Comune di Palermo, prende il feed GTFS di AMAT caricato per ultimo e,
+# se è diverso da quello in uso, rigenera dati/trasporto (fermate, linee, orari). I feed escono ogni poche settimane.
+# Se il feed è scaduto, incompleto o fuori dal comune lo script fallisce e i dati in repository restano quelli precedenti.
+on:
+  schedule:
+    - cron: "23 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-gtfs
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Scarica e converti l'ultimo feed
+        run: python3 scripts/gtfs_scarica.py | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Salva nel repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dati/trasporto/fermate.geojson dati/trasporto/linee.geojson dati/trasporto/orari.json dati/trasporto/gtfs_origine.json
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione nei dati."
+          else
+            git commit -m "dati: aggiornamento GTFS AMAT ($(date -u +%F))"
+            git push
+          fi
