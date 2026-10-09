@@ -1,7 +1,8 @@
 // js/rndt/area.js
 // Area di lavoro del catalogo RNDT: solo Palermo. Moduli puri, senza DOM.
 
-// ovest, sud, est, nord = LIMITI di core/config.js (config.js usa `window`: qui non si importa)
+// ovest, sud, est, nord: area di Palermo per le ricerche (catalogo RNDT, servizi WFS/ArcGIS). I LIMITI della mappa in core/config.js
+// arrivano un po' più a ovest (fino a Cinisi e Terrasini, oltre l'aeroporto); config.js usa `window`: qui non si importa
 export const BBOX_PALERMO = [13.1, 37.9785, 13.55, 38.2919];
 export const CENTRO_PALERMO = [13.33225, 38.14074];
 export const SOGLIA_FILTRO = 5000; // sopra questo numero di feature il filtro sul confine costa troppo nel browser

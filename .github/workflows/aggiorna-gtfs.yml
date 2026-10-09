@@ -2,6 +2,7 @@ name: Aggiorna GTFS
 
 # Ogni giorno (e a mano): legge il catalogo open data del Comune di Palermo, prende il feed GTFS di AMAT caricato per ultimo e,
 # se è diverso da quello in uso, rigenera dati/trasporto (fermate, linee, orari). I feed escono ogni poche settimane.
+# Fa lo stesso per il feed GTFS Trenitalia (ferrovia urbana, ferrovia-*): il controllo sulla versione rende innocuo il passaggio giornaliero.
 # Se il feed è scaduto, incompleto o fuori dal comune lo script fallisce e i dati in repository restano quelli precedenti.
 on:
   schedule:
@@ -29,14 +30,19 @@ jobs:
       - name: Scarica e converti l'ultimo feed
         run: python3 scripts/gtfs_scarica.py | tee -a "$GITHUB_STEP_SUMMARY"
 
+      - name: Scarica e converti il feed Trenitalia
+        continue-on-error: true  # un feed Trenitalia scaduto o incompleto non deve bloccare l'aggiornamento di AMAT
+        shell: bash  # con pipefail: un errore dello script fa fallire il passo (visibile nei log), non lo nasconde `tee`
+        run: python3 scripts/gtfs_trenitalia_scarica.py 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
+
       - name: Salva nel repository
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f dati/trasporto/fermate.geojson dati/trasporto/linee.geojson dati/trasporto/orari.json dati/trasporto/gtfs_origine.json
+          git add -f dati/trasporto/fermate.geojson dati/trasporto/linee.geojson dati/trasporto/orari.json dati/trasporto/gtfs_origine.json dati/trasporto/ferrovia-fermate.geojson dati/trasporto/ferrovia-linee.geojson dati/trasporto/ferrovia-orari.json dati/trasporto/ferrovia_origine.json
           if git diff --cached --quiet; then
             echo "Nessuna variazione nei dati."
           else
-            git commit -m "dati: aggiornamento GTFS AMAT ($(date -u +%F))"
+            git commit -m "dati: aggiornamento GTFS AMAT e Trenitalia ($(date -u +%F))"
             git push
           fi

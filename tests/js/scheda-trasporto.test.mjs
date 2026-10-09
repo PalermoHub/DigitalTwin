@@ -69,3 +69,38 @@ test('tooltip linee: una per linea (le due direzioni insieme), al massimo `max`,
   assert.deepEqual(t.linee.map(l => l.numero), ['100', '101']);
   assert.equal(t.altre, 1);
 });
+
+test('stazione ferroviaria: strato, icona e badge della ferrovia', () => {
+  const v = voceFermata({ id: 'f830012002', nome: 'Palermo Centrale', linee: ['M1'], accessibile: 'Sì', tipo: 'ferrovia' }, dinamico);
+  assert.equal(v.strato, 'trasporto-stazioni');
+  assert.equal(v.icona, 'treno');
+  assert.equal(v.badge, 'Stazione');
+});
+
+test('fermata AMAT: strato, icona e badge invariati', () => {
+  const v = voceFermata(fermata, dinamico);
+  assert.equal(v.strato, 'trasporto-fermate');
+  assert.equal(v.icona, 'bus');
+  assert.equal(v.badge, 'Fermata');
+});
+
+test('una sola linea ferroviaria: icona treno e badge Metro', () => {
+  const v = voceLinee([linea('ferrovia-1', 0, 'ferrovia')], () => 'nodo');
+  assert.equal(v.icona, 'treno');
+  assert.equal(v.badge, 'Metro');
+});
+
+test('stazione in apertura: lo stato è una riga della scheda e non ci sono linee', () => {
+  const v = voceFermata({ id: 'fosm-1', nome: 'Palermo Politeama', linee: [], accessibile: 'Sì', tipo: 'ferrovia', stato: 'in apertura' }, dinamico);
+  assert.equal(v.badge, 'Stazione');
+  assert.deepEqual(v.gruppi[0].righe, [
+    { etichetta: 'Stato', valore: 'In apertura' },
+    { etichetta: 'Accessibile in carrozzina', valore: 'Sì' },
+  ]);
+});
+
+test('tooltip di una stazione in apertura: dice che apre a breve, non «nessuna corsa nel feed»', () => {
+  const t = tooltipFermata({ nome: 'Palermo Porto', linee: [], tipo: 'ferrovia', stato: 'in apertura' });
+  assert.equal(t.titolo, 'Palermo Porto');
+  assert.equal(t.dettaglio, 'In apertura: non ancora in servizio');
+});

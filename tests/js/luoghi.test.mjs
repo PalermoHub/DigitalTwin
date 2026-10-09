@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { preparaLuoghi, cercaLuoghi } from '../../js/core/luoghi.js';
+import { preparaLuoghi, cercaLuoghi, FONTI } from '../../js/core/luoghi.js';
 
 const punto = (nome, extra) => ({ properties: { nome, lon: 13.36, lat: 38.11, ...extra } });
 const voci = preparaLuoghi([
@@ -138,4 +138,23 @@ test('la sede degli uffici si trova per nome e precede i suoi uffici', () => {
   assert.equal(r[0].etichetta, 'Polo Tecnico');
   assert.equal(r[0].nota, 'Sede comunale, 95 uffici');
   assert.equal(r.length, 2);
+});
+
+// le fonti vere (non quelle di prova): stazioni e linee della ferrovia urbana
+const fonteFerrovia = file => FONTI.find(f => f.file === file);
+const ferrovia = preparaLuoghi([
+  { ...fonteFerrovia('trasporto/ferrovia-fermate.geojson'), features: [punto('Palermo Notarbartolo', { id: 'f830012134', linee: ['M1', 'M3'] })] },
+  { ...fonteFerrovia('trasporto/ferrovia-linee.geojson'), features: [punto('x', { numero: 'M1', nome: 'Passante ferroviario (Palermo Centrale ⇄ Carini)', tipo: 'ferrovia', da: 'Carini', a: 'Palermo Centrale' })] },
+]);
+
+test('una stazione ferroviaria si trova per nome e accende le stazioni RFI', () => {
+  const [r] = cercaLuoghi(ferrovia, 'notarbartolo');
+  assert.equal(r.etichetta, 'Palermo Notarbartolo');
+  assert.equal(r.strato, 'trasporto-stazioni');
+});
+
+test('una linea ferroviaria si trova dalla sigla e accende le linee metro', () => {
+  const r = cercaLuoghi(ferrovia, 'M1').find(x => x.etichetta.startsWith('Linea M1'));
+  assert.equal(r.strato, 'trasporto-metro');
+  assert.equal(r.nota, 'Metro, Carini → Palermo Centrale');
 });

@@ -1,0 +1,93 @@
+{
+  "830012065": {
+    "lon": 13.328882,
+    "lat": 38.147678,
+    "nome": "Palermo De Gasperi",
+    "scarto_m": 1005,
+    "fonte": "OpenStreetMap node 12026634427 «Palermo De Gasperi»"
+  },
+  "830012125": {
+    "lon": 13.141645,
+    "lat": 38.171815,
+    "nome": "Piraineto",
+    "scarto_m": 334,
+    "fonte": "OpenStreetMap node 9063306504 «Piraineto»"
+  },
+  "830012130": {
+    "lon": 13.354092,
+    "lat": 38.108958,
+    "nome": "Palermo Palazzo Reale-Orleans",
+    "scarto_m": 71,
+    "fonte": "OpenStreetMap node 9063329758 «Palazzo Reale-Orleans»"
+  },
+  "830012133": {
+    "lon": 13.10582,
+    "lat": 38.187374,
+    "nome": "Palermo Aeroporto",
+    "scarto_m": 397,
+    "fonte": "OpenStreetMap node 9063329632 «Palermo Aeroporto»"
+  },
+  "830012135": {
+    "lon": 13.361622,
+    "lat": 38.102697,
+    "nome": "Palermo Vespri",
+    "scarto_m": 128,
+    "fonte": "OpenStreetMap node 9063329761 «Palermo Vespri»"
+  },
+  "830012136": {
+    "lon": 13.349234,
+    "lat": 38.145207,
+    "nome": "Palermo Imperatore Federico",
+    "scarto_m": 380,
+    "fonte": "OpenStreetMap node 1746597335 «Palermo Imperatore Federico»"
+  },
+  "830012137": {
+    "lon": 13.353622,
+    "lat": 38.141048,
+    "nome": "Palermo Fiera",
+    "scarto_m": 353,
+    "fonte": "OpenStreetMap node 1746597333 «Palermo Fiera»"
+  },
+  "830012138": {
+    "lon": 13.358071,
+    "lat": 38.135315,
+    "nome": "Palermo Giachery",
+    "scarto_m": 337,
+    "fonte": "OpenStreetMap node 12152993489 «Palermo Giachery»"
+  },
+  "830012139": {
+    "lon": 13.297867,
+    "lat": 38.174051,
+    "nome": "Palermo Cardillo-Zen",
+    "scarto_m": 107,
+    "fonte": "OpenStreetMap node 5421530432 «Palermo Cardillo»"
+  },
+  "830012140": {
+    "lon": 13.321922,
+    "lat": 38.15546,
+    "nome": "Palermo Francia",
+    "scarto_m": 60,
+    "fonte": "OpenStreetMap node 5811454244 «Palermo Francia»"
+  },
+  "830012143": {
+    "lon": 13.345531,
+    "lat": 38.124363,
+    "nome": "Palermo Lolli",
+    "scarto_m": 134,
+    "fonte": "OpenStreetMap node 4010029591 «Palermo Lolli»"
+  },
+  "830012144": {
+    "lon": 13.370845,
+    "lat": 38.09825,
+    "nome": "Palermo Guadagna",
+    "scarto_m": 104,
+    "fonte": "OpenStreetMap node 9063329769 «Palermo Guadagna»"
+  },
+  "830012799": {
+    "lon": 13.218192,
+    "lat": 38.163498,
+    "nome": "Carini Torre Ciachea",
+    "scarto_m": 284,
+    "fonte": "OpenStreetMap node 9063329689 «Carini Torre Ciachea»"
+  }
+}

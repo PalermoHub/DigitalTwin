@@ -8,17 +8,27 @@ import { evidenzia } from '../core/evidenza.js';
 import { fermateVicine, voceTrasportoVicino } from './trasporto-vicino.js';
 import { registraTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
-import { giornoIniziale, oggiISO, colorePerTesto } from './trasporto-orari.js';
+import { giornoIniziale, oggiISO, colorePerTesto, uniscimOrari } from './trasporto-orari.js';
 import { t as tr, tl } from '../core/i18n.js';
+import { creaStrati, stratoLinea } from './trasporto-strati.js';
+import { immagineStazione, urlStazione } from './trasporto-logo.js';
 
-// Linee bus/tram e fermate AMAT (GTFS). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
+// Linee bus/tram e fermate AMAT (GTFS) e linee e stazioni della ferrovia urbana (GTFS Trenitalia, file ferrovia-*): stesso schema,
+// stesse mappe in memoria (id con prefisso: stazioni «f…», rotte «ferrovia-…»). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
 // (da zoom 13) così la scheda di destra mostra fermate e linee anche a strato spento, come per scuole e seggi.
 // I colori delle linee sono quelli ufficiali del feed (route_color).
 const COLORE_FERMATA = '#364fc7';
 const ZOOM_MIN = 13;
 const ZOOM_FERMATA = 17.5;
 const RAGGIO_VICINO = 300; // m, in linea d'aria
-const L = { bus: 'trasporto-bus', tram: 'trasporto-tram', fermate: 'trasporto-fermate', hitLinee: 'trasporto-hit-linee', hitFermate: 'trasporto-hit-fermate' };
+const IMMAGINE_STAZIONE = 'stazione-metro';
+const ZOOM_STAZIONE = 11; // le stazioni sono poche e distanti: si vedono da più lontano delle fermate
+const L = {
+  bus: 'trasporto-bus', tram: 'trasporto-tram', fermate: 'trasporto-fermate', hitLinee: 'trasporto-hit-linee', hitFermate: 'trasporto-hit-fermate',
+  metro: 'trasporto-metro', metroTratti: 'trasporto-metro-tratti', stazioni: 'trasporto-stazioni', hitMetro: 'trasporto-hit-metro', hitStazioni: 'trasporto-hit-stazioni',
+};
+const STRATI_TRASPORTO = [L.bus, L.tram, L.fermate, L.metro, L.stazioni];
+
 
 const fermate = new Map(); // id -> proprietà complete (le feature di MapLibre trasformano gli array in testo)
 const linee = new Map();
@@ -30,12 +40,14 @@ const limitiRotta = new Map(); // route_id -> [[o, s], [e, n]] per l'inquadratur
 // orari.json (compatto, ≈ 150 KB compresso) si scarica alla prima scheda aperta e poi resta in memoria
 let promessaOrari = null;
 function caricaOrari() {
-  promessaOrari ??= fetch(urlDati('trasporto/orari.json'))
-    .then(r => {
+  promessaOrari ??= Promise.all([
+    fetch(urlDati('trasporto/orari.json')).then(r => {
       if (!r.ok) throw new Error(tr('err.orariNonRaggiungibili'));
       return r.json();
-    })
-    .then(decodificaOrari)
+    }).then(decodificaOrari),
+    // gli orari ferroviari sono facoltativi: se mancano restano quelli di AMAT
+    fetch(urlDati('trasporto/ferrovia-orari.json')).then(r => (r.ok ? r.json() : null)).then(o => (o ? decodificaOrari(o) : null)).catch(() => null),
+  ]).then(([amat, ferrovia]) => uniscimOrari(amat, ferrovia))
     .catch(err => { promessaOrari = null; throw err; }); // un errore non resta in cache: si riprova
   return promessaOrari;
 }
@@ -70,6 +82,9 @@ const ctx = {
   nomeFermata: id => fermate.get(id)?.nome ?? id,
 };
 
+// Una stazione non ancora aperta non ha orari: la scheda lo dice al posto delle partenze.
+const notaInApertura = () => el('p', 'scheda-nota', tr('trasporto.inAperturaNota'));
+
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
@@ -80,20 +95,28 @@ function el(tag, classe, testo) {
 // Legenda in #legende (sulla mappa): compare se almeno uno strato è acceso. Ogni voce è la casella del suo strato:
 // accende e spegne bus, tram o fermate (a filtro Linea attivo, il filtro resta quello scelto nel pannello).
 let legenda = null;
+function logoStazione() {
+  const img = el('img', 'trasporto-logo-metro');
+  img.src = urlStazione(48);
+  img.alt = '';
+  return img;
+}
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-trasporto');
   legenda.hidden = true;
-  const tratto = classe => { const i = el('i', `trasporto-tratto ${classe}`); i.style.background = '#7B263E'; return i; };
+  const tratto = (classe, colore = '#7B263E') => { const i = el('i', `trasporto-tratto ${classe}`); i.style.background = colore; return i; };
   legenda.append(
     el('strong', null, 'Trasporto pubblico'),
     voceStrato(tratto(''), 'Linea bus (colore AMAT)', L.bus),
     voceStrato(tratto('trasporto-tratto--tram'), 'Linea tram', L.tram),
     voceStrato(el('i', 'trasporto-pallino'), 'Fermata (da zoom 13)', L.fermate),
+    voceStrato(el('i', 'trasporto-tratto trasporto-tratto--binario'), 'Linea metro (RFI, tracciato schematico)', L.metro),
+    voceStrato(logoStazione(), 'Stazione (RFI, più chiara se in apertura)', L.stazioni),
   );
   document.getElementById('legende').append(legenda);
 }
 function aggiornaLegenda() {
-  if (legenda) legenda.hidden = ![L.bus, L.tram, L.fermate].some(id => document.getElementById(`strato-${id}`)?.checked);
+  if (legenda) legenda.hidden = !STRATI_TRASPORTO.some(id => document.getElementById(`strato-${id}`)?.checked);
 }
 
 // Tooltip al passaggio del mouse, solo sugli strati accesi (a strato spento sulla mappa non c'è nulla da indicare):
@@ -101,11 +124,11 @@ function aggiornaLegenda() {
 function collegaTooltip(map) {
   const acceso = id => map.getLayoutProperty(id, 'visibility') === 'visible';
   registraTooltip(map, e => {
-    if (![L.bus, L.tram, L.fermate].some(acceso)) return null; // nessuno strato acceso: niente da cercare sotto il cursore
+    if (!STRATI_TRASPORTO.some(acceso)) return null; // nessuno strato acceso: niente da cercare sotto il cursore
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];
-    const fermata = acceso(L.fermate) ? map.queryRenderedFeatures(riquadro, { layers: [L.hitFermate] })[0] : null;
-    const sotto = fermata ? [] : map.queryRenderedFeatures(riquadro, { layers: [L.hitLinee] })
-      .map(f => linee.get(f.properties.id)).filter(l => l && acceso(l.tipo === 'tram' ? L.tram : L.bus));
+    const fermata = ['fermate', 'stazioni'].flatMap(k => (acceso(L[k]) ? map.queryRenderedFeatures(riquadro, { layers: [k === 'fermate' ? L.hitFermate : L.hitStazioni] }) : []))[0];
+    const sotto = fermata ? [] : map.queryRenderedFeatures(riquadro, { layers: [L.hitLinee, L.hitMetro] })
+      .map(f => linee.get(f.properties.id)).filter(l => l && acceso(stratoLinea(l.tipo)));
     if (!fermata && !sotto.length) return null;
     const html = el('div', 'trasporto-tooltip-corpo');
     if (fermata) {
@@ -127,13 +150,29 @@ function collegaTooltip(map) {
   }, 0);
 }
 
+// Mette fermate (o stazioni) e linee di un feed nelle mappe in memoria, con i limiti di ogni rotta per l'inquadratura.
+function registra(f, l) {
+  for (const x of f.features) fermate.set(x.properties.id, x.properties);
+  for (const x of l.features) {
+    linee.set(x.properties.id, x.properties);
+    rottaPerNumero.set(x.properties.numero, x.properties.route_id);
+    geometrie.set(x.properties.id, x.geometry);
+    perNumero.set(x.properties.numero, { tipo: x.properties.tipo, colore: x.properties.colore });
+    const [o, s, e, n] = x.geometry.coordinates.reduce(([o, s, e, n], [lon, lat]) => [Math.min(o, lon), Math.min(s, lat), Math.max(e, lon), Math.max(n, lat)], [Infinity, Infinity, -Infinity, -Infinity]);
+    const prima = limitiRotta.get(x.properties.route_id);
+    limitiRotta.set(x.properties.route_id, prima ? [[Math.min(prima[0][0], o), Math.min(prima[0][1], s)], [Math.max(prima[1][0], e), Math.max(prima[1][1], n)]] : [[o, s], [e, n]]);
+  }
+}
+
 export default {
   id: 'trasporto',
   titolo: 'Trasporto pubblico',
-  argomento: { titolo: 'Trasporto pubblico', descrizione: 'Linee bus e tram e fermate AMAT, con gli orari dal feed GTFS.' },
+  argomento: { titolo: 'Trasporto pubblico', descrizione: 'Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.' },
   aggiungiSorgenti(map) {
     map.addSource('trasporto-linee', { type: 'geojson', data: urlDati('trasporto/linee.geojson') });
     map.addSource('trasporto-fermate', { type: 'geojson', data: urlDati('trasporto/fermate.geojson') });
+    map.addSource('ferrovia-linee', { type: 'geojson', data: urlDati('trasporto/ferrovia-linee.geojson') });
+    map.addSource('ferrovia-fermate', { type: 'geojson', data: urlDati('trasporto/ferrovia-fermate.geojson') });
   },
   aggiungiLayer(map) {
     mappa = map;
@@ -152,38 +191,57 @@ export default {
     // strati trasparenti sempre presenti: la scheda mostra i dati anche a strato spento
     map.addLayer({ id: L.hitLinee, type: 'line', source: 'trasporto-linee', minzoom: ZOOM_MIN, paint: { 'line-width': 12, 'line-opacity': 0 } });
     map.addLayer({ id: L.hitFermate, type: 'circle', source: 'trasporto-fermate', minzoom: ZOOM_MIN, paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
+    // ferrovia urbana: sopra bus e tram
+    // la linea ha l'aspetto del binario sulle carte: tracciato nero con trattini bianchi (le traverse)
+    map.addLayer({
+      id: L.metro, type: 'line', source: 'ferrovia-linee', layout: { ...nascosto, 'line-cap': 'butt', 'line-join': 'round' },
+      paint: { 'line-color': '#1a1a1a', 'line-width': spessore(2.5, 6) },
+    });
+    map.addLayer({
+      id: L.metroTratti, type: 'line', source: 'ferrovia-linee', layout: { ...nascosto, 'line-cap': 'butt', 'line-join': 'round' },
+      paint: { 'line-color': '#fff', 'line-width': spessore(1.2, 3.4), 'line-dasharray': [2, 2] },
+    });
+    // stazioni: il logo delle metropolitane (quadrato rosso con la M) e, avvicinandosi, il nome
+    if (!map.hasImage(IMMAGINE_STAZIONE)) map.addImage(IMMAGINE_STAZIONE, immagineStazione(64), { pixelRatio: 2 });
+    map.addLayer({
+      id: L.stazioni, type: 'symbol', source: 'ferrovia-fermate', minzoom: ZOOM_STAZIONE,
+      layout: {
+        ...nascosto, 'icon-image': IMMAGINE_STAZIONE, 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.5, 14, 0.7, 17, 0.9],
+        'icon-allow-overlap': true, 'icon-ignore-placement': true, 'symbol-sort-key': ['case', ['has', 'stato'], 0, 1],
+        'text-field': ['step', ['zoom'], '', 13.5, ['get', 'nome']], 'text-font': ['Noto Sans Bold'], 'text-size': 11,
+        'text-anchor': 'left', 'text-offset': [1.1, 0], 'text-optional': true,
+      },
+      paint: { 'icon-opacity': ['case', ['has', 'stato'], 0.55, 1], 'text-opacity': ['case', ['has', 'stato'], 0.7, 1], 'text-color': '#7f1d18', 'text-halo-color': '#fff', 'text-halo-width': 1.6 },
+    });
+    map.addLayer({ id: L.hitMetro, type: 'line', source: 'ferrovia-linee', minzoom: ZOOM_STAZIONE, paint: { 'line-width': 12, 'line-opacity': 0 } });
+    map.addLayer({ id: L.hitStazioni, type: 'circle', source: 'ferrovia-fermate', minzoom: ZOOM_STAZIONE, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
     collegaTooltip(map);
   },
   async avvia() {
-    const [f, l] = await Promise.all(['fermate', 'linee'].map(async n => {
-      const r = await fetch(urlDati(`trasporto/${n}.geojson`)); // già in cache: è il file della sorgente
-      if (!r.ok) throw new Error(`trasporto/${n}.geojson non raggiungibile`);
+    const leggi = prefisso => Promise.all(['fermate', 'linee'].map(async n => {
+      const file = `trasporto/${prefisso}${n}.geojson`;
+      const r = await fetch(urlDati(file)); // già in cache: è il file della sorgente
+      if (!r.ok) throw new Error(`${file} non raggiungibile`);
       return r.json();
     }));
-    for (const x of f.features) fermate.set(x.properties.id, x.properties);
-    for (const x of l.features) {
-      linee.set(x.properties.id, x.properties);
-      rottaPerNumero.set(x.properties.numero, x.properties.route_id);
-      geometrie.set(x.properties.id, x.geometry);
-      perNumero.set(x.properties.numero, { tipo: x.properties.tipo, colore: x.properties.colore });
-      const [o, s, e, n] = x.geometry.coordinates.reduce(([o, s, e, n], [lon, lat]) => [Math.min(o, lon), Math.min(s, lat), Math.max(e, lon), Math.max(n, lat)], [Infinity, Infinity, -Infinity, -Infinity]);
-      const prima = limitiRotta.get(x.properties.route_id);
-      limitiRotta.set(x.properties.route_id, prima ? [[Math.min(prima[0][0], o), Math.min(prima[0][1], s)], [Math.max(prima[1][0], e), Math.max(prima[1][1], n)]] : [[o, s], [e, n]]);
-    }
+    // la ferrovia è facoltativa: se i suoi file mancano restano bus, tram e fermate di AMAT
+    const [[f, l], ferrovia] = await Promise.all([leggi(''), leggi('ferrovia-').catch(() => null)]);
+    registra(f, l);
+    if (ferrovia) registra(...ferrovia);
     if (giornoIniziale({ validita: f.validita }, oggiISO()).fuori) {
       segnala(tr('trasporto.orariFuori', { da: f.validita.da, a: f.validita.a }));
     }
+    if (ferrovia && giornoIniziale({ validita: ferrovia[0].validita }, oggiISO()).fuori) {
+      segnala(tr('trasporto.orariFuoriRfi', { da: ferrovia[0].validita.da, a: ferrovia[0].validita.a }));
+    }
   },
-  strati: [
-    { id: 'trasporto-bus', etichetta: 'Linee bus', layers: [L.bus], attivo: false, suCambio: aggiornaLegenda },
-    { id: 'trasporto-tram', etichetta: 'Linee tram', layers: [L.tram], attivo: false, suCambio: aggiornaLegenda },
-    { id: 'trasporto-fermate', etichetta: 'Fermate', layers: [L.fermate], attivo: false, suCambio: aggiornaLegenda },
-  ],
+  sezioniFisse: true, // AMAT e RFI restano due sezioni: il riordino degli strati non attraversa le intestazioni
+  strati: creaStrati(aggiornaLegenda),
   pannello: creaLegenda,
   // per il filtro Linea del pannello Filtri (valido dopo `avvia`)
   filtro: () => ({ linee: [...linee.values()], limiti: id => limitiRotta.get(id) }),
   scheda: {
-    layers: [L.hitFermate, L.hitLinee],
+    layers: [L.hitFermate, L.hitStazioni, L.hitLinee, L.hitMetro],
     suEvidenza(base) { if (riferimento) riferimento.base = base; },
     voci(trovati, lngLat) {
       const visti = new Set();
@@ -193,9 +251,9 @@ export default {
         const id = f.properties.id;
         if (visti.has(id)) continue; // i tile spezzano i tracciati in più frammenti
         visti.add(id);
-        if (f.layer.id === L.hitFermate) {
+        if (f.layer.id === L.hitFermate || f.layer.id === L.hitStazioni) {
           const p = fermate.get(id) ?? { ...f.properties, linee: [] };
-          voci.push(voceFermata(p, orariFermata(id, ctx)));
+          voci.push(voceFermata(p, p.stato ? notaInApertura : orariFermata(id, ctx)));
         } else if (linee.has(id)) sotto.push(linee.get(id));
       }
       // tutte le linee del clic in una sola voce: su una strada principale sono decine

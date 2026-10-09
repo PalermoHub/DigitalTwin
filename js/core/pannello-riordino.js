@@ -6,18 +6,37 @@ import { t } from './i18n.js';
 
 // Blocchi di un gruppo: ogni strato con ciò che lo segue (opacità, filtri, albero) fino allo strato o al titolo di sezione
 // successivi. Il titolo di sezione viaggia con lo strato che lo segue, così gli strati si spostano in tutto il gruppo.
+// Un titolo con `data-fissa` (es. AMAT e RFI nel trasporto) non viaggia: resta dov'è e divide il gruppo in sezioni (`sez`),
+// e gli strati si riordinano solo dentro la propria sezione.
 function blocchi(gruppo) {
   const r = [];
   let corrente = null;
   let titoli = [];
+  let sez = 0;
   for (const n of gruppo.children) {
     if (n.matches('label.strato, .rndt-gruppo-riga')) { // la riga RNDT affianca al label il pulsante «Rimuovi»
       const casella = n.querySelector('input[type=checkbox]');
-      r.push(corrente = { riga: n, nodi: [...titoli, n], id: casella?.id.replace(/^strato-/, '') ?? '' });
+      r.push(corrente = { riga: n, nodi: [...titoli, n], id: casella?.id.replace(/^strato-/, '') ?? '', sez });
       titoli = [];
-    } else if (n.matches('h3.gruppo-sezione')) { titoli.push(n); corrente = null; } else if (corrente) corrente.nodi.push(n);
+    } else if (n.matches('h3.gruppo-sezione')) {
+      if (n.dataset.fissa !== undefined) sez++; else titoli.push(n);
+      corrente = null;
+    } else if (corrente) corrente.nodi.push(n);
   }
   return r;
+}
+// I blocchi raggruppati per sezione, nell'ordine in cui compaiono.
+const perSezione = tutti => {
+  const gruppi = new Map();
+  for (const b of tutti) gruppi.set(b.sez, [...(gruppi.get(b.sez) ?? []), b]);
+  return [...gruppi.values()];
+};
+// Rimette i blocchi di ogni sezione nell'ordine dato da `ordinaSezione(blocchiDellaSezione)`, senza uscire dalla sezione.
+function disponi(gruppo, ordinaSezione) {
+  for (const sezione of perSezione(blocchi(gruppo))) {
+    let dopo = sezione[0].nodi[0].previousElementSibling;
+    for (const b of ordinaSezione(sezione)) { dopo.after(...b.nodi); dopo = b.nodi.at(-1); }
+  }
 }
 // Parti del blocco che si ripiegano: tutto tranne titolo, riga dello strato e suo cursore di opacità.
 const ramo = b => b.nodi.slice(b.nodi.indexOf(b.riga) + 1).filter(n => !n.classList.contains('strato-opacita'));
@@ -54,13 +73,13 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
     if (tutto) tutto.textContent = aperti ? t('riordino.comprimi') : t('riordino.espandi');
   };
   const aggiornaFrecce = () => {
-    const tutti = blocchi(gruppo);
-    for (const b of tutti) {
-      const i = tutti.indexOf(b);
-      b.riga.querySelector('[data-azione=su]').disabled = i === 0;
-      b.riga.querySelector('[data-azione=giu]').disabled = i === tutti.length - 1;
-      // da solo nel gruppo non c'è nulla da spostare
-      for (const a of ['su', 'giu', 'trascina']) b.riga.querySelector(`[data-azione=${a}]`).hidden = tutti.length < 2;
+    for (const sezione of perSezione(blocchi(gruppo))) {
+      for (const [i, b] of sezione.entries()) {
+        b.riga.querySelector('[data-azione=su]').disabled = i === 0;
+        b.riga.querySelector('[data-azione=giu]').disabled = i === sezione.length - 1;
+        // da solo nel gruppo (o nella sezione) non c'è nulla da spostare
+        for (const a of ['su', 'giu', 'trascina']) b.riga.querySelector(`[data-azione=${a}]`).hidden = sezione.length < 2;
+      }
     }
   };
   const salvaEMappa = () => {
@@ -77,10 +96,9 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
     const indice = new Map(stackIniziale().map((id, i) => [id, i]));
     const cima = b => Math.max(-1, ...(layersDi.get(b.id) ?? []).filter(id => indice.has(id)).map(id => indice.get(id)));
     if (tutti.some(b => cima(b) < 0)) return;
-    const voluto = tutti.map((b, i) => ({ b, i, k: cima(b) })).sort((x, y) => y.k - x.k || x.i - y.i).map(x => x.b);
-    if (voluto.every((b, i) => b === tutti[i])) return;
-    let dopo = tutti[0].nodi[0].previousElementSibling;
-    for (const b of voluto) { dopo.after(...b.nodi); dopo = b.nodi.at(-1); }
+    const perStack = sezione => sezione.map((b, i) => ({ b, i, k: cima(b) })).sort((x, y) => y.k - x.k || x.i - y.i).map(x => x.b);
+    if (perSezione(tutti).every(sezione => perStack(sezione).every((b, i) => b === sezione[i]))) return;
+    disponi(gruppo, perStack);
     aggiornaFrecce();
   };
   if (!daElenco) document.addEventListener(EVENTO_DISEGNO, sincronizza);
@@ -89,7 +107,7 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
     const tutti = blocchi(gruppo);
     const b = tutti.find(x => x.riga === riga);
     const vicino = tutti[tutti.indexOf(b) + verso];
-    if (!vicino) return false;
+    if (!vicino || vicino.sez !== b.sez) return false; // mai oltre il titolo fisso di una sezione
     if (verso < 0) vicino.nodi[0].before(...b.nodi);
     else vicino.nodi.at(-1).after(...b.nodi);
     return true;
@@ -123,9 +141,9 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
         for (let passi = 0; passi < 50; passi++) { // un movimento rapido può scavalcare più strati
           const tutti = blocchi(gruppo);
           const i = tutti.findIndex(x => x.riga === b.riga);
-          if (i > 0 && ev.clientY < meta(tutti[i - 1])) muovi(b.riga, -1);
-          else if (i < tutti.length - 1 && ev.clientY > meta(tutti[i + 1])) muovi(b.riga, 1);
-          else break;
+          const mosso = i > 0 && ev.clientY < meta(tutti[i - 1]) ? muovi(b.riga, -1)
+            : i < tutti.length - 1 && ev.clientY > meta(tutti[i + 1]) ? muovi(b.riga, 1) : false;
+          if (!mosso) break; // fermi, o al confine di una sezione fissa: niente da rifare a ogni movimento
         }
       };
       const fine = () => {
@@ -170,10 +188,7 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
     reset.dataset.azione = 'ripristina';
     reset.textContent = t('riordino.ripristina');
     reset.addEventListener('click', () => {
-      const tutti = blocchi(gruppo);
-      const per = new Map(tutti.map(b => [b.id, b]));
-      let dopo = tutti[0].nodi[0].previousElementSibling;
-      for (const id of ordineIniziale) { dopo.after(...per.get(id).nodi); dopo = per.get(id).nodi.at(-1); }
+      disponi(gruppo, sezione => [...sezione].sort((x, y) => ordineIniziale.indexOf(x.id) - ordineIniziale.indexOf(y.id)));
       azzeraOrdine(storage, idGruppo);
       applicaMosse(map, daElenco ? mosseMappa(stackIniziale(), blocchi(gruppo).map(b => layersDi.get(b.id) ?? [])) : mosseSequenza(stackIniziale(), originale));
       aggiornaFrecce();
@@ -186,10 +201,10 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
   // ordine salvato in una visita precedente
   const salvato = leggiOrdine(storage)[idGruppo];
   if (Array.isArray(salvato) && riordinabile) {
-    const tutti = blocchi(gruppo);
-    const per = new Map(tutti.map(b => [b.id, b]));
-    let dopo = tutti[0].nodi[0].previousElementSibling;
-    for (const id of ordina(tutti.map(b => b.id), salvato)) { dopo.after(...per.get(id).nodi); dopo = per.get(id).nodi.at(-1); }
+    disponi(gruppo, sezione => {
+      const per = new Map(sezione.map(b => [b.id, b]));
+      return ordina(sezione.map(b => b.id), salvato).map(id => per.get(id));
+    });
     applicaMosse(map, mosseMappa(stackIniziale(), blocchi(gruppo).map(b => layersDi.get(b.id) ?? [])));
   }
   aggiornaFrecce();

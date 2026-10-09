@@ -30,6 +30,8 @@ export const FONTI = {
   'uffici-hit': { etichetta: t('evidenza.uffici'), colore: '#a61e4d' },
   'trasporto-hit-fermate': { etichetta: t('evidenza.fermata'), colore: '#364fc7' },
   'trasporto-hit-linee': { etichetta: t('evidenza.linea'), colore: '#e03131' },
+  'trasporto-hit-stazioni': { etichetta: t('evidenza.stazione'), colore: '#b7282e' },
+  'trasporto-hit-metro': { etichetta: t('evidenza.linea'), colore: '#b7282e' },
   'griglia-hit': { etichetta: t('evidenza.griglia'), colore: '#5c940d' },
 };
 
@@ -47,6 +49,7 @@ const ATTRIBUTI = {
   'immobili-hit': p => unisciTesti(p.TIPO, p.INDIRIZZO),
   'civici-hit': p => unisciTesti(p.Odonimo, p.Esponente ? `${p.Civico}/${p.Esponente}` : p.Civico),
   'trasporto-hit-fermate': p => unisciTesti(p.nome),
+  'trasporto-hit-stazioni': p => unisciTesti(p.nome),
   'monumenti-hit-poli': p => unisciTesti(p.nome),
   'monumenti-hit-punti': p => unisciTesti(p.nome),
   'scuole-hit-poli': p => unisciTesti(p.nome),

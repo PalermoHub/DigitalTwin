@@ -21,6 +21,24 @@ export function giornoIniziale({ validita }, oggi) {
   return oggi >= validita.da && oggi <= validita.a ? { data: oggi, fuori: false } : { data: validita.da, fuori: true };
 }
 
+// Fonde gli orari di due feed (AMAT e Trenitalia): gli indici di servizio e gli id di fermata non collidono (i servizi
+// ferroviari partono da 1000, le stazioni hanno il prefisso «f»). La validità è l'unione: fuori dal periodo di un feed
+// i suoi servizi semplicemente non hanno giorni attivi. Con un solo feed restituisce quello.
+export function uniscimOrari(a, b) {
+  if (!a || !b) return a ?? b;
+  return {
+    validita: { da: a.validita.da < b.validita.da ? a.validita.da : b.validita.da, a: a.validita.a > b.validita.a ? a.validita.a : b.validita.a },
+    validitaPer: { amat: a.validita, ferrovia: b.validita }, // ogni fermata mostra l'avviso e il selettore del proprio feed
+    servizi: { ...a.servizi, ...b.servizi },
+    fermate: { ...a.fermate, ...b.fermate },
+  };
+}
+
+// Validità del feed a cui appartiene la fermata: le stazioni ferroviarie hanno l'id con prefisso «f», quelle di AMAT sono numeriche.
+export function validitaFermata(orari, stopId) {
+  return orari.validitaPer?.[String(stopId).startsWith('f') ? 'ferrovia' : 'amat'] ?? orari.validita;
+}
+
 export function serviziAttivi({ servizi }, data) {
   return new Set(Object.entries(servizi).filter(([, date]) => date.includes(data)).map(([indice]) => Number(indice)));
 }

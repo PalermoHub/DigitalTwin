@@ -1,0 +1,16 @@
+{
+  "osm-10248861760": {
+    "nome": "Palermo Politeama",
+    "lon": 13.35504,
+    "lat": 38.124033,
+    "accessibile": "Sì",
+    "fonte": "OpenStreetMap node 10248861760 (construction:railway=station, RFI)"
+  },
+  "osm-10248861761": {
+    "nome": "Palermo Porto",
+    "lon": 13.362031,
+    "lat": 38.129118,
+    "accessibile": "",
+    "fonte": "OpenStreetMap node 10248861761 (construction:railway=station, RFI)"
+  }
+}

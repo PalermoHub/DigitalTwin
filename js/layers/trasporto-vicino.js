@@ -11,14 +11,15 @@ export function distanzaM([lon1, lat1], [lon2, lat2]) {
 }
 
 // Le fermate entro `raggio` metri dal punto, dalla più vicina, con le loro linee (numero, tipo, colore).
-// `fermate` = [{ id, nome, lon, lat, linee: [numero] }]; `info(numero)` → { tipo, colore } o undefined (linea fuori dal feed: ignorata).
+// `fermate` = [{ id, nome, lon, lat, linee: [numero], stato? }]; `info(numero)` → { tipo, colore } o undefined (linea fuori dal feed: ignorata).
 export function fermateVicine(punto, fermate, info, raggio) {
   const trovate = [];
   for (const f of fermate) {
     const distanza = distanzaM(punto, [f.lon, f.lat]);
     if (distanza > raggio) continue;
     const linee = f.linee.flatMap(numero => { const l = info(numero); return l ? [{ numero, tipo: l.tipo, colore: l.colore }] : []; }).sort(perNumero);
-    if (linee.length) trovate.push({ id: f.id, nome: f.nome, lon: f.lon, lat: f.lat, distanza, linee });
+    // una stazione in apertura non ha linee, ma si segnala lo stesso: è già un punto di riferimento (stato → «in apertura»)
+    if (linee.length || f.stato) trovate.push({ id: f.id, nome: f.nome, lon: f.lon, lat: f.lat, distanza, linee, ...(f.stato ? { stato: f.stato } : {}) });
   }
   return trovate.sort((a, b) => a.distanza - b.distanza);
 }

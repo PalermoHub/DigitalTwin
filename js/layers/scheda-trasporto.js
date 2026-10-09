@@ -2,12 +2,17 @@
 // Orari e fermate in sequenza sono interattivi (selettore del giorno): li costruisce `dinamico`, passato da chi disegna.
 import { t } from '../core/i18n.js';
 
+const ICONA = { tram: 'tram', ferrovia: 'treno' };
+const BADGE = { tram: 'Tram', ferrovia: 'Metro' };
+
 const righe = coppie => coppie.filter(([, valore]) => valore).map(([etichetta, valore]) => ({ etichetta, valore }));
 
 export function voceFermata(p, dinamico) {
+  const stazione = p.tipo === 'ferrovia';
   return {
-    chiave: `fermata-${p.id}`, peso: 6, strato: 'trasporto-fermate', titolo: p.nome, icona: 'bus', badge: 'Fermata', sempre: true,
-    gruppi: [{ righe: righe([['Linee', p.linee.join(', ')], ['Accessibile in carrozzina', p.accessibile]]) }],
+    chiave: `fermata-${p.id}`, peso: 6, strato: stazione ? 'trasporto-stazioni' : 'trasporto-fermate', titolo: p.nome,
+    icona: stazione ? 'treno' : 'bus', badge: stazione ? 'Stazione' : 'Fermata', sempre: true,
+    gruppi: [{ righe: righe([['Stato', p.stato && 'In apertura'], ['Linee', p.linee.join(', ')], ['Accessibile in carrozzina', p.accessibile]]) }],
     dinamico,
   };
 }
@@ -31,15 +36,15 @@ export function voceLinee(linee, costruisci) {
   const gruppi = raggruppaLinee(linee);
   const una = gruppi.length === 1 ? gruppi[0] : null;
   return {
-    chiave: 'linee', peso: 7, titolo: una ? t('trasporto.linea', { numero: una.numero }) : t('trasporto.lineeN', { n: gruppi.length }), icona: una?.tipo === 'tram' ? 'tram' : 'bus',
-    badge: una ? (una.tipo === 'tram' ? 'Tram' : 'Bus') : undefined, sempre: true, gruppi: [],
+    chiave: 'linee', peso: 7, titolo: una ? t('trasporto.linea', { numero: una.numero }) : t('trasporto.lineeN', { n: gruppi.length }), icona: ICONA[una?.tipo] ?? 'bus',
+    badge: una ? BADGE[una.tipo] ?? 'Bus' : undefined, sempre: true, gruppi: [],
     dinamico: () => costruisci(gruppi),
   };
 }
 
 // Tooltip al passaggio del mouse: stesse informazioni essenziali della scheda.
 export function tooltipFermata(p) {
-  return { titolo: p.nome, dettaglio: p.linee.length ? t('trasporto.lineeElenco', { elenco: p.linee.join(', ') }) : 'Nessuna corsa nel feed' };
+  return { titolo: p.nome, dettaglio: p.linee.length ? t('trasporto.lineeElenco', { elenco: p.linee.join(', ') }) : p.stato ? t('trasporto.inApertura') : 'Nessuna corsa nel feed' };
 }
 
 // Una riga per linea (le due direzioni insieme), al massimo `max`: su una strada principale ne passano molte.

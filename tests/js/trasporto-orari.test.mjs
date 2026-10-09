@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  formatoOra, oggiISO, minutoAdesso, giornoIniziale, serviziAttivi, partenzeFermata, prossime, riepilogoLinea, colorePerTesto,
+  formatoOra, oggiISO, minutoAdesso, giornoIniziale, serviziAttivi, partenzeFermata, prossime, riepilogoLinea, colorePerTesto, uniscimOrari, validitaFermata,
 } from '../../js/layers/trasporto-orari.js';
 
 const orari = {
@@ -79,4 +79,43 @@ test('riepilogoLinea: se la prima fermata della corsa-modello non ha corse oggi,
 test('colorePerTesto: testo scuro sui colori chiari e viceversa', () => {
   assert.equal(colorePerTesto('#FACE2F'), '#000000');
   assert.equal(colorePerTesto('#7B263E'), '#ffffff');
+});
+
+test('uniscimOrari fonde servizi e fermate dei due feed senza collisioni', () => {
+  const a = { validita: { da: '2026-08-25', a: '2026-10-31' }, servizi: { 0: ['2026-10-01'] }, fermate: { 1: { 100: [{ d: 0, s: 0, t: [600] }] } } };
+  const b = { validita: { da: '2026-09-26', a: '2026-12-12' }, servizi: { 1000: ['2026-10-03'] }, fermate: { f1: { 'ferrovia-1': [{ d: 0, s: 1000, t: [700] }] } } };
+  const u = uniscimOrari(a, b);
+  assert.deepEqual(Object.keys(u.servizi), ['0', '1000']);
+  assert.deepEqual(Object.keys(u.fermate), ['1', 'f1']);
+  assert.deepEqual(u.validita, { da: '2026-08-25', a: '2026-12-12' });
+});
+
+test('uniscimOrari con un solo feed restituisce quello', () => {
+  const a = { validita: { da: 'x', a: 'y' }, servizi: {}, fermate: {} };
+  assert.equal(uniscimOrari(a, null), a);
+  assert.equal(uniscimOrari(null, a), a);
+});
+
+test('con orari fusi, i giorni di un feed non nascondono le partenze dell\'altro', () => {
+  const a = { validita: { da: '2026-08-25', a: '2026-10-31' }, servizi: { 0: ['2026-11-05'] }, fermate: { 1: { 100: [{ d: 0, s: 0, t: [600] }] } } };
+  const b = { validita: { da: '2026-09-26', a: '2026-12-12' }, servizi: { 1000: ['2026-11-05'] }, fermate: { f1: { 'ferrovia-1': [{ d: 0, s: 1000, t: [700] }] } } };
+  const u = uniscimOrari(a, b);
+  assert.deepEqual(partenzeFermata(u, 'f1', '2026-11-05').map(p => p.t), [700]);
+});
+
+test('validitaFermata: ogni fermata ha la validità del proprio feed, non quella dell\'unione', () => {
+  const amat = { validita: { da: '2026-08-25', a: '2026-10-31' }, servizi: {}, fermate: { 1: {} } };
+  const ferrovia = { validita: { da: '2026-09-26', a: '2026-12-12' }, servizi: {}, fermate: { f1: {} } };
+  const u = uniscimOrari(amat, ferrovia);
+  assert.deepEqual(validitaFermata(u, '1'), amat.validita);
+  assert.deepEqual(validitaFermata(u, 'f1'), ferrovia.validita);
+  // dopo la scadenza di AMAT una fermata bus è fuori validità anche se la ferrovia è ancora valida
+  assert.equal(giornoIniziale({ validita: validitaFermata(u, '1') }, '2026-11-05').fuori, true);
+  assert.equal(giornoIniziale({ validita: validitaFermata(u, 'f1') }, '2026-11-05').fuori, false);
+});
+
+test('validitaFermata: con un solo feed vale la validità degli orari', () => {
+  const a = { validita: { da: 'x', a: 'y' }, servizi: {}, fermate: {} };
+  assert.deepEqual(validitaFermata(a, '1'), a.validita);
+  assert.deepEqual(validitaFermata(uniscimOrari(a, null), 'f1'), a.validita);
 });
