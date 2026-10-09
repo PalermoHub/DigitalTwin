@@ -5,6 +5,7 @@
 import { ESTENSIONI } from '../rndt/importa.js';
 import { TETTO_SERVIZI } from './salvati.js';
 import { ORTOFOTO } from './ortofoto.js';
+import { BENI_CULTURALI } from './beniculturali.js';
 import { t as tr, tn, tl } from '../core/i18n.js';
 
 const SVG = d => `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="${d}"/></svg>`;
@@ -219,21 +220,21 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     return form;
   }
 
-  // ortofoto pronte: un clic le mette in mappa (sotto i dati); i tile partono solo allora
-  function creaOrtofoto() {
-    const gruppo = nodo(tr('aggiungi.ortofoto'), { icona: 'connessione', apri: false, classe: 'agg-tipo' });
-    gruppo.det.firstElementChild.title = tr('aggiungi.ortofoto.nota');
-    gruppo.conteggio.textContent = String(ORTOFOTO.length);
-    for (const o of ORTOFOTO) {
+  // elenchi pronti (ortofoto, beni culturali): un clic mette il layer in mappa; i tile partono solo allora
+  function creaElencoPronto({ titolo, nota, metti, voci, aggiungi }) {
+    const gruppo = nodo(tr(titolo), { icona: 'connessione', apri: false, classe: 'agg-tipo' });
+    gruppo.det.firstElementChild.title = tr(nota);
+    gruppo.conteggio.textContent = String(voci.length);
+    for (const o of voci) {
       const riga = el('div', 'agg-salvato');
       const apri = bottone('', 'agg-salvato-nome');
       const ico = el('span', 'agg-ico');
       ico.innerHTML = ICONE.raster;
       apri.append(ico, el('span', null, tl(o.nome)));
-      apri.title = tr('aggiungi.ortofoto.metti', { nome: tl(o.nome) });
+      apri.title = tr(metti, { nome: tl(o.nome) });
       const esitoRiga = nuovoEsito();
       apri.addEventListener('click', () => {
-        const { errori } = controllo.aggiungiOrtofoto(o);
+        const { errori } = aggiungi(o);
         if (errori.length) esito(esitoRiga, errori.map(e => `«${e.nome}»: ${e.messaggio}.`).join(' '), true);
         else avvisa(tr('aggiungi.inMappa', { nome: tl(o.nome) }));
       });
@@ -250,7 +251,12 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
       azione: { icona: 'piu', titolo: tr('aggiungi.aggiungiServizio', { tipo: tipo.titolo }), suClic: () => { ramo.det.open = true; modulo.hidden = !modulo.hidden; if (!modulo.hidden) modulo.querySelector('input')?.focus(); } },
     });
     const elenco = el('div', 'agg-elenco');
-    if (tipo.id === 'arcgis') ramo.figli.append(creaOrtofoto());
+    if (tipo.id === 'arcgis') {
+      ramo.figli.append(
+        creaElencoPronto({ titolo: 'aggiungi.ortofoto', nota: 'aggiungi.ortofoto.nota', metti: 'aggiungi.ortofoto.metti', voci: ORTOFOTO, aggiungi: o => controllo.aggiungiOrtofoto(o) }),
+        creaElencoPronto({ titolo: 'aggiungi.beniCulturali', nota: 'aggiungi.beniCulturali.nota', metti: 'aggiungi.beniCulturali.metti', voci: BENI_CULTURALI, aggiungi: o => controllo.aggiungiBeneCulturale(o) }),
+      );
+    }
     ramo.figli.append(modulo, elenco);
     rami.set(tipo.id, { ramo, elenco });
     servizi.figli.append(ramo.det);

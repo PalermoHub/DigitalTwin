@@ -7,6 +7,7 @@ import {
 } from './servizi.js';
 import { capabilitiesWmts } from './wmts.js';
 import { leggiUrlArcgis, urlInfo, descriviArcgis, urlExport, urlTileCache, urlQuery } from './arcgis.js';
+import { ATTRIBUZIONE_BENI, urlBeneCulturale } from './beniculturali.js';
 import { leggiServizi, salvaServizi, aggiungiServizio, rimuoviServizio, filtraServizi } from './salvati.js';
 import { ATTRIBUZIONE_ORTOFOTO, urlOrtofoto } from './ortofoto.js';
 import { creaCredenziali, ospiteDi } from './credenziali.js';
@@ -130,6 +131,11 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     try { host.addTileLayer(o.nome, urlOrtofoto(o), { attribution: ATTRIBUZIONE_ORTOFOTO, maxzoom: o.max, sotto: true, diretto: true }); return { errori: [] }; } catch (e) { return { errori: [{ nome: o.nome, messaggio: messaggio(e) }] }; }
   }
 
+  // Un servizio dei beni culturali (SITR): immagini dal server, il server ammette già il CORS, quindi senza proxy
+  function aggiungiBeneCulturale(o) {
+    try { host.addTileLayer(o.nome, urlBeneCulturale(o), { attribution: ATTRIBUZIONE_BENI, diretto: true }); return { errori: [] }; } catch (e) { return { errori: [{ nome: o.nome, messaggio: messaggio(e) }] }; }
+  }
+
   const serveCredenziali = id => {
     const s = stato.servizi.find(x => x.id === id);
     return Boolean(s?.utente || s?.conToken) && !credenziali.ha(ospiteDi(s.url));
@@ -172,6 +178,6 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     stato: () => stato,
     suCambio(fn) { ascoltatori.add(fn); return () => ascoltatori.delete(fn); },
     credenziali, serveCredenziali, protetto, cerca: testo => filtraServizi(stato.servizi, testo),
-    leggiServizio, aggiungiOrtofoto, aggiungiXyz, aggiungiWms, aggiungiWfs, aggiungiWmts, aggiungiArcgis, riaggiungi, rimuovi,
+    leggiServizio, aggiungiOrtofoto, aggiungiBeneCulturale, aggiungiXyz, aggiungiWms, aggiungiWfs, aggiungiWmts, aggiungiArcgis, riaggiungi, rimuovi,
   };
 }
