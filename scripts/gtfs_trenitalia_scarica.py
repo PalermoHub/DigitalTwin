@@ -23,7 +23,7 @@ import gtfs_trenitalia
 URL = "https://github.com/deryclem/trenitalia-gtfs/raw/main/gtfs-trenitalia.zip"
 MARCATORE = gtfs_trenitalia.OUT / "ferrovia_origine.json"
 MINIMO_STAZIONI = 3
-RICHIESTI = ("agency", "calendar", "feed_info", "routes", "shapes", "stop_times", "stops", "trips")
+RICHIESTI = ("agency", "calendar", "feed_info", "routes", "stop_times", "stops", "trips")  # le shapes (14 MB) non servono: vedi gtfs_trenitalia.py
 
 
 def versione(src):

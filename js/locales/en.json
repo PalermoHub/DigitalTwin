@@ -1680,7 +1680,6 @@
   "lbl.RFI": "RFI",
   "lbl.Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.": "Bus and tram lines and AMAT stops, metro lines and stations (RFI), with timetables from the GTFS feeds.",
   "trasporto.orariFuoriRfi": "Urban rail (Trenitalia) timetables valid from {da} to {a}: today is outside the validity period",
-  "lbl.Linea metro (RFI)": "Metro line (RFI)",
   "lbl.Stazione (RFI)": "Station (RFI)",
   "lbl.Stazione": "Station",
   "lbl.Metro": "Metro",
@@ -1690,5 +1689,6 @@
   "lbl.Gli orari del trasporto pubblico si aggiornano da soli: ogni giorno il sito controlla il portale open data del Comune e, quando AMAT pubblica un nuovo feed, fermate, linee e orari vengono sostituiti. Lo stesso vale per la ferrovia urbana: ogni giorno il sito controlla il feed GTFS di Trenitalia e, quando esce una nuova versione, stazioni, linee e orari vengono sostituiti. Se il feed in uso è scaduto, la mappa lo segnala.": "Public transport timetables update automatically: every day the site checks the City's open data portal and, when AMAT publishes a new feed, stops, lines and timetables are replaced. The same goes for urban rail: every day the site checks the Trenitalia GTFS feed and, when a new version is published, stations, lines and timetables are replaced. If the feed in use has expired, the map says so.",
   "lbl.Trasporto ferroviario urbano (linee, stazioni, orari): Trenitalia S.p.A. / CCISS MMTIS, dati NeTEx convertiti in GTFS da Clément Desouche (@deryclem), licenza CC BY 4.0, feed valido dal 26/09/2026 al 12/12/2026": "Urban rail (lines, stations, timetables): Trenitalia S.p.A. / CCISS MMTIS, NeTEx data converted to GTFS by Clément Desouche (@deryclem), CC BY 4.0 licence, feed valid from 26/09/2026 to 12/12/2026",
   "lbl.Feed GTFS Trenitalia": "Trenitalia GTFS feed",
-  "lbl.Licenza CC BY 4.0": "CC BY 4.0 licence"
+  "lbl.Licenza CC BY 4.0": "CC BY 4.0 licence",
+  "lbl.Linea metro (RFI, tracciato schematico)": "Metro line (RFI, schematic route)"
 }

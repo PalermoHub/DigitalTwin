@@ -11,6 +11,8 @@ dalle corse con almeno due stazioni nel perimetro di Palermo, raggruppate per ca
 Gli id hanno un prefisso (stazioni `f<codice>`, rotte `ferrovia-<n>`, servizi da 1000) per non collidere con quelli di AMAT,
 perché il viewer tiene i due insiemi nelle stesse mappe.
 Il feed non ha calendar_dates: i servizi sono definiti da calendar.txt (giorni della settimana tra start_date e end_date).
+Le shapes del feed non si usano: contengono i vertici delle fermate di tutta la corsa, anche fuori ordine (a volte Bagheria in mezzo a una
+tratta urbana). Il tracciato è quindi la spezzata delle stazioni in sequenza: schematico, ma coerente con le stazioni mostrate.
 """
 import json
 import sys
@@ -67,14 +69,6 @@ def _direzione(sequenza, riferimento):
     if len(comuni) >= 2:
         return 0 if comuni[0] < comuni[-1] else 1
     return 0 if sequenza[0] == riferimento[0] else 1
-
-
-def _taglia(coord, a, b):
-    """Il tratto di tracciato tra i vertici più vicini ad `a` e `b` ([lon, lat]); None se non è un tratto ordinato."""
-    def vicino(p):
-        return min(range(len(coord)), key=lambda i: (coord[i][0] - p[0]) ** 2 + (coord[i][1] - p[1]) ** 2)
-    i, j = vicino(a), vicino(b)
-    return coord[i:j + 1] if j > i else None
 
 
 def costruisci(src=SRC, nomi=None):
@@ -151,9 +145,6 @@ def costruisci(src=SRC, nomi=None):
                         "lon": round(float(stazioni[sid]["stop_lon"]), 6), "lat": round(float(stazioni[sid]["stop_lat"]), 6)}}
         for sid in sorted(usate, key=lambda s: codice[s])]}
 
-    tracciati = defaultdict(list)
-    for r in leggi(src, "shapes"):
-        tracciati[r["shape_id"]].append((int(r["shape_pt_sequence"]), round(float(r["shape_pt_lon"]), 6), round(float(r["shape_pt_lat"]), 6)))
     per_codice = {codice[sid]: sid for sid in usate}
     elementi = []
     for (r, d), tids in sorted(per_linea.items(), key=lambda kv: (int(kv[0][0].split("-")[1]), kv[0][1])):
@@ -161,12 +152,7 @@ def costruisci(src=SRC, nomi=None):
         info = nomi.get(firma(c), {})
         seq = list(Counter(tuple(sequenza[t]) for t in tids).most_common(1)[0][0])
         punti = [[round(float(stazioni[per_codice[k]]["stop_lon"]), 6), round(float(stazioni[per_codice[k]]["stop_lat"]), 6)] for k in seq]
-        forme = Counter(corse[t]["shape_id"] for t in tids if corse[t]["shape_id"] in tracciati)
-        coord = None
-        if forme:
-            completa = [[lon, lat] for _, lon, lat in sorted(tracciati[forme.most_common(1)[0][0]])]
-            coord = _taglia(completa, punti[0], punti[-1])
-        coord = coord or punti
+        coord = punti
         a, b = stazioni[per_codice[seq[0]]], stazioni[per_codice[seq[-1]]]
         da0, a0 = rif[c][0], rif[c][-1]
         medio = coord[len(coord) // 2]

@@ -100,7 +100,7 @@ function creaLegenda() {
     voceStrato(tratto(''), 'Linea bus (colore AMAT)', L.bus),
     voceStrato(tratto('trasporto-tratto--tram'), 'Linea tram', L.tram),
     voceStrato(el('i', 'trasporto-pallino'), 'Fermata (da zoom 13)', L.fermate),
-    voceStrato(tratto('trasporto-tratto--tram', COLORE_STAZIONE), 'Linea metro (RFI)', L.metro),
+    voceStrato(tratto('trasporto-tratto--tram', COLORE_STAZIONE), 'Linea metro (RFI, tracciato schematico)', L.metro),
     voceStrato(el('i', 'trasporto-pallino trasporto-pallino--stazione'), 'Stazione (RFI)', L.stazioni),
   );
   document.getElementById('legende').append(legenda);
