@@ -12,4 +12,5 @@ export const BENI_CULTURALI = [
   { id: 'siti_archeologici', nome: 'Siti archeologici', layer: 0 },
 ]; // i18n-ok: nomi dei servizi, come sono sul server
 
-export const urlBeneCulturale = b => urlExport(`${SITR}/${b.id}/MapServer`, b.layer);
+export const baseBeneCulturale = b => `${SITR}/${b.id}/MapServer`;
+export const urlBeneCulturale = b => urlExport(baseBeneCulturale(b), b.layer);

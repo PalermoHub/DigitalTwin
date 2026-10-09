@@ -49,6 +49,8 @@
   "aggiungi.beniCulturali": "Regione Siciliana - Beni culturali",
   "aggiungi.beniCulturali.nota": "Servizi dei beni culturali pronti: un clic li mette in mappa. Le immagini arrivano direttamente dal server della Regione.",
   "aggiungi.beniCulturali.metti": "Metti «{nome}» in mappa",
+  "aggiungi.pronto.dati": "Dati",
+  "aggiungi.pronto.dati.titolo": "Aggiungi «{nome}» come dati interrogabili (area di Palermo)",
   "lbl.Beni isolati": "Beni isolati",
   "lbl.Beni paesaggistici (D.Lgs. 42/04)": "Beni paesaggistici (D.Lgs. 42/04)",
   "lbl.Parchi archeologici (2016)": "Parchi archeologici (2016)",

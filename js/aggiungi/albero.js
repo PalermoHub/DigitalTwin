@@ -221,7 +221,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
   }
 
   // elenchi pronti (ortofoto, beni culturali): un clic mette il layer in mappa; i tile partono solo allora
-  function creaElencoPronto({ titolo, nota, metti, voci, aggiungi }) {
+  function creaElencoPronto({ titolo, nota, metti, voci, aggiungi, aggiungiDati }) {
     const gruppo = nodo(tr(titolo), { icona: 'connessione', apri: false, classe: 'agg-tipo' });
     gruppo.det.firstElementChild.title = tr(nota);
     gruppo.conteggio.textContent = String(voci.length);
@@ -238,7 +238,19 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
         if (errori.length) esito(esitoRiga, errori.map(e => `«${e.nome}»: ${e.messaggio}.`).join(' '), true);
         else avvisa(tr('aggiungi.inMappa', { nome: tl(o.nome) }));
       });
-      riga.append(apri, esitoRiga);
+      riga.append(apri);
+      if (aggiungiDati) { // anche i dati interrogabili (clic sugli elementi, tabella), non solo l'immagine
+        const dati = bottone(tr('aggiungi.pronto.dati'), 'agg-salvato-nome');
+        dati.style.flex = 'none';
+        dati.title = tr('aggiungi.pronto.dati.titolo', { nome: tl(o.nome) });
+        dati.addEventListener('click', async () => {
+          const { errori } = await aggiungiDati(o);
+          if (errori.length) esito(esitoRiga, errori.map(e => `«${e.nome}»: ${e.messaggio}.`).join(' '), true);
+          else avvisa(tr('aggiungi.inMappa', { nome: tl(o.nome) }));
+        });
+        riga.append(dati);
+      }
+      riga.append(esitoRiga);
       gruppo.figli.append(riga);
     }
     return gruppo.det;
@@ -254,7 +266,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     if (tipo.id === 'arcgis') {
       ramo.figli.append(
         creaElencoPronto({ titolo: 'aggiungi.ortofoto', nota: 'aggiungi.ortofoto.nota', metti: 'aggiungi.ortofoto.metti', voci: ORTOFOTO, aggiungi: o => controllo.aggiungiOrtofoto(o) }),
-        creaElencoPronto({ titolo: 'aggiungi.beniCulturali', nota: 'aggiungi.beniCulturali.nota', metti: 'aggiungi.beniCulturali.metti', voci: BENI_CULTURALI, aggiungi: o => controllo.aggiungiBeneCulturale(o) }),
+        creaElencoPronto({ titolo: 'aggiungi.beniCulturali', nota: 'aggiungi.beniCulturali.nota', metti: 'aggiungi.beniCulturali.metti', voci: BENI_CULTURALI, aggiungi: o => controllo.aggiungiBeneCulturale(o), aggiungiDati: o => controllo.aggiungiBeneCulturaleDati(o) }),
       );
     }
     ramo.figli.append(modulo, elenco);
