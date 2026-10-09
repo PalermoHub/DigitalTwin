@@ -16,3 +16,11 @@ test('gli strati spenti e i punti «hit» trasparenti non cambiano il puntatore'
 test('solo i cerchi: poligoni, linee ed etichette hanno già i loro gestori', () => {
   for (const tipo of ['fill', 'line', 'symbol', 'raster', 'heatmap']) assert.equal(ePuntoVisibile(tipo, 'visible', 1), false, tipo);
 });
+
+test('poligoni e linee dei layer aggiunti: mano se accesi', async () => {
+  const { eEsternoCliccabile } = await import('../../js/core/cursore-punti.js');
+  assert.equal(eEsternoCliccabile('miei-ab12-fill', 'fill', 'visible'), true);
+  assert.equal(eEsternoCliccabile('rndt-x-line', 'line', undefined), true);
+  assert.equal(eEsternoCliccabile('miei-ab12-fill', 'fill', 'none'), false);
+  assert.equal(eEsternoCliccabile('confini-upl-fill', 'fill', 'visible'), false); // i layer del progetto hanno i loro gestori
+});

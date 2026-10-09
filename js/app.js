@@ -5,7 +5,7 @@ import { collegaInvito } from './core/invito.js';
 import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaRail, ICONE_RAIL } from './core/rail.js';
 import { collegaScheda } from './core/scheda.js';
-import { collegaRndt } from './rndt/index.js';
+import { collegaRndt, creaInterrogazione } from './rndt/index.js';
 import { creaGruppo, creaGruppoRndt, OPZIONI_MIEI } from './rndt/gruppo.js';
 import { collegaAggiungi } from './aggiungi/index.js';
 import { migraFileLocali } from './aggiungi/migrazione.js';
@@ -103,7 +103,7 @@ map.once('style.load', async () => {
   costruisciPannello(map, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
   const rndt = collegaRndt(map, document.getElementById('rndt-pannello'), gruppoRndt);
   const aggiungi = collegaAggiungi(map, gruppoMiei);
-  collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt });
+  collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt: creaInterrogazione([rndt.host, aggiungi.host]) }); // la scheda interroga i layer RNDT e i «miei layer»
   // Geoimage (circa 100 KB di moduli) si carica al primo clic sul suo tab, o all'avvio solo se c'è un progetto da ripristinare.
   const pannelloGeo = document.getElementById('geoimage-pannello');
   let geoPronto = null;

@@ -57,6 +57,7 @@ export function collegaAggiungi(map, gruppo) {
   gruppo.collega(host, () => {}, carica, () => creaAlbero({ controllo, carica, caricaDaUrl, avvisa: segnala }));
 
   return {
+    host,
     async ripristina() { await anelliPronti; await host.ripristina(); },
   };
 }

@@ -8,6 +8,10 @@ export function ePuntoVisibile(tipo, visibilita, opacita) {
   return tipo === 'circle' && visibilita !== 'none' && opacita !== 0;
 }
 
+// I poligoni e le linee dei layer aggiunti dall'utente (file, WFS, ArcGIS, RNDT) non hanno un gestore proprio: la mano la mette questo.
+const ESTERNO_AREA = /^(?:miei|rndt)-.+-(?:fill|line)$/;
+export const eEsternoCliccabile = (id, tipo, visibilita) => (tipo === 'fill' || tipo === 'line') && ESTERNO_AREA.test(id) && visibilita !== 'none';
+
 export function collegaCursorePunti(map) {
   let cerchi = null; // id di tutti i layer circle; si rifà quando lo stile cambia (layer aggiunti a runtime)
   map.on('styledata', () => { cerchi = null; });
@@ -15,8 +19,10 @@ export function collegaCursorePunti(map) {
   map.on('mousemove', e => {
     const canvas = map.getCanvas();
     if (canvas.style.cursor === 'crosshair') return; // modalità di posizionamento (Geoimage): non si tocca
-    cerchi ??= map.getStyle().layers.filter(l => l.type === 'circle').map(l => l.id);
-    const ids = cerchi.filter(id => map.getLayer(id) && ePuntoVisibile('circle', map.getLayoutProperty(id, 'visibility'), map.getPaintProperty(id, 'circle-opacity')));
+    cerchi ??= map.getStyle().layers.filter(l => l.type === 'circle' || ESTERNO_AREA.test(l.id)).map(l => ({ id: l.id, tipo: l.type }));
+    const ids = cerchi.filter(({ id, tipo }) => map.getLayer(id) && (tipo === 'circle'
+      ? ePuntoVisibile('circle', map.getLayoutProperty(id, 'visibility'), map.getPaintProperty(id, 'circle-opacity'))
+      : eEsternoCliccabile(id, tipo, map.getLayoutProperty(id, 'visibility')))).map(c => c.id);
     const sopra = ids.length > 0 && map.queryRenderedFeatures([[e.point.x - RAGGIO, e.point.y - RAGGIO], [e.point.x + RAGGIO, e.point.y + RAGGIO]], { layers: ids }).length > 0;
     if (sopra) { canvas.style.cursor = 'pointer'; mio = true; } else if (mio) { canvas.style.cursor = ''; mio = false; }
   });

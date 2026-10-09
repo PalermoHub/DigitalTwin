@@ -48,21 +48,34 @@ export function collegaRndt(map, elementoPannello, gruppo) {
 
   gruppo?.collega(host, apri); // gruppo «RNDT» della barra strati
 
-  const dentro = (l, { lng, lat }) => {
-    const b = l.sorgente?.bounds;
-    return !b || (lng >= b[0] && lng <= b[2] && lat >= b[1] && lat <= b[3]);
-  };
-
   return {
     apri,
     chiudi: pannello.chiudi,
-    segnaposto,
-    layerAlPunto: lngLat => host.elenco().filter(l => l.visibile && !l.indisponibile && dentro(l, lngLat)),
-    interroga: (layers, lngLat, point, zoom) => interrogaTutti({
-      layers, lngLat: [lngLat.lng, lngLat.lat], zoom,
-      leggiTesto: async url => new TextDecoder().decode(await host.fetchArrayBuffer(url)),
-      featureAlPunto: l => host.featureAlPunto(l.id, point),
-    }),
+    host,
+    ...creaInterrogazione([host]),
     async ripristina() { await anelliPronti; await host.ripristina(); },
+  };
+}
+
+const dentro = (l, { lng, lat }) => {
+  const b = l.sorgente?.bounds;
+  return !b || (lng >= b[0] && lng <= b[2] && lat >= b[1] && lat <= b[3]);
+};
+
+// Cosa la scheda chiede ai layer aggiunti: quelli accesi sotto il clic, di uno o più host (RNDT e «miei layer»), e le loro risposte.
+// Ogni layer si interroga con l'host a cui appartiene (rete, credenziali, feature in mappa).
+export function creaInterrogazione(host) {
+  const hosts = Array.isArray(host) ? host : [host];
+  return {
+    segnaposto,
+    layerAlPunto: lngLat => hosts.flatMap(h => h.elenco().filter(l => l.visibile && !l.indisponibile && dentro(l, lngLat)).map(l => ({ ...l, host: h }))),
+    async interroga(layers, lngLat, point, zoom) {
+      const risposte = await Promise.all(hosts.map(h => interrogaTutti({
+        layers: layers.filter(l => l.host === h), lngLat: [lngLat.lng, lngLat.lat], zoom,
+        leggiTesto: async url => new TextDecoder().decode(await h.fetchArrayBuffer(url)),
+        featureAlPunto: l => h.featureAlPunto(l.id, point),
+      })));
+      return risposte.flat();
+    },
   };
 }
