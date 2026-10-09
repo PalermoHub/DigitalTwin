@@ -48,3 +48,16 @@ test('voceTrasportoVicino: senza fermate nessuna voce; la scheda la unisce', () 
   const v = voceTrasportoVicino([{ id: 'A', nome: 'A', lon: 13, lat: 38, distanza: 5, linee: [] }], 300, () => null);
   assert.equal(unisci([v]).sezioni.length, 1);
 });
+
+test('fermateVicine: una stazione in apertura, senza linee, compare lo stesso con il suo stato', () => {
+  const porto = { id: 'fosm-2', nome: 'Palermo Porto', lon: 13.350, lat: 38.1305, linee: [], stato: 'in apertura' };
+  const r = fermateVicine(punto, [...fermate, porto], info, 300);
+  assert.deepEqual(r.map(x => x.id), ['A', 'fosm-2', 'B']);
+  assert.equal(r[1].stato, 'in apertura');
+  assert.deepEqual(r[1].linee, []);
+  assert.equal(r[0].stato, undefined);
+});
+
+test('fermateVicine: una fermata senza linee e senza stato resta esclusa', () => {
+  assert.deepEqual(fermateVicine(punto, [f('V', 'Vuota', 13.35, 38.1301, [])], info, 300), []);
+});

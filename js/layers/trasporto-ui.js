@@ -161,6 +161,7 @@ export function elencoFermateVicine(fermate, vai, vaiALinea) {
     const testa = el('div', 'scheda-riga');
     testa.append(nome, el('span', 'scheda-val', metri(f.distanza)));
     const righe = el('div', 'trasporto-vicina-linee');
+    if (f.stato) righe.append(el('span', 'scheda-nota', t('trasporto.inApertura')));
     for (const l of f.linee) {
       const b = el('button', 'trasporto-chip-bottone');
       b.type = 'button';
