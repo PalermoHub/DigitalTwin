@@ -1,0 +1,59 @@
+name: Aggiorna metro
+
+# Ogni giorno (e a mano): scarica il feed GTFS Trenitalia (deryclem/trenitalia-gtfs, ricalcolato ogni lunedì) e, se la versione è nuova,
+# rigenera stazioni, tracciati e orari della metro (dati/trasporto/ferrovia-*). Il controllo sulla versione rende innocuo il passaggio giornaliero.
+# Nomi, sigle, posizioni corrette e stazioni in apertura sono nostri (scripts/ferrovia_*.json) e non si toccano.
+# Se il feed porta stazioni o linee che non erano nei dati, gli orari si aggiornano comunque e si apre una issue per decidere a mano.
+# Se il feed è scaduto, incompleto o fuori dal comune lo script fallisce e i dati in repository restano quelli precedenti.
+on:
+  schedule:
+    - cron: "43 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: aggiorna-gtfs  # stesso gruppo di «Aggiorna GTFS»: i due workflow committano sugli stessi percorsi e non devono correre insieme
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Scarica e converti il feed Trenitalia
+        shell: bash  # con pipefail: un errore dello script fa fallire il passo, non lo nasconde `tee`
+        run: python3 scripts/gtfs_trenitalia_scarica.py --rapporto "$RUNNER_TEMP/novita.md" 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Salva nel repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dati/trasporto/ferrovia-fermate.geojson dati/trasporto/ferrovia-linee.geojson dati/trasporto/ferrovia-orari.json dati/trasporto/ferrovia_origine.json
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione nei dati."
+          else
+            git commit -m "dati: aggiornamento metro, feed Trenitalia ($(date -u +%F))"
+            git push
+          fi
+
+      - name: Avvisa se ci sono stazioni o linee nuove
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -s "$RUNNER_TEMP/novita.md" ] || { echo "Nessuna stazione o linea nuova."; exit 0; }
+          versione=$(python3 -c "import json; print(json.load(open('dati/trasporto/ferrovia_origine.json'))['versione'])")
+          titolo="Metro: stazioni o linee nuove nel feed Trenitalia ($versione)"
+          if [ -n "$(gh issue list --state all --search "\"$titolo\" in:title" --json number --jq '.[0].number')" ]; then
+            echo "Issue già aperta per questa versione."
+            exit 0
+          fi
+          gh issue create --title "$titolo" --body-file "$RUNNER_TEMP/novita.md"
