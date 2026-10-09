@@ -16,11 +16,12 @@ export const MERITO_PLUGIN = [
 export const PASSI = [
   {
     id: 'cos-e',
+    gruppo: 'funzioni',
     titolo: 'Cos\'è la mappa e a cosa serve',
     paragrafi: [
       'Il Digital Twin di Palermo, realizzato da Open Data Sicilia, è una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città: catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico, sicurezza stradale e uffici comunali.',
       'Serve a leggere un luogo da più punti di vista: chi cerca una particella, chi vuole capire come è fatto un quartiere, chi studia la mobilità o i servizi. Ogni informazione resta collegata alla fonte da cui proviene.',
-      'In alto, accanto al logo, il menu porta alle altre schede (Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e avvisi, About); la mappa sta al centro, con la barra degli strati a sinistra e la scheda del luogo a destra. Funziona anche da telefono, con una barra di quattro tab in basso: vedi il passo «Sul telefono».',
+      'In alto, accanto al logo, il menu porta alle altre schede (Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e note, About); la mappa sta al centro, con la barra degli strati a sinistra e la scheda del luogo a destra. Funziona anche da telefono, con una barra di quattro tab in basso: vedi il passo «Sul telefono».',
     ],
     immagine: { file: 'img/guida/passi/cos-e.webp', alt: 'La mappa di Palermo appena aperta: in alto il logo, il menu delle schede e i pulsanti degli strumenti; a sinistra la barra verticale degli strati; in basso la ricerca e, a piè di pagina, l\'avviso sul valore legale.', didascalia: 'La vista iniziale: il centro di Palermo.' },
     narrazione: 'Benvenuti nel Digital Twin di Palermo, realizzato da Open Data Sicilia: una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città. Qui trovi insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale, e puoi leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.',
@@ -28,6 +29,7 @@ export const PASSI = [
   },
   {
     id: 'telefono',
+    gruppo: 'funzioni',
     titolo: 'Sul telefono',
     statico: true,
     paragrafi: [
@@ -38,17 +40,19 @@ export const PASSI = [
   },
   {
     id: 'dati',
+    gruppo: 'funzioni',
     titolo: 'Con quali dati è realizzata',
     paragrafi: [
       'La mappa usa dati pubblicati da enti pubblici e da progetti di dati aperti: il Comune di Palermo (scuole, uffici, incidenti, carta tecnica), l\'azienda del trasporto pubblico AMAT, il catasto e la zonizzazione del piano regolatore, i dati del censimento e la base cartografica di OpenStreetMap.',
-      'L\'elenco completo è nella scheda «Fonti e avvisi» del menu (in alto; da telefono nel tab «Menu»): per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).',
+      'L\'elenco completo è nella scheda «Fonti e note» del menu (in alto; da telefono nel tab «Menu»): per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).',
     ],
-    immagine: { file: 'img/guida/passi/dati.webp', alt: 'La scheda Fonti e avvisi, con l\'elenco delle fonti dei dati, i collegamenti ai dati originali e alle licenze.', didascalia: 'Le fonti dei dati sono elencate in «Fonti e avvisi», con i link alle licenze.' },
-    narrazione: 'I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l\'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap. L\'elenco completo si trova nella scheda Fonti e avvisi, con il collegamento al dato originale e alla licenza di ogni fonte.',
+    immagine: { file: 'img/guida/passi/dati.webp', alt: 'La scheda Fonti e note, con l\'elenco delle fonti dei dati, i collegamenti ai dati originali e alle licenze.', didascalia: 'Le fonti dei dati sono elencate in «Fonti e note», con i link alle licenze.' },
+    narrazione: 'I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l\'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap. L\'elenco completo si trova nella scheda Fonti e note, con il collegamento al dato originale e alla licenza di ogni fonte.',
     scena: { strati: [], centro: CENTRO, zoom: 12, ritaglio: '#crediti' },
   },
   {
     id: 'strati',
+    gruppo: 'funzioni',
     titolo: 'La barra degli strati',
     paragrafi: [
       'Gli strati sono i temi che si possono sovrapporre alla mappa. A sinistra una barra verticale ha cinque tab: «Base cartografica», «Layer», «RNDT», «I miei layer» e «Filtri». Il tab «Layer» apre un pannello con i gruppi di strati (Confini, Edifici, Monumenti, Piano PAI, Popolazione, Rilievo, Servizi, Sicurezza, Territorio, Trasporti), sempre in ordine alfabetico: un clic sul gruppo lo apre, e ogni strato ha una casella per accenderlo o spegnerlo. Il pannello resta aperto finché non si preme di nuovo il tab o Esc; da telefono si apre dal tab «Strati», mentre «I miei layer», il catalogo RNDT e Geoimage stanno nel tab «Aggiungi».',
@@ -60,6 +64,7 @@ export const PASSI = [
   },
   {
     id: 'ordine-layer',
+    gruppo: 'funzioni',
     titolo: 'Mettere un layer sopra o sotto un altro',
     paragrafi: [
       'In cima al tab «Layer», sotto «Cerca strato», la scheda arancione «Ordine layer in mappa» elenca tutti gli strati accesi, di qualsiasi gruppo, con accanto il gruppo di provenienza. Il contatore dice quanti sono, anche a scheda chiusa; servono almeno due strati accesi per cambiare l\'ordine.',
@@ -71,6 +76,7 @@ export const PASSI = [
   },
   {
     id: 'mappe-storiche',
+    gruppo: 'funzioni',
     titolo: 'Mappe di base e mappe storiche',
     paragrafi: [
       'Il tab «Base cartografica» cambia la mappa che sta sotto gli strati: mappe stradali (chiara, scura e altre), immagini aeree e topografiche. Il pulsante con la luna, nella barra degli strumenti, passa dal tema chiaro al tema scuro, e la mappa di base cambia di conseguenza.',
@@ -82,6 +88,7 @@ export const PASSI = [
   },
   {
     id: 'miei-layer',
+    gruppo: 'funzioni',
     titolo: 'Aggiungere i propri dati e servizi',
     paragrafi: [
       'Il tab «I miei layer» funziona come il Browser di QGIS. Sotto «I miei dati» si caricano file dal computer (GeoJSON, KML, KMZ, GPX, Shapefile in zip, CSV con latitudine e longitudine) o da un indirizzo https, anche un foglio Google Sheets condiviso con «Chiunque abbia il link». Sotto «Servizi» c\'è un ramo per tipo: XYZ, WMS, WMTS, WFS e ArcGIS REST; il pulsante «+» aggiunge un servizio e «Leggi il servizio» ne mostra i layer da spuntare.',
@@ -93,6 +100,7 @@ export const PASSI = [
   },
   {
     id: 'colori',
+    gruppo: 'funzioni',
     titolo: 'Cambiare i colori di uno strato',
     paragrafi: [
       'Il pulsante con la tavolozza, accanto a uno strato, apre il pannello dei colori: riempimento e bordo, e «Colora per attributo», che colora gli elementi secondo un campo dei dati. Il tipo «Per categorie» dà un colore a ogni valore; il tipo «Graduata» divide un campo numerico in classi (da tre a nove, a quantili o a intervalli uguali).',
@@ -104,6 +112,7 @@ export const PASSI = [
   },
   {
     id: 'clic',
+    gruppo: 'funzioni',
     titolo: 'Fare clic sulla mappa',
     paragrafi: [
       'Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono: all\'apertura un invito a tutto schermo lo ricorda, sparisce al primo clic e, con «Non mostrare più», non si ripresenta (il pulsante «Ripristina» accanto alla ricerca lo riaccende). Il punto scelto viene evidenziato e si apre la scheda del luogo.',
@@ -115,6 +124,7 @@ export const PASSI = [
   },
   {
     id: 'tutto-in-un-punto',
+    gruppo: 'funzioni',
     titolo: 'Tutto in un punto',
     statico: true,
     paragrafi: [
@@ -124,6 +134,7 @@ export const PASSI = [
   },
   {
     id: 'scheda',
+    gruppo: 'funzioni',
     titolo: 'Cosa si legge nella scheda',
     paragrafi: [
       'La scheda è organizzata in sezioni, che si scelgono dalle linguette in alto: Luogo, Strumenti urbanistici, Mercato, Popolazione e altre. «Luogo» riassume ciò che c\'è nel punto scelto: indirizzo, circoscrizione e quartiere, monumenti, rischio di incidenti e fermate vicine.',
@@ -134,62 +145,8 @@ export const PASSI = [
     scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC, schedaTab: 'Strumenti urbanistici' },
   },
   {
-    id: 'monumenti',
-    titolo: 'Monumenti e luoghi storici',
-    paragrafi: [
-      'Lo strato «Monumenti» (gruppo Territorio) mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane, teatri. Dove è stato possibile abbinarli, anche l\'edificio è colorato sulla mappa.',
-      'Un clic su un monumento apre la sua scheda, con foto, descrizione, categoria e il collegamento al Portale del Turismo del Comune di Palermo, da cui provengono i testi.',
-    ],
-    immagine: { file: 'img/guida/passi/monumenti.webp', alt: 'Lo strato Monumenti acceso e la scheda del Teatro Massimo aperta, con foto, categoria e descrizione.', didascalia: 'La scheda di un monumento: il Teatro Massimo.' },
-    narrazione: 'Lo strato Monumenti mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane e teatri. Dove è stato possibile, anche l\'edificio è colorato sulla mappa. Un clic su un monumento apre la sua scheda, con foto, descrizione e il collegamento al Portale del Turismo del Comune di Palermo.',
-    scena: { strati: ['monumenti'], centro: TEATRO, zoom: 16.5, clic: TEATRO },
-  },
-  {
-    id: 'uffici',
-    titolo: 'Uffici comunali',
-    paragrafi: [
-      'Lo strato «Uffici comunali (sedi)» mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede.',
-      'La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando pubblicati. I dati provengono dal sito istituzionale del Comune.',
-    ],
-    immagine: { file: 'img/guida/passi/uffici.webp', alt: 'Lo strato Uffici comunali acceso e la scheda di Palazzo Palagonia, con l\'elenco di aree e uffici della sede.', didascalia: 'La scheda di una sede comunale: Palazzo Palagonia.' },
-    narrazione: 'Lo strato Uffici comunali mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede. La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando sono pubblicati.',
-    scena: { strati: ['uffici'], centro: PALAGONIA, zoom: 16.5, clic: PALAGONIA, schedaApri: 'Uffici e responsabili' },
-  },
-  {
-    id: 'pai',
-    titolo: 'Pericolosità e rischio idrogeologico (PAI)',
-    paragrafi: [
-      'Il gruppo «Piano PAI» riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti, siti di attenzione ed erosione costiera, con la simbologia ufficiale.',
-      'Un clic su un\'area apre la scheda: nella sezione «Strumenti urbanistici» compare il riquadro «Vincoli PAI», con la classe più grave tra quelle sovrapposte, accanto alla zonizzazione e ai vincoli del piano regolatore. Sono dati informativi: per usi legali vale la cartografia ufficiale dell\'Autorità di Bacino.',
-    ],
-    immagine: { file: 'img/guida/passi/pai.webp', alt: 'Lo strato Pericolosità idraulica acceso sulla mappa e, nella scheda, la sezione Strumenti urbanistici con zonizzazione, vincoli e il riquadro Vincoli PAI.', didascalia: 'Clic su un\'area PAI: la scheda, sezione «Strumenti urbanistici».' },
-    narrazione: 'Il gruppo Piano P A I riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti ed erosione costiera, con la simbologia ufficiale. Un clic su un\'area apre la scheda: nella sezione vincoli trovi il riquadro dei vincoli P A I, con la classe più grave. Sono dati informativi.',
-    scena: { strati: ['idraulica_pericolosita'], centro: [13.40, 38.08], zoom: 13, clicSu: { layer: 'pai-idraulica_pericolosita-hit' }, schedaTab: 'Strumenti urbanistici' },
-  },
-  {
-    id: 'incendi',
-    titolo: 'Incendi',
-    paragrafi: [
-      'Lo strato «Incendi» mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l\'anno.',
-      'La scheda di un incendio riporta data, località, superficie totale e boscata e, quando disponibili, le squadre intervenute. Se più incendi si sovrappongono, la scheda li elenca tutti.',
-    ],
-    immagine: { file: 'img/guida/passi/incendi.webp', alt: 'Lo strato Incendi acceso, con le aree bruciate colorate per anno, e la scheda di un incendio con data, località e superfici.', didascalia: 'La scheda di un incendio: Bellolampo, duemilaventitré.' },
-    narrazione: 'Lo strato Incendi mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l\'anno. La scheda di un incendio riporta data, località e superfici bruciate.',
-    scena: { strati: ['incendi'], centro: [13.33, 38.10], zoom: 12, clicSu: { layer: 'incendi-hit', filtro: { anno: 2023 } } },
-  },
-  {
-    id: 'isole-calore',
-    titolo: 'Isole di calore',
-    paragrafi: [
-      'Lo strato «Isole di calore» (gruppo Territorio) mostra la temperatura superficiale estiva ricavata dai satelliti Landsat 8 e 9 (USGS) per ognuna delle 3600 sezioni di censimento del 2021; in mappa c\'è l\'anno 2025. È la temperatura della superficie, non quella dell\'aria che si misura con il termometro.',
-      'La legenda permette di scegliere il metodo di classificazione (Jenks, quantili, intervalli uguali) e da tre a nove classi, e mostra il grafico dell\'andamento comunale dal 2019 al 2025. Un clic su una sezione apre la scheda con la voce «Isola di calore»: temperatura estiva, differenza rispetto alla media comunale e variazione dal 2019. Il link porta allo studio completo di PalermoHub.',
-    ],
-    immagine: { file: 'img/guida/passi/isole-calore.webp', alt: 'Lo strato Isole di calore acceso: le sezioni di censimento colorate per temperatura superficiale e la legenda a classi con il metodo di classificazione, il cursore delle classi e il grafico dell\'andamento comunale.', didascalia: 'Isole di calore: temperatura superficiale estiva per sezione di censimento.' },
-    narrazione: 'Lo strato isole di calore mostra la temperatura superficiale estiva, ricavata dai satelliti Landsat, per ogni sezione di censimento. Nella legenda scegli il metodo di classificazione e il numero di classi, e vedi il grafico dell\'andamento dal duemiladiciannove al duemilaventicinque. Attenzione: è la temperatura della superficie, non quella dell\'aria.',
-    scena: { strati: ['isole-calore'], centro: [13.3615, 38.1157], zoom: 13 },
-  },
-  {
     id: 'filtri',
+    gruppo: 'funzioni',
     titolo: 'Cercare e filtrare',
     paragrafi: [
       'Il campo di ricerca in basso permette di cercare una via, un civico, un quartiere o una particella. Il tab «Filtri» della barra a sinistra apre il pannello per limitare la ricerca a una circoscrizione, a un quartiere o a una UPL, per scegliere una linea del trasporto pubblico, l\'anno e la gravità degli incidenti, o per cercare una particella catastale da foglio e numero. Un numero sul tab dice quanti filtri sono attivi.',
@@ -201,6 +158,7 @@ export const PASSI = [
   },
   {
     id: 'strumenti',
+    gruppo: 'funzioni',
     titolo: 'Stampare la mappa',
     paragrafi: [
       'Il pulsante con la stampante, nella barra degli strumenti in alto a destra, prepara un foglio con il titolo, l\'immagine della mappa che stai guardando, le legende dei soli strati accesi e le attribuzioni delle fonti. Prima di stampare si sceglie il formato, da A4 ad A0, l\'orientamento, orizzontale o verticale, e la scala, da 1:1.000 a 1:25.000, con la barra grafica in metri e chilometri; «Vista attuale» stampa la mappa com\'è.',
@@ -212,6 +170,7 @@ export const PASSI = [
   },
   {
     id: 'tabella-dati',
+    gruppo: 'funzioni',
     titolo: 'La tabella dei dati',
     statico: true,
     paragrafi: [
@@ -223,6 +182,7 @@ export const PASSI = [
   },
   {
     id: 'street-view',
+    gruppo: 'funzioni',
     titolo: 'Street View',
     statico: true,
     paragrafi: [
@@ -232,8 +192,68 @@ export const PASSI = [
     immagine: { file: 'img/guida/passi/street-view.webp', alt: 'La mappa con il cono azzurro di Street View vicino al Teatro Massimo e, a destra, la finestra con la panoramica di Via Maqueda.', didascalia: 'Street View: il cono sceglie la direzione e la panoramica si apre in una finestra.' },
   },
   {
+    id: 'monumenti',
+    gruppo: 'casi',
+    titolo: 'Monumenti e luoghi storici',
+    paragrafi: [
+      'Lo strato «Monumenti» (gruppo Territorio) mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane, teatri. Dove è stato possibile abbinarli, anche l\'edificio è colorato sulla mappa.',
+      'Un clic su un monumento apre la sua scheda, con foto, descrizione, categoria e il collegamento al Portale del Turismo del Comune di Palermo, da cui provengono i testi.',
+    ],
+    immagine: { file: 'img/guida/passi/monumenti.webp', alt: 'Lo strato Monumenti acceso e la scheda del Teatro Massimo aperta, con foto, categoria e descrizione.', didascalia: 'La scheda di un monumento: il Teatro Massimo.' },
+    narrazione: 'Lo strato Monumenti mostra i luoghi di interesse storico e culturale: chiese, palazzi, fontane e teatri. Dove è stato possibile, anche l\'edificio è colorato sulla mappa. Un clic su un monumento apre la sua scheda, con foto, descrizione e il collegamento al Portale del Turismo del Comune di Palermo.',
+    scena: { strati: ['monumenti'], centro: TEATRO, zoom: 16.5, clic: TEATRO },
+  },
+  {
+    id: 'uffici',
+    gruppo: 'casi',
+    titolo: 'Uffici comunali',
+    paragrafi: [
+      'Lo strato «Uffici comunali (sedi)» mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede.',
+      'La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando pubblicati. I dati provengono dal sito istituzionale del Comune.',
+    ],
+    immagine: { file: 'img/guida/passi/uffici.webp', alt: 'Lo strato Uffici comunali acceso e la scheda di Palazzo Palagonia, con l\'elenco di aree e uffici della sede.', didascalia: 'La scheda di una sede comunale: Palazzo Palagonia.' },
+    narrazione: 'Lo strato Uffici comunali mostra dove si trovano gli uffici del Comune di Palermo, raggruppati per sede. La scheda di una sede elenca le aree e gli uffici che vi hanno sede, con responsabili e contatti, quando sono pubblicati.',
+    scena: { strati: ['uffici'], centro: PALAGONIA, zoom: 16.5, clic: PALAGONIA, schedaApri: 'Uffici e responsabili' },
+  },
+  {
+    id: 'pai',
+    gruppo: 'casi',
+    titolo: 'Pericolosità e rischio idrogeologico (PAI)',
+    paragrafi: [
+      'Il gruppo «Piano PAI» riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti, siti di attenzione ed erosione costiera, con la simbologia ufficiale.',
+      'Un clic su un\'area apre la scheda: nella sezione «Strumenti urbanistici» compare il riquadro «Vincoli PAI», con la classe più grave tra quelle sovrapposte, accanto alla zonizzazione e ai vincoli del piano regolatore. Sono dati informativi: per usi legali vale la cartografia ufficiale dell\'Autorità di Bacino.',
+    ],
+    immagine: { file: 'img/guida/passi/pai.webp', alt: 'Lo strato Pericolosità idraulica acceso sulla mappa e, nella scheda, la sezione Strumenti urbanistici con zonizzazione, vincoli e il riquadro Vincoli PAI.', didascalia: 'Clic su un\'area PAI: la scheda, sezione «Strumenti urbanistici».' },
+    narrazione: 'Il gruppo Piano P A I riporta il Piano di Assetto Idrogeologico della Regione Siciliana: pericolosità e rischio idraulico e geomorfologico, dissesti ed erosione costiera, con la simbologia ufficiale. Un clic su un\'area apre la scheda: nella sezione vincoli trovi il riquadro dei vincoli P A I, con la classe più grave. Sono dati informativi.',
+    scena: { strati: ['idraulica_pericolosita'], centro: [13.40, 38.08], zoom: 13, clicSu: { layer: 'pai-idraulica_pericolosita-hit' }, schedaTab: 'Strumenti urbanistici' },
+  },
+  {
+    id: 'incendi',
+    gruppo: 'casi',
+    titolo: 'Incendi',
+    paragrafi: [
+      'Lo strato «Incendi» mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l\'anno.',
+      'La scheda di un incendio riporta data, località, superficie totale e boscata e, quando disponibili, le squadre intervenute. Se più incendi si sovrappongono, la scheda li elenca tutti.',
+    ],
+    immagine: { file: 'img/guida/passi/incendi.webp', alt: 'Lo strato Incendi acceso, con le aree bruciate colorate per anno, e la scheda di un incendio con data, località e superfici.', didascalia: 'La scheda di un incendio: Bellolampo, duemilaventitré.' },
+    narrazione: 'Lo strato Incendi mostra le aree percorse dal fuoco nel Comune di Palermo dal duemilasette, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l\'anno. La scheda di un incendio riporta data, località e superfici bruciate.',
+    scena: { strati: ['incendi'], centro: [13.33, 38.10], zoom: 12, clicSu: { layer: 'incendi-hit', filtro: { anno: 2023 } } },
+  },
+  {
+    id: 'isole-calore',
+    gruppo: 'casi',
+    titolo: 'Isole di calore',
+    paragrafi: [
+      'Lo strato «Isole di calore» (gruppo Territorio) mostra la temperatura superficiale estiva ricavata dai satelliti Landsat 8 e 9 (USGS) per ognuna delle 3600 sezioni di censimento del 2021; in mappa c\'è l\'anno 2025. È la temperatura della superficie, non quella dell\'aria che si misura con il termometro.',
+      'La legenda permette di scegliere il metodo di classificazione (Jenks, quantili, intervalli uguali) e da tre a nove classi, e mostra il grafico dell\'andamento comunale dal 2019 al 2025. Un clic su una sezione apre la scheda con la voce «Isola di calore»: temperatura estiva, differenza rispetto alla media comunale e variazione dal 2019. Il link porta allo studio completo di PalermoHub.',
+    ],
+    immagine: { file: 'img/guida/passi/isole-calore.webp', alt: 'Lo strato Isole di calore acceso: le sezioni di censimento colorate per temperatura superficiale e la legenda a classi con il metodo di classificazione, il cursore delle classi e il grafico dell\'andamento comunale.', didascalia: 'Isole di calore: temperatura superficiale estiva per sezione di censimento.' },
+    narrazione: 'Lo strato isole di calore mostra la temperatura superficiale estiva, ricavata dai satelliti Landsat, per ogni sezione di censimento. Nella legenda scegli il metodo di classificazione e il numero di classi, e vedi il grafico dell\'andamento dal duemiladiciannove al duemilaventicinque. Attenzione: è la temperatura della superficie, non quella dell\'aria.',
+    scena: { strati: ['isole-calore'], centro: [13.3615, 38.1157], zoom: 13 },
+  },
+  {
     id: 'avvertenze',
-    titolo: 'Avvertenze',
+    titolo: 'Disclaimer',
     paragrafi: [
       'Catasto, zonizzazione e vincoli hanno valore solo informativo e non sostituiscono il certificato di destinazione urbanistica né le visure ufficiali. Il piano regolatore è la variante generale del duemilaquattro: varianti successive potrebbero non essere incluse.',
       'I dati del censimento sono stime campionarie, quindi i valori per sezione non sono conteggi esatti.',

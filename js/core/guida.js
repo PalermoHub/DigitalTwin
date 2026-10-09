@@ -57,7 +57,15 @@ export function schedaGuida(doc = document, passi = PASSI) {
   indice.className = 'guida-indice';
   indice.setAttribute('aria-label', tr('guida.indice'));
   const ol = doc.createElement('ol');
+  let gruppoCorrente;
   for (const p of passi) {
+    if (p.gruppo && p.gruppo !== gruppoCorrente) { // intestazione del gruppo nell'indice: il passo senza gruppo (Disclaimer) chiude l'elenco
+      const intest = doc.createElement('li');
+      intest.className = 'guida-indice-gruppo';
+      intest.textContent = tr(`guida.gruppo.${p.gruppo}`);
+      ol.append(intest);
+    }
+    gruppoCorrente = p.gruppo;
     const li = doc.createElement('li');
     const a = doc.createElement('a');
     a.href = `#guida-${p.id}`;
@@ -94,7 +102,15 @@ export function schedaGuida(doc = document, passi = PASSI) {
   }
   radice.append(media);
 
+  let gruppoPagina;
   for (const p of passi) {
+    if (p.gruppo && p.gruppo !== gruppoPagina) {
+      const hg = doc.createElement('h2');
+      hg.className = 'guida-gruppo';
+      hg.textContent = tr(`guida.gruppo.${p.gruppo}`);
+      radice.append(hg);
+    }
+    gruppoPagina = p.gruppo;
     const sez = creaPasso(doc, p);
     sezioni[p.id] = sez;
     radice.append(sez);
