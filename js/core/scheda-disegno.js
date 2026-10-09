@@ -154,7 +154,9 @@ export function disegnaSezione(s, i) {
   if (s.icona) titolo.append(icona(s.icona));
   titolo.append(tl(s.titolo));
   for (const b of s.badges ?? (s.badge ? [s.badge] : [])) titolo.append(' ', el('span', 'scheda-tag', tl(b)));
+  if (s.avviso) titolo.append(' ', el('span', 'scheda-tag scheda-tag--scomparso', tl(s.avviso.etichetta)));
   const corpo = [];
+  if (s.avviso) corpo.push(el('p', 'scheda-avviso', tl(s.avviso.testo)));
   if (s.immagine) {
     const img = el('img', 'scheda-foto');
     img.src = s.immagine.url;

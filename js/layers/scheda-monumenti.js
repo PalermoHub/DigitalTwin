@@ -6,6 +6,19 @@ import { t, tl } from '../core/i18n.js';
 // (luoghi della Mappa monumentale, ospitate altrove) restano come sono.
 
 const FONTE_COMUNE = 'Portale del Turismo — Comune di Palermo';
+// Beni che la descrizione dà per scomparsi ma di cui resta qualcosa (id): niente avviso. Per ora nessuno.
+const ANCORA_PRESENTI = new Set();
+// Solo l'inizio della descrizione conta: «Fonderia Di Maggio 1887 non esistente» parla della fonderia che ha fuso la
+// fontanella (che c'è), e «Scalone scomparso nel 1830» è storia di un edificio che oggi esiste.
+const SCOMPARSO = /^\s*(non\s+(più\s+)?esistente|demolit[aoie]|abbattut[aoie]|distrutt[aoie])\b/i;
+
+export function beneScomparso(p) {
+  return !ANCORA_PRESENTI.has(p.id) && SCOMPARSO.test(p.descrizione ?? '');
+}
+
+// Se la descrizione è solo la frase «non più esistente» l'avviso la sostituisce; se aggiunge il motivo la conserva.
+const soloFrase = d => /^\s*non\s+(più\s+)?esistente\s*[.!]?\s*$/i.test(d);
+
 const urlFoto = (rel, risolvi) => (/^https?:/.test(rel) ? rel : risolvi(rel));
 
 export function voceMonumento(p, risolvi) {
@@ -22,7 +35,8 @@ export function voceMonumento(p, risolvi) {
   };
   if (p.url) voce.link = { testo: 'Vai al sito del Comune', url: p.url, icona: 'esterno', suggerimento: 'Portale del Turismo del Comune di Palermo' };
   if (p.foto) voce.immagine = { url: urlFoto(p.foto, risolvi), alt: p.nome };
-  if (p.descrizione) voce.testo = p.descrizione;
+  if (p.descrizione && !(beneScomparso(p) && soloFrase(p.descrizione))) voce.testo = p.descrizione;
+  if (beneScomparso(p)) voce.avviso = { etichetta: t('monumento.scomparso.etichetta'), testo: t('monumento.scomparso.avviso') };
   return voce;
 }
 
@@ -31,8 +45,9 @@ export function modelloPopup(p, risolvi) {
     titolo: p.nome,
     categoria: p.categoria,
     foto: p.foto ? urlFoto(p.foto, risolvi) : null,
-    descrizione: p.descrizione || null,
+    descrizione: (beneScomparso(p) && soloFrase(p.descrizione)) ? null : (p.descrizione || null),
     url: p.url || null,
     fonte: p.fonte ?? FONTE_COMUNE,
+    scomparso: beneScomparso(p),
   };
 }

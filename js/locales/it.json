@@ -435,6 +435,8 @@
   "isole.mediaComunale": "Media comunale {da}–{a}",
   "isole.sezioneEMedia": "Sezione e media comunale {da}–{a}",
   "layer.fonte": "Fonte: {fonte}",
+  "monumento.scomparso.etichetta": "Non più presente",
+  "monumento.scomparso.avviso": "Oggi non è più presente. Il punto indica dove sorgeva.",
   "lbl. (#zoom/lat/lon), così l’atlante si apre sulla zona che si sta guardando. Il catalogo RNDT è il plugin ": " (#zoom/lat/lon), così l’atlante si apre sulla zona che si sta guardando. Il catalogo RNDT è il plugin ",
   "lbl. (4.7.1, licenza BSD a tre clausole) disegna la mappa nel browser, con strati vettoriali, raster e rilievo. ": " (4.7.1, licenza BSD a tre clausole) disegna la mappa nel browser, con strati vettoriali, raster e rilievo. ",
   "lbl. (Google Ireland Ltd., UE) per contare le visite in forma aggregata, solo se si accetta il banner di consenso (nulla viene caricato prima). Google può impostare cookie e trattare l’indirizzo IP e informazioni sul dispositivo; i dati possono essere trasferiti anche fuori dall’UE secondo le garanzie del Data Privacy Framework.": " (Google Ireland Ltd., UE) per contare le visite in forma aggregata, solo se si accetta il banner di consenso (nulla viene caricato prima). Google può impostare cookie e trattare l’indirizzo IP e informazioni sul dispositivo; i dati possono essere trasferiti anche fuori dall’UE secondo le garanzie del Data Privacy Framework.",

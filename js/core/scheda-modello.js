@@ -49,7 +49,7 @@ function aggiungiGruppo(sezione, gruppo) {
 }
 
 const conContenuto = s =>
-  s.gruppi.some(g => g.righe.length || g.griglia?.length) || s.accordion?.elementi?.length > 0 || s.link || s.testo || s.immagine || s.sempre;
+  s.gruppi.some(g => g.righe.length || g.griglia?.length) || s.accordion?.elementi?.length > 0 || s.link || s.testo || s.immagine || s.avviso || s.sempre;
 
 export function unisci(voci) {
   const contesto = {};
@@ -67,7 +67,7 @@ export function unisci(voci) {
     } else {
       const pesoPrima = s.peso;
       if (v.peso < s.peso) Object.assign(s, { peso: v.peso, titolo: v.titolo, icona: v.icona, chiave: v.chiave }); // titolo della voce principale
-      for (const campo of ['badge', 'link', 'accordion', 'nota', 'immagine', 'testo']) s[campo] ??= v[campo];
+      for (const campo of ['badge', 'link', 'accordion', 'nota', 'immagine', 'testo', 'avviso']) s[campo] ??= v[campo];
       if (v.badge && !s.badges.includes(v.badge)) s.badges[v.peso < pesoPrima ? 'unshift' : 'push'](v.badge);
       // fonti diverse della stessa scheda: una per riga
       if (v.fonte && !(s.fonte ?? '').split('\n').includes(v.fonte)) s.fonte = s.fonte ? `${s.fonte}\n${v.fonte}` : v.fonte;

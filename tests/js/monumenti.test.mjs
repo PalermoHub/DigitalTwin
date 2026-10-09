@@ -73,3 +73,36 @@ test('popup del KML: senza url, con fonte', () => {
 test('luogo senza foto, testo né link: la sezione non compare', () => {
   assert.equal(unisci([voceMonumento({ ...K, foto: null, descrizione: null }, risolvi)]).sezioni.length, 0);
 });
+
+test('bene scomparso: avviso in scheda e nel popup; la frase da sola non si ripete nel testo', () => {
+  const v = voceMonumento({ ...P, descrizione: 'non più esistente' }, risolvi);
+  assert.match(v.avviso.etichetta, /Non più presente/);
+  assert.equal(v.testo, undefined);
+  assert.equal(unisci([v]).sezioni[0].avviso.etichetta, v.avviso.etichetta);
+  assert.equal(modelloPopup({ ...P, descrizione: 'Non più esistente' }, risolvi).scomparso, true);
+});
+
+test('bene scomparso con motivo: il testo resta', () => {
+  const v = voceMonumento({ ...P, descrizione: 'Distrutto dai bombardamenti del 1943' }, risolvi);
+  assert.ok(v.avviso);
+  assert.equal(v.testo, 'Distrutto dai bombardamenti del 1943');
+});
+
+test('nessun avviso: fontanelle di fonderie non esistenti e storie di edifici ancora in piedi', () => {
+  for (const d of ['Fonderia Di Maggio 1887 non esistente', 'Fonderia Oretea 1887 non più esistente', 'Scalone scomparso intorno al 1830', 'La Torre campanaria.', '']) {
+    assert.equal(voceMonumento({ ...P, descrizione: d }, risolvi).avviso, undefined, d);
+    assert.equal(modelloPopup({ ...P, descrizione: d }, risolvi).scomparso, false, d);
+  }
+});
+
+test('popup di un bene scomparso: la frase da sola non si ripete sotto l\'avviso', () => {
+  assert.equal(modelloPopup({ ...P, descrizione: 'non più esistente' }, risolvi).descrizione, null);
+  assert.equal(modelloPopup({ ...P, descrizione: 'Demolita nel 1965' }, risolvi).descrizione, 'Demolita nel 1965');
+});
+
+test('scheda di un bene scomparso senza foto, link né testo: la sezione resta, con l\'avviso', () => {
+  const v = voceMonumento({ ...P, foto: null, url: null, descrizione: 'non più esistente' }, risolvi);
+  const { sezioni } = unisci([v]);
+  assert.equal(sezioni.length, 1);
+  assert.ok(sezioni[0].avviso);
+});
