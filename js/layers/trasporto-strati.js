@@ -4,7 +4,7 @@
 // elenca dall'alto verso il basso lo stesso ordine di disegno.
 export const creaStrati = suCambio => [
   { id: 'trasporto-stazioni', etichetta: 'Stazioni metro', sezione: 'RFI', layers: ['trasporto-stazioni'], attivo: false, suCambio },
-  { id: 'trasporto-metro', etichetta: 'Linea metro', sezione: 'RFI', layers: ['trasporto-metro', 'trasporto-metro-tratti'], attivo: false, suCambio },
+  { id: 'trasporto-metro', etichetta: 'Linea metro', sezione: 'RFI', layers: ['trasporto-metro', 'trasporto-metro-tratti', 'trasporto-metro-apertura'], attivo: false, suCambio },
   { id: 'trasporto-bus', etichetta: 'Linee bus', sezione: 'AMAT', layers: ['trasporto-bus'], attivo: false, suCambio },
   { id: 'trasporto-tram', etichetta: 'Linee tram', sezione: 'AMAT', layers: ['trasporto-tram'], attivo: false, suCambio },
   { id: 'trasporto-fermate', etichetta: 'Fermate', sezione: 'AMAT', layers: ['trasporto-fermate'], attivo: false, suCambio },

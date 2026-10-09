@@ -19,6 +19,7 @@ import zipfile
 from datetime import date, datetime
 from pathlib import Path
 
+import ferrovia_osm
 import gtfs
 import gtfs_trenitalia
 
@@ -137,7 +138,7 @@ def main():
         if not a.forza and not da_aggiornare(nuova):
             print(f"Già aggiornato: feed Trenitalia {nuova}")
             return 0
-        risultato = gtfs_trenitalia.costruisci(Path(tmp), nomi, posizioni, in_apertura)
+        risultato = gtfs_trenitalia.costruisci(Path(tmp), nomi, posizioni, in_apertura, ferrovia_osm.carica())
     fermate = risultato[0]
     if a.rapporto:
         vecchie = (_leggi_json(gtfs_trenitalia.OUT / "ferrovia-fermate.geojson"), _leggi_json(gtfs_trenitalia.OUT / "ferrovia-linee.geojson"))

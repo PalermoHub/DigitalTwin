@@ -3,6 +3,9 @@ name: Aggiorna metro
 # Ogni giorno (e a mano): scarica il feed GTFS Trenitalia (deryclem/trenitalia-gtfs, ricalcolato ogni lunedì) e, se la versione è nuova,
 # rigenera stazioni, tracciati e orari della metro (dati/trasporto/ferrovia-*). Il controllo sulla versione rende innocuo il passaggio giornaliero.
 # Nomi, sigle, posizioni corrette e stazioni in apertura sono nostri (scripts/ferrovia_*.json) e non si toccano.
+# Il tracciato è il binario reale di OpenStreetMap (scripts/ferrovia_osm*.json, tratto in apertura in ferrovia-apertura.geojson): il lunedì
+# (e a mano) si riscarica da Overpass e, se è cambiato, si rigenerano i tracciati anche con lo stesso feed. Se Overpass non risponde
+# si tiene la copia in repository.
 # Se il feed porta stazioni o linee che non erano nei dati, gli orari si aggiornano comunque e si apre una issue per decidere a mano.
 # Se il feed è scaduto, incompleto o fuori dal comune lo script fallisce e i dati in repository restano quelli precedenti.
 on:
@@ -29,15 +32,28 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Aggiorna i binari da OpenStreetMap
+        id: osm
+        continue-on-error: true  # Overpass è spesso occupato: si tiene la copia in repository e si va avanti col feed
+        shell: bash
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != workflow_dispatch ] && [ "$(date -u +%u)" != 1 ]; then echo "Non è lunedì: binari OSM non riscaricati."; exit 0; fi
+          python3 scripts/ferrovia_osm.py 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
+
       - name: Scarica e converti il feed Trenitalia
         shell: bash  # con pipefail: un errore dello script fa fallire il passo, non lo nasconde `tee`
-        run: python3 scripts/gtfs_trenitalia_scarica.py --rapporto "$RUNNER_TEMP/novita.md" 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
+        run: |
+          # binari OSM cambiati: si rigenera anche se la versione del feed è la stessa
+          forza=""
+          git diff --quiet -- scripts/ferrovia_osm.json scripts/ferrovia_osm_costruzione.json || forza="--forza"
+          python3 scripts/gtfs_trenitalia_scarica.py $forza --rapporto "$RUNNER_TEMP/novita.md" 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Salva nel repository
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f dati/trasporto/ferrovia-fermate.geojson dati/trasporto/ferrovia-linee.geojson dati/trasporto/ferrovia-orari.json dati/trasporto/ferrovia_origine.json
+          git add -f dati/trasporto/ferrovia-fermate.geojson dati/trasporto/ferrovia-linee.geojson dati/trasporto/ferrovia-orari.json dati/trasporto/ferrovia_origine.json \
+            dati/trasporto/ferrovia-apertura.geojson scripts/ferrovia_osm.json scripts/ferrovia_osm_costruzione.json
           if git diff --cached --quiet; then
             echo "Nessuna variazione nei dati."
           else

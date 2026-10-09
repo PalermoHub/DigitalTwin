@@ -16,8 +16,9 @@ Le stazioni non ancora aperte (Politeama e Porto, dell'Anello) non sono nel feed
 `stato: in apertura` (posizione dai nodi OpenStreetMap in costruzione), senza linee né orari. Da togliere dal file quando il feed le include.
 Il feed non ha calendar_dates: i servizi sono definiti da calendar.txt (giorni della settimana tra start_date e end_date).
 Le shapes del feed non si usano: contengono i vertici delle fermate di tutta la corsa, anche fuori ordine (a volte Bagheria in mezzo a una
-tratta urbana). Il tracciato è quindi la spezzata delle stazioni, instradata sulla rete delle tratte tra stazioni consecutive (i servizi
-veloci passano dalle stazioni che saltano): schematico, ma coerente con le stazioni mostrate.
+tratta urbana). Il tracciato è quindi la sequenza delle stazioni, instradata sulla rete delle tratte tra stazioni consecutive (i servizi
+veloci passano dalle stazioni che saltano) e, tra due stazioni, sul binario reale di OpenStreetMap (`ferrovia_osm.py`, © OpenStreetMap
+contributors, ODbL); dove il binario non c'è, linea retta tra le stazioni.
 """
 import heapq
 import json
@@ -28,6 +29,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from compatta_dati import codifica_orari
+from ferrovia_osm import carica as carica_osm
 from gtfs import data_iso, leggi, minuti, nome
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -112,9 +114,10 @@ def _rete(sequenze):
     return archi - corde
 
 
-def _instrada(seq, archi, pos):
+def _instrada(seq, archi, pos, osm=None):
     """Coordinate del servizio `seq` lungo la rete: tra due stazioni consecutive prende il percorso più breve sugli archi
-    (passando dalle stazioni che il servizio salta); senza percorso le collega in linea retta."""
+    (passando dalle stazioni che il servizio salta); senza percorso le collega in linea retta.
+    Con `osm` (ferrovia_osm.Rete) ogni tratta tra stazioni è sostituita dal binario reale di OpenStreetMap, dove c'è."""
     vicini = defaultdict(list)
     for arco in archi:
         a, b = tuple(arco)
@@ -138,10 +141,15 @@ def _instrada(seq, archi, pos):
     codici = [seq[0]]
     for da, a in zip(seq, seq[1:]):
         codici += percorso(da, a)[1:]
-    return [pos[c] for c in codici]
+    if osm is None:
+        return [pos[c] for c in codici]
+    coord = [pos[codici[0]]]
+    for da, a in zip(codici, codici[1:]):
+        coord += (osm.instrada(pos[da], pos[a]) or [pos[da], pos[a]])[1:]
+    return coord
 
 
-def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None):
+def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None, osm=None):
     nomi = nomi or {}
     in_apertura = in_apertura or {}  # stazioni non ancora aperte (non sono nel feed): solo punti, senza linee né orari
     posizioni = posizioni or {}  # stop_code -> {lon, lat}: correzioni alle coordinate del feed (vedi ferrovia_posizioni.json)
@@ -240,7 +248,7 @@ def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None):
         c = next(k for k, v in rotta.items() if v == r)
         info = nomi.get(firma(c), {})
         seq = list(Counter(tuple(sequenza[t]) for t in tids).most_common(1)[0][0])
-        coord = _instrada(seq, rete, punti)
+        coord = _instrada(seq, rete, punti, osm)
         a, b = stazioni[per_codice[seq[0]]], stazioni[per_codice[seq[-1]]]
         da0, a0 = rif[c][0], rif[c][-1]
         medio = coord[len(coord) // 2]
@@ -270,7 +278,7 @@ def main(argv=None):
     nomi = json.loads(NOMI.read_text(encoding="utf-8")) if NOMI.exists() else {}
     posizioni = json.loads(POSIZIONI.read_text(encoding="utf-8")) if POSIZIONI.exists() else {}
     in_apertura = json.loads(IN_APERTURA.read_text(encoding="utf-8")) if IN_APERTURA.exists() else {}
-    fermate, linee, orari = risultato = costruisci(Path(argv[0]) if argv else SRC, nomi, posizioni, in_apertura)
+    fermate, linee, orari = risultato = costruisci(Path(argv[0]) if argv else SRC, nomi, posizioni, in_apertura, carica_osm())
     scrivi(risultato)
     print(f"{len(fermate['features'])} stazioni, {len(linee['features'])} tracciati, {len(orari['fermate'])} stazioni con orari")
     for f in linee["features"]:

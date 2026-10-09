@@ -25,7 +25,7 @@ const IMMAGINE_STAZIONE = 'stazione-metro';
 const ZOOM_STAZIONE = 11; // le stazioni sono poche e distanti: si vedono da più lontano delle fermate
 const L = {
   bus: 'trasporto-bus', tram: 'trasporto-tram', fermate: 'trasporto-fermate', hitLinee: 'trasporto-hit-linee', hitFermate: 'trasporto-hit-fermate',
-  metro: 'trasporto-metro', metroTratti: 'trasporto-metro-tratti', stazioni: 'trasporto-stazioni', hitMetro: 'trasporto-hit-metro', hitStazioni: 'trasporto-hit-stazioni',
+  metro: 'trasporto-metro', metroTratti: 'trasporto-metro-tratti', metroApertura: 'trasporto-metro-apertura', stazioni: 'trasporto-stazioni', hitMetro: 'trasporto-hit-metro', hitStazioni: 'trasporto-hit-stazioni',
 };
 const STRATI_TRASPORTO = [L.bus, L.tram, L.fermate, L.metro, L.stazioni];
 
@@ -143,7 +143,7 @@ function creaLegenda() {
     voceStrato(tratto(''), 'Linea bus (colore AMAT)', L.bus),
     voceStrato(tratto('trasporto-tratto--tram'), 'Linea tram', L.tram),
     voceStrato(el('i', 'trasporto-pallino'), 'Fermata (da zoom 13)', L.fermate),
-    voceStrato(el('i', 'trasporto-tratto trasporto-tratto--binario'), 'Linea metro (RFI, tracciato schematico)', L.metro),
+    voceStrato(el('i', 'trasporto-tratto trasporto-tratto--binario'), 'Linea metro (RFI)', L.metro),
     voceStrato(logoStazione(), 'Stazione (RFI, più chiara se in apertura)', L.stazioni),
   );
   document.getElementById('legende').append(legenda);
@@ -205,6 +205,7 @@ export default {
     map.addSource('trasporto-linee', { type: 'geojson', data: urlDati('trasporto/linee.geojson') });
     map.addSource('trasporto-fermate', { type: 'geojson', data: urlDati('trasporto/fermate.geojson') });
     map.addSource('ferrovia-linee', { type: 'geojson', data: urlDati('trasporto/ferrovia-linee.geojson') });
+    map.addSource('ferrovia-apertura', { type: 'geojson', data: urlDati('trasporto/ferrovia-apertura.geojson') });
     map.addSource('ferrovia-fermate', { type: 'geojson', data: urlDati('trasporto/ferrovia-fermate.geojson') });
   },
   aggiungiLayer(map) {
@@ -234,6 +235,11 @@ export default {
       id: L.metroTratti, type: 'line', source: 'ferrovia-linee', layout: { ...nascosto, 'line-cap': 'butt', 'line-join': 'round' },
       paint: { 'line-color': '#fff', 'line-width': spessore(1.2, 3.4), 'line-dasharray': [2, 2] },
     });
+    // tratto non ancora aperto (Anello: Porto e Politeama): tratteggio grigio sotto la linea in esercizio
+    map.addLayer({
+      id: L.metroApertura, type: 'line', source: 'ferrovia-apertura', layout: { ...nascosto, 'line-cap': 'butt', 'line-join': 'round' },
+      paint: { 'line-color': '#6b6b6b', 'line-width': spessore(2.5, 6), 'line-dasharray': [2, 1.5], 'line-opacity': 0.8 },
+    }, L.metro);
     // stazioni: il logo delle metropolitane (quadrato rosso con la M) e, avvicinandosi, il nome
     if (!map.hasImage(IMMAGINE_STAZIONE)) map.addImage(IMMAGINE_STAZIONE, immagineStazione(64), { pixelRatio: 2 });
     map.addLayer({
