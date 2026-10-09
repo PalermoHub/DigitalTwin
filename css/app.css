@@ -275,8 +275,8 @@ dialog li { margin: 4px 0; }
 #cerca-testo { text-overflow: ellipsis; } /* il segnaposto lungo si accorcia con i puntini invece di tagliare a metà parola */
 .cerca-sep { width: 1px; height: 22px; margin: 0 4px; flex-shrink: 0; background: var(--border-ui); }
 #cerca-filtri { flex-shrink: 0; height: 36px; padding: 0 14px 0 11px; gap: 6px; margin-right: 8px; display: flex; align-items: center; justify-content: center; background: var(--accent); border: 0; border-radius: var(--r-pill); color: var(--accent-ink); font-size: var(--fs-sm); font-weight: 600; }
-#cerca-ripristina { flex-shrink: 0; width: 36px; height: 36px; margin-right: 4px; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; border-radius: 50%; color: inherit; cursor: pointer; }
-#cerca-ripristina:hover { background: var(--border-ui); }
+#cerca-ripristina { flex-shrink: 0; width: 38px; height: 38px; margin-right: 4px; display: flex; align-items: center; justify-content: center; background: var(--accent-soft); border: 0; border-radius: 50%; color: var(--accent-strong); cursor: pointer; }
+#cerca-ripristina:hover { background: color-mix(in srgb, var(--accent) 28%, transparent); }
 #cerca-filtri:hover { filter: brightness(1.1); }
 #cerca-filtri[aria-expanded="true"] { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); }
 #cerca-risultati {
