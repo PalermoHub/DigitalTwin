@@ -98,20 +98,18 @@ def _distanza(a, b):
     return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
 
 
-def _rete(sequenze, pos):
-    """Archi tra stazioni consecutive in almeno una corsa, senza le corde che scavalcano una stazione intermedia.
+def _rete(sequenze):
+    """Archi tra stazioni consecutive in almeno una corsa, senza le corde che scavalcano altre stazioni.
 
-    Un servizio veloce che salta una stazione dà l'arco A-C: se esistono anche A-B e B-C e B sta quasi sul segmento, A-C non è
-    una tratta di binario ma una scorciatoia, e si scarta (il binario passa da B). `pos` = codice -> [lon, lat].
+    Un servizio veloce che salta una stazione dà l'arco A-C; se un'altra corsa ferma in B tra A e C, A-C non è una tratta
+    di binario ma una scorciatoia (sul golfo di Carini sarebbe una linea sull'acqua) e si scarta: il binario passa da B.
+    La regola non usa le coordinate: la strada reale può essere molto più lunga della corda.
     """
-    archi = {frozenset(c) for seq in sequenze for c in zip(seq, seq[1:])}
-
-    def scavalcato(arco):
-        a, b = tuple(arco)
-        return any(frozenset((a, c)) in archi and frozenset((c, b)) in archi
-                   and _distanza(pos[a], pos[c]) + _distanza(pos[c], pos[b]) < 1.3 * _distanza(pos[a], pos[b])
-                   for c in pos if c not in arco)
-    return {arco for arco in archi if not scavalcato(arco)}
+    archi, corde = set(), set()
+    for seq in sequenze:
+        archi.update(frozenset(c) for c in zip(seq, seq[1:]))
+        corde.update(frozenset((seq[i], seq[j])) for i in range(len(seq)) for j in range(i + 2, len(seq)))
+    return archi - corde
 
 
 def _instrada(seq, archi, pos):
@@ -236,7 +234,7 @@ def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None):
 
     per_codice = {codice[sid]: sid for sid in usate}
     punti = {k: coord(sid) for k, sid in per_codice.items()}
-    rete = _rete(list(sequenza.values()), punti)
+    rete = _rete(list(sequenza.values()))
     elementi = []
     for (r, d), tids in sorted(per_linea.items(), key=lambda kv: (int(kv[0][0].split("-")[1]), kv[0][1])):
         c = next(k for k, v in rotta.items() if v == r)
