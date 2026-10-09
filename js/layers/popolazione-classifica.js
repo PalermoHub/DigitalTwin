@@ -55,7 +55,7 @@ export function costruisciClassifica(dati, luogo = {}) {
   legenda.innerHTML = `<span><i class="pop-dot pop-it"></i>${tr('popolazione.italiani')}</span><span><i class="pop-dot pop-st"></i>${tr('popolazione.stranieri')}</span><span class="pop-legenda-pct">${tr('popolazione.pctStr')}</span>`;
   const lista = el('div', 'pop-lista');
   const totale = el('div', 'pop-totale');
-  const fonte = el('p', 'scheda-nota scheda-fonte', 'Fonte: ISTAT, Censimento permanente 2021 — sezioni di censimento. Tendenza: aggiornamento 2023, Cruscotto Statistico Comunale (dati.gov.it).');
+  const fonte = el('p', 'scheda-nota scheda-fonte', 'Fonte: ISTAT, Censimento permanente 2021 — sezioni di censimento. Tendenza: aggiornamento 2023, AGID Cruscotto Italia (dati.gov.it).');
   radice.append(bottoni, legenda, lista, totale, fonte);
 
   const btn = {};
