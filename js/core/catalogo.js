@@ -313,6 +313,7 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
     voce('Isole di calore: temperatura superficiale da satellite Landsat (USGS), elaborazione PalermoHub / OpenDataSicilia, 2019–2025', [['USGS Landsat', 'https://www.usgs.gov/landsat-missions/landsat-science-products'], ['Dati su Zenodo', 'https://zenodo.org/records/18872933'], ['Isole di calore urbane 2019-2025', 'https://palermohub.github.io/isole_di_calore/']], 'CC BY 4.0'),
     voce('Pericolosità e rischio idrogeologico (PAI): Regione Siciliana, Piano di assetto idrogeologico, bacini 039-040', [['PAI, SITR Regione Siciliana', 'https://www.sitr.regione.sicilia.it/pai/'], ['Dati PAI aggiornati al 12/05/2026', 'https://www.sitr.regione.sicilia.it/dati-pai-idraulica-e-geomorfologia-aggiornati-al-12-05-2026/']]),
     voce('Incendi: catasto dei soprassuoli percorsi dal fuoco, Comune di Palermo e Sistema Informativo Forestale (SIF) della Regione Siciliana', [['SIF Regione Siciliana', 'https://sif.regione.sicilia.it/ilportale/']], null, ['CC BY 3.0 IT']),
+    voce('Indicatori statistici comunali di Palermo (popolazione, censimento, imprese, ambiente e altro): Cruscotto Statistico Comunale, dati.gov.it — condizioni d\'uso da verificare', [['Cruscotto Statistico Comunale (Palermo)', 'https://cruscotto-italia.dati.gov.it/comune.html?istat=082053']]),
   ]);
   const argomenti = schedaArgomenti(moduli, document, () => dialog.close());
   const guida = schedaGuida();
