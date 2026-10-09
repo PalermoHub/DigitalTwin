@@ -10,6 +10,7 @@ import { registraTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { giornoIniziale, oggiISO, colorePerTesto } from './trasporto-orari.js';
 import { t as tr, tl } from '../core/i18n.js';
+import { creaStrati } from './trasporto-strati.js';
 
 // Linee bus/tram e fermate AMAT (GTFS). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
 // (da zoom 13) così la scheda di destra mostra fermate e linee anche a strato spento, come per scuole e seggi.
@@ -130,7 +131,7 @@ function collegaTooltip(map) {
 export default {
   id: 'trasporto',
   titolo: 'Trasporto pubblico',
-  argomento: { titolo: 'Trasporto pubblico', descrizione: 'Linee bus e tram e fermate AMAT, con gli orari dal feed GTFS.' },
+  argomento: { titolo: 'Trasporto pubblico', descrizione: 'Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.' },
   aggiungiSorgenti(map) {
     map.addSource('trasporto-linee', { type: 'geojson', data: urlDati('trasporto/linee.geojson') });
     map.addSource('trasporto-fermate', { type: 'geojson', data: urlDati('trasporto/fermate.geojson') });
@@ -174,11 +175,7 @@ export default {
       segnala(tr('trasporto.orariFuori', { da: f.validita.da, a: f.validita.a }));
     }
   },
-  strati: [
-    { id: 'trasporto-bus', etichetta: 'Linee bus', layers: [L.bus], attivo: false, suCambio: aggiornaLegenda },
-    { id: 'trasporto-tram', etichetta: 'Linee tram', layers: [L.tram], attivo: false, suCambio: aggiornaLegenda },
-    { id: 'trasporto-fermate', etichetta: 'Fermate', layers: [L.fermate], attivo: false, suCambio: aggiornaLegenda },
-  ],
+  strati: creaStrati(aggiornaLegenda),
   pannello: creaLegenda,
   // per il filtro Linea del pannello Filtri (valido dopo `avvia`)
   filtro: () => ({ linee: [...linee.values()], limiti: id => limitiRotta.get(id) }),

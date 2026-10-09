@@ -920,7 +920,6 @@
   "lbl.Libro delle fontane AMAP (PDF)": "AMAP fountains book (PDF)",
   "lbl.Linee": "Lines",
   "lbl.Linee bus": "Bus lines",
-  "lbl.Linee bus e tram e fermate AMAT, con gli orari dal feed GTFS.": "AMAT bus and tram lines and stops, with timetables from the GTFS feed.",
   "lbl.Linee del trasporto": "Transport lines",
   "lbl.Linee tram": "Tram lines",
   "lbl.Livello della classifica": "Ranking level",
@@ -1676,5 +1675,10 @@
   "lbl.Al rilascio si apre una finestra con la panoramica di Google Street View del punto: si sposta trascinando la barra in alto, si ridimensiona dall'angolo e si chiude con la croce. «Apri su Google Maps» la apre a tutto schermo in una nuova scheda. Esc spegne lo strumento. Dove Google non ha immagini la finestra resta vuota; la panoramica è un servizio esterno di Google e non fa parte dei dati della mappa.": "On release a window opens with the Google Street View panorama of the point: move it by dragging the top bar, resize it from the corner and close it with the cross. “Open in Google Maps” opens it full screen in a new tab. Esc switches the tool off. Where Google has no imagery the window stays empty; the panorama is an external Google service and is not part of the map data.",
   "lbl.Gli orari del trasporto pubblico si aggiornano da soli: ogni giorno il sito controlla il portale open data del Comune e, quando AMAT pubblica un nuovo feed, fermate, linee e orari vengono sostituiti. Se il feed in uso è scaduto, la mappa lo segnala.": "Public transport timetables update automatically: every day the site checks the City's open data portal and, when AMAT publishes a new feed, stops, lines and timetables are replaced. If the feed in use has expired, the map says so.",
   "lbl.Plugin": "Plugin",
-  "lbl.Casi d'uso": "Use cases"
+  "lbl.Casi d'uso": "Use cases",
+  "lbl.Linee metro": "Metro lines",
+  "lbl.Stazioni": "Stations",
+  "lbl.AMAT": "AMAT",
+  "lbl.RFI": "RFI",
+  "lbl.Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.": "Bus and tram lines and AMAT stops, metro lines and stations (RFI), with timetables from the GTFS feeds."
 }

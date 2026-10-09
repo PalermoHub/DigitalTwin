@@ -920,7 +920,6 @@
   "lbl.Libro delle fontane AMAP (PDF)": "Libro delle fontane AMAP (PDF)",
   "lbl.Linee": "Linee",
   "lbl.Linee bus": "Linee bus",
-  "lbl.Linee bus e tram e fermate AMAT, con gli orari dal feed GTFS.": "Linee bus e tram e fermate AMAT, con gli orari dal feed GTFS.",
   "lbl.Linee del trasporto": "Linee del trasporto",
   "lbl.Linee tram": "Linee tram",
   "lbl.Livello della classifica": "Livello della classifica",
@@ -1676,5 +1675,10 @@
   "lbl.Al rilascio si apre una finestra con la panoramica di Google Street View del punto: si sposta trascinando la barra in alto, si ridimensiona dall'angolo e si chiude con la croce. «Apri su Google Maps» la apre a tutto schermo in una nuova scheda. Esc spegne lo strumento. Dove Google non ha immagini la finestra resta vuota; la panoramica è un servizio esterno di Google e non fa parte dei dati della mappa.": "Al rilascio si apre una finestra con la panoramica di Google Street View del punto: si sposta trascinando la barra in alto, si ridimensiona dall'angolo e si chiude con la croce. «Apri su Google Maps» la apre a tutto schermo in una nuova scheda. Esc spegne lo strumento. Dove Google non ha immagini la finestra resta vuota; la panoramica è un servizio esterno di Google e non fa parte dei dati della mappa.",
   "lbl.Gli orari del trasporto pubblico si aggiornano da soli: ogni giorno il sito controlla il portale open data del Comune e, quando AMAT pubblica un nuovo feed, fermate, linee e orari vengono sostituiti. Se il feed in uso è scaduto, la mappa lo segnala.": "Gli orari del trasporto pubblico si aggiornano da soli: ogni giorno il sito controlla il portale open data del Comune e, quando AMAT pubblica un nuovo feed, fermate, linee e orari vengono sostituiti. Se il feed in uso è scaduto, la mappa lo segnala.",
   "lbl.Plugin": "Plugin",
-  "lbl.Casi d'uso": "Casi d'uso"
+  "lbl.Casi d'uso": "Casi d'uso",
+  "lbl.Linee metro": "Linee metro",
+  "lbl.Stazioni": "Stazioni",
+  "lbl.AMAT": "AMAT",
+  "lbl.RFI": "RFI",
+  "lbl.Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.": "Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS."
 }
