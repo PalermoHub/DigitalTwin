@@ -169,13 +169,17 @@ function lista(voci) {
 }
 
 // Avvolge una pagina di blocchi in un contenitore con l'indice laterale (un voce per ogni blocco con titolo h3).
+// Un h2.guida-gruppo è anche intestazione di gruppo nell'indice; un {gruppo} semplice (non un nodo) è un'intestazione solo dell'indice,
+// per un gruppo che nella pagina sarebbe una ripetizione del titolo.
 function paginaConIndice(nodi) {
   const radice = el('div');
-  radice.append(...nodi);
-  const voci = nodi.flatMap(n => {
-    if (n.tagName === 'H2' && n.className === 'guida-gruppo') return [{ gruppo: n.textContent }]; // intestazione di gruppo dell'indice
-    return n.tagName === 'SECTION' && n.querySelector('h3') ? [{ titolo: n.querySelector('h3').textContent, sezione: n }] : [];
-  });
+  const voci = [];
+  for (const n of nodi) {
+    if (!n.nodeType) { voci.push({ gruppo: n.gruppo }); continue; }
+    radice.append(n);
+    if (n.tagName === 'H2' && n.className === 'guida-gruppo') voci.push({ gruppo: n.textContent });
+    else if (n.tagName === 'SECTION' && n.querySelector('h3')) voci.push({ titolo: n.querySelector('h3').textContent, sezione: n });
+  }
   indiceLaterale(document, radice, voci);
   return radice;
 }
@@ -194,7 +198,7 @@ function schedaPlugin() {
   );
   return [
     ...titoloPagina('Plugin RNDT', 'Il catalogo nazionale dei dati territoriali, direttamente sulla mappa.'),
-    el('h2', 'Plugin', { className: 'guida-gruppo' }),
+    { gruppo: 'Plugin' }, // solo nell'indice: nella pagina sarebbe una ripetizione del titolo «Plugin RNDT»
     merito,
     blocco('Cos’è l’RNDT', el('p', 'Il Repertorio Nazionale dei Dati Territoriali (RNDT) è il catalogo ufficiale italiano dei dati geografici: raccoglie le schede di migliaia di mappe e dati pubblicati da Comuni, Regioni, ministeri, enti parco, agenzie e altri enti. È un po’ come una biblioteca: dice che cosa esiste, chi lo ha prodotto e dove si può consultare.')),
     blocco('Cosa fa questo plugin', lista([
