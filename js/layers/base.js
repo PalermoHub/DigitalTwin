@@ -110,6 +110,16 @@ function scegli(map, base) {
   for (const id of Object.keys(RASTER)) map.setLayoutProperty(`base-${id}`, 'visibility', base === id ? 'visible' : 'none');
 }
 
+// Primo layer sopra le basi (le raster, la bianca, le vettoriali e quelle di Positron): lì stanno le ortofoto, sotto ogni dato.
+// `undefined` se non c'è altro: il layer va in cima.
+export function sopraLeBasi(map) {
+  const strati = map.getStyle().layers;
+  const sono = new Set(idPositron);
+  let ultimo = -1;
+  strati.forEach((l, i) => { if (l.id.startsWith('base-') || sono.has(l.id)) ultimo = i; });
+  return strati[ultimo + 1]?.id;
+}
+
 export default {
   id: 'base',
   titolo: 'Base cartografica',

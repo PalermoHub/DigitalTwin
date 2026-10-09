@@ -4,7 +4,8 @@
 // rami aperti e testo digitato restano.
 import { ESTENSIONI } from '../rndt/importa.js';
 import { TETTO_SERVIZI } from './salvati.js';
-import { t as tr, tn } from '../core/i18n.js';
+import { ORTOFOTO } from './ortofoto.js';
+import { t as tr, tn, tl } from '../core/i18n.js';
 
 const SVG = d => `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="${d}"/></svg>`;
 // icone dei servizi, nello spirito del Browser di QGIS: tratto colorato, un colore per tipo (leggibile su tema chiaro e scuro)
@@ -20,6 +21,8 @@ export const ICONE = {
   wmts: LINEE('#7b61c9', `${GLOBO.replace('M3 12h18', 'M4 8h16M4 16h16')}`),
   wfs: LINEE('#e08a1e', '<path d="M5 17 10 6l9 5-3 8z"/><g fill="currentColor"><rect x="3" y="15" width="4" height="4"/><rect x="8" y="4" width="4" height="4"/><rect x="17" y="9" width="4" height="4"/><rect x="14" y="17" width="4" height="4"/></g>'),
   arcgis: LINEE('#1f9bb5', '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/>'),
+  connessione: LINEE('#5b6f82', '<path d="M4 12h6M10 12l6-6M10 12l6 6"/><circle cx="18" cy="6" r="1.6"/><circle cx="18" cy="18" r="1.6"/>'),
+  raster: LINEE('#2e9a57', '<rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>'),
   lucchetto: SVG('M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z'),
 };
 export const TIPI = [
@@ -216,6 +219,30 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     return form;
   }
 
+  // ortofoto pronte: un clic le mette in mappa (sotto i dati); i tile partono solo allora
+  function creaOrtofoto() {
+    const gruppo = nodo(tr('aggiungi.ortofoto'), { icona: 'connessione', apri: false, classe: 'agg-tipo' });
+    gruppo.det.firstElementChild.title = tr('aggiungi.ortofoto.nota');
+    gruppo.conteggio.textContent = String(ORTOFOTO.length);
+    for (const o of ORTOFOTO) {
+      const riga = el('div', 'agg-salvato');
+      const apri = bottone('', 'agg-salvato-nome');
+      const ico = el('span', 'agg-ico');
+      ico.innerHTML = ICONE.raster;
+      apri.append(ico, el('span', null, tl(o.nome)));
+      apri.title = tr('aggiungi.ortofoto.metti', { nome: tl(o.nome) });
+      const esitoRiga = nuovoEsito();
+      apri.addEventListener('click', () => {
+        const { errori } = controllo.aggiungiOrtofoto(o);
+        if (errori.length) esito(esitoRiga, errori.map(e => `«${e.nome}»: ${e.messaggio}.`).join(' '), true);
+        else avvisa(tr('aggiungi.inMappa', { nome: tl(o.nome) }));
+      });
+      riga.append(apri, esitoRiga);
+      gruppo.figli.append(riga);
+    }
+    return gruppo.det;
+  }
+
   for (const tipo of TIPI) {
     const modulo = creaModulo(tipo);
     const ramo = nodo(tipo.titolo, {
@@ -223,6 +250,7 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
       azione: { icona: 'piu', titolo: tr('aggiungi.aggiungiServizio', { tipo: tipo.titolo }), suClic: () => { ramo.det.open = true; modulo.hidden = !modulo.hidden; if (!modulo.hidden) modulo.querySelector('input')?.focus(); } },
     });
     const elenco = el('div', 'agg-elenco');
+    if (tipo.id === 'arcgis') ramo.figli.append(creaOrtofoto());
     ramo.figli.append(modulo, elenco);
     rami.set(tipo.id, { ramo, elenco });
     servizi.figli.append(ramo.det);

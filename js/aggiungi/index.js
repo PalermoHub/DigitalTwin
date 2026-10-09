@@ -14,6 +14,7 @@ import { PROXY_RNDT } from '../rndt/index.js';
 import { urlDati } from '../core/config.js';
 import { segnala } from '../core/pannello.js';
 import { t } from '../core/i18n.js';
+import { sopraLeBasi } from '../layers/base.js';
 
 export function collegaAggiungi(map, gruppo) {
   const storage = (() => { try { return window.localStorage; } catch { return null; } })();
@@ -24,7 +25,7 @@ export function collegaAggiungi(map, gruppo) {
   const credenziali = creaCredenziali(); // solo in memoria: spariscono con la pagina
   let controllo = null;
   const host = creaHost({
-    map, proxy: PROXY_RNDT, prefisso: 'miei', etichetta: 'aggiunti', stato: leggi(storage, CHIAVE_MIEI),
+    map, proxy: PROXY_RNDT, prefisso: 'miei', etichetta: 'aggiunti', sopraBasi: () => sopraLeBasi(map), stato: leggi(storage, CHIAVE_MIEI),
     scrivi: s => salva(storage, s, CHIAVE_MIEI), anelli: () => anelli, notifica: segnala, archivioDati: archivioIndexedDB(),
     autorizzazione: url => credenziali.intestazione(ospiteDi(url)),
     protetto: url => controllo?.protetto(url) ?? false,

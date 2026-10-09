@@ -8,6 +8,7 @@ import {
 import { capabilitiesWmts } from './wmts.js';
 import { leggiUrlArcgis, urlInfo, descriviArcgis, urlExport, urlTileCache, urlQuery } from './arcgis.js';
 import { leggiServizi, salvaServizi, aggiungiServizio, rimuoviServizio, filtraServizi } from './salvati.js';
+import { ATTRIBUZIONE_ORTOFOTO, urlOrtofoto } from './ortofoto.js';
 import { creaCredenziali, ospiteDi } from './credenziali.js';
 import { t as tr } from '../core/i18n.js';
 
@@ -124,6 +125,11 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     return { ...r, errori };
   }
 
+  // Un'ortofoto pronta: tile diretti dal server, sotto i dati, con lo zoom massimo che il servizio ha davvero
+  function aggiungiOrtofoto(o) {
+    try { host.addTileLayer(o.nome, urlOrtofoto(o), { attribution: ATTRIBUZIONE_ORTOFOTO, maxzoom: o.max, sotto: true, diretto: true }); return { errori: [] }; } catch (e) { return { errori: [{ nome: o.nome, messaggio: messaggio(e) }] }; }
+  }
+
   const serveCredenziali = id => {
     const s = stato.servizi.find(x => x.id === id);
     return Boolean(s?.utente || s?.conToken) && !credenziali.ha(ospiteDi(s.url));
@@ -166,6 +172,6 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     stato: () => stato,
     suCambio(fn) { ascoltatori.add(fn); return () => ascoltatori.delete(fn); },
     credenziali, serveCredenziali, protetto, cerca: testo => filtraServizi(stato.servizi, testo),
-    leggiServizio, aggiungiXyz, aggiungiWms, aggiungiWfs, aggiungiWmts, aggiungiArcgis, riaggiungi, rimuovi,
+    leggiServizio, aggiungiOrtofoto, aggiungiXyz, aggiungiWms, aggiungiWfs, aggiungiWmts, aggiungiArcgis, riaggiungi, rimuovi,
   };
 }

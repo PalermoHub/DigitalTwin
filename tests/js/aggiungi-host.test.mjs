@@ -186,3 +186,25 @@ test('exceededTransferLimit: il servizio ha troncato la risposta → errore, mai
   assert.equal(map.sorgenti.size, 0);
   assert.equal(scritti.length, 0);
 });
+
+test('addTileLayer con «sotto»: il layer va prima di quello indicato da sopraBasi, senza proxy se «diretto», e si ripristina uguale', () => {
+  const map = mappaFinta(), posizioni = [], scritti = [];
+  map.addLayer = (l, prima) => { posizioni.push(prima); map.strati.set(l.id, l); };
+  const crea = stato => creaHost({ map, proxy: PROXY, stato, scrivi: s => { scritti.push(s); return true; }, archivioDati: archivioInMemoria(), prefisso: 'miei', sopraBasi: () => 'dati-1' });
+  const host = crea({ v: 1, layers: [] });
+  const id = host.addTileLayer('Orto', 'https://s.it/tile/{z}/{y}/{x}', { maxzoom: 19, sotto: true, diretto: true });
+  assert.equal(posizioni[0], 'dati-1');
+  assert.deepEqual(map.sorgenti.get(id).tiles, ['https://s.it/tile/{z}/{y}/{x}']);
+  assert.equal(map.sorgenti.get(id).maxzoom, 19);
+  const salvato = scritti.at(-1).layers[0];
+  assert.deepEqual([salvato.sorgente.sotto, salvato.sorgente.diretto, salvato.sorgente.maxzoom], [true, true, 19]);
+  // un layer normale resta in cima e passa dal proxy
+  const altro = host.addTileLayer('X', 'https://b.it/{z}/{x}/{y}.png', {});
+  assert.equal(posizioni[1], undefined);
+  assert.ok(map.sorgenti.get(altro).tiles[0].startsWith(PROXY));
+  // dopo un riavvio torna nella stessa posizione
+  const map2 = mappaFinta(), pos2 = [];
+  map2.addLayer = (l, prima) => { pos2.push(prima); map2.strati.set(l.id, l); };
+  const host2 = creaHost({ map: map2, proxy: PROXY, stato: scritti.at(-1), scrivi: () => true, archivioDati: archivioInMemoria(), prefisso: 'miei', sopraBasi: () => 'dati-2' });
+  return host2.ripristina().then(() => assert.deepEqual(pos2, ['dati-2', undefined]));
+});

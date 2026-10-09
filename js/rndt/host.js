@@ -29,7 +29,7 @@ export function urlProxy(proxy, url) {
   return `${proxy.replace(/\/$/, '')}/t/${m[1]}${m[2] || '/'}`;
 }
 
-export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, archivioDati = null, prefisso = 'rndt', etichetta = 'RNDT', autorizzazione = () => null, protetto = () => false, riscrivi = url => url, fetchFn = (...a) => fetch(...a) }) {
+export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [], notifica = () => {}, pannello = {}, archivioDati = null, prefisso = 'rndt', etichetta = 'RNDT', autorizzazione = () => null, sopraBasi = () => undefined, protetto = () => false, riscrivi = url => url, fetchFn = (...a) => fetch(...a) }) {
   let stato = iniziale;
   const layers = new Map(); // id → { id, tipo, nome, visibile, sorgente, idMappa[], idSorgente, salvato, indisponibile?, errore? }
   const ascoltatori = new Set();
@@ -87,14 +87,21 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     return registra({ id, tipo: 'wms', nome, visibile: true, sorgente: { ...opz }, idMappa: [id], idSorgente: id, salvato: true }, { salva });
   }
 
+  // opz: attribution; maxzoom (oltre, MapLibre ingrandisce i tile dell'ultimo livello); sotto (il layer sta sopra le basi e sotto
+  // i dati, come un'ortofoto); diretto (senza proxy, per servizi che ammettono già il CORS: non pesa sul Worker)
   function creaTile(nome, url, opz = {}, salva) {
     const id = `${prefisso}-${hash(`tile|${url}`)}`;
     liberaSeNonDisponibile(id);
     if (layers.has(id)) return id;
-    map.addSource(id, { type: 'raster', tiles: [urlProxy(proxy, url)], tileSize: 256, ...(opz.attribution ? { attribution: opz.attribution } : {}), bounds: BBOX_PALERMO });
-    map.addLayer({ id, type: 'raster', source: id });
+    map.addSource(id, {
+      type: 'raster', tiles: [opz.diretto ? url : urlProxy(proxy, url)], tileSize: 256, bounds: BBOX_PALERMO,
+      ...(opz.attribution ? { attribution: opz.attribution } : {}), ...(opz.maxzoom ? { maxzoom: opz.maxzoom } : {}),
+    });
+    map.addLayer({ id, type: 'raster', source: id }, opz.sotto ? sopraBasi() : undefined);
     verificaInMappa(id);
-    return registra({ id, tipo: 'tile', nome, visibile: true, sorgente: { url, attribution: opz.attribution }, idMappa: [id], idSorgente: id, salvato: true }, { salva });
+    const sorgente = { url, attribution: opz.attribution };
+    for (const k of ['maxzoom', 'sotto', 'diretto']) if (opz[k]) sorgente[k] = opz[k];
+    return registra({ id, tipo: 'tile', nome, visibile: true, sorgente, idMappa: [id], idSorgente: id, salvato: true }, { salva });
   }
 
   function creaGeoJson(nome, fc, url, salva, idSalvato) {
@@ -254,7 +261,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
           const urlSalvato = salvato.sorgente?.url;
           if (urlSalvato && protetto(urlSalvato)) throw new Error('servono utente e password');
           if (salvato.tipo === 'wms') id = creaWms(salvato.nome, salvato.sorgente, false);
-          else if (salvato.tipo === 'tile') id = creaTile(salvato.nome, salvato.sorgente.url, { attribution: salvato.sorgente.attribution }, false);
+          else if (salvato.tipo === 'tile') id = creaTile(salvato.nome, salvato.sorgente.url, salvato.sorgente, false);
           else if (salvato.sorgente.dati === true) {
             const fc = await archivioDati?.leggi(salvato.id);
             if (!fc) throw new Error(tr('err.datiNonTrovati'));
