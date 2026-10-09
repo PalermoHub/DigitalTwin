@@ -265,10 +265,8 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
       ramo.figli.append(
         creaElencoPronto({ titolo: 'aggiungi.ortofoto', nota: 'aggiungi.ortofoto.nota', voci: ORTOFOTO,
           gruppi: [{ metti: 'aggiungi.ortofoto.metti', aggiungi: o => controllo.aggiungiOrtofoto(o) }] }),
-        creaElencoPronto({ titolo: 'aggiungi.beniCulturali', nota: 'aggiungi.beniCulturali.nota', voci: BENI_CULTURALI, gruppi: [
-          { titolo: 'aggiungi.pronto.immagini', metti: 'aggiungi.beniCulturali.metti', aggiungi: o => controllo.aggiungiBeneCulturale(o) },
-          { titolo: 'aggiungi.pronto.dati', metti: 'aggiungi.pronto.dati.titolo', aggiungi: o => controllo.aggiungiBeneCulturaleDati(o) },
-        ] }),
+        creaElencoPronto({ titolo: 'aggiungi.beniCulturali', nota: 'aggiungi.beniCulturali.nota', voci: BENI_CULTURALI,
+          gruppi: [{ metti: 'aggiungi.beniCulturali.metti', aggiungi: o => controllo.aggiungiBeneCulturaleDati(o) }] }),
       );
     }
     ramo.figli.append(modulo, elenco);

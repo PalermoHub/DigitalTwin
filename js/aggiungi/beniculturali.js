@@ -1,9 +1,7 @@
 // js/aggiungi/beniculturali.js
 // Beni culturali della Regione Siciliana (SITR): quattro MapServer con un solo layer vettoriale ciascuno, pronti da accendere dal ramo
-// «ArcGIS REST» come immagini (export). Modulo puro, senza DOM né rete.
-import { urlExport } from './arcgis.js';
+// «ArcGIS REST» come dati interrogabili. Modulo puro, senza DOM né rete.
 const SITR = 'https://map.sitr.regione.sicilia.it/gis/rest/services/beni_culturali';
-export const ATTRIBUZIONE_BENI = '© Regione Siciliana, SITR';
 
 export const BENI_CULTURALI = [
   { id: 'beni_isolati', nome: 'Beni isolati', layer: 0 },
@@ -13,4 +11,3 @@ export const BENI_CULTURALI = [
 ]; // i18n-ok: nomi dei servizi, come sono sul server
 
 export const baseBeneCulturale = b => `${SITR}/${b.id}/MapServer`;
-export const urlBeneCulturale = b => urlExport(baseBeneCulturale(b), b.layer);
