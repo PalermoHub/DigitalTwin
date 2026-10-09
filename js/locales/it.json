@@ -1674,8 +1674,6 @@
   "lbl.Al rilascio si apre una finestra con la panoramica di Google Street View del punto: si sposta trascinando la barra in alto, si ridimensiona dall'angolo e si chiude con la croce. «Apri su Google Maps» la apre a tutto schermo in una nuova scheda. Esc spegne lo strumento. Dove Google non ha immagini la finestra resta vuota; la panoramica è un servizio esterno di Google e non fa parte dei dati della mappa.": "Al rilascio si apre una finestra con la panoramica di Google Street View del punto: si sposta trascinando la barra in alto, si ridimensiona dall'angolo e si chiude con la croce. «Apri su Google Maps» la apre a tutto schermo in una nuova scheda. Esc spegne lo strumento. Dove Google non ha immagini la finestra resta vuota; la panoramica è un servizio esterno di Google e non fa parte dei dati della mappa.",
   "lbl.Plugin": "Plugin",
   "lbl.Casi d'uso": "Casi d'uso",
-  "lbl.Linee metro": "Linee metro",
-  "lbl.Stazioni": "Stazioni",
   "lbl.AMAT": "AMAT",
   "lbl.RFI": "RFI",
   "lbl.Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.": "Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.",
@@ -1690,5 +1688,7 @@
   "lbl.Trasporto ferroviario urbano (linee, stazioni, orari): Trenitalia S.p.A. / CCISS MMTIS, dati NeTEx convertiti in GTFS da Clément Desouche (@deryclem), licenza CC BY 4.0, feed valido dal 26/09/2026 al 12/12/2026": "Trasporto ferroviario urbano (linee, stazioni, orari): Trenitalia S.p.A. / CCISS MMTIS, dati NeTEx convertiti in GTFS da Clément Desouche (@deryclem), licenza CC BY 4.0, feed valido dal 26/09/2026 al 12/12/2026",
   "lbl.Feed GTFS Trenitalia": "Feed GTFS Trenitalia",
   "lbl.Licenza CC BY 4.0": "Licenza CC BY 4.0",
-  "lbl.Linea metro (RFI, tracciato schematico)": "Linea metro (RFI, tracciato schematico)"
+  "lbl.Linea metro (RFI, tracciato schematico)": "Linea metro (RFI, tracciato schematico)",
+  "lbl.Linea metro": "Linea metro",
+  "lbl.Stazioni metro": "Stazioni metro"
 }

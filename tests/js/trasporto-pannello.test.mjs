@@ -10,11 +10,17 @@ test('gli strati del trasporto sono divisi in AMAT e RFI, in quest\'ordine', () 
   assert.deepEqual(strati.filter(s => s.sezione === 'RFI').map(s => s.id), ['trasporto-metro', 'trasporto-stazioni']);
 });
 
+test('le etichette: AMAT «Linee bus», «Linee tram», «Fermate»; RFI «Linea metro», «Stazioni metro»', () => {
+  assert.deepEqual(strati.map(s => s.etichetta), ['Linee bus', 'Linee tram', 'Fermate', 'Linea metro', 'Stazioni metro']);
+});
+
 test('tutti gli strati partono spenti e ognuno governa il proprio layer', () => {
-  for (const s of strati) {
-    assert.equal(s.attivo, false);
-    assert.deepEqual(s.layers, [s.id]);
-  }
+  for (const s of strati) assert.equal(s.attivo, false);
+  for (const s of strati.filter(x => x.id !== 'trasporto-metro')) assert.deepEqual(s.layers, [s.id]);
+});
+
+test('la linea metro è un binario: un layer nero e uno di trattini bianchi, accesi insieme', () => {
+  assert.deepEqual(strati.find(s => s.id === 'trasporto-metro').layers, ['trasporto-metro', 'trasporto-metro-tratti']);
 });
 
 test('il callback di cambio è passato a ogni strato', () => {

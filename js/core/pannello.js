@@ -246,6 +246,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
         const h = document.createElement('h3');
         h.className = 'gruppo-sezione';
         h.textContent = s.sezione;
+        if (m.sezioniFisse) h.dataset.fissa = ''; // titolo che non viaggia con gli strati: il riordino resta dentro la sezione
         gruppo.append(h);
       }
       const label = document.createElement('label');
