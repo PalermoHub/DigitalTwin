@@ -102,7 +102,15 @@ export function schedaGuida(doc = document, passi = PASSI) {
   }
   radice.append(media);
 
+  let gruppoPagina;
   for (const p of passi) {
+    if (p.gruppo && p.gruppo !== gruppoPagina) {
+      const hg = doc.createElement('h2');
+      hg.className = 'guida-gruppo';
+      hg.textContent = tr(`guida.gruppo.${p.gruppo}`);
+      radice.append(hg);
+    }
+    gruppoPagina = p.gruppo;
     const sez = creaPasso(doc, p);
     sezioni[p.id] = sez;
     radice.append(sez);
