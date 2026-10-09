@@ -10,6 +10,7 @@ import { leggiUrlArcgis, urlInfo, descriviArcgis, urlExport, urlTileCache, urlQu
 import { baseBeneCulturale } from './beniculturali.js';
 import { leggiServizi, salvaServizi, aggiungiServizio, rimuoviServizio, filtraServizi } from './salvati.js';
 import { ATTRIBUZIONE_ORTOFOTO, urlOrtofoto } from './ortofoto.js';
+import { ATTRIBUZIONE_ESRI } from './xyz-pronti.js';
 import { creaCredenziali, ospiteDi } from './credenziali.js';
 import { t as tr } from '../core/i18n.js';
 
@@ -131,6 +132,11 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     try { host.addTileLayer(o.nome, urlOrtofoto(o), { attribution: ATTRIBUZIONE_ORTOFOTO, maxzoom: o.max, sotto: true, diretto: true }); return { errori: [] }; } catch (e) { return { errori: [{ nome: o.nome, messaggio: messaggio(e) }] }; }
   }
 
+  // Una base XYZ pronta (Esri): tile diretti dal server, sotto i dati
+  function aggiungiXyzPronto(o) {
+    try { host.addTileLayer(o.nome, o.url, { attribution: ATTRIBUZIONE_ESRI, maxzoom: o.max, sotto: true, diretto: true }); return { errori: [] }; } catch (e) { return { errori: [{ nome: o.nome, messaggio: messaggio(e) }] }; }
+  }
+
   // Un WMS pronto (IGM, carte storiche): richiesta ai tile via proxy, con i dati del servizio già noti
   function aggiungiWmsPronto(o) {
     try { host.addWmsLayer(o.nome, { url: o.url, layers: o.layers, version: o.version, format: o.format, transparent: true, bounds: o.bbox, sotto: true }); return { errori: [] }; } catch (e) { return { errori: [{ nome: o.nome, messaggio: messaggio(e) }] }; }
@@ -184,6 +190,6 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     stato: () => stato,
     suCambio(fn) { ascoltatori.add(fn); return () => ascoltatori.delete(fn); },
     credenziali, serveCredenziali, protetto, cerca: testo => filtraServizi(stato.servizi, testo),
-    leggiServizio, aggiungiOrtofoto, aggiungiWmsPronto, aggiungiBeneCulturaleDati, aggiungiXyz, aggiungiWms, aggiungiWfs, aggiungiWmts, aggiungiArcgis, riaggiungi, rimuovi,
+    leggiServizio, aggiungiOrtofoto, aggiungiWmsPronto, aggiungiXyzPronto, aggiungiBeneCulturaleDati, aggiungiXyz, aggiungiWms, aggiungiWfs, aggiungiWmts, aggiungiArcgis, riaggiungi, rimuovi,
   };
 }

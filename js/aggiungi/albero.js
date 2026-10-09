@@ -6,6 +6,7 @@ import { ESTENSIONI } from '../rndt/importa.js';
 import { TETTO_SERVIZI } from './salvati.js';
 import { ORTOFOTO } from './ortofoto.js';
 import { WMS_CARTE_STORICHE } from './wms-pronti.js';
+import { XYZ_PRONTI } from './xyz-pronti.js';
 import { BENI_CULTURALI } from './beniculturali.js';
 import { t as tr, tn, tl } from '../core/i18n.js';
 
@@ -262,6 +263,12 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
       azione: { icona: 'piu', titolo: tr('aggiungi.aggiungiServizio', { tipo: tipo.titolo }), suClic: () => { ramo.det.open = true; modulo.hidden = !modulo.hidden; if (!modulo.hidden) modulo.querySelector('input')?.focus(); } },
     });
     const elenco = el('div', 'agg-elenco');
+    if (tipo.id === 'xyz') {
+      ramo.figli.append(
+        creaElencoPronto({ titolo: 'aggiungi.esri', nota: 'aggiungi.esri.nota', voci: XYZ_PRONTI,
+          gruppi: [{ metti: 'aggiungi.esri.metti', aggiungi: o => controllo.aggiungiXyzPronto(o) }] }),
+      );
+    }
     if (tipo.id === 'wms') {
       ramo.figli.append(
         creaElencoPronto({ titolo: 'aggiungi.storiche', nota: 'aggiungi.storiche.nota', voci: WMS_CARTE_STORICHE,
