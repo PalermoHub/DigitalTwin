@@ -108,6 +108,11 @@ const ctx = {
   orari: caricaOrari,
   info: (route, dir) => linee.get(`linea-${route}-${dir}`) ?? { numero: route, colore: '#555555', a: '' },
   nomeFermata: id => fermate.get(id)?.nome ?? id,
+  vaiAFermata: (id, numero) => { const f = fermate.get(id); if (f) vaiAFermata(f, numero); },
+  // le altre linee che passano per la fermata (cambi), con il loro colore; quelle fuori dal feed si saltano
+  cambi: (id, numero) => (fermate.get(id)?.linee ?? []).filter(n => n !== numero && rottaPerNumero.has(n))
+    .map(n => ({ numero: n, colore: ctx.info(rottaPerNumero.get(n), 0).colore }))
+    .sort((a, b) => a.numero.localeCompare(b.numero, 'it', { numeric: true })),
 };
 
 // Una stazione non ancora aperta non ha orari: la scheda lo dice al posto delle partenze.

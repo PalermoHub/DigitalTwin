@@ -98,11 +98,32 @@ export function orariFermata(stopId, ctx) {
   });
 }
 
+// Fermate in sequenza come uno schema a strisce: la linea nel suo colore con un pallino per fermata (capolinea più grandi),
+// e accanto a ogni nome le altre linee che vi passano (i cambi). Il nome porta la mappa sulla fermata; un cambio la porta
+// sulla fermata mostrando anche il percorso di quell'altra linea.
 function fermateInSequenza(linea, ctx) {
   const radice = el('details', 'scheda-acc');
   radice.append(el('summary', null, `Fermate (${linea.fermate.length})`));
-  const elenco = el('ol', 'trasporto-fermate');
-  for (const id of linea.fermate) elenco.append(el('li', null, ctx.nomeFermata(id)));
+  const elenco = el('ol', 'trasporto-fermate trasporto-strip');
+  elenco.style.setProperty('--colore-linea', linea.colore);
+  const ultima = linea.fermate.length - 1;
+  linea.fermate.forEach((id, i) => {
+    const voce = el('li', i === 0 || i === ultima ? 'trasporto-strip-capolinea' : null);
+    const nome = el('button', 'trasporto-strip-nome', ctx.nomeFermata(id));
+    nome.type = 'button';
+    nome.title = t('trasporto.mostraFermata');
+    nome.addEventListener('click', () => ctx.vaiAFermata(id));
+    voce.append(nome);
+    for (const c of ctx.cambi(id, linea.numero)) {
+      const b = el('button', 'trasporto-chip-bottone');
+      b.type = 'button';
+      b.title = t('trasporto.mostraPercorso', { numero: c.numero });
+      b.addEventListener('click', () => ctx.vaiAFermata(id, c.numero));
+      b.append(chip(c));
+      voce.append(' ', b);
+    }
+    elenco.append(voce);
+  });
   radice.append(elenco);
   return radice;
 }

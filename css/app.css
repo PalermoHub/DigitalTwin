@@ -417,6 +417,20 @@ dialog li { margin: 4px 0; }
 .trasporto-testata { margin: 8px 0 2px; font-size: var(--fs-xs); }
 .trasporto-ore { margin: 0 0 6px; line-height: 1.5; font-variant-numeric: tabular-nums; word-spacing: 1px; }
 .trasporto-fermate { margin: 4px 0 0; padding-left: 20px; font-size: var(--fs-xs); line-height: 1.5; max-height: 220px; overflow-y: auto; }
+/* Schema a striscia: la linea passa nel centro di ogni voce (x = 0 della voce) e il pallino sta sopra, all'altezza della prima riga di testo. Niente bordo sulla lista: `overflow` ne ritaglierebbe metà pallino. */
+.trasporto-strip { list-style: none; margin: 4px 0 0; padding: 0 0 0 10px; }
+.trasporto-strip li { position: relative; padding: 3px 0 3px 18px; --y: calc(3px + .75em); }
+.trasporto-strip li::before, .trasporto-strip li::after { content: ""; position: absolute; box-sizing: border-box; }
+.trasporto-strip li::after { left: -2px; top: 0; bottom: 0; width: 4px; background: var(--colore-linea, var(--trasporto)); }
+.trasporto-strip li:first-child::after { top: var(--y); }
+.trasporto-strip li:last-child::after { bottom: auto; height: var(--y); }
+.trasporto-strip li:only-child::after { display: none; }
+.trasporto-strip li::before { z-index: 1; left: -5px; top: var(--y); width: 10px; height: 10px; margin-top: -5px; border: 2px solid var(--colore-linea, var(--trasporto)); border-radius: 50%; background: var(--bianco); }
+.trasporto-strip .trasporto-strip-capolinea { font-weight: 700; }
+.trasporto-strip .trasporto-strip-capolinea::before { left: -7px; width: 14px; height: 14px; margin-top: -7px; border-width: 3px; }
+.trasporto-strip-nome { all: unset; cursor: pointer; color: var(--accent-strong); text-decoration: underline dotted; text-underline-offset: 3px; }
+.trasporto-strip-nome:hover, .trasporto-strip-nome:focus-visible { text-decoration-style: solid; }
+.trasporto-strip .trasporto-chip { font-size: 10px; padding: 0 4px; min-width: 1.8em; }
 .legenda-trasporto { margin-top: 8px; }
 .legenda-selezione .selezione-testa { justify-content: space-between; gap: 10px; margin-bottom: 4px; }
 .legenda-selezione strong { font-size: var(--fs-xs); }
