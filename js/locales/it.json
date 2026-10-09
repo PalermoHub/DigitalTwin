@@ -1370,7 +1370,7 @@
   "pres.collabora.p1": "Hai trovato un errore nei dati o qualcosa che non funziona? Hai un'idea per migliorare il sito? Segnalalo aprendo una issue su GitHub (basta un account gratuito). Anche chi vuole contribuire con dati, correzioni o codice è il benvenuto.",
   "pres.collabora.titolo": "Collabora e segnala",
   "pres.dati.fonti": "Vedi le fonti",
-  "pres.dati.p1": "I dati arrivano dal Comune di Palermo, dall'azienda del trasporto pubblico AMAT, dal catasto, dal censimento e da OpenStreetMap.",
+  "pres.dati.p1": "I dati arrivano da fonti aperte: Comune di Palermo, AMAT, AMAP Spa, Agenzia delle Entrate, ISTAT, Regione Siciliana e OpenStreetMap.",
   "pres.dati.p2": "Per ogni fonte trovi la data, il collegamento al dato originale e la licenza.",
   "pres.dati.titolo": "Dati aperti, con le fonti",
   "pres.descrizione": "Catasto, piano regolatore, popolazione, edifici, trasporto pubblico e molto altro su una sola mappa di Palermo, da dati aperti.",
