@@ -23,4 +23,5 @@ test('attributoDi: zona PRG, fermata e valore esplicito', () => {
   assert.equal(attributoDi('trasporto-hit-fermate', { nome: 'Via Roma' }), 'Via Roma');
   assert.equal(attributoDi('trasporto-vicine', { attributo: 'Politeama' }), 'Politeama');
   assert.equal(attributoDi('edifici-hit', {}), undefined);
+  assert.equal(attributoDi('monumenti-hit-poli', { nome: 'Teatro Massimo' }), 'Teatro Massimo');
 });

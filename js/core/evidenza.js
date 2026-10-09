@@ -47,6 +47,13 @@ const ATTRIBUTI = {
   'immobili-hit': p => unisciTesti(p.TIPO, p.INDIRIZZO),
   'civici-hit': p => unisciTesti(p.Odonimo, p.Esponente ? `${p.Civico}/${p.Esponente}` : p.Civico),
   'trasporto-hit-fermate': p => unisciTesti(p.nome),
+  'monumenti-hit-poli': p => unisciTesti(p.nome),
+  'monumenti-hit-punti': p => unisciTesti(p.nome),
+  'scuole-hit-poli': p => unisciTesti(p.nome),
+  'scuole-hit-punti': p => unisciTesti(p.nome),
+  'seggi-hit-poli': p => unisciTesti(p.nome),
+  'seggi-hit-punti': p => unisciTesti(p.nome),
+  'alberi-hit-punti': p => unisciTesti(p.nome || p.specie),
 };
 export const attributoDi = (id, proprieta = {}) => (ATTRIBUTI[id]?.(proprieta) ?? pulito(proprieta.attributo)) || undefined;
 
