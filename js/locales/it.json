@@ -1693,5 +1693,9 @@
   "trasporto.inAperturaNota": "Stazione in apertura: non è ancora in servizio, quindi non ci sono orari. Compare qui perché è già presente in OpenStreetMap.",
   "lbl.In apertura": "In apertura",
   "lbl.Stazione (RFI, più chiara se in apertura)": "Stazione (RFI, più chiara se in apertura)",
-  "lbl.Posizione di alcune stazioni e stazioni in apertura (Politeama, Porto) da dati © contributori OpenStreetMap (ODbL)": "Posizione di alcune stazioni e stazioni in apertura (Politeama, Porto) da dati © contributori OpenStreetMap (ODbL)"
+  "lbl.Posizione di alcune stazioni e stazioni in apertura (Politeama, Porto) da dati © contributori OpenStreetMap (ODbL)": "Posizione di alcune stazioni e stazioni in apertura (Politeama, Porto) da dati © contributori OpenStreetMap (ODbL)",
+  "lbl.. Il progetto evcharginglogsicilia è un refactoring per la Sicilia di ": ". Il progetto evcharginglogsicilia è un refactoring per la Sicilia di ",
+  "lbl., il progetto originale di ": ", il progetto originale di ",
+  "lbl., per ": ", per ",
+  "lbl.Maurizio Napolitano (@napo)": "Maurizio Napolitano (@napo)"
 }
