@@ -220,40 +220,38 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     return form;
   }
 
-  // elenchi pronti (ortofoto, beni culturali): un clic mette il layer in mappa; i tile partono solo allora
-  function creaElencoPronto({ titolo, nota, metti, voci, aggiungi, aggiungiDati }) {
-    const gruppo = nodo(tr(titolo), { icona: 'connessione', apri: false, classe: 'agg-tipo' });
-    gruppo.det.firstElementChild.title = tr(nota);
-    gruppo.conteggio.textContent = String(voci.length);
-    for (const o of voci) {
-      const riga = el('div', 'agg-salvato');
-      const apri = bottone('', 'agg-salvato-nome');
-      const ico = el('span', 'agg-ico');
-      ico.innerHTML = ICONE.raster;
-      apri.append(ico, el('span', null, tl(o.nome)));
-      apri.title = tr(metti, { nome: tl(o.nome) });
-      const esitoRiga = nuovoEsito();
-      apri.addEventListener('click', () => {
-        const { errori } = aggiungi(o);
-        if (errori.length) esito(esitoRiga, errori.map(e => `«${e.nome}»: ${e.messaggio}.`).join(' '), true);
-        else avvisa(tr('aggiungi.inMappa', { nome: tl(o.nome) }));
-      });
-      riga.append(apri);
-      if (aggiungiDati) { // anche i dati interrogabili (clic sugli elementi, tabella), non solo l'immagine
-        const dati = bottone(tr('aggiungi.pronto.dati'), 'agg-salvato-nome');
-        dati.style.flex = 'none';
-        dati.title = tr('aggiungi.pronto.dati.titolo', { nome: tl(o.nome) });
-        dati.addEventListener('click', async () => {
-          const { errori } = await aggiungiDati(o);
+  // elenchi pronti (ortofoto, beni culturali): un clic mette il layer in mappa; i tile partono solo allora.
+  // `gruppi`: un solo gruppo senza titolo = righe dirette; più gruppi (es. Immagini / Dati) = sottogruppi con le stesse voci
+  function creaElencoPronto({ titolo, nota, voci, gruppi }) {
+    const radice = nodo(tr(titolo), { icona: 'connessione', apri: false, classe: 'agg-tipo' });
+    radice.det.firstElementChild.title = tr(nota);
+    radice.conteggio.textContent = String(voci.length);
+    for (const g of gruppi) {
+      let contenitore = radice.figli;
+      if (g.titolo) {
+        const sotto = nodo(tr(g.titolo), { icona: 'connessione', apri: false, classe: 'agg-tipo' });
+        sotto.conteggio.textContent = String(voci.length);
+        radice.figli.append(sotto.det);
+        contenitore = sotto.figli;
+      }
+      for (const o of voci) {
+        const riga = el('div', 'agg-salvato');
+        const apri = bottone('', 'agg-salvato-nome');
+        const ico = el('span', 'agg-ico');
+        ico.innerHTML = ICONE.raster;
+        apri.append(ico, el('span', null, tl(o.nome)));
+        apri.title = tr(g.metti, { nome: tl(o.nome) });
+        const esitoRiga = nuovoEsito();
+        apri.addEventListener('click', async () => {
+          const { errori } = await g.aggiungi(o);
           if (errori.length) esito(esitoRiga, errori.map(e => `«${e.nome}»: ${e.messaggio}.`).join(' '), true);
           else avvisa(tr('aggiungi.inMappa', { nome: tl(o.nome) }));
         });
-        riga.append(dati);
+        riga.append(apri, esitoRiga);
+        contenitore.append(riga);
       }
-      riga.append(esitoRiga);
-      gruppo.figli.append(riga);
     }
-    return gruppo.det;
+    return radice.det;
   }
 
   for (const tipo of TIPI) {
@@ -265,8 +263,12 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
     const elenco = el('div', 'agg-elenco');
     if (tipo.id === 'arcgis') {
       ramo.figli.append(
-        creaElencoPronto({ titolo: 'aggiungi.ortofoto', nota: 'aggiungi.ortofoto.nota', metti: 'aggiungi.ortofoto.metti', voci: ORTOFOTO, aggiungi: o => controllo.aggiungiOrtofoto(o) }),
-        creaElencoPronto({ titolo: 'aggiungi.beniCulturali', nota: 'aggiungi.beniCulturali.nota', metti: 'aggiungi.beniCulturali.metti', voci: BENI_CULTURALI, aggiungi: o => controllo.aggiungiBeneCulturale(o), aggiungiDati: o => controllo.aggiungiBeneCulturaleDati(o) }),
+        creaElencoPronto({ titolo: 'aggiungi.ortofoto', nota: 'aggiungi.ortofoto.nota', voci: ORTOFOTO,
+          gruppi: [{ metti: 'aggiungi.ortofoto.metti', aggiungi: o => controllo.aggiungiOrtofoto(o) }] }),
+        creaElencoPronto({ titolo: 'aggiungi.beniCulturali', nota: 'aggiungi.beniCulturali.nota', voci: BENI_CULTURALI, gruppi: [
+          { titolo: 'aggiungi.pronto.immagini', metti: 'aggiungi.beniCulturali.metti', aggiungi: o => controllo.aggiungiBeneCulturale(o) },
+          { titolo: 'aggiungi.pronto.dati', metti: 'aggiungi.pronto.dati.titolo', aggiungi: o => controllo.aggiungiBeneCulturaleDati(o) },
+        ] }),
       );
     }
     ramo.figli.append(modulo, elenco);

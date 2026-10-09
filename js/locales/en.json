@@ -49,6 +49,7 @@
   "aggiungi.beniCulturali": "Sicilian Region - Cultural heritage",
   "aggiungi.beniCulturali.nota": "Ready-made cultural heritage services: one click puts them on the map. Images come straight from the Region’s server.",
   "aggiungi.beniCulturali.metti": "Put “{nome}” on the map",
+  "aggiungi.pronto.immagini": "Images",
   "aggiungi.pronto.dati": "Data",
   "aggiungi.pronto.dati.titolo": "Add “{nome}” as queryable data (Palermo area)",
   "lbl.Beni isolati": "Isolated heritage sites",
