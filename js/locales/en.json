@@ -843,7 +843,6 @@
   "lbl.Incendi (da zoom 12)": "Fires (from zoom 12)",
   "lbl.Incendi per anno (n. incendi)": "Fires per year (no. of fires)",
   "lbl.Incendi: catasto dei soprassuoli percorsi dal fuoco, Comune di Palermo e Sistema Informativo Forestale (SIF) della Regione Siciliana": "Fires: register of areas burnt by fire, Municipality of Palermo and the Forestry Information System (SIF) of the Sicilian Region",
-  "lbl.Indicatori statistici comunali di Palermo (popolazione, censimento, imprese, ambiente e altro): Cruscotto Statistico Comunale, dati.gov.it — condizioni d'uso da verificare": "Municipal statistical indicators for Palermo (population, census, businesses, environment and more): Municipal Statistical Dashboard, dati.gov.it — terms of use to be verified",
   "lbl.Incendio": "Fire",
   "lbl.Incidente": "Accident",
   "lbl.Incidenti (da zoom 14)": "Accidents (from zoom 14)",
@@ -1705,5 +1704,7 @@
   "lbl.. Il progetto evcharginglogsicilia è un refactoring per la Sicilia di ": ". The evcharginglogsicilia project is a refactoring for Sicily of ",
   "lbl., il progetto originale di ": ", the original project by ",
   "lbl., per ": ", for ",
-  "lbl.Maurizio Napolitano (@napo)": "Maurizio Napolitano (@napo)"
+  "lbl.Maurizio Napolitano (@napo)": "Maurizio Napolitano (@napo)",
+  "lbl.Indicatori statistici comunali di Palermo (popolazione, censimento, imprese, ambiente e altro): AGID Cruscotto Italia, dati.gov.it — condizioni d'uso da verificare": "Municipal statistical indicators for Palermo (population, census, businesses, environment and more): AGID Cruscotto Italia, dati.gov.it — terms of use to be verified",
+  "lbl.AGID Cruscotto Italia": "AGID Cruscotto Italia"
 }
