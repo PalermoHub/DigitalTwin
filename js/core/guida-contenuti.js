@@ -21,7 +21,7 @@ export const PASSI = [
     paragrafi: [
       'Il Digital Twin di Palermo, realizzato da Open Data Sicilia, è una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città: catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico, sicurezza stradale e uffici comunali.',
       'Serve a leggere un luogo da più punti di vista: chi cerca una particella, chi vuole capire come è fatto un quartiere, chi studia la mobilità o i servizi. Ogni informazione resta collegata alla fonte da cui proviene.',
-      'In alto, accanto al logo, il menu porta alle altre schede (Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e note, About); la mappa sta al centro, con la barra degli strati a sinistra e la scheda del luogo a destra. Funziona anche da telefono, con una barra di quattro tab in basso: vedi il passo «Sul telefono».',
+      'In alto, accanto al logo, il menu porta alle altre schede (Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e note, About); la mappa sta al centro, con la barra degli strati a sinistra e la scheda del luogo a destra. Funziona anche da smartphone, con una barra di quattro tab in basso: vedi il passo «Su smartphone».',
     ],
     immagine: { file: 'img/guida/passi/cos-e.webp', alt: 'La mappa di Palermo appena aperta: in alto il logo, il menu delle schede e i pulsanti degli strumenti; a sinistra la barra verticale degli strati; in basso la ricerca e, a piè di pagina, l\'avviso sul valore legale.', didascalia: 'La vista iniziale: il centro di Palermo.' },
     narrazione: 'Benvenuti nel Digital Twin di Palermo, realizzato da Open Data Sicilia: una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città. Qui trovi insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale, e puoi leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.',
@@ -30,13 +30,13 @@ export const PASSI = [
   {
     id: 'telefono',
     gruppo: 'funzioni',
-    titolo: 'Sul telefono',
+    titolo: 'Su smartphone',
     statico: true,
     paragrafi: [
       'Su uno schermo stretto i comandi cambiano. In basso c\'è una barra con quattro tab: «Mappa» riporta alla mappa e chiude ciò che la copre; «Strati» apre i riquadri delle mappe di base, dei layer e dei filtri, con il numero degli strati accesi; «Aggiungi» riunisce «I miei layer», il catalogo RNDT e Geoimage; «Menu» apre le guide e le pagine sul progetto.',
       'La ricerca sta in alto, sotto il logo, con il pulsante «Filtri»; a destra restano gli strumenti della mappa. Il tema scuro si cambia con l\'interruttore accanto al logo. Per conoscere un luogo si tocca la mappa: la scheda sale dal basso e si alza o si abbassa trascinando la maniglia.',
     ],
-    immagine: { file: 'img/guida/passi/telefono.webp', alt: 'Tre schermate del telefono: la mappa con la ricerca in alto e la barra dei tab in basso; il foglio «Aggiungi» con «I miei layer», «Catalogo RNDT» e «Geoimage»; il menu a comparsa con le guide e le pagine informative.', didascalia: 'Da telefono: ricerca in alto, quattro tab in basso e menu a comparsa.' },
+    immagine: { file: 'img/guida/passi/telefono.webp', alt: 'Tre schermate dello smartphone: la mappa con la ricerca in alto e la barra dei tab in basso; il foglio «Aggiungi» con «I miei layer», «Catalogo RNDT» e «Geoimage»; il menu a comparsa con le guide e le pagine informative.', didascalia: 'Da smartphone: ricerca in alto, quattro tab in basso e menu a comparsa.' },
   },
   {
     id: 'dati',
@@ -44,7 +44,8 @@ export const PASSI = [
     titolo: 'Con quali dati è realizzata',
     paragrafi: [
       'La mappa usa dati pubblicati da enti pubblici e da progetti di dati aperti: il Comune di Palermo (scuole, uffici, incidenti, carta tecnica), l\'azienda del trasporto pubblico AMAT, il catasto e la zonizzazione del piano regolatore, i dati del censimento e la base cartografica di OpenStreetMap.',
-      'L\'elenco completo è nella scheda «Fonti e note» del menu (in alto; da telefono nel tab «Menu»): per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).',
+      'L\'elenco completo è nella scheda «Fonti e note» del menu (in alto; da smartphone nel tab «Menu»): per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).',
+      'Gli orari del trasporto pubblico si aggiornano da soli: ogni giorno il sito controlla il portale open data del Comune e, quando AMAT pubblica un nuovo feed, fermate, linee e orari vengono sostituiti. Se il feed in uso è scaduto, la mappa lo segnala.',
     ],
     immagine: { file: 'img/guida/passi/dati.webp', alt: 'La scheda Fonti e note, con l\'elenco delle fonti dei dati, i collegamenti ai dati originali e alle licenze.', didascalia: 'Le fonti dei dati sono elencate in «Fonti e note», con i link alle licenze.' },
     narrazione: 'I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l\'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap. L\'elenco completo si trova nella scheda Fonti e note, con il collegamento al dato originale e alla licenza di ogni fonte.',
@@ -55,7 +56,7 @@ export const PASSI = [
     gruppo: 'funzioni',
     titolo: 'La barra degli strati',
     paragrafi: [
-      'Gli strati sono i temi che si possono sovrapporre alla mappa. A sinistra una barra verticale ha cinque tab: «Base cartografica», «Layer», «RNDT», «I miei layer» e «Filtri». Il tab «Layer» apre un pannello con i gruppi di strati (Confini, Edifici, Monumenti, Piano PAI, Popolazione, Rilievo, Servizi, Sicurezza, Territorio, Trasporti), sempre in ordine alfabetico: un clic sul gruppo lo apre, e ogni strato ha una casella per accenderlo o spegnerlo. Il pannello resta aperto finché non si preme di nuovo il tab o Esc; da telefono si apre dal tab «Strati», mentre «I miei layer», il catalogo RNDT e Geoimage stanno nel tab «Aggiungi».',
+      'Gli strati sono i temi che si possono sovrapporre alla mappa. A sinistra una barra verticale ha cinque tab: «Base cartografica», «Layer», «RNDT», «I miei layer» e «Filtri». Il tab «Layer» apre un pannello con i gruppi di strati (Confini, Edifici, Monumenti, Piano PAI, Popolazione, Rilievo, Servizi, Sicurezza, Territorio, Trasporti), sempre in ordine alfabetico: un clic sul gruppo lo apre, e ogni strato ha una casella per accenderlo o spegnerlo. Il pannello resta aperto finché non si preme di nuovo il tab o Esc; da smartphone si apre dal tab «Strati», mentre «I miei layer», il catalogo RNDT e Geoimage stanno nel tab «Aggiungi».',
       'Gli strati accesi compaiono come etichette in alto sulla mappa e la legenda in basso a sinistra ne spiega i colori. Accanto a ogni strato i pulsanti permettono di spostarlo su o giù, centrare la mappa sui suoi dati e cambiare i colori; il campo «Cerca strato» filtra l\'elenco. Se ne possono accendere più d\'uno per confrontarli, ad esempio edifici e catasto.',
     ],
     immagine: { file: 'img/guida/passi/strati.webp', alt: 'La barra verticale a sinistra con il tab Layer aperto: il gruppo Territorio mostra l\'elenco degli strati, tra cui catasto, piano regolatore e incendi.', didascalia: 'Il tab «Layer» con il gruppo «Territorio» aperto e il catasto acceso.' },
@@ -115,7 +116,7 @@ export const PASSI = [
     gruppo: 'funzioni',
     titolo: 'Fare clic sulla mappa',
     paragrafi: [
-      'Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono: all\'apertura un invito a tutto schermo lo ricorda, sparisce al primo clic e, con «Non mostrare più», non si ripresenta (il pulsante «Ripristina» accanto alla ricerca lo riaccende). Il punto scelto viene evidenziato e si apre la scheda del luogo.',
+      'Per conoscere un luogo basta fare clic sulla mappa, o toccarla da smartphone: all\'apertura un invito a tutto schermo lo ricorda, sparisce al primo clic e, con «Non mostrare più», non si ripresenta (il pulsante «Ripristina» accanto alla ricerca lo riaccende). Il punto scelto viene evidenziato e si apre la scheda del luogo.',
       'Le aree evidenziate (edificio, particella, fermate vicine e altro) hanno in basso una legenda «Selezione in mappa» con un colore per ogni voce: un clic su una voce lascia in mappa solo quella, un secondo clic le riaccende tutte. Passando con il mouse su un\'area compare un fumetto con il nome del layer e il dato che identifica l\'elemento; il pulsante a fumetto della legenda li accende e li spegne.',
     ],
     immagine: { file: 'img/guida/passi/clic.webp', alt: 'Un punto scelto sulla mappa in via Maqueda con le aree evidenziate, la legenda Selezione in mappa in basso e la scheda del luogo aperta sul lato destro.', didascalia: 'Un clic in via Maqueda evidenzia il punto, mostra la legenda della selezione e apre la scheda.' },
@@ -162,7 +163,7 @@ export const PASSI = [
     titolo: 'Stampare la mappa',
     paragrafi: [
       'Il pulsante con la stampante, nella barra degli strumenti in alto a destra, prepara un foglio con il titolo, l\'immagine della mappa che stai guardando, le legende dei soli strati accesi e le attribuzioni delle fonti. Prima di stampare si sceglie il formato, da A4 ad A0, l\'orientamento, orizzontale o verticale, e la scala, da 1:1.000 a 1:25.000, con la barra grafica in metri e chilometri; «Vista attuale» stampa la mappa com\'è.',
-      'Negli altri pulsanti della barra: la casa riporta alla vista iniziale, le frecce agli angoli attivano lo schermo intero e la luna passa dal tema chiaro al tema scuro (da telefono si usa l\'interruttore accanto al logo, e stampa, vista iniziale e schermo intero stanno in colonna a destra).',
+      'Negli altri pulsanti della barra: la casa riporta alla vista iniziale, le frecce agli angoli attivano lo schermo intero e la luna passa dal tema chiaro al tema scuro (da smartphone si usa l\'interruttore accanto al logo, e stampa, vista iniziale e schermo intero stanno in colonna a destra).',
     ],
     immagine: { file: 'img/guida/passi/strumenti.webp', alt: 'La barra degli strumenti con il pulsante di stampa premuto e il menu aperto: formato, orientamento, scala e il pulsante Stampa.', didascalia: 'Il menu di stampa: formato, orientamento e scala.' },
     narrazione: 'Il pulsante con la stampante prepara un foglio con il titolo, la mappa che stai guardando, le legende degli strati accesi e le fonti. Scegli il formato, da A quattro ad A zero, l\'orientamento e la scala. Gli altri pulsanti della barra riportano alla vista iniziale, attivano lo schermo intero o passano al tema scuro.',
@@ -174,7 +175,7 @@ export const PASSI = [
     titolo: 'La tabella dei dati',
     statico: true,
     paragrafi: [
-      'Il pulsante con la tabella, nella barra degli strumenti in alto a destra, apre dal basso la «Tabella dei dati»: le righe degli strati accesi, uno per scheda, in stile tabella attributi. Mostra le informazioni caricate nella vista corrente, quindi basta spostare o avvicinare la mappa per aggiornarla; da telefono il pulsante sta nel foglio «Strati». Un layer spento non ha scheda.',
+      'Il pulsante con la tabella, nella barra degli strumenti in alto a destra, apre dal basso la «Tabella dei dati»: le righe degli strati accesi, uno per scheda, in stile tabella attributi. Mostra le informazioni caricate nella vista corrente, quindi basta spostare o avvicinare la mappa per aggiornarla; da smartphone il pulsante sta nel foglio «Strati». Un layer spento non ha scheda.',
       'Per scegliere cosa vedere ci sono quattro strumenti di selezione: «Clic» sceglie un elemento, «Riquadro» e «Poligono» quelli dentro l\'area disegnata, «Area» quelli dentro una circoscrizione, un quartiere o una UPL. «Torna alla vista» riporta alle righe visibili in mappa. Il campo «Filtra le righe» cerca nel testo, l\'intestazione ordina e il menu «Colonne» mostra, nasconde e sposta le colonne.',
       'Le caselle scelgono righe e colonne da esportare; il pulsante CSV o GeoJSON indica quante righe e colonne usciranno (per esempio «33 × 15») e aggiunge la fonte e la licenza del layer. L\'esportazione è attiva per i dati aperti del Comune con licenza che la consente, come incidenti e sicurezza stradale; per gli altri layer, e per quelli aggiunti da te, il pulsante resta spento. La geometria dei layer a tile è semplificata: per dati precisi conviene il CSV.',
     ],
