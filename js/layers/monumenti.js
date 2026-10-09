@@ -3,7 +3,7 @@ import { collegamento } from '../core/url-sicuro.js';
 import { registraTooltipStrati } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
-import { voceMonumento, modelloPopup, idScomparsi } from './scheda-monumenti.js';
+import { voceMonumento, modelloPopup, idScomparsi, filtroEdifici } from './scheda-monumenti.js';
 import { voceUsoEdificio } from './scheda-uso.js';
 import { tl, t } from '../core/i18n.js';
 
@@ -39,6 +39,9 @@ let puntiTutti = []; // tutti i punti, per ricalcolare i cluster quando la legen
 const HIT_POLI = 'monumenti-hit-poli';
 const HIT_PUNTI = 'monumenti-hit-punti';
 let legenda = null;
+let scomparsi = []; // id dei beni non più presenti: niente poligono, solo il punto
+let categorieAccese = MONUMENTI_CATEGORIE.map(([nome]) => nome);
+const filtraEdifici = map => { for (const id of [POLI, CONTORNI, HIT_POLI]) map.setFilter(id, filtroEdifici(categorieAccese, scomparsi)); };
 // dettagli completi per id (stanno solo sul punto: i poligoni portano id, nome e categoria)
 const dettagli = new Map();
 const completo = p => dettagli.get(p.id) ?? p;
@@ -100,13 +103,11 @@ function collegaPopup(map) {
   }
 }
 
-// I beni non più presenti restano sulla mappa ma più tenui. Gli id vengono dalle descrizioni (i poligoni portano solo l'id),
-// quindi gli stili si ritoccano appena i dati sono caricati.
+// I beni non più presenti restano sulla mappa come punto più tenue. Gli id vengono dalle descrizioni, quindi lo stile
+// si ritocca appena i dati sono caricati.
 function attenuaScomparsi(map, ids) {
-  if (!ids.length || !map.getLayer(POLI)) return;
+  if (!ids.length || !map.getLayer(PUNTI)) return;
   const assente = ['in', ['get', 'id'], ['literal', ids]];
-  map.setPaintProperty(POLI, 'fill-opacity', ['case', assente, 0.3, 0.85]);
-  map.setPaintProperty(CONTORNI, 'line-opacity', ['case', assente, 0.35, 1]);
   map.setPaintProperty(PUNTI, 'circle-opacity', ['case', assente, 0.4, 1]);
   map.setPaintProperty(PUNTI, 'circle-stroke-opacity', ['case', assente, 0.5, 1]);
 }
@@ -119,8 +120,8 @@ const caselle = new Map(); // categoria -> { pannello, legenda }
 function creaLegenda(gruppo, map) {
   const attive = new Set(MONUMENTI_CATEGORIE.map(([nome]) => nome));
   const applica = () => {
-    const filtro = ['in', ['get', 'categoria'], ['literal', [...attive]]];
-    for (const id of [POLI, CONTORNI, HIT_POLI]) map.setFilter(id, filtro);
+    categorieAccese = [...attive];
+    filtraEdifici(map);
     // i cluster contano solo le categorie accese: si rialimenta la sorgente con i punti filtrati
     if (!puntiTutti.length) return; // dati non ancora caricati
     map.getSource(SRC).setData({ type: 'FeatureCollection', features: puntiTutti.filter(f => attive.has(f.properties.categoria)) });
@@ -208,7 +209,9 @@ export default {
     const dati = await (await fetch(urlDati('monumenti/monumenti.geojson'))).json(); // già in cache: è il file della sorgente
     puntiTutti = dati.features;
     for (const f of puntiTutti) dettagli.set(f.properties.id, f.properties);
-    attenuaScomparsi(map, idScomparsi(puntiTutti.map(f => f.properties)));
+    scomparsi = idScomparsi(puntiTutti.map(f => f.properties));
+    filtraEdifici(map);
+    attenuaScomparsi(map, scomparsi);
   },
   strati: [{ id: 'monumenti', etichetta: 'Monumenti (Portale del Turismo)', layers: LAYERS, attivo: false,
     sottovoci: [{ titolo: 'Categorie', voci: MONUMENTI_CATEGORIE.map(([nome]) => ({ id: `categoria:${nome}`, etichetta: nome })) }],
