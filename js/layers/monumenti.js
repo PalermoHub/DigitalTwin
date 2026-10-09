@@ -66,6 +66,7 @@ function contenutoPopup(p) {
     radice.append(img);
   }
   radice.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.categoria));
+  if (m.scomparso) radice.append(el('p', 'monumento-scomparso', t('monumento.scomparso.avviso')));
   if (m.descrizione) radice.append(el('p', 'monumento-desc', m.descrizione));
   if (m.url) {
     const a = el('a', 'monumento-link', 'Vai al sito del Comune');

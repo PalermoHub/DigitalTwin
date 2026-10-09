@@ -385,6 +385,9 @@ dialog li { margin: 4px 0; }
 .monumento-popup h3 { margin: 8px 10px 0; font-size: var(--fs-base); }
 .monumento-foto, .scheda-foto { display: block; width: 100%; max-height: 140px; object-fit: cover; }
 .scheda-foto { border-radius: var(--r-sm); margin: 6px 0; }
+.scheda-tag--scomparso { background: var(--c5-bg); color: var(--c5-fg); border: 1px solid var(--c5-bd); }
+.scheda-avviso, .monumento-scomparso { margin: 6px 0; padding: 6px 10px; border-left: 3px solid var(--c5-fg); background: var(--c5-bg); color: var(--c5-fg); font-size: var(--fs-sm); font-weight: 600; line-height: 1.35; }
+.monumento-scomparso { margin: 4px 10px; }
 .monumento-cat { margin: 2px 10px; color: var(--text-muted); font-size: var(--fs-xs); }
 .monumento-desc { margin: 4px 10px; line-height: 1.35; max-height: 72px; overflow-y: auto; }
 .monumento-popup .monumento-foto { max-height: 110px; }
