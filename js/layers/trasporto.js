@@ -280,6 +280,7 @@ export default {
       const visti = new Set();
       const voci = [];
       const sotto = [];
+      const dellaFermata = []; // linee delle fermate cliccate: servono se il clic non ha colpito un tracciato
       for (const f of trovati) {
         const id = f.properties.id;
         if (visti.has(id)) continue; // i tile spezzano i tracciati in più frammenti
@@ -287,6 +288,7 @@ export default {
         if (f.layer.id === L.hitFermate || f.layer.id === L.hitStazioni) {
           const p = fermate.get(id) ?? { ...f.properties, linee: [] };
           voci.push(voceFermata(p, p.stato ? notaInApertura : orariFermata(id, ctx)));
+          dellaFermata.push(...p.linee);
         } else if (linee.has(id)) sotto.push(linee.get(id));
       }
       // tutte le linee del clic in una sola voce: su una strada principale sono decine
@@ -295,6 +297,12 @@ export default {
         // le linee sotto il clic si vedono intere, con le fermate (al massimo 6: su una strada principale sono decine)
         voce.evidenza = [...new Set(sotto.map(l => l.route_id))].slice(0, 6).map(percorso).filter(Boolean);
         voci.push(voce);
+      }
+      // un clic sulla fermata e non sul tracciato: le sue linee si aprono comunque, con lo schema delle fermate (senza evidenziarle sulla mappa)
+      if (!sotto.length && dellaFermata.length) {
+        const numeri = new Set(dellaFermata);
+        const sue = [...linee.values()].filter(l => numeri.has(l.numero)).sort((a, b) => a.numero.localeCompare(b.numero, 'it', { numeric: true }));
+        if (sue.length) voci.push({ ...voceLinee(sue, gruppi => elencoLinee(gruppi, ctx)), chiave: 'linee-fermata' });
       }
       // in ogni punto della mappa: le linee con una fermata nei dintorni, anche senza aver colpito fermate o tracciati
       riferimento = lngLat ? { lngLat, evidenza: [], base: [] } : null;

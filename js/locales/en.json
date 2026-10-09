@@ -1567,6 +1567,7 @@
   "trasporto.mostraFermata": "Show the stop on the map and open its card",
   "trasporto.mostraPercorso": "Show the route of line {numero}",
   "trasporto.ogni": "every {n} min",
+  "trasporto.soloArrivo": "Arrival-only terminus: no services depart from here. Timetables are at the departure stop.",
   "trasporto.orariFuori": "Public transport timetables valid from {da} to {a}: today is outside the validity period",
   "trasporto.orariNd": "Timetables unavailable: {msg}",
   "trasporto.orariValgono": "Timetables are valid from {da} to {a}: showing the first valid day.",

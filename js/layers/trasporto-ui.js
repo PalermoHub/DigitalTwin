@@ -81,6 +81,8 @@ function tuttiGliOrari(ctx, partenze) {
 
 export function orariFermata(stopId, ctx) {
   return () => conGiorno(ctx, stopId, (orari, data) => {
+    // il feed ha solo le partenze: un capolinea di sola arrivo non ne ha in nessun giorno, e non è «nessuna corsa»
+    if (!orari.fermate?.[stopId]) return [el('p', 'scheda-nota', t('trasporto.soloArrivo'))];
     const tutte = partenzeFermata(orari, stopId, data);
     if (!tutte.length) return [nessunaCorsa()];
     const oggi = data === oggiISO();

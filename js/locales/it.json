@@ -1567,6 +1567,7 @@
   "trasporto.mostraFermata": "Mostra la fermata sulla mappa e apri la sua scheda",
   "trasporto.mostraPercorso": "Mostra il percorso della linea {numero}",
   "trasporto.ogni": "ogni {n} min",
+  "trasporto.soloArrivo": "Capolinea di sola arrivo: da qui non partono corse. Gli orari sono alla fermata di partenza.",
   "trasporto.orariFuori": "Orari del trasporto pubblico validi dal {da} al {a}: oggi sono fuori validità",
   "trasporto.orariNd": "Orari non disponibili: {msg}",
   "trasporto.orariValgono": "Gli orari valgono dal {da} al {a}: mostro il primo giorno valido.",
