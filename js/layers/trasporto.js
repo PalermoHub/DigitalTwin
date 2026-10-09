@@ -11,6 +11,7 @@ import { voceStrato } from '../core/legenda.js';
 import { giornoIniziale, oggiISO, colorePerTesto, uniscimOrari } from './trasporto-orari.js';
 import { t as tr, tl } from '../core/i18n.js';
 import { creaStrati, stratoLinea } from './trasporto-strati.js';
+import { immagineStazione, urlStazione } from './trasporto-logo.js';
 
 // Linee bus/tram e fermate AMAT (GTFS) e linee e stazioni della ferrovia urbana (GTFS Trenitalia, file ferrovia-*): stesso schema,
 // stesse mappe in memoria (id con prefisso: stazioni «f…», rotte «ferrovia-…»). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
@@ -20,11 +21,11 @@ const COLORE_FERMATA = '#364fc7';
 const ZOOM_MIN = 13;
 const ZOOM_FERMATA = 17.5;
 const RAGGIO_VICINO = 300; // m, in linea d'aria
-const COLORE_STAZIONE = '#B7282E'; // come il colore predefinito dei servizi in scripts/gtfs_trenitalia.py
+const IMMAGINE_STAZIONE = 'stazione-metro';
 const ZOOM_STAZIONE = 11; // le stazioni sono poche e distanti: si vedono da più lontano delle fermate
 const L = {
   bus: 'trasporto-bus', tram: 'trasporto-tram', fermate: 'trasporto-fermate', hitLinee: 'trasporto-hit-linee', hitFermate: 'trasporto-hit-fermate',
-  metro: 'trasporto-metro', stazioni: 'trasporto-stazioni', hitMetro: 'trasporto-hit-metro', hitStazioni: 'trasporto-hit-stazioni',
+  metro: 'trasporto-metro', metroTratti: 'trasporto-metro-tratti', stazioni: 'trasporto-stazioni', hitMetro: 'trasporto-hit-metro', hitStazioni: 'trasporto-hit-stazioni',
 };
 const STRATI_TRASPORTO = [L.bus, L.tram, L.fermate, L.metro, L.stazioni];
 
@@ -91,6 +92,12 @@ function el(tag, classe, testo) {
 // Legenda in #legende (sulla mappa): compare se almeno uno strato è acceso. Ogni voce è la casella del suo strato:
 // accende e spegne bus, tram o fermate (a filtro Linea attivo, il filtro resta quello scelto nel pannello).
 let legenda = null;
+function logoStazione() {
+  const img = el('img', 'trasporto-logo-metro');
+  img.src = urlStazione(48);
+  img.alt = '';
+  return img;
+}
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-trasporto');
   legenda.hidden = true;
@@ -100,8 +107,8 @@ function creaLegenda() {
     voceStrato(tratto(''), 'Linea bus (colore AMAT)', L.bus),
     voceStrato(tratto('trasporto-tratto--tram'), 'Linea tram', L.tram),
     voceStrato(el('i', 'trasporto-pallino'), 'Fermata (da zoom 13)', L.fermate),
-    voceStrato(tratto('trasporto-tratto--tram', COLORE_STAZIONE), 'Linea metro (RFI, tracciato schematico)', L.metro),
-    voceStrato(el('i', 'trasporto-pallino trasporto-pallino--stazione'), 'Stazione (RFI)', L.stazioni),
+    voceStrato(el('i', 'trasporto-tratto trasporto-tratto--binario'), 'Linea metro (RFI, tracciato schematico)', L.metro),
+    voceStrato(logoStazione(), 'Stazione (RFI)', L.stazioni),
   );
   document.getElementById('legende').append(legenda);
 }
@@ -182,13 +189,26 @@ export default {
     map.addLayer({ id: L.hitLinee, type: 'line', source: 'trasporto-linee', minzoom: ZOOM_MIN, paint: { 'line-width': 12, 'line-opacity': 0 } });
     map.addLayer({ id: L.hitFermate, type: 'circle', source: 'trasporto-fermate', minzoom: ZOOM_MIN, paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
     // ferrovia urbana: sopra bus e tram
+    // la linea ha l'aspetto del binario sulle carte: tracciato nero con trattini bianchi (le traverse)
     map.addLayer({
-      id: L.metro, type: 'line', source: 'ferrovia-linee', layout: { ...nascosto, 'line-cap': 'round', 'line-join': 'round' },
-      paint: { 'line-color': ['get', 'colore'], 'line-width': spessore(3, 7), 'line-opacity': 0.9 },
+      id: L.metro, type: 'line', source: 'ferrovia-linee', layout: { ...nascosto, 'line-cap': 'butt', 'line-join': 'round' },
+      paint: { 'line-color': '#1a1a1a', 'line-width': spessore(2.5, 6) },
     });
     map.addLayer({
-      id: L.stazioni, type: 'circle', source: 'ferrovia-fermate', minzoom: ZOOM_STAZIONE, layout: nascosto,
-      paint: { 'circle-color': '#fff', 'circle-stroke-color': COLORE_STAZIONE, 'circle-stroke-width': 2.5, 'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 4, 17, 8] },
+      id: L.metroTratti, type: 'line', source: 'ferrovia-linee', layout: { ...nascosto, 'line-cap': 'butt', 'line-join': 'round' },
+      paint: { 'line-color': '#fff', 'line-width': spessore(1.2, 3.4), 'line-dasharray': [2, 2] },
+    });
+    // stazioni: il logo delle metropolitane (quadrato rosso con la M) e, avvicinandosi, il nome
+    if (!map.hasImage(IMMAGINE_STAZIONE)) map.addImage(IMMAGINE_STAZIONE, immagineStazione(64), { pixelRatio: 2 });
+    map.addLayer({
+      id: L.stazioni, type: 'symbol', source: 'ferrovia-fermate', minzoom: ZOOM_STAZIONE,
+      layout: {
+        ...nascosto, 'icon-image': IMMAGINE_STAZIONE, 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.5, 14, 0.7, 17, 0.9],
+        'icon-allow-overlap': true, 'icon-ignore-placement': true,
+        'text-field': ['step', ['zoom'], '', 13.5, ['get', 'nome']], 'text-font': ['Noto Sans Bold'], 'text-size': 11,
+        'text-anchor': 'left', 'text-offset': [1.1, 0], 'text-optional': true,
+      },
+      paint: { 'text-color': '#7f1d18', 'text-halo-color': '#fff', 'text-halo-width': 1.6 },
     });
     map.addLayer({ id: L.hitMetro, type: 'line', source: 'ferrovia-linee', minzoom: ZOOM_STAZIONE, paint: { 'line-width': 12, 'line-opacity': 0 } });
     map.addLayer({ id: L.hitStazioni, type: 'circle', source: 'ferrovia-fermate', minzoom: ZOOM_STAZIONE, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
@@ -212,6 +232,7 @@ export default {
       segnala(tr('trasporto.orariFuoriRfi', { da: ferrovia[0].validita.da, a: ferrovia[0].validita.a }));
     }
   },
+  sezioniFisse: true, // AMAT e RFI restano due sezioni: il riordino degli strati non attraversa le intestazioni
   strati: creaStrati(aggiornaLegenda),
   pannello: creaLegenda,
   // per il filtro Linea del pannello Filtri (valido dopo `avvia`)

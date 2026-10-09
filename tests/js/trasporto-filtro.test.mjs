@@ -39,11 +39,12 @@ test('stratiDaAccendere: una linea ferroviaria accende linee metro e stazioni', 
 
 test('filtriPerLinea: i filtri di base non toccano la ferrovia; scegliere una linea la restringe', () => {
   const base = filtriPerLinea(null);
-  for (const id of ['trasporto-metro', 'trasporto-stazioni', 'trasporto-hit-metro', 'trasporto-hit-stazioni']) assert.equal(base[id], null);
+  for (const id of ['trasporto-metro', 'trasporto-metro-tratti', 'trasporto-stazioni', 'trasporto-hit-metro', 'trasporto-hit-stazioni']) assert.equal(base[id], null);
 
   const f = filtriPerLinea(l('ferrovia-1', 'M1', 'ferrovia'));
   assert.deepEqual(f['trasporto-metro'], ['==', ['get', 'route_id'], 'ferrovia-1']);
   assert.deepEqual(f['trasporto-hit-metro'], f['trasporto-metro']);
+  assert.deepEqual(f['trasporto-metro-tratti'], f['trasporto-metro']); // i trattini seguono il tracciato nero
   assert.deepEqual(f['trasporto-stazioni'], ['in', 'M1', ['get', 'linee']]);
   assert.deepEqual(f['trasporto-hit-stazioni'], f['trasporto-stazioni']);
   // una linea AMAT nasconde la ferrovia: nessuna stazione né tracciato ha quella rotta

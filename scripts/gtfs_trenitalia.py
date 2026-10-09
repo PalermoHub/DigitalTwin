@@ -12,8 +12,10 @@ Gli id hanno un prefisso (stazioni `f<codice>`, rotte `ferrovia-<n>`, servizi da
 perché il viewer tiene i due insiemi nelle stesse mappe.
 Il feed non ha calendar_dates: i servizi sono definiti da calendar.txt (giorni della settimana tra start_date e end_date).
 Le shapes del feed non si usano: contengono i vertici delle fermate di tutta la corsa, anche fuori ordine (a volte Bagheria in mezzo a una
-tratta urbana). Il tracciato è quindi la spezzata delle stazioni in sequenza: schematico, ma coerente con le stazioni mostrate.
+tratta urbana). Il tracciato è quindi la spezzata delle stazioni, instradata sulla rete delle tratte tra stazioni consecutive (i servizi
+veloci passano dalle stazioni che saltano): schematico, ma coerente con le stazioni mostrate.
 """
+import heapq
 import json
 import sys
 from collections import Counter, defaultdict
@@ -69,6 +71,55 @@ def _direzione(sequenza, riferimento):
     if len(comuni) >= 2:
         return 0 if comuni[0] < comuni[-1] else 1
     return 0 if sequenza[0] == riferimento[0] else 1
+
+
+def _distanza(a, b):
+    return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
+
+
+def _rete(sequenze, pos):
+    """Archi tra stazioni consecutive in almeno una corsa, senza le corde che scavalcano una stazione intermedia.
+
+    Un servizio veloce che salta una stazione dà l'arco A-C: se esistono anche A-B e B-C e B sta quasi sul segmento, A-C non è
+    una tratta di binario ma una scorciatoia, e si scarta (il binario passa da B). `pos` = codice -> [lon, lat].
+    """
+    archi = {frozenset(c) for seq in sequenze for c in zip(seq, seq[1:])}
+
+    def scavalcato(arco):
+        a, b = tuple(arco)
+        return any(frozenset((a, c)) in archi and frozenset((c, b)) in archi
+                   and _distanza(pos[a], pos[c]) + _distanza(pos[c], pos[b]) < 1.3 * _distanza(pos[a], pos[b])
+                   for c in pos if c not in arco)
+    return {arco for arco in archi if not scavalcato(arco)}
+
+
+def _instrada(seq, archi, pos):
+    """Coordinate del servizio `seq` lungo la rete: tra due stazioni consecutive prende il percorso più breve sugli archi
+    (passando dalle stazioni che il servizio salta); senza percorso le collega in linea retta."""
+    vicini = defaultdict(list)
+    for arco in archi:
+        a, b = tuple(arco)
+        vicini[a].append(b)
+        vicini[b].append(a)
+
+    def percorso(da, a):
+        coda, visti = [(0.0, da, [da])], set()
+        while coda:
+            costo, nodo, tratto = heapq.heappop(coda)
+            if nodo == a:
+                return tratto
+            if nodo in visti:
+                continue
+            visti.add(nodo)
+            for v in vicini[nodo]:
+                if v not in visti:
+                    heapq.heappush(coda, (costo + _distanza(pos[nodo], pos[v]), v, tratto + [v]))
+        return [da, a]
+
+    codici = [seq[0]]
+    for da, a in zip(seq, seq[1:]):
+        codici += percorso(da, a)[1:]
+    return [pos[c] for c in codici]
 
 
 def costruisci(src=SRC, nomi=None):
@@ -146,13 +197,14 @@ def costruisci(src=SRC, nomi=None):
         for sid in sorted(usate, key=lambda s: codice[s])]}
 
     per_codice = {codice[sid]: sid for sid in usate}
+    posizioni = {k: [round(float(stazioni[sid]["stop_lon"]), 6), round(float(stazioni[sid]["stop_lat"]), 6)] for k, sid in per_codice.items()}
+    rete = _rete(list(sequenza.values()), posizioni)
     elementi = []
     for (r, d), tids in sorted(per_linea.items(), key=lambda kv: (int(kv[0][0].split("-")[1]), kv[0][1])):
         c = next(k for k, v in rotta.items() if v == r)
         info = nomi.get(firma(c), {})
         seq = list(Counter(tuple(sequenza[t]) for t in tids).most_common(1)[0][0])
-        punti = [[round(float(stazioni[per_codice[k]]["stop_lon"]), 6), round(float(stazioni[per_codice[k]]["stop_lat"]), 6)] for k in seq]
-        coord = punti
+        coord = _instrada(seq, rete, posizioni)
         a, b = stazioni[per_codice[seq[0]]], stazioni[per_codice[seq[-1]]]
         da0, a0 = rif[c][0], rif[c][-1]
         medio = coord[len(coord) // 2]

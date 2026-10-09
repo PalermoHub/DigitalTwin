@@ -436,7 +436,8 @@ dialog li { margin: 4px 0; }
 .legenda i.trasporto-tratto { width: 22px; height: 4px; border: 0; border-radius: 2px; }
 .legenda i.trasporto-tratto--tram { height: 7px; }
 .legenda i.trasporto-pallino { width: 10px; height: 10px; border: 2px solid var(--trasporto); border-radius: 50%; background: var(--bianco); }
-.legenda i.trasporto-pallino--stazione { border-color: #b7282e; border-width: 2.5px; }
+.legenda i.trasporto-tratto--binario { height: 6px; background: repeating-linear-gradient(90deg, #1a1a1a 0 5px, #fff 5px 8px); border: 1px solid #1a1a1a; box-sizing: border-box; }
+.legenda img.trasporto-logo-metro { width: 14px; height: 14px; display: inline-block; vertical-align: middle; }
 .trasporto-tooltip-linea { margin: 2px 0; white-space: nowrap; }
 .trasporto-tooltip-altre { margin-top: 2px; color: var(--text-muted); font-style: italic; }
 .legenda .sicurezza-sezione { flex-direction: column; align-items: stretch; gap: 0; }
