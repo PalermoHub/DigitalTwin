@@ -345,7 +345,7 @@
   "html.cerca.filtri": "Filters: area and cadastre",
   "html.cerca.filtri.et": "Filters",
   "html.cerca.placeholder": "Search street, number, neighbourhood or parcel…",
-  "html.cerca.ripristina": "Reset colours, panels and layer order",
+  "html.cerca.ripristina": "Clears the map selection; with nothing selected, resets colours, panels and layer order",
   "html.cerca.ripristina.aria": "Reset customisations",
   "html.chip.gruppo": "Active layers",
   "html.crediti.aria": "Information",

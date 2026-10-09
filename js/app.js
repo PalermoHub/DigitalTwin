@@ -191,7 +191,12 @@ map.once('style.load', async () => {
   map.on('rotate', () => { ago.style.transform = `rotate(${-map.getBearing()}deg)`; });
   btnBussola.addEventListener('click', () => map.easeTo({ bearing: 0, duration: 300 }));
   document.addEventListener('vista3d', e => { btnBussola.hidden = !e.detail; });
-  collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })());
+  collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })(), undefined, undefined, () => {
+    const scheda = document.getElementById('scheda');
+    if (scheda.hidden) return false;
+    scheda.querySelector('.scheda-x')?.click();
+    return true;
+  });
 
   const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia && !DIFFERITI.has(m.id)).map(m => m.avvia(map)));
   esiti.forEach(e => { if (e.status === 'rejected') segnala(t('avviso.stratoNonCaricato.dettaglio', { nome: e.reason?.message ?? e.reason })); });

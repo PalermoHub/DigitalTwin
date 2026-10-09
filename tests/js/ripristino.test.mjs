@@ -26,3 +26,13 @@ test('il pulsante chiede conferma e ricarica solo se accettata', () => {
   click();
   assert.equal(ricaricata, 1); assert.deepEqual(s.dati, {});
 });
+
+test('con una selezione in mappa il clic la toglie e basta: niente conferma né ricarica', () => {
+  let click; const bottone = { addEventListener: (_, f) => { click = f; } };
+  const s = finto({ 'dt-temi-strati': '{}' }); let ricaricata = 0, chieste = 0, selezione = true;
+  collegaRipristino(bottone, s, () => ricaricata++, () => { chieste++; return true; }, () => { const era = selezione; selezione = false; return era; });
+  click();
+  assert.equal(chieste, 0); assert.equal(ricaricata, 0); assert.ok('dt-temi-strati' in s.dati);
+  click(); // mappa ormai libera: ripristino vero
+  assert.equal(chieste, 1); assert.equal(ricaricata, 1); assert.deepEqual(s.dati, {});
+});

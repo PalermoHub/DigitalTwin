@@ -345,7 +345,7 @@
   "html.cerca.filtri": "Filtri: zona e catasto",
   "html.cerca.filtri.et": "Filtri",
   "html.cerca.placeholder": "Cerca via, civico, quartiere o particella…",
-  "html.cerca.ripristina": "Ripristina colori, schede e ordine degli strati",
+  "html.cerca.ripristina": "Toglie la selezione in mappa; a mappa libera ripristina colori, schede e ordine degli strati",
   "html.cerca.ripristina.aria": "Ripristina personalizzazioni",
   "html.chip.gruppo": "Strati accesi",
   "html.crediti.aria": "Informazioni",
