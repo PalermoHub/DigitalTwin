@@ -131,6 +131,11 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     try { host.addTileLayer(o.nome, urlOrtofoto(o), { attribution: ATTRIBUZIONE_ORTOFOTO, maxzoom: o.max, sotto: true, diretto: true }); return { errori: [] }; } catch (e) { return { errori: [{ nome: o.nome, messaggio: messaggio(e) }] }; }
   }
 
+  // Un WMS pronto (IGM 25.000): richiesta ai tile via proxy, con i dati del servizio già noti
+  function aggiungiWmsPronto(o) {
+    try { host.addWmsLayer(o.nome, { url: o.url, layers: o.layers, version: o.version, format: o.format, transparent: true }); return { errori: [] }; } catch (e) { return { errori: [{ nome: o.nome, messaggio: messaggio(e) }] }; }
+  }
+
   // Un servizio dei beni culturali (SITR) come vettori interrogabili (query ArcGIS sull'area di Palermo, come il modo «dati» del ramo)
   async function aggiungiBeneCulturaleDati(o) {
     const nome = o.nome;
@@ -179,6 +184,6 @@ export function creaControllo({ host, storage, credenziali = creaCredenziali() }
     stato: () => stato,
     suCambio(fn) { ascoltatori.add(fn); return () => ascoltatori.delete(fn); },
     credenziali, serveCredenziali, protetto, cerca: testo => filtraServizi(stato.servizi, testo),
-    leggiServizio, aggiungiOrtofoto, aggiungiBeneCulturaleDati, aggiungiXyz, aggiungiWms, aggiungiWfs, aggiungiWmts, aggiungiArcgis, riaggiungi, rimuovi,
+    leggiServizio, aggiungiOrtofoto, aggiungiWmsPronto, aggiungiBeneCulturaleDati, aggiungiXyz, aggiungiWms, aggiungiWfs, aggiungiWmts, aggiungiArcgis, riaggiungi, rimuovi,
   };
 }
