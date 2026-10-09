@@ -116,7 +116,7 @@ export const SEZIONI = [
       'La base cartografica e la ricerca sono quelle del Digital Twin: non ci sono il selettore della mappa di base né la ricerca dei luoghi di Geoimage.',
       'Le maniglie si vedono solo con il pannello Geoimage aperto; a pannello ripiegato resta solo l’immagine.',
       'Il cambio tra scala e deforma degli angoli si fa con un pulsante, non cliccando sull’immagine (il clic sulla mappa apre la scheda dei luoghi).',
-      'Si usa meglio con il mouse. Sul telefono il tab laterale non c’è: apri Geoimage dal pulsante nel pannello Strati e chiudilo con la X in alto a destra del pannello.',
+      'Si usa meglio con il mouse. Su smartphone il tab laterale non c’è: apri Geoimage dal pulsante nel pannello Strati e chiudilo con la X in alto a destra del pannello.',
     ],
   },
   {
