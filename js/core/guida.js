@@ -154,15 +154,21 @@ export function passiRndt(doc = document, passi = PASSI_RNDT) {
 }
 
 // Indice laterale per le pagine fatte di blocchi (Guida Geoimage, Plugin RNDT): su schermi larghi sta a destra e resta in vista.
-// `voci` = [{ titolo, sezione }]; il clic scorre fino alla sezione senza toccare l'indirizzo della pagina.
+// `voci` = [{ titolo, sezione }] o [{ gruppo }] per un'intestazione di gruppo; il clic scorre fino alla sezione senza toccare l'indirizzo della pagina.
 export function indiceLaterale(doc, radice, voci) {
   radice.className = 'guida-pagina';
   const nav = doc.createElement('nav');
   nav.className = 'guida-indice';
   nav.setAttribute('aria-label', tr('guida.indicePagina'));
   const ol = doc.createElement('ol');
-  for (const { titolo, sezione } of voci) {
+  for (const { titolo, sezione, gruppo } of voci) {
     const li = doc.createElement('li');
+    if (gruppo) { // intestazione di gruppo (come nell'indice della Guida): non è un link
+      li.className = 'guida-indice-gruppo';
+      li.textContent = gruppo;
+      ol.append(li);
+      continue;
+    }
     const a = doc.createElement('a');
     a.href = '#';
     a.addEventListener('click', e => { e.preventDefault(); sezione.scrollIntoView({ block: 'start' }); });
@@ -172,7 +178,7 @@ export function indiceLaterale(doc, radice, voci) {
   }
   nav.append(ol);
   // prima della prima sezione indicizzata (sotto titolo e introduzione): su schermi stretti l'indice sta in alto, su quelli larghi la griglia lo porta a destra
-  const primaSezione = voci[0]?.sezione;
+  const primaSezione = voci.find(v => v.sezione)?.sezione;
   if (primaSezione) radice.insertBefore(nav, primaSezione); else radice.append(nav);
   return nav;
 }
