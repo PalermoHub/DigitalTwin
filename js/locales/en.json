@@ -1689,5 +1689,6 @@
   "lbl.Linea metro (RFI, tracciato schematico)": "Metro line (RFI, schematic route)",
   "lbl.Linea metro": "Metro line",
   "lbl.Stazioni metro": "Metro stations",
-  "lbl.Trasporto ferroviario urbano (linee, stazioni, orari): Trenitalia S.p.A. / CCISS MMTIS, dati NeTEx convertiti in GTFS da Clément Desouche (@deryclem), feed valido dal 26/09/2026 al 12/12/2026": "Urban rail (lines, stations, timetables): Trenitalia S.p.A. / CCISS MMTIS, NeTEx data converted to GTFS by Clément Desouche (@deryclem), feed valid from 26/09/2026 to 12/12/2026"
+  "lbl.Trasporto ferroviario urbano (linee, stazioni, orari): Trenitalia S.p.A. / CCISS MMTIS, dati NeTEx convertiti in GTFS da Clément Desouche (@deryclem), feed valido dal 26/09/2026 al 12/12/2026": "Urban rail (lines, stations, timetables): Trenitalia S.p.A. / CCISS MMTIS, NeTEx data converted to GTFS by Clément Desouche (@deryclem), feed valid from 26/09/2026 to 12/12/2026",
+  "lbl.Posizione di alcune stazioni corretta con dati © contributori OpenStreetMap (ODbL)": "Position of some stations corrected with data © OpenStreetMap contributors (ODbL)"
 }

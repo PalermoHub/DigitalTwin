@@ -10,6 +10,8 @@ Il feed è nazionale e ha una sola rotta per categoria di treno (REG, RV…), se
 dalle corse con almeno due stazioni nel perimetro di Palermo, raggruppate per capolinea (`ferrovia_nomi.json` dà i nomi ufficiali).
 Gli id hanno un prefisso (stazioni `f<codice>`, rotte `ferrovia-<n>`, servizi da 1000) per non collidere con quelli di AMAT,
 perché il viewer tiene i due insiemi nelle stesse mappe.
+Le coordinate di alcune stazioni nel feed sono sbagliate (fino a 1 km: De Gasperi ha quelle di Francia): `ferrovia_posizioni.json`
+le corregge con i nodi stazione di OpenStreetMap (© OpenStreetMap contributors, ODbL), con l'id del nodo come fonte.
 Il feed non ha calendar_dates: i servizi sono definiti da calendar.txt (giorni della settimana tra start_date e end_date).
 Le shapes del feed non si usano: contengono i vertici delle fermate di tutta la corsa, anche fuori ordine (a volte Bagheria in mezzo a una
 tratta urbana). Il tracciato è quindi la spezzata delle stazioni, instradata sulla rete delle tratte tra stazioni consecutive (i servizi
@@ -30,6 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "dati" / "gtfs-trenitalia"
 OUT = ROOT / "dati" / "trasporto"
 NOMI = Path(__file__).resolve().parent / "ferrovia_nomi.json"
+POSIZIONI = Path(__file__).resolve().parent / "ferrovia_posizioni.json"
 
 BBOX = (13.105, 38.07, 13.50, 38.25)  # lon min, lat min, lon max, lat max: dall'aeroporto (13,110) a Ficarazzi/Roccella; fuori Cinisi e la linea per Trapani
 BASE_SERVIZI = 1000
@@ -137,8 +140,9 @@ def _instrada(seq, archi, pos):
     return [pos[c] for c in codici]
 
 
-def costruisci(src=SRC, nomi=None):
+def costruisci(src=SRC, nomi=None, posizioni=None):
     nomi = nomi or {}
+    posizioni = posizioni or {}  # stop_code -> {lon, lat}: correzioni alle coordinate del feed (vedi ferrovia_posizioni.json)
     stazioni = {}  # stop_id -> riga, solo le fermate vere (location_type 0) dentro il perimetro
     for r in leggi(src, "stops"):
         if r["location_type"] in ("", "0") and dentro(float(r["stop_lon"]), float(r["stop_lat"])):
@@ -160,6 +164,12 @@ def costruisci(src=SRC, nomi=None):
             urbane[tid] = [(stop, m) for _, stop, m in sorted(s)]
 
     codice = {sid: s["stop_code"] for sid, s in stazioni.items()}
+
+    def coord(sid):
+        """[lon, lat] della stazione: la correzione se c'è, altrimenti le coordinate del feed. Il perimetro usa sempre quelle del feed."""
+        c = posizioni.get(stazioni[sid]["stop_code"])
+        return [round(c["lon"], 6), round(c["lat"], 6)] if c else [round(float(stazioni[sid]["stop_lon"]), 6), round(float(stazioni[sid]["stop_lat"]), 6)]
+
     sequenza = {tid: [codice[stop] for stop, _ in s] for tid, s in urbane.items()}
 
     # servizi: corse con gli stessi capolinea (in qualunque verso); le varianti piccole si aggregano a un servizio che ne contiene il percorso
@@ -210,21 +220,21 @@ def costruisci(src=SRC, nomi=None):
 
     usate = {stop for s in urbane.values() for stop, _ in s}
     fermate = {"type": "FeatureCollection", "validita": validita, "features": [
-        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [round(float(stazioni[sid]["stop_lon"]), 6), round(float(stazioni[sid]["stop_lat"]), 6)]},
+        {"type": "Feature", "geometry": {"type": "Point", "coordinates": coord(sid)},
          "properties": {"id": f"f{codice[sid]}", "nome": _nome_stazione(stazioni[sid]["stop_name"]), "linee": sorted(passano[sid], key=_chiave_sigla),
                         "accessibile": ACCESSIBILE.get(stazioni[sid]["wheelchair_boarding"], ""), "tipo": "ferrovia",
-                        "lon": round(float(stazioni[sid]["stop_lon"]), 6), "lat": round(float(stazioni[sid]["stop_lat"]), 6)}}
+                        "lon": coord(sid)[0], "lat": coord(sid)[1]}}
         for sid in sorted(usate, key=lambda s: codice[s])]}
 
     per_codice = {codice[sid]: sid for sid in usate}
-    posizioni = {k: [round(float(stazioni[sid]["stop_lon"]), 6), round(float(stazioni[sid]["stop_lat"]), 6)] for k, sid in per_codice.items()}
-    rete = _rete(list(sequenza.values()), posizioni)
+    punti = {k: coord(sid) for k, sid in per_codice.items()}
+    rete = _rete(list(sequenza.values()), punti)
     elementi = []
     for (r, d), tids in sorted(per_linea.items(), key=lambda kv: (int(kv[0][0].split("-")[1]), kv[0][1])):
         c = next(k for k, v in rotta.items() if v == r)
         info = nomi.get(firma(c), {})
         seq = list(Counter(tuple(sequenza[t]) for t in tids).most_common(1)[0][0])
-        coord = _instrada(seq, rete, posizioni)
+        coord = _instrada(seq, rete, punti)
         a, b = stazioni[per_codice[seq[0]]], stazioni[per_codice[seq[-1]]]
         da0, a0 = rif[c][0], rif[c][-1]
         medio = coord[len(coord) // 2]
@@ -252,7 +262,8 @@ def scrivi(risultato, out=OUT):
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     nomi = json.loads(NOMI.read_text(encoding="utf-8")) if NOMI.exists() else {}
-    fermate, linee, orari = risultato = costruisci(Path(argv[0]) if argv else SRC, nomi)
+    posizioni = json.loads(POSIZIONI.read_text(encoding="utf-8")) if POSIZIONI.exists() else {}
+    fermate, linee, orari = risultato = costruisci(Path(argv[0]) if argv else SRC, nomi, posizioni)
     scrivi(risultato)
     print(f"{len(fermate['features'])} stazioni, {len(linee['features'])} tracciati, {len(orari['fermate'])} stazioni con orari")
     for f in linee["features"]:
