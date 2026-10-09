@@ -253,6 +253,17 @@ export const PASSI = [
     scena: { strati: ['isole-calore'], centro: [13.3615, 38.1157], zoom: 13 },
   },
   {
+    id: 'trasporto-strip',
+    gruppo: 'casi',
+    titolo: 'Fermate di bus, tram e metro',
+    statico: true,
+    paragrafi: [
+      'Ogni linea del trasporto pubblico (bus e tram AMAT, metro della ferrovia urbana) si apre dalla scheda: si accendono gli strati «Linee bus», «Linee tram» o «Linea metro» e si clicca sul tracciato o su una fermata. Nel riquadro «Linee» si sceglie la linea e, nel suo blocco, si apre «Fermate»: le fermate compaiono in sequenza come uno schema a striscia, con la linea nel suo colore, un pallino per ogni fermata e i capolinea più grandi e in grassetto.',
+      'Accanto al nome di ogni fermata, i riquadri colorati con il numero sono le altre linee che vi passano: i cambi. Un clic sul riquadro porta la mappa sulla fermata e mostra il percorso di quella linea; un clic sul nome porta la mappa sulla fermata e apre la sua scheda, con le prossime partenze. Cliccando su una fermata e non sul tracciato, le sue linee si aprono comunque con lo stesso schema. Un capolinea di sola arrivo lo dice: da lì non partono corse e gli orari sono alla fermata di partenza.',
+    ],
+    immagine: { file: 'img/guida/passi/trasporto-strip.webp', alt: 'La mappa con il tracciato e le fermate della linea 442 e, nella scheda, il blocco «Fermate (19)»: le fermate in sequenza su una striscia colorata, con a fianco i riquadri delle altre linee che vi passano.', didascalia: 'La linea 442 nella scheda: le fermate in sequenza e i cambi con le altre linee.' },
+  },
+  {
     id: 'avvertenze',
     titolo: 'Disclaimer',
     paragrafi: [

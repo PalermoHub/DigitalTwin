@@ -105,7 +105,7 @@ export function orariFermata(stopId, ctx) {
 // sulla fermata mostrando anche il percorso di quell'altra linea.
 function fermateInSequenza(linea, ctx) {
   const radice = el('details', 'scheda-acc');
-  radice.append(el('summary', null, `Fermate (${linea.fermate.length})`));
+  radice.append(el('summary', null, t('trasporto.fermateN', { n: linea.fermate.length })));
   const elenco = el('ol', 'trasporto-fermate trasporto-strip');
   elenco.style.setProperty('--colore-linea', linea.colore);
   const ultima = linea.fermate.length - 1;

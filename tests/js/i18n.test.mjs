@@ -146,6 +146,7 @@ test('immagine: in inglese sceglie la variante .en.svg degli schemi con testo; i
   impostaDizionari('en', {}, {});
   assert.equal(immagine('img/guida/passi/intersezione.svg'), 'img/guida/passi/intersezione.en.svg');
   assert.equal(immagine('img/guida/passi/scheda.webp'), 'img/guida/passi/scheda.webp');
+  assert.equal(immagine('img/guida/passi/trasporto-strip.webp'), 'img/guida/passi/trasporto-strip.en.webp');
   impostaDizionari('it', {}, {});
 });
 

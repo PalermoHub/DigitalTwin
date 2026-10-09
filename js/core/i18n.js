@@ -41,9 +41,9 @@ export function t(chiave, vars) {
 // In inglese cerca «lbl.<testo italiano>»; se manca (un nome proprio, un dato) restituisce il testo senza avvisi.
 export const tl = testo => (corrente === 'it' || typeof testo !== 'string' || !testo ? testo : dizionario[`lbl.${testo}`] ?? testo);
 
-// Schemi con testo scritto nell'immagine: in inglese esiste la variante «.en.svg» (stesso nome, stesso formato).
-const VARIANTI_EN = new Set(['img/guida/passi/intersezione.svg']);
-export const immagine = file => (corrente === 'en' && VARIANTI_EN.has(file) ? file.replace(/\.svg$/, '.en.svg') : file);
+// Schemi e screenshot con testo scritto nell'immagine: in inglese esiste la variante «.en.svg» / «.en.webp» (stesso nome, stesso formato).
+const VARIANTI_EN = new Set(['img/guida/passi/intersezione.svg', 'img/guida/passi/trasporto-strip.webp']);
+export const immagine = file => (corrente === 'en' && VARIANTI_EN.has(file) ? file.replace(/\.(svg|webp)$/, '.en.$1') : file);
 
 // plurale: usa <base>.uno per n === 1, <base>.altri altrimenti; {n} è sempre disponibile
 export const tn = (base, n, vars) => t(`${base}.${n === 1 ? 'uno' : 'altri'}`, { n, ...vars });
