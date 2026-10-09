@@ -208,3 +208,10 @@ test('addTileLayer con «sotto»: il layer va prima di quello indicato da sopraB
   const host2 = creaHost({ map: map2, proxy: PROXY, stato: scritti.at(-1), scrivi: () => true, archivioDati: archivioInMemoria(), prefisso: 'miei', sopraBasi: () => 'dati-2' });
   return host2.ripristina().then(() => assert.deepEqual(pos2, ['dati-2', undefined]));
 });
+
+test('addWfsLayer: il SITR (CORS aperto) si scarica diretto, senza proxy', async () => {
+  const { host, chiamate } = costruisci(punti(2));
+  const url = 'https://map.sitr.regione.sicilia.it/gis/rest/services/beni_culturali/siti_archeologici/MapServer/0/query?f=geojson';
+  await host.addWfsLayer('Siti', url);
+  assert.equal(chiamate[0], url);
+});

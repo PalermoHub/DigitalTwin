@@ -23,6 +23,9 @@ export function hash(testo) {
 }
 
 // https://host/percorso?query → <proxy>/t/host/percorso?query. Le graffe dei segnaposto ({z}, {bbox-epsg-3857}) restano com'erano.
+// Server che ammettono già il CORS da ogni origine: si interrogano direttamente, senza passare dal Worker (niente limite di origini, meno carico)
+const DIRETTI = /^https:\/\/map\.sitr\.regione\.sicilia\.it\//i;
+
 export function urlProxy(proxy, url) {
   const m = String(url).match(/^https?:\/\/([^/?#]+)([^#]*)/i);
   if (!m) throw new Error(tr('err.indirizzoNonValidoUrl', { url }));
@@ -160,7 +163,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
       throw new Error('download limitato a Palermo: attiva «Only features in the current map view»');
     }
     const auth = autorizzazione(url);
-    const daScaricare = urlProxy(proxy, riscrivi(url)); // il token (se c'è) viaggia solo nella richiesta: l'URL del layer resta senza
+    const daScaricare = !auth && DIRETTI.test(url) ? riscrivi(url) : urlProxy(proxy, riscrivi(url)); // il token (se c'è) viaggia solo nella richiesta: l'URL del layer resta senza
     const risposta = await (auth ? fetchFn(daScaricare, { headers: { authorization: auth } }) : fetchFn(daScaricare));
     if (risposta.status === 401) throw new Error(tr('err.richiedePassword'));
     if (!risposta.ok) throw new Error(`HTTP ${risposta.status}`);
