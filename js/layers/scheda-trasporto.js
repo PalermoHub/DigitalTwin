@@ -2,11 +2,16 @@
 // Orari e fermate in sequenza sono interattivi (selettore del giorno): li costruisce `dinamico`, passato da chi disegna.
 import { t } from '../core/i18n.js';
 
+const ICONA = { tram: 'tram', ferrovia: 'treno' };
+const BADGE = { tram: 'Tram', ferrovia: 'Metro' };
+
 const righe = coppie => coppie.filter(([, valore]) => valore).map(([etichetta, valore]) => ({ etichetta, valore }));
 
 export function voceFermata(p, dinamico) {
+  const stazione = p.tipo === 'ferrovia';
   return {
-    chiave: `fermata-${p.id}`, peso: 6, strato: 'trasporto-fermate', titolo: p.nome, icona: 'bus', badge: 'Fermata', sempre: true,
+    chiave: `fermata-${p.id}`, peso: 6, strato: stazione ? 'trasporto-stazioni' : 'trasporto-fermate', titolo: p.nome,
+    icona: stazione ? 'treno' : 'bus', badge: stazione ? 'Stazione' : 'Fermata', sempre: true,
     gruppi: [{ righe: righe([['Linee', p.linee.join(', ')], ['Accessibile in carrozzina', p.accessibile]]) }],
     dinamico,
   };
@@ -31,8 +36,8 @@ export function voceLinee(linee, costruisci) {
   const gruppi = raggruppaLinee(linee);
   const una = gruppi.length === 1 ? gruppi[0] : null;
   return {
-    chiave: 'linee', peso: 7, titolo: una ? t('trasporto.linea', { numero: una.numero }) : t('trasporto.lineeN', { n: gruppi.length }), icona: una?.tipo === 'tram' ? 'tram' : 'bus',
-    badge: una ? (una.tipo === 'tram' ? 'Tram' : 'Bus') : undefined, sempre: true, gruppi: [],
+    chiave: 'linee', peso: 7, titolo: una ? t('trasporto.linea', { numero: una.numero }) : t('trasporto.lineeN', { n: gruppi.length }), icona: ICONA[una?.tipo] ?? 'bus',
+    badge: una ? BADGE[una.tipo] ?? 'Bus' : undefined, sempre: true, gruppi: [],
     dinamico: () => costruisci(gruppi),
   };
 }

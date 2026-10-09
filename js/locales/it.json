@@ -1680,5 +1680,10 @@
   "lbl.Stazioni": "Stazioni",
   "lbl.AMAT": "AMAT",
   "lbl.RFI": "RFI",
-  "lbl.Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.": "Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS."
+  "lbl.Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.": "Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.",
+  "trasporto.orariFuoriRfi": "Orari della ferrovia urbana (Trenitalia) validi dal {da} al {a}: oggi sono fuori validità",
+  "lbl.Linea metro (RFI)": "Linea metro (RFI)",
+  "lbl.Stazione (RFI)": "Stazione (RFI)",
+  "lbl.Stazione": "Stazione",
+  "lbl.Metro": "Metro"
 }
