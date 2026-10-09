@@ -1623,3 +1623,5 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .guida-indice li.guida-indice-gruppo { list-style: none; margin-left: -20px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: .8125em; color: var(--text-muted, inherit); break-after: avoid; }
 .guida-indice li.guida-indice-gruppo:not(:first-child) { margin-top: 10px; }
 .guida-pagina > h2.guida-gruppo { margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--border-ui); }
+.legenda i.monumenti-pallino--assente { background: transparent; border: 1.5px dashed var(--text-muted); }
+.monumenti-assente { margin-top: 4px; color: var(--text-muted); }
