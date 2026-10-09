@@ -53,8 +53,36 @@ function caricaOrari() {
 }
 
 let mappa = null;
-// porta la mappa sulla fermata: il margine segue già la scheda aperta, quindi la fermata resta nella parte visibile
-const vaiAFermata = f => mappa?.easeTo({ center: [f.lon, f.lat], zoom: Math.max(mappa.getZoom(), ZOOM_FERMATA), duration: 600 });
+// Porta la mappa sulla fermata (il margine segue già la scheda aperta, quindi resta nella parte visibile), ne accende lo strato
+// (resta acceso: si spegne dalla legenda o dall'interruttore «Mappa» della scheda) e apre la sua scheda come un clic sul cerchio.
+// Con `numero` mostra anche il percorso di quella linea, una volta aperta la scheda.
+function vaiAFermata(f, numero) {
+  if (!mappa) return;
+  const casella = document.getElementById(`strato-${fermate.get(f.id)?.tipo === 'ferrovia' ? L.stazioni : L.fermate}`);
+  if (casella && !casella.checked && !casella.disabled) {
+    casella.checked = true;
+    casella.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  const map = mappa;
+  let fatto = false;
+  const apri = () => {
+    if (fatto) return;
+    fatto = true;
+    const prima = riferimento;
+    map.fire('click', { point: map.project([f.lon, f.lat]), lngLat: { lng: f.lon, lat: f.lat } });
+    if (numero == null) return;
+    // il clic è asincrono: il riferimento cambia quando la scheda è pronta (con una scadenza di 2 s)
+    const fine = Date.now() + 2000;
+    const attendi = () => {
+      if (riferimento !== prima) mostraLinea(rottaPerNumero.get(numero));
+      else if (Date.now() < fine) requestAnimationFrame(attendi);
+    };
+    attendi();
+  };
+  // a movimento finito, appena lo strato è disegnato (con una scadenza: se la mappa è già ferma «idle» potrebbe non arrivare)
+  map.once('moveend', () => { map.once('idle', apri); setTimeout(apri, 400); });
+  map.easeTo({ center: [f.lon, f.lat], zoom: Math.max(map.getZoom(), ZOOM_FERMATA), duration: 600 });
+}
 
 const percorso = routeId => percorsoLinea(routeId, linee, geometrie, fermate);
 // il punto cliccato e le fermate vicine restano sulla mappa quando si mostra una linea: è il punto di riferimento
@@ -267,7 +295,7 @@ export default {
       riferimento = lngLat ? { lngLat, evidenza: [], base: [] } : null;
       if (lngLat && fermate.size) {
         const vicine = fermateVicine([lngLat.lng, lngLat.lat], fermate.values(), n => perNumero.get(n), RAGGIO_VICINO);
-        const vicino = voceTrasportoVicino(vicine, RAGGIO_VICINO, mostrate => elencoFermateVicine(mostrate, vaiAFermata, numero => mostraLinea(rottaPerNumero.get(numero))));
+        const vicino = voceTrasportoVicino(vicine, RAGGIO_VICINO, mostrate => elencoFermateVicine(mostrate, vaiAFermata));
         if (vicino) { voci.push(vicino); riferimento.evidenza = vicino.evidenza; }
       }
       return voci;

@@ -1564,7 +1564,7 @@
   "trasporto.linea": "Linea {numero}",
   "trasporto.lineeElenco": "Linee {elenco}",
   "trasporto.lineeN": "Linee ({n})",
-  "trasporto.mostraFermata": "Mostra la fermata sulla mappa",
+  "trasporto.mostraFermata": "Mostra la fermata sulla mappa e apri la sua scheda",
   "trasporto.mostraPercorso": "Mostra il percorso della linea {numero}",
   "trasporto.ogni": "ogni {n} min",
   "trasporto.orariFuori": "Orari del trasporto pubblico validi dal {da} al {a}: oggi sono fuori validità",

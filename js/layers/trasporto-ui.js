@@ -149,8 +149,8 @@ export function elencoLinee(gruppi, ctx) {
   return radice;
 }
 
-// Fermate vicine al punto cliccato: il nome è un pulsante che porta la mappa sulla fermata; sotto, le sue linee (ognuna mostra il proprio percorso).
-export function elencoFermateVicine(fermate, vai, vaiALinea) {
+// Fermate vicine al punto cliccato: il nome è un pulsante che porta la mappa sulla fermata e ne apre la scheda; sotto, le sue linee (ognuna fa lo stesso e mostra anche il proprio percorso).
+export function elencoFermateVicine(fermate, vai) {
   const radice = el('div', 'trasporto-vicine');
   for (const f of fermate) {
     const voce = el('div', 'trasporto-vicina');
@@ -166,7 +166,7 @@ export function elencoFermateVicine(fermate, vai, vaiALinea) {
       const b = el('button', 'trasporto-chip-bottone');
       b.type = 'button';
       b.title = t('trasporto.mostraPercorso', { numero: l.numero });
-      b.addEventListener('click', () => vaiALinea(l.numero));
+      b.addEventListener('click', () => vai(f, l.numero));
       b.append(chip({ numero: l.numero, colore: l.colore }));
       righe.append(b);
     }

@@ -1564,7 +1564,7 @@
   "trasporto.linea": "Line {numero}",
   "trasporto.lineeElenco": "Lines {elenco}",
   "trasporto.lineeN": "Lines ({n})",
-  "trasporto.mostraFermata": "Show the stop on the map",
+  "trasporto.mostraFermata": "Show the stop on the map and open its card",
   "trasporto.mostraPercorso": "Show the route of line {numero}",
   "trasporto.ogni": "every {n} min",
   "trasporto.orariFuori": "Public transport timetables valid from {da} to {a}: today is outside the validity period",
