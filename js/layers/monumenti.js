@@ -41,7 +41,12 @@ const HIT_PUNTI = 'monumenti-hit-punti';
 let legenda = null;
 let scomparsi = []; // id dei beni non più presenti: niente poligono, solo il punto
 let categorieAccese = MONUMENTI_CATEGORIE.map(([nome]) => nome);
-const filtraEdifici = map => { for (const id of [POLI, CONTORNI, HIT_POLI]) map.setFilter(id, filtroEdifici(categorieAccese, scomparsi)); };
+// Il disegno salta i poligoni dei beni non più presenti (sono edifici di oggi); lo strato dei clic li tiene, così la scheda
+// racconta anche cosa sorgeva lì.
+const filtraEdifici = map => {
+  for (const id of [POLI, CONTORNI]) map.setFilter(id, filtroEdifici(categorieAccese, scomparsi));
+  map.setFilter(HIT_POLI, filtroEdifici(categorieAccese, []));
+};
 // dettagli completi per id (stanno solo sul punto: i poligoni portano id, nome e categoria)
 const dettagli = new Map();
 const completo = p => dettagli.get(p.id) ?? p;
