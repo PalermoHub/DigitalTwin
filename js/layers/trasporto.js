@@ -82,6 +82,9 @@ const ctx = {
   nomeFermata: id => fermate.get(id)?.nome ?? id,
 };
 
+// Una stazione non ancora aperta non ha orari: la scheda lo dice al posto delle partenze.
+const notaInApertura = () => el('p', 'scheda-nota', tr('trasporto.inAperturaNota'));
+
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
@@ -108,7 +111,7 @@ function creaLegenda() {
     voceStrato(tratto('trasporto-tratto--tram'), 'Linea tram', L.tram),
     voceStrato(el('i', 'trasporto-pallino'), 'Fermata (da zoom 13)', L.fermate),
     voceStrato(el('i', 'trasporto-tratto trasporto-tratto--binario'), 'Linea metro (RFI, tracciato schematico)', L.metro),
-    voceStrato(logoStazione(), 'Stazione (RFI)', L.stazioni),
+    voceStrato(logoStazione(), 'Stazione (RFI, più chiara se in apertura)', L.stazioni),
   );
   document.getElementById('legende').append(legenda);
 }
@@ -204,11 +207,11 @@ export default {
       id: L.stazioni, type: 'symbol', source: 'ferrovia-fermate', minzoom: ZOOM_STAZIONE,
       layout: {
         ...nascosto, 'icon-image': IMMAGINE_STAZIONE, 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.5, 14, 0.7, 17, 0.9],
-        'icon-allow-overlap': true, 'icon-ignore-placement': true,
+        'icon-allow-overlap': true, 'icon-ignore-placement': true, 'symbol-sort-key': ['case', ['has', 'stato'], 0, 1],
         'text-field': ['step', ['zoom'], '', 13.5, ['get', 'nome']], 'text-font': ['Noto Sans Bold'], 'text-size': 11,
         'text-anchor': 'left', 'text-offset': [1.1, 0], 'text-optional': true,
       },
-      paint: { 'text-color': '#7f1d18', 'text-halo-color': '#fff', 'text-halo-width': 1.6 },
+      paint: { 'icon-opacity': ['case', ['has', 'stato'], 0.55, 1], 'text-opacity': ['case', ['has', 'stato'], 0.7, 1], 'text-color': '#7f1d18', 'text-halo-color': '#fff', 'text-halo-width': 1.6 },
     });
     map.addLayer({ id: L.hitMetro, type: 'line', source: 'ferrovia-linee', minzoom: ZOOM_STAZIONE, paint: { 'line-width': 12, 'line-opacity': 0 } });
     map.addLayer({ id: L.hitStazioni, type: 'circle', source: 'ferrovia-fermate', minzoom: ZOOM_STAZIONE, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
@@ -250,7 +253,7 @@ export default {
         visti.add(id);
         if (f.layer.id === L.hitFermate || f.layer.id === L.hitStazioni) {
           const p = fermate.get(id) ?? { ...f.properties, linee: [] };
-          voci.push(voceFermata(p, orariFermata(id, ctx)));
+          voci.push(voceFermata(p, p.stato ? notaInApertura : orariFermata(id, ctx)));
         } else if (linee.has(id)) sotto.push(linee.get(id));
       }
       // tutte le linee del clic in una sola voce: su una strada principale sono decine

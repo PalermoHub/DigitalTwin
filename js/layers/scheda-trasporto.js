@@ -12,7 +12,7 @@ export function voceFermata(p, dinamico) {
   return {
     chiave: `fermata-${p.id}`, peso: 6, strato: stazione ? 'trasporto-stazioni' : 'trasporto-fermate', titolo: p.nome,
     icona: stazione ? 'treno' : 'bus', badge: stazione ? 'Stazione' : 'Fermata', sempre: true,
-    gruppi: [{ righe: righe([['Linee', p.linee.join(', ')], ['Accessibile in carrozzina', p.accessibile]]) }],
+    gruppi: [{ righe: righe([['Stato', p.stato && 'In apertura'], ['Linee', p.linee.join(', ')], ['Accessibile in carrozzina', p.accessibile]]) }],
     dinamico,
   };
 }
@@ -44,7 +44,7 @@ export function voceLinee(linee, costruisci) {
 
 // Tooltip al passaggio del mouse: stesse informazioni essenziali della scheda.
 export function tooltipFermata(p) {
-  return { titolo: p.nome, dettaglio: p.linee.length ? t('trasporto.lineeElenco', { elenco: p.linee.join(', ') }) : 'Nessuna corsa nel feed' };
+  return { titolo: p.nome, dettaglio: p.linee.length ? t('trasporto.lineeElenco', { elenco: p.linee.join(', ') }) : p.stato ? t('trasporto.inApertura') : 'Nessuna corsa nel feed' };
 }
 
 // Una riga per linea (le due direzioni insieme), al massimo `max`: su una strada principale ne passano molte.

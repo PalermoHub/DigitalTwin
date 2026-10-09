@@ -1678,7 +1678,6 @@
   "lbl.RFI": "RFI",
   "lbl.Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.": "Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.",
   "trasporto.orariFuoriRfi": "Orari della ferrovia urbana (Trenitalia) validi dal {da} al {a}: oggi sono fuori validità",
-  "lbl.Stazione (RFI)": "Stazione (RFI)",
   "lbl.Stazione": "Stazione",
   "lbl.Metro": "Metro",
   "luoghi.stazione": "Stazione{linee}",
@@ -1690,5 +1689,9 @@
   "lbl.Linea metro": "Linea metro",
   "lbl.Stazioni metro": "Stazioni metro",
   "lbl.Trasporto ferroviario urbano (linee, stazioni, orari): Trenitalia S.p.A. / CCISS MMTIS, dati NeTEx convertiti in GTFS da Clément Desouche (@deryclem), feed valido dal 26/09/2026 al 12/12/2026": "Trasporto ferroviario urbano (linee, stazioni, orari): Trenitalia S.p.A. / CCISS MMTIS, dati NeTEx convertiti in GTFS da Clément Desouche (@deryclem), feed valido dal 26/09/2026 al 12/12/2026",
-  "lbl.Posizione di alcune stazioni corretta con dati © contributori OpenStreetMap (ODbL)": "Posizione di alcune stazioni corretta con dati © contributori OpenStreetMap (ODbL)"
+  "trasporto.inApertura": "In apertura: non ancora in servizio",
+  "trasporto.inAperturaNota": "Stazione in apertura: non è ancora in servizio, quindi non ci sono orari. Compare qui perché è già presente in OpenStreetMap.",
+  "lbl.In apertura": "In apertura",
+  "lbl.Stazione (RFI, più chiara se in apertura)": "Stazione (RFI, più chiara se in apertura)",
+  "lbl.Posizione di alcune stazioni e stazioni in apertura (Politeama, Porto) da dati © contributori OpenStreetMap (ODbL)": "Posizione di alcune stazioni e stazioni in apertura (Politeama, Porto) da dati © contributori OpenStreetMap (ODbL)"
 }

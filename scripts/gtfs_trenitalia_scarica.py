@@ -74,6 +74,7 @@ def main():
     nomi_file = gtfs_trenitalia.NOMI
     nomi = json.loads(nomi_file.read_text(encoding="utf-8")) if nomi_file.exists() else {}
     posizioni = json.loads(gtfs_trenitalia.POSIZIONI.read_text(encoding="utf-8")) if gtfs_trenitalia.POSIZIONI.exists() else {}
+    in_apertura = json.loads(gtfs_trenitalia.IN_APERTURA.read_text(encoding="utf-8")) if gtfs_trenitalia.IN_APERTURA.exists() else {}
     with tempfile.TemporaryDirectory() as tmp:
         estrai(_scarica(URL), tmp)
         verifica(tmp)
@@ -81,7 +82,7 @@ def main():
         if not a.forza and not da_aggiornare(nuova):
             print(f"Già aggiornato: feed Trenitalia {nuova}")
             return 0
-        risultato = gtfs_trenitalia.costruisci(Path(tmp), nomi, posizioni)
+        risultato = gtfs_trenitalia.costruisci(Path(tmp), nomi, posizioni, in_apertura)
     gtfs_trenitalia.scrivi(risultato)
     fermate = risultato[0]
     MARCATORE.write_text(json.dumps({"versione": nuova, "scaricato": datetime.now().isoformat(timespec="seconds"), "validita": fermate["validita"]},

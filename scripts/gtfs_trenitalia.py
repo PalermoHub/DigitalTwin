@@ -12,6 +12,8 @@ Gli id hanno un prefisso (stazioni `f<codice>`, rotte `ferrovia-<n>`, servizi da
 perché il viewer tiene i due insiemi nelle stesse mappe.
 Le coordinate di alcune stazioni nel feed sono sbagliate (fino a 1 km: De Gasperi ha quelle di Francia): `ferrovia_posizioni.json`
 le corregge con i nodi stazione di OpenStreetMap (© OpenStreetMap contributors, ODbL), con l'id del nodo come fonte.
+Le stazioni non ancora aperte (Politeama e Porto, dell'Anello) non sono nel feed: `ferrovia_in_apertura.json` le aggiunge come punti con
+`stato: in apertura` (posizione dai nodi OpenStreetMap in costruzione), senza linee né orari. Da togliere dal file quando il feed le include.
 Il feed non ha calendar_dates: i servizi sono definiti da calendar.txt (giorni della settimana tra start_date e end_date).
 Le shapes del feed non si usano: contengono i vertici delle fermate di tutta la corsa, anche fuori ordine (a volte Bagheria in mezzo a una
 tratta urbana). Il tracciato è quindi la spezzata delle stazioni, instradata sulla rete delle tratte tra stazioni consecutive (i servizi
@@ -33,6 +35,7 @@ SRC = ROOT / "dati" / "gtfs-trenitalia"
 OUT = ROOT / "dati" / "trasporto"
 NOMI = Path(__file__).resolve().parent / "ferrovia_nomi.json"
 POSIZIONI = Path(__file__).resolve().parent / "ferrovia_posizioni.json"
+IN_APERTURA = Path(__file__).resolve().parent / "ferrovia_in_apertura.json"
 
 BBOX = (13.105, 38.07, 13.50, 38.25)  # lon min, lat min, lon max, lat max: dall'aeroporto (13,110) a Ficarazzi/Roccella; fuori Cinisi e la linea per Trapani
 BASE_SERVIZI = 1000
@@ -140,8 +143,9 @@ def _instrada(seq, archi, pos):
     return [pos[c] for c in codici]
 
 
-def costruisci(src=SRC, nomi=None, posizioni=None):
+def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None):
     nomi = nomi or {}
+    in_apertura = in_apertura or {}  # stazioni non ancora aperte (non sono nel feed): solo punti, senza linee né orari
     posizioni = posizioni or {}  # stop_code -> {lon, lat}: correzioni alle coordinate del feed (vedi ferrovia_posizioni.json)
     stazioni = {}  # stop_id -> riga, solo le fermate vere (location_type 0) dentro il perimetro
     for r in leggi(src, "stops"):
@@ -225,6 +229,10 @@ def costruisci(src=SRC, nomi=None, posizioni=None):
                         "accessibile": ACCESSIBILE.get(stazioni[sid]["wheelchair_boarding"], ""), "tipo": "ferrovia",
                         "lon": coord(sid)[0], "lat": coord(sid)[1]}}
         for sid in sorted(usate, key=lambda s: codice[s])]}
+    for chiave, s in sorted(in_apertura.items()):
+        fermate["features"].append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [round(s["lon"], 6), round(s["lat"], 6)]},
+                                    "properties": {"id": f"f{chiave}", "nome": s["nome"], "linee": [], "accessibile": s.get("accessibile", ""), "tipo": "ferrovia",
+                                                   "stato": "in apertura", "lon": round(s["lon"], 6), "lat": round(s["lat"], 6)}})
 
     per_codice = {codice[sid]: sid for sid in usate}
     punti = {k: coord(sid) for k, sid in per_codice.items()}
@@ -263,7 +271,8 @@ def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     nomi = json.loads(NOMI.read_text(encoding="utf-8")) if NOMI.exists() else {}
     posizioni = json.loads(POSIZIONI.read_text(encoding="utf-8")) if POSIZIONI.exists() else {}
-    fermate, linee, orari = risultato = costruisci(Path(argv[0]) if argv else SRC, nomi, posizioni)
+    in_apertura = json.loads(IN_APERTURA.read_text(encoding="utf-8")) if IN_APERTURA.exists() else {}
+    fermate, linee, orari = risultato = costruisci(Path(argv[0]) if argv else SRC, nomi, posizioni, in_apertura)
     scrivi(risultato)
     print(f"{len(fermate['features'])} stazioni, {len(linee['features'])} tracciati, {len(orari['fermate'])} stazioni con orari")
     for f in linee["features"]:

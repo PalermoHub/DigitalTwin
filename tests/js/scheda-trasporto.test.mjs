@@ -89,3 +89,18 @@ test('una sola linea ferroviaria: icona treno e badge Metro', () => {
   assert.equal(v.icona, 'treno');
   assert.equal(v.badge, 'Metro');
 });
+
+test('stazione in apertura: lo stato è una riga della scheda e non ci sono linee', () => {
+  const v = voceFermata({ id: 'fosm-1', nome: 'Palermo Politeama', linee: [], accessibile: 'Sì', tipo: 'ferrovia', stato: 'in apertura' }, dinamico);
+  assert.equal(v.badge, 'Stazione');
+  assert.deepEqual(v.gruppi[0].righe, [
+    { etichetta: 'Stato', valore: 'In apertura' },
+    { etichetta: 'Accessibile in carrozzina', valore: 'Sì' },
+  ]);
+});
+
+test('tooltip di una stazione in apertura: dice che apre a breve, non «nessuna corsa nel feed»', () => {
+  const t = tooltipFermata({ nome: 'Palermo Porto', linee: [], tipo: 'ferrovia', stato: 'in apertura' });
+  assert.equal(t.titolo, 'Palermo Porto');
+  assert.equal(t.dettaglio, 'In apertura: non ancora in servizio');
+});
