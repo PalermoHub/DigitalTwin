@@ -16,6 +16,8 @@ export function beneScomparso(p) {
   return !ANCORA_PRESENTI.has(p.id) && SCOMPARSO.test(p.descrizione ?? '');
 }
 
+export const idScomparsi = lista => lista.filter(beneScomparso).map(p => p.id);
+
 // Se la descrizione è solo la frase «non più esistente» l'avviso la sostituisce; se aggiunge il motivo la conserva.
 const soloFrase = d => /^\s*non\s+(più\s+)?esistente\s*[.!]?\s*$/i.test(d);
 

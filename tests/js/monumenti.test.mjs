@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { voceMonumento, modelloPopup } from '../../js/layers/scheda-monumenti.js';
+import { voceMonumento, modelloPopup, idScomparsi } from '../../js/layers/scheda-monumenti.js';
 import { unisci } from '../../js/core/scheda-modello.js';
 
 const P = {
@@ -105,4 +105,9 @@ test('scheda di un bene scomparso senza foto, link né testo: la sezione resta, 
   const { sezioni } = unisci([v]);
   assert.equal(sezioni.length, 1);
   assert.ok(sezioni[0].avviso);
+});
+
+test('idScomparsi: solo i beni non più presenti, non le fontanelle delle fonderie', () => {
+  const lista = [{ ...P, id: 'a', descrizione: 'non più esistente' }, { ...P, id: 'b', descrizione: 'Fonderia Di Maggio 1887 non esistente' }, { ...P, id: 'c', descrizione: 'Demolita nel 1965' }];
+  assert.deepEqual(idScomparsi(lista), ['a', 'c']);
 });

@@ -3,7 +3,7 @@ import { collegamento } from '../core/url-sicuro.js';
 import { registraTooltipStrati } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
-import { voceMonumento, modelloPopup } from './scheda-monumenti.js';
+import { voceMonumento, modelloPopup, idScomparsi } from './scheda-monumenti.js';
 import { voceUsoEdificio } from './scheda-uso.js';
 import { tl, t } from '../core/i18n.js';
 
@@ -100,6 +100,17 @@ function collegaPopup(map) {
   }
 }
 
+// I beni non più presenti restano sulla mappa ma più tenui. Gli id vengono dalle descrizioni (i poligoni portano solo l'id),
+// quindi gli stili si ritoccano appena i dati sono caricati.
+function attenuaScomparsi(map, ids) {
+  if (!ids.length || !map.getLayer(POLI)) return;
+  const assente = ['in', ['get', 'id'], ['literal', ids]];
+  map.setPaintProperty(POLI, 'fill-opacity', ['case', assente, 0.3, 0.85]);
+  map.setPaintProperty(CONTORNI, 'line-opacity', ['case', assente, 0.35, 1]);
+  map.setPaintProperty(PUNTI, 'circle-opacity', ['case', assente, 0.4, 1]);
+  map.setPaintProperty(PUNTI, 'circle-stroke-opacity', ['case', assente, 0.5, 1]);
+}
+
 // Caselle delle categorie nel menu del layer e nella legenda: restano allineate (stessa categoria, due caselle).
 const caselle = new Map(); // categoria -> { pannello, legenda }
 
@@ -141,6 +152,9 @@ function creaLegenda(gruppo, map) {
     blocco.append(label);
     caselle.set(nome, { pannello: cb, legenda: riga._filtro.casella });
   }
+  const assente = el('div', 'monumenti-cat monumenti-assente');
+  assente.append(el('i', 'monumenti-pallino monumenti-pallino--assente'), t('monumento.scomparso.etichetta'));
+  legenda.append(assente);
   gruppo.append(blocco);
   document.getElementById('legende').append(legenda);
 }
@@ -190,10 +204,11 @@ export default {
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: singolo, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
     collegaPopup(map);
   },
-  async avvia() {
+  async avvia(map) {
     const dati = await (await fetch(urlDati('monumenti/monumenti.geojson'))).json(); // già in cache: è il file della sorgente
     puntiTutti = dati.features;
     for (const f of puntiTutti) dettagli.set(f.properties.id, f.properties);
+    attenuaScomparsi(map, idScomparsi(puntiTutti.map(f => f.properties)));
   },
   strati: [{ id: 'monumenti', etichetta: 'Monumenti (Portale del Turismo)', layers: LAYERS, attivo: false,
     sottovoci: [{ titolo: 'Categorie', voci: MONUMENTI_CATEGORIE.map(([nome]) => ({ id: `categoria:${nome}`, etichetta: nome })) }],
