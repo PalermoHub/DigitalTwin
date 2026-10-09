@@ -172,7 +172,10 @@ function lista(voci) {
 function paginaConIndice(nodi) {
   const radice = el('div');
   radice.append(...nodi);
-  const voci = nodi.filter(n => n.tagName === 'SECTION' && n.querySelector('h3')).map(n => ({ titolo: n.querySelector('h3').textContent, sezione: n }));
+  const voci = nodi.flatMap(n => {
+    if (n.tagName === 'H2' && n.className === 'guida-gruppo') return [{ gruppo: n.textContent }]; // intestazione di gruppo dell'indice
+    return n.tagName === 'SECTION' && n.querySelector('h3') ? [{ titolo: n.querySelector('h3').textContent, sezione: n }] : [];
+  });
   indiceLaterale(document, radice, voci);
   return radice;
 }
@@ -191,6 +194,7 @@ function schedaPlugin() {
   );
   return [
     ...titoloPagina('Plugin RNDT', 'Il catalogo nazionale dei dati territoriali, direttamente sulla mappa.'),
+    el('h2', 'Plugin', { className: 'guida-gruppo' }),
     merito,
     blocco('Cos’è l’RNDT', el('p', 'Il Repertorio Nazionale dei Dati Territoriali (RNDT) è il catalogo ufficiale italiano dei dati geografici: raccoglie le schede di migliaia di mappe e dati pubblicati da Comuni, Regioni, ministeri, enti parco, agenzie e altri enti. È un po’ come una biblioteca: dice che cosa esiste, chi lo ha prodotto e dove si può consultare.')),
     blocco('Cosa fa questo plugin', lista([
@@ -308,7 +312,7 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
     ['argomenti', 'Argomenti', [argomenti.elemento]],
     ['guida', 'Guida', [guida]],
     ['geoimage', 'Guida Geoimage', [schedaGeoimage()]],
-    ['plugin', 'Plugin RNDT', [paginaConIndice([...schedaPlugin(), ...passiRndt()])]],
+    ['plugin', 'Plugin RNDT', [paginaConIndice([...schedaPlugin(), el('h2', 'Casi d\'uso', { className: 'guida-gruppo' }), ...passiRndt()])]],
     ['fonti', 'Fonti e note', [...titoloPagina('Fonti e note', 'Da dove vengono i dati e cosa tenere presente quando li si usa.'), blocco('Fonti dei dati', fonti), blocco('Da sapere', elenco(AVVISI))]],
     ['privacy', 'Privacy', [...titoloPagina('Privacy', 'Come sono trattati i dati personali di chi usa il sito (Regolamento UE 2016/679).'), schedaPrivacy()]],
     ['about', 'About', schedaComunita()],
