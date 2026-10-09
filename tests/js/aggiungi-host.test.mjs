@@ -215,3 +215,13 @@ test('addWfsLayer: il SITR (CORS aperto) si scarica diretto, senza proxy', async
   await host.addWfsLayer('Siti', url);
   assert.equal(chiamate[0], url);
 });
+
+test('addWmsLayer con «sotto»: va prima di sopraBasi (sopra le basi, sotto i dati); senza, in cima', () => {
+  const map = mappaFinta(), posizioni = [];
+  map.addLayer = (l, prima) => { posizioni.push(prima); map.strati.set(l.id, l); };
+  const host = creaHost({ map, proxy: PROXY, stato: { v: 1, layers: [] }, scrivi: () => true, archivioDati: archivioInMemoria(), prefisso: 'miei', sopraBasi: () => 'dati-1' });
+  const opz = { url: 'https://s.it/wms', layers: 'a', version: '1.3.0', format: 'image/png' };
+  host.addWmsLayer('Storica', { ...opz, sotto: true });
+  host.addWmsLayer('Altro', { ...opz, layers: 'b' });
+  assert.deepEqual(posizioni, ['dati-1', undefined]);
+});

@@ -1,15 +1,13 @@
 // worker/proxy-core.js
 // Logica del proxy. Un Worker può esportare solo il suo gestore (rndt-proxy.js): le altre esportazioni stanno qui.
 // Proxy CORS per i servizi del catalogo RNDT (WMS, WFS, GeoJSON, catalogo). Rotta: /t/<host>/<percorso>?<query>
-// Non è un proxy aperto: solo https (tranne SOLO_HTTP), solo GET/HEAD, solo nomi pubblici (niente IP, localhost, porte), solo dalle origini
+// Non è un proxy aperto: solo https, solo GET/HEAD, solo nomi pubblici (niente IP, localhost, porte), solo dalle origini
 // in ORIGINI e al massimo 10 MB per risposta. Nessuna cache e nessun cookie.
 // L'intestazione Authorization (servizi con utente e password) si inoltra solo all'host richiesto, mai su un redirect
 // verso un altro, e non si registra; WWW-Authenticate non torna al browser (niente finestra di login).
 
 export const LIMITE_BYTE = 10 * 1024 * 1024;
 const MAX_REDIRECT = 3;
-// Server che rispondono solo in http (l'https li rimanda a http): gli unici per cui il Worker parla http, sempre in sola lettura
-const SOLO_HTTP = new Set(['wms.pcn.minambiente.it']);
 const PRIVATO = /^(localhost|.*\.(local|localhost|internal|lan|home|corp))$/i;
 
 // Solo nomi di dominio veri: lettere, cifre, trattini e punti; l'ultima etichetta (il TLD) inizia con una lettera, così
@@ -25,7 +23,7 @@ export function urlDestinazione(richiesta) {
   const m = u.pathname.match(/^\/t\/([^/]+)(\/.*)?$/);
   if (!m) return null;
   const host = decodeURIComponent(m[1]);
-  return ospiteValido(host) ? `${SOLO_HTTP.has(host.toLowerCase()) ? 'http' : 'https'}://${host}${m[2] ?? '/'}${u.search}` : null;
+  return ospiteValido(host) ? `https://${host}${m[2] ?? '/'}${u.search}` : null;
 }
 
 const risposta = (stato, testo, intestazioni = {}) => new Response(JSON.stringify({ errore: testo }), {
@@ -59,7 +57,7 @@ export async function gestisci(richiesta, env, fetchFn) {
       if (!sposta) break;
       if (salti >= MAX_REDIRECT) throw new Error('troppi redirect');
       const prossimo = new URL(sposta, corrente);
-      if ((prossimo.protocol !== 'https:' && !(prossimo.protocol === 'http:' && SOLO_HTTP.has(prossimo.hostname))) || prossimo.username || prossimo.password || prossimo.port || !ospiteValido(prossimo.hostname)) throw new Error('redirect non ammesso');
+      if (prossimo.protocol !== 'https:' || prossimo.username || prossimo.password || prossimo.port || !ospiteValido(prossimo.hostname)) throw new Error('redirect non ammesso');
       corrente = prossimo.href;
     }
   } catch {

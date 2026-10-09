@@ -85,7 +85,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     imposta('WIDTH', '256'); imposta('HEIGHT', '256'); imposta(v13 ? 'CRS' : 'SRS', 'EPSG:3857');
     const bounds = (opz.bounds && intersezione(opz.bounds, BBOX_PALERMO)) || BBOX_PALERMO; // niente tile fuori da Palermo
     map.addSource(id, { type: 'raster', tiles: [`${urlProxy(proxy, q.toString())}&BBOX={bbox-epsg-3857}`], tileSize: 256, bounds });
-    map.addLayer({ id, type: 'raster', source: id });
+    map.addLayer({ id, type: 'raster', source: id }, opz.sotto ? sopraBasi() : undefined); // sotto: come un'ortofoto, sopra le basi e sotto i dati
     verificaInMappa(id);
     return registra({ id, tipo: 'wms', nome, visibile: true, sorgente: { ...opz }, idMappa: [id], idSorgente: id, salvato: true }, { salva });
   }

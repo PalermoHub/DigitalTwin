@@ -123,15 +123,3 @@ test('un 401 del servizio arriva com’è ma senza WWW-Authenticate (niente fine
   assert.equal(r.status, 401);
   assert.equal(r.headers.get('www-authenticate'), null);
 });
-
-test('wms.pcn.minambiente.it (solo http) si interroga in http; gli altri host restano https', async () => {
-  assert.equal(urlDestinazione(rq('/t/wms.pcn.minambiente.it/ogc?map=/x.map')), 'http://wms.pcn.minambiente.it/ogc?map=/x.map');
-  assert.equal(urlDestinazione(rq('/t/altro.it/ogc')), 'https://altro.it/ogc');
-});
-
-test('un redirect verso http è ammesso solo per gli host solo-http', async () => {
-  const vai = a => async u => (u === 'https://a.it/x' ? new Response(null, { status: 301, headers: { location: a } }) : new Response('ok'));
-  const richiesta = () => rq('/t/a.it/x', { headers: { origin: ORIGINE } });
-  assert.equal((await gestisci(richiesta(), env, vai('http://b.it/y'))).status, 502);
-  assert.equal((await gestisci(richiesta(), env, vai('http://wms.pcn.minambiente.it/y'))).status, 200);
-});
