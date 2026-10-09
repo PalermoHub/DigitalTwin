@@ -264,7 +264,7 @@ const LINK_CATALOGO = [
   [/Variante generale al PRG 2004/, [['Geocatalogo del Comune di Palermo', 'https://geocatalog.comune.palermo.it/geonetwork/srv/ita/catalog.search#/metadata/25562f02-587f-49ca-b5b6-21018efe7c78'], ['Open data del Comune di Palermo', 'https://opendata.comune.palermo.it/index.php'], ['SITR Regione Siciliana', 'https://www.sitr.regione.sicilia.it/']]],
   [/numeri civici/, [['ANNCSU, Archivio nazionale dei numeri civici', 'https://www.anncsu.gov.it/it/consultazione-dellarchivio/open-data/'], ['Mappa ANNCSU di PalermoHub', 'https://gbvitrano.github.io/ANNCSU/index.html']]],
   [/HR-DTM-5m/, [['Dati su Zenodo', 'https://zenodo.org/records/18872933'], ['DOI del dataset', 'https://doi.org/10.5281/zenodo.18921767'], ['Articolo (Scientific Data)', 'https://doi.org/10.1038/s41597-025-06132-z'], ['Repository del progetto', 'https://github.com/palermohub/Palerm-DTM-5m']]],
-  [/Censimento permanente 2023/, [['Cruscotto Statistico Comunale (Palermo)', 'https://cruscotto-italia.dati.gov.it/comune.html?istat=082053#censimento']]],
+  [/Censimento permanente 2023/, [['AGID Cruscotto Italia', 'https://cruscotto-italia.dati.gov.it/comune.html?istat=082053#censimento']]],
   [/ISTAT/, [['ISTAT, Basi territoriali e variabili censuarie', 'https://www.istat.it/notizia/basi-territoriali-e-variabili-censuarie/'], ['Popolazione residente a Palermo, open data del Comune', 'https://opendata.comune.palermo.it/opendata-archivio-dataset.php?tag=POPOLAZIONE%20RESIDENTE']]],
 ];
 
