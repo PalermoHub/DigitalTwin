@@ -1340,7 +1340,7 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
   #app-header { flex-wrap: wrap; row-gap: 8px; padding: 8px 12px; min-height: 0; }
   #app-header { column-gap: 8px; }
   #app-logo img { height: 30px; }
-      #piede-coord { display: none; }
+      #piede-coord, .piede-avviso, #piede-copyright .piede-licenza { display: none; }
   #piede-copyright { font-size: var(--fs-2xs); }
 }
 
