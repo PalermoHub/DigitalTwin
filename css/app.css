@@ -492,7 +492,7 @@ dialog li { margin: 4px 0; }
 .scheda-icona { display: inline-flex; vertical-align: -.2em; margin-right: 8px; color: var(--accent-strong); }
 .scheda-link .scheda-icona { color: inherit; margin-right: 6px; }
 .scheda-acc > summary .scheda-icona { margin-right: 6px; }
-.scheda-tag { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: var(--r-pill); background: var(--accent); color: var(--accent-ink); font-size: var(--fs-xs); font-weight: 700; text-transform: none; letter-spacing: 0; }
+.scheda-tag { display: inline-block; margin: 3px 0 3px 6px; padding: 1px 8px; border-radius: var(--r-pill); background: var(--accent); color: var(--accent-ink); font-size: var(--fs-xs); font-weight: 700; text-transform: none; letter-spacing: 0; }
 .scheda-gruppo { margin-top: 6px; }
 .scheda-gruppo h4 { margin: 8px 0 2px; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
 
