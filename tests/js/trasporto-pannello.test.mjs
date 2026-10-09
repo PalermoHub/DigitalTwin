@@ -4,14 +4,14 @@ import { creaStrati, stratoLinea } from '../../js/layers/trasporto-strati.js';
 
 const strati = creaStrati(() => {});
 
-test('gli strati del trasporto sono divisi in AMAT e RFI, in quest\'ordine', () => {
-  assert.deepEqual([...new Set(strati.map(s => s.sezione))], ['AMAT', 'RFI']);
+test('gli strati del trasporto sono divisi in RFI e AMAT: RFI sta sopra, come sulla mappa', () => {
+  assert.deepEqual([...new Set(strati.map(s => s.sezione))], ['RFI', 'AMAT']);
   assert.deepEqual(strati.filter(s => s.sezione === 'AMAT').map(s => s.id), ['trasporto-bus', 'trasporto-tram', 'trasporto-fermate']);
-  assert.deepEqual(strati.filter(s => s.sezione === 'RFI').map(s => s.id), ['trasporto-metro', 'trasporto-stazioni']);
+  assert.deepEqual(strati.filter(s => s.sezione === 'RFI').map(s => s.id), ['trasporto-stazioni', 'trasporto-metro']);
 });
 
-test('le etichette: AMAT «Linee bus», «Linee tram», «Fermate»; RFI «Linea metro», «Stazioni metro»', () => {
-  assert.deepEqual(strati.map(s => s.etichetta), ['Linee bus', 'Linee tram', 'Fermate', 'Linea metro', 'Stazioni metro']);
+test('le etichette: RFI «Stazioni metro», «Linea metro»; AMAT «Linee bus», «Linee tram», «Fermate»', () => {
+  assert.deepEqual(strati.map(s => s.etichetta), ['Stazioni metro', 'Linea metro', 'Linee bus', 'Linee tram', 'Fermate']);
 });
 
 test('tutti gli strati partono spenti e ognuno governa il proprio layer', () => {

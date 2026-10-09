@@ -17,25 +17,40 @@ veloci passano dalle stazioni che saltano): schematico, ma coerente con le stazi
 """
 import heapq
 import json
+import re
 import sys
 from collections import Counter, defaultdict
 from datetime import date, timedelta
 from pathlib import Path
 
 from compatta_dati import codifica_orari
-from gtfs import data_iso, leggi, minuti, nome, ordine_linea
+from gtfs import data_iso, leggi, minuti, nome
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "dati" / "gtfs-trenitalia"
 OUT = ROOT / "dati" / "trasporto"
 NOMI = Path(__file__).resolve().parent / "ferrovia_nomi.json"
 
-BBOX = (13.15, 38.05, 13.50, 38.25)  # lon min, lat min, lon max, lat max: da Carini a Ficarazzi/Roccella
+BBOX = (13.105, 38.07, 13.50, 38.25)  # lon min, lat min, lon max, lat max: dall'aeroporto (13,110) a Ficarazzi/Roccella; fuori Cinisi e la linea per Trapani
 BASE_SERVIZI = 1000
 COLORE = "#B7282E"
 MIN_CORSE = 3  # un servizio con meno corse è una variante: si aggrega a uno più grande che ne contiene il percorso
 ACCESSIBILE = {"1": "Sì", "2": "No"}
 GIORNI = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+
+
+ARTICOLI = {"Di", "Del", "Dei", "Della", "Delle", "Dello", "Degli", "Da", "Al", "Alla"}
+
+
+def _nome_stazione(testo):
+    """Nome in maiuscole e minuscole, con preposizioni e articoli in minuscolo («Isola delle Femmine»); il primo termine resta maiuscolo."""
+    parole = nome(testo).split(" ")
+    return " ".join(p if i == 0 or p not in ARTICOLI else p.lower() for i, p in enumerate(parole))
+
+
+def _chiave_sigla(sigla):
+    """Ordine naturale delle sigle: M1, M2, M10 (e non M1, M10, M2)."""
+    return [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", sigla)]
 
 
 def dentro(lon, lat):
@@ -137,7 +152,8 @@ def costruisci(src=SRC, nomi=None):
     for r in leggi(src, "stop_times"):
         if r["stop_id"] in stazioni:
             soste[r["trip_id"]].append((int(r["stop_sequence"]), r["stop_id"], minuti(r["departure_time"])))
-    corse = {r["trip_id"]: r for r in leggi(src, "trips")}
+    treni = {r["route_id"] for r in leggi(src, "routes") if r["route_type"] == "2"}  # niente autobus sostitutivi (rotta BUS, tipo 3)
+    corse = {r["trip_id"]: r for r in leggi(src, "trips") if r["route_id"] in treni}
     urbane = {}  # corsa -> [(stop_id, partenza)] in ordine
     for tid, s in soste.items():
         if len(s) >= 2 and tid in corse and corse[tid]["service_id"] in indice:
@@ -174,7 +190,11 @@ def costruisci(src=SRC, nomi=None):
     passano = defaultdict(set)  # stazione -> numeri di servizio
     partenze = defaultdict(list)  # (stazione, rotta, direzione, servizio) -> minuti
     per_linea = defaultdict(list)  # (rotta, direzione) -> corse
-    numero = {c: nomi.get(firma(c), {}).get("numero", f"M{i}") for i, c in enumerate(chiavi, 1)}
+    riservate = [i["numero"] for i in nomi.values() if i.get("numero")]
+    if len(set(riservate)) != len(riservate):
+        raise ValueError(f"ferrovia_nomi.json: sigle duplicate {sorted(x for x in set(riservate) if riservate.count(x) > 1)}")
+    libere = (f"M{n}" for n in range(1, len(chiavi) + len(riservate) + 1) if f"M{n}" not in riservate)  # le sigle riservate non si riassegnano
+    numero = {c: nomi.get(firma(c), {}).get("numero") or next(libere) for c in chiavi}
     for tid, s in urbane.items():
         c = servizio[tid]
         d = _direzione(sequenza[tid], rif[c])
@@ -191,7 +211,7 @@ def costruisci(src=SRC, nomi=None):
     usate = {stop for s in urbane.values() for stop, _ in s}
     fermate = {"type": "FeatureCollection", "validita": validita, "features": [
         {"type": "Feature", "geometry": {"type": "Point", "coordinates": [round(float(stazioni[sid]["stop_lon"]), 6), round(float(stazioni[sid]["stop_lat"]), 6)]},
-         "properties": {"id": f"f{codice[sid]}", "nome": nome(stazioni[sid]["stop_name"]), "linee": sorted(passano[sid], key=ordine_linea),
+         "properties": {"id": f"f{codice[sid]}", "nome": _nome_stazione(stazioni[sid]["stop_name"]), "linee": sorted(passano[sid], key=_chiave_sigla),
                         "accessibile": ACCESSIBILE.get(stazioni[sid]["wheelchair_boarding"], ""), "tipo": "ferrovia",
                         "lon": round(float(stazioni[sid]["stop_lon"]), 6), "lat": round(float(stazioni[sid]["stop_lat"]), 6)}}
         for sid in sorted(usate, key=lambda s: codice[s])]}
@@ -210,9 +230,9 @@ def costruisci(src=SRC, nomi=None):
         medio = coord[len(coord) // 2]
         elementi.append({"type": "Feature", "geometry": {"type": "LineString", "coordinates": coord}, "properties": {
             "id": f"linea-{r}-{d}", "route_id": r, "numero": numero[c],
-            "nome": info.get("nome") or f"{nome(stazioni[per_codice[da0]]['stop_name'])} ⇄ {nome(stazioni[per_codice[a0]]['stop_name'])}",
+            "nome": info.get("nome") or f"{_nome_stazione(stazioni[per_codice[da0]]['stop_name'])} ⇄ {_nome_stazione(stazioni[per_codice[a0]]['stop_name'])}",
             "colore": info.get("colore", COLORE), "tipo": "ferrovia", "direzione": d,
-            "da": nome(a["stop_name"]), "a": nome(b["stop_name"]), "fermate": [f"f{k}" for k in seq], "lon": medio[0], "lat": medio[1]}})
+            "da": _nome_stazione(a["stop_name"]), "a": _nome_stazione(b["stop_name"]), "fermate": [f"f{k}" for k in seq], "lon": medio[0], "lat": medio[1]}})
     linee = {"type": "FeatureCollection", "features": elementi}
 
     in_uso = {corse[t]["service_id"] for t in urbane}

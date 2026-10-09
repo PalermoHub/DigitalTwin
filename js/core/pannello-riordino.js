@@ -141,9 +141,9 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
         for (let passi = 0; passi < 50; passi++) { // un movimento rapido può scavalcare più strati
           const tutti = blocchi(gruppo);
           const i = tutti.findIndex(x => x.riga === b.riga);
-          if (i > 0 && ev.clientY < meta(tutti[i - 1])) muovi(b.riga, -1);
-          else if (i < tutti.length - 1 && ev.clientY > meta(tutti[i + 1])) muovi(b.riga, 1);
-          else break;
+          const mosso = i > 0 && ev.clientY < meta(tutti[i - 1]) ? muovi(b.riga, -1)
+            : i < tutti.length - 1 && ev.clientY > meta(tutti[i + 1]) ? muovi(b.riga, 1) : false;
+          if (!mosso) break; // fermi, o al confine di una sezione fissa: niente da rifare a ogni movimento
         }
       };
       const fine = () => {

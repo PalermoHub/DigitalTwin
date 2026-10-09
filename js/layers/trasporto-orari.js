@@ -28,9 +28,15 @@ export function uniscimOrari(a, b) {
   if (!a || !b) return a ?? b;
   return {
     validita: { da: a.validita.da < b.validita.da ? a.validita.da : b.validita.da, a: a.validita.a > b.validita.a ? a.validita.a : b.validita.a },
+    validitaPer: { amat: a.validita, ferrovia: b.validita }, // ogni fermata mostra l'avviso e il selettore del proprio feed
     servizi: { ...a.servizi, ...b.servizi },
     fermate: { ...a.fermate, ...b.fermate },
   };
+}
+
+// Validità del feed a cui appartiene la fermata: le stazioni ferroviarie hanno l'id con prefisso «f», quelle di AMAT sono numeriche.
+export function validitaFermata(orari, stopId) {
+  return orari.validitaPer?.[String(stopId).startsWith('f') ? 'ferrovia' : 'amat'] ?? orari.validita;
 }
 
 export function serviziAttivi({ servizi }, data) {

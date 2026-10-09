@@ -1,6 +1,6 @@
 import { metri } from './trasporto-vicino.js';
 import {
-  giornoIniziale, oggiISO, minutoAdesso, partenzeFermata, prossime, riepilogoLinea, formatoOra, colorePerTesto,
+  giornoIniziale, oggiISO, minutoAdesso, partenzeFermata, prossime, riepilogoLinea, formatoOra, colorePerTesto, validitaFermata,
 } from './trasporto-orari.js';
 import { t, tl } from '../core/i18n.js';
 
@@ -31,17 +31,19 @@ function riga(etichetta, valore) {
 
 const nessunaCorsa = () => el('p', 'scheda-nota', 'Nessuna corsa in questa data.');
 
-// `disegna(orari, data)` restituisce i nodi del corpo, ridisegnati a ogni cambio di giorno.
-function conGiorno(ctx, disegna) {
+// `disegna(orari, data)` restituisce i nodi del corpo, ridisegnati a ogni cambio di giorno. Il giorno iniziale, i limiti del
+// selettore e l'avviso di validità sono quelli del feed di `stopId` (AMAT e Trenitalia hanno periodi diversi).
+function conGiorno(ctx, stopId, disegna) {
   const radice = el('div', 'trasporto-orari');
   radice.append(el('p', 'scheda-nota', 'Orari in caricamento…'));
   ctx.orari().then(orari => {
-    const { data, fuori } = giornoIniziale(orari, oggiISO());
+    const validita = validitaFermata(orari, stopId);
+    const { data, fuori } = giornoIniziale({ validita }, oggiISO());
     const scelta = el('input');
     scelta.type = 'date';
     scelta.value = data;
-    scelta.min = orari.validita.da;
-    scelta.max = orari.validita.a;
+    scelta.min = validita.da;
+    scelta.max = validita.a;
     scelta.setAttribute('aria-label', t('trasporto.giorno'));
     const giorno = el('label', 'trasporto-giorno', 'Giorno ');
     giorno.append(scelta);
@@ -49,7 +51,7 @@ function conGiorno(ctx, disegna) {
     const ridisegna = () => { if (scelta.value) corpo.replaceChildren(...disegna(orari, scelta.value)); };
     scelta.addEventListener('change', ridisegna);
     const avviso = fuori
-      ? [el('p', 'scheda-nota', t('trasporto.orariValgono', { da: dataIt(orari.validita.da), a: dataIt(orari.validita.a) }))]
+      ? [el('p', 'scheda-nota', t('trasporto.orariValgono', { da: dataIt(validita.da), a: dataIt(validita.a) }))]
       : [];
     radice.replaceChildren(...avviso, giorno, corpo);
     ridisegna();
@@ -78,7 +80,7 @@ function tuttiGliOrari(ctx, partenze) {
 }
 
 export function orariFermata(stopId, ctx) {
-  return () => conGiorno(ctx, (orari, data) => {
+  return () => conGiorno(ctx, stopId, (orari, data) => {
     const tutte = partenzeFermata(orari, stopId, data);
     if (!tutte.length) return [nessunaCorsa()];
     const oggi = data === oggiISO();
@@ -108,7 +110,7 @@ function fermateInSequenza(linea, ctx) {
 export function orariLinea(linea, ctx) {
   return () => {
     const radice = el('div');
-    radice.append(conGiorno(ctx, (orari, data) => {
+    radice.append(conGiorno(ctx, linea.fermate[0], (orari, data) => {
       const r = riepilogoLinea(orari, linea, data);
       if (!r) return [nessunaCorsa()];
       const blocco = el('div', 'scheda-gruppo');

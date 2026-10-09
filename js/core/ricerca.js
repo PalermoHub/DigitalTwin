@@ -49,7 +49,9 @@ function luoghi() {
     const r = await fetch(urlDati(f.file)).catch(err => { if (f.facoltativa) return { ok: false }; throw err; });
     if (!r.ok && f.facoltativa) return { ...f, features: [] };
     if (!r.ok) throw new Error(t('sicurezza.fileNd', { file: f.file }));
-    return { ...f, features: (await r.json()).features };
+    // un file facoltativo che non è JSON (un host che risponde con la pagina iniziale ai percorsi inesistenti) non rompe la ricerca
+    const dati = await r.json().catch(err => { if (f.facoltativa) return { features: [] }; throw err; });
+    return { ...f, features: dati.features };
   })).then(preparaLuoghi).catch(err => { promessaLuoghi = null; throw err; });
   return promessaLuoghi;
 }
