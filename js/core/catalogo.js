@@ -306,7 +306,7 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
     ['guida', 'Guida', [guida]],
     ['geoimage', 'Guida Geoimage', [schedaGeoimage()]],
     ['plugin', 'Plugin RNDT', [paginaConIndice([...schedaPlugin(), ...passiRndt()])]],
-    ['fonti', 'Fonti e avvisi', [...titoloPagina('Fonti e avvisi', 'Da dove vengono i dati e cosa tenere presente quando li si usa.'), blocco('Avvisi', elenco(AVVISI)), blocco('Fonti dei dati', fonti)]],
+    ['fonti', 'Fonti e note', [...titoloPagina('Fonti e note', 'Da dove vengono i dati e cosa tenere presente quando li si usa.'), blocco('Fonti dei dati', fonti), blocco('Da sapere', elenco(AVVISI))]],
     ['privacy', 'Privacy', [...titoloPagina('Privacy', 'Come sono trattati i dati personali di chi usa il sito (Regolamento UE 2016/679).'), schedaPrivacy()]],
     ['about', 'About', schedaComunita()],
   ];

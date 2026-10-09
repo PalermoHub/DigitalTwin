@@ -21,7 +21,7 @@ export const PASSI = [
     paragrafi: [
       'Il Digital Twin di Palermo, realizzato da Open Data Sicilia, è una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città: catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico, sicurezza stradale e uffici comunali.',
       'Serve a leggere un luogo da più punti di vista: chi cerca una particella, chi vuole capire come è fatto un quartiere, chi studia la mobilità o i servizi. Ogni informazione resta collegata alla fonte da cui proviene.',
-      'In alto, accanto al logo, il menu porta alle altre schede (Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e avvisi, About); la mappa sta al centro, con la barra degli strati a sinistra e la scheda del luogo a destra. Funziona anche da telefono, con una barra di quattro tab in basso: vedi il passo «Sul telefono».',
+      'In alto, accanto al logo, il menu porta alle altre schede (Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e note, About); la mappa sta al centro, con la barra degli strati a sinistra e la scheda del luogo a destra. Funziona anche da telefono, con una barra di quattro tab in basso: vedi il passo «Sul telefono».',
     ],
     immagine: { file: 'img/guida/passi/cos-e.webp', alt: 'La mappa di Palermo appena aperta: in alto il logo, il menu delle schede e i pulsanti degli strumenti; a sinistra la barra verticale degli strati; in basso la ricerca e, a piè di pagina, l\'avviso sul valore legale.', didascalia: 'La vista iniziale: il centro di Palermo.' },
     narrazione: 'Benvenuti nel Digital Twin di Palermo, realizzato da Open Data Sicilia: una mappa interattiva che mette a disposizione di tutti i cittadini i dati della nostra città. Qui trovi insieme catasto, piano regolatore, popolazione, edifici, monumenti, trasporto pubblico e sicurezza stradale, e puoi leggere un luogo da più punti di vista, sempre con la fonte dei dati a portata di mano.',
@@ -44,10 +44,10 @@ export const PASSI = [
     titolo: 'Con quali dati è realizzata',
     paragrafi: [
       'La mappa usa dati pubblicati da enti pubblici e da progetti di dati aperti: il Comune di Palermo (scuole, uffici, incidenti, carta tecnica), l\'azienda del trasporto pubblico AMAT, il catasto e la zonizzazione del piano regolatore, i dati del censimento e la base cartografica di OpenStreetMap.',
-      'L\'elenco completo è nella scheda «Fonti e avvisi» del menu (in alto; da telefono nel tab «Menu»): per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).',
+      'L\'elenco completo è nella scheda «Fonti e note» del menu (in alto; da telefono nel tab «Menu»): per ogni fonte ci sono la data, il collegamento al dato originale e il collegamento alla licenza (per esempio Creative Commons Attribuzione 4.0).',
     ],
-    immagine: { file: 'img/guida/passi/dati.webp', alt: 'La scheda Fonti e avvisi, con l\'elenco delle fonti dei dati, i collegamenti ai dati originali e alle licenze.', didascalia: 'Le fonti dei dati sono elencate in «Fonti e avvisi», con i link alle licenze.' },
-    narrazione: 'I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l\'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap. L\'elenco completo si trova nella scheda Fonti e avvisi, con il collegamento al dato originale e alla licenza di ogni fonte.',
+    immagine: { file: 'img/guida/passi/dati.webp', alt: 'La scheda Fonti e note, con l\'elenco delle fonti dei dati, i collegamenti ai dati originali e alle licenze.', didascalia: 'Le fonti dei dati sono elencate in «Fonti e note», con i link alle licenze.' },
+    narrazione: 'I dati arrivano da enti pubblici e da progetti di dati aperti: il Comune di Palermo, l\'azienda del trasporto pubblico, il catasto, la zonizzazione del piano regolatore, il censimento e la cartografia di OpenStreetMap. L\'elenco completo si trova nella scheda Fonti e note, con il collegamento al dato originale e alla licenza di ogni fonte.',
     scena: { strati: [], centro: CENTRO, zoom: 12, ritaglio: '#crediti' },
   },
   {
