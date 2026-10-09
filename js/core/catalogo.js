@@ -115,6 +115,8 @@ function schedaComunita() {
     li.append(prima, link(testo, href));
     dove.append(li);
   }
+  const segnala = el('p');
+  segnala.append(link('Apri una segnalazione su GitHub', 'https://github.com/PalermoHub/DigitalTwin/issues'));
   const sviluppo = el('p');
   sviluppo.append('Web app progettata e sviluppata da ', link('@gbvitrano', 'https://www.linkedin.com/in/gbvitrano'), ' in collaborazione con ',
     link('Claude AI (Anthropic)', 'https://www.anthropic.com/claude'),
@@ -124,6 +126,7 @@ function schedaComunita() {
     sezione('Che cos\u2019è', el('p', '#opendatasicilia è un\u2019iniziativa civica che si propone di far conoscere e diffondere la cultura dell\u2019open government e le prassi dell\u2019open data nel nostro territorio e aprire una discussione pubblica partecipata.')),
     sezione('Chi siamo', el('p', 'Siamo un gruppo di cittadini con diverse storie, competenze, professioni. Siamo accomunati dalla genuina volontà di contribuire a migliorare la qualità della vita della nostra comunità. Lo vogliamo fare con spirito di collaborazione e concretezza.')),
     sezione('Dove siamo', el('p', 'Ci trovi in questi luoghi:'), dove),
+    sezione('Collabora e segnala', el('p', 'Hai trovato un errore nei dati, qualcosa che non funziona o hai un\u2019idea per migliorare il sito? Segnalalo aprendo una issue su GitHub (basta un account gratuito): indica cosa stavi facendo, il livello o la mappa interessata e, se puoi, allega uno screenshot. Anche chi vuole contribuire con dati, correzioni o codice è il benvenuto.'), segnala),
     el('h2', 'Credits', { className: 'pagina-sezione' }),
     sezione('Sviluppo', sviluppo),
     ...strumentiUsati(sezione),
