@@ -1,4 +1,5 @@
 import { ordineLinea } from './trasporto-orari.js';
+import { stratoLinea } from './trasporto-strati.js';
 import { t } from '../core/i18n.js';
 
 // Filtro «Linea» del pannello Filtri: restringe tracciati e fermate a una sola linea. La logica dei filtri MapLibre è pura
@@ -9,13 +10,18 @@ const BASE = {
   'trasporto-fermate': null,
   'trasporto-hit-linee': null,
   'trasporto-hit-fermate': null,
+  'trasporto-metro': null,
+  'trasporto-stazioni': null,
+  'trasporto-hit-metro': null,
+  'trasporto-hit-stazioni': null,
 };
+const ORDINE_TIPI = { bus: 0, tram: 1, ferrovia: 2 };
 
-// Una voce per linea (le due direzioni unite): bus prima dei tram, numeri in ordine numerico.
+// Una voce per linea (le due direzioni unite): bus, poi tram, poi ferrovia; numeri in ordine numerico.
 export function opzioniLinee(linee) {
   const perRotta = new Map();
   for (const x of linee) if (!perRotta.has(x.route_id)) perRotta.set(x.route_id, { route_id: x.route_id, numero: x.numero, nome: x.nome, tipo: x.tipo });
-  return [...perRotta.values()].sort((a, b) => (a.tipo === 'tram') - (b.tipo === 'tram') || ordineLinea(a.numero, b.numero));
+  return [...perRotta.values()].sort((a, b) => (ORDINE_TIPI[a.tipo] ?? 0) - (ORDINE_TIPI[b.tipo] ?? 0) || ordineLinea(a.numero, b.numero));
 }
 
 // Filtri per layer: con `linea` solo quella linea e le fermate dove passa; senza, i filtri di base.
@@ -29,21 +35,25 @@ export function filtriPerLinea(linea) {
     'trasporto-fermate': fermate,
     'trasporto-hit-linee': rotta,
     'trasporto-hit-fermate': fermate,
+    'trasporto-metro': rotta,
+    'trasporto-stazioni': fermate,
+    'trasporto-hit-metro': rotta,
+    'trasporto-hit-stazioni': fermate,
   };
 }
 
-export const stratiDaAccendere = linea => [linea.tipo === 'tram' ? 'trasporto-tram' : 'trasporto-bus', 'trasporto-fermate'];
+export const stratiDaAccendere = linea => (linea.tipo === 'ferrovia' ? ['trasporto-metro', 'trasporto-stazioni'] : [stratoLinea(linea.tipo), 'trasporto-fermate']);
 
 // `limiti(route_id)` dà [[o, s], [e, n]] del tracciato. Il chip sta in un contenitore proprio: quello delle zone si riscrive a ogni scelta.
 export function collegaFiltroLinea(map, { select, chips, linee, limiti }) {
   const opzioni = opzioniLinee(linee);
   const gruppo = tipo => {
     const g = document.createElement('optgroup');
-    g.label = tipo === 'tram' ? 'Tram' : 'Bus';
+    g.label = tipo === 'tram' ? 'Tram' : tipo === 'ferrovia' ? 'Metro' : 'Bus';
     for (const o of opzioni.filter(x => x.tipo === tipo)) g.append(new Option(`${o.numero} — ${o.nome}`, o.route_id));
     return g;
   };
-  select.replaceChildren(new Option(t('filtro.tutte'), ''), gruppo('bus'), gruppo('tram'));
+  select.replaceChildren(new Option(t('filtro.tutte'), ''), ...['bus', 'tram', 'ferrovia'].map(gruppo).filter(g => g.children.length));
 
   function scegli(routeId, zoom = true) {
     const linea = opzioni.find(o => o.route_id === routeId) ?? null;

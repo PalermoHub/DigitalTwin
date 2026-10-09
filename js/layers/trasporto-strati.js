@@ -7,3 +7,6 @@ export const creaStrati = suCambio => [
   { id: 'trasporto-metro', etichetta: 'Linee metro', sezione: 'RFI', layers: ['trasporto-metro'], attivo: false, suCambio },
   { id: 'trasporto-stazioni', etichetta: 'Stazioni', sezione: 'RFI', layers: ['trasporto-stazioni'], attivo: false, suCambio },
 ];
+
+// Strato delle linee di un tipo (bus, tram, ferrovia): serve alla ricerca, al filtro Linea e alle schede.
+export const stratoLinea = tipo => (tipo === 'tram' ? 'trasporto-tram' : tipo === 'ferrovia' ? 'trasporto-metro' : 'trasporto-bus');

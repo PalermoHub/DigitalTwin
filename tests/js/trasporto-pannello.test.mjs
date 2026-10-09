@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { creaStrati } from '../../js/layers/trasporto-strati.js';
+import { creaStrati, stratoLinea } from '../../js/layers/trasporto-strati.js';
 
 const strati = creaStrati(() => {});
 
@@ -21,4 +21,11 @@ test('il callback di cambio è passato a ogni strato', () => {
   const chiamate = [];
   for (const s of creaStrati(v => chiamate.push(v))) s.suCambio(true);
   assert.equal(chiamate.length, 5);
+});
+
+test('stratoLinea: bus, tram e ferrovia hanno ciascuno il proprio strato', () => {
+  assert.equal(stratoLinea('bus'), 'trasporto-bus');
+  assert.equal(stratoLinea('tram'), 'trasporto-tram');
+  assert.equal(stratoLinea('ferrovia'), 'trasporto-metro');
+  assert.equal(stratoLinea(undefined), 'trasporto-bus');
 });

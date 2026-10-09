@@ -27,3 +27,27 @@ test('stratiDaAccendere: il tipo della linea e le fermate', () => {
   assert.deepEqual(stratiDaAccendere(l('101', '101', 'bus')), ['trasporto-bus', 'trasporto-fermate']);
   assert.deepEqual(stratiDaAccendere(l('TRAM1', 'TRAM1', 'tram')), ['trasporto-tram', 'trasporto-fermate']);
 });
+
+test('opzioniLinee: le linee ferroviarie vengono dopo bus e tram', () => {
+  const o = opzioniLinee([l('ferrovia-1', 'M1', 'ferrovia'), l('TRAM1', 'TRAM1', 'tram'), l('9', '9', 'bus')]);
+  assert.deepEqual(o.map(x => x.numero), ['9', 'TRAM1', 'M1']);
+});
+
+test('stratiDaAccendere: una linea ferroviaria accende linee metro e stazioni', () => {
+  assert.deepEqual(stratiDaAccendere(l('ferrovia-1', 'M1', 'ferrovia')), ['trasporto-metro', 'trasporto-stazioni']);
+});
+
+test('filtriPerLinea: i filtri di base non toccano la ferrovia; scegliere una linea la restringe', () => {
+  const base = filtriPerLinea(null);
+  for (const id of ['trasporto-metro', 'trasporto-stazioni', 'trasporto-hit-metro', 'trasporto-hit-stazioni']) assert.equal(base[id], null);
+
+  const f = filtriPerLinea(l('ferrovia-1', 'M1', 'ferrovia'));
+  assert.deepEqual(f['trasporto-metro'], ['==', ['get', 'route_id'], 'ferrovia-1']);
+  assert.deepEqual(f['trasporto-hit-metro'], f['trasporto-metro']);
+  assert.deepEqual(f['trasporto-stazioni'], ['in', 'M1', ['get', 'linee']]);
+  assert.deepEqual(f['trasporto-hit-stazioni'], f['trasporto-stazioni']);
+  // una linea AMAT nasconde la ferrovia: nessuna stazione né tracciato ha quella rotta
+  const bus = filtriPerLinea(l('101', '101', 'bus'));
+  assert.deepEqual(bus['trasporto-metro'], ['==', ['get', 'route_id'], '101']);
+  assert.deepEqual(bus['trasporto-stazioni'], ['in', '101', ['get', 'linee']]);
+});

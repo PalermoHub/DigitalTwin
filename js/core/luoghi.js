@@ -2,8 +2,8 @@ import { normalizza } from './indirizzi.js';
 import { t as tr, tl } from './i18n.js';
 
 // Luoghi cercabili per nome: sorgente e strato da accendere quando si sceglie il risultato (`strato`: nome o funzione sulle proprietà;
-// `zoom`: opzionale, altrimenti la ricerca zooma a 18; `numero`: funzione, per cercare una linea dal solo numero o sigla).
-// L'ordine è anche quello di parità: scuole, sezioni elettorali, monumenti, fermate, linee, sedi, uffici.
+// `zoom`: opzionale, altrimenti la ricerca zooma a 18; `facoltativa`: se il file manca la ricerca prosegue senza; `numero`: funzione, per cercare una linea dal solo numero o sigla).
+// L'ordine è anche quello di parità: scuole, sezioni elettorali, monumenti, fermate, linee, ferrovia, sedi, uffici.
 export const FONTI = [
   { file: 'scuole/scuole.geojson', strato: 'scuole', nota: p => p.tipo, campi: p => [p.nome, p.indirizzo], sezioni: p => p.seggio_sezioni },
   { file: 'scuole/seggi.geojson', strato: 'seggi', nota: () => tr('luoghi.sezioniElettorali'), campi: p => [p.nome, p.indirizzo], sezioni: p => p.sezioni },
@@ -14,6 +14,10 @@ export const FONTI = [
   // le linee si trovano per numero o nome; lo strato da accendere è bus o tram
   { file: 'trasporto/linee.geojson', strato: p => (p.tipo === 'tram' ? 'trasporto-tram' : 'trasporto-bus'), zoom: 14, numero: p => p.numero,
     nota: p => tr('luoghi.linea', { tipo: p.tipo === 'tram' ? 'Tram' : 'Bus', da: p.da, a: p.a }), campi: p => [`Linea ${p.numero} ${p.nome}`] },
+  // ferrovia urbana (feed Trenitalia): stazioni per nome, linee per sigla o nome
+  { file: 'trasporto/ferrovia-fermate.geojson', facoltativa: true, strato: 'trasporto-stazioni', zoom: 14, nota: p => tr('luoghi.stazione', { linee: p.linee.length ? tr('luoghi.fermata.linee', { elenco: p.linee.join(', ') }) : '' }), campi: p => [p.nome] },
+  { file: 'trasporto/ferrovia-linee.geojson', facoltativa: true, strato: 'trasporto-metro', zoom: 12, numero: p => p.numero,
+    nota: p => tr('luoghi.linea', { tipo: 'Metro', da: p.da, a: p.a }), campi: p => [`Linea ${p.numero} ${p.nome}`] },
   { file: 'colonnine/colonnine.geojson', strato: 'colonnine', zoom: 17, nota: p => tr('luoghi.colonnina', { stato: tl(p.stato).toLowerCase(), kw: p.potenza_kw }), campi: p => [p.operatore, p.indirizzo] },
   // sedi degli uffici (es. «Polo Tecnico»), prima degli uffici che ospitano
   { file: 'uffici/sedi.geojson', strato: 'uffici', zoom: 17, nota: p => tr('luoghi.sede', { n: p.n_uffici }), campi: p => [p.nome, p.indirizzo] },

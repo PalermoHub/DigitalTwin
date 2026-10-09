@@ -10,7 +10,7 @@ import { registraTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { giornoIniziale, oggiISO, colorePerTesto, uniscimOrari } from './trasporto-orari.js';
 import { t as tr, tl } from '../core/i18n.js';
-import { creaStrati } from './trasporto-strati.js';
+import { creaStrati, stratoLinea } from './trasporto-strati.js';
 
 // Linee bus/tram e fermate AMAT (GTFS) e linee e stazioni della ferrovia urbana (GTFS Trenitalia, file ferrovia-*): stesso schema,
 // stesse mappe in memoria (id con prefisso: stazioni «f…», rotte «ferrovia-…»). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
@@ -27,8 +27,7 @@ const L = {
   metro: 'trasporto-metro', stazioni: 'trasporto-stazioni', hitMetro: 'trasporto-hit-metro', hitStazioni: 'trasporto-hit-stazioni',
 };
 const STRATI_TRASPORTO = [L.bus, L.tram, L.fermate, L.metro, L.stazioni];
-// strato delle linee di un tipo (bus, tram, ferrovia)
-const stratoLinea = tipo => (tipo === 'tram' ? L.tram : tipo === 'ferrovia' ? L.metro : L.bus);
+
 
 const fermate = new Map(); // id -> proprietà complete (le feature di MapLibre trasformano gli array in testo)
 const linee = new Map();

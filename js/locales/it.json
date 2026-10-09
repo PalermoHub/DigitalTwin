@@ -1685,5 +1685,7 @@
   "lbl.Linea metro (RFI)": "Linea metro (RFI)",
   "lbl.Stazione (RFI)": "Stazione (RFI)",
   "lbl.Stazione": "Stazione",
-  "lbl.Metro": "Metro"
+  "lbl.Metro": "Metro",
+  "luoghi.stazione": "Stazione{linee}",
+  "evidenza.stazione": "Stazione"
 }

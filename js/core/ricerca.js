@@ -46,7 +46,8 @@ async function conCivici(voci, testo) {
 let promessaLuoghi = null;
 function luoghi() {
   promessaLuoghi ??= Promise.all(FONTI.map(async f => {
-    const r = await fetch(urlDati(f.file));
+    const r = await fetch(urlDati(f.file)).catch(err => { if (f.facoltativa) return { ok: false }; throw err; });
+    if (!r.ok && f.facoltativa) return { ...f, features: [] };
     if (!r.ok) throw new Error(t('sicurezza.fileNd', { file: f.file }));
     return { ...f, features: (await r.json()).features };
   })).then(preparaLuoghi).catch(err => { promessaLuoghi = null; throw err; });
