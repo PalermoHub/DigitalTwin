@@ -18,6 +18,13 @@ export function beneScomparso(p) {
 
 export const idScomparsi = lista => lista.filter(beneScomparso).map(p => p.id);
 
+// Filtro dei poligoni: solo le categorie accese, e mai l'edificio di oggi di un bene non più presente (il poligono
+// abbinato per posizione è un altro edificio: il Teatro Massimo non deve rispondere «Chiesa delle Teatine»).
+export function filtroEdifici(categorie, scomparsi) {
+  const accese = ['in', ['get', 'categoria'], ['literal', categorie]];
+  return scomparsi.length ? ['all', accese, ['!', ['in', ['get', 'id'], ['literal', scomparsi]]]] : accese;
+}
+
 // Se la descrizione è solo la frase «non più esistente» l'avviso la sostituisce; se aggiunge il motivo la conserva.
 const soloFrase = d => /^\s*non\s+(più\s+)?esistente\s*[.!]?\s*$/i.test(d);
 
