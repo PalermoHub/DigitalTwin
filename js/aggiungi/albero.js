@@ -5,7 +5,7 @@
 import { ESTENSIONI } from '../rndt/importa.js';
 import { TETTO_SERVIZI } from './salvati.js';
 import { ORTOFOTO } from './ortofoto.js';
-import { WMS_PRONTI } from './wms-pronti.js';
+import { WMS_PRONTI, WMS_CARTE_STORICHE } from './wms-pronti.js';
 import { BENI_CULTURALI } from './beniculturali.js';
 import { t as tr, tn, tl } from '../core/i18n.js';
 
@@ -266,6 +266,8 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
       ramo.figli.append(
         creaElencoPronto({ titolo: 'aggiungi.igm', nota: 'aggiungi.igm.nota', voci: WMS_PRONTI,
           gruppi: [{ metti: 'aggiungi.igm.metti', aggiungi: o => controllo.aggiungiWmsPronto(o) }] }),
+        creaElencoPronto({ titolo: 'aggiungi.storiche', nota: 'aggiungi.storiche.nota', voci: WMS_CARTE_STORICHE,
+          gruppi: [{ metti: 'aggiungi.storiche.metti', aggiungi: o => controllo.aggiungiWmsPronto(o) }] }),
       );
     }
     if (tipo.id === 'arcgis') {
