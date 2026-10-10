@@ -61,7 +61,7 @@ export function voceMef(p) {
     chiave: (p.id_poligono ?? p.id_edificio) != null ? `mef-${p.id_poligono ?? p.id_edificio}` : `mef-p${tutti[0]?.id ?? ''}`,
     peso: 56,
     strato: 'mef-immobili',
-    titolo: 'Immobili dichiarati al MEF',
+    titolo: 'Immobile dichiarato al MEF',
     icona: 'monumento',
     badge: p.anno != null ? String(p.anno) : undefined,
     gruppi: [],
@@ -86,7 +86,7 @@ export function voceMef(p) {
 export function modelloTooltipMef(p) {
   const beni = leggiBeni(p);
   return {
-    titolo: 'Immobili dichiarati al MEF',
+    titolo: 'Immobile dichiarato al MEF',
     sottotitolo: beni[0]?.tipologia ?? beni[0]?.natura ?? '',
     righe: righe([['Beni dichiarati', String(p.n_beni ?? beni.length)], ['Indirizzo', beni[0]?.indirizzo]]),
   };

@@ -41,7 +41,7 @@ test('voceMef: un solo bene, righe in un gruppo senza titolo e con la tipologia'
   const v = voceMef({ forma: 'edificio', id_edificio: 42, n_beni: 1, anno: 2023, beni: JSON.stringify([BENE]) });
   assert.equal(v.chiave, 'mef-42');
   assert.equal(v.strato, 'mef-immobili');
-  assert.equal(v.titolo, 'Immobili dichiarati al MEF');
+  assert.equal(v.titolo, 'Immobile dichiarato al MEF');
   assert.equal(v.peso, 56);
   assert.equal(v.badge, '2023');
   assert.equal(v.gruppi.length, 1);
@@ -83,7 +83,7 @@ test('voceMef: un punto prende la chiave dal primo bene', () => {
 
 test('modelloTooltipMef: titolo, numero di beni e indirizzo', () => {
   const m = modelloTooltipMef({ n_beni: 2, beni: JSON.stringify([BENE, BENE]) });
-  assert.equal(m.titolo, 'Immobili dichiarati al MEF');
+  assert.equal(m.titolo, 'Immobile dichiarato al MEF');
   assert.equal(valore(m.righe, 'Beni dichiarati'), '2');
   assert.equal(valore(m.righe, 'Indirizzo'), 'Via Roma 3');
 });
