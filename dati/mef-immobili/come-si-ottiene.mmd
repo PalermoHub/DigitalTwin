@@ -20,9 +20,9 @@ flowchart TD
     end
 
     subgraph LOCALIZZA["3 · Localizzazione a tre livelli: vince il primo che risponde"]
-        L1["Livello 1 · Catasto<br/>foglio e particella dall'identificativo del MEF<br/>beni localizzati: 4.925"]:::regola
+        L1["Livello 1 · Catasto<br/>foglio e particella dall'identificativo del MEF<br/>beni localizzati: 4.924"]:::regola
         L2["Livello 2 · Layer già mappati<br/>Immobili comunali per particella o per indirizzo entro 60 m<br/>scuole e seggi: parte più grande del poligono<br/>uffici: edificio più grande entro 15 m dalla sede<br/>monumenti: solo tipologie culturali entro 30 m<br/>beni localizzati: 655"]:::regola
-        L3["Livello 3 · Posizione dichiarata dal MEF<br/>l'edificio che contiene il punto o il più vicino entro 15 m<br/>beni localizzati: 2.426"]:::regola
+        L3["Livello 3 · Posizione dichiarata dal MEF<br/>l'edificio che contiene il punto o il più vicino entro 15 m<br/>beni localizzati: 2.427"]:::regola
         L1 -->|"nessuna particella trovata"| L2
         L2 -->|"nessuna corrispondenza"| L3
     end
@@ -35,13 +35,13 @@ flowchart TD
     end
 
     subgraph VERIFICA["5 · Verifica della posizione MEF"]
-        V1["Il punto MEF dista al più 15 m dal poligono scelto: concorde<br/>4.653 beni"]:::regola
-        V2["Il punto MEF contraddice catasto o layer: la posizione è corretta<br/>927 beni"]:::regola
-        V3["Solo la posizione dichiarata: non verificabile<br/>2.426 beni"]:::regola
+        V1["Il punto MEF dista al più 15 m dal poligono scelto: concorde<br/>5.074 beni"]:::regola
+        V2["Il punto MEF contraddice catasto o layer: la posizione è corretta<br/>505 beni"]:::regola
+        V3["Solo la posizione dichiarata: non verificabile<br/>2.427 beni"]:::regola
     end
 
     subgraph USCITA["6 · Aggregazione e uscita"]
-        U1["Un elemento per poligono con l'elenco dei suoi beni<br/>1.265 edifici con 6.964 beni, il maggiore ne ha 257<br/>332 particelle con 498 beni, 544 punti"]:::esito
+        U1["Un elemento per poligono con l'elenco dei suoi beni<br/>1.259 edifici con 6.964 beni, il maggiore ne ha 257<br/>484 particelle con 498 beni, 544 punti"]:::esito
         U2["Controlli: nessun bene perso o duplicato, numero di beni e di edifici plausibile,<br/>almeno metà delle particelle richieste trovate: altrimenti il workflow fallisce"]:::regola
         U3["File in dati/mef-immobili: mef_immobili.geojson, mef_immobili.csv,<br/>riepilogo.json, README.md e il diagramma come-si-ottiene.mmd"]:::esito
     end
