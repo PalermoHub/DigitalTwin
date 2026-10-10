@@ -1354,6 +1354,8 @@
   "luoghi.fermata": "Fermata{linee}",
   "luoghi.fermata.linee": ", linee {elenco}",
   "luoghi.fontanella": "Fontanella",
+  "luoghi.immobileComunale": "Immobile comunale",
+  "luoghi.immobileMef": "Immobile dichiarato al MEF",
   "luoghi.linea": "{tipo}, {da} → {a}",
   "luoghi.sede": "Sede comunale, {n} uffici",
   "luoghi.sedeElettorale": "Sede elettorale",

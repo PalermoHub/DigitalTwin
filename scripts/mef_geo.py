@@ -1,4 +1,5 @@
 """Geometria e PMTiles per gli script MEF: tile MVT, metri locali, aggancio punto-edificio."""
+import functools
 import gzip
 import math
 from pathlib import Path
@@ -65,7 +66,11 @@ def frammenti_pmtiles(percorso: Path, z: int, filtro=None) -> list:
     from pmtiles.reader import MmapSource, Reader
     frammenti = []
     with open(percorso, "rb") as f:
-        lettore = Reader(MmapSource(f))
+        sorgente = MmapSource(f)
+        # le directory del PMTiles si rileggono per ogni tile: con la cache si deserializzano una volta sola
+        if hasattr(sorgente, "get_bytes"):
+            sorgente.get_bytes = functools.lru_cache(maxsize=None)(sorgente.get_bytes)
+        lettore = Reader(sorgente)
         h = lettore.header()
         x0, y1 = tile_xy(h["min_lon_e7"] / 1e7, h["min_lat_e7"] / 1e7, z)
         x1, y0 = tile_xy(h["max_lon_e7"] / 1e7, h["max_lat_e7"] / 1e7, z)

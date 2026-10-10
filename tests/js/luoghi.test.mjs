@@ -158,3 +158,16 @@ test('una linea ferroviaria si trova dalla sigla e accende le linee metro', () =
   assert.equal(r.strato, 'trasporto-metro');
   assert.equal(r.nota, 'Metro, Carini → Palermo Centrale');
 });
+
+test('immobili comunali e dichiarati al MEF: cercabili per indirizzo, i poligoni vanno al centro del riquadro', () => {
+  const fonte = file => FONTI.find(f => f.file === file);
+  const voci = preparaLuoghi([
+    { ...fonte('mef-immobili/immobili_comunali.geojson'), features: [{ geometry: { type: 'Point', coordinates: [13.39, 38.07] }, properties: { nome: 'VIA CORONA VITTORIO 32', categoria: 'Terreno' } }] },
+    { ...fonte('mef-immobili/mef_immobili.geojson'), features: [{ geometry: { type: 'Polygon', coordinates: [[[13.0, 38.0], [13.2, 38.0], [13.2, 38.2], [13.0, 38.2], [13.0, 38.0]]] }, properties: { indirizzo: 'VIA SAMPOLO S.N.C.', tipologia: 'Magazzino' } }] },
+  ]);
+  const comunale = cercaLuoghi(voci, 'corona vittorio')[0];
+  assert.equal(comunale.strato, 'immobili');
+  const mef = cercaLuoghi(voci, 'via sampolo')[0];
+  assert.equal(mef.strato, 'mef-immobili');
+  assert.ok(Math.abs(mef.lon - 13.1) < 1e-9 && Math.abs(mef.lat - 38.1) < 1e-9);
+});

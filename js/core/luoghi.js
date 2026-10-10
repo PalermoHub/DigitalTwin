@@ -23,12 +23,25 @@ export const FONTI = [
   { file: 'uffici/sedi.geojson', strato: 'uffici', zoom: 17, nota: p => tr('luoghi.sede', { n: p.n_uffici }), campi: p => [p.nome, p.indirizzo] },
   // uffici comunali: per nome, sede o responsabile; le coordinate stanno nella geometria
   { file: 'uffici/uffici.geojson', strato: 'uffici', nota: p => [p.area, p.sede].filter(Boolean).join(' · '), campi: p => [p.nome, p.sede, p.indirizzo, p.responsabile] },
+  // immobili comunali (un punto per indirizzo) e immobili dichiarati al MEF (poligoni: si va al centro)
+  { file: 'mef-immobili/immobili_comunali.geojson', facoltativa: true, strato: 'immobili', zoom: 18, nota: p => [tr('luoghi.immobileComunale'), p.categoria].filter(Boolean).join(' · '), campi: p => [p.nome] },
+  { file: 'mef-immobili/mef_immobili.geojson', facoltativa: true, strato: 'mef-immobili', zoom: 18, nota: p => [tr('luoghi.immobileMef'), p.tipologia].filter(Boolean).join(' · '), campi: p => [p.indirizzo, p.catastale] },
 ];
+
+// centro (punto, o centro del riquadro per poligoni e linee) di una geometria GeoJSON
+function centro(g) {
+  if (g?.type === 'Point') return g.coordinates;
+  const xs = [], ys = [];
+  const scorri = c => (typeof c[0] === 'number' ? (xs.push(c[0]), ys.push(c[1])) : c.forEach(scorri));
+  if (g?.coordinates) scorri(g.coordinates);
+  return xs.length ? [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2] : [];
+}
 
 // features GeoJSON → voci con testo normalizzato (una sola volta, non a ogni tasto)
 export function preparaLuoghi(fonti) {
   return fonti.flatMap(({ strato, zoom, numero, nota, campi, sezioni, features }, ordine) => features.map(f => {
-    const p = { lon: f.geometry?.coordinates?.[0], lat: f.geometry?.coordinates?.[1], ...f.properties };
+    const [lon, lat] = centro(f.geometry);
+    const p = { lon, lat, ...f.properties };
     const [nome, ...altri] = campi(p);
     return {
       etichetta: nome, nota: nota(p), strato: typeof strato === 'function' ? strato(p) : strato, zoom, numero: numero ? normalizza(String(numero(p))) : '', ordine, lon: p.lon, lat: p.lat,
