@@ -72,3 +72,7 @@ scripts/*
 !scripts/uffici_build.py
 !scripts/uffici_scrape.py
 !scripts/mef_immobili.py
+!scripts/mef_geo.py
+!scripts/mef_catasto.py
+!scripts/mef_fonti.py
+!scripts/mef_localizza.py
