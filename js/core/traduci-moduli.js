@@ -9,6 +9,7 @@ const sottovoci = lista => lista.map(g => ({ ...g, titolo: tl(g.titolo), voci: v
 function traduciStrato(s) {
   if (s.etichetta) s.etichetta = tl(s.etichetta);
   if (s.sezione) s.sezione = tl(s.sezione);
+  if (s.nota) s.nota = tl(s.nota);
   const d = Object.getOwnPropertyDescriptor(s, 'sottovoci');
   if (d?.get) Object.defineProperty(s, 'sottovoci', { configurable: true, enumerable: true, get() { return sottovoci(d.get.call(this)); } });
   else if (d?.value) s.sottovoci = sottovoci(d.value);

@@ -167,7 +167,7 @@ export default {
       suCambio(attivo) { if (legendaOmi) legendaOmi.hidden = !attivo; } },
     { id: 'civici', etichetta: 'Numeri civici (da zoom 14)', layers: ['civici'], attivo: false },
     // ultimo del modulo: il sottogruppo prosegue con lo strato «Immobili dichiarati al MEF» (js/layers/mef-immobili.js, che segue in MODULI)
-    { id: 'immobili', etichetta: 'Immobili comunali', sezione: 'Immobili comunali', layers: ['immobili'], attivo: false },
+    { id: 'immobili', etichetta: 'Immobili comunali', sezione: 'Immobili comunali', nota: 'I layer sono il risultato di una georeferenziazione automatica e hanno carattere puramente dimostrativo', layers: ['immobili'], attivo: false },
   ],
   pannello(gruppo, map) { creaLegendaCatasto(gruppo, map); creaLegendaOmi(gruppo, map); },
   scheda: {
