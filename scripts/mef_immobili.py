@@ -240,3 +240,57 @@ def leggi_edificato(percorso: Path) -> dict:
 def controlla_edifici(edifici: dict) -> None:
     if len(edifici) < MIN_EDIFICI:
         raise SystemExit(f"dall'edificato sono stati letti solo {len(edifici)} edifici (ne servono almeno {MIN_EDIFICI}): file incompleto?")
+
+
+# --- join spaziale ----------------------------------------------------------
+
+# Metri locali attorno a Palermo (proiezione equirettangolare): a 20 km dal centro l'errore sta sotto lo 0,5%,
+# più che sufficiente per una tolleranza di 15 m e senza dipendere da pyproj.
+LAT0, LON0 = 38.12, 13.33
+M_LAT = 111200.0
+M_LON = 111320.0 * math.cos(math.radians(LAT0))
+
+
+def punto_m(lon: float, lat: float) -> Point:
+    return Point((lon - LON0) * M_LON, (lat - LAT0) * M_LAT)
+
+
+def in_metri(geom):
+    return shapely.transform(geom, lambda c: np.column_stack(((c[:, 0] - LON0) * M_LON, (c[:, 1] - LAT0) * M_LAT)))
+
+
+def motivo_punto(b: dict) -> str | None:
+    """None se il bene può agganciarsi a un edificio; altrimenti perché resta un punto."""
+    if b["natura"] == "Terreno":
+        return "terreno"
+    if b["precisione"] in ("strada", "comune"):
+        return b["precisione"]
+    return None
+
+
+def aggancia(beni, edifici_m: dict) -> dict:
+    """{id bene: (id edificio, None)} oppure {id bene: (None, motivo)}. `edifici_m`: {id: geometria in metri}."""
+    ids = list(edifici_m)
+    geoms = [edifici_m[i] for i in ids]
+    albero = STRtree(geoms) if geoms else None
+    esito = {}
+    for b in beni:
+        motivo = motivo_punto(b)
+        if motivo:
+            esito[b["id"]] = (None, motivo)
+            continue
+        if albero is None:
+            esito[b["id"]] = (None, "senza-edificio")
+            continue
+        p = punto_m(b["lon"], b["lat"])
+        dentro = albero.query(p, predicate="intersects")
+        if len(dentro):
+            k = min(dentro, key=lambda j: geoms[j].area)  # il più specifico
+            esito[b["id"]] = (ids[int(k)], None)
+            continue
+        k = albero.nearest(p)
+        if k is not None and geoms[int(k)].distance(p) <= SOGLIA_M:
+            esito[b["id"]] = (ids[int(k)], None)
+        else:
+            esito[b["id"]] = (None, "senza-edificio")
+    return esito
