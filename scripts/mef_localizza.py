@@ -176,3 +176,28 @@ def livello_riferimenti(b: dict, ctx: Contesto):
         if loc:
             return loc
     return None
+
+
+# --- livello 3: posizione e orchestrazione ----------------------------------
+
+def livello_posizione(b: dict, ctx: Contesto) -> Loc:
+    """Come nella prima versione: il poligono che contiene il punto, o il più vicino entro 15 m; altrimenti un punto."""
+    i, motivo = aggancia_uno(b, ctx.ids, ctx.geoms, ctx.albero)
+    if i is None:
+        return Loc("", None, "punto", "posizione", "non verificabile", motivo)
+    return Loc(f"e{i}", ctx.edifici_wgs[i], "edificio", "posizione", "non verificabile")
+
+
+LIVELLI = (livello_catasto, livello_immobili, livello_riferimenti, livello_posizione)
+
+
+def localizza(b: dict, ctx: Contesto) -> Loc:
+    for livello in LIVELLI:
+        loc = livello(b, ctx)
+        if loc:
+            return loc
+    raise AssertionError("livello_posizione risponde sempre")
+
+
+def localizza_tutti(beni, ctx: Contesto) -> dict:
+    return {b["id"]: localizza(b, ctx) for b in beni}
