@@ -1,5 +1,6 @@
-
 # Digital Twin di Palermo
+
+<img width="1200" height="630" alt="social-card" src="https://github.com/user-attachments/assets/b01fd005-f24a-47e8-a54e-4661e0ce01d8" />
 
 Viewer web statico che sovrappone sulla stessa mappa catasto (S.I.T.R. 2026-09), PRG 2004 con PPE e vincoli, zone OMI,
 popolazione ISTAT 2021 e 2023, edifici 3D, rilievo 3D, elevazione e civici. Un clic restituisce la **scheda del luogo**
