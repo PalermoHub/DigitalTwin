@@ -52,7 +52,9 @@ jobs:
           r = json.load(open("dati/mef-immobili/riepilogo.json"))
           print(f"## Immobili dichiarati al MEF — censimento {r['anno']}")
           print(f"- Beni di Palermo: {r['beni']}  · senza posizione utilizzabile (scartati): {r['senza_posizione']}")
-          print(f"- Agganciati a un edificio: {r['in_edifici']} beni in {r['edifici']} edifici (massimo {r['max_beni_per_edificio']} beni in un edificio)")
+          print(f"- Localizzazione: {r['per_localizzazione']}")
+          print(f"- Verifica: {r['per_verifica']}  · posizione MEF corretta per {r['corretti']} beni")
+          print(f"- Edifici: {r['in_edifici']} beni in {r['edifici']} edifici (massimo {r['max_beni_per_edificio']} in uno)  · terreni: {r['in_terreni']} beni in {r['terreni']} particelle")
           print(f"- Rimasti punti: {r['punti']} {r['punti_per_motivo']}")
           PY
 
