@@ -4,6 +4,7 @@ import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
 import { STILE_OMI } from './stile-omi.js';
 import { vociOmi } from './scheda-omi.js';
 import { t, tl } from '../core/i18n.js';
+import { registraTooltipStrati } from '../core/tooltip.js';
 
 // Come nell'app originale (catasto-app): la vestizione di PRG, PPE e vincoli è fatta di tile
 // raster già pubblicati; i poligoni vettoriali restano trasparenti e servono solo ai dati
@@ -138,6 +139,7 @@ export default {
     });
     map.addLayer({ id: 'omi-hit', type: 'fill', source: 'omi', 'source-layer': 'Zone_OMI_2025_II', paint: vuoto });
     map.addLayer({ id: 'immobili-hit', type: 'fill', source: 'immobili', 'source-layer': 'immobili_comunali_2024', paint: vuoto });
+    registraTooltipStrati(map, [{ layers: ['immobili'], modello: p => ({ titolo: tl('Immobile comunale'), sottotitolo: p.INDIRIZZO || p.TIPO || '' }) }]);
     // numeri civici: testo come nell'app originale (font forniti dallo stile della base)
     map.addLayer({
       id: 'civici', type: 'symbol', source: 'civici', 'source-layer': 'civici_wgs84', minzoom: 14,
