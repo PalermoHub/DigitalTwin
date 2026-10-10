@@ -294,3 +294,90 @@ def aggancia(beni, edifici_m: dict) -> dict:
         else:
             esito[b["id"]] = (None, "senza-edificio")
     return esito
+
+
+# --- aggregazione e uscita --------------------------------------------------
+
+def pubblico(b: dict) -> dict:
+    return {k: v for k, v in b.items() if k not in ("lat", "lon")}
+
+
+def _beni_json(lista) -> str:
+    return json.dumps([pubblico(b) for b in lista], ensure_ascii=False, separators=(",", ":"))
+
+
+def _geojson(geom) -> dict:
+    return json.loads(shapely.to_geojson(shapely.set_precision(geom, 1e-6)))
+
+
+def costruisci(beni, esito, edifici_wgs: dict, props_edifici: dict, anno: int) -> list:
+    per_edificio, punti = {}, []
+    for b in beni:
+        i, motivo = esito[b["id"]]
+        if i is None:
+            punti.append((b, motivo))
+        else:
+            per_edificio.setdefault(i, []).append(b)
+    feats = []
+    for i, lista in sorted(per_edificio.items(), key=lambda kv: str(kv[0])):
+        prop = {"forma": "edificio", "id_edificio": i, "n_beni": len(lista), "posizione": "edificio", "anno": anno, "beni": _beni_json(lista)}
+        for k in ("altezza", "occupancy"):
+            if props_edifici.get(i, {}).get(k) is not None:
+                prop[k] = props_edifici[i][k]
+        feats.append({"type": "Feature", "properties": prop, "geometry": _geojson(edifici_wgs[i])})
+    for b, motivo in punti:
+        feats.append({
+            "type": "Feature",
+            "properties": {"forma": "punto", "n_beni": 1, "posizione": motivo, "anno": anno, "beni": _beni_json([b])},
+            "geometry": {"type": "Point", "coordinates": [round(b["lon"], 6), round(b["lat"], 6)]},
+        })
+    return feats
+
+
+def verifica(beni, feats) -> None:
+    visti = [b["id"] for f in feats for b in json.loads(f["properties"]["beni"])]
+    if sorted(visti) != sorted(b["id"] for b in beni):
+        raise SystemExit(f"incoerenza: {len(beni)} beni letti, {len(visti)} nel risultato")
+    for f in feats:
+        if f["properties"]["n_beni"] != len(json.loads(f["properties"]["beni"])):
+            raise SystemExit("incoerenza: n_beni diverso dall'elenco dei beni")
+
+
+def riepilogo(beni, scartati: int, feats) -> dict:
+    edifici = [f for f in feats if f["properties"]["forma"] == "edificio"]
+    punti = [f for f in feats if f["properties"]["forma"] == "punto"]
+    per_motivo = {}
+    for f in punti:
+        per_motivo[f["properties"]["posizione"]] = per_motivo.get(f["properties"]["posizione"], 0) + 1
+    return {
+        "beni": len(beni),
+        "in_edifici": sum(f["properties"]["n_beni"] for f in edifici),
+        "edifici": len(edifici),
+        "punti": len(punti),
+        "punti_per_motivo": per_motivo,
+        "senza_posizione": scartati,
+        "max_beni_per_edificio": max((f["properties"]["n_beni"] for f in edifici), default=0),
+    }
+
+
+def scrivi(uscita: Path, anno: int, beni, esito, feats, riep: dict) -> None:
+    uscita.mkdir(parents=True, exist_ok=True)
+    (uscita / "mef_immobili.geojson").write_text(
+        json.dumps({"type": "FeatureCollection", "features": feats}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    with open(uscita / "mef_immobili.csv", "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["id_bene", "esito", "id_edificio", "motivo", "tipologia", "indirizzo"])
+        for b in beni:
+            i, motivo = esito[b["id"]]
+            w.writerow([b["id"], "edificio" if i is not None else "punto", "" if i is None else i, motivo or "",
+                        b.get("tipologia", ""), b.get("indirizzo", "")])
+    (uscita / "riepilogo.json").write_text(json.dumps({"anno": anno, **riep}, ensure_ascii=False, indent=1), encoding="utf-8")
+    (uscita / "README.md").write_text(
+        f"# Immobili dichiarati al MEF (Comune di Palermo)\n\n"
+        f"Anno del censimento: **{anno}**. Generato il {date.today().isoformat()} da `scripts/mef_immobili.py` (workflow «Aggiorna MEF»).\n\n"
+        f"- Beni: {riep['beni']} · in edifici: {riep['in_edifici']} (in {riep['edifici']} edifici) · punti: {riep['punti']} {riep['punti_per_motivo']}\n"
+        f"- Beni scartati perché senza posizione utilizzabile: {riep['senza_posizione']}\n\n"
+        f"Fonti: Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici "
+        f"(open data, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC.\n\n"
+        f"Gli edifici portano l'elenco dei beni (`beni`, JSON). Terreni e beni georiferiti dall'indirizzo alla strada o al comune restano punti.\n",
+        encoding="utf-8")
