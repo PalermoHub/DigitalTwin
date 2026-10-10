@@ -860,7 +860,14 @@ button.strato-chip:hover i { color: var(--text); }
 
 /* interruttore «Mappa» nell'intestazione delle sezioni della scheda: accende lo strato collegato */
 .scheda-strato { flex: none; margin-left: auto; padding: 2px 10px; border: 1px solid var(--border); border-radius: var(--r-pill); background: transparent; color: var(--text-muted); font: inherit; font-size: var(--fs-sm); font-weight: 500; cursor: pointer; }
-.scheda-riassunto + .scheda-strato { margin-left: 8px; }
+.scheda-riassunto + .scheda-strato { margin-left: auto; }
+/* intestazione sezione: titolo + «Mappa» sulla prima riga, riassunto sotto allineato al titolo (mai due righe a destra) */
+details.scheda-sez > summary { flex-wrap: wrap; row-gap: 0; }
+details.scheda-sez > summary > h3 { flex: 1 1 0; min-width: 0; }
+details.scheda-sez > summary > .scheda-strato { order: 2; }
+details.scheda-sez > summary > .scheda-riassunto { order: 3; flex: 0 0 100%; margin-left: 0; padding: 0 0 4px calc(1em + 10px); text-align: left; }
+/* a sezione aperta il riassunto ripete la prima riga del corpo: si mostra solo da chiusa */
+details.scheda-sez[open] > summary > .scheda-riassunto { display: none; }
 .scheda-strato[hidden] { display: none; }
 .scheda-strato:hover:not(:disabled) { background: var(--accent-soft); }
 .scheda-strato[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
