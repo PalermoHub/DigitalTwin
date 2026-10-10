@@ -38,7 +38,7 @@ function creaLegenda() {
   for (const [colore, testo, tondo] of [
     [COLORE_UNO, 'Edificio con un bene', false],
     [COLORE_PIU, 'Edificio con più beni', false],
-    [COLORE_PUNTO, 'Terreno o posizione approssimata', true],
+    [COLORE_PUNTO, 'Terreno o bene non agganciato a un edificio', true],
   ]) {
     const riga = el('div', 'mef-legenda-riga');
     const simbolo = el('i', tondo ? 'monumenti-pallino' : 'mef-campione');

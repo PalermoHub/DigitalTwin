@@ -1754,5 +1754,10 @@
   "lbl.Altri beni dichiarati": "Altri beni dichiarati",
   "lbl.Open data del censimento degli immobili pubblici": "Open data del censimento degli immobili pubblici",
   "lbl.Beni dichiarati": "Beni dichiarati",
-  "lbl.Immobili dichiarati al MEF: Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici (beni dei comuni dichiarati dagli enti, ultimo anno pubblicato); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC": "Immobili dichiarati al MEF: Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici (beni dei comuni dichiarati dagli enti, ultimo anno pubblicato); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC"
+  "lbl.Immobili dichiarati al MEF: Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici (beni dei comuni dichiarati dagli enti, ultimo anno pubblicato); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC": "Immobili dichiarati al MEF: Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici (beni dei comuni dichiarati dagli enti, ultimo anno pubblicato); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC",
+  "mef.beni.uno": "{n} bene dichiarato",
+  "mef.beni.altri": "{n} beni dichiarati",
+  "lbl.Seleziona un bene per vedere i dettagli": "Seleziona un bene per vedere i dettagli",
+  "lbl.Indirizzo (civico)": "Indirizzo (civico)",
+  "lbl.Terreno o bene non agganciato a un edificio": "Terreno o bene non agganciato a un edificio"
 }

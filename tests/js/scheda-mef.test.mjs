@@ -23,7 +23,7 @@ test('righeBene: unità di misura e righe presenti, in ordine', () => {
   assert.equal(valore(r, 'Superficie'), '85,5 m²');
   assert.equal(valore(r, 'Cubatura'), '250 m³');
   assert.equal(valore(r, 'Indirizzo'), 'Via Roma 3');
-  assert.deepEqual(etichette(r).slice(0, 3), ['Natura', 'Indirizzo', 'Superficie']);
+  assert.deepEqual(etichette(r).slice(0, 4), ['Tipologia', 'Natura', 'Indirizzo', 'Superficie']);
 });
 
 test('righeBene: i valori assenti non compaiono', () => {
@@ -37,7 +37,7 @@ test('righeBene: la posizione approssimata è dichiarata come tale', () => {
   assert.doesNotMatch(valore(righeBene({ ...BENE, precisione: 'catastale' }), 'Posizione'), /approssimata/);
 });
 
-test('voceMef: un solo bene, nessun titolo di gruppo', () => {
+test('voceMef: un solo bene, righe in un gruppo senza titolo e con la tipologia', () => {
   const v = voceMef({ forma: 'edificio', id_edificio: 42, n_beni: 1, anno: 2023, beni: JSON.stringify([BENE]) });
   assert.equal(v.chiave, 'mef-42');
   assert.equal(v.strato, 'mef-immobili');
@@ -46,22 +46,34 @@ test('voceMef: un solo bene, nessun titolo di gruppo', () => {
   assert.equal(v.badge, '2023');
   assert.equal(v.gruppi.length, 1);
   assert.equal(v.gruppi[0].titolo, undefined);
+  assert.equal(valore(v.gruppi[0].righe, 'Tipologia'), 'Abitazione');
+  assert.equal(v.accordion, undefined);
   assert.match(v.link.url, /^https:\/\/www\.de\.mef\.gov\.it\//);
   assert.equal(unisci([v]).sezioni.length, 1);
 });
 
-test('voceMef: più beni, un gruppo ciascuno con la tipologia', () => {
-  const beni = [BENE, { ...BENE, id: '2', tipologia: 'Negozio' }];
-  const v = voceMef({ forma: 'edificio', id_edificio: 7, n_beni: 2, anno: 2023, beni: JSON.stringify(beni) });
-  assert.deepEqual(v.gruppi.map(g => g.titolo), ['1. Abitazione', '2. Negozio']);
+test('voceMef: più beni, un elemento di accordion ciascuno con tutte le sue righe (anche dopo unisci)', () => {
+  const secondo = { ...BENE, id: '2', tipologia: 'Negozio', indirizzo: 'Via Roma 5', superficie_mq: 40, catastale: 'F.1 P.2 S.2', utilizzo: 'Locato a terzi' };
+  const v = voceMef({ forma: 'edificio', id_edificio: 7, n_beni: 2, anno: 2023, beni: JSON.stringify([BENE, secondo]) });
+  assert.deepEqual(v.accordion.elementi.map(e => e.titolo), ['Abitazione', 'Negozio']);
+  assert.deepEqual(v.accordion.elementi.map(e => e.anteprima), ['Via Roma 3', 'Via Roma 5']);
+  const sezione = unisci([v]).sezioni[0];
+  const negozio = sezione.accordion.elementi[1].righe;
+  assert.equal(valore(negozio, 'Indirizzo'), 'Via Roma 5');
+  assert.equal(valore(negozio, 'Superficie'), '40 m²');
+  assert.equal(valore(negozio, 'Identificativo catastale'), 'F.1 P.2 S.2');
+  assert.equal(valore(negozio, 'Utilizzo'), 'Locato a terzi');
+  assert.equal(valore(negozio, 'Tipologia'), 'Negozio');
+  assert.match(sezione.accordion.riassunto, /^2 /);
 });
 
 test('voceMef: oltre il massimo mostra i primi e il numero degli altri', () => {
-  const beni = Array.from({ length: MAX_BENI + 5 }, (_, i) => ({ ...BENE, id: String(i) }));
+  const beni = Array.from({ length: MAX_BENI + 5 }, (_, i) => ({ ...BENE, id: String(i), indirizzo: `Via Roma ${i}` }));
   const v = voceMef({ forma: 'edificio', id_edificio: 9, n_beni: beni.length, anno: 2023, beni: JSON.stringify(beni) });
-  assert.equal(v.gruppi.length, MAX_BENI + 1);
-  const ultimo = v.gruppi.at(-1).righe[0];
-  assert.deepEqual(ultimo, { etichetta: 'Altri beni dichiarati', valore: '5' });
+  assert.equal(v.accordion.elementi.length, MAX_BENI);
+  assert.match(v.accordion.riassunto, new RegExp(`^${MAX_BENI + 5} `));
+  assert.deepEqual(v.gruppi.at(-1).righe, [{ etichetta: 'Altri beni dichiarati', valore: '5' }]);
+  assert.equal(unisci([v]).sezioni[0].accordion.elementi.length, MAX_BENI);
 });
 
 test('voceMef: un punto prende la chiave dal primo bene', () => {

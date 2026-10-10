@@ -1754,5 +1754,10 @@
   "lbl.Altri beni dichiarati": "Other declared properties",
   "lbl.Open data del censimento degli immobili pubblici": "Open data of the public real estate census",
   "lbl.Beni dichiarati": "Declared properties",
-  "lbl.Immobili dichiarati al MEF: Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici (beni dei comuni dichiarati dagli enti, ultimo anno pubblicato); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC": "Properties declared to the MEF: Ministry of Economy and Finance, Treasury Department, Census of public real estate (properties of municipalities declared by the bodies, latest published year); building footprints: Municipality of Palermo, CTC volumetric units"
+  "lbl.Immobili dichiarati al MEF: Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici (beni dei comuni dichiarati dagli enti, ultimo anno pubblicato); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC": "Properties declared to the MEF: Ministry of Economy and Finance, Treasury Department, Census of public real estate (properties of municipalities declared by the bodies, latest published year); building footprints: Municipality of Palermo, CTC volumetric units",
+  "mef.beni.uno": "{n} declared property",
+  "mef.beni.altri": "{n} declared properties",
+  "lbl.Seleziona un bene per vedere i dettagli": "Select a property to see the details",
+  "lbl.Indirizzo (civico)": "Address (street number)",
+  "lbl.Terreno o bene non agganciato a un edificio": "Land or property not linked to a building"
 }
