@@ -513,7 +513,8 @@ dialog li { margin: 4px 0; }
 .scheda-gruppo { margin-top: 6px; }
 .scheda-gruppo h4 { margin: 8px 0 2px; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
 
-.scheda-riga { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; }
+.scheda-riga { display: flex; justify-content: space-between; gap: 12px; padding: 3px 6px; margin: 0 -6px; border-radius: var(--r-sm); }
+.scheda-gruppo > .scheda-riga:nth-of-type(even) { background: color-mix(in srgb, var(--text) 7%, transparent); }
 .scheda-riga--lunga { flex-direction: column; gap: 0; }
 .scheda-riga--lunga .scheda-val { text-align: left; }
 .scheda-et { color: var(--text-muted); }
