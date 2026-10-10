@@ -116,3 +116,63 @@ def _livello_chiavi(b: dict, ctx: Contesto, in_m: dict, in_wgs: dict, fonte: str
 
 def livello_catasto(b: dict, ctx: Contesto):
     return _livello_chiavi(b, ctx, ctx.particelle_m, ctx.particelle_wgs, "catasto")
+
+
+# --- livello 2: layer già mappati ------------------------------------------
+
+def tipologia_culturale(tipologia: str) -> bool:
+    t = (tipologia or "").lower()
+    return any(parola in t for parola in CULTURALI)
+
+
+def livello_immobili(b: dict, ctx: Contesto):
+    """Immobili comunali: stessa particella (chiave) oppure indirizzo compatibile entro 60 m."""
+    loc = _livello_chiavi(b, ctx, ctx.immobili_m, ctx.immobili_wgs, "immobili-comunali")
+    if loc or ctx.albero_imm is None:
+        return loc
+    p = punto_m(b["lon"], b["lat"])
+    vicini = sorted((ctx.immobili[int(k)]["geom_m"].distance(p), int(k))
+                    for k in ctx.albero_imm.query(p.buffer(RAGGIO_LAYER), predicate="intersects"))
+    for _, k in vicini:
+        im = ctx.immobili[k]
+        if not indirizzi_compatibili(b.get("indirizzo", ""), im["indirizzo"]):
+            continue
+        loc = _da_area(b, ctx, im["geom_m"], im["geom"], f"i{im['id']}", "immobili-comunali")
+        if loc:
+            return loc
+    return None
+
+
+def _poligono_riferimento(b: dict, ctx: Contesto, p, k: int):
+    r, pm, gm = ctx.riferimenti[k]
+    if gm is not None:   # scuole e seggi: la parte più grande del loro poligono
+        parti_m = list(gm.geoms) if hasattr(gm, "geoms") else [gm]
+        parti_w = list(r.poligono.geoms) if hasattr(r.poligono, "geoms") else [r.poligono]
+        j = max(range(len(parti_m)), key=lambda n: parti_m[n].area)
+        return Loc(f"x{r.fonte}-{r.id}", parti_w[j], "edificio", r.fonte, _verifica(parti_m[j], p))
+    i = _edificio_vicino(ctx, pm)   # uffici e monumenti: solo il punto, poi l'edificio più grande lì vicino
+    if i is None:
+        return None
+    return Loc(f"e{i}", ctx.edifici_wgs[i], "edificio", r.fonte, _verifica(ctx.geoms[ctx.pos[i]], p))
+
+
+def livello_riferimenti(b: dict, ctx: Contesto):
+    """Scuole, seggi, uffici (indirizzo compatibile entro 60 m) e monumenti (tipologia culturale entro 30 m)."""
+    if ctx.albero_rif is None:
+        return None
+    p = punto_m(b["lon"], b["lat"])
+    candidati = []
+    for k in ctx.albero_rif.query(p.buffer(RAGGIO_LAYER), predicate="intersects"):
+        r, pm, gm = ctx.riferimenti[int(k)]
+        d = p.distance(gm if gm is not None else pm)
+        if r.fonte == "monumenti":
+            if d > RAGGIO_MONUMENTI or not tipologia_culturale(b.get("tipologia", "")):
+                continue
+        elif d > RAGGIO_LAYER or not indirizzi_compatibili(b.get("indirizzo", ""), r.indirizzo):
+            continue
+        candidati.append((d, int(k)))
+    for _, k in sorted(candidati):
+        loc = _poligono_riferimento(b, ctx, p, k)
+        if loc:
+            return loc
+    return None
