@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { PRESET, CAMPI, CAMPI_EXTRA, FONT, DIMENSIONE, TIPOGRAFIA_STANDARD, normalizza, mescola, contrasto, variabili, NOMI_VARIABILI, controlli, validaColori, validaTipografia, variabiliTipografia, applica, applicaTipografia, leggi, leggiTipografia, salva, esporta, importa } from '../../js/core/tema-interfaccia.js';
+import { PRESET, CAMPI, CAMPI_EXTRA, FONT, DIMENSIONE, TIPOGRAFIA_STANDARD, normalizza, mescola, contrasto, variabili, NOMI_VARIABILI, controlli, correggiContrasto, validaColori, validaTipografia, variabiliTipografia, applica, applicaTipografia, presetCorrispondente, leggi, leggiTipografia, salva, esporta, importa } from '../../js/core/tema-interfaccia.js';
 
 const memoria = () => { const m = new Map(); return { getItem: k => m.get(k) ?? null, setItem: (k, v) => m.set(k, v), removeItem: k => m.delete(k) }; };
 const radiceFinta = () => { const p = new Map(); return { p, style: { setProperty: (k, v) => p.set(k, v), removeProperty: k => p.delete(k) } }; };
@@ -22,7 +22,7 @@ test('ogni preset ha i cinque colori validi e testo e link leggibili sullo sfond
   assert.ok(Object.keys(PRESET).length >= 20);
   for (const [nome, c] of Object.entries(PRESET)) {
     assert.deepEqual(validaColori(c), c, nome);
-    for (const k of controlli(c).filter(x => x.id !== 'accento')) assert.ok(k.ok, `${nome}: ${k.id} ${k.rapporto.toFixed(2)}`);
+    for (const k of controlli(c)) assert.ok(k.ok, `${nome}: ${k.id} ${k.rapporto.toFixed(2)}`);
   }
 });
 
@@ -142,3 +142,27 @@ test('file JSON versione 2: porta anche tipografia e colori avanzati', () => {
   assert.deepEqual(r.colori, colori);
   assert.deepEqual(r.tipografia, { dimensione: 110, font: 'serif' });
 });
+
+test('presetCorrispondente: riconosce un preset, anche con avanzati uguali ai standard, e null se personalizzato', () => {
+  assert.equal(presetCorrispondente({ ...PRESET.mare }), 'mare');
+  assert.equal(presetCorrispondente({ ...PRESET.daltonici }), 'daltonici');
+  assert.equal(presetCorrispondente({ ...PRESET.mare, accento: '#123456' }), null);
+  assert.equal(presetCorrispondente({ ...PRESET.mare, pericolo: '#ff0000' }), null);
+  assert.equal(presetCorrispondente({ ...PRESET.chiaro, accento: '#F5A623' }), 'chiaro');
+});
+
+test('controlli: l\'accento non genera avvisi (è un riempimento con inchiostro proprio)', () => {
+  assert.deepEqual(controlli(PRESET.chiaro).map(c => c.id), ['testo', 'link']);
+  assert.ok(controlli(PRESET.chiaro).every(c => c.ok));
+});
+
+test('correggiContrasto: lascia il colore se va bene, altrimenti lo porta a 4.5:1 restando vicino', () => {
+  assert.equal(correggiContrasto('#1b1f24', '#ffffff'), '#1b1f24');
+  const c = correggiContrasto('#aaaaaa', '#ffffff');
+  assert.ok(contrasto(c, '#ffffff') >= 4.5);
+  assert.ok(contrasto(c, '#ffffff') < 6, 'non va fino al nero');
+  const d = correggiContrasto('#444444', '#1c2128');
+  assert.ok(contrasto(d, '#1c2128') >= 4.5);
+  assert.ok(luminanzaMaggiore(d, '#444444'));
+});
+const luminanzaMaggiore = (a, b) => parseInt(a.slice(1), 16) > parseInt(b.slice(1), 16);

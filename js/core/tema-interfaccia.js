@@ -129,7 +129,18 @@ export function extraEffettivi(colori) {
   return Object.fromEntries(CAMPI_EXTRA.map(c => [c, colori[c] ?? base[c]]));
 }
 
-export const NOMI_VARIABILI = Object.keys(variabili(PRESET.chiaro));
+// Nome del tema pronto con gli stessi colori (base ed effettivi avanzati), o null se i colori sono personalizzati
+export function presetCorrispondente(colori) {
+  const uguali = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
+  const extra = extraEffettivi(colori);
+  return Object.keys(PRESET).find(nome => {
+    const p = PRESET[nome];
+    const extraP = extraEffettivi(p);
+    return CAMPI.every(c => uguali(colori[c], p[c])) && CAMPI_EXTRA.every(c => uguali(extra[c], extraP[c]));
+  }) ?? null;
+}
+
+export const NOMI_VARIABILI =Object.keys(variabili(PRESET.chiaro));
 
 // Tipografia: dimensione del testo in % (scala tutta l'interfaccia, che è in rem) e carattere
 export const DIMENSIONE = { min: 85, max: 150, passo: 5, standard: 100 };
@@ -166,13 +177,24 @@ export function applicaTipografia(radice, t) {
   for (const [n, v] of Object.entries(variabiliTipografia(t))) radice.style.setProperty(n, v);
 }
 
-// Coppie che devono restare leggibili (soglie WCAG: 4.5 per il testo, 3 per i componenti)
+// Coppie che devono restare leggibili (soglia WCAG 4.5 per il testo). L'accento non c'è: è un riempimento, il testo che porta sopra
+// usa --accent-ink (nero o bianco) e quando serve come testo diventa --accent-strong (vedi variabili()).
 export function controlli(colori) {
   return [
     { id: 'testo', rapporto: contrasto(colori.testo, colori.sfondo), minimo: 4.5 },
     { id: 'link', rapporto: contrasto(colori.link, colori.sfondo), minimo: 4.5 },
-    { id: 'accento', rapporto: contrasto(colori.accento, colori.sfondo), minimo: 3 },
   ].map(c => ({ ...c, ok: c.rapporto >= c.minimo }));
+}
+
+// Il colore più vicino a `colore` che ha almeno `minimo`:1 sullo sfondo: lo porta verso il nero o il bianco, il più lontano dallo sfondo
+export function correggiContrasto(colore, sfondo, minimo = 4.5) {
+  if (contrasto(colore, sfondo) >= minimo) return colore;
+  const verso = contrasto('#000000', sfondo) >= contrasto('#ffffff', sfondo) ? '#000000' : '#ffffff';
+  for (let i = 1; i <= 20; i++) {
+    const c = mescola(colore, verso, i / 20);
+    if (contrasto(c, sfondo) >= minimo) return c;
+  }
+  return verso;
 }
 
 // Applica (o toglie, con `colori` null) le variabili alla radice del documento. Restituisce true se il tema è scuro.
