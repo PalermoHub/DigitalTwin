@@ -170,3 +170,73 @@ def bene(r: dict) -> dict | None:
 def nell_area(b: dict) -> bool:
     lon0, lat0, lon1, lat1 = AREA
     return lon0 <= b["lon"] <= lon1 and lat0 <= b["lat"] <= lat1
+
+
+# --- edificato --------------------------------------------------------------
+
+def a_lonlat(x: int, y: int, z: int, px: float, py: float, estensione: int) -> tuple[float, float]:
+    """Punto (px, py) di un tile MVT (y verso il basso) -> (lon, lat) WGS84."""
+    n = 2 ** z
+    lon = (x + px / estensione) / n * 360.0 - 180.0
+    lat = math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * (y + py / estensione) / n))))
+    return lon, lat
+
+
+def _converti(coordinate, f):
+    if coordinate and isinstance(coordinate[0], (int, float)):
+        return list(f(coordinate[0], coordinate[1]))
+    return [_converti(c, f) for c in coordinate]
+
+
+def frammenti_tile(dati: bytes, z: int, x: int, y: int) -> list:
+    """(id, geometria WGS84, proprietà) di ogni poligono del tile (`dati` già decompresso)."""
+    import mapbox_vector_tile as mvt
+    out = []
+    for strato in mvt.decode(dati, default_options={"y_coord_down": True}).values():
+        estensione = strato.get("extent", 4096)
+        for ft in strato["features"]:
+            g = dict(ft["geometry"])
+            if g["type"] not in ("Polygon", "MultiPolygon"):
+                continue
+            g["coordinates"] = _converti(g["coordinates"], lambda px, py: a_lonlat(x, y, z, px, py, estensione))
+            out.append((ft.get("id"), shape(g), ft.get("properties", {})))
+    return out
+
+
+def ricomponi(frammenti) -> dict:
+    """Un edificio spezzato sui bordi dei tile torna un solo poligono: {id: (geometria, proprietà)}."""
+    per_id = {}
+    for i, g, p in frammenti:
+        if i is None:
+            continue
+        per_id.setdefault(i, ([], p))[0].append(shapely.make_valid(g))
+    return {i: (unary_union(gs), p) for i, (gs, p) in per_id.items()}
+
+
+def tile_xy(lon: float, lat: float, z: int) -> tuple[int, int]:
+    n = 2 ** z
+    return int((lon + 180) / 360 * n), int((1 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2 * n)
+
+
+def leggi_edificato(percorso: Path) -> dict:
+    from pmtiles.reader import MmapSource, Reader
+    with open(percorso, "rb") as f:
+        lettore = Reader(MmapSource(f))
+        h = lettore.header()
+        x0, y1 = tile_xy(h["min_lon_e7"] / 1e7, h["min_lat_e7"] / 1e7, ZOOM)
+        x1, y0 = tile_xy(h["max_lon_e7"] / 1e7, h["max_lat_e7"] / 1e7, ZOOM)
+        frammenti = []
+        for x in range(x0, x1 + 1):
+            for y in range(y0, y1 + 1):
+                d = lettore.get(ZOOM, x, y)
+                if not d:
+                    continue
+                if d[:2] == b"\x1f\x8b":
+                    d = gzip.decompress(d)
+                frammenti += frammenti_tile(d, ZOOM, x, y)
+    return ricomponi(frammenti)
+
+
+def controlla_edifici(edifici: dict) -> None:
+    if len(edifici) < MIN_EDIFICI:
+        raise SystemExit(f"dall'edificato sono stati letti solo {len(edifici)} edifici (ne servono almeno {MIN_EDIFICI}): file incompleto?")
