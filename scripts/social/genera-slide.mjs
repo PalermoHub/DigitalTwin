@@ -24,5 +24,10 @@ for (const [w, h, nome] of [[1200, 400, 'desktop'], [375, 300, 'smartphone']]) {
   await p.evaluate(() => document.images[0].decode());
   await p.screenshot({ path: out.replace('.jpg', `-anteprima-${nome}.jpg`), type: 'jpeg', quality: 86 });
 }
+// versione a striscia 1900×400
+await p.setViewportSize({ width: 1900, height: 400 });
+await p.goto(pathToFileURL(join(qui, 'slide-palermohub-1900x400.html')).href);
+await p.evaluate(() => Promise.all([document.fonts.ready, ...[...document.images].map(i => i.decode().catch(() => {}))]));
+await p.screenshot({ path: out.replace('.jpg', '-1900x400.jpg'), type: 'jpeg', quality: 88 });
 await browser.close();
 console.log('ok');
