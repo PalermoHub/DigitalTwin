@@ -1759,5 +1759,7 @@
   "mef.beni.altri": "{n} declared properties",
   "lbl.Seleziona un bene per vedere i dettagli": "Select a property to see the details",
   "lbl.Indirizzo (civico)": "Address (street number)",
-  "lbl.Terreno o bene non agganciato a un edificio": "Land or property not linked to a building"
+  "lbl.Terreno o bene non agganciato a un edificio": "Land or property not linked to a building",
+  "tabella.layer.mef": "Properties declared to the MEF",
+  "tabella.fonte.mef": "Italian Ministry of Economy and Finance, Public property census (CC BY 4.0); processed by DigitalTwin Palermo, CC BY 4.0; see NOTICE.md"
 }

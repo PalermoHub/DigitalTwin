@@ -306,6 +306,22 @@ def _beni_json(lista) -> str:
     return json.dumps([pubblico(b) for b in lista], ensure_ascii=False, separators=(",", ":"))
 
 
+def proprieta_piatte(lista) -> dict:
+    """Campi semplici per la tabella dati del sito (legge le proprietà, non il JSON `beni`)."""
+    def uniti(chiave):
+        visti = []
+        for b in lista:
+            v = b.get(chiave)
+            if v and v not in visti:
+                visti.append(v)
+        return "; ".join(visti) or None
+
+    piatte = {"id_bene": lista[0]["id"], "tipologia": uniti("tipologia"), "indirizzo": lista[0].get("indirizzo"), "catastale": uniti("catastale")}
+    mq = [b["superficie_mq"] for b in lista if b.get("superficie_mq") is not None]
+    piatte["superficie_mq"] = round(sum(mq), 2) if mq else None
+    return {k: v for k, v in piatte.items() if v is not None}
+
+
 def _geojson(geom) -> dict:
     return json.loads(shapely.to_geojson(shapely.set_precision(geom, 1e-6)))
 
@@ -320,7 +336,7 @@ def costruisci(beni, esito, edifici_wgs: dict, props_edifici: dict, anno: int) -
             per_edificio.setdefault(i, []).append(b)
     feats = []
     for i, lista in sorted(per_edificio.items(), key=lambda kv: str(kv[0])):
-        prop = {"forma": "edificio", "id_edificio": i, "n_beni": len(lista), "posizione": "edificio", "anno": anno, "beni": _beni_json(lista)}
+        prop = {"forma": "edificio", "id_edificio": i, "n_beni": len(lista), "posizione": "edificio", "anno": anno, **proprieta_piatte(lista), "beni": _beni_json(lista)}
         for k in ("altezza", "occupancy"):
             if props_edifici.get(i, {}).get(k) is not None:
                 prop[k] = props_edifici[i][k]
@@ -328,7 +344,7 @@ def costruisci(beni, esito, edifici_wgs: dict, props_edifici: dict, anno: int) -
     for b, motivo in punti:
         feats.append({
             "type": "Feature",
-            "properties": {"forma": "punto", "n_beni": 1, "posizione": motivo, "anno": anno, "beni": _beni_json([b])},
+            "properties": {"forma": "punto", "n_beni": 1, "posizione": motivo, "anno": anno, **proprieta_piatte([b]), "beni": _beni_json([b])},
             "geometry": {"type": "Point", "coordinates": [round(b["lon"], 6), round(b["lat"], 6)]},
         })
     return feats

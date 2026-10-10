@@ -1759,5 +1759,7 @@
   "mef.beni.altri": "{n} beni dichiarati",
   "lbl.Seleziona un bene per vedere i dettagli": "Seleziona un bene per vedere i dettagli",
   "lbl.Indirizzo (civico)": "Indirizzo (civico)",
-  "lbl.Terreno o bene non agganciato a un edificio": "Terreno o bene non agganciato a un edificio"
+  "lbl.Terreno o bene non agganciato a un edificio": "Terreno o bene non agganciato a un edificio",
+  "tabella.layer.mef": "Immobili dichiarati al MEF",
+  "tabella.fonte.mef": "Ministero dell’economia e delle finanze, Censimento degli immobili pubblici (CC BY 4.0); elaborazione DigitalTwin Palermo, CC BY 4.0; vedi NOTICE.md"
 }
