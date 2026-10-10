@@ -1,0 +1,15 @@
+{
+ "anno": 2023,
+ "beni": 8006,
+ "in_edifici": 6673,
+ "edifici": 1219,
+ "punti": 1333,
+ "punti_per_motivo": {
+  "senza-edificio": 597,
+  "strada": 204,
+  "terreno": 505,
+  "comune": 27
+ },
+ "senza_posizione": 0,
+ "max_beni_per_edificio": 257
+}
