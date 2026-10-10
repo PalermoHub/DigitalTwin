@@ -35,6 +35,9 @@ from shapely.strtree import STRtree
 
 from mef_geo import (SOGLIA_M, a_lonlat, aggancia, aggancia_uno, frammenti_pmtiles, frammenti_tile, in_metri,  # noqa: F401
                      motivo_punto, punto_m, ricomponi, tile_xy)
+from mef_fonti import (carica_immobili, carica_particelle, carica_riferimenti, chiavi_richieste,
+                       controlla_particelle)
+from mef_localizza import Contesto, Rif, localizza_tutti
 
 RADICE = Path(__file__).resolve().parent.parent
 USCITA = RADICE / "dati" / "mef-immobili"
@@ -215,26 +218,31 @@ def _geojson(geom) -> dict:
     return json.loads(shapely.to_geojson(shapely.set_precision(geom, 1e-6)))
 
 
-def costruisci(beni, esito, edifici_wgs: dict, props_edifici: dict, anno: int) -> list:
-    per_edificio, punti = {}, []
+def costruisci(beni, locs: dict, props_edifici: dict, anno: int) -> list:
+    """Un elemento per poligono (edificio, terreno, poligono di un layer) e un punto per ogni bene senza poligono."""
+    per_poligono, punti = {}, []
     for b in beni:
-        i, motivo = esito[b["id"]]
-        if i is None:
-            punti.append((b, motivo))
+        loc = locs[b["id"]]
+        voce = {**b, "localizzazione": loc.fonte, "verifica": loc.verifica}
+        if loc.forma == "punto":
+            punti.append((voce, loc))
         else:
-            per_edificio.setdefault(i, []).append(b)
+            per_poligono.setdefault(loc.chiave, (loc, []))[1].append(voce)
     feats = []
-    for i, lista in sorted(per_edificio.items(), key=lambda kv: str(kv[0])):
-        prop = {"forma": "edificio", "id_edificio": i, "n_beni": len(lista), "posizione": "edificio", "anno": anno, **proprieta_piatte(lista), "beni": _beni_json(lista)}
-        for k in ("altezza", "occupancy"):
-            if props_edifici.get(i, {}).get(k) is not None:
-                prop[k] = props_edifici[i][k]
-        feats.append({"type": "Feature", "properties": prop, "geometry": _geojson(edifici_wgs[i])})
-    for b, motivo in punti:
+    for chiave, (loc, lista) in sorted(per_poligono.items()):
+        prop = {"forma": loc.forma, "id_poligono": chiave, "n_beni": len(lista), "posizione": loc.forma, "anno": anno,
+                **proprieta_piatte(lista), "beni": _beni_json(lista)}
+        if chiave.startswith("e") and chiave[1:].isdigit():
+            for k in ("altezza", "occupancy"):
+                v = props_edifici.get(int(chiave[1:]), {}).get(k)
+                if v is not None:
+                    prop[k] = v
+        feats.append({"type": "Feature", "properties": prop, "geometry": _geojson(loc.geom)})
+    for voce, loc in punti:
         feats.append({
             "type": "Feature",
-            "properties": {"forma": "punto", "n_beni": 1, "posizione": motivo, "anno": anno, **proprieta_piatte([b]), "beni": _beni_json([b])},
-            "geometry": {"type": "Point", "coordinates": [round(b["lon"], 6), round(b["lat"], 6)]},
+            "properties": {"forma": "punto", "n_beni": 1, "posizione": loc.motivo, "anno": anno, **proprieta_piatte([voce]), "beni": _beni_json([voce])},
+            "geometry": {"type": "Point", "coordinates": [round(voce["lon"], 6), round(voce["lat"], 6)]},
         })
     return feats
 
@@ -248,53 +256,81 @@ def verifica(beni, feats) -> None:
             raise SystemExit("incoerenza: n_beni diverso dall'elenco dei beni")
 
 
-def riepilogo(beni, scartati: int, feats) -> dict:
-    edifici = [f for f in feats if f["properties"]["forma"] == "edificio"]
-    punti = [f for f in feats if f["properties"]["forma"] == "punto"]
-    per_motivo = {}
-    for f in punti:
-        per_motivo[f["properties"]["posizione"]] = per_motivo.get(f["properties"]["posizione"], 0) + 1
+def _conta(valori) -> dict:
+    out = {}
+    for v in valori:
+        out[v] = out.get(v, 0) + 1
+    return out
+
+
+def riepilogo(beni, scartati: int, feats, locs: dict) -> dict:
+    per_forma = {f: [x for x in feats if x["properties"]["forma"] == f] for f in ("edificio", "terreno", "punto")}
+    per_verifica = _conta(loc.verifica for loc in locs.values())
     return {
         "beni": len(beni),
-        "in_edifici": sum(f["properties"]["n_beni"] for f in edifici),
-        "edifici": len(edifici),
-        "punti": len(punti),
-        "punti_per_motivo": per_motivo,
+        "in_edifici": sum(f["properties"]["n_beni"] for f in per_forma["edificio"]),
+        "edifici": len(per_forma["edificio"]),
+        "in_terreni": sum(f["properties"]["n_beni"] for f in per_forma["terreno"]),
+        "terreni": len(per_forma["terreno"]),
+        "punti": len(per_forma["punto"]),
+        "punti_per_motivo": _conta(f["properties"]["posizione"] for f in per_forma["punto"]),
+        "per_localizzazione": _conta(loc.fonte for loc in locs.values()),
+        "per_verifica": per_verifica,
+        "corretti": per_verifica.get("corretto", 0),
         "senza_posizione": scartati,
-        "max_beni_per_edificio": max((f["properties"]["n_beni"] for f in edifici), default=0),
+        "max_beni_per_edificio": max((f["properties"]["n_beni"] for f in per_forma["edificio"]), default=0),
     }
 
 
-def scrivi(uscita: Path, anno: int, beni, esito, feats, riep: dict) -> None:
+def scrivi(uscita: Path, anno: int, beni, locs: dict, feats, riep: dict) -> None:
     uscita.mkdir(parents=True, exist_ok=True)
     (uscita / "mef_immobili.geojson").write_text(
         json.dumps({"type": "FeatureCollection", "features": feats}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     with open(uscita / "mef_immobili.csv", "w", encoding="utf-8", newline="") as f:
         w = csv.writer(f, lineterminator="\n")
-        w.writerow(["id_bene", "esito", "id_edificio", "motivo", "tipologia", "indirizzo"])
+        w.writerow(["id_bene", "esito", "id_poligono", "motivo", "localizzazione", "verifica", "tipologia", "indirizzo"])
         for b in beni:
-            i, motivo = esito[b["id"]]
-            w.writerow([b["id"], "edificio" if i is not None else "punto", "" if i is None else i, motivo or "",
-                        b.get("tipologia", ""), b.get("indirizzo", "")])
+            loc = locs[b["id"]]
+            w.writerow([b["id"], loc.forma, loc.chiave, loc.motivo or "", loc.fonte,
+                        loc.verifica, b.get("tipologia", ""), b.get("indirizzo", "")])
     (uscita / "riepilogo.json").write_text(json.dumps({"anno": anno, **riep}, ensure_ascii=False, indent=1), encoding="utf-8")
     (uscita / "README.md").write_text(
         f"# Immobili dichiarati al MEF (Comune di Palermo)\n\n"
         f"Anno del censimento: **{anno}**. Generato il {date.today().isoformat()} da `scripts/mef_immobili.py` (workflow «Aggiorna MEF»).\n\n"
-        f"- Beni: {riep['beni']} · in edifici: {riep['in_edifici']} (in {riep['edifici']} edifici) · punti: {riep['punti']} {riep['punti_per_motivo']}\n"
+        f"- Beni: {riep['beni']} · in edifici: {riep['in_edifici']} (in {riep['edifici']} edifici) · in terreni: {riep['in_terreni']} "
+        f"({riep['terreni']} particelle) · punti: {riep['punti']} {riep['punti_per_motivo']}\n"
+        f"- Localizzazione: {riep['per_localizzazione']} · verifica: {riep['per_verifica']} (beni corretti rispetto alla posizione MEF: {riep['corretti']})\n"
         f"- Beni scartati perché senza posizione utilizzabile: {riep['senza_posizione']}\n\n"
         f"Fonti: Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici "
-        f"(open data, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC.\n\n"
-        f"Gli edifici portano l'elenco dei beni (`beni`, JSON). Terreni e beni georiferiti dall'indirizzo alla strada o al comune restano punti.\n",
+        f"(open data, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC; "
+        f"particelle: SITR Regione Siciliana e Agenzia delle Entrate; immobili comunali: Comune di Palermo.\n\n"
+        f"La posizione di ogni bene è verificata con il catasto (foglio e particella), poi con i layer già mappati (immobili comunali, scuole, "
+        f"seggi, uffici, monumenti), poi con la posizione dichiarata. Gli edifici portano l'elenco dei beni (`beni`, JSON).\n",
         encoding="utf-8")
 
 
 # --- programma --------------------------------------------------------------
 
+PARTICELLE = "https://palermohub.github.io/PRG2004/particelle/particelle.pmtiles"
+IMMOBILI = "https://palermohub.github.io/PRG2004/immobili/immobili_comunali_2024.pmtiles"
+
+
+def _file(percorso: str | None, url: str, cartella: Path, nome: str) -> Path:
+    if percorso:
+        return Path(percorso)
+    destinazione = cartella / nome
+    destinazione.write_bytes(scarica(url))
+    return destinazione
+
+
 def main(argv=None) -> None:
     a = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     a.add_argument("--anno", type=int, help="anno del censimento (default: l'ultimo pubblicato)")
     a.add_argument("--zip", help="ZIP del MEF già scaricato (non usa la rete)")
-    a.add_argument("--pmtiles", help="edificato.pmtiles già scaricato (non usa la rete)")
+    a.add_argument("--pmtiles", help="edificato.pmtiles già scaricato")
+    a.add_argument("--particelle", help="particelle.pmtiles già scaricato")
+    a.add_argument("--immobili", help="immobili_comunali_2024.pmtiles già scaricato")
+    a.add_argument("--radice", default=str(RADICE / "dati"), help="cartella dati/ con scuole, uffici e monumenti")
     a.add_argument("--uscita", default=str(USCITA))
     args = a.parse_args(argv)
 
@@ -317,23 +353,27 @@ def main(argv=None) -> None:
         raise SystemExit(f"{len(beni)} beni di Palermo nel CSV: fuori dall'intervallo atteso ({MIN_BENI}–{MAX_BENI})")
     print(f"Beni di Palermo: {len(beni)} (scartati senza posizione utilizzabile: {scartati})", file=sys.stderr)
 
-    if args.pmtiles:
-        edifici = leggi_edificato(Path(args.pmtiles))
-    else:
-        with tempfile.TemporaryDirectory() as tmp:
-            percorso = Path(tmp) / "edificato.pmtiles"
-            percorso.write_bytes(scarica(EDIFICATO))
-            edifici = leggi_edificato(percorso)
-    controlla_edifici(edifici)
-    print(f"Edifici letti: {len(edifici)}", file=sys.stderr)
+    with tempfile.TemporaryDirectory() as tmp:
+        cartella = Path(tmp)
+        edifici = leggi_edificato(_file(args.pmtiles, EDIFICATO, cartella, "edificato.pmtiles"))
+        controlla_edifici(edifici)
+        print(f"Edifici letti: {len(edifici)}", file=sys.stderr)
+        chiavi = chiavi_richieste(beni)
+        particelle = carica_particelle(_file(args.particelle, PARTICELLE, cartella, "particelle.pmtiles"), chiavi)
+        controlla_particelle(particelle, chiavi)
+        print(f"Particelle trovate: {len(particelle)} su {len(chiavi)} richieste", file=sys.stderr)
+        immobili = carica_immobili(_file(args.immobili, IMMOBILI, cartella, "immobili.pmtiles"))
+        print(f"Immobili comunali: {len(immobili)}", file=sys.stderr)
 
-    edifici_m = {i: in_metri(g) for i, (g, _) in edifici.items()}
-    esito = aggancia(beni, edifici_m)
-    usati = {i for i, _ in esito.values() if i is not None}
-    feats = costruisci(beni, esito, {i: edifici[i][0] for i in usati}, {i: edifici[i][1] for i in usati}, anno)
+    riferimenti = [Rif(r["fonte"], r["id"], Point(r["lon"], r["lat"]), r["indirizzo"], r["poligono"])
+                   for r in carica_riferimenti(Path(args.radice))]
+    print(f"Layer già mappati: {len(riferimenti)} elementi", file=sys.stderr)
+    ctx = Contesto({i: g for i, (g, _) in edifici.items()}, particelle, immobili, riferimenti)
+    locs = localizza_tutti(beni, ctx)
+    feats = costruisci(beni, locs, {i: p for i, (_, p) in edifici.items()}, anno)
     verifica(beni, feats)
-    riep = riepilogo(beni, scartati, feats)
-    scrivi(Path(args.uscita), anno, beni, esito, feats, riep)
+    riep = riepilogo(beni, scartati, feats, locs)
+    scrivi(Path(args.uscita), anno, beni, locs, feats, riep)
     print(json.dumps(riep, ensure_ascii=False), file=sys.stderr)
 
 
