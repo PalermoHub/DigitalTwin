@@ -208,7 +208,8 @@ def proprieta_piatte(lista) -> dict:
                 visti.append(v)
         return "; ".join(visti) or None
 
-    piatte = {"id_bene": lista[0]["id"], "tipologia": uniti("tipologia"), "indirizzo": lista[0].get("indirizzo"), "catastale": uniti("catastale")}
+    piatte = {"id_bene": lista[0]["id"], "tipologia": uniti("tipologia"), "indirizzo": lista[0].get("indirizzo"), "catastale": uniti("catastale"),
+              "localizzazione": uniti("localizzazione"), "verifica": uniti("verifica")}
     mq = [b["superficie_mq"] for b in lista if b.get("superficie_mq") is not None]
     piatte["superficie_mq"] = round(sum(mq), 2) if mq else None
     return {k: v for k, v in piatte.items() if v is not None}

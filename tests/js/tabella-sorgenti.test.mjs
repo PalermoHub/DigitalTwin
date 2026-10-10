@@ -98,9 +98,9 @@ test('layer esterni: entrano, si rinominano e escono senza toccare quelli del pr
 test('immobili dichiarati al MEF: edifici e punti, chiave stabile, colonne piatte (non il JSON dei beni)', () => {
   const s = sorgentePer('mef-immobili');
   assert.deepEqual(s.strati, ['mef-immobili-hit', 'mef-immobili-hit-punti']);
-  assert.deepEqual(s.visibili, ['mef-immobili-fill', 'mef-immobili-linea', 'mef-immobili-punti']);
+  assert.deepEqual(s.visibili, ['mef-immobili-fill', 'mef-immobili-linea', 'mef-immobili-terreno', 'mef-immobili-terreno-linea', 'mef-immobili-punti']);
   assert.equal(s.approssimata, false);
-  assert.ok(s.colonne.includes('tipologia') && s.colonne.includes('n_beni') && !s.colonne.includes('beni'));
+  assert.ok(s.colonne.includes('tipologia') && s.colonne.includes('n_beni') && s.colonne.includes('localizzazione') && !s.colonne.includes('beni'));
   assert.equal(s.chiave({ id_edificio: 12, id_bene: 'x' }), 12);
   assert.equal(s.chiave({ id_poligono: 'P7', id_edificio: 12 }), 'P7');
   assert.equal(s.chiave({ id_bene: 'x' }), 'x');

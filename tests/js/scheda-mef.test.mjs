@@ -87,3 +87,26 @@ test('modelloTooltipMef: titolo, numero di beni e indirizzo', () => {
   assert.equal(valore(m.righe, 'Beni dichiarati'), '2');
   assert.equal(valore(m.righe, 'Indirizzo'), 'Via Roma 3');
 });
+
+import { etichettaLocalizzazione } from '../../js/layers/scheda-mef.js';
+
+test('etichettaLocalizzazione: fonte e, se corretta, la posizione MEF corretta', () => {
+  assert.equal(etichettaLocalizzazione({ localizzazione: 'catasto', verifica: 'concorde' }), 'Catasto');
+  assert.equal(etichettaLocalizzazione({ localizzazione: 'catasto', verifica: 'corretto' }), 'Catasto (posizione MEF corretta)');
+  assert.equal(etichettaLocalizzazione({ localizzazione: 'immobili-comunali', verifica: 'concorde' }), 'Immobili comunali');
+  assert.equal(etichettaLocalizzazione({ localizzazione: 'scuole', verifica: 'corretto' }), 'Scuole (posizione MEF corretta)');
+  assert.equal(etichettaLocalizzazione({ localizzazione: 'posizione', verifica: 'non verificabile' }), 'Posizione dichiarata');
+  assert.equal(etichettaLocalizzazione({}), null);
+  assert.equal(etichettaLocalizzazione({ localizzazione: 'sconosciuta' }), null);
+});
+
+test('righeBene: riga Localizzazione dopo la posizione', () => {
+  const r = righeBene({ ...BENE, localizzazione: 'catasto', verifica: 'corretto' });
+  assert.equal(valore(r, 'Localizzazione'), 'Catasto (posizione MEF corretta)');
+  assert.ok(!etichette(righeBene(BENE)).includes('Localizzazione'));
+});
+
+test('voceMef: la chiave usa id_poligono (e id_edificio per i dati vecchi)', () => {
+  assert.equal(voceMef({ forma: 'terreno', id_poligono: 't55-1704', n_beni: 1, beni: JSON.stringify([BENE]) }).chiave, 'mef-t55-1704');
+  assert.equal(voceMef({ forma: 'edificio', id_edificio: 5, n_beni: 1, beni: JSON.stringify([BENE]) }).chiave, 'mef-5');
+});

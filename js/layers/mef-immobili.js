@@ -12,15 +12,20 @@ const SRC = 'mef-immobili';
 const FILL = 'mef-immobili-fill';
 const LINEA = 'mef-immobili-linea';
 const PUNTI = 'mef-immobili-punti';
+const FILL_TERRENO = 'mef-immobili-terreno';
+const LINEA_TERRENO = 'mef-immobili-terreno-linea';
 const HIT = 'mef-immobili-hit';
 const HIT_PUNTI = 'mef-immobili-hit-punti';
 const MAX_NELLA_SCHEDA = 6;
 
 const COLORE_UNO = '#d9822b';
 const COLORE_PIU = '#a4501a';
-const COLORE_PUNTO = '#6a994e';
+const COLORE_TERRENO = '#6a994e';
+const COLORE_PUNTO = '#7a7a7a';
 const EDIFICIO = ['==', ['get', 'forma'], 'edificio'];
 const PUNTO = ['==', ['get', 'forma'], 'punto'];
+const TERRENO = ['==', ['get', 'forma'], 'terreno'];
+const POLIGONO = ['!=', ['get', 'forma'], 'punto'];
 
 let legenda = null;
 
@@ -38,7 +43,8 @@ function creaLegenda() {
   for (const [colore, testo, tondo] of [
     [COLORE_UNO, 'Edificio con un bene', false],
     [COLORE_PIU, 'Edificio con più beni', false],
-    [COLORE_PUNTO, 'Terreno o bene non agganciato a un edificio', true],
+    [COLORE_TERRENO, 'Terreno (particella catastale)', false],
+    [COLORE_PUNTO, 'Bene senza poligono', true],
   ]) {
     const riga = el('div', 'mef-legenda-riga');
     const simbolo = el('i', tondo ? 'monumenti-pallino' : 'mef-campione');
@@ -71,6 +77,14 @@ export default {
       paint: { 'line-color': '#5c2e0b', 'line-width': 0.8 },
     });
     map.addLayer({
+      id: FILL_TERRENO, type: 'fill', source: SRC, filter: TERRENO, layout: nascosto,
+      paint: { 'fill-color': COLORE_TERRENO, 'fill-opacity': 0.4 },
+    });
+    map.addLayer({
+      id: LINEA_TERRENO, type: 'line', source: SRC, filter: TERRENO, layout: nascosto,
+      paint: { 'line-color': '#386641', 'line-width': 1, 'line-dasharray': [3, 2] },
+    });
+    map.addLayer({
       id: PUNTI, type: 'circle', source: SRC, filter: PUNTO, layout: nascosto,
       paint: {
         'circle-color': COLORE_PUNTO, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5,
@@ -78,16 +92,16 @@ export default {
       },
     });
     // trasparenti e sempre presenti: la scheda del luogo mostra i beni anche a strato spento
-    map.addLayer({ id: HIT, type: 'fill', source: SRC, filter: EDIFICIO, paint: { 'fill-opacity': 0 } });
+    map.addLayer({ id: HIT, type: 'fill', source: SRC, filter: POLIGONO, paint: { 'fill-opacity': 0 } });
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: PUNTO, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
-    registraTooltipStrati(map, [{ layers: [FILL, PUNTI], modello: modelloTooltipMef }]);
-    for (const id of [FILL, PUNTI]) {
+    registraTooltipStrati(map, [{ layers: [FILL, FILL_TERRENO, PUNTI], modello: modelloTooltipMef }]);
+    for (const id of [FILL, FILL_TERRENO, PUNTI]) {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
       map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
     }
   },
   strati: [{
-    id: 'mef-immobili', etichetta: 'Immobili dichiarati al MEF', layers: [FILL, LINEA, PUNTI], attivo: false,
+    id: 'mef-immobili', etichetta: 'Immobili dichiarati al MEF', layers: [FILL, LINEA, FILL_TERRENO, LINEA_TERRENO, PUNTI], attivo: false,
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
   }],
   pannello: creaLegenda,

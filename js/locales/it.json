@@ -1761,5 +1761,12 @@
   "lbl.Indirizzo (civico)": "Indirizzo (civico)",
   "lbl.Terreno o bene non agganciato a un edificio": "Terreno o bene non agganciato a un edificio",
   "tabella.layer.mef": "Immobili dichiarati al MEF",
-  "tabella.fonte.mef": "Ministero dell’economia e delle finanze, Censimento degli immobili pubblici (CC BY 4.0); elaborazione DigitalTwin Palermo, CC BY 4.0; vedi NOTICE.md"
+  "tabella.fonte.mef": "Ministero dell’economia e delle finanze, Censimento degli immobili pubblici (CC BY 4.0); elaborazione DigitalTwin Palermo, CC BY 4.0; vedi NOTICE.md",
+  "lbl.Localizzazione": "Localizzazione",
+  "lbl.posizione MEF corretta": "posizione MEF corretta",
+  "lbl.Scuole": "Scuole",
+  "lbl.Sedi elettorali": "Sedi elettorali",
+  "lbl.Posizione dichiarata": "Posizione dichiarata",
+  "lbl.Terreno (particella catastale)": "Terreno (particella catastale)",
+  "lbl.Bene senza poligono": "Bene senza poligono"
 }

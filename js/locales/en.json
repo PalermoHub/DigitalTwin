@@ -1761,5 +1761,12 @@
   "lbl.Indirizzo (civico)": "Address (street number)",
   "lbl.Terreno o bene non agganciato a un edificio": "Land or property not linked to a building",
   "tabella.layer.mef": "Properties declared to the MEF",
-  "tabella.fonte.mef": "Italian Ministry of Economy and Finance, Public property census (CC BY 4.0); processed by DigitalTwin Palermo, CC BY 4.0; see NOTICE.md"
+  "tabella.fonte.mef": "Italian Ministry of Economy and Finance, Public property census (CC BY 4.0); processed by DigitalTwin Palermo, CC BY 4.0; see NOTICE.md",
+  "lbl.Localizzazione": "Location method",
+  "lbl.posizione MEF corretta": "MEF position corrected",
+  "lbl.Scuole": "Schools",
+  "lbl.Sedi elettorali": "Polling stations",
+  "lbl.Posizione dichiarata": "Declared position",
+  "lbl.Terreno (particella catastale)": "Land (cadastral parcel)",
+  "lbl.Bene senza poligono": "Property without polygon"
 }

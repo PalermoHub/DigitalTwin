@@ -14,6 +14,23 @@ const PRECISIONE = {
   comune: 'Solo il comune: posizione approssimata',
 };
 
+const LOCALIZZAZIONE = {
+  catasto: 'Catasto',
+  'immobili-comunali': 'Immobili comunali',
+  scuole: 'Scuole',
+  seggi: 'Sedi elettorali',
+  uffici: 'Uffici comunali',
+  monumenti: 'Monumenti',
+  posizione: 'Posizione dichiarata',
+};
+
+// Come è stato trovato il poligono del bene; se la posizione MEF contraddiceva la fonte, lo dice.
+export function etichettaLocalizzazione(b) {
+  const nome = LOCALIZZAZIONE[b.localizzazione];
+  if (!nome) return null;
+  return b.verifica === 'corretto' ? `${tl(nome)} (${tl('posizione MEF corretta')})` : tl(nome);
+}
+
 const num = (v, d) => (v != null && Number.isFinite(Number(v)) ? Number(v).toLocaleString(localeIntl(), { maximumFractionDigits: d }) : null);
 const misura = (v, unita, d = 1) => (num(v, d) == null ? null : `${num(v, d)} ${unita}`);
 
@@ -31,7 +48,7 @@ export function righeBene(b) {
     ['Tipologia', b.tipologia], ['Natura', b.natura], ['Indirizzo', b.indirizzo], ['Superficie', misura(b.superficie_mq, 'm²')], ['Cubatura', misura(b.cubatura_mc, 'm³')],
     ['Epoca di costruzione', b.epoca], ['Identificativo catastale', b.catastale], ['Utilizzo', b.utilizzo], ['Finalità', b.finalita],
     ['Vincolo culturale o paesaggistico', b.vincolo], ['Natura giuridica', b.giuridica],
-    ['Posizione', PRECISIONE[b.precisione] ? tl(PRECISIONE[b.precisione]) : null],
+    ['Posizione', PRECISIONE[b.precisione] ? tl(PRECISIONE[b.precisione]) : null], ['Localizzazione', etichettaLocalizzazione(b)],
   ]);
 }
 
@@ -41,7 +58,7 @@ export function voceMef(p) {
   const tutti = leggiBeni(p);
   const beni = tutti.slice(0, MAX_BENI);
   const voce = {
-    chiave: p.id_edificio != null ? `mef-${p.id_edificio}` : `mef-p${tutti[0]?.id ?? ''}`,
+    chiave: (p.id_poligono ?? p.id_edificio) != null ? `mef-${p.id_poligono ?? p.id_edificio}` : `mef-p${tutti[0]?.id ?? ''}`,
     peso: 56,
     strato: 'mef-immobili',
     titolo: 'Immobili dichiarati al MEF',
