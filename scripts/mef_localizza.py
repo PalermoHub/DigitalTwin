@@ -1,0 +1,118 @@
+"""Localizzazione dei beni MEF a tre livelli: catasto, layer già mappati, posizione."""
+from dataclasses import dataclass
+
+from shapely.ops import unary_union
+from shapely.strtree import STRtree
+
+from mef_catasto import indirizzi_compatibili, particelle_da_identificativo
+from mef_geo import SOGLIA_M, aggancia_uno, in_metri, punto_m
+
+RAGGIO_LAYER = 60.0       # immobili comunali, scuole, seggi, uffici: indirizzo compatibile entro 60 m
+RAGGIO_MONUMENTI = 30.0   # monumenti (senza indirizzo): solo tipologie culturali, entro 30 m
+SOGLIA_DENTRO = 0.5       # un edificio è «dentro» una particella se almeno metà della sua area la copre
+CULTURALI = ("museo", "biblioteca", "teatro", "culto", "monument", "castell", "archeolog")
+
+
+@dataclass
+class Loc:
+    chiave: str            # identifica il poligono: e<id>, t<foglio>-<part>[+…], x<fonte>-<id>, i<fid>
+    geom: object           # geometria WGS84 (None per i punti)
+    forma: str             # edificio | terreno | punto
+    fonte: str             # catasto | immobili-comunali | scuole | seggi | uffici | monumenti | posizione
+    verifica: str          # concorde | corretto | non verificabile
+    motivo: str | None = None   # solo per i punti: terreno, strada, comune, senza-edificio
+
+
+@dataclass
+class Rif:
+    fonte: str
+    id: str
+    punto: object          # Point WGS84
+    indirizzo: str = ""
+    poligono: object = None   # geometria WGS84 o None
+
+
+def _albero(geometrie):
+    return STRtree(geometrie) if geometrie else None
+
+
+class Contesto:
+    """Tutte le fonti, già in metri locali e con gli alberi spaziali pronti."""
+
+    def __init__(self, edifici_wgs: dict, particelle_wgs: dict, immobili: list, riferimenti: list):
+        self.edifici_wgs = edifici_wgs
+        self.ids = list(edifici_wgs)
+        self.pos = {i: k for k, i in enumerate(self.ids)}
+        self.geoms = [in_metri(edifici_wgs[i]) for i in self.ids]
+        self.albero = _albero(self.geoms)
+        self.particelle_wgs = particelle_wgs
+        self.particelle_m = {k: in_metri(g) for k, g in particelle_wgs.items()}
+        per_chiave = {}
+        for im in immobili:
+            if im["chiave"]:
+                per_chiave.setdefault(im["chiave"], []).append(im["geom"])
+        self.immobili_wgs = {k: unary_union(v) for k, v in per_chiave.items()}
+        self.immobili_m = {k: in_metri(g) for k, g in self.immobili_wgs.items()}
+        self.immobili = [{**im, "geom_m": in_metri(im["geom"])} for im in immobili if im.get("indirizzo")]
+        self.albero_imm = _albero([im["geom_m"] for im in self.immobili])
+        self.riferimenti = [(r, punto_m(r.punto.x, r.punto.y), in_metri(r.poligono) if r.poligono is not None else None)
+                            for r in riferimenti]
+        self.albero_rif = _albero([gm if gm is not None else pm for _, pm, gm in self.riferimenti])
+
+
+# --- aiuti ------------------------------------------------------------------
+
+def _edifici_nell_area(ctx: Contesto, area_m) -> list:
+    """[(id, area)] degli edifici coperti per almeno SOGLIA_DENTRO dall'area."""
+    if ctx.albero is None:
+        return []
+    out = []
+    for k in ctx.albero.query(area_m, predicate="intersects"):
+        g = ctx.geoms[int(k)]
+        if g.area > 0 and g.intersection(area_m).area / g.area >= SOGLIA_DENTRO:
+            out.append((ctx.ids[int(k)], g.area))
+    return out
+
+
+def _piu_grande(candidati):
+    return max(candidati, key=lambda c: c[1])[0] if candidati else None
+
+
+def _edificio_vicino(ctx: Contesto, p, raggio: float = SOGLIA_M):
+    """Id dell'edificio più grande che contiene il punto o ne dista al più `raggio`."""
+    if ctx.albero is None:
+        return None
+    return _piu_grande([(ctx.ids[int(k)], ctx.geoms[int(k)].area) for k in ctx.albero.query(p.buffer(raggio), predicate="intersects")])
+
+
+def _verifica(poligono_m, p) -> str:
+    return "concorde" if poligono_m.distance(p) <= SOGLIA_M else "corretto"
+
+
+def _chiave_terreno(chiavi) -> str:
+    return "t" + "+".join(f"{f}-{p}" for f, p in sorted(chiavi))
+
+
+def _da_area(b: dict, ctx: Contesto, area_m, area_wgs, chiave_terreno: str, fonte: str):
+    """Terreno: l'area stessa. Fabbricato: l'edificio più grande dentro l'area (None se non ce ne sono)."""
+    p = punto_m(b["lon"], b["lat"])
+    if b["natura"] == "Terreno":
+        return Loc(chiave_terreno, area_wgs, "terreno", fonte, _verifica(area_m, p))
+    i = _piu_grande(_edifici_nell_area(ctx, area_m))
+    if i is None:
+        return None
+    return Loc(f"e{i}", ctx.edifici_wgs[i], "edificio", fonte, _verifica(ctx.geoms[ctx.pos[i]], p))
+
+
+def _livello_chiavi(b: dict, ctx: Contesto, in_m: dict, in_wgs: dict, fonte: str):
+    chiavi = [k for k in particelle_da_identificativo(b.get("catastale", ""), b["natura"]) if k in in_m]
+    if not chiavi:
+        return None
+    return _da_area(b, ctx, unary_union([in_m[k] for k in chiavi]), unary_union([in_wgs[k] for k in chiavi]),
+                    _chiave_terreno(chiavi), fonte)
+
+
+# --- livello 1: catasto ----------------------------------------------------
+
+def livello_catasto(b: dict, ctx: Contesto):
+    return _livello_chiavi(b, ctx, ctx.particelle_m, ctx.particelle_wgs, "catasto")
