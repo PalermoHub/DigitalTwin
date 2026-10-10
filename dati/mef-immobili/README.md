@@ -9,3 +9,5 @@ Anno del censimento: **2023**. Generato il 2026-10-10 da `scripts/mef_immobili.p
 Fonti: Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici (open data, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC; particelle: SITR Regione Siciliana e Agenzia delle Entrate; immobili comunali: Comune di Palermo.
 
 La posizione di ogni bene è verificata con il catasto (foglio e particella), poi con i layer già mappati (immobili comunali, scuole, seggi, uffici, monumenti), poi con la posizione dichiarata. Gli edifici portano l'elenco dei beni (`beni`, JSON).
+
+Come si ottiene il layer, passo per passo: `come-si-ottiene.mmd` (diagramma Mermaid con i numeri di questa esecuzione).

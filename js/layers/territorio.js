@@ -164,8 +164,9 @@ export default {
     { id: 'vincoli', etichetta: 'PRG 2004: vincoli', layers: ['prg-va', 'prg-vl'], attivo: false },
     { id: 'omi', etichetta: 'Zone OMI 2025', layers: ['omi', 'omi-line'], attivo: false,
       suCambio(attivo) { if (legendaOmi) legendaOmi.hidden = !attivo; } },
-    { id: 'immobili', etichetta: 'Immobili comunali', layers: ['immobili'], attivo: false },
     { id: 'civici', etichetta: 'Numeri civici (da zoom 14)', layers: ['civici'], attivo: false },
+    // ultimo del modulo: il sottogruppo prosegue con lo strato «Immobili dichiarati al MEF» (js/layers/mef-immobili.js, che segue in MODULI)
+    { id: 'immobili', etichetta: 'Immobili comunali', sezione: 'Immobili comunali', layers: ['immobili'], attivo: false },
   ],
   pannello(gruppo, map) { creaLegendaCatasto(gruppo, map); creaLegendaOmi(gruppo, map); },
   scheda: {

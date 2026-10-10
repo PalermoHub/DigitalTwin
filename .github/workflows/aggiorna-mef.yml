@@ -1,7 +1,8 @@
 name: Aggiorna MEF
 
 # Avvio manuale: scarica dal MEF i beni immobili del Comune di Palermo dell'ultimo anno pubblicato (o di quello indicato),
-# li aggancia ai poligoni dell'edificato (PMTiles pubblico) e rigenera dati/mef-immobili/.
+# li localizza a tre livelli (catasto, layer già mappati, posizione dichiarata) sui poligoni di edifici e particelle (PMTiles
+# pubblici) e rigenera dati/mef-immobili/, compreso il diagramma come-si-ottiene.mmd con i numeri dell'esecuzione.
 on:
   workflow_dispatch:
     inputs:
@@ -24,7 +25,7 @@ concurrency:
 jobs:
   aggiorna:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 30   # in locale servono circa 5 minuti
     steps:
       - uses: actions/checkout@v4
 
@@ -35,7 +36,7 @@ jobs:
       - name: Installa le librerie
         run: pip install shapely numpy mapbox-vector-tile pmtiles
 
-      - name: Scarica i beni del MEF e agganciali agli edifici
+      - name: Scarica i beni del MEF e localizzali (catasto, layer già mappati, posizione)
         env:
           ANNO: ${{ inputs.anno }}
         run: |
@@ -67,13 +68,14 @@ jobs:
             dati/mef-immobili/mef_immobili.csv
             dati/mef-immobili/riepilogo.json
             dati/mef-immobili/README.md
+            dati/mef-immobili/come-si-ottiene.mmd
 
       - name: Salva nel repository
         if: ${{ inputs.committa }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f dati/mef-immobili/mef_immobili.geojson dati/mef-immobili/mef_immobili.csv dati/mef-immobili/riepilogo.json dati/mef-immobili/README.md
+          git add -f dati/mef-immobili/mef_immobili.geojson dati/mef-immobili/mef_immobili.csv dati/mef-immobili/riepilogo.json dati/mef-immobili/README.md dati/mef-immobili/come-si-ottiene.mmd
           if git diff --cached --quiet; then
             echo "Nessuna variazione nei dati."
           else

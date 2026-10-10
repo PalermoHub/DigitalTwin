@@ -264,6 +264,93 @@ def _conta(valori) -> dict:
     return out
 
 
+def diagramma(anno: int, r: dict) -> str:
+    """Diagramma Mermaid di come si ottiene il layer, con i numeri dell'ultima esecuzione."""
+    loc = r["per_localizzazione"]
+    ver = r["per_verifica"]
+    n = lambda v: f"{v:,}".replace(",", ".")
+    motivi = ", ".join(f"{k}: {n(v)}" for k, v in sorted(r["punti_per_motivo"].items())) or "nessuno"
+    return f"""flowchart TD
+    %% Generato da scripts/mef_immobili.py (workflow «Aggiorna MEF»): non modificare a mano.
+    classDef fonte fill:#e7f0fa,stroke:#1c7ed6,color:#12263f
+    classDef passo fill:#fff4e0,stroke:#d9822b,color:#3a2a10
+    classDef regola fill:#f1f8e9,stroke:#6a994e,color:#1f3318
+    classDef esito fill:#f3e8ff,stroke:#7048a8,color:#2b1a47
+
+    subgraph FONTI["1 · Fonti dei dati"]
+        MEF["Censimento degli immobili pubblici del MEF, anno {anno}<br/>ZIP della Sicilia con un CSV di tutti i comuni<br/>licenza CC BY 4.0"]:::fonte
+        EDI["Edificato di Palermo: PMTiles pubblico<br/>circa 111.800 poligoni di edifici letti a zoom 16<br/>i frammenti sui bordi dei tile sono ricomposti"]:::fonte
+        PAR["Particelle catastali: PMTiles pubblico<br/>foglio e particella, lette a zoom 17<br/>solo quelle citate dai beni"]:::fonte
+        IMM["Immobili comunali 2024: PMTiles pubblico<br/>particelle con indirizzo del patrimonio del Comune"]:::fonte
+        RIF["Layer già mappati del repository<br/>scuole, sezioni elettorali, uffici comunali, monumenti"]:::fonte
+    end
+
+    subgraph LETTURA["2 · Lettura e pulizia dei beni"]
+        A1["Si tengono i beni con codice comune G273 Palermo<br/>{n(r['beni'])} beni, ognuno con il suo identificativo"]:::passo
+        A2["Si leggono natura, tipologia, indirizzo, superficie, cubatura,<br/>epoca, utilizzo, vincoli, natura giuridica e identificativo catastale"]:::passo
+        A3["Coordinate: si scartano quelle assenti, scambiate o fuori da Palermo<br/>precisione: catastale, civico, strada o comune"]:::passo
+    end
+
+    subgraph LOCALIZZA["3 · Localizzazione a tre livelli: vince il primo che risponde"]
+        L1["Livello 1 · Catasto<br/>foglio e particella dall'identificativo del MEF<br/>beni localizzati: {n(loc.get('catasto', 0))}"]:::regola
+        L2["Livello 2 · Layer già mappati<br/>Immobili comunali per particella o per indirizzo entro 60 m<br/>scuole e seggi: parte più grande del poligono<br/>uffici: edificio più grande entro 15 m dalla sede<br/>monumenti: solo tipologie culturali entro 30 m<br/>beni localizzati: {n(sum(v for k, v in loc.items() if k != 'catasto' and k != 'posizione'))}"]:::regola
+        L3["Livello 3 · Posizione dichiarata dal MEF<br/>l'edificio che contiene il punto o il più vicino entro 15 m<br/>beni localizzati: {n(loc.get('posizione', 0))}"]:::regola
+        L1 -->|"nessuna particella trovata"| L2
+        L2 -->|"nessuna corrispondenza"| L3
+    end
+
+    subgraph FORMA["4 · Quale poligono prende il bene"]
+        F1["Terreno: la particella catastale<br/>più particelle: la loro unione"]:::passo
+        F2["Fabbricato: l'edificio più grande dentro la particella,<br/>almeno metà della sua area deve essere coperta"]:::passo
+        F3["Compendio: se un immobile comunale copre metà dell'area dichiarata<br/>si aggiungono le particelle contigue con lo stesso indirizzo<br/>tetto 250.000 m²<br/>un fabbricato prende tutti gli edifici del compendio<br/>perché un edificio può essere fatto di più poligoni"]:::regola
+        F4["Nessun poligono possibile: il bene resta un punto<br/>motivi: {motivi}"]:::passo
+    end
+
+    subgraph VERIFICA["5 · Verifica della posizione MEF"]
+        V1["Il punto MEF dista al più 15 m dal poligono scelto: concorde<br/>{n(ver.get('concorde', 0))} beni"]:::regola
+        V2["Il punto MEF contraddice catasto o layer: la posizione è corretta<br/>{n(ver.get('corretto', 0))} beni"]:::regola
+        V3["Solo la posizione dichiarata: non verificabile<br/>{n(ver.get('non verificabile', 0))} beni"]:::regola
+    end
+
+    subgraph USCITA["6 · Aggregazione e uscita"]
+        U1["Un elemento per poligono con l'elenco dei suoi beni<br/>{n(r['edifici'])} edifici con {n(r['in_edifici'])} beni, il maggiore ne ha {r['max_beni_per_edificio']}<br/>{n(r['terreni'])} particelle con {n(r['in_terreni'])} beni, {n(r['punti'])} punti"]:::esito
+        U2["Controlli: nessun bene perso o duplicato, numero di beni e di edifici plausibile,<br/>almeno metà delle particelle richieste trovate: altrimenti il workflow fallisce"]:::regola
+        U3["File in dati/mef-immobili: mef_immobili.geojson, mef_immobili.csv,<br/>riepilogo.json, README.md e il diagramma come-si-ottiene.mmd"]:::esito
+    end
+
+    subgraph SITO["7 · Nel sito"]
+        S1["Layer «Immobili dichiarati al MEF» nel gruppo Territorio<br/>sottogruppo «Immobili comunali» insieme allo strato Immobili comunali<br/>spento all'apertura"]:::esito
+        S2["Scheda del luogo: un bene per riga, con tipologia, indirizzo,<br/>superficie, identificativo catastale e come è stato localizzato"]:::esito
+        S3["Tabella dati: righe filtrabili ed esportabili, con le colonne piatte del layer"]:::esito
+    end
+
+    MEF --> A1 --> A2 --> A3 --> L1
+    PAR --> L1
+    IMM --> L2
+    RIF --> L2
+    EDI --> L1
+    EDI --> L3
+    L1 --> F1
+    L1 --> F2
+    L2 --> F1
+    L2 --> F2
+    L3 --> F2
+    L3 --> F4
+    F1 --> F3
+    F2 --> F3
+    F3 --> V1
+    F3 --> V2
+    L3 --> V3
+    F4 --> U1
+    V1 --> U1
+    V2 --> U1
+    V3 --> U1
+    U1 --> U2 --> U3 --> S1
+    S1 --> S2
+    S1 --> S3
+"""
+
+
 def riepilogo(beni, scartati: int, feats, locs: dict) -> dict:
     per_forma = {f: [x for x in feats if x["properties"]["forma"] == f] for f in ("edificio", "terreno", "punto")}
     per_verifica = _conta(loc.verifica for loc in locs.values())
@@ -294,6 +381,7 @@ def scrivi(uscita: Path, anno: int, beni, locs: dict, feats, riep: dict) -> None
             loc = locs[b["id"]]
             w.writerow([b["id"], loc.forma, loc.chiave, loc.motivo or "", loc.fonte,
                         loc.verifica, b.get("tipologia", ""), b.get("indirizzo", "")])
+    (uscita / "come-si-ottiene.mmd").write_text(diagramma(anno, riep), encoding="utf-8")
     (uscita / "riepilogo.json").write_text(json.dumps({"anno": anno, **riep}, ensure_ascii=False, indent=1), encoding="utf-8")
     (uscita / "README.md").write_text(
         f"# Immobili dichiarati al MEF (Comune di Palermo)\n\n"
@@ -306,7 +394,8 @@ def scrivi(uscita: Path, anno: int, beni, locs: dict, feats, riep: dict) -> None
         f"(open data, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC; "
         f"particelle: SITR Regione Siciliana e Agenzia delle Entrate; immobili comunali: Comune di Palermo.\n\n"
         f"La posizione di ogni bene è verificata con il catasto (foglio e particella), poi con i layer già mappati (immobili comunali, scuole, "
-        f"seggi, uffici, monumenti), poi con la posizione dichiarata. Gli edifici portano l'elenco dei beni (`beni`, JSON).\n",
+        f"seggi, uffici, monumenti), poi con la posizione dichiarata. Gli edifici portano l'elenco dei beni (`beni`, JSON).\n\n"
+        f"Come si ottiene il layer, passo per passo: `come-si-ottiene.mmd` (diagramma Mermaid con i numeri di questa esecuzione).\n",
         encoding="utf-8")
 
 

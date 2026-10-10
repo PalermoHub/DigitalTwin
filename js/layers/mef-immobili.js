@@ -63,6 +63,7 @@ export default {
     descrizione: 'Beni immobili del Comune di Palermo dichiarati al censimento del Ministero dell’economia e delle finanze, agganciati agli edifici in base alla posizione.',
   },
   gruppo: 'territorio',
+  sezione: '', // nessun titolo proprio: lo strato sta nel sottogruppo «Immobili comunali», che apre lo strato «Immobili comunali» di territorio.js
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: urlDati('mef-immobili/mef_immobili.geojson') });
   },
