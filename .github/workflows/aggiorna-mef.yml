@@ -34,7 +34,7 @@ jobs:
           python-version: "3.12"
 
       - name: Installa le librerie
-        run: pip install shapely numpy mapbox-vector-tile pmtiles
+        run: pip install shapely numpy "mapbox-vector-tile<3" "pmtiles~=3.0"
 
       - name: Scarica i beni del MEF e localizzali (catasto, layer già mappati, posizione)
         env:

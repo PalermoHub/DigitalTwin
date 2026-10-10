@@ -206,7 +206,7 @@ def proprieta_piatte(lista) -> dict:
             v = b.get(chiave)
             if v and v not in visti:
                 visti.append(v)
-        return "; ".join(visti) or None
+        return "; ".join(sorted(visti)) or None
 
     piatte = {"id_bene": lista[0]["id"], "tipologia": uniti("tipologia"), "indirizzo": lista[0].get("indirizzo"), "catastale": uniti("catastale"),
               "localizzazione": uniti("localizzazione"), "verifica": uniti("verifica")}

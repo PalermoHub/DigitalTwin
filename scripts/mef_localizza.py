@@ -1,4 +1,5 @@
 """Localizzazione dei beni MEF a tre livelli: catasto, layer già mappati, posizione."""
+import hashlib
 from dataclasses import dataclass
 
 from shapely.ops import unary_union
@@ -56,6 +57,7 @@ class Contesto:
         self.immobili = [{**im, "geom_m": in_metri(im["geom"])} for im in immobili if im.get("indirizzo")]
         self.albero_imm = _albero([im["geom_m"] for im in self.immobili])
         self.compendi = {}
+        self.compendi_edifici = {}   # chiave del compendio -> edifici nel gruppo, uguali per tutti i beni
         self.riferimenti = [(r, punto_m(r.punto.x, r.punto.y), in_metri(r.poligono) if r.poligono is not None else None)
                             for r in riferimenti]
         self.albero_rif = _albero([gm if gm is not None else pm for _, pm, gm in self.riferimenti])
@@ -87,6 +89,7 @@ def _edificio_vicino(ctx: Contesto, p, raggio: float = SOGLIA_M):
 
 
 def _verifica(poligono_m, p) -> str:
+    """«concorde» se il punto MEF non contraddice l'area che ha determinato la localizzazione (entro SOGLIA_M)."""
     return "concorde" if poligono_m.distance(p) <= SOGLIA_M else "corretto"
 
 
@@ -101,14 +104,15 @@ def _compendio(ctx: Contesto, area_m, area_wgs):
     """Il bene può essere una parte di un immobile comunale più esteso (più particelle e più edifici).
 
     Parte dagli immobili comunali che coprono almeno metà dell'area dichiarata e aggiunge quelli contigui con lo
-    stesso indirizzo. Ritorna (area in metri, area WGS84, id del compendio) oppure (area_m, area_wgs, None)."""
+    stesso indirizzo. Ritorna (area in metri, area WGS84, id del compendio, gruppo in metri) oppure
+    (area_m, area_wgs, None, None)."""
     if ctx.albero_imm is None:
-        return area_m, area_wgs, None
+        return area_m, area_wgs, None, None
     imm = ctx.immobili
     semi = [int(k) for k in ctx.albero_imm.query(area_m, predicate="intersects")
-            if imm[int(k)]["geom_m"].intersection(area_m).area >= 0.5 * min(imm[int(k)]["geom_m"].area, area_m.area)]
+            if imm[int(k)]["geom_m"].intersection(area_m).area >= 0.5 * area_m.area]
     if not semi:
-        return area_m, area_wgs, None
+        return area_m, area_wgs, None, None
     chiave = tuple(sorted(semi))
     if chiave not in ctx.compendi:   # molti beni cadono nello stesso compendio: si calcola una volta
         gruppo, coda = set(semi), list(semi)
@@ -127,8 +131,8 @@ def _compendio(ctx: Contesto, area_m, area_wgs):
     gruppo_m, gruppo_wgs, id_compendio = ctx.compendi[chiave]
     unione_m = gruppo_m if gruppo_m.covers(area_m) else gruppo_m.union(area_m)
     if unione_m.area > MAX_COMPENDIO_M2:
-        return area_m, area_wgs, None
-    return unione_m, (gruppo_wgs if unione_m is gruppo_m else gruppo_wgs.union(area_wgs)), id_compendio
+        return area_m, area_wgs, None, None
+    return unione_m, (gruppo_wgs if unione_m is gruppo_m else gruppo_wgs.union(area_wgs)), (id_compendio, chiave), gruppo_m
 
 
 def _da_area(b: dict, ctx: Contesto, area_m, area_wgs, chiave_terreno: str, fonte: str, compendio: bool = False):
@@ -136,20 +140,31 @@ def _da_area(b: dict, ctx: Contesto, area_m, area_wgs, chiave_terreno: str, font
     Con `compendio` l'area si estende all'immobile comunale che la contiene: il terreno prende tutte le sue
     particelle, il fabbricato tutti gli edifici (un edificio può essere fatto di più poligoni)."""
     p = punto_m(b["lon"], b["lat"])
-    esteso = None
+    esteso = gruppo_m = None
     if compendio:
-        area_m, area_wgs, esteso = _compendio(ctx, area_m, area_wgs)
+        area_m, area_wgs, esteso, gruppo_m = _compendio(ctx, area_m, area_wgs)
     if b["natura"] == "Terreno":
-        return Loc(f"i{esteso}" if esteso is not None else chiave_terreno, area_wgs, "terreno", fonte, _verifica(area_m, p))
-    dentro = _edifici_nell_area(ctx, area_m)
+        if esteso is None:
+            chiave = chiave_terreno
+        elif area_m is gruppo_m:
+            chiave = f"i{esteso[0]}"
+        else:   # l'area dichiarata esce dal gruppo: stessa chiave solo se è la stessa area
+            chiave = f"i{esteso[0]}-" + hashlib.md5(chiave_terreno.encode()).hexdigest()[:6]
+        return Loc(chiave, area_wgs, "terreno", fonte, _verifica(area_m, p))
+    if esteso is not None:   # gli edifici del compendio sono gli stessi per tutti i beni che vi cadono
+        if esteso[1] not in ctx.compendi_edifici:
+            ctx.compendi_edifici[esteso[1]] = _edifici_nell_area(ctx, gruppo_m)
+        dentro = ctx.compendi_edifici[esteso[1]] or _edifici_nell_area(ctx, area_m)
+    else:
+        dentro = _edifici_nell_area(ctx, area_m)
     if not dentro:
         return None
     if esteso is not None and len(dentro) > 1:
         ids = sorted(i for i, _ in dentro)
         geom = unary_union([ctx.edifici_wgs[i] for i in ids])
-        return Loc(f"m{ids[0]}+{len(ids)}", geom, "edificio", fonte, _verifica(unary_union([ctx.geoms[ctx.pos[i]] for i in ids]), p))
+        return Loc(f"m{ids[0]}+{len(ids)}", geom, "edificio", fonte, _verifica(area_m, p))
     i = _piu_grande(dentro)
-    return Loc(f"e{i}", ctx.edifici_wgs[i], "edificio", fonte, _verifica(ctx.geoms[ctx.pos[i]], p))
+    return Loc(f"e{i}", ctx.edifici_wgs[i], "edificio", fonte, _verifica(area_m, p))
 
 
 def _livello_chiavi(b: dict, ctx: Contesto, in_m: dict, in_wgs: dict, fonte: str):
@@ -185,7 +200,7 @@ def livello_immobili(b: dict, ctx: Contesto):
         im = ctx.immobili[k]
         if not indirizzi_compatibili(b.get("indirizzo", ""), im["indirizzo"]):
             continue
-        loc = _da_area(b, ctx, im["geom_m"], im["geom"], f"i{im['id']}", "immobili-comunali", compendio=True)
+        loc = _da_area(b, ctx, im["geom_m"], im["geom"], f"o{im['id']}", "immobili-comunali", compendio=True)
         if loc:
             return loc
     return None
@@ -197,7 +212,7 @@ def _poligono_riferimento(b: dict, ctx: Contesto, p, k: int):
         parti_m = list(gm.geoms) if hasattr(gm, "geoms") else [gm]
         parti_w = list(r.poligono.geoms) if hasattr(r.poligono, "geoms") else [r.poligono]
         j = max(range(len(parti_m)), key=lambda n: parti_m[n].area)
-        return Loc(f"x{r.fonte}-{r.id}", parti_w[j], "edificio", r.fonte, _verifica(parti_m[j], p))
+        return Loc(f"x{r.fonte}-{r.id}", parti_w[j], "edificio", r.fonte, _verifica(gm, p))
     i = _edificio_vicino(ctx, pm)   # uffici e monumenti: solo il punto, poi l'edificio più grande lì vicino
     if i is None:
         return None
