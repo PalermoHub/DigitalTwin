@@ -6,7 +6,7 @@ import { PASSI as SOLO_GUIDA, PASSI_RNDT } from '../../js/core/guida-contenuti.j
 const PASSI = [...SOLO_GUIDA, ...PASSI_RNDT]; // i test di contenuto valgono per entrambi
 
 test('i passi nell\'ordine previsto', () => {
-  assert.deepEqual(SOLO_GUIDA.map(p => p.id), ['cos-e', 'telefono', 'dati', 'strati', 'ordine-layer', 'mappe-storiche', 'miei-layer', 'colori', 'clic', 'tutto-in-un-punto', 'scheda', 'filtri', 'strumenti', 'tabella-dati', 'street-view', 'monumenti', 'uffici', 'pai', 'incendi', 'isole-calore', 'trasporto-strip', 'avvertenze']);
+  assert.deepEqual(SOLO_GUIDA.map(p => p.id), ['cos-e', 'telefono', 'dati', 'strati', 'ordine-layer', 'mappe-storiche', 'miei-layer', 'colori', 'tema-interfaccia', 'clic', 'tutto-in-un-punto', 'scheda', 'filtri', 'strumenti', 'tabella-dati', 'street-view', 'monumenti', 'uffici', 'pai', 'incendi', 'isole-calore', 'trasporto-strip', 'avvertenze']);
   assert.deepEqual(PASSI_RNDT.map(p => p.id), ['rndt-catalogo', 'rndt-gruppo', 'rndt-info']);
 });
 
@@ -134,4 +134,10 @@ test('passiRndt: una sezione per passo RNDT, con id ancora e immagine', () => {
   const sezioni = passiRndt(doc);
   assert.deepEqual(sezioni.map(s => s.id), PASSI_RNDT.map(p => `guida-${p.id}`));
   assert.equal(sezioni.flatMap(s => tutti(s, 'img')).length, PASSI_RNDT.length);
+});
+
+test('il passo del tema mette in evidenza i temi per daltonici', () => {
+  const p = SOLO_GUIDA.find(x => x.id === 'tema-interfaccia');
+  assert.match(p.evidenza, /Daltonici: rosso-verde/);
+  assert.match(p.evidenza, /Daltonici: blu-giallo/);
 });

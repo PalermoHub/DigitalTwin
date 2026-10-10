@@ -346,6 +346,7 @@ dialog li { margin: 4px 0; }
 .info-blocco figure img { margin: 0; }
 .info-blocco figcaption { margin-top: 6px; color: var(--text-muted); font-size: var(--fs-xs); }
 .guida-passo { scroll-margin-top: 8px; }
+.guida-evidenza { margin: 12px 0; padding: 10px 14px; border-left: 4px solid var(--accent); border-radius: var(--r-sm); background: var(--surface-alt); font-weight: 600; }
 /* schermi larghi: contenuto a sinistra, indice a destra sempre in vista mentre la guida scorre */
 @media (min-width: 1000px) {
   .guida-pagina { display: grid; grid-template-columns: minmax(0, 1fr) 250px; column-gap: 20px; align-items: start; }

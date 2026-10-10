@@ -131,6 +131,12 @@ function creaPasso(doc, p) {
     par.textContent = testo;
     sez.append(par);
   }
+  if (p.evidenza) {
+    const ev = doc.createElement('p');
+    ev.className = 'guida-evidenza';
+    ev.textContent = p.evidenza;
+    sez.append(ev);
+  }
   const fig = doc.createElement('figure');
   fig.className = 'guida-figura';
   const img = doc.createElement('img');

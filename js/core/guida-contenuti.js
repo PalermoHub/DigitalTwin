@@ -113,6 +113,20 @@ export const PASSI = [
     scena: { strati: ['edificato'], centro: CENTRO, zoom: 15, rail: 'btn-gruppo-layer', gruppo: 'Edifici', macro: 'colori' },
   },
   {
+    id: 'tema-interfaccia',
+    gruppo: 'funzioni',
+    titolo: 'Personalizzare i colori e il testo dell\'interfaccia',
+    paragrafi: [
+      'Nella barra di destra il tab «Tema» (la tavolozza) apre il pannello che cambia l\'aspetto di tutta l\'applicazione, non solo della mappa. In alto ci sono i «Temi pronti», ciascuno con la sua miniatura: Chiaro, Scuro, Alto contrasto e molti altri. Un clic li applica subito, con l\'anteprima dal vivo, e il tema scelto resta salvato in questo browser.',
+      'Sotto i temi si regolano a mano i cinque colori di base: sfondo, testo, accento, link e bordi. Se un colore si legge male sullo sfondo, un avviso indica il contrasto misurato e quello minimo consigliato. «Colori avanzati» permette di scegliere anche i colori di stato (esito positivo, errore e allarme, fondo degli avvisi), quello della particella cercata e quello dei valori nei grafici. La sezione «Testo» cambia la dimensione e il carattere, compreso Atkinson Hyperlegible, pensato per l\'alta leggibilità.',
+      '«Salva su file» scrive il tema in un file sul tuo computer, che «Carica da file» rilegge anche su un altro dispositivo: non viene inviato a nessuno. «Ripristina colori standard» toglie il tema personalizzato, come fa il pulsante chiaro/scuro della barra degli strumenti.',
+    ],
+    evidenza: 'Per chi non distingue bene alcuni colori ci sono due temi pronti: «Daltonici: rosso-verde», per chi confonde il rosso con il verde, e «Daltonici: blu-giallo», per chi confonde il blu con il giallo. Non cambiano solo lo sfondo: esito positivo ed errore non sono più verde e rosso, e anche i colori della particella cercata e dei valori nei grafici sono scelti perché si distinguano per tinta e luminosità.',
+    immagine: { file: 'img/guida/passi/tema-interfaccia.webp', alt: 'Il pannello Tema nella barra di destra, scorso fino ai Temi pronti: in evidenza i due temi Daltonici, rosso-verde e blu-giallo, con le miniature; sotto, i colori di base e la sezione Testo.', didascalia: 'Il tab «Tema»: temi pronti, tra cui i due per daltonici.' },
+    narrazione: 'Il tab tema, nella barra di destra, cambia i colori e il testo di tutta l\'applicazione. Scegli un tema pronto, oppure regola a mano sfondo, testo, accento, link e bordi: un avviso ti dice se il contrasto è troppo basso. Puoi anche ingrandire il testo e usare un carattere ad alta leggibilità. Ci sono poi due temi pensati per chi non distingue bene i colori, uno per il rosso e il verde e uno per il blu e il giallo. Il tema si può salvare su file e ricaricare quando vuoi.',
+    scena: { strati: [], centro: CENTRO, zoom: 13, macro: 'tema' },
+  },
+  {
     id: 'clic',
     gruppo: 'funzioni',
     titolo: 'Fare clic sulla mappa',
