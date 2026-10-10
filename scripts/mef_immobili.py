@@ -399,6 +399,20 @@ def scrivi(uscita: Path, anno: int, beni, locs: dict, feats, riep: dict) -> None
         encoding="utf-8")
 
 
+def ricerca_immobili_comunali(immobili) -> dict:
+    """Un punto per indirizzo (il baricentro del primo immobile) per la ricerca del sito: dati/mef-immobili/immobili_comunali.geojson."""
+    visti, feats = set(), []
+    for im in sorted(immobili, key=lambda x: str(x["id"])):
+        indirizzo = im["indirizzo"]
+        if not indirizzo or indirizzo in visti:
+            continue
+        visti.add(indirizzo)
+        c = im["geom"].representative_point()
+        props = {k: v for k, v in (("nome", indirizzo), ("categoria", im.get("categoria")), ("tipo", im.get("tipo"))) if v}
+        feats.append({"type": "Feature", "properties": props, "geometry": {"type": "Point", "coordinates": [round(c.x, 6), round(c.y, 6)]}})
+    return {"type": "FeatureCollection", "features": feats}
+
+
 # --- programma --------------------------------------------------------------
 
 PARTICELLE = "https://palermohub.github.io/PRG2004/particelle/particelle.pmtiles"
@@ -464,6 +478,8 @@ def main(argv=None) -> None:
     verifica(beni, feats)
     riep = riepilogo(beni, scartati, feats, locs)
     scrivi(Path(args.uscita), anno, beni, locs, feats, riep)
+    (Path(args.uscita) / "immobili_comunali.geojson").write_text(
+        json.dumps(ricerca_immobili_comunali(immobili), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(json.dumps(riep, ensure_ascii=False), file=sys.stderr)
 
 

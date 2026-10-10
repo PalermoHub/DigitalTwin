@@ -65,6 +65,7 @@ jobs:
           name: dati-mef-immobili
           path: |
             dati/mef-immobili/mef_immobili.geojson
+            dati/mef-immobili/immobili_comunali.geojson
             dati/mef-immobili/mef_immobili.csv
             dati/mef-immobili/riepilogo.json
             dati/mef-immobili/README.md
@@ -75,7 +76,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f dati/mef-immobili/mef_immobili.geojson dati/mef-immobili/mef_immobili.csv dati/mef-immobili/riepilogo.json dati/mef-immobili/README.md dati/mef-immobili/come-si-ottiene.mmd
+          git add -f dati/mef-immobili/immobili_comunali.geojson dati/mef-immobili/mef_immobili.geojson dati/mef-immobili/mef_immobili.csv dati/mef-immobili/riepilogo.json dati/mef-immobili/README.md dati/mef-immobili/come-si-ottiene.mmd
           if git diff --cached --quiet; then
             echo "Nessuna variazione nei dati."
           else

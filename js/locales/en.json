@@ -1354,6 +1354,8 @@
   "luoghi.fermata": "Stop{linee}",
   "luoghi.fermata.linee": ", lines {elenco}",
   "luoghi.fontanella": "Drinking fountain",
+  "luoghi.immobileComunale": "Municipal property",
+  "luoghi.immobileMef": "Property declared to the MEF",
   "luoghi.linea": "{tipo}, {da} → {a}",
   "luoghi.sede": "Municipal office building, {n} offices",
   "luoghi.sedeElettorale": "Polling station",

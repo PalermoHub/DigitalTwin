@@ -42,7 +42,7 @@ def carica_immobili(percorso: Path, zoom: int = 16) -> list:
         civico = str(p.get("NUMERO_CIVICO") or "").strip()
         indirizzo = " ".join(x for x in (str(p.get("INDIRIZZO") or "").strip(), civico) if x)
         out.append({"id": fid, "geom": unary_union(gs), "chiave": chiave(p.get("FOGLIO"), p.get("PLLA")),
-                    "indirizzo": indirizzo, "categoria": p.get("CATEGORIA")})
+                    "indirizzo": indirizzo, "categoria": p.get("CATEGORIA"), "tipo": p.get("TIPO")})
     return out
 
 

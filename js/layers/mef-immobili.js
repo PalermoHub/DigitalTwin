@@ -3,6 +3,7 @@ import { registraTooltipStrati } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { modelloTooltipMef, voceMef } from './scheda-mef.js';
 import { tl } from '../core/i18n.js';
+import { voceFiltro } from '../core/legenda.js';
 
 // Beni immobili del Comune di Palermo dichiarati al censimento del MEF (dati/mef-immobili/, workflow «Aggiorna MEF»).
 // Gli edifici con almeno un bene sono poligoni (un colore se i beni sono più d'uno); terreni e beni georiferiti solo dalla strada o
@@ -36,21 +37,36 @@ function el(tag, classe, testo) {
   return e;
 }
 
+// Le quattro voci della legenda sono filtri: ognuna accende o spegne una categoria di elementi (il clic ne isola una).
+const CATEGORIE = [
+  { chiave: 'uno', colore: COLORE_UNO, testo: 'Edificio con un bene', tondo: false },
+  { chiave: 'piu', colore: COLORE_PIU, testo: 'Edificio con più beni', tondo: false },
+  { chiave: 'terreno', colore: COLORE_TERRENO, testo: 'Terreno (particella catastale)', tondo: false },
+  { chiave: 'punto', colore: COLORE_PUNTO, testo: 'Bene senza poligono', tondo: true },
+];
+const accese = new Set(CATEGORIE.map(c => c.chiave));
+const NESSUNO = ['==', 1, 0];
+let mappa = null;
+
+// Filtro dei layer di ogni forma secondo le categorie accese.
+function applicaFiltri() {
+  if (!mappa) return;
+  const edifici = [accese.has('uno') && ['<=', ['get', 'n_beni'], 1], accese.has('piu') && ['>', ['get', 'n_beni'], 1]].filter(Boolean);
+  const filtroEdifici = edifici.length === 2 ? EDIFICIO : edifici.length ? ['all', EDIFICIO, edifici[0]] : NESSUNO;
+  const imposta = (ids, filtro) => { for (const id of ids) if (mappa.getLayer(id)) mappa.setFilter(id, filtro); };
+  imposta([FILL, LINEA], filtroEdifici);
+  imposta([FILL_TERRENO, LINEA_TERRENO], accese.has('terreno') ? TERRENO : NESSUNO);
+  imposta([PUNTI], accese.has('punto') ? PUNTO : NESSUNO);
+}
+
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti legenda-mef');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Immobili dichiarati al MEF'));
-  for (const [colore, testo, tondo] of [
-    [COLORE_UNO, 'Edificio con un bene', false],
-    [COLORE_PIU, 'Edificio con più beni', false],
-    [COLORE_TERRENO, 'Terreno (particella catastale)', false],
-    [COLORE_PUNTO, 'Bene senza poligono', true],
-  ]) {
-    const riga = el('div', 'mef-legenda-riga');
+  for (const { chiave, colore, testo, tondo } of CATEGORIE) {
     const simbolo = el('i', tondo ? 'monumenti-pallino' : 'mef-campione');
     simbolo.style.background = colore;
-    riga.append(simbolo, tl(testo));
-    legenda.append(riga);
+    legenda.append(voceFiltro(simbolo, testo, acceso => { acceso ? accese.add(chiave) : accese.delete(chiave); applicaFiltri(); }));
   }
   document.getElementById('legende').append(legenda);
 }
@@ -68,6 +84,7 @@ export default {
     map.addSource(SRC, { type: 'geojson', data: urlDati('mef-immobili/mef_immobili.geojson') });
   },
   aggiungiLayer(map) {
+    mappa = map;
     const nascosto = { visibility: 'none' };
     map.addLayer({
       id: FILL, type: 'fill', source: SRC, filter: EDIFICIO, layout: nascosto,
