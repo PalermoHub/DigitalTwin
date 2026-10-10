@@ -381,3 +381,56 @@ def scrivi(uscita: Path, anno: int, beni, esito, feats, riep: dict) -> None:
         f"(open data, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC.\n\n"
         f"Gli edifici portano l'elenco dei beni (`beni`, JSON). Terreni e beni georiferiti dall'indirizzo alla strada o al comune restano punti.\n",
         encoding="utf-8")
+
+
+# --- programma --------------------------------------------------------------
+
+def main(argv=None) -> None:
+    a = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    a.add_argument("--anno", type=int, help="anno del censimento (default: l'ultimo pubblicato)")
+    a.add_argument("--zip", help="ZIP del MEF già scaricato (non usa la rete)")
+    a.add_argument("--pmtiles", help="edificato.pmtiles già scaricato (non usa la rete)")
+    a.add_argument("--uscita", default=str(USCITA))
+    args = a.parse_args(argv)
+
+    if args.zip:
+        trovato = re.search(r"(\d{4})", Path(args.zip).name)
+        anno = args.anno or (int(trovato.group(1)) if trovato else date.today().year)
+        dati_zip = Path(args.zip).read_bytes()
+    else:
+        home = scarica(PAGINA).decode("utf-8", errors="replace")
+        anno = args.anno or ultimo_anno(home)
+        pagina = scarica(f"{PAGINA}dati_immobili_{anno}.html").decode("utf-8", errors="replace")
+        dati_zip = scarica(url_archivio(pagina))
+    print(f"Censimento MEF {anno}", file=sys.stderr)
+
+    righe = beni_del_comune(leggi_csv(csv_da_zip(dati_zip)))
+    tutti = [bene(r) for r in righe]
+    beni = [b for b in tutti if b is not None and nell_area(b)]
+    scartati = len(righe) - len(beni)
+    if not MIN_BENI <= len(beni) <= MAX_BENI:
+        raise SystemExit(f"{len(beni)} beni di Palermo nel CSV: fuori dall'intervallo atteso ({MIN_BENI}–{MAX_BENI})")
+    print(f"Beni di Palermo: {len(beni)} (scartati senza posizione utilizzabile: {scartati})", file=sys.stderr)
+
+    if args.pmtiles:
+        edifici = leggi_edificato(Path(args.pmtiles))
+    else:
+        with tempfile.TemporaryDirectory() as tmp:
+            percorso = Path(tmp) / "edificato.pmtiles"
+            percorso.write_bytes(scarica(EDIFICATO))
+            edifici = leggi_edificato(percorso)
+    controlla_edifici(edifici)
+    print(f"Edifici letti: {len(edifici)}", file=sys.stderr)
+
+    edifici_m = {i: in_metri(g) for i, (g, _) in edifici.items()}
+    esito = aggancia(beni, edifici_m)
+    usati = {i for i, _ in esito.values() if i is not None}
+    feats = costruisci(beni, esito, {i: edifici[i][0] for i in usati}, {i: edifici[i][1] for i in usati}, anno)
+    verifica(beni, feats)
+    riep = riepilogo(beni, scartati, feats)
+    scrivi(Path(args.uscita), anno, beni, esito, feats, riep)
+    print(json.dumps(riep, ensure_ascii=False), file=sys.stderr)
+
+
+if __name__ == "__main__":
+    main()
