@@ -9,7 +9,7 @@ on:
   push:
     branches: [main]
   workflow_run:
-    workflows: ["Aggiorna colonnine", "Aggiorna GTFS", "Aggiorna incendi", "Aggiorna PAI", "Aggiorna uffici"]
+    workflows: ["Aggiorna colonnine", "Aggiorna GTFS", "Aggiorna incendi", "Aggiorna MEF", "Aggiorna PAI", "Aggiorna uffici"]
     types: [completed]
   workflow_dispatch:
 

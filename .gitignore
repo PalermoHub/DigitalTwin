@@ -13,6 +13,8 @@ dati/*/
 !dati/incedi/
 # eccezione: PAI (rigenerato dal workflow «Aggiorna PAI»)
 !dati/pai/
+# eccezione: immobili dichiarati al MEF (rigenerato dal workflow «Aggiorna MEF»)
+!dati/mef-immobili/
 # eccezione: isole di calore (piccolo, rigenerato da scripts/isole_calore.py)
 !dati/isole-calore/
 # dati di lavoro degli script (non servono alla webapp)
