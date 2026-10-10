@@ -24,6 +24,7 @@
 <link rel="icon" type="image/png" href="img/favicon.png">
 <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 <script>try{if(localStorage.getItem('dt-tema')==='scuro')document.documentElement.dataset.tema='scuro'}catch(e){}</script>
+<script>try{var u=JSON.parse(localStorage.getItem('dt-tema-ui'));if(u&&(u.versione===1||u.versione===2)&&u.vars){var r=document.documentElement;for(var k in u.vars)r.style.setProperty(k,u.vars[k]);if(u.scuro===true)r.dataset.tema='scuro';else if(u.scuro===false)delete r.dataset.tema}}catch(e){}</script>
 <link rel="stylesheet" href="css/vendor/maplibre-gl.css">
 <link rel="stylesheet" href="css/app.css">
 <script src="js/consenso.js"></script>
@@ -116,6 +117,7 @@
 <aside id="scheda" hidden data-i18n-aria="html.scheda.aria" aria-label="Scheda del luogo"></aside>
 <aside id="rndt-pannello" hidden data-i18n-aria="html.rndt.aria" aria-label="Catalogo RNDT"></aside>
 <aside id="geoimage-pannello" hidden data-i18n-aria="html.geoimage.aria" aria-label="Geoimage: mappe storiche"></aside>
+<aside id="tema-ui-pannello" hidden data-i18n-aria="html.temaUi.aria" aria-label="Tema dell'interfaccia"></aside>
 <nav id="rail-pannelli" data-i18n-aria="html.rail.aria" aria-label="Pannelli laterali"></nav>
 <dialog id="crediti" data-i18n-aria="html.crediti.aria" aria-label="Informazioni"></dialog>
 </main>

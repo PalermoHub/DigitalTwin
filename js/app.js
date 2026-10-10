@@ -4,6 +4,7 @@ import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js
 import { collegaInvito } from './core/invito.js';
 import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaRail, ICONE_RAIL } from './core/rail.js';
+import { creaPannelloInterfaccia } from './core/pannello-interfaccia.js';
 import { collegaScheda } from './core/scheda.js';
 import { collegaRndt, creaInterrogazione } from './rndt/index.js';
 import { creaGruppo, creaGruppoRndt, OPZIONI_MIEI } from './rndt/gruppo.js';
@@ -126,22 +127,35 @@ map.once('style.load', async () => {
       if (salvato) (await caricaGeoimage().catch(() => null))?.ripristina();
     },
   };
+  // Tema dell'interfaccia: il pannello si costruisce al primo clic sul suo tab; un tema salvato è già applicato dallo script in <head>
+  const pannelloTema = document.getElementById('tema-ui-pannello');
+  const temaUi = {
+    apri() {
+      if (!pannelloTema.childElementCount) creaPannelloInterfaccia(pannelloTema, { storage: window.localStorage, bottoneTema: document.getElementById('btn-tema'), segnala });
+      pannelloTema.hidden = false;
+    },
+    chiudi() { pannelloTema.hidden = true; },
+  };
   const rail = collegaRail(document.getElementById('rail-pannelli'), [
     { id: 'scheda', etichetta: t('app.rail.scheda'), pannello: document.getElementById('scheda') },
     { id: 'rndt', etichetta: 'RNDT', pannello: document.getElementById('rndt-pannello'), apri: rndt.apri, chiudi: rndt.chiudi },
     { id: 'geoimage', etichetta: t('app.rail.geoimage'), pannello: pannelloGeo, apri: geoimage.apri, chiudi: geoimage.chiudi },
+    { id: 'tema', etichetta: t('app.rail.tema'), pannello: pannelloTema, apri: temaUi.apri, chiudi: temaUi.chiudi },
   ]);
   // su mobile la barra laterale non c'è: Geoimage si apre dal pannello Strati
   const btnGeo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-geoimage-m', className: 'btn-pannello-mobile', title: t('html.geoimage.aria') });
   btnGeo.innerHTML = `${ICONE_RAIL.geoimage}<span class="et">Geoimage</span>`;
   btnGeo.addEventListener('click', () => { tab.imposta(null); rail.commuta('geoimage'); });
+  const btnTema = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-tema-ui-m', className: 'btn-pannello-mobile', title: t('html.temaUi.aria') });
+  btnTema.innerHTML = `${ICONE_RAIL.tema}<span class="et">${t('app.rail.tema')}</span>`;
+  btnTema.addEventListener('click', () => { tab.imposta(null); rail.commuta('tema'); });
   // il catalogo RNDT sta tra i riquadri di «Aggiungi»; l'elenco dei layer RNDT aggiunti è in cima al suo pannello
   const btnCatalogo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-rndt-m', className: 'btn-pannello-mobile', title: t('html.btn.rndt') });
   btnCatalogo.innerHTML = `${ICONE_RAIL.rndt}<span class="et">${t('html.btn.rndt.aria')}</span>`;
   btnCatalogo.addEventListener('click', () => { tab.imposta(null); rail.commuta('rndt'); });
-  document.getElementById('barra-gruppi').append(btnCatalogo, btnGeo);
+  document.getElementById('barra-gruppi').append(btnCatalogo, btnGeo, btnTema);
   document.getElementById('btn-rndt').addEventListener('click', () => rail.commuta('rndt'));
-  tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); document.getElementById('crediti').open && document.getElementById('crediti').close(); };
+  tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); document.getElementById('crediti').open && document.getElementById('crediti').close(); };
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
   geoimage.ripristina(); // e la mappa storica di Geoimage, se c'era

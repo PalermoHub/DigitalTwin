@@ -136,7 +136,12 @@ button, input, select, textarea { font-family: inherit; }
 @font-face { font-family: 'Montserrat'; font-weight: 500; font-style: normal; font-display: swap; src: url('fonts/montserrat-Medium.woff2') format('woff2'); }
 @font-face { font-family: 'Montserrat'; font-weight: 600; font-style: normal; font-display: swap; src: url('fonts/montserrat-SemiBold.woff2') format('woff2'); }
 @font-face { font-family: 'Montserrat'; font-weight: 700; font-style: normal; font-display: swap; src: url('fonts/montserrat-Bold.woff2') format('woff2'); }
-html, body { height: 100%; margin: 0; font: var(--fs-base)/1.4 'Montserrat', system-ui, sans-serif; color: var(--text); background: var(--surface); }
+@font-face { font-family: 'Atkinson Hyperlegible'; font-weight: 400; font-style: normal; font-display: swap; src: url('fonts/atkinson-400.woff2') format('woff2'); }
+@font-face { font-family: 'Atkinson Hyperlegible'; font-weight: 700; font-style: normal; font-display: swap; src: url('fonts/atkinson-700.woff2') format('woff2'); }
+html, body { height: 100%; margin: 0; font: var(--fs-base)/1.4 var(--font-ui, 'Montserrat', system-ui, sans-serif); color: var(--text); background: var(--surface); }
+/* --scala-testo e --font-ui li imposta il pannello Tema (js/core/tema-interfaccia.js); senza scelta nulla cambia.
+   La dimensione della radice (14px × scala) è la base di tutti i rem: l'interfaccia in rem la segue. Va dopo la regola con `font`. */
+html { font-size: calc(var(--scala-testo, 1) * .875rem); }
 /* la pagina non scorre né rimbalza mai (su iPad e Surface un trascinamento o uno zoom del browser porterebbe fuori vista barra e ricerca) */
 html, body { overflow: hidden; overscroll-behavior: none; }
 #barra-strumenti, #area-ricerca, #legende, #pannello { touch-action: manipulation; } /* niente zoom con doppio tocco sull'interfaccia */
@@ -569,7 +574,7 @@ dialog li { margin: 4px 0; }
   .scheda-espandi { display: none; }
   /* con la scheda aperta, barra strumenti, ricerca e fogli si centrano sulla parte di mappa rimasta visibile */
   body { --scheda-l: var(--rail-w); }
-  body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) { --scheda-l: calc(var(--scheda-w) + var(--rail-w)); }
+  body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato), #tema-ui-pannello:not([hidden]):not(.collassato)) { --scheda-l: calc(var(--scheda-w) + var(--rail-w)); }
   #barra-strumenti, #area-ricerca, #pannello { left: calc((100% - var(--scheda-l)) / 2); transition: left var(--t-media) ease; }
   /* la barra non esce mai dalla mappa visibile: se non ci sta, scorre di lato */
   #barra-strumenti { max-width: calc(100% - var(--scheda-l) - 16px); overflow-x: auto; scrollbar-width: none; }
@@ -1022,7 +1027,7 @@ details.scheda-sez[open] > summary > .scheda-riassunto { display: none; }
 #rndt-pannello .ordt-detail-title { font-size: var(--fs-md); }
 
 /* barra verticale dei pannelli a destra: tab con testo ruotato, pannello attivo evidenziato */
-#scheda.collassato, #rndt-pannello.collassato, #geoimage-pannello.collassato { display: none; }
+#scheda.collassato, #rndt-pannello.collassato, #geoimage-pannello.collassato, #tema-ui-pannello.collassato { display: none; }
 #rail-pannelli { display: none; }
 @media (min-width: 721px) {
   #rail-pannelli {
@@ -1153,9 +1158,9 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 /* ==========================================================================
    Geoimage: mappa storica sulla base, pannello a destra (come RNDT)
    ========================================================================== */
-#geoimage-pannello { position: fixed; z-index: var(--z-foglio); left: 0; right: 0; bottom: 0; top: 8vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm) var(--r-sm) 0 0; box-shadow: var(--ombra); overflow: hidden; }
-#geoimage-pannello[hidden] { display: none; }
-@media (min-width: 721px) { #geoimage-pannello { top: 0; left: auto; right: var(--rail-w); width: var(--scheda-w); border-radius: 0; } }
+#geoimage-pannello, #tema-ui-pannello { position: fixed; z-index: var(--z-foglio); left: 0; right: 0; bottom: 0; top: 8vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm) var(--r-sm) 0 0; box-shadow: var(--ombra); overflow: hidden; }
+#geoimage-pannello[hidden], #tema-ui-pannello[hidden] { display: none; }
+@media (min-width: 721px) { #geoimage-pannello, #tema-ui-pannello { top: 0; left: auto; right: var(--rail-w); width: var(--scheda-w); border-radius: 0; } }
 /* .gi-autore: stile condiviso con .rndt-autore (sopra) */
 .gi-autore a { color: inherit; font-weight: 600; }
 .gi-stato { flex: none; margin: 0; padding: 6px 12px; font-size: var(--fs-sm); background: var(--accent-soft); border-bottom: 1px solid var(--border); }
@@ -1190,6 +1195,22 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
 .gi-tabella { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
 .gi-tabella th, .gi-tabella td { padding: 3px 4px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .gi-tabella th { position: sticky; top: 0; background: var(--surface-alt); color: var(--text-muted); }
+.tui-avanzati > summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+.tui-tipo { display: grid; gap: 8px; }
+.tui-tipo input[type=range] { width: 100%; }
+.tui-campione { margin: 0; padding: 8px 10px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
+.tui-preset { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.tui-preset .gi-btn { justify-content: flex-start; gap: 8px; }
+.tui-anteprima { flex: none; display: flex; flex-direction: column; justify-content: center; gap: 3px; width: 46px; height: 32px; padding: 4px; box-sizing: border-box; border: 1px solid; border-radius: var(--r-xs); }
+.tui-anteprima i { display: block; height: 3px; border-radius: 2px; }
+.tui-anteprima .tui-barra { height: 6px; width: 60%; }
+.tui-anteprima .tui-riga { width: 100%; opacity: .85; }
+.tui-anteprima .tui-corta { width: 65%; opacity: .85; }
+.tui-anteprima .tui-link { width: 40%; }
+/* colori: etichetta, campione e valore in tre colonne fisse, così i campioni restano allineati */
+.gi-campo.tui-colore { display: grid; grid-template-columns: minmax(0, 1fr) 64px 8ch; align-items: center; gap: 10px; }
+.tui-colore input[type="color"] { width: 64px; height: 30px; padding: 2px; box-sizing: border-box; }
+.tui-colore .gi-valore { min-width: 0; text-align: left; }
 .gi-res-buono td:nth-child(6) { color: var(--c1-fg); }
 .gi-res-medio td:nth-child(6) { color: var(--c4-fg); }
 .gi-res-alto td:nth-child(6) { color: var(--pericolo); font-weight: 700; }
@@ -1436,7 +1457,7 @@ body:has(#crediti[open]) :is(.invito-clic, .invito-mai) { display: none; }
 @media (min-width: 721px) { #barra-gruppi .btn-pannello-mobile { display: none; } }
 @media (max-width: 720px) { body.strati-aperti #barra-gruppi .btn-pannello-mobile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; } }
 /* l'invito all'avvio non sta sopra un pannello aperto */
-body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) .invito-clic { display: none; }
+body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato), #tema-ui-pannello:not([hidden]):not(.collassato)) .invito-clic { display: none; }
 
 /* Visore delle immagini della guida */
 .guida-figura img, img.dt-fig { cursor: zoom-in; }
@@ -1508,7 +1529,7 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   /* i fogli e i pannelli finiscono sopra la barra dei tab */
   body.strati-aperti #barra-strati { bottom: var(--tab-h); }
   #scheda { bottom: var(--tab-h); }
-  #rndt-pannello, #geoimage-pannello { bottom: var(--tab-h); }
+  #rndt-pannello, #geoimage-pannello, #tema-ui-pannello { bottom: var(--tab-h); }
   #legende-box { --legende-bottom: calc(var(--tab-h) + 12px); bottom: calc(var(--tab-h) + 12px); }
 
   /* foglio «Strati»: basi, layer, filtri. Foglio «Aggiungi»: i miei layer, catalogo RNDT, Geoimage */
@@ -1635,10 +1656,10 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 @media (max-width: 720px) {
   #tabella-dati { left: 0; right: 0; bottom: calc(var(--tab-h) + var(--footer-h)); max-height: min(60dvh, calc(100dvh - 64px - var(--tab-h) - var(--footer-h) - 8px)); }
   body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: auto; }
-  body:has(#tabella-dati:not([hidden])):not(.strati-aperti):not(.info-aperto):not(:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato))) :is(.maplibregl-ctrl-bottom-right, .maplibregl-ctrl-bottom-left) { bottom: calc(var(--tabella-h) + var(--tab-h)); }
+  body:has(#tabella-dati:not([hidden])):not(.strati-aperti):not(.info-aperto):not(:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato), #tema-ui-pannello:not([hidden]):not(.collassato))) :is(.maplibregl-ctrl-bottom-right, .maplibregl-ctrl-bottom-left) { bottom: calc(var(--tabella-h) + var(--tab-h)); }
   body.strati-aperti #tabella-dati, body.info-aperto #tabella-dati,
-  body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) #tabella-dati { display: none; }
-  body.strati-aperti, body.info-aperto, body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato)) { --tabella-h: 0px !important; }
+  body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato), #tema-ui-pannello:not([hidden]):not(.collassato)) #tabella-dati { display: none; }
+  body.strati-aperti, body.info-aperto, body:has(#scheda:not([hidden]):not(.collassato), #rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([hidden]):not(.collassato), #tema-ui-pannello:not([hidden]):not(.collassato)) { --tabella-h: 0px !important; }
   .tabella-barra { flex-wrap: wrap; overflow-x: visible; }
   .tabella-barra > .tabella-filtro { flex: 1 1 170px; width: auto; }
   .tabella-barra > .tabella-esporti { margin-left: 0; }
