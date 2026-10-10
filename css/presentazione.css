@@ -165,3 +165,15 @@ a { color: inherit; }
 #logo-ods { flex: none; display: block; line-height: 0; }
 #logo-ods img { display: block; height: 24px; width: auto; }
 @media (max-width: 720px) { #piede-copyright { font-size: .6875rem; } }
+/* «Perché?»: confronto PalermoHub / Digital Twin */
+.perche h3 { margin: 40px 0 12px; font-size: clamp(1.25rem, 2.6vw, 1.625rem); line-height: 1.2; font-weight: 700; letter-spacing: -.01em; }
+.perche p strong { color: var(--testo); }
+.tabella-scroll { max-width: none; margin: 8px 0 0; overflow-x: auto; border: 1px solid var(--bordo); border-radius: var(--r); background: var(--superficie); }
+.confronto { width: 100%; min-width: 640px; border-collapse: collapse; font-size: .9688rem; line-height: 1.5; }
+.confronto th, .confronto td { padding: 12px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--bordo); }
+.confronto thead th { border-bottom: 2px solid var(--accento); font-weight: 700; }
+.confronto tbody th { width: 20%; font-weight: 700; }
+.confronto td { color: var(--testo-tenue); }
+.confronto tbody tr:last-child > * { border-bottom: 0; }
+.confronto tbody tr:nth-child(even) > * { background: color-mix(in srgb, var(--testo) 3%, transparent); }
+.solo-lettori { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
