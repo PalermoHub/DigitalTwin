@@ -83,7 +83,7 @@
   --z-viewer: 200;
 
   /* scheda del luogo: larghezza e ingombro (0 quando è chiusa) */
-  --scheda-w: 380px;
+  --scheda-w: 440px;
   --scheda-l: 0px;
   --rail-w: 44px;
   /* ingombro a sinistra: su mobile resta il valore storico (legende a 112px); il desktop lo ridefinisce */
@@ -771,7 +771,7 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
   #area-ricerca { width: clamp(220px, calc(100vw - var(--scheda-l) - var(--sx) - 150px), 400px); }
 }
 @media (min-width: 721px) and (max-width: 1000px) {
-  :root { --scheda-w: 340px; }
+  :root { --scheda-w: 380px; }
   body:has(#scheda:not([hidden])) #zoom-box { bottom: 54px; }
 }
 
@@ -862,9 +862,13 @@ button.strato-chip:hover i { color: var(--text); }
 .scheda-strato { flex: none; margin-left: auto; padding: 2px 10px; border: 1px solid var(--border); border-radius: var(--r-pill); background: transparent; color: var(--text-muted); font: inherit; font-size: var(--fs-sm); font-weight: 500; cursor: pointer; }
 .scheda-riassunto + .scheda-strato { margin-left: auto; }
 /* intestazione sezione: titolo + «Mappa» sulla prima riga, riassunto sotto allineato al titolo (mai due righe a destra) */
-details.scheda-sez > summary { flex-wrap: wrap; row-gap: 0; }
+details.scheda-sez > summary { flex-wrap: wrap; row-gap: 0; align-items: flex-start; padding: 8px 0 4px; }
+details.scheda-sez > summary::before, details.scheda-sez > summary > h3 { line-height: 28px; }
 details.scheda-sez > summary > h3 { flex: 1 1 0; min-width: 0; }
-details.scheda-sez > summary > .scheda-strato { order: 2; }
+details.scheda-sez > summary > .scheda-sez-extra { order: 2; flex: none; display: flex; flex-direction: column; align-items: flex-end; max-width: 50%; }
+.scheda-sez-extra:empty { display: none; }
+.scheda-sez-extra > .scheda-tag { margin: 3px 0; height: 22px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; line-height: 1; }
+.scheda-sez-extra > .scheda-strato { margin: 3px 0; height: 22px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; font-size: var(--fs-xs); line-height: 1; }
 details.scheda-sez > summary > .scheda-riassunto { order: 3; flex: 0 0 100%; margin-left: 0; padding: 0 0 4px calc(1em + 10px); text-align: left; }
 /* a sezione aperta il riassunto ripete la prima riga del corpo: si mostra solo da chiusa */
 details.scheda-sez[open] > summary > .scheda-riassunto { display: none; }

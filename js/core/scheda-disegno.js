@@ -153,8 +153,10 @@ export function disegnaSezione(s, i) {
   const titolo = el('h3');
   if (s.icona) titolo.append(icona(s.icona));
   titolo.append(tl(s.titolo));
-  for (const b of s.badges ?? (s.badge ? [s.badge] : [])) titolo.append(' ', el('span', 'scheda-tag', tl(b)));
-  if (s.avviso) titolo.append(' ', el('span', 'scheda-tag scheda-tag--scomparso', tl(s.avviso.etichetta)));
+  // badge a destra sulla riga del titolo, sotto di loro l'interruttore «Mappa» (aggiunto da scheda.js)
+  const lato = el('div', 'scheda-sez-extra');
+  for (const b of s.badges ?? (s.badge ? [s.badge] : [])) lato.append(el('span', 'scheda-tag', tl(b)));
+  if (s.avviso) lato.append(el('span', 'scheda-tag scheda-tag--scomparso', tl(s.avviso.etichetta)));
   const corpo = [];
   if (s.avviso) corpo.push(el('p', 'scheda-avviso', tl(s.avviso.testo)));
   if (s.immagine) {
@@ -177,7 +179,7 @@ export function disegnaSezione(s, i) {
   sezione.open = s.aperta !== false;
   sezione.dataset.peso = s.peso;
   const sommario = el('summary');
-  sommario.append(titolo);
+  sommario.append(titolo, lato);
   const sunto = riassunto(s);
   if (sunto) sommario.append(el('span', 'scheda-riassunto', sunto));
   sezione.append(sommario, ...corpo);
