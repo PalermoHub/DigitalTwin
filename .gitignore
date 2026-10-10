@@ -69,3 +69,4 @@ scripts/*
 !scripts/pai.py
 !scripts/uffici_build.py
 !scripts/uffici_scrape.py
+!scripts/mef_immobili.py
