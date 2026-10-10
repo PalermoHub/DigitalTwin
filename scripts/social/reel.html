@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: 'Montserrat'; font-weight: 500; src: url('../../css/fonts/montserrat-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 600; src: url('../../css/fonts/montserrat-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 700; src: url('../../css/fonts/montserrat-Bold.woff2') format('woff2'); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e121a; }
+body { font-family: 'Montserrat', sans-serif; color: #fff; position: relative; }
+.l { position: absolute; will-change: transform, opacity; }
+#sfondo { inset: 0; background:
+  radial-gradient(ellipse 80% 50% at var(--gx, 50%) var(--gy, 40%), rgba(245,166,35,.16), transparent 70%),
+  radial-gradient(ellipse 60% 40% at 20% 100%, rgba(255,255,255,.04), transparent 70%), #0e121a; }
+#mappa { inset: 0; overflow: hidden; }
+#bgimg { position: absolute; left: 50%; top: 50%; height: 1920px; width: auto; transform-origin: center; }
+#velo { inset: 0; background:
+  linear-gradient(180deg, rgba(14,18,26,.55) 0%, rgba(14,18,26,.5) 40%, rgba(14,18,26,.72) 70%, rgba(150,90,15,.55) 100%),
+  radial-gradient(ellipse 90% 35% at 50% 100%, rgba(245,166,35,.35), transparent 70%); }
+
+.scena { position: absolute; inset: 0; opacity: 0; }
+.box { display: inline-block; background: #f5a623; color: #1a1206; font-weight: 700; text-transform: uppercase;
+  line-height: 1; padding: .2em .32em .22em; border-radius: .16em; box-shadow: 0 20px 60px rgba(245,166,35,.28); white-space: nowrap; }
+.big { font-weight: 700; text-transform: uppercase; line-height: 1; white-space: nowrap; }
+.etich { display: flex; align-items: center; gap: 22px; font-weight: 600; font-size: 44px; letter-spacing: .02em; white-space: nowrap; }
+.badge { width: 66px; height: 66px; border-radius: 14px; background: #fff; color: #0e121a; font-weight: 700; font-size: 40px; display: grid; place-items: center; }
+.shot { border-radius: 22px; overflow: hidden; background: #fff; box-shadow: 0 40px 100px rgba(0,0,0,.65), 0 0 0 2px rgba(255,255,255,.08); }
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.centro { left: 0; right: 0; text-align: center; }
+#flash { inset: 0; background: #f5a623; opacity: 0; mix-blend-mode: normal; }
+#barra { left: 0; bottom: 0; height: 12px; background: #f5a623; width: 0; }
+.chip { display: inline-flex; align-items: center; gap: 16px; background: rgba(20,25,35,.92); border: 2px solid rgba(245,166,35,.6);
+  color: #fff; font-weight: 600; font-size: 40px; padding: 18px 30px; border-radius: 999px; white-space: nowrap; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+.chip i { width: 18px; height: 18px; border-radius: 50%; background: #f5a623; display: inline-block; }
+.telefono { width: 440px; height: 961px; border-radius: 64px; background: #0b0d12; padding: 18px; box-shadow: 0 50px 120px rgba(0,0,0,.7), 0 0 0 3px #2a2f3a; }
+.schermo { width: 100%; height: 100%; border-radius: 48px; background-image: url('../../img/guida/passi/telefono.webp'); background-repeat: no-repeat; }
+.ods { filter: invert(1); }
+#sott { left: 0; right: 0; top: 1680px; display: flex; justify-content: center; }
+#sott .pill { background: rgba(8,10,14,.92); border-radius: 22px; padding: 18px 34px 20px; font-weight: 700; font-size: 50px; line-height: 1.15;
+  max-width: 1010px; text-align: center; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+#sott .w { display: inline-block; margin: 0 .13em; transition: none; }
+#sott .w.on { color: #f5a623; }
+</style>
+</head>
+<body>
+<div class="l" id="sfondo"></div>
+<div class="l" id="mappa"><img id="bgimg" alt=""></div>
+<div class="l" id="velo"></div>
+
+<!-- 1 · apertura -->
+<div class="scena" id="s1">
+  <img class="l" id="s1logo" src="../../img/logo-palermo-digital-twin-scuro.svg" style="left:50%;top:330px;width:620px;margin-left:-310px">
+  <div class="l big centro" id="s1a" style="top:640px;font-size:150px">Palermo</div>
+  <div class="l big centro" id="s1b" style="top:810px;font-size:96px;color:#cfd5df">ha un</div>
+  <div class="l centro" id="s1c" style="top:960px"><span class="box" style="font-size:112px">Gemello</span></div>
+  <div class="l centro" id="s1d" style="top:1130px"><span class="box" style="font-size:112px">digitale</span></div>
+</div>
+
+<!-- 2 · tutta la città -->
+<div class="scena" id="s2">
+  <div class="l shot" id="s2img" style="left:90px;top:620px;width:900px;height:1240px"><img src="../../img/landing/hero-scuro.webp" style="object-position:30% top"></div>
+  <div class="l big" id="s2a" style="left:80px;top:250px;font-size:120px">Tutta</div>
+  <div class="l big" id="s2b" style="left:80px;top:390px;font-size:120px;color:#f5a623">la città</div>
+  <div class="l etich" id="s2c" style="left:84px;top:540px;font-size:42px;color:#cfd5df">su una sola mappa</div>
+</div>
+
+<!-- 3 · raffica di temi -->
+<div class="scena" id="s3">
+  <div class="l etich" id="s3et" style="left:80px;top:250px"><span class="badge" id="s3n">1</span><span>SCOPRI LA MAPPA</span></div>
+  <div class="l" id="s3tit" style="left:80px;top:360px"><span class="box" id="s3box" style="font-size:92px">Catasto</span></div>
+  <div class="l" id="s3sub" style="left:84px;top:530px;font-size:50px;font-weight:600;line-height:1.2;white-space:nowrap"></div>
+  <div class="l shot" id="s3img" style="left:60px;top:760px;width:1120px;height:630px"><img id="s3src"></div>
+  <div class="l shot" id="s3img2" style="left:-120px;top:1340px;width:900px;height:506px"><img id="s3src2"></div>
+</div>
+
+<!-- 4 · un clic -->
+<div class="scena" id="s4">
+  <div class="l shot" id="s4img" style="left:40px;top:500px;width:1000px;height:1250px"><img src="../../img/guida/passi/scheda.webp" style="object-position:38% center"></div>
+  <div class="l" id="s4ring" style="left:540px;top:1100px;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:8px solid #f5a623"></div>
+  <div class="l" id="s4dot" style="left:540px;top:1100px;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:#f5a623;box-shadow:0 0 0 8px rgba(245,166,35,.35)"></div>
+  <div class="l big" id="s4a" style="left:80px;top:220px;font-size:80px;color:#cfd5df">Basta</div>
+  <div class="l" id="s4b" style="left:80px;top:320px"><span class="box" style="font-size:130px">un clic</span></div>
+  <div class="l chip" id="c1" style="left:90px;top:900px"><i></i>Catasto</div>
+  <div class="l chip" id="c2" style="left:560px;top:1010px"><i></i>PRG e vincoli</div>
+  <div class="l chip" id="c3" style="left:120px;top:1240px"><i></i>Edificio</div>
+  <div class="l chip" id="c4" style="left:520px;top:1360px"><i></i>Popolazione</div>
+  <div class="l chip" id="c5" style="left:150px;top:1520px"><i></i>Zone OMI</div>
+</div>
+
+<!-- 5 · smartphone -->
+<div class="scena" id="s5">
+  <div class="l big" id="s5a" style="left:80px;top:230px;font-size:76px;color:#cfd5df">Anche dallo</div>
+  <div class="l" id="s5b" style="left:80px;top:330px"><span class="box" style="font-size:112px">smartphone</span></div>
+  <div class="l telefono" id="p1" style="left:320px;top:640px"><div class="schermo" id="sc1"></div></div>
+  <div class="l telefono" id="p2" style="left:320px;top:640px"><div class="schermo" id="sc2"></div></div>
+  <div class="l telefono" id="p3" style="left:320px;top:640px"><div class="schermo" id="sc3"></div></div>
+</div>
+
+<!-- 6 · valori -->
+<div class="scena" id="s6">
+  <div class="l big centro" id="v1" style="top:560px;font-size:132px">Gratis</div>
+  <div class="l big centro" id="v2" style="top:760px;font-size:96px;color:#cfd5df">senza account</div>
+  <div class="l centro" id="v3" style="top:930px"><span class="box" style="font-size:112px">Open source</span></div>
+  <div class="l big centro" id="v4" style="top:1120px;font-size:56px;color:#8a93a3;letter-spacing:.04em">Codice EUPL · Dati CC BY 4.0</div>
+</div>
+
+<!-- 7 · lancio -->
+<div class="scena" id="s7">
+  <img class="l" id="s7logo" src="../../img/logo-palermo-digital-twin-scuro.svg" style="left:50%;top:420px;width:760px;margin-left:-380px">
+  <div class="l etich centro" id="s7et" style="top:720px;justify-content:center"><span class="badge" style="background:#f5a623;width:28px;height:28px;border-radius:50%"></span><span>LANCIO UFFICIALE</span></div>
+  <div class="l centro" id="s7box" style="top:830px"><span class="box" style="font-size:150px">È online</span></div>
+  <div class="l centro" id="s7url" style="top:1080px;font-size:44px;font-weight:600;color:#fff;white-space:nowrap">palermodigitaltwin<span style="color:#f5a623">.</span>opendatasicilia.it</div>
+  <div class="l centro" id="s7cta" style="top:1160px;font-size:40px;font-weight:500;color:#8a93a3">Dal computer o dallo smartphone</div>
+  <div class="l big centro" id="s7esp" style="top:1270px;font-size:78px">Esplora <span style="color:#f5a623">la tua città</span></div>
+  <div class="l" id="s7ods" style="left:0;right:0;top:1560px;display:flex;justify-content:center;align-items:center;gap:26px;font-size:44px;font-weight:500;color:#e6e8ec">
+    <img class="ods" src="../../img/opendatasicilia.png" style="height:96px"><span>Open Data Sicilia</span></div>
+</div>
+
+<div class="l" id="sott"><div class="pill" id="pill"></div></div>
+<div class="l" id="flash"></div>
+<div class="l" id="barra"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, a, b) => cl((t - a) / (b - a));
+const out3 = x => 1 - Math.pow(1 - x, 3);
+const out5 = x => 1 - Math.pow(1 - x, 5);
+const in3 = x => x * x * x;
+const back = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+function set(id, { x = 0, y = 0, s = 1, r = 0, ry = 0, rx = 0, o = 1, blur = 0 } = {}) {
+  const e = typeof id === 'string' ? $(id) : id;
+  e.style.transform = `perspective(1800px) translate(${x}px,${y}px) rotateX(${rx}deg) rotateY(${ry}deg) rotate(${r}deg) scale(${s})`;
+  e.style.opacity = o;
+  e.style.filter = blur ? `blur(${blur}px)` : '';
+}
+// ingresso "slam": scala da grande con overshoot
+const slam = (t, a, d = .35) => { const k = p(t, a, a + d); return { s: lerp(1.8, 1, back(k)), o: cl(k * 3), blur: (1 - out3(k)) * 14 }; };
+const daSx = (t, a, d = .45, dx = -700) => { const k = out5(p(t, a, a + d)); return { x: lerp(dx, 0, k), o: cl(k * 2) }; };
+const daSu = (t, a, d = .5, dy = 220) => { const k = out5(p(t, a, a + d)); return { y: lerp(dy, 0, k), o: cl(k * 2) }; };
+const scena = (id, t, a, b) => { $(id).style.opacity = t >= a && t < b ? 1 : 0; return t >= a && t < b; };
+
+const temi = [
+  { n: 1, tit: 'Catasto e PRG', sub: 'Particelle, zone e vincoli', a: 'scheda', b: 'strati' },
+  { n: 2, tit: 'Isole di calore', sub: 'Le temperature d\'estate', a: 'isole-calore', b: 'colori' },
+  { n: 3, tit: 'Mappe storiche', sub: 'Palermo dal 1580 a oggi', a: 'mappe-storiche', b: 'geoimage-swipe' },
+  { n: 4, tit: 'Rischi', sub: 'Frane, alluvioni e incendi', a: 'pai', b: 'incendi' },
+  { n: 5, tit: 'Trasporti', sub: 'Fermate e linee', a: 'trasporto-strip', b: 'tabella-dati' },
+  { n: 6, tit: 'Monumenti', sub: 'Il patrimonio della città', a: 'monumenti', b: 'street-view' },
+];
+const T3 = 5.0, DT = 1.35;   // inizio raffica e durata di ogni tema
+const DURATA = 26.5;
+window.DURATA = DURATA;
+
+// ritaglio dei tre smartphone dallo screenshot (1280×720)
+const ritagli = [142, 494, 846];
+['sc1', 'sc2', 'sc3'].forEach((id, i) => {
+  const k = 404 / 292;
+  $(id).style.backgroundSize = `${1280 * k}px auto`;
+  $(id).style.backgroundPosition = `${-ritagli[i] * k}px ${-42 * k}px`;
+});
+
+// sottotitoli karaoke: [{t, d, testo}] in tempo reale
+window.SOTTOTITOLI = [];
+let rigaCorrente = -1;
+function sottotitoli(tr) {
+  const S = window.SOTTOTITOLI;
+  let k = -1;
+  for (let i = 0; i < S.length; i++) {
+    const ult = S[i].parole?.at(-1), parlato = ult ? ult.t + ult.d : S[i].d;
+    const fine = Math.min(S[i].t + parlato + .4, i + 1 < S.length ? S[i + 1].t - .02 : 1e9);
+    if (tr >= S[i].t - .06 && tr < fine) k = i;
+  }
+  const pill = $('pill');
+  if (k < 0) { pill.parentNode.style.opacity = 0; rigaCorrente = -1; return; }
+  const r = S[k], parole = r.testo.split(' ');
+  if (rigaCorrente !== k) {
+    rigaCorrente = k;
+    pill.innerHTML = parole.map(w => `<span class="w">${w}</span>`).join(' ');
+    pill.style.fontSize = r.testo.length > 45 ? '44px' : '';
+  }
+  // parola accesa: tempi di Edge TTS (WordBoundary); la parola resta accesa fino all'inizio della successiva
+  const P = r.parole || [], spans = pill.children, x = tr - r.t;
+  let on = -1;
+  for (let j = 0; j < P.length; j++) if (x >= P[j].t - .03) on = j;
+  for (let j = 0; j < spans.length; j++) spans[j].classList.toggle('on', j === on);
+  const kk = p(tr, r.t - .06, r.t + .12);
+  set(pill.parentNode, { y: lerp(30, 0, out3(kk)), s: lerp(.92, 1, back(kk)), o: kk });
+}
+
+// sfondo: la mappa vera, diversa per scena, scurita e in lento movimento
+const SFONDI = [
+  [0, 'guida/passi/isole-calore.webp', 72, 2], [5.0, null, 0, 0],
+  [13.1, 'guida/passi/scheda.webp', 30, 7], [17.2, 'landing/hero-scuro.webp', 35, 3],
+  [20.4, 'guida/passi/isole-calore.webp', 72, 3], [22.4, 'landing/hero-scuro.webp', 35, 1.5],
+];
+function sfondo(t) {
+  let k = 0; for (let i = 0; i < SFONDI.length; i++) if (t >= SFONDI[i][0]) k = i;
+  let [a, src, ox, blur] = SFONDI[k];
+  if (!src) {   // raffica dei temi: lo screenshot del tema corrente, sfocato
+    const i = cl(Math.floor((t - T3) / DT), 0, 5); src = `guida/passi/${temi[i].a}.webp`; ox = 60; blur = 9; a = T3 + i * DT;
+  }
+  const img = $('bgimg'), url = '../../img/' + src;
+  if (!img.src.endsWith(src)) img.src = url;
+  const z = t - a;
+  img.style.transform = `translate(-${ox}%, -50%) scale(${1.45 + z * .025}) translateX(${-z * 6}px)`;
+  img.style.filter = `blur(${blur}px) brightness(.55) saturate(1.15)`;
+}
+
+window.render = function (t, tr = t) {
+  sfondo(t);
+  sottotitoli(tr);
+  // sfondo vivo
+  $('sfondo').style.setProperty('--gx', (50 + 30 * Math.sin(t * .6)) + '%');
+  $('sfondo').style.setProperty('--gy', (40 + 15 * Math.cos(t * .45)) + '%');
+  $('barra').style.width = (t / DURATA * 100) + '%';
+
+  // flash sui tagli
+  const tagli = [2.6, 5.0, T3 + DT * 6, 13.6 + 0.0, 17.2, 20.4];
+  let f = 0; for (const c of tagli) f = Math.max(f, 1 - cl(Math.abs(t - c) / .09));
+  $('flash').style.opacity = f * .85;
+
+  // 1 · apertura 0–2.6
+  if (scena('s1', t, 0, 2.6)) {
+    set('s1logo', { ...daSu(t, .05, .5, -80), s: lerp(.9, 1, out3(p(t, 0, .6))) });
+    set('s1a', slam(t, .35));
+    set('s1b', daSu(t, .75, .35, 60));
+    set('s1c', { ...daSx(t, 1.05, .35, -1100), r: lerp(-6, -2, out3(p(t, 1.05, 1.5))) });
+    set('s1d', { ...daSx(t, 1.25, .35, 1100), r: lerp(6, 2, out3(p(t, 1.25, 1.7))) });
+    const u = in3(p(t, 2.25, 2.6));
+    for (const id of ['s1logo', 's1a', 's1b', 's1c', 's1d']) { const e = $(id); e.style.transform += ` scale(${1 + u * .6})`; e.style.opacity = +e.style.opacity * (1 - u); }
+  }
+
+  // 2 · tutta la città 2.6–5.0
+  if (scena('s2', t, 2.6, 5.0)) {
+    const k = out5(p(t, 2.6, 3.3));
+    set('s2img', { y: lerp(900, 0, k), rx: lerp(35, 8, k), ry: lerp(-10, -4, out3(p(t, 2.6, 5))), r: lerp(4, 0, k), s: lerp(1, 1.08, p(t, 2.6, 5)), o: cl(k * 2) });
+    set('s2a', daSx(t, 2.75));
+    set('s2b', daSx(t, 2.9));
+    set('s2c', daSu(t, 3.2, .4, 40));
+    const u = in3(p(t, 4.7, 5.0));
+    set('s2img', { y: -u * 600, rx: 8 - u * 20, s: 1.08 + u * .3, o: 1 - u, ry: -4 });
+  }
+
+  // 3 · raffica 5.0–13.1
+  if (scena('s3', t, T3, T3 + DT * 6)) {
+    const i = cl(Math.floor((t - T3) / DT), 0, 5), tm = temi[i], a = T3 + i * DT;
+    if (window.temaCorrente !== i) {
+      window.temaCorrente = i;
+      $('s3n').textContent = tm.n; $('s3box').textContent = tm.tit; $('s3sub').textContent = tm.sub;
+      $('s3src').src = `../../img/guida/passi/${tm.a}.webp`; $('s3src2').src = `../../img/guida/passi/${tm.b}.webp`;
+    }
+    const dir = i % 2 ? 1 : -1;
+    set('s3et', i === 0 ? daSx(t, a, .4) : {});
+    set('s3n', { s: lerp(1.6, 1, back(p(t, a, a + .3))) });
+    set('s3tit', { ...slam(t, a + .02, .3), r: lerp(dir * 5, 0, out3(p(t, a, a + .35))) });
+    set('s3sub', daSu(t, a + .12, .35, 50));
+    const k = out5(p(t, a, a + .5)), z = p(t, a, a + DT);
+    set('s3img', { x: lerp(-dir * 1100, -80, k) - z * 60, ry: dir * -18 + -10 * (1 - k) * dir, rx: 6, r: dir * 3, s: lerp(1, 1.05, z), o: cl(k * 2) });
+    const k2 = out5(p(t, a + .12, a + .6));
+    set('s3img2', { x: lerp(dir * 1100, 0, k2) + z * 50, ry: dir * 16, rx: 8, r: -dir * 3, o: cl(k2 * 2) });
+    // uscita del blocco testo alla fine della raffica
+    const u = in3(p(t, T3 + DT * 6 - .25, T3 + DT * 6));
+    if (u > 0) for (const id of ['s3et', 's3tit', 's3sub', 's3img', 's3img2']) $(id).style.opacity *= 1 - u;
+  }
+
+  // 4 · un clic 13.1–17.2
+  const A4 = T3 + DT * 6;
+  if (scena('s4', t, A4, 17.2)) {
+    const k = out5(p(t, A4, A4 + .6)), z = p(t, A4, 17.2);
+    set('s4img', { y: lerp(400, 0, k), s: lerp(.9, 1.06, out3(z)), rx: lerp(20, 6, k), ry: -6, o: cl(k * 2) });
+    set('s4a', daSx(t, A4 + .1));
+    set('s4b', slam(t, A4 + .3));
+    const c = A4 + .9;
+    set('s4dot', { s: back(p(t, c, c + .25)) * (1 + .12 * Math.sin(t * 12)), o: cl(p(t, c, c + .1) * 5) });
+    const r = (t - c) % .8 / .8;
+    set('s4ring', { s: t > c ? 1 + r * 9 : 0, o: t > c ? (1 - r) : 0 });
+    ['c1', 'c2', 'c3', 'c4', 'c5'].forEach((id, j) => {
+      const a = c + .25 + j * .18, kk = back(p(t, a, a + .35));
+      const dx = (j % 2 ? 1 : -1) * 90, flo = Math.sin((t - a) * 2.4 + j) * 8;
+      set(id, { x: lerp(-dx, 0, kk), y: flo, s: lerp(.3, 1, kk), o: cl(p(t, a, a + .15) * 1) });
+    });
+  }
+
+  // 5 · smartphone 17.2–20.4
+  if (scena('s5', t, 17.2, 20.4)) {
+    set('s5a', daSx(t, 17.25));
+    set('s5b', { ...slam(t, 17.4), r: lerp(-5, -1.5, out3(p(t, 17.4, 17.9))) });
+    const k = out5(p(t, 17.3, 18.0));
+    const ap = out5(p(t, 18.3, 18.9));
+    set('p2', { y: lerp(1300, 0, k), o: 1, r: lerp(10, 0, k) });
+    set('p1', { y: lerp(1300, 40, k), x: -ap * 330, r: -ap * 9, s: 1 - ap * .12, o: cl(ap * 3) });
+    set('p3', { y: lerp(1300, 40, k), x: ap * 330, r: ap * 9, s: 1 - ap * .12, o: cl(ap * 3) });
+    $('p2').style.zIndex = 2;
+    const fl = Math.sin(t * 2) * 10;
+    $('p2').style.transform += ` translateY(${fl}px)`;
+  }
+
+  // 6 · valori 20.4–22.4
+  if (scena('s6', t, 20.4, 22.4)) {
+    set('v1', slam(t, 20.45, .3));
+    set('v2', daSx(t, 20.75, .35, 900));
+    set('v3', { ...slam(t, 21.05, .3), r: lerp(-6, -2, out3(p(t, 21.05, 21.4))) });
+    set('v4', daSu(t, 21.35, .4, 40));
+    const u = in3(p(t, 22.15, 22.4));
+    for (const id of ['v1', 'v2', 'v3', 'v4']) { $(id).style.opacity *= 1 - u; }
+  }
+
+  // 7 · lancio 22.4–25
+  if (scena('s7', t, 22.4, 99)) {
+    set('s7logo', { ...daSu(t, 22.4, .5, -60), s: lerp(.85, 1, out3(p(t, 22.4, 23))) });
+    set('s7et', daSu(t, 22.6, .4, 40));
+    set('s7box', { ...slam(t, 22.75, .38), r: lerp(-4, -1.5, out3(p(t, 22.75, 23.2))) });
+    $('s7box').style.transform += ` scale(${1 + .025 * Math.sin((t - 23.2) * 5) * (t > 23.2)})`;
+    set('s7url', daSu(t, 23.05, .4, 40));
+    set('s7cta', daSu(t, 23.2, .4, 40));
+    set('s7ods', daSu(t, 23.35, .4, 60));
+    set('s7esp', slam(t, 24.6, .35));
+  }
+};
+window.pronto = Promise.all([document.fonts.ready, ...[...document.images].map(i => i.decode().catch(() => {}))]);
+</script>
+</body>
+</html>
