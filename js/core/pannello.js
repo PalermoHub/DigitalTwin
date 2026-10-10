@@ -236,6 +236,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
       const h = document.createElement('h3');
       h.className = 'gruppo-sezione';
       h.textContent = titolo;
+      if (m.sezioniFisse) h.dataset.fissa = '';
       gruppo.append(h);
     }
     let sezioneStrato = null;
@@ -248,6 +249,12 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
         h.textContent = s.sezione;
         if (m.sezioniFisse) h.dataset.fissa = ''; // titolo che non viaggia con gli strati: il riordino resta dentro la sezione
         gruppo.append(h);
+        if (s.nota) { // nota sotto il titolo: non è uno strato, il riordino la lascia dov'è
+          const n = document.createElement('p');
+          n.className = 'base-suggerimento gruppo-nota';
+          n.textContent = s.nota;
+          gruppo.append(n);
+        }
       }
       const label = document.createElement('label');
       const cb = document.createElement('input');

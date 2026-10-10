@@ -1,0 +1,84 @@
+name: Aggiorna MEF
+
+# Avvio manuale: scarica dal MEF i beni immobili del Comune di Palermo dell'ultimo anno pubblicato (o di quello indicato),
+# li localizza a tre livelli (catasto, layer già mappati, posizione dichiarata) sui poligoni di edifici e particelle (PMTiles
+# pubblici) e rigenera dati/mef-immobili/, compreso il diagramma come-si-ottiene.mmd con i numeri dell'esecuzione.
+on:
+  workflow_dispatch:
+    inputs:
+      anno:
+        description: "Anno del censimento (vuoto = l'ultimo pubblicato)"
+        type: string
+        default: ""
+      committa:
+        description: "Salva i dati aggiornati nel repository (altrimenti solo artefatto scaricabile)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-mef
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30   # in locale servono circa 5 minuti
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa le librerie
+        run: pip install shapely numpy mapbox-vector-tile pmtiles
+
+      - name: Scarica i beni del MEF e localizzali (catasto, layer già mappati, posizione)
+        env:
+          ANNO: ${{ inputs.anno }}
+        run: |
+          if [ -n "$ANNO" ]; then
+            python3 scripts/mef_immobili.py --anno "$ANNO"
+          else
+            python3 scripts/mef_immobili.py
+          fi
+
+      - name: Riepilogo
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r = json.load(open("dati/mef-immobili/riepilogo.json"))
+          print(f"## Immobili dichiarati al MEF — censimento {r['anno']}")
+          print(f"- Beni di Palermo: {r['beni']}  · senza posizione utilizzabile (scartati): {r['senza_posizione']}")
+          print(f"- Localizzazione: {r['per_localizzazione']}")
+          print(f"- Verifica: {r['per_verifica']}  · posizione MEF corretta per {r['corretti']} beni")
+          print(f"- Edifici: {r['in_edifici']} beni in {r['edifici']} edifici (massimo {r['max_beni_per_edificio']} in uno)  · terreni: {r['in_terreni']} beni in {r['terreni']} particelle")
+          print(f"- Rimasti punti: {r['punti']} {r['punti_per_motivo']}")
+          PY
+
+      - name: Artefatto
+        uses: actions/upload-artifact@v4
+        with:
+          name: dati-mef-immobili
+          path: |
+            dati/mef-immobili/mef_immobili.geojson
+            dati/mef-immobili/mef_immobili.csv
+            dati/mef-immobili/riepilogo.json
+            dati/mef-immobili/README.md
+            dati/mef-immobili/come-si-ottiene.mmd
+
+      - name: Salva nel repository
+        if: ${{ inputs.committa }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dati/mef-immobili/mef_immobili.geojson dati/mef-immobili/mef_immobili.csv dati/mef-immobili/riepilogo.json dati/mef-immobili/README.md dati/mef-immobili/come-si-ottiene.mmd
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione nei dati."
+          else
+            git commit -m "dati: aggiornamento immobili dichiarati al MEF ($(date -u +%F))"
+            git push
+          fi

@@ -134,6 +134,7 @@ export default {
   titolo: 'Isole di calore',
   argomento: { titolo: 'Isole di calore', descrizione: 'Temperatura superficiale estiva 2025 per sezione censuaria, da satellite Landsat, con metodi di classificazione a scelta e l\'andamento dal 2019 al 2025. Link allo studio completo.' },
   gruppo: 'territorio',
+  sezioniFisse: true, // «Immobili comunali» resta una sezione a sé nel gruppo Territorio: il riordino non attraversa le intestazioni
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'vector', url: pmt('isole-calore/sezioni.pmtiles') });
   },

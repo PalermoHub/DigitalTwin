@@ -601,6 +601,8 @@ dialog li { margin: 4px 0; }
 .uffici-popup .uffici-suggerimento { margin-top: 6px; font-style: italic; color: var(--text-muted); }
 .legenda-uffici { max-height: 45vh; overflow-y: auto; }
 .legenda-incendi i.incendi-campione { width: 14px; height: 10px; border: 1.5px solid; border-radius: 2px; }
+.legenda-mef .mef-legenda-riga { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
+.legenda-mef i.mef-campione { width: 14px; height: 10px; border-radius: 2px; border: 1px solid #5c2e0b; flex: none; }
 .incendi-popup-voce + .incendi-popup-voce { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--border); }
 .legenda-pai { max-height: 50vh; overflow-y: auto; }
 .legenda-pai .pai-legenda-tema { display: flex; flex-direction: column; align-items: flex-start; }

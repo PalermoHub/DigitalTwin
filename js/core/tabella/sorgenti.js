@@ -20,6 +20,7 @@ const alberi = t('tabella.fonte.alberi');
 const turismo = t('tabella.fonte.monumenti');
 const esterna = t('tabella.fonte.esterna');
 const sicurezza = t('tabella.fonte.incidenti');
+const mef = t('tabella.fonte.mef');
 
 export const SORGENTI = [
   { id: 'colonnine', nome: t('tabella.layer.colonnine'), strati: ['colonnine-hit'], visibili: ['colonnine-punti'], chiave: p => p.id, fonte: progetto, approssimata: false, esporta: true, colore: '#2b8a3e' },
@@ -56,6 +57,8 @@ export const SORGENTI = [
   { id: 'vincoli-areali', nome: t('tabella.layer.vincoliAreali'), strati: ['prg-va-hit'], visibili: ['prg-va'], chiave: p => p.fid, colonne: ['tipo', 'descrizone', 'note'], fonte: prg, approssimata: true, esporta: true, colore: '#862e9c' },
   { id: 'vincoli-lineari', nome: t('tabella.layer.vincoliLineari'), strati: ['prg-vl-hit'], visibili: ['prg-vl'], chiave: p => p.fid, colonne: ['TIPO', 'DESCRIZION', 'NOTE'], fonte: prg, approssimata: true, esporta: true, colore: '#5f3dc4' },
   { id: 'isole-calore', nome: t('tabella.layer.calore'), strati: ['isole-calore-hit'], visibili: ['isole-calore-fill'], chiave: p => p.sez, colonne: ['sez', 'circoscrizione', 'Quartiere', 'UPL_nome', 'LST_2025', 'LST_2024', 'LST_2023', 'LST_2022', 'LST_2021', 'LST_2020', 'LST_2019'], fonte: calore, approssimata: true, esporta: true, colore: '#fd7e14' },
+  // beni dichiarati al MEF: edifici (poligoni) e beni senza edificio (punti); le colonne sono i campi piatti, il JSON `beni` resta nella scheda
+  { id: 'mef-immobili', nome: t('tabella.layer.mef'), strati: ['mef-immobili-hit', 'mef-immobili-hit-punti'], visibili: ['mef-immobili-fill', 'mef-immobili-linea', 'mef-immobili-terreno', 'mef-immobili-terreno-linea', 'mef-immobili-punti'], chiave: p => p.id_poligono ?? p.id_edificio ?? p.id_bene ?? null, colonne: ['tipologia', 'indirizzo', 'catastale', 'superficie_mq', 'n_beni', 'forma', 'localizzazione', 'verifica', 'posizione', 'anno'], fonte: mef, approssimata: false, esporta: true, colore: '#b5651d' },
   { id: 'popolazione', nome: t('tabella.layer.popolazione'), strati: ['pop-hit'], visibili: ['pop-fill'], chiave: p => p.SEZ21_ID, colonne: ['SEZ21_ID', 'Circoscrizione', 'Quartiere', 'UPL', 'POP21', 'Pop_2022', 'FAM21', 'ABI21', 'EDI21', 'Area'], fonte: istat, approssimata: true, esporta: true, colore: '#1c7ed6' },
 ];
 
