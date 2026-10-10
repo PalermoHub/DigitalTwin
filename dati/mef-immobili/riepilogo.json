@@ -1,32 +1,32 @@
 {
  "anno": 2023,
  "beni": 8006,
- "in_edifici": 6962,
- "edifici": 1267,
+ "in_edifici": 6964,
+ "edifici": 1265,
  "in_terreni": 498,
- "terreni": 495,
- "punti": 546,
+ "terreni": 332,
+ "punti": 544,
  "punti_per_motivo": {
   "senza-edificio": 372,
-  "strada": 140,
+  "strada": 138,
   "terreno": 7,
   "comune": 27
  },
  "per_localizzazione": {
-  "catasto": 4916,
-  "immobili-comunali": 524,
-  "posizione": 2436,
+  "catasto": 4925,
+  "immobili-comunali": 528,
+  "posizione": 2426,
   "scuole": 82,
   "uffici": 17,
   "monumenti": 9,
-  "seggi": 22
+  "seggi": 19
  },
  "per_verifica": {
-  "concorde": 3354,
-  "corretto": 2216,
-  "non verificabile": 2436
+  "concorde": 4653,
+  "non verificabile": 2426,
+  "corretto": 927
  },
- "corretti": 2216,
+ "corretti": 927,
  "senza_posizione": 0,
  "max_beni_per_edificio": 257
 }

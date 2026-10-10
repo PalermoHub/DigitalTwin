@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from shapely.ops import unary_union
 from shapely.strtree import STRtree
 
-from mef_catasto import indirizzi_compatibili, particelle_da_identificativo
+from mef_catasto import indirizzi_compatibili, indirizzo_normalizzato, particelle_da_identificativo
 from mef_geo import SOGLIA_M, aggancia_uno, in_metri, punto_m
 
 RAGGIO_LAYER = 60.0       # immobili comunali, scuole, seggi, uffici: indirizzo compatibile entro 60 m
@@ -55,6 +55,7 @@ class Contesto:
         self.immobili_m = {k: in_metri(g) for k, g in self.immobili_wgs.items()}
         self.immobili = [{**im, "geom_m": in_metri(im["geom"])} for im in immobili if im.get("indirizzo")]
         self.albero_imm = _albero([im["geom_m"] for im in self.immobili])
+        self.compendi = {}
         self.riferimenti = [(r, punto_m(r.punto.x, r.punto.y), in_metri(r.poligono) if r.poligono is not None else None)
                             for r in riferimenti]
         self.albero_rif = _albero([gm if gm is not None else pm for _, pm, gm in self.riferimenti])
@@ -93,14 +94,61 @@ def _chiave_terreno(chiavi) -> str:
     return "t" + "+".join(f"{f}-{p}" for f, p in sorted(chiavi))
 
 
-def _da_area(b: dict, ctx: Contesto, area_m, area_wgs, chiave_terreno: str, fonte: str):
-    """Terreno: l'area stessa. Fabbricato: l'edificio più grande dentro l'area (None se non ce ne sono)."""
+MAX_COMPENDIO_M2 = 250_000.0   # oltre, un «compendio» è quasi certamente un accorpamento improprio: si tiene la sola area dichiarata
+
+
+def _compendio(ctx: Contesto, area_m, area_wgs):
+    """Il bene può essere una parte di un immobile comunale più esteso (più particelle e più edifici).
+
+    Parte dagli immobili comunali che coprono almeno metà dell'area dichiarata e aggiunge quelli contigui con lo
+    stesso indirizzo. Ritorna (area in metri, area WGS84, id del compendio) oppure (area_m, area_wgs, None)."""
+    if ctx.albero_imm is None:
+        return area_m, area_wgs, None
+    imm = ctx.immobili
+    semi = [int(k) for k in ctx.albero_imm.query(area_m, predicate="intersects")
+            if imm[int(k)]["geom_m"].intersection(area_m).area >= 0.5 * min(imm[int(k)]["geom_m"].area, area_m.area)]
+    if not semi:
+        return area_m, area_wgs, None
+    chiave = tuple(sorted(semi))
+    if chiave not in ctx.compendi:   # molti beni cadono nello stesso compendio: si calcola una volta
+        gruppo, coda = set(semi), list(semi)
+        while coda:
+            k = coda.pop()
+            via = indirizzo_normalizzato(imm[k]["indirizzo"])
+            if not via[0]:
+                continue
+            for j in ctx.albero_imm.query(imm[k]["geom_m"].buffer(1.0), predicate="intersects"):
+                j = int(j)
+                if j not in gruppo and indirizzo_normalizzato(imm[j]["indirizzo"]) == via:
+                    gruppo.add(j)
+                    coda.append(j)
+        ctx.compendi[chiave] = (unary_union([imm[k]["geom_m"] for k in gruppo]), unary_union([imm[k]["geom"] for k in gruppo]),
+                                min(imm[k]["id"] for k in gruppo))
+    gruppo_m, gruppo_wgs, id_compendio = ctx.compendi[chiave]
+    unione_m = gruppo_m if gruppo_m.covers(area_m) else gruppo_m.union(area_m)
+    if unione_m.area > MAX_COMPENDIO_M2:
+        return area_m, area_wgs, None
+    return unione_m, (gruppo_wgs if unione_m is gruppo_m else gruppo_wgs.union(area_wgs)), id_compendio
+
+
+def _da_area(b: dict, ctx: Contesto, area_m, area_wgs, chiave_terreno: str, fonte: str, compendio: bool = False):
+    """Terreno: l'area stessa. Fabbricato: l'edificio più grande dentro l'area (None se non ce ne sono).
+    Con `compendio` l'area si estende all'immobile comunale che la contiene: il terreno prende tutte le sue
+    particelle, il fabbricato tutti gli edifici (un edificio può essere fatto di più poligoni)."""
     p = punto_m(b["lon"], b["lat"])
+    esteso = None
+    if compendio:
+        area_m, area_wgs, esteso = _compendio(ctx, area_m, area_wgs)
     if b["natura"] == "Terreno":
-        return Loc(chiave_terreno, area_wgs, "terreno", fonte, _verifica(area_m, p))
-    i = _piu_grande(_edifici_nell_area(ctx, area_m))
-    if i is None:
+        return Loc(f"i{esteso}" if esteso is not None else chiave_terreno, area_wgs, "terreno", fonte, _verifica(area_m, p))
+    dentro = _edifici_nell_area(ctx, area_m)
+    if not dentro:
         return None
+    if esteso is not None and len(dentro) > 1:
+        ids = sorted(i for i, _ in dentro)
+        geom = unary_union([ctx.edifici_wgs[i] for i in ids])
+        return Loc(f"m{ids[0]}+{len(ids)}", geom, "edificio", fonte, _verifica(unary_union([ctx.geoms[ctx.pos[i]] for i in ids]), p))
+    i = _piu_grande(dentro)
     return Loc(f"e{i}", ctx.edifici_wgs[i], "edificio", fonte, _verifica(ctx.geoms[ctx.pos[i]], p))
 
 
@@ -109,7 +157,7 @@ def _livello_chiavi(b: dict, ctx: Contesto, in_m: dict, in_wgs: dict, fonte: str
     if not chiavi:
         return None
     return _da_area(b, ctx, unary_union([in_m[k] for k in chiavi]), unary_union([in_wgs[k] for k in chiavi]),
-                    _chiave_terreno(chiavi), fonte)
+                    _chiave_terreno(chiavi), fonte, compendio=True)
 
 
 # --- livello 1: catasto ----------------------------------------------------
@@ -137,7 +185,7 @@ def livello_immobili(b: dict, ctx: Contesto):
         im = ctx.immobili[k]
         if not indirizzi_compatibili(b.get("indirizzo", ""), im["indirizzo"]):
             continue
-        loc = _da_area(b, ctx, im["geom_m"], im["geom"], f"i{im['id']}", "immobili-comunali")
+        loc = _da_area(b, ctx, im["geom_m"], im["geom"], f"i{im['id']}", "immobili-comunali", compendio=True)
         if loc:
             return loc
     return None
