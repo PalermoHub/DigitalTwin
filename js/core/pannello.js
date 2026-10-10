@@ -236,6 +236,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
       const h = document.createElement('h3');
       h.className = 'gruppo-sezione';
       h.textContent = titolo;
+      if (m.sezioniFisse) h.dataset.fissa = '';
       gruppo.append(h);
     }
     let sezioneStrato = null;

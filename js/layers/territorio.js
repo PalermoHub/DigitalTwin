@@ -157,6 +157,7 @@ export default {
       paint: { 'text-color': '#c0392b', 'text-halo-color': '#ffffff', 'text-halo-width': 1.5 },
     });
   },
+  sezioniFisse: true, // «Immobili comunali» (con lo strato MEF di mef-immobili.js) resta una sezione a sé: il riordino non attraversa le intestazioni
   strati: [
     { id: 'catasto', etichetta: 'Catasto: particelle (da zoom 12)', layers: ['catasto', 'catasto-etichette'], attivo: false,
       suCambio(attivo) { if (legendaCatasto) legendaCatasto.hidden = !attivo; } },

@@ -5,7 +5,7 @@
 //  - file statici dell'app (js, css, immagini, caratteri): copia salvata subito e aggiornamento in secondo piano;
 //  - tutto il resto (altri siti, tile con richieste a intervalli di byte, POST): non si tocca.
 // Per rilasciare una versione nuova basta cambiare VERSIONE: le cache vecchie si cancellano all'attivazione.
-const VERSIONE = 'dt-v68';
+const VERSIONE = 'dt-v69';
 const STATICA = `${VERSIONE}-statica`;
 const DATI = `${VERSIONE}-dati`;
 
