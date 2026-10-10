@@ -12,6 +12,7 @@ condizioni aggiornate presso il titolare. Fonti usate:
 
 - ISTAT (sezioni censuarie, indicatori, censimento permanente): in genere CC BY
 - Comune di Palermo (catasto/SITR, PRG, civici, GTFS, uffici): condizioni del portale open data del Comune
+- Ministero dell'economia e delle finanze, Dipartimento del Tesoro (immobili dichiarati al censimento, `dati/mef-immobili/`): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), con citazione della fonte
 - Trasporto ferroviario urbano di Palermo (feed GTFS): Trenitalia S.p.A. / CCISS MMTIS (dati NeTEx sul Punto di Accesso Nazionale), convertiti in GTFS da Clément Desouche ([deryclem/trenitalia-gtfs](https://github.com/deryclem/trenitalia-gtfs)), licenza [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) con obbligo di attribuzione; feed valido dal 26/09/2026 al 12/12/2026
 - Agenzia delle Entrate, OMI: condizioni dell'Osservatorio del Mercato Immobiliare
 - OpenStreetMap (mappe di base, posizione corretta di 13 stazioni ferroviarie e stazioni in apertura Politeama e Porto, `scripts/ferrovia_posizioni.json` e `scripts/ferrovia_in_apertura.json`; tracciato dei binari delle linee ferroviarie urbane, `scripts/ferrovia_osm.json` e `dati/trasporto/ferrovia-linee.geojson`): ODbL, © contributori OpenStreetMap, con obbligo di attribuzione e share-alike
