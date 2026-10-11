@@ -1,5 +1,5 @@
 // Cattura dall'app vera, uno per volta, gli strati del reel «esploso» (vista dall'alto, sfondo trasparente)
-// in img/social/strati/<id>.webp. Serve l'app in locale: python3 scripts/serve.py 8000
+// in img/strati-3d/<id>.webp. Serve l'app in locale: python3 scripts/serve.py 8000
 // Uso: node scripts/social/strati-cattura.mjs [--solo catasto,prg]   (poi python3 scripts/social/terreno-gradoni.py)
 import { chromium } from 'playwright';
 import { fileURLToPath } from 'node:url';
@@ -8,10 +8,10 @@ import { mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
 const qui = dirname(fileURLToPath(import.meta.url));
-const uscita = join(qui, '../../img/social/strati');
+const uscita = join(qui, '../../img/strati-3d');
 mkdirSync(uscita, { recursive: true });
 // vista (dal centro a Monte Pellegrino), lato della texture quadrata e strati: tutti in strati.json
-const { vista: VISTA, lato: LATO, strati: STRATI } = JSON.parse(readFileSync(join(qui, 'strati.json'), 'utf8'));
+const { vista: VISTA, lato: LATO, strati: STRATI } = JSON.parse(readFileSync(join(qui, '../../img/strati-3d/strati.json'), 'utf8'));
 const is = process.argv.indexOf('--solo');
 const solo = is > 0 ? new Set(process.argv[is + 1].split(',')) : null;
 

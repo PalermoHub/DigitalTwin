@@ -177,3 +177,43 @@ a { color: inherit; }
 .confronto tbody tr:last-child > * { border-bottom: 0; }
 .confronto tbody tr:nth-child(even) > * { background: color-mix(in srgb, var(--testo) 3%, transparent); }
 .solo-lettori { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Strati in 3D (js/presentazione-strati.js): palco scuro come nell'app, elenco a destra (sotto, su telefono) */
+.p3 { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 0; border-radius: var(--r); overflow: hidden; color: #fff; box-shadow: var(--ombra);
+  background: radial-gradient(ellipse 70% 55% at 40% 55%, rgba(245, 166, 35, .14), transparent 70%), radial-gradient(circle, rgba(255, 255, 255, .07) 1.4px, transparent 1.8px) 0 0 / 40px 40px, #0e121a; }
+.p3-palco { position: relative; height: 620px; perspective: 2600px; overflow: hidden; cursor: grab; touch-action: pan-y; outline-offset: -3px; }
+.p3-palco.trascina { cursor: grabbing; }
+.p3-palco:focus-visible { outline: 3px solid var(--fuoco); }
+.p3-mondo { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+.p3-piano { position: absolute; left: -500px; top: -500px; width: 1000px; height: 1000px; transform-style: preserve-3d; transition: opacity .25s;
+  border: 3px solid rgba(255, 255, 255, calc(var(--vetro, 1) * .35)); border-radius: 4px; background: rgba(20, 26, 38, calc(var(--vetro, 1) * .32)); }
+.p3-piano[data-base] { background: none; }
+.p3-piano img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.p3-piano.att { border-color: var(--accento); box-shadow: 0 0 60px rgba(245, 166, 35, .55); }
+.p3-linee { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.p3-linee path { fill: none; stroke: var(--accento); stroke-width: 2; stroke-dasharray: 7 6; }
+.p3-elenco { grid-row: 1; grid-column: 2; align-self: center; max-height: 600px; overflow: auto; padding: 10px; display: flex; flex-direction: column; gap: 2px; }
+.p3-elenco button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 8px; border: 0; border-radius: 10px; background: none; color: #fff; font: inherit; text-align: left; cursor: pointer; }
+.p3-elenco button:hover, .p3-elenco button:focus-visible { background: rgba(255, 255, 255, .08); }
+.p3-elenco button.att { background: rgba(245, 166, 35, .2); }
+.p3-elenco i { flex: none; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; border: 2px solid rgba(255, 255, 255, .4); font-style: normal; font-size: .6875rem; font-weight: 700; color: #aab2c0; }
+.p3-elenco button.att i { border-color: var(--accento); color: var(--accento); }
+.p3-elenco b { display: block; font-size: .875rem; font-weight: 700; }
+.p3-elenco small { display: block; font-size: .75rem; color: #aab2c0; }
+.p3-comandi { position: absolute; left: calc((100% - 250px) / 2); bottom: 16px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; white-space: nowrap;
+  padding: 8px 14px; border-radius: 999px; background: rgba(16, 20, 29, .9); border: 1px solid rgba(255, 255, 255, .12); }
+.p3-comandi label { display: flex; align-items: center; gap: 8px; font-size: .8125rem; font-weight: 600; color: #aab2c0; }
+.p3-comandi input[type=range] { width: 120px; accent-color: var(--accento); }
+.p3-comandi button { min-width: 32px; padding: 6px 12px; border: 1px solid rgba(255, 255, 255, .2); border-radius: 999px; background: none; color: #fff; font: 600 .8125rem 'Montserrat', sans-serif; cursor: pointer; }
+.p3-comandi button:hover, .p3-comandi button:focus-visible, .p3-comandi button[aria-pressed="true"] { border-color: var(--accento); color: var(--accento); }
+.p3-aiuto { position: absolute; left: 16px; top: 12px; margin: 0; font-size: .75rem; color: #aab2c0; pointer-events: none; }
+@media (max-width: 760px) {
+  .p3 { grid-template-columns: minmax(0, 1fr); }
+  .p3-palco { height: 440px; }
+  .p3-elenco { grid-row: 2; grid-column: 1; max-height: none; display: grid; grid-template-columns: 1fr 1fr; padding: 8px; }
+  .p3-elenco small { display: none; }
+  .p3-comandi { left: 50%; top: 384px; bottom: auto; gap: 6px; padding: 6px 10px; }
+  .p3-comandi input[type=range] { width: 70px; }
+  .p3-comandi label span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .p3-piano { transition: none; } }

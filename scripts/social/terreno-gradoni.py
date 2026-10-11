@@ -1,6 +1,6 @@
 """Terreno 3D del reel «strati esplosi» come plastico a gradoni: legge i tile Terrarium del DTM dell'app
 (tileset terrain-dem del catalogo), li ritaglia sulla vista di strati.json e scrive una fetta per quota in
-img/social/strati/terreno-<n>.webp, con ombreggiatura e tinta ipsometrica; l'elenco (file e quota) va in terreno.json.
+img/strati-3d/terreno-<n>.webp, con ombreggiatura e tinta ipsometrica; l'elenco (file e quota) va in terreno.json.
 Uso: python3 scripts/social/terreno-gradoni.py"""
 import io, json, math, os, urllib.request
 import numpy as np
@@ -8,9 +8,9 @@ from PIL import Image
 
 qui = os.path.dirname(os.path.abspath(__file__))
 radice = os.path.join(qui, "../..")
-uscita = os.path.join(radice, "img/social/strati")
+uscita = os.path.join(radice, "img/strati-3d")
 os.makedirs(uscita, exist_ok=True)
-conf = json.load(open(os.path.join(qui, "strati.json")))
+conf = json.load(open(os.path.join(radice, "img/strati-3d/strati.json")))
 catalogo = json.load(open(os.path.join(radice, "dati/catalogo.json")))
 URL = next(v["url"] for v in catalogo if v.get("id") == "terrain-dem")
 LATO, (LON, LAT), ZOOM = conf["lato"], conf["vista"]["center"], conf["vista"]["zoom"]

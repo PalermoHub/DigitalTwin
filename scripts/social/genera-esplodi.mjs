@@ -20,8 +20,8 @@ const pagina = await browser.newPage({ viewport: { width: 1080, height: 1920 } }
 pagina.on('pageerror', e => console.log('errore pagina:', e.message));
 // l'indirizzo del sito nella chiusura è sfocato; --url lo mostra
 await pagina.goto(pathToFileURL(join(qui, 'esplodi.html')).href + (process.argv.includes('--url') ? '?url=1' : ''));
-const strati = JSON.parse(readFileSync(join(qui, 'strati.json'), 'utf8')).strati;
-for (const s of strati) if (s.gradoni) s.gradoni = JSON.parse(readFileSync(join(uscita, 'strati/terreno.json'), 'utf8'));
+const strati = JSON.parse(readFileSync(join(uscita, '../strati-3d/strati.json'), 'utf8')).strati;
+for (const s of strati) if (s.gradoni) s.gradoni = JSON.parse(readFileSync(join(uscita, '../strati-3d/terreno.json'), 'utf8'));
 await pagina.evaluate(s => window.impostaStrati(s), strati);
 const durata = await pagina.evaluate(() => window.DURATA);
 if (process.argv.includes('--tempi')) {   // per musica-esplodi.py: tagli e passo della salita come li calcola la pagina

@@ -154,13 +154,13 @@ window.impostaStrati = function (lista) {
   lista.forEach((s, i) => {
     const el = document.createElement('div'); el.className = 'piano'; el.id = 'pi' + i;
     if (s.id === 'edifici') for (let j = 0; j < FETTE; j++) {
-      const f = document.createElement('img'); f.className = 'fetta'; f.src = `../../img/social/strati/${s.id}.webp`;
+      const f = document.createElement('img'); f.className = 'fetta'; f.src = `../../img/strati-3d/${s.id}.webp`;
       f.style.filter = `brightness(${.35 + .5 * j / FETTE}) saturate(.6)`; f.dataset.j = j; el.append(f);
     }
     if (s.gradoni) for (const g of s.gradoni) {     // terreno: una fetta per quota (terreno-gradoni.py)
-      const f = document.createElement('img'); f.className = 'fetta gradone'; f.src = `../../img/social/strati/${g.file}`; f.dataset.q = g.quota; el.append(f);
+      const f = document.createElement('img'); f.className = 'fetta gradone'; f.src = `../../img/strati-3d/${g.file}`; f.dataset.q = g.quota; el.append(f);
     } else {
-      const img = document.createElement('img'); img.src = `../../img/social/strati/${s.id}.webp`; el.append(img);
+      const img = document.createElement('img'); img.src = `../../img/strati-3d/${s.id}.webp`; el.append(img);
     }
     mondo.append(el);
     const e = document.createElement('div'); e.className = 'etc'; e.id = 'et' + i;
