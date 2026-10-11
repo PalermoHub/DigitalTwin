@@ -80,7 +80,12 @@ export function disegnaVoceTooltip(m) {
 
 // Tooltip per i layer con un modello di popup {titolo, sottotitolo, pallino?, badge?: {testo, colore}}: `gruppi` = [{ layers, modello(props) }]. Si cerca solo
 // negli strati accesi (a strato spento sulla mappa non c'è nulla da indicare); nel riquadro di ±4 px cadono anche i punti piccoli.
+// i modelli di tooltip registrati, per layer: la vista «Strati in 3D» li riusa per descrivere ogni strato della pila
+const modelli = [];
+export const modelloTooltipDi = id => modelli.find(g => g.layers.includes(id))?.modello ?? null;
+
 export function registraTooltipStrati(map, gruppi, priorita = 2) {
+  modelli.push(...gruppi);
   const acceso = id => map.getLayer(id) && map.getLayoutProperty(id, 'visibility') === 'visible';
   registraTooltip(map, e => {
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];

@@ -65,3 +65,45 @@ export function puntoDaPiano(angoli, u, v) {
 
 // Quote dei piani esplosi: passo uguale, proporzionale al lato della cattura.
 export const quote = (n, lato) => Array.from({ length: n }, (_, i) => i * lato * 0.075);
+
+// Un'etichetta per una feature qualsiasi, dalle sue proprietà (per gli strati senza un modello di tooltip):
+// il catasto come foglio e particella, altrimenti il campo più parlante tra quelli noti e, se c'è, un secondo campo
+// come dettaglio; in mancanza, il primo testo o il primo numero che non sia un identificativo.
+const CHIAVI = ['nome', 'name', 'denominazione', 'denominaz', 'titolo', 'title', 'route_long_name', 'route_short_name', 'linea',
+  'zto', 'zona', 'descrizion', 'descrizione', 'descrizone', 'tipo', 'categoria', 'indirizzo', 'quartiere', 'circoscriz', 'circoscrizione', 'sezione', 'classe'];
+const IDENTIFICATIVO = /^(fid|id|id1|ogc_fid|objectid|gid|cod_istat|cod_cat)$/i;
+export function etichettaFeature(p) {
+  if (!p) return null;
+  const chiavi = Object.keys(p);
+  const trova = n => chiavi.find(k => k.toLowerCase() === n);
+  const vale = k => k != null && p[k] != null && typeof p[k] !== 'object' && String(p[k]).trim() !== '';
+  const foglio = trova('foglio'), particella = trova('paricella') ?? trova('particella');
+  if (vale(foglio) && vale(particella)) return { foglio: String(p[foglio]), particella: String(p[particella]) };
+  const trovate = CHIAVI.map(trova).filter(vale);
+  if (trovate.length) {
+    const titolo = String(p[trovate[0]]);
+    const sotto = trovate.slice(1).map(k => String(p[k])).find(v => v !== titolo && v.length <= 80) ?? '';
+    return { titolo, sotto };
+  }
+  const testo = chiavi.find(k => !IDENTIFICATIVO.test(k) && typeof p[k] === 'string' && p[k].trim());
+  if (testo) return { titolo: p[testo], sotto: '' };
+  const numero = chiavi.find(k => !IDENTIFICATIVO.test(k) && typeof p[k] === 'number');
+  return numero ? { titolo: `${numero}: ${p[numero].toLocaleString()}`, sotto: '' } : null;
+}
+
+// Strati disegnati come immagini (PRG e vincoli) o con dati altrove: per il tooltip si interrogano i layer invisibili
+// che l'app usa per la scheda. Le chiavi sono gli id degli strati del pannello.
+export const LAYER_DA_INTERROGARE = {
+  prg: ['prg-zto-hit', 'prg-ns-hit', 'prg-cs-hit'],
+  vincoli: ['prg-va-hit', 'prg-vl-hit'],
+  catasto: ['catasto-hit'],
+  omi: ['omi-hit'],
+  immobili: ['immobili-hit'],
+  edificato: ['edifici-hit'],
+  edifici3d: ['edifici-hit'],
+  coropletico: ['pop-hit'],
+  rilievo3d: ['griglia-hit'],
+  elevazione: ['griglia-hit'],
+};
+// i layer da interrogare per un piano della pila (il terreno riunisce più strati)
+export const layerDaInterrogare = g => [...new Set([...g.layers, ...(g.strati ?? [g.id]).flatMap(id => LAYER_DA_INTERROGARE[id] ?? [])])];

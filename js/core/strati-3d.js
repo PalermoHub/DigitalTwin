@@ -1,9 +1,9 @@
 import { t } from './i18n.js';
 import { segnala } from './pannello.js';
 import { eBase } from '../layers/base.js';
-import { gruppiStrati, limitaPiani, quote, unisciTerreno, MAX_PIANI } from './strati-3d-modello.js';
+import { gruppiStrati, limitaPiani, quote, unisciTerreno, etichettaFeature, layerDaInterrogare, MAX_PIANI } from './strati-3d-modello.js';
 import { gradoni } from './strati-3d-terreno.js';
-import { contenutoTooltip } from './tooltip.js';
+import { modelloTooltipDi, disegnaVoceTooltip } from './tooltip.js';
 
 // «Strati in 3D»: i layer accesi, fotografati uno per uno nell'inquadratura corrente, si separano in una pila
 // che si gira col mouse o col dito. Un clic su un punto di uno strato apre la scheda di quel punto sopra la scena;
@@ -309,22 +309,57 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   tip.hidden = true;
   radice.append(tip);
   const nascondiTip = () => { tip.hidden = true; palco.classList.remove('su-oggetto'); };
+  // Tutto quello che c'è sotto un punto, strato per strato: lo strato sotto il mouse in cima ed evidenziato, poi gli
+  // altri dall'alto. Per ogni oggetto il modello di tooltip dell'app se c'è, altrimenti un'etichetta dalle proprietà.
+  const MAX_VOCI = 3;
+  function descriviPunto(punto, sotto) {
+    const riquadro = [[punto.x - 3, punto.y - 3], [punto.x + 3, punto.y + 3]];
+    const sezioni = [];
+    piani.forEach((p, i) => {
+      if (spento[i] || p.base) return;
+      const ids = layerDaInterrogare(p).filter(id => map.getLayer(id));
+      if (!ids.length) return;
+      const voci = new Map();
+      for (const f of map.queryRenderedFeatures(riquadro, { layers: ids })) {
+        let v = modelloTooltipDi(f.layer.id)?.(f.properties);
+        if (!v?.titolo) {
+          const e = etichettaFeature(f.properties);
+          v = e && (e.foglio ? { titolo: t('strati3d.particella', e) } : { titolo: e.titolo, sottotitolo: e.sotto });
+        }
+        if (v?.titolo) voci.set(`${v.titolo}\n${v.sottotitolo ?? ''}`, v);
+      }
+      if (voci.size) sezioni.push({ i, voci: [...voci.values()] });
+    });
+    if (!sezioni.length) return null;
+    // lo strato «sotto il mouse»: il primo con dati scendendo da quello toccato (le parti vuote di un piano non contano)
+    const qui = Math.max(-1, ...sezioni.map(x => x.i).filter(i => i <= sotto));
+    sezioni.sort((a, b) => (b.i === qui) - (a.i === qui) || b.i - a.i);
+    const corpo = el('div', 'strati3d-tip');
+    for (const { i, voci } of sezioni) {
+      const sez = el('div', 'strati3d-tip-sez');
+      if (i === qui) sez.classList.add('qui');
+      const testa = el('div', 'strati3d-tip-testa');
+      testa.append(el('i', null, String(i + 1)), el('b', null, titoloPiano(piani[i])));
+      sez.append(testa, ...voci.slice(0, MAX_VOCI).map(disegnaVoceTooltip));
+      if (voci.length > MAX_VOCI) sez.append(el('div', 'strati-tooltip-altre', t('strati3d.altre', { n: voci.length - MAX_VOCI })));
+      corpo.append(sez);
+    }
+    return corpo;
+  }
   let attesaTip = 0;
   palco.addEventListener('pointermove', ev => {
     if (ev.pointerType !== 'mouse' || puntatori.size || chiudendo) { nascondiTip(); return; }
     const img = ev.target.closest?.('.strati3d-img');
     if (!img) { nascondiTip(); return; }
+    const sotto = elPiani.findIndex(({ d }) => d === img.closest('.strati3d-piano'));
     const { offsetX, offsetY, clientX, clientY } = ev;
     cancelAnimationFrame(attesaTip);
     attesaTip = requestAnimationFrame(() => {
       const punto = puntoMappa(offsetX / cw, offsetY / ch);
-      const accesi = piani.filter((p, i) => !spento[i] && !p.base).flatMap(p => p.layers).filter(id => map.getLayer(id));
-      const riquadro = [[punto.x - 3, punto.y - 3], [punto.x + 3, punto.y + 3]];
-      const oggetto = accesi.length > 0 && map.queryRenderedFeatures(riquadro, { layers: accesi }).length > 0;
-      const contenuto = contenutoTooltip({ point: punto, lngLat: map.unproject(punto) });
-      palco.classList.toggle('su-oggetto', oggetto || !!contenuto?.cursore);
-      if (!contenuto) { tip.hidden = true; return; }
-      tipCorpo.replaceChildren(contenuto.corpo);
+      const corpo = descriviPunto(punto, sotto);
+      palco.classList.toggle('su-oggetto', !!corpo);
+      if (!corpo) { tip.hidden = true; return; }
+      tipCorpo.replaceChildren(corpo);
       const r = radice.getBoundingClientRect();
       tip.style.transform = `translate(${clientX - r.left + 14}px, ${clientY - r.top + 16}px)`;
       tip.hidden = false;

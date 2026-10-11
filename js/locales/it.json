@@ -2075,5 +2075,7 @@
   "pres.strati3d.piu": "Avvicina",
   "pres.strati3d.meno": "Allontana",
   "pres.strati3d.aiuto": "Trascina per girare · Ctrl + rotella per lo zoom",
-  "pres.strati3d.noscript": "Il modello 3D ha bisogno di JavaScript."
+  "pres.strati3d.noscript": "Il modello 3D ha bisogno di JavaScript.",
+  "strati3d.particella": "Foglio {foglio}, particella {particella}",
+  "strati3d.altre": "+ altri {n}"
 }

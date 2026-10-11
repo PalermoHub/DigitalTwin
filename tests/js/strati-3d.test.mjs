@@ -73,3 +73,19 @@ test('terreno: quota Terrarium e zoom dei tile entro il tetto', async () => {
   assert.ok((Math.floor(0.5374 * n) - Math.floor(0.5370 * n) + 1) * (Math.floor(0.3884 * n) - Math.floor(0.3880 * n) + 1) <= 48);
   assert.ok(z <= 15 && z >= 10);
 });
+
+test('etichettaFeature: catasto, campi noti con dettaglio, ripieghi', async () => {
+  const { etichettaFeature } = await import('../../js/core/strati-3d-modello.js');
+  assert.deepEqual(etichettaFeature({ Foglio: 54, Paricella: '312', fid: 9 }), { foglio: '54', particella: '312' });
+  assert.deepEqual(etichettaFeature({ ZTO: 'B2', DESCRIZION: 'Zona residenziale', fid: 1 }), { titolo: 'B2', sotto: 'Zona residenziale' });
+  assert.deepEqual(etichettaFeature({ fid: 3, colore: 'rosso' }), { titolo: 'rosso', sotto: '' });
+  assert.deepEqual(etichettaFeature({ fid: 3, pop21: 1250 }), { titolo: `pop21: ${(1250).toLocaleString()}`, sotto: '' });
+  assert.equal(etichettaFeature({ fid: 3 }), null);
+});
+
+test('layerDaInterrogare: i layer di servizio degli strati disegnati come immagini', async () => {
+  const { layerDaInterrogare } = await import('../../js/core/strati-3d-modello.js');
+  assert.deepEqual(layerDaInterrogare({ id: 'prg', layers: ['prg-zto', 'prg-ppe'] }), ['prg-zto', 'prg-ppe', 'prg-zto-hit', 'prg-ns-hit', 'prg-cs-hit']);
+  assert.deepEqual(layerDaInterrogare({ id: 'terreno', strati: ['rilievo3d', 'elevazione'], layers: ['h', 'e'] }), ['h', 'e', 'griglia-hit']);
+  assert.deepEqual(layerDaInterrogare({ id: 'altri', layers: ['x'] }), ['x']);
+});
