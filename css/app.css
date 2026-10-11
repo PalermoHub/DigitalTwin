@@ -3,6 +3,8 @@
    Interfaccia chiara di default; il tema scuro sostituisce solo i token (vedi [data-tema="scuro"]).
    ========================================================================== */
 :root {
+  --tre-d: #4f46e5;        /* pulsante «Strati in 3D»: indaco, distinto dai pulsanti grigi e dall'ambra degli stati attivi */
+  --tre-d-ink: #fff;
   color-scheme: light;
 
   /* superfici, testo, bordi */
@@ -92,6 +94,8 @@
 
 /* tema scuro: sostituisce solo i token; il chiaro resta il predefinito. La base cartografica si sceglie a parte. */
 :root[data-tema="scuro"] {
+  --tre-d: #818cf8;
+  --tre-d-ink: #12152b;
   color-scheme: dark;
   --surface: #1c2128;
   --surface-alt: #232a33;
@@ -1848,6 +1852,10 @@ body.strati3d-attiva :is(#scheda, #rail-pannelli) { z-index: calc(var(--z-viewer
 .strati3d-beta { padding: 3px 9px; border-radius: var(--r-pill); border: 1px solid var(--accent); color: var(--accent); font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; pointer-events: auto; cursor: help; }
 .strati3d-beta--mini { padding: 0 5px; text-transform: none; font-size: var(--fs-3xs); line-height: 1.4; cursor: inherit; }
 #barra-strumenti #btn-strati3d .strati3d-bollino { position: absolute; top: -5px; right: -6px; min-width: 15px; height: 15px; padding: 0 3px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); font-size: 10px; font-weight: 700; line-height: 15px; text-align: center; }
+#barra-strumenti #btn-strati3d { background: var(--tre-d); border-color: var(--tre-d); color: var(--tre-d-ink); }
+#barra-strumenti #btn-strati3d:hover:not(:disabled) { background: color-mix(in srgb, var(--tre-d) 85%, #000); color: var(--tre-d-ink); }
+#barra-strumenti #btn-strati3d[aria-pressed="true"] { box-shadow: 0 0 0 3px color-mix(in srgb, var(--tre-d) 35%, transparent); }
+#btn-strati3d-m svg { color: var(--tre-d); }
 #btn-strati3d:disabled, #btn-strati3d-m:disabled { opacity: .45; cursor: not-allowed; }
 @media (max-width: 720px) {
   .strati3d-testata h2 { display: none; }
