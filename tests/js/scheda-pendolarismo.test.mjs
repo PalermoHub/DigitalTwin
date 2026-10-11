@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { riepilogo, classifica, saldoPerComune, quota, voceScheda, modelloTooltipPendolarismo, COLORE_ENTRATA, COLORE_USCITA } from '../../js/layers/scheda-pendolarismo.js';
+import { NOTA, riepilogo, classifica, saldoPerComune, quota, voceScheda, modelloTooltipPendolarismo, COLORE_ENTRATA, COLORE_USCITA } from '../../js/layers/scheda-pendolarismo.js';
 
 const nodi = [
   { tipo: 'palermo', nome: 'Palermo', codice: '082053', interni: 1000, entrata: 1000, uscita: 1000, saldo: 0 },
@@ -40,12 +40,13 @@ test('saldoPerComune: gli scarti maggiori in valore assoluto, poi dal saldo più
   assert.ok(!saldoPerComune([...nodi, { tipo: 'comune', nome: 'Pari', codice: '1', entrata: 7, uscita: 7, saldo: 0 }], 10).some(d => d.nome === 'Pari'));
 });
 
-test('voceScheda: sezione dello strato, con fonte e nota sul periodo del dato', () => {
+test('voceScheda: sezione dello strato, con fonte; la nota sul periodo del dato sta in un blocco apri/chiudi', () => {
   const v = voceScheda(nodi, () => document, null);
   assert.equal(v.strato, 'pendolarismo');
   assert.equal(v.chiave, 'pendolarismo');
   assert.match(v.fonte, /ISTAT/);
-  assert.match(v.nota, /2021/);
+  assert.equal(v.nota, undefined);
+  assert.match(NOTA, /2021/);
   assert.equal(typeof v.dinamico, 'function');
 });
 

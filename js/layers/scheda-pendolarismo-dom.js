@@ -1,7 +1,7 @@
 // Parti disegnate della scheda del pendolarismo, come nel pannello della mappa originale: tre riquadri in percentuale,
 // tre numeri chiave e le classifiche dei comuni di destinazione (uscita) e di origine (entrata) con le barre.
-import { localeIntl, t } from '../core/i18n.js';
-import { riepilogo, classifica, conSegno, percentuale, COLORE_ENTRATA, COLORE_USCITA } from './scheda-pendolarismo.js';
+import { localeIntl, t, tl } from '../core/i18n.js';
+import { riepilogo, classifica, conSegno, percentuale, NOTA, COLORE_ENTRATA, COLORE_USCITA } from './scheda-pendolarismo.js';
 
 const num = v => Number(v).toLocaleString(localeIntl());
 
@@ -55,6 +55,13 @@ function classificaDisegnata(titolo, elenco, colore) {
   return blocco;
 }
 
+// «Nota sulla qualità dei dati»: chiusa all'apertura, come nella scheda PEBA
+function notaQualita() {
+  const nota = el('details', 'peba-nota');
+  nota.append(el('summary', null, tl('Nota sulla qualità dei dati')), el('p', null, tl(NOTA)));
+  return nota;
+}
+
 export function contenutoDinamico(nodi) {
   const radice = el('div', 'pend-dinamico');
   const r = riepilogo(nodi);
@@ -62,6 +69,7 @@ export function contenutoDinamico(nodi) {
   radice.append(
     classificaDisegnata(t('pendolarismo.topUscita'), classifica(nodi, 'uscita'), COLORE_USCITA),
     classificaDisegnata(t('pendolarismo.topEntrata'), classifica(nodi, 'entrata'), COLORE_ENTRATA),
+    notaQualita(),
   );
   return radice;
 }
