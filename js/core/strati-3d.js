@@ -1,8 +1,9 @@
 import { t } from './i18n.js';
 import { segnala } from './pannello.js';
 import { eBase } from '../layers/base.js';
-import { gruppiStrati, limitaPiani, puntoDaPiano, quote, unisciTerreno, MAX_PIANI } from './strati-3d-modello.js';
+import { gruppiStrati, limitaPiani, quote, unisciTerreno, MAX_PIANI } from './strati-3d-modello.js';
 import { gradoni } from './strati-3d-terreno.js';
+import { contenutoTooltip } from './tooltip.js';
 
 // «Strati in 3D»: i layer accesi, fotografati uno per uno nell'inquadratura corrente, si separano in una pila
 // che si gira col mouse o col dito. Un clic su un punto di uno strato apre la scheda di quel punto sopra la scena;
@@ -72,15 +73,15 @@ async function cattura(map, gruppi, avanzamento) {
       const c = await fotografa(map, scala);
       if (vuoto(c)) continue;
       // il terreno diventa un plastico a gradoni dal DTM (se non si legge resta piatto)
-      const terreno = g.terreno ? await gradoni(map, angoli, c, { maxFette: telefono ? 8 : 12 }).catch(() => null) : null;
-      piani.push({ ...g, canvas: c, gradoni: terreno });
+      const plastico = g.terreno ? await gradoni(map, angoli, c, { maxFette: telefono ? 8 : 12 }).catch(() => null) : null;
+      piani.push({ ...g, canvas: c, gradoni: plastico });
     }
   } finally {
     for (const [id, v] of prima) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', v);
     if (terreno) map.setTerrain(terreno);
     map.jumpTo(camera);
   }
-  return { piani, angoli, scala };
+  return { piani, angoli, scala, camera, terreno, vista: { ...camera, pitch: 0 } };
 }
 
 function titoloPiano(g) {
@@ -99,7 +100,7 @@ function el(tag, classe, testo) {
 }
 
 // La scena: si apre «piatta» (identica alla mappa), esplode, si gira; chiudendo si richiude e sfuma sulla mappa vera.
-function apriScena(map, { piani, angoli }, alChiudere) {
+function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   const ridotto = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const telefono = matchMedia(TELEFONO).matches;
   const radice = el('div', 'strati3d');
@@ -150,6 +151,18 @@ function apriScena(map, { piani, angoli }, alChiudere) {
   const corpo = map.getContainer().closest('#corpo') || document.body;
   corpo.append(radice);
   document.body.classList.add('strati3d-attiva'); // la scheda del luogo e il suo rail salgono sopra la scena
+  // Sotto la scena la mappa resta ferma sull'inquadratura fotografata (dall'alto, senza rilievo): un punto della pila è
+  // così un pixel della mappa, per la scheda (che cerca gli oggetti disegnati) e per il tooltip. Alla chiusura torna com'era.
+  if (terreno) map.setTerrain(null);
+  map.jumpTo(vista);
+  let salto = false;
+  const tieniFerma = () => {
+    if (salto || chiudendo) return;
+    salto = true;
+    map.jumpTo(vista);
+    salto = false;
+  };
+  map.on('moveend', tieniFerma);
 
   const cw = piani[0].canvas.width, ch = piani[0].canvas.height, lato = Math.max(cw, ch);
   // la pila nasce sopra la mappa, alla stessa scala: aprendosi sembra che sia la mappa a sollevarsi
@@ -190,6 +203,8 @@ function apriScena(map, { piani, angoli }, alChiudere) {
       occhio.setAttribute('aria-pressed', String(!spento[i]));
       occhio.title = occhio.ariaLabel = t(spento[i] ? 'strati3d.accendi' : 'strati3d.spegni', { nome });
       riga.classList.toggle('spenta', spento[i]);
+      // anche sulla mappa sotto (fino alla chiusura): così lo strato spento non dà tooltip né scheda
+      for (const id of p.layers) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', spento[i] ? 'none' : 'visible');
       if (spento[i] && meta.att === i) meta.att = -1;
       gesto();
     });
@@ -223,10 +238,14 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     const r = radice.getBoundingClientRect();
     const aperta = scheda && !scheda.hidden && !scheda.classList.contains('collassato');
     const s = aperta ? scheda.getBoundingClientRect() : null;
-    const destra = s && !telefono ? Math.max(260, s.left - r.left) : r.width;
+    // a destra: la scheda aperta o, se si vede, il rail dei pannelli laterali
+    const rail = document.getElementById('rail-pannelli')?.getBoundingClientRect();
+    const bordo = Math.min(s && !telefono ? s.left : Infinity, rail?.width ? rail.left : Infinity);
+    const destra = Number.isFinite(bordo) ? Math.max(260, bordo - r.left) : r.width;
     const basso = s && telefono ? Math.max(160, s.top - r.top) : r.height;
-    const x1 = destra - (telefono ? 0 : elenco.offsetWidth + 32);
-    const y0 = 60, y1 = telefono ? (s ? basso - 8 : r.height - 210) : r.height - 70;
+    // l'elenco è una fila di chip sotto la testata: toglie spazio in alto, non di lato
+    const x1 = destra;
+    const y0 = elenco.getBoundingClientRect().bottom - r.top + 10, y1 = s && telefono ? basso - 8 : r.height - (telefono ? 80 : 70);
     return { aperta, x0: 0, x1, y0, y1, destra: r.width - destra, basso: r.height - basso };
   };
   let girando = !ridotto, ultimoGesto = 0, chiudendo = false, raf = 0;
@@ -276,11 +295,44 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     puntoPiano = [ev.offsetX, ev.offsetY];
     for (const pt of punti) Object.assign(pt.style, { left: `${puntoPiano[0]}px`, top: `${puntoPiano[1]}px` });
     Object.assign(spillo.style, { left: `${puntoPiano[0] - cw / 2}px`, top: `${puntoPiano[1] - ch / 2}px` });
-    const [x, y] = puntoDaPiano(angoli, puntoPiano[0] / cw, puntoPiano[1] / ch);
-    const lngLat = new maplibregl.MercatorCoordinate(x, y).toLngLat();
-    map.fire('click', { point: map.project(lngLat), lngLat }); // la scheda dell'app, sopra la scena (vedi css)
+    const punto = puntoMappa(puntoPiano[0] / cw, puntoPiano[1] / ch);
+    map.fire('click', { point: punto, lngLat: map.unproject(punto) }); // la scheda dell'app, sopra la scena (vedi css)
+    nascondiTip();
     gesto();
   });
+  // ── puntatore e tooltip: come sulla mappa 2D, con gli stessi fornitori di tooltip dell'app ──
+  const contenitore = map.getContainer();
+  const puntoMappa = (u, v) => new maplibregl.Point(u * contenitore.clientWidth, v * contenitore.clientHeight);
+  const tip = el('div', 'maplibregl-popup mappa-tooltip strati3d-tooltip'); // i18n-ok: classi CSS (stile del tooltip della mappa)
+  const tipCorpo = el('div', 'maplibregl-popup-content');
+  tip.append(tipCorpo);
+  tip.hidden = true;
+  radice.append(tip);
+  const nascondiTip = () => { tip.hidden = true; palco.classList.remove('su-oggetto'); };
+  let attesaTip = 0;
+  palco.addEventListener('pointermove', ev => {
+    if (ev.pointerType !== 'mouse' || puntatori.size || chiudendo) { nascondiTip(); return; }
+    const img = ev.target.closest?.('.strati3d-img');
+    if (!img) { nascondiTip(); return; }
+    const { offsetX, offsetY, clientX, clientY } = ev;
+    cancelAnimationFrame(attesaTip);
+    attesaTip = requestAnimationFrame(() => {
+      const punto = puntoMappa(offsetX / cw, offsetY / ch);
+      const accesi = piani.filter((p, i) => !spento[i] && !p.base).flatMap(p => p.layers).filter(id => map.getLayer(id));
+      const riquadro = [[punto.x - 3, punto.y - 3], [punto.x + 3, punto.y + 3]];
+      const oggetto = accesi.length > 0 && map.queryRenderedFeatures(riquadro, { layers: accesi }).length > 0;
+      const contenuto = contenutoTooltip({ point: punto, lngLat: map.unproject(punto) });
+      palco.classList.toggle('su-oggetto', oggetto || !!contenuto?.cursore);
+      if (!contenuto) { tip.hidden = true; return; }
+      tipCorpo.replaceChildren(contenuto.corpo);
+      const r = radice.getBoundingClientRect();
+      tip.style.transform = `translate(${clientX - r.left + 14}px, ${clientY - r.top + 16}px)`;
+      tip.hidden = false;
+    });
+  });
+  palco.addEventListener('pointerleave', nascondiTip);
+  palco.addEventListener('pointerdown', nascondiTip);
+  palco.addEventListener('wheel', nascondiTip, { passive: true });
   cursore.addEventListener('input', () => { meta.e = +cursore.value; gesto(); });
   const PASSO_MANO = 80;
   const muoviPila = (x, y) => { meta.px += x; meta.py += y; gesto(); };
@@ -372,6 +424,11 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     window.removeEventListener('pointerup', lascia);
     window.removeEventListener('pointercancel', lascia);
     document.removeEventListener('keydown', tasti);
+    map.off('moveend', tieniFerma);
+    piani.forEach((p, i) => { if (spento[i]) for (const id of p.layers) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', 'visible'); });
+    if (terreno) map.setTerrain(terreno);
+    map.jumpTo(camera);
+    nascondiTip();
     radice.classList.add('sfuma');
     document.body.classList.remove('strati3d-attiva');
     setTimeout(() => radice.remove(), ridotto ? 0 : 350);
