@@ -2,6 +2,7 @@
 import { urlDati } from '../core/config.js';
 import { collegamento } from '../core/url-sicuro.js';
 import { t, tl } from '../core/i18n.js';
+import { apriVisore } from './peba-visore.js';
 import { COLORE_LIVELLO, criticita, percorsoMiniatura, urlFoto, testoBadge } from './scheda-peba.js';
 
 function el(tag, classe, testo) {
@@ -43,6 +44,7 @@ function foto(p, i) {
   img.addEventListener('error', () => { if (provata) a.remove(); else { provata = true; img.src = grande; } });
   img.src = urlDati(percorsoMiniatura(p.codice, i));
   a.append(img);
+  a.addEventListener('click', e => { if (e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey) { e.preventDefault(); apriVisore(p, i - 1); } });
   return a;
 }
 

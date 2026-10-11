@@ -106,3 +106,9 @@ test('immobili dichiarati al MEF: edifici e punti, chiave stabile, colonne piatt
   assert.equal(s.chiave({ id_bene: 'x' }), 'x');
   assert.equal(s.chiave({}), null);
 });
+
+test('peba: strati hit e disegnati', () => {
+  const s = sorgentePer('peba');
+  assert.deepEqual(s.strati, ['peba-hit', 'peba-hit-punti']);
+  assert.deepEqual(s.visibili, ['peba-fill', 'peba-linea', 'peba-punti']);
+});

@@ -171,3 +171,12 @@ test('immobili comunali e dichiarati al MEF: cercabili per indirizzo, i poligoni
   assert.equal(mef.strato, 'mef-immobili');
   assert.ok(Math.abs(mef.lon - 13.1) < 1e-9 && Math.abs(mef.lat - 38.1) < 1e-9);
 });
+
+test('PEBA: si trova per codice, nome, indirizzo e quartiere', () => {
+  const fonte = FONTI.find(f => f.file === 'peba/peba.geojson');
+  assert.equal(fonte.strato, 'peba');
+  const voci = preparaLuoghi([{ ...fonte, features: [{ properties: {
+    codice: 'U_16', nome: 'DIRETTORE GENERALE', indirizzo: 'Piazza Marina, 46', quartiere: 'Tribunali-Castellammare', gruppo: 'Sede amministrativa/istituzionale',
+  }, geometry: { type: 'Point', coordinates: [13.3694, 38.1170] } }] }]);
+  for (const q of ['direttore generale', 'U_16', 'u 16', 'piazza marina', 'tribunali']) assert.equal(cercaLuoghi(voci, q)[0]?.strato, 'peba', q);
+});

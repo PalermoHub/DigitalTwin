@@ -6,7 +6,8 @@ import { ordinaSezioni, leggiAperte, salvaAperta } from './layer-sezioni.js';
 import { ordineStrati } from './riordino.js';
 import { abilitaRiordino, creaOrdineDisegno } from './pannello-riordino.js';
 export { abilitaRiordino }; // l'API pubblica resta qui: i gruppi RNDT e «I miei layer» la importano da pannello.js
-import { ETICHETTE } from './pannello-comune.js';
+import { ETICHETTE, EVENTO_GRUPPO } from './pannello-comune.js';
+import { aggiornaSottogruppi, rendiPieghevoli } from './sottogruppi.js';
 import { t } from './i18n.js';
 
 
@@ -296,6 +297,9 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
   const layersDi = new Map(moduli.flatMap(m => m.strati.map(s => [s.id, s.layers])));
   const inizialeDisegno = ordineStrati(map.getStyle().layers.map(l => l.id), moduli.flatMap(m => m.strati));
   for (const el of contenitori) abilitaRiordino(map, el, layersDi, storage);
+  // i titoli dei sottogruppi (es. «Immobili comunali», «PEBA» in Territorio) si aprono e si chiudono; dopo un riordino si riapplicano
+  for (const el of contenitori) rendiPieghevoli(el);
+  document.addEventListener(EVENTO_GRUPPO, () => contenitori.forEach(aggiornaSottogruppi));
   // ordine di disegno globale: un elenco unico degli strati accesi, sotto «Cerca strato»
   const disegno = layer ? creaOrdineDisegno(map, moduli, storage, inizialeDisegno) : null;
   disegno?.ripristinaSalvato();
