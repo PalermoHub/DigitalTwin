@@ -1991,10 +1991,9 @@
   "pendolarismo.suggerimento": "The map shows the top 25 links per direction (share of at least 1%). Turn on “Show all links” in the legend to see them all.",
   "pendolarismo.topUscita": "Top destinations (outbound)",
   "pendolarismo.topEntrata": "Top origins (inbound)",
-  "tabella.layer.pendolarismo": "Commuting to and from Palermo",
+  "tabella.layer.pendolarismo": "Commuting to and from Palermo 2021",
   "tabella.fonte.pendolarismo": "ISTAT, 2021 Permanent census of population and housing, commuting-for-work matrix; processed by PalermoHub; CC BY 4.0",
   "lbl.Pendolarismo per lavoro": "Commuting for work",
-  "lbl.Pendolarismo da e verso Palermo": "Commuting to and from Palermo",
   "lbl.Spostamenti casa-lavoro tra Palermo e gli altri comuni (ISTAT, Censimento 2021): chi esce, chi entra e quanti vivono e lavorano in città, con classifiche dei comuni collegati.": "Home-to-work trips between Palermo and other municipalities (ISTAT, 2021 Census): who leaves, who arrives and how many live and work in the city, with rankings of the linked municipalities.",
   "lbl.Uscita (residenti che lavorano fuori)": "Outbound (residents working elsewhere)",
   "lbl.Entrata (lavoratori da fuori)": "Inbound (workers from elsewhere)",
@@ -2010,5 +2009,7 @@
   "lbl.Mappa Pendolarismo": "Commuting map",
   "lbl.Pendolarismo da e verso Palermo: ISTAT, Censimento permanente della popolazione e delle abitazioni 2021, matrice di pendolarismo per lavoro tra comuni (dati al 31 dicembre 2021); elaborazione PalermoHub": "Commuting to and from Palermo: ISTAT, 2021 Permanent census of population and housing, commuting-for-work matrix between municipalities (data as of 31 December 2021); processed by PalermoHub",
   "lbl.ISTAT, Matrice di pendolarismo (Esplora dati)": "ISTAT, Commuting matrix (Explore data)",
-  "lbl.Mappa Pendolarismo 2021, PalermoHub": "Commuting map 2021, PalermoHub"
+  "lbl.Mappa Pendolarismo 2021, PalermoHub": "Commuting map 2021, PalermoHub",
+  "lbl.Pendolarismo da e verso Palermo 2021": "Commuting to and from Palermo 2021",
+  "scheda.suntoMercato": "Real estate market quotations"
 }

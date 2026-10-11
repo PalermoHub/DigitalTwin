@@ -1991,10 +1991,9 @@
   "pendolarismo.suggerimento": "Sulla mappa i primi 25 collegamenti per direzione (quota di almeno l'1%). Attiva «Mostra tutti i collegamenti» nella legenda per vederli tutti.",
   "pendolarismo.topUscita": "Top destinazioni (uscita)",
   "pendolarismo.topEntrata": "Top origini (entrata)",
-  "tabella.layer.pendolarismo": "Pendolarismo da e verso Palermo",
+  "tabella.layer.pendolarismo": "Pendolarismo da e verso Palermo 2021",
   "tabella.fonte.pendolarismo": "ISTAT, Censimento permanente della popolazione e delle abitazioni 2021, matrice di pendolarismo per lavoro; elaborazione PalermoHub; CC BY 4.0",
   "lbl.Pendolarismo per lavoro": "Pendolarismo per lavoro",
-  "lbl.Pendolarismo da e verso Palermo": "Pendolarismo da e verso Palermo",
   "lbl.Spostamenti casa-lavoro tra Palermo e gli altri comuni (ISTAT, Censimento 2021): chi esce, chi entra e quanti vivono e lavorano in città, con classifiche dei comuni collegati.": "Spostamenti casa-lavoro tra Palermo e gli altri comuni (ISTAT, Censimento 2021): chi esce, chi entra e quanti vivono e lavorano in città, con classifiche dei comuni collegati.",
   "lbl.Uscita (residenti che lavorano fuori)": "Uscita (residenti che lavorano fuori)",
   "lbl.Entrata (lavoratori da fuori)": "Entrata (lavoratori da fuori)",
@@ -2010,5 +2009,7 @@
   "lbl.Mappa Pendolarismo": "Mappa Pendolarismo",
   "lbl.Pendolarismo da e verso Palermo: ISTAT, Censimento permanente della popolazione e delle abitazioni 2021, matrice di pendolarismo per lavoro tra comuni (dati al 31 dicembre 2021); elaborazione PalermoHub": "Pendolarismo da e verso Palermo: ISTAT, Censimento permanente della popolazione e delle abitazioni 2021, matrice di pendolarismo per lavoro tra comuni (dati al 31 dicembre 2021); elaborazione PalermoHub",
   "lbl.ISTAT, Matrice di pendolarismo (Esplora dati)": "ISTAT, Matrice di pendolarismo (Esplora dati)",
-  "lbl.Mappa Pendolarismo 2021, PalermoHub": "Mappa Pendolarismo 2021, PalermoHub"
+  "lbl.Mappa Pendolarismo 2021, PalermoHub": "Mappa Pendolarismo 2021, PalermoHub",
+  "lbl.Pendolarismo da e verso Palermo 2021": "Pendolarismo da e verso Palermo 2021",
+  "scheda.suntoMercato": "Quotazioni mercato immobiliare"
 }

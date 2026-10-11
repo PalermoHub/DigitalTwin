@@ -116,6 +116,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   }, { passive: false });
   const corpo = el('div', 'scheda-corpo');
   let attiva = tabIniziale ?? new URLSearchParams(location.search).get('tab'); // il tab chiesto da uno strato vince su quello ricordato
+  const TITOLI_SUNTO = { mercato: () => tr('scheda.suntoMercato') }; // titolo sopra il riepilogo, dove serve
   let sunti = new Map(); // riepilogo in testa a certe schede: id -> celle { valore, chiave }
   const mostraTab = id => {
     attiva = id;
@@ -127,7 +128,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
     }
     for (const l of piede.querySelectorAll('.scheda-link')) l.hidden = l.dataset.tab !== id;
     piede.hidden = ![...piede.children].some(c => !c.hidden);
-    corpo.querySelector('.scheda-sunto')?.remove();
+    for (const x of corpo.querySelectorAll('.scheda-sunto, .scheda-sunto-titolo')) x.remove();
     const celle = sunti.get(id);
     if (celle) {
       const box = el('div', 'scheda-sunto');
@@ -136,7 +137,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
         cella.append(el('b', null, c.valore), el('span', null, tl(c.chiave)));
         box.append(cella);
       }
-      corpo.prepend(box);
+      corpo.prepend(...(TITOLI_SUNTO[id] ? [el('h3', 'scheda-sunto-titolo', TITOLI_SUNTO[id]()), box] : [box]));
     }
     corpo.scrollTop = 0;
   };
