@@ -1,0 +1,21 @@
+{
+ "vista": {"center": [13.352, 38.140], "zoom": 13.25},
+ "lato": 1600,
+ "strati": [
+  {"id": "terreno", "gradoni": true, "titolo": "Terreno 3D", "sotto": "DTM 5 m, IRPI-CNR"},
+  {"id": "elevazione", "temi": ["elevazione"], "titolo": "Elevazione", "sotto": "Quote del terreno"},
+  {"id": "base", "base": true, "titolo": "Mappa di base", "sotto": "OpenFreeMap", "piatto": true},
+  {"id": "catasto", "temi": ["catasto"], "titolo": "Catasto", "sotto": "Particelle S.I.T.R.", "escludi": ["etichette"]},
+  {"id": "prg", "temi": ["prg"], "titolo": "PRG 2004", "sotto": "Zone e PPE"},
+  {"id": "vincoli", "temi": ["vincoli"], "titolo": "Vincoli", "sotto": "Tutele del PRG"},
+  {"id": "omi", "temi": ["omi"], "titolo": "Zone OMI", "sotto": "Valori immobiliari"},
+  {"id": "edifici", "temi": ["edificato"], "titolo": "Edifici 3D", "sotto": "Volumi e altezze", "piatto": true},
+  {"id": "popolazione", "temi": ["coropletico"], "titolo": "Popolazione", "sotto": "ISTAT, sezioni"},
+  {"id": "calore", "temi": ["isole-calore"], "titolo": "Isole di calore", "sotto": "Temperature estive"},
+  {"id": "immobili", "temi": ["immobili", "mef-immobili"], "titolo": "Immobili", "sotto": "Pubblici: Comune e MEF"},
+  {"id": "incidenti", "temi": ["sicurezza-archi"], "titolo": "Incidenti", "sotto": "Strade pericolose"},
+  {"id": "trasporti", "temi": ["trasporto-bus", "trasporto-tram", "trasporto-metro", "trasporto-stazioni"], "titolo": "Trasporti", "sotto": "Bus, tram, metro", "piatto": true},
+  {"id": "luoghi", "temi": ["monumenti", "alberi", "fontanelle", "scuole", "colonnine"], "titolo": "Luoghi", "sotto": "Monumenti, scuole", "piatto": true},
+  {"id": "confini", "temi": ["circoscrizioni", "quartieri"], "titolo": "Confini", "sotto": "Circoscrizioni, quartieri", "piatto": true, "chiaro": true}
+ ]
+}

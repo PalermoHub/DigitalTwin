@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<!-- Reel «strati esplosi»: i layer dell'app (catturati da strati-cattura.mjs) impilati in 3D, con la camera che ci gira
+     attorno. Stesso stile del reel di lancio (reel.html). Lo guida genera-esplodi.mjs chiamando window.render(t). -->
+<style>
+@font-face { font-family: 'Montserrat'; font-weight: 500; src: url('../../css/fonts/montserrat-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 600; src: url('../../css/fonts/montserrat-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 700; src: url('../../css/fonts/montserrat-Bold.woff2') format('woff2'); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e121a; }
+body { font-family: 'Montserrat', sans-serif; color: #fff; position: relative; }
+.l { position: absolute; will-change: transform, opacity; }
+#sfondo { inset: 0; background:
+  radial-gradient(ellipse 80% 50% at var(--gx, 50%) var(--gy, 45%), rgba(245,166,35,.16), transparent 70%),
+  radial-gradient(ellipse 60% 40% at 20% 100%, rgba(255,255,255,.04), transparent 70%), #0e121a; }
+#griglia { inset: 0; opacity: .5; background-image:
+  radial-gradient(circle, rgba(255,255,255,.09) 1.6px, transparent 2px); background-size: 54px 54px; }
+
+/* palco 3D: #mondo porta la camera, ogni .piano è uno strato */
+#palco { will-change: auto; inset: 0; perspective: 2600px; perspective-origin: 540px 960px; overflow: hidden; }
+#mondo { will-change: auto; left: 540px; top: 960px; width: 0; height: 0; transform-style: preserve-3d; }
+.piano { position: absolute; left: -500px; top: -500px; width: 1000px; height: 1000px; transform-style: preserve-3d;
+  border: 3px solid rgba(255,255,255,.35); border-radius: 4px; background: rgba(14,18,26,.0); }
+.piano img, .fetta { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.piano.att { border-color: #f5a623; box-shadow: 0 0 60px rgba(245,166,35,.55), inset 0 0 0 2px #f5a623; }
+#velo { inset: 0; background:
+  linear-gradient(180deg, rgba(14,18,26,.75) 0%, rgba(14,18,26,.15) 28%, rgba(14,18,26,0) 60%, rgba(14,18,26,.6) 86%, rgba(150,90,15,.45) 100%); }
+
+.scena { position: absolute; inset: 0; opacity: 0; }
+.box { display: inline-block; background: #f5a623; color: #1a1206; font-weight: 700; text-transform: uppercase;
+  line-height: 1; padding: .2em .32em .22em; border-radius: .16em; box-shadow: 0 20px 60px rgba(245,166,35,.28); white-space: nowrap; }
+.big { font-weight: 700; text-transform: uppercase; line-height: 1; white-space: nowrap; text-shadow: 0 6px 30px rgba(0,0,0,.6); }
+.etich { display: flex; align-items: center; gap: 22px; font-weight: 600; font-size: 44px; letter-spacing: .02em; white-space: nowrap; }
+.badge { min-width: 66px; height: 66px; padding: 0 12px; border-radius: 14px; background: #fff; color: #0e121a; font-weight: 700; font-size: 40px; display: grid; place-items: center; }
+.centro { left: 0; right: 0; text-align: center; }
+.ods { filter: invert(1); }
+#flash { inset: 0; background: #f5a623; opacity: 0; }
+#barra { left: 0; bottom: 0; height: 12px; background: #f5a623; width: 0; }
+
+/* etichette del colpo largo, come nel disegno degli strati */
+#linee { inset: 0; width: 1080px; height: 1920px; overflow: visible; }
+.etc { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 1.05; }
+.etc b { display: block; font-weight: 700; font-size: 30px; }
+.etc span { display: block; font-weight: 500; font-size: 20px; color: #aab2c0; }
+
+#sott { left: 0; right: 0; top: 1680px; display: flex; justify-content: center; }
+#sott .pill { background: rgba(8,10,14,.92); border-radius: 22px; padding: 18px 34px 20px; font-weight: 700; font-size: 50px; line-height: 1.15;
+  max-width: 1010px; text-align: center; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+#sott .w { display: inline-block; margin: 0 .13em; }
+#sott .w.on { color: #f5a623; }
+</style>
+</head>
+<body>
+<div class="l" id="sfondo"></div>
+<div class="l" id="griglia"></div>
+<div class="l" id="palco"><div class="l" id="mondo"></div></div>
+<div class="l" id="velo"></div>
+<svg class="l" id="linee"></svg>
+<div class="l" id="etichette" style="inset:0"></div>
+
+<!-- A · apertura -->
+<div class="scena" id="sa">
+  <div class="l big centro" id="sa1" style="top:300px;font-size:150px">Palermo</div>
+  <div class="l big centro" id="sa2" style="top:470px;font-size:84px;color:#cfd5df">strato dopo</div>
+  <div class="l centro" id="sa3" style="top:590px"><span class="box" style="font-size:130px">strato</span></div>
+</div>
+
+<!-- B · esplosione -->
+<div class="scena" id="sb">
+  <div class="l big" id="sb1" style="left:80px;top:230px;font-size:110px">Tutti i dati</div>
+  <div class="l" id="sb2" style="left:80px;top:370px"><span class="box" style="font-size:110px">in 3D</span></div>
+</div>
+
+<!-- C · salita lungo gli strati -->
+<div class="scena" id="sc">
+  <div class="l etich" id="scet" style="left:80px;top:200px"><span class="badge" id="scn">01</span><span id="scdi">STRATO DI 14</span></div>
+  <div class="l" id="sctit" style="left:80px;top:300px"><span class="box" id="scbox" style="font-size:96px">Catasto</span></div>
+  <div class="l" id="scsub" style="left:84px;top:450px;font-size:50px;font-weight:600;white-space:nowrap;text-shadow:0 4px 20px rgba(0,0,0,.7)"></div>
+</div>
+
+<!-- D · colpo largo -->
+<div class="scena" id="sd">
+  <div class="l big" id="sd1" style="left:70px;top:170px;font-size:100px"><span id="sdn">14</span> strati</div>
+  <div class="l" id="sd2" style="left:70px;top:300px"><span class="box" style="font-size:84px">una sola mappa</span></div>
+</div>
+
+<!-- E · si richiude -->
+<div class="scena" id="se">
+  <div class="l big centro" id="se1" style="top:260px;font-size:84px;color:#cfd5df">Tutto in</div>
+  <div class="l centro" id="se2" style="top:370px"><span class="box" style="font-size:120px">un clic</span></div>
+</div>
+
+<!-- F · chiusura -->
+<div class="scena" id="sf">
+  <img class="l" id="sflogo" src="../../img/logo-palermo-digital-twin-scuro.svg" style="left:50%;top:420px;width:760px;margin-left:-380px">
+  <div class="l centro" id="sfbox" style="top:760px"><span class="box" style="font-size:140px">Esplorala</span></div>
+  <div class="l centro" id="sfurl" style="top:1010px;font-size:44px;font-weight:600;white-space:nowrap">palermodigitaltwin<span style="color:#f5a623">.</span>opendatasicilia.it</div>
+  <div class="l centro" id="sfcta" style="top:1090px;font-size:40px;font-weight:500;color:#8a93a3">Dal computer o dallo smartphone</div>
+  <div class="l" id="sfods" style="left:0;right:0;top:1290px;display:flex;justify-content:center;align-items:center;gap:26px;font-size:44px;font-weight:500;color:#e6e8ec">
+    <img class="ods" src="../../img/opendatasicilia.png" style="height:96px"><span>Open Data Sicilia</span></div>
+</div>
+
+<div class="l" id="sott"><div class="pill" id="pill"></div></div>
+<div class="l" id="flash"></div>
+<div class="l" id="barra"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, a, b) => cl((t - a) / (b - a));
+const out3 = x => 1 - Math.pow(1 - x, 3);
+const out5 = x => 1 - Math.pow(1 - x, 5);
+const in3 = x => x * x * x;
+const io = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+function set(id, { x = 0, y = 0, s = 1, r = 0, o = 1, blur = 0 } = {}) {
+  const e = typeof id === 'string' ? $(id) : id;
+  e.style.transform = `translate(${x}px,${y}px) rotate(${r}deg) scale(${s})`;
+  e.style.opacity = o;
+  e.style.filter = blur ? `blur(${blur}px)` : '';
+}
+const slam = (t, a, d = .35) => { const k = p(t, a, a + d); return { s: lerp(1.8, 1, back(k)), o: cl(k * 3), blur: (1 - out3(k)) * 14 }; };
+const daSx = (t, a, d = .45, dx = -700) => { const k = out5(p(t, a, a + d)); return { x: lerp(dx, 0, k), o: cl(k * 2) }; };
+const daSu = (t, a, d = .5, dy = 220) => { const k = out5(p(t, a, a + d)); return { y: lerp(dy, 0, k), o: cl(k * 2) }; };
+const scena = (id, t, a, b) => { $(id).style.opacity = t >= a && t < b ? 1 : 0; return t >= a && t < b; };
+const uscita = (ids, t, a, b) => { const u = in3(p(t, a, b)); if (u > 0) for (const id of ids) $(id).style.opacity *= 1 - u; };
+
+// indirizzo del sito sfocato finché il lancio non è pubblico (?url=1 lo mostra)
+const SFOCA_URL = !new URLSearchParams(location.search).has('url');
+
+// ── tempi (secondi reali; le battute della voce stanno in esplodi-battute.json) ──
+const TA = 3.0, TB = 6.4, DS = 1.1;           // fine apertura, inizio salita, durata di ogni strato
+let N = 14, TC, TD, TE, DURATA;
+function tempi() {
+  TC = TB + N * DS; TD = TC + 5.6; TE = TD + 3.0; DURATA = TE + 4.6; window.DURATA = DURATA;
+  window.TEMPI = { durata: +DURATA.toFixed(3), tagli: [TA, TB, TC, TD, TE].map(x => +x.toFixed(3)), salita: TB, passo: DS, n: N };
+}
+tempi();
+
+// ── strati: impostati da genera-esplodi.mjs con strati.json (qui un ripiego per aprire la pagina a mano) ──
+let STRATI = [];
+// unità del mondo: un piano è 1000 px (circa 10 km); U lo riporta alla scala della camera
+const U = 1.6, GAP = 75;                       // GAP: distanza fra due strati, esplosi del tutto
+const FETTE = 6;                               // fette che danno volume agli edifici
+const SPAZIO_TERRENO = 50, QUOTA = .15;        // spazio in più sopra il terreno a gradoni; px per metro di quota (≈1,5× il vero)
+let BASE_Z = [];
+window.impostaStrati = function (lista) {
+  STRATI = lista; N = lista.length; tempi();
+  BASE_Z = lista.map((_, i) => lista.slice(0, i).reduce((z, s) => z + GAP + (s.gradoni ? SPAZIO_TERRENO : 0), 0));
+  const mondo = $('mondo'); mondo.innerHTML = ''; $('etichette').innerHTML = ''; $('linee').innerHTML = '';
+  lista.forEach((s, i) => {
+    const el = document.createElement('div'); el.className = 'piano'; el.id = 'pi' + i;
+    if (s.id === 'edifici') for (let j = 0; j < FETTE; j++) {
+      const f = document.createElement('img'); f.className = 'fetta'; f.src = `../../img/strati-3d/${s.id}.webp`;
+      f.style.filter = `brightness(${.35 + .5 * j / FETTE}) saturate(.6)`; f.dataset.j = j; el.append(f);
+    }
+    if (s.gradoni) for (const g of s.gradoni) {     // terreno: una fetta per quota (terreno-gradoni.py)
+      const f = document.createElement('img'); f.className = 'fetta gradone'; f.src = `../../img/strati-3d/${g.file}`; f.dataset.q = g.quota; el.append(f);
+    } else {
+      const img = document.createElement('img'); img.src = `../../img/strati-3d/${s.id}.webp`; el.append(img);
+    }
+    mondo.append(el);
+    const e = document.createElement('div'); e.className = 'etc'; e.id = 'et' + i;
+    e.innerHTML = `<b>${s.titolo}</b><span>${s.sotto}</span>`; $('etichette').append(e);
+    const ln = document.createElementNS('http://www.w3.org/2000/svg', 'path'); ln.id = 'ln' + i;
+    ln.setAttribute('stroke', 'rgba(255,255,255,.55)'); ln.setAttribute('stroke-width', '2'); ln.setAttribute('stroke-dasharray', '8 7'); ln.setAttribute('fill', 'none');
+    $('linee').append(ln);
+  });
+  const dot = document.createElementNS('http://www.w3.org/2000/svg', 'g'); dot.id = 'punti'; $('linee').append(dot);
+  window.pronto = Promise.all([document.fonts.ready, ...[...document.images].map(i => i.decode().catch(() => {}))]);
+  return window.pronto;
+};
+
+// ── camera ──
+// velocità di rotazione (gradi/s) a tappe; l'angolo è il suo integrale
+function vel(t) {
+  const K = [[0, 0], [TA, 0], [TA + 1.2, 26], [TB, 13], [TC, 13], [TC + 1, 34], [TD - .6, 34], [TD, 20]];
+  for (let i = K.length - 1; i >= 0; i--) if (t >= K[i][0]) {
+    const [a, va] = K[i], [b, vb] = K[i + 1] || [a + 1, va];
+    return lerp(va, vb, io(p(t, a, b)));
+  }
+  return 0;
+}
+function azimut(t) {
+  let a = 0; const h = 1 / 120; const fine = Math.min(t, TD);
+  for (let x = 0; x < fine; x += h) a += vel(x) * Math.min(h, fine - x);
+  if (t > TD) {   // si richiude puntando a nord: il giro si chiude sul multiplo di 360 più vicino
+    const a0 = a + vel(TD) * .4, meta = Math.ceil(a0 / 360) * 360;
+    a = lerp(a + vel(TD) * (t - TD) * (1 - p(t, TD, TE)), meta, io(p(t, TD, TE)));
+  }
+  return a;
+}
+// esplosione di ogni strato: dal basso verso l'alto in B, tutti insieme e più larghi in D, di nuovo piatti in E
+function esplosione(t, i) {
+  const a = TA + .2 + i * (TB - TA - 1.4) / N;
+  let e = out3(p(t, a, a + 1.1));
+  e *= lerp(1, 1.5, io(p(t, TC, TC + 1.4)));
+  e *= 1 - io(p(t, TD, TE - .4));
+  return e;
+}
+const zStrato = (i, e) => (BASE_Z[i] ?? i * GAP) * e + i * .4;
+function camera(t) {
+  const zMed = zStrato(N - 1, 1.5) / 2;
+  // stati delle scene: k scala, b inclinazione, zt quota guardata, px/py spostamento sullo schermo
+  const A = { k: lerp(1.25, 1.1, p(t, 0, TA)), b: 0, zt: 0, px: 0, py: 60 };
+  const salita = cl((t - TB) / DS - .25, 0, N - 1);       // indice (frazionario) dello strato guardato
+  const iS = Math.floor(salita), fS = io(cl((salita - iS) / .55));
+  const C = { k: .5, b: 56, zt: zStrato(Math.min(N - 1, iS + fS), 1), px: 0, py: 420 };
+  const C0 = { ...C, zt: zStrato(0, 1) + GAP * 2 };
+  const D = { k: .37, b: 62, zt: zMed, px: -180, py: 200 };
+  const E = { k: .62, b: 0, zt: 0, px: 0, py: 220 };
+  const mix = (u, v, x) => Object.fromEntries(Object.keys(u).map(k => [k, lerp(u[k], v[k], x)]));
+  let c;
+  if (t < TA) c = A;
+  else if (t < TB) c = mix({ ...A, k: 1.1 }, C0, io(p(t, TA, TB)));
+  else if (t < TC) c = mix(C0, C, io(p(t, TB, TB + DS)));
+  else if (t < TD) c = mix(C, D, io(p(t, TC, TC + 1.6)));
+  else c = mix(D, E, io(p(t, TD, TE)));
+  if (t >= TE) c = mix(E, { ...E, k: .55, py: 60 }, io(p(t, TE, TE + 1.2)));
+  c.a = azimut(t);
+  return c;
+}
+const matrice = c => new DOMMatrix(`translate(${c.px}px,${c.py}px) scale3d(${c.k * U},${c.k * U},${c.k * U}) rotateX(${c.b}deg) rotateZ(${c.a}deg) translateZ(${-c.zt}px)`);
+function proietta(M, x, y, z) {   // come fa il browser: matrice, poi prospettiva del palco (2600px)
+  const q = M.transformPoint(new DOMPoint(x, y, z)), w = 1 - q.z / 2600;
+  return [540 + q.x / w, 960 + q.y / w];
+}
+
+// ── sottotitoli karaoke (come reel.html) ──
+window.SOTTOTITOLI = [];
+let rigaCorrente = -1;
+function sottotitoli(tr) {
+  const S = window.SOTTOTITOLI;
+  let k = -1;
+  for (let i = 0; i < S.length; i++) {
+    const ult = S[i].parole?.at(-1), parlato = ult ? ult.t + ult.d : S[i].d;
+    const fine = Math.min(S[i].t + parlato + .4, i + 1 < S.length ? S[i + 1].t - .02 : 1e9);
+    if (tr >= S[i].t - .06 && tr < fine) k = i;
+  }
+  const pill = $('pill');
+  if (k < 0) { pill.parentNode.style.opacity = 0; rigaCorrente = -1; return; }
+  const r = S[k], parole = r.testo.split(' ');
+  if (rigaCorrente !== k) {
+    rigaCorrente = k;
+    pill.innerHTML = parole.map(w => `<span class="w">${w}</span>`).join(' ');
+    pill.style.fontSize = r.testo.length > 45 ? '44px' : '';
+  }
+  const P = r.parole || [], spans = pill.children, x = tr - r.t;
+  let on = -1;
+  for (let j = 0; j < P.length; j++) if (x >= P[j].t - .03) on = j;
+  for (let j = 0; j < spans.length; j++) spans[j].classList.toggle('on', j === on);
+  const kk = p(tr, r.t - .06, r.t + .12);
+  set(pill.parentNode, { y: lerp(30, 0, out3(kk)), s: lerp(.92, 1, back(kk)), o: kk });
+}
+
+window.render = function (t) {
+  sottotitoli(t);
+  $('sfondo').style.setProperty('--gx', (50 + 30 * Math.sin(t * .6)) + '%');
+  $('sfondo').style.setProperty('--gy', (45 + 15 * Math.cos(t * .45)) + '%');
+  $('barra').style.width = (t / DURATA * 100) + '%';
+  let f = 0; for (const c of [TA, TC, TD, TE]) f = Math.max(f, 1 - cl(Math.abs(t - c) / .09));
+  $('flash').style.opacity = f * .6;
+
+  // ── la pila di strati ──
+  const c = camera(t), M = matrice(c);
+  $('mondo').style.transform = `translate(${c.px}px,${c.py}px) scale3d(${c.k * U},${c.k * U},${c.k * U}) rotateX(${c.b}deg) rotateZ(${c.a}deg) translateZ(${-c.zt}px)`;
+  const salita = (t - TB) / DS, attivo = t >= TB && t < TC ? cl(Math.floor(salita), 0, N - 1) : -1;
+  const largo = io(p(t, TC, TC + 1.4)) * (1 - io(p(t, TD, TD + .8)));
+  const pts = [];
+  STRATI.forEach((s, i) => {
+    const e = esplosione(t, i), el = $('pi' + i);
+    const su = i === attivo ? out3(p(salita, attivo, attivo + .35)) * (1 - in3(p(salita, attivo + .85, attivo + 1))) : 0;
+    const z = zStrato(i, e) + su * 25;
+    el.style.transform = `translateZ(${z}px)`;
+    // da piatto si vedono solo gli strati «piatto»; esplosi si vedono tutti
+    const vis = s.piatto ? 1 : cl((e - .1) * 3);
+    const fuoco = attivo < 0 ? 1 : i === attivo ? 1 : i < attivo ? .22 : .12;
+    el.style.opacity = vis * fuoco;
+    el.classList.toggle('att', i === attivo);
+    el.style.borderColor = i === attivo ? '' : `rgba(255,255,255,${.4 * cl(e * 2)})`;
+    el.style.background = s.base ? '' : `rgba(20,26,38,${.32 * cl(e * 1.5)})`;
+    if (s.gradoni) el.querySelectorAll('.gradone').forEach(f => { f.style.transform = `translateZ(${+f.dataset.q * QUOTA * cl(e * 1.3)}px)`; });
+    if (s.id === 'edifici') el.querySelectorAll('.fetta').forEach(f => { f.style.transform = `translateZ(${(+f.dataset.j - FETTE) * 3 * cl(e * 1.2 + .3)}px)`; });
+    // spigolo più a destra sullo schermo, per le linee del colpo largo
+    const ang = [[-500, -500], [500, -500], [500, 500], [-500, 500]].map(([x, y]) => proietta(M, x, y, z));
+    pts.push(ang.reduce((m, q) => q[0] > m[0] ? q : m));
+  });
+  // etichette con linea tratteggiata (colpo largo)
+  STRATI.forEach((s, i) => {
+    const [x, y] = pts[i], e = $('et' + i), ln = $('ln' + i);
+    const ritardo = cl(largo * 1.6 - i * .04);
+    const X = 790, Y = y - 22;
+    e.style.transform = `translate(${X + 20 + (1 - out3(ritardo)) * 80}px,${Y - 20}px)`;
+    e.style.opacity = ritardo;
+    ln.setAttribute('d', `M${x},${y} L${lerp(x, X + 8, ritardo)},${y}`);
+    ln.style.opacity = ritardo;
+  });
+
+  // A · apertura
+  if (scena('sa', t, 0, TA)) {
+    set('sa1', slam(t, .25));
+    set('sa2', daSu(t, .7, .4, 60));
+    set('sa3', { ...slam(t, 1.0, .35), r: lerp(-6, -2, out3(p(t, 1.0, 1.4))) });
+    uscita(['sa1', 'sa2', 'sa3'], t, TA - .3, TA);
+  }
+  // B · esplosione
+  if (scena('sb', t, TA, TB)) {
+    set('sb1', daSx(t, TA + .15));
+    set('sb2', { ...slam(t, TA + .45, .35), r: lerp(-5, -1.5, out3(p(t, TA + .45, TA + .9))) });
+    uscita(['sb1', 'sb2'], t, TB - .3, TB);
+  }
+  // C · salita
+  if (scena('sc', t, TB, TC)) {
+    const i = cl(Math.floor(salita), 0, N - 1), s = STRATI[i], a = TB + i * DS;
+    if (window.stratoCorrente !== i) {
+      window.stratoCorrente = i;
+      $('scn').textContent = String(i + 1).padStart(2, '0'); $('scdi').textContent = `STRATO DI ${N}`;
+      $('scbox').textContent = s.titolo; $('scsub').textContent = s.sotto;
+    }
+    set('scet', i === 0 ? daSx(t, a, .4) : {});
+    set('scn', { s: lerp(1.6, 1, back(p(t, a, a + .3))) });
+    set('sctit', { ...slam(t, a + .02, .3), r: lerp((i % 2 ? 1 : -1) * 5, 0, out3(p(t, a, a + .35))) });
+    set('scsub', daSu(t, a + .1, .35, 50));
+    uscita(['scet', 'sctit', 'scsub'], t, TC - .25, TC);
+  }
+  // D · colpo largo
+  if (scena('sd', t, TC, TD)) {
+    $('sdn').textContent = N;
+    set('sd1', daSx(t, TC + .3));
+    set('sd2', { ...slam(t, TC + .6, .35), r: lerp(-5, -1.5, out3(p(t, TC + .6, TC + 1))) });
+    uscita(['sd1', 'sd2'], t, TD - .3, TD);
+  }
+  // E · si richiude
+  if (scena('se', t, TD, TE)) {
+    set('se1', daSu(t, TD + .9, .4, 60));
+    set('se2', { ...slam(t, TD + 1.2, .35), r: lerp(-5, -1.5, out3(p(t, TD + 1.2, TD + 1.6))) });
+    uscita(['se1', 'se2'], t, TE - .25, TE);
+  }
+  // F · chiusura: la mappa scivola sotto e si scurisce
+  const fF = io(p(t, TE, TE + .8));
+  $('palco').style.opacity = 1 - .72 * fF;
+  $('palco').style.filter = fF ? `blur(${fF * 6}px)` : '';
+  if (scena('sf', t, TE, 99)) {
+    set('sflogo', { ...daSu(t, TE, .5, -60), s: lerp(.85, 1, out3(p(t, TE, TE + .6))) });
+    set('sfbox', { ...slam(t, TE + .35, .38), r: lerp(-4, -1.5, out3(p(t, TE + .35, TE + .8))) });
+    $('sfbox').style.transform += ` scale(${1 + .025 * Math.sin((t - TE - .8) * 5) * (t > TE + .8)})`;
+    set('sfurl', { ...daSu(t, TE + .65, .4, 40), blur: SFOCA_URL ? 13 : 0 });
+    set('sfcta', daSu(t, TE + .8, .4, 40));
+    set('sfods', daSu(t, TE + .95, .4, 60));
+  }
+};
+window.pronto = document.fonts.ready;
+</script>
+</body>
+</html>

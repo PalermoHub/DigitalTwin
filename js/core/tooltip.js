@@ -20,20 +20,29 @@ function nascondi(map) {
   if (mioCursore) { map.getCanvas().style.cursor = ''; mioCursore = false; }
 }
 
+// Il contenuto del tooltip per un punto della mappa ({ point, lngLat }, come un evento del mouse): lo usa anche la vista
+// «Strati in 3D», che lo mostra sopra la pila. null se sotto il punto non c'è nulla.
+export function contenutoTooltip(e) {
+  const sezioni = fornitori.map(({ fornitore }) => fornitore(e)).filter(Boolean);
+  if (!sezioni.length) return null;
+  const corpo = document.createElement('div');
+  corpo.className = 'mappa-tooltip-corpo';
+  for (const s of sezioni) {
+    const sezione = document.createElement('div');
+    sezione.className = 'mappa-tooltip-sezione';
+    sezione.append(s.contenuto);
+    corpo.append(sezione);
+  }
+  return { corpo, cursore: sezioni.some(s => s.cursore) };
+}
+
 function collega(map) {
   map.on('mousemove', e => {
-    const sezioni = fornitori.map(({ fornitore }) => fornitore(e)).filter(Boolean);
-    if (!sezioni.length) return nascondi(map);
-    if (sezioni.some(s => s.cursore)) { map.getCanvas().style.cursor = 'pointer'; mioCursore = true; }
+    const tip = contenutoTooltip(e);
+    if (!tip) return nascondi(map);
+    if (tip.cursore) { map.getCanvas().style.cursor = 'pointer'; mioCursore = true; }
     else if (mioCursore) { map.getCanvas().style.cursor = ''; mioCursore = false; }
-    const corpo = document.createElement('div');
-    corpo.className = 'mappa-tooltip-corpo';
-    for (const s of sezioni) {
-      const sezione = document.createElement('div');
-      sezione.className = 'mappa-tooltip-sezione';
-      sezione.append(s.contenuto);
-      corpo.append(sezione);
-    }
+    const { corpo } = tip;
     popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'mappa-tooltip', anchor: 'top', offset: 14 });
     popup.setLngLat(e.lngLat).setDOMContent(corpo).addTo(map);
   });
@@ -71,7 +80,12 @@ export function disegnaVoceTooltip(m) {
 
 // Tooltip per i layer con un modello di popup {titolo, sottotitolo, pallino?, badge?: {testo, colore}}: `gruppi` = [{ layers, modello(props) }]. Si cerca solo
 // negli strati accesi (a strato spento sulla mappa non c'è nulla da indicare); nel riquadro di ±4 px cadono anche i punti piccoli.
+// i modelli di tooltip registrati, per layer: la vista «Strati in 3D» li riusa per descrivere ogni strato della pila
+const modelli = [];
+export const modelloTooltipDi = id => modelli.find(g => g.layers.includes(id))?.modello ?? null;
+
 export function registraTooltipStrati(map, gruppi, priorita = 2) {
+  modelli.push(...gruppi);
   const acceso = id => map.getLayer(id) && map.getLayoutProperty(id, 'visibility') === 'visible';
   registraTooltip(map, e => {
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];

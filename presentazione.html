@@ -56,6 +56,7 @@
     <nav class="menu" data-i18n-aria="pres.menu.aria" aria-label="Sezioni della pagina">
       <a href="#video" data-i18n="pres.menu.video">Video</a>
       <a href="#cosa-trovi" data-i18n="pres.menu.cosa">Cosa trovi</a>
+      <a href="#strati-3d" data-i18n="pres.menu.strati3d">3D</a>
       <a href="#telefono" data-i18n="pres.menu.telefono">Smartphone</a>
       <a href="#dati" data-i18n="pres.menu.dati">Dati e fonti</a>
       <a href="#perche" data-i18n="pres.menu.perche">Perché?</a>
@@ -166,6 +167,26 @@
             <p data-i18n="pres.pai.p">I vincoli del Piano di Assetto Idrogeologico: pericolosità e rischio idraulico e geomorfologico.</p>
           </figcaption>
         </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sezione" id="strati-3d" aria-labelledby="titolo-strati3d">
+    <div class="contenitore">
+      <h2 id="titolo-strati3d" data-i18n="pres.strati3d.titolo">Tutti gli strati, in 3D</h2>
+      <p class="intro" data-i18n="pres.strati3d.intro">I quindici strati della mappa, separati uno sopra l'altro: girali con il mouse o con il dito, tocca uno strato nell'elenco per metterlo in evidenza. Nell'app lo fai con i tuoi layer accesi, dal pulsante «Strati in 3D».</p>
+      <div class="p3" id="strati3d-pres">
+        <div class="p3-palco" tabindex="0" role="img" data-i18n-aria="pres.strati3d.aria" aria-label="Modello 3D degli strati della mappa: trascina per girarlo, frecce da tastiera per ruotare e inclinare"><div class="p3-mondo"></div><svg class="p3-linee" aria-hidden="true"></svg></div>
+        <nav class="p3-elenco" data-i18n-aria="pres.strati3d.elenco" aria-label="Strati del modello"></nav>
+        <div class="p3-comandi">
+          <button type="button" data-p3="meno" data-i18n-aria="pres.strati3d.meno" data-i18n-title="pres.strati3d.meno" aria-label="Allontana" title="Allontana">−</button>
+          <button type="button" data-p3="piu" data-i18n-aria="pres.strati3d.piu" data-i18n-title="pres.strati3d.piu" aria-label="Avvicina" title="Avvicina">+</button>
+          <label><span data-i18n="pres.strati3d.esplodi">Esplodi</span> <input type="range" data-p3="esplodi" min="0" max="1.6" step="0.01" value="1"></label>
+          <button type="button" data-p3="gira" data-i18n="pres.strati3d.gira">Gira</button>
+          <button type="button" data-p3="alto" data-i18n="pres.strati3d.alto">Dall'alto</button>
+        </div>
+        <p class="p3-aiuto" data-i18n="pres.strati3d.aiuto">Trascina per girare · Ctrl + rotella per lo zoom</p>
+        <noscript><p class="p3-aiuto" data-i18n="pres.strati3d.noscript">Il modello 3D ha bisogno di JavaScript.</p></noscript>
       </div>
     </div>
   </section>
@@ -332,5 +353,6 @@
 })();
 </script>
 <script type="module" src="js/i18n-pagina.js"></script>
+<script type="module" src="js/presentazione-strati.js"></script>
 </body>
 </html>

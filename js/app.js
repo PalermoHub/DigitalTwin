@@ -16,6 +16,8 @@ import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaTabella } from './core/tabella/index.js';
 import { collegaCursorePunti } from './core/cursore-punti.js';
 import { collegaStampa } from './core/stampa.js';
+import { collegaStrati3d } from './core/strati-3d.js';
+import { collegaChipBarra } from './core/chip-barra.js';
 import { collegaZone } from './core/zone.js';
 import { collegaRipristino } from './core/ripristino.js';
 import { preparaCondivisione, collegaCondivisione } from './core/condivisione.js';
@@ -178,12 +180,19 @@ map.once('style.load', async () => {
     collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti)));
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
+  collegaChipBarra(document.getElementById('strati-chip'), document.getElementById('barra-strumenti')); // i chip scendono sotto la barra se la toccano
   window.dt.tabella = collegaTabella(map, { pulsante: document.getElementById('btn-tabella') });
   // su mobile la barra strumenti non c'è: la tabella si apre dal foglio Strati (riguarda i layer accesi)
   const btnTabella = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-tabella-m', className: 'btn-pannello-mobile', title: t('html.btn.tabella') });
   btnTabella.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg><span class="et">${t('tab.tabella')}</span>`;
   btnTabella.addEventListener('click', () => { tab.imposta(null); window.dt.tabella.apri(); });
   document.getElementById('barra-gruppi').append(btnTabella);
+  // strati in 3D: dalla barra strumenti e, su mobile, dal foglio Strati (il foglio si chiude prima di aprire la scena)
+  const btnStrati3d = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-strati3d-m', className: 'btn-pannello-mobile' });
+  btnStrati3d.innerHTML = `${document.getElementById('btn-strati3d').querySelector('svg').outerHTML.replace(/width="16" height="16"/, 'width="20" height="20"')}<span class="et">${t('tab.strati3d')} <span class="strati3d-beta strati3d-beta--mini">β</span></span>`;
+  btnStrati3d.addEventListener('click', () => tab.imposta(null), { capture: true });
+  document.getElementById('barra-gruppi').append(btnStrati3d);
+  collegaStrati3d(map, MODULI, [document.getElementById('btn-strati3d'), btnStrati3d]);
   collegaCursorePunti(map);
   collegaStampa(map, document.getElementById('btn-stampa'), document.getElementById('stampa-menu'));
   const archivioLocale = (() => { try { return window.localStorage; } catch { return null; } })();
