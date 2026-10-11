@@ -2011,5 +2011,21 @@
   "lbl.ISTAT, Matrice di pendolarismo (Esplora dati)": "ISTAT, Matrice di pendolarismo (Esplora dati)",
   "lbl.Mappa Pendolarismo 2021, PalermoHub": "Mappa Pendolarismo 2021, PalermoHub",
   "lbl.Pendolarismo da e verso Palermo 2021": "Pendolarismo da e verso Palermo 2021",
-  "scheda.suntoMercato": "Quotazioni mercato immobiliare"
+  "scheda.suntoMercato": "Quotazioni mercato immobiliare",
+  "html.btn.strati3d": "Strati in 3D: separa i layer accesi e girali attorno",
+  "strati3d.titolo": "Strati in 3D",
+  "strati3d.chiudi": "Torna alla mappa",
+  "strati3d.elenco": "Strati della pila",
+  "strati3d.esplodi": "Esplodi",
+  "strati3d.gira": "Gira",
+  "strati3d.alto": "Dall'alto",
+  "strati3d.in3d": "In 3D",
+  "strati3d.prepara": "Preparo gli strati in 3D… {n} di {tot}",
+  "strati3d.aiuto": "Trascina per girare, rotella o due dita per avvicinarti. Tocca uno strato nell'elenco per metterlo in evidenza, un punto della pila per aprirne la scheda.",
+  "strati3d.base": "Mappa di base",
+  "strati3d.altri": "Altri layer",
+  "strati3d.nessuno": "Accendi almeno un layer per vederlo in 3D",
+  "strati3d.troppi": "Troppi layer accesi: in 3D si vedono i {n} più in alto",
+  "strati3d.errore": "La vista 3D degli strati non si è aperta: riprova",
+  "tab.strati3d": "Strati 3D"
 }

@@ -110,6 +110,9 @@ function scegli(map, base) {
   for (const id of Object.keys(RASTER)) map.setLayoutProperty(`base-${id}`, 'visibility', base === id ? 'visible' : 'none');
 }
 
+// Layer della base cartografica (raster, bianca, vettoriali e Positron): la vista «Strati in 3D» li mette nel piano più basso.
+export const eBase = id => id.startsWith('base-') || idPositron.includes(id);
+
 // Primo layer sopra le basi (le raster, la bianca, le vettoriali e quelle di Positron): lì stanno le ortofoto, sotto ogni dato.
 // `undefined` se non c'è altro: il layer va in cima.
 export function sopraLeBasi(map) {

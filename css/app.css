@@ -1776,3 +1776,54 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .legenda-pendolarismo i.pend-linea { display: inline-block; width: 18px; height: 4px; margin-right: 6px; border-radius: 2px; flex: none; vertical-align: middle; }
 .scheda-sunto-titolo { margin: 12px 0 0; font-size: var(--fs-sm); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
 .scheda-sunto-titolo + .scheda-sunto { margin-top: 6px; }
+
+/* ==========================================================================
+   Strati in 3D (js/core/strati-3d.js): palco scuro come il reel, pannelli con i colori dell'app
+   ========================================================================== */
+.strati3d-velo { position: fixed; inset: 0; z-index: var(--z-viewer); display: grid; place-items: center; background: rgba(14, 18, 26, .55); }
+.strati3d-velo p { padding: 12px 18px; border-radius: var(--r-pill); background: var(--surface); color: var(--text); font-weight: 600; font-size: var(--fs-sm); box-shadow: var(--ombra); }
+.strati3d { position: fixed; inset: 0; z-index: var(--z-viewer); color: #fff; background: transparent; transition: background .45s ease; }
+.strati3d.aperta { background:
+  radial-gradient(ellipse 70% 50% at 50% 55%, rgba(245, 166, 35, .13), transparent 70%),
+  radial-gradient(circle, rgba(255, 255, 255, .07) 1.4px, transparent 1.8px) 0 0 / 44px 44px, #0e121a; }
+.strati3d.chiude { background: transparent; }
+.strati3d.sfuma { opacity: 0; transition: opacity .3s ease; }
+.strati3d-palco { position: absolute; inset: 0; perspective: 2600px; overflow: hidden; cursor: grab; touch-action: none; }
+.strati3d-palco.trascina { cursor: grabbing; }
+.strati3d-mondo { position: absolute; width: 0; height: 0; transform-style: preserve-3d; }
+.strati3d-piano { position: absolute; transform-style: preserve-3d; border: 2px solid rgba(255, 255, 255, calc(var(--vetro, 0) * .4));
+  background: rgba(20, 26, 38, calc(var(--vetro, 0) * .32)); transition: opacity .25s; }
+.strati3d-piano[data-base] { background: none; }
+.strati3d-piano.att { border-color: var(--accent); box-shadow: 0 0 60px rgba(245, 166, 35, .55); }
+.strati3d-img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.strati3d :is(.strati3d-testata, .strati3d-elenco, .strati3d-comandi, .strati3d-aiuto) { transition: opacity .3s ease; }
+.strati3d:not(.aperta) :is(.strati3d-testata, .strati3d-elenco, .strati3d-comandi, .strati3d-aiuto),
+.strati3d.chiude :is(.strati3d-testata, .strati3d-elenco, .strati3d-comandi, .strati3d-aiuto) { opacity: 0; pointer-events: none; }
+.strati3d-testata { position: absolute; left: 16px; right: 16px; top: 14px; display: flex; align-items: center; gap: 12px; pointer-events: none; }
+.strati3d-testata h2 { margin: 0; font-size: var(--fs-sm); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.strati3d-chiudi { pointer-events: auto; margin-left: auto; padding: 9px 16px; border-radius: var(--r-pill); border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: var(--fs-sm); cursor: pointer; }
+.strati3d-elenco { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 230px; max-height: calc(100% - 200px); overflow: auto;
+  padding: 6px; border-radius: var(--r-md); background: rgba(16, 20, 29, .9); border: 1px solid rgba(255, 255, 255, .12); }
+.strati3d-elenco button { display: flex; width: 100%; align-items: center; gap: 10px; padding: 7px 8px; border: 0; border-radius: var(--r-sm); background: none; color: #fff; text-align: left; cursor: pointer; font-size: var(--fs-sm); }
+.strati3d-elenco button:hover, .strati3d-elenco button:focus-visible { background: rgba(255, 255, 255, .08); }
+.strati3d-elenco button.att { background: rgba(245, 166, 35, .18); }
+.strati3d-elenco i { flex: none; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; border: 2px solid rgba(255, 255, 255, .4); font-style: normal; font-size: var(--fs-3xs); font-weight: 700; color: #aab2c0; }
+.strati3d-elenco button.att i { border-color: var(--accent); color: var(--accent); }
+.strati3d-elenco b { font-weight: 600; }
+.strati3d-comandi { position: absolute; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 12px; white-space: nowrap;
+  padding: 8px 16px; border-radius: var(--r-pill); background: rgba(16, 20, 29, .9); border: 1px solid rgba(255, 255, 255, .12); }
+.strati3d-comandi label { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); font-weight: 600; color: #aab2c0; }
+.strati3d-comandi input[type=range] { width: 150px; accent-color: var(--accent); }
+.strati3d-comandi button { padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid rgba(255, 255, 255, .2); background: none; color: #fff; font-size: var(--fs-sm); font-weight: 600; cursor: pointer; }
+.strati3d-comandi button:hover, .strati3d-comandi button:focus-visible, .strati3d-comandi button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.strati3d-aiuto { position: absolute; left: 16px; bottom: 80px; max-width: 280px; margin: 0; font-size: var(--fs-xs); line-height: 1.4; color: #aab2c0; pointer-events: none; }
+.strati3d-aiuto.via { opacity: 0; transition-delay: 1.2s; }
+#btn-strati3d:disabled, #btn-strati3d-m:disabled { opacity: .45; cursor: not-allowed; }
+@media (max-width: 720px) {
+  .strati3d-testata h2 { display: none; }
+  .strati3d-elenco { top: auto; bottom: 74px; left: 8px; right: 8px; width: auto; max-height: 120px; transform: none; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .strati3d-elenco button { padding: 5px 6px; font-size: var(--fs-xs); }
+  .strati3d-comandi { left: 8px; right: 8px; transform: none; justify-content: space-between; gap: 8px; padding: 8px 10px; }
+  .strati3d-comandi input[type=range] { width: 96px; }
+  .strati3d-aiuto { display: none; }
+}

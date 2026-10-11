@@ -2011,5 +2011,21 @@
   "lbl.ISTAT, Matrice di pendolarismo (Esplora dati)": "ISTAT, Commuting matrix (Explore data)",
   "lbl.Mappa Pendolarismo 2021, PalermoHub": "Commuting map 2021, PalermoHub",
   "lbl.Pendolarismo da e verso Palermo 2021": "Commuting to and from Palermo 2021",
-  "scheda.suntoMercato": "Real estate market quotations"
+  "scheda.suntoMercato": "Real estate market quotations",
+  "html.btn.strati3d": "Layers in 3D: pull the active layers apart and orbit them",
+  "strati3d.titolo": "Layers in 3D",
+  "strati3d.chiudi": "Back to the map",
+  "strati3d.elenco": "Layers in the stack",
+  "strati3d.esplodi": "Explode",
+  "strati3d.gira": "Rotate",
+  "strati3d.alto": "From above",
+  "strati3d.in3d": "In 3D",
+  "strati3d.prepara": "Preparing the 3D layers… {n} of {tot}",
+  "strati3d.aiuto": "Drag to orbit, scroll or pinch to zoom. Tap a layer in the list to highlight it, a point of the stack to open its place card.",
+  "strati3d.base": "Base map",
+  "strati3d.altri": "Other layers",
+  "strati3d.nessuno": "Turn on at least one layer to see it in 3D",
+  "strati3d.troppi": "Too many active layers: the 3D view shows the top {n}",
+  "strati3d.errore": "The 3D layer view did not open: try again",
+  "tab.strati3d": "3D layers"
 }
