@@ -14,6 +14,7 @@ export default {
   aggiungiLayer(map) {
     map.addLayer({
       id: 'edifici-2d', type: 'fill', source: 'edificato', 'source-layer': 'edificato', minzoom: 12,
+      layout: { visibility: 'none' },
       paint: { 'fill-color': EDIFICATO_NEUTRAL, 'fill-opacity': 0.8, 'fill-outline-color': '#9aa0a6' },
     });
     map.addLayer({
@@ -32,7 +33,7 @@ export default {
     });
   },
   strati: [{
-    id: 'edificato', etichetta: 'Edificato (da zoom 12)', layers: ['edifici-2d'], attivo: true,
+    id: 'edificato', etichetta: 'Edificato (da zoom 12)', layers: ['edifici-2d'], attivo: false,
   }, {
     id: 'edifici3d', etichetta: 'Edifici 3D (da zoom 12)', layers: ['edifici-3d'], attivo: false,
     suCambio(attivo, map) { aggiorna3D(map); },
