@@ -42,7 +42,34 @@ function collega(map) {
 
 const MAX_VOCI = 3;
 
-// Tooltip per i layer con un modello di popup {titolo, sottotitolo}: `gruppi` = [{ layers, modello(props) }]. Si cerca solo
+// Una voce del tooltip: titolo in grassetto (con il pallino colorato se il modello ne ha uno), badge, poi il sottotitolo.
+export function disegnaVoceTooltip(m) {
+  const voce = document.createElement('div');
+  const titolo = document.createElement('strong');
+  if (m.pallino) {
+    const pallino = document.createElement('span');
+    pallino.className = 'tooltip-pallino';
+    pallino.style.background = m.pallino;
+    titolo.append(pallino);
+  }
+  titolo.append(m.titolo);
+  voce.append(titolo);
+  if (m.badge?.testo) {
+    const badge = document.createElement('span');
+    badge.className = 'tooltip-badge';
+    badge.textContent = m.badge.testo;
+    badge.style.setProperty('--colore', m.badge.colore);
+    voce.append(badge);
+  }
+  if (m.sottotitolo && m.sottotitolo !== m.titolo) {
+    const dettaglio = document.createElement('div');
+    dettaglio.textContent = m.sottotitolo;
+    voce.append(dettaglio);
+  }
+  return voce;
+}
+
+// Tooltip per i layer con un modello di popup {titolo, sottotitolo, pallino?, badge?: {testo, colore}}: `gruppi` = [{ layers, modello(props) }]. Si cerca solo
 // negli strati accesi (a strato spento sulla mappa non c'è nulla da indicare); nel riquadro di ±4 px cadono anche i punti piccoli.
 export function registraTooltipStrati(map, gruppi, priorita = 2) {
   const acceso = id => map.getLayer(id) && map.getLayoutProperty(id, 'visibility') === 'visible';
@@ -61,18 +88,7 @@ export function registraTooltipStrati(map, gruppi, priorita = 2) {
     const corpo = document.createElement('div');
     corpo.className = 'strati-tooltip-corpo';
     const mostrate = [...voci.values()];
-    for (const m of mostrate.slice(0, MAX_VOCI)) {
-      const voce = document.createElement('div');
-      const titolo = document.createElement('strong');
-      titolo.textContent = m.titolo;
-      voce.append(titolo);
-      if (m.sottotitolo && m.sottotitolo !== m.titolo) {
-        const dettaglio = document.createElement('div');
-        dettaglio.textContent = m.sottotitolo;
-        voce.append(dettaglio);
-      }
-      corpo.append(voce);
-    }
+    for (const m of mostrate.slice(0, MAX_VOCI)) corpo.append(disegnaVoceTooltip(m));
     if (mostrate.length > MAX_VOCI) {
       const altre = document.createElement('div');
       altre.className = 'strati-tooltip-altre';
