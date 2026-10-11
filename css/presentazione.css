@@ -217,3 +217,7 @@ a { color: inherit; }
   .p3-comandi label span { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .p3-piano { transition: none; } }
+
+/* targhetta «in fase di sviluppo» accanto al titolo di una sezione */
+.in-sviluppo { display: inline-block; vertical-align: middle; margin-left: 10px; padding: 4px 12px; border: 1.5px solid var(--accento); border-radius: 999px;
+  color: var(--accento-forte); font-size: .8125rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }

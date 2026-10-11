@@ -2077,5 +2077,6 @@
   "pres.strati3d.aiuto": "Trascina per girare · Ctrl + rotella per lo zoom",
   "pres.strati3d.noscript": "Il modello 3D ha bisogno di JavaScript.",
   "strati3d.particella": "Foglio {foglio}, particella {particella}",
-  "strati3d.altre": "+ altri {n}"
+  "strati3d.altre": "+ altri {n}",
+  "pres.strati3d.beta": "In fase di sviluppo"
 }
