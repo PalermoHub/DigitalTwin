@@ -2007,5 +2007,8 @@
   "lbl.Dati al 31 dicembre 2021, in piena pandemia: gli spostamenti possono riflettere il lavoro agile. I comuni sono rappresentati dal centroide e l'arco non è il percorso reale.": "Data as of 31 December 2021, during the pandemic: trips may reflect remote working. Municipalities are shown by their centroid and the arc is not the real route.",
   "lbl.Vivono e lavorano qui": "Live and work here",
   "lbl.Saldo": "Balance",
-  "lbl.Mappa Pendolarismo": "Commuting map"
+  "lbl.Mappa Pendolarismo": "Commuting map",
+  "lbl.Pendolarismo da e verso Palermo: ISTAT, Censimento permanente della popolazione e delle abitazioni 2021, matrice di pendolarismo per lavoro tra comuni (dati al 31 dicembre 2021); elaborazione PalermoHub": "Commuting to and from Palermo: ISTAT, 2021 Permanent census of population and housing, commuting-for-work matrix between municipalities (data as of 31 December 2021); processed by PalermoHub",
+  "lbl.ISTAT, Matrice di pendolarismo (Esplora dati)": "ISTAT, Commuting matrix (Explore data)",
+  "lbl.Mappa Pendolarismo 2021, PalermoHub": "Commuting map 2021, PalermoHub"
 }
