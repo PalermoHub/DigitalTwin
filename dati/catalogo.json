@@ -19,7 +19,8 @@
    }
   ],
   "fonte": "S.I.T.R. Regione Siciliana e Agenzia delle Entrate — particelle catastali",
-  "data": "2026-09"
+  "data": "2026-09",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "prg-vincoli/prg.pmtiles",
@@ -94,7 +95,8 @@
    }
   ],
   "fonte": "Comune di Palermo — Variante generale al PRG 2004: zonizzazione e vincoli",
-  "data": "2004"
+  "data": "2004",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "prg-vincoli/Variente_Generale_PRG_2004.gpkg",
@@ -214,7 +216,8 @@
    }
   ],
   "fonte": "Comune di Palermo — numeri civici",
-  "data": "2026-02"
+  "data": "2026-02",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "civici-omi/Zone_OMI_2025_II.pmtiles",
@@ -258,7 +261,8 @@
    }
   ],
   "fonte": "Agenzia delle Entrate — Osservatorio del Mercato Immobiliare, zone OMI",
-  "data": "2025-S2"
+  "data": "2025-S2",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "civici-omi/immobili_comunali_2024.pmtiles",
@@ -292,7 +296,8 @@
    }
   ],
   "fonte": "Comune di Palermo — immobili comunali",
-  "data": "2024"
+  "data": "2024",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "edifici/edificato.gpkg",
@@ -371,7 +376,8 @@
    }
   ],
   "fonte": "Comune di Palermo — unità volumetriche CTC; popolazione per edificio: stima",
-  "data": "2026"
+  "data": "2026",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "terreno/palermo_dtm5m.tif",
@@ -448,7 +454,8 @@
    }
   ],
   "fonte": "ISTAT / Comune di Palermo — circoscrizioni, quartieri, UPL",
-  "data": "2021"
+  "data": "2021",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "popolazione/geo_sezioni_2021.pmtiles",
@@ -609,7 +616,8 @@
    }
   ],
   "fonte": "ISTAT — sezioni di censimento 2021",
-  "data": "2021"
+  "data": "2021",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "popolazione/punti_pop_10.pmtiles",
@@ -684,7 +692,8 @@
   "sha256": "4e104901ea41d7c8fe22cfaa00a350224676747599a5b11f511145ab4ae813c8",
   "url": "https://gbvitrano.github.io/palermo_popolazione/data/sezioni_indicatori.json",
   "fonte": "ISTAT — Censimento permanente della popolazione e delle abitazioni 2021",
-  "data": "2021"
+  "data": "2021",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "clima/dtm_zonal_sezioni.json",
@@ -2009,7 +2018,8 @@
   "sha256": "9a766c3b6f8d5bdec9e967b5264a9944fd458239c3470d6350e2c02d5015b158",
   "url": "https://palermohub.opendatasicilia.it/pmtiles/civici_index.json",
   "fonte": "Comune di Palermo — numeri civici (indice per la ricerca)",
-  "data": "2026-02"
+  "data": "2026-02",
+  "licenza": "CC BY 4.0"
  },
  {
   "percorso": "mobilita/sicurezza/rete_rischio.geojson",
@@ -2122,7 +2132,8 @@
   "url": "https://palermohub.github.io/PRG2004/ZTO/{z}/{x}/{y}.png",
   "esempio": "https://palermohub.github.io/PRG2004/ZTO/14/8794/6306.png",
   "fonte": "Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): zonizzazione",
-  "data": "2004"
+  "data": "2004",
+  "licenza": "CC BY 4.0"
  },
  {
   "tipo": "tileset",
@@ -2131,7 +2142,8 @@
   "url": "https://palermohub.github.io/PRG2004/ppe/{z}/{x}/{y}.png",
   "esempio": "https://palermohub.github.io/PRG2004/ppe/14/8800/6312.png",
   "fonte": "Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): PPE",
-  "data": "2004"
+  "data": "2004",
+  "licenza": "CC BY 4.0"
  },
  {
   "tipo": "tileset",
@@ -2140,7 +2152,8 @@
   "url": "https://palermohub.github.io/PRG2004/VA/{z}/{x}/{y}.png",
   "esempio": "https://palermohub.github.io/PRG2004/VA/14/8794/6306.png",
   "fonte": "Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): vincoli areali",
-  "data": "2004"
+  "data": "2004",
+  "licenza": "CC BY 4.0"
  },
  {
   "tipo": "tileset",
@@ -2149,7 +2162,8 @@
   "url": "https://palermohub.github.io/PRG2004/VL/{z}/{x}/{y}.png",
   "esempio": "https://palermohub.github.io/PRG2004/VL/14/8794/6306.png",
   "fonte": "Comune di Palermo — Variante generale al PRG 2004, rielaborazione di OpenDataSicilia (vestizione raster): vincoli lineari",
-  "data": "2004"
+  "data": "2004",
+  "licenza": "CC BY 4.0"
  },
  {
   "tipo": "tileset",
