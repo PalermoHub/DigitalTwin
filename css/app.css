@@ -537,6 +537,7 @@ dialog li { margin: 4px 0; }
 .scheda-badge--c3 { background: var(--c3-bg); color: var(--c3-fg); border-color: var(--c3-bd); }
 .scheda-badge--c4 { background: var(--c4-bg); color: var(--c4-fg); border-color: var(--c4-bd); }
 .scheda-badge--c5 { background: var(--c5-bg); color: var(--c5-fg); border-color: var(--c5-bd); }
+.scheda-badge-tinta { justify-self: end; padding: 1px 10px; border-radius: 999px; font-size: var(--fs-xs); font-weight: 600; color: color-mix(in srgb, var(--tinta) 55%, var(--text)); background: color-mix(in srgb, var(--tinta) 14%, transparent); border: 1px solid color-mix(in srgb, var(--tinta) 53%, transparent); }
 .scheda-griglia { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 4px; }
 .scheda-cella { text-align: center; padding: 8px 6px; border-radius: var(--r-sm); background: var(--accent-soft); overflow-wrap: anywhere; }
 .scheda-cella-val { display: block; font-weight: 700; font-size: var(--fs-md); }

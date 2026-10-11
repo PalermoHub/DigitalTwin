@@ -71,7 +71,7 @@ function creaLegenda() {
   legenda.append(el('strong', null, 'PEBA – Barriere architettoniche'));
   const scelta = el('div', 'peba-modo');
   scelta.append(el('span', null, 'Colora per'));
-  for (const [chiave, testo] of [['livello', 'Livello'], ['gruppo', 'Gruppo']]) {
+  for (const [chiave, testo] of [['livello', 'Accessibilità'], ['gruppo', 'Gruppo']]) {
     const b = el('button', null, testo);
     b.type = 'button';
     b.setAttribute('aria-pressed', String(chiave === modo));
@@ -82,7 +82,7 @@ function creaLegenda() {
     });
     scelta.append(b);
   }
-  legenda.append(scelta, famiglia('Livello di accessibilità', LIVELLI, livelliAccesi, false), famiglia('Gruppo', GRUPPI, gruppiAccesi, true));
+  legenda.append(scelta, famiglia('Accessibilità', LIVELLI, livelliAccesi, false), famiglia('Gruppo', GRUPPI, gruppiAccesi, true));
   applicaColore();
   document.getElementById('legende').append(legenda);
 }

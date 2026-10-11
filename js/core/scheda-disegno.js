@@ -32,6 +32,12 @@ function disegnaRiga(r) {
     return riga;
   }
   riga.append(el('span', 'scheda-et', tl(r.etichetta)));
+  if (r.colore) { // valore a badge con tinta propria (es. PEBA: livello, rilevanza, codice del gruppo)
+    const badge = el('span', 'scheda-val scheda-badge-tinta', r.valore);
+    badge.style.setProperty('--tinta', r.colore);
+    riga.append(badge);
+    return riga;
+  }
   if (r.classe) {
     const { valore, dettaglio } = dividiDettaglio(r.valore);
     const badge = el('span', 'scheda-val scheda-badge scheda-badge--c' + r.classe);
