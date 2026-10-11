@@ -52,3 +52,24 @@ test('puntoDaPiano: angoli e centro di una vista ruotata', () => {
 test('quote: passo costante dal basso', () => {
   assert.deepEqual(quote(3, 1000), [0, 75, 150]);
 });
+
+test('unisciTerreno: rilievo ed elevazione in un solo piano, in fondo', async () => {
+  const { unisciTerreno } = await import('../../js/core/strati-3d-modello.js');
+  const g = unisciTerreno([{ id: 'base', base: true, layers: ['b'] }, { id: 'catasto', layers: ['c'] }, { id: 'rilievo3d', layers: ['h'] }, { id: 'elevazione', layers: ['e'] }]);
+  assert.deepEqual(g.map(x => x.id), ['terreno', 'base', 'catasto']);
+  assert.deepEqual(g[0].layers, ['h', 'e']);
+  assert.deepEqual(unisciTerreno([{ id: 'catasto', layers: ['c'] }]).map(x => x.id), ['catasto']);
+  // il limite dei piani non taglia né la base né il terreno
+  assert.deepEqual(limitaPiani([g[0], g[1], { id: 'a' }, { id: 'b' }], 3).piani.map(x => x.id), ['terreno', 'base', 'b']);
+});
+
+test('terreno: quota Terrarium e zoom dei tile entro il tetto', async () => {
+  const { quotaTerrarium, zoomTile } = await import('../../js/core/strati-3d-terreno.js');
+  assert.equal(quotaTerrarium(128, 0, 0), 0);
+  assert.equal(quotaTerrarium(130, 88, 128), 600.5);
+  // una vista di circa 0,0004 unità Mercator (≈ 16 km) a zoom 14: si scende finché i tile sono al più 48
+  const z = zoomTile(0.5370, 0.3880, 0.5374, 0.3884, 14);
+  const n = 2 ** z;
+  assert.ok((Math.floor(0.5374 * n) - Math.floor(0.5370 * n) + 1) * (Math.floor(0.3884 * n) - Math.floor(0.3880 * n) + 1) <= 48);
+  assert.ok(z <= 15 && z >= 10);
+});

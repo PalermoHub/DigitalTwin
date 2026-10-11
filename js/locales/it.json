@@ -2029,5 +2029,6 @@
   "strati3d.errore": "La vista 3D degli strati non si è aperta: riprova",
   "tab.strati3d": "Strati 3D",
   "strati3d.spegni": "Spegni {nome} nella pila",
-  "strati3d.accendi": "Riaccendi {nome} nella pila"
+  "strati3d.accendi": "Riaccendi {nome} nella pila",
+  "strati3d.terreno": "Terreno 3D"
 }

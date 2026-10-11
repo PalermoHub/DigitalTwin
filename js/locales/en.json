@@ -2029,5 +2029,6 @@
   "strati3d.errore": "The 3D layer view did not open: try again",
   "tab.strati3d": "3D layers",
   "strati3d.spegni": "Hide {nome} in the stack",
-  "strati3d.accendi": "Show {nome} in the stack again"
+  "strati3d.accendi": "Show {nome} in the stack again",
+  "strati3d.terreno": "3D terrain"
 }

@@ -1,7 +1,8 @@
 import { t } from './i18n.js';
 import { segnala } from './pannello.js';
 import { eBase } from '../layers/base.js';
-import { gruppiStrati, limitaPiani, puntoDaPiano, quote, MAX_PIANI } from './strati-3d-modello.js';
+import { gruppiStrati, limitaPiani, puntoDaPiano, quote, unisciTerreno, MAX_PIANI } from './strati-3d-modello.js';
+import { gradoni } from './strati-3d-terreno.js';
 
 // «Strati in 3D»: i layer accesi, fotografati uno per uno nell'inquadratura corrente, si separano in una pila
 // che si gira col mouse o col dito. Un clic su un punto di uno strato apre la scheda di quel punto sopra la scena;
@@ -69,7 +70,10 @@ async function cattura(map, gruppi, avanzamento) {
       for (const l of stile) map.setLayoutProperty(l.id, 'visibility', tieni.has(l.id) ? 'visible' : 'none');
       await inattiva(map);
       const c = await fotografa(map, scala);
-      if (!vuoto(c)) piani.push({ ...g, canvas: c });
+      if (vuoto(c)) continue;
+      // il terreno diventa un plastico a gradoni dal DTM (se non si legge resta piatto)
+      const terreno = g.terreno ? await gradoni(map, angoli, c, { maxFette: telefono ? 8 : 12 }).catch(() => null) : null;
+      piani.push({ ...g, canvas: c, gradoni: terreno });
     }
   } finally {
     for (const [id, v] of prima) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', v);
@@ -81,6 +85,7 @@ async function cattura(map, gruppi, avanzamento) {
 
 function titoloPiano(g) {
   if (g.base) return t('strati3d.base');
+  if (g.terreno) return t('strati3d.terreno');
   if (g.altri) return t('strati3d.altri');
   const testo = document.getElementById(`strato-${g.id}`)?.closest('label')?.textContent || g.etichetta || g.id;
   return testo.replace(/\s*\([^)]*zoom[^)]*\)/i, '').replace(/\s+/g, ' ').trim(); // «(da zoom 12)» qui non serve
@@ -137,14 +142,22 @@ function apriScena(map, { piani, angoli }, alChiudere) {
   const distanza = quote(2, lato)[1];
   const spento = piani.map(() => false);
   // quota di ogni piano: contano solo quelli accesi, così spegnendone uno la pila si ricompatta
-  const quota = i => distanza * spento.slice(0, i).filter(x => !x).length;
+  // il terreno a gradoni ha un'altezza propria (≈1,5× il vero, ma mai più di un passo e mezzo): chi sta sopra si alza di tanto
+  const esagera = p => Math.min(1.5 / p.gradoni.metriPx, distanza * 1.5 / Math.max(1, p.gradoni.massima));
+  const rilievo = piani.map(p => (p.gradoni ? p.gradoni.massima * esagera(p) : 0));
+  const quota = i => piani.slice(0, i).reduce((z, _, j) => z + (spento[j] ? 0 : distanza + rilievo[j]), 0);
   const zz = piani.map((_, i) => quota(i));
   const OCCHIO = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
   const elPiani = piani.map((p, i) => {
     const d = el('div', 'strati3d-piano');
     Object.assign(d.style, { width: `${cw}px`, height: `${ch}px`, left: `${-cw / 2}px`, top: `${-ch / 2}px` });
-    p.canvas.className = 'strati3d-img';
-    d.append(p.canvas);
+    if (p.gradoni) {
+      const k = esagera(p);
+      for (const f of p.gradoni.fette) { f.canvas.className = 'strati3d-img'; f.canvas.dataset.z = f.quota * k; d.append(f.canvas); }
+    } else {
+      p.canvas.className = 'strati3d-img';
+      d.append(p.canvas);
+    }
     if (p.base) d.dataset.base = '';
     mondo.append(d);
     const nome = titoloPiano(p);
@@ -264,7 +277,7 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     tPrima = ora;
     if (girando && !chiudendo && ora - ultimoGesto > 2500) meta.a += dt * 8;
     const m = ridotto ? 1 : 1 - Math.exp(-dt * (chiudendo ? 5 : 4));
-    const cima = Math.max(0, ...piani.map((_, i) => (spento[i] ? 0 : quota(i))));
+    const cima = Math.max(0, ...piani.map((_, i) => (spento[i] ? 0 : quota(i) + rilievo[i])));
     const scopo = chiudendo ? { ...piatto, a: Math.round(cam.a / 360) * 360, zt: 0 }
       : { ...meta, k: meta.k * adatta(), zt: (meta.att >= 0 ? quota(meta.att) : cima / 2) * meta.e };
     [scopo.dx, scopo.dy] = chiudendo ? [0, 0] : spazioScheda();
@@ -279,6 +292,7 @@ function apriScena(map, { piani, angoli }, alChiudere) {
       const fuoco = meta.att < 0 || chiudendo || att ? 1 : i < meta.att ? 0.25 : 0.1;
       d.style.opacity = spento[i] && !chiudendo ? 0 : fuoco;
       d.style.pointerEvents = spento[i] ? 'none' : '';
+      if (piani[i].gradoni) for (const f of d.children) if (f.dataset.z) f.style.transform = `translateZ(${f.dataset.z * cam.e}px)`;
       punti[i].hidden = !puntoPiano || spento[i];
       d.style.setProperty('--vetro', vetro);
       d.classList.toggle('att', att);
@@ -346,7 +360,7 @@ export function collegaStrati3d(map, moduli, bottoni) {
     (map.getContainer().closest('#corpo') || document.body).append(velo);
     try {
       const max = matchMedia(TELEFONO).matches ? MAX_PIANI.telefono : MAX_PIANI.desktop;
-      const { piani: gruppi, fuori } = limitaPiani(gruppiStrati(map.getStyle().layers, strati, acceso, eBase), max);
+      const { piani: gruppi, fuori } = limitaPiani(unisciTerreno(gruppiStrati(map.getStyle().layers, strati, acceso, eBase)), max);
       if (fuori) segnala(t('strati3d.troppi', { n: max }));
       const scena = await cattura(map, gruppi, (n, tot) => { testo.textContent = t('strati3d.prepara', { n, tot }); });
       if (!scena.piani.length) { segnala(t('strati3d.nessuno')); return; }

@@ -33,11 +33,22 @@ export function gruppiStrati(stile, strati, acceso, eBase) {
   return gruppi.sort((a, b) => quota(a) - quota(b));
 }
 
-// Tiene la base e gli ultimi `max - 1` piani (quelli più in alto): ritorna anche quanti ne restano fuori.
+// Rilievo 3D ed elevazione diventano un solo piano «terreno», in fondo alla pila: l'elevazione colorata va drappeggiata
+// sul rilievo (strati-3d-terreno.js), da sola su un piano piatto perderebbe le altezze.
+export const STRATI_TERRENO = ['rilievo3d', 'elevazione'];
+export function unisciTerreno(gruppi, ids = STRATI_TERRENO) {
+  const suoi = gruppi.filter(g => ids.includes(g.id));
+  if (!suoi.length) return gruppi;
+  const terreno = { id: 'terreno', terreno: true, strati: suoi.map(g => g.id), layers: suoi.flatMap(g => g.layers) };
+  return [terreno, ...gruppi.filter(g => !ids.includes(g.id))];
+}
+
+// Tiene base e terreno e gli ultimi piani (quelli più in alto) fino a `max`: ritorna anche quanti ne restano fuori.
 export function limitaPiani(gruppi, max) {
   if (gruppi.length <= max) return { piani: gruppi, fuori: 0 };
-  const base = gruppi.filter(g => g.base);
-  const resto = gruppi.filter(g => !g.base);
+  const fisso = g => g.base || g.terreno;
+  const base = gruppi.filter(fisso);
+  const resto = gruppi.filter(g => !fisso(g));
   const tenuti = resto.slice(resto.length - (max - base.length));
   return { piani: [...base, ...tenuti], fuori: resto.length - tenuti.length };
 }
