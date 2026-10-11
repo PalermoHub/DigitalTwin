@@ -15,6 +15,8 @@ dati/*/
 !dati/pai/
 # eccezione: immobili dichiarati al MEF (rigenerato dal workflow «Aggiorna MEF»)
 !dati/mef-immobili/
+# eccezione: PEBA (barriere architettoniche; GeoJSON e miniature, generati da scripts/peba.py)
+!dati/peba/
 # eccezione: isole di calore (piccolo, rigenerato da scripts/isole_calore.py)
 !dati/isole-calore/
 # dati di lavoro degli script (non servono alla webapp)
