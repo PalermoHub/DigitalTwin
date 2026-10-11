@@ -17,6 +17,7 @@ import { collegaTabella } from './core/tabella/index.js';
 import { collegaCursorePunti } from './core/cursore-punti.js';
 import { collegaStampa } from './core/stampa.js';
 import { collegaStrati3d } from './core/strati-3d.js';
+import { collegaChipBarra } from './core/chip-barra.js';
 import { collegaZone } from './core/zone.js';
 import { collegaRipristino } from './core/ripristino.js';
 import { preparaCondivisione, collegaCondivisione } from './core/condivisione.js';
@@ -179,6 +180,7 @@ map.once('style.load', async () => {
     collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti)));
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
+  collegaChipBarra(document.getElementById('strati-chip'), document.getElementById('barra-strumenti')); // i chip scendono sotto la barra se la toccano
   window.dt.tabella = collegaTabella(map, { pulsante: document.getElementById('btn-tabella') });
   // su mobile la barra strumenti non c'è: la tabella si apre dal foglio Strati (riguarda i layer accesi)
   const btnTabella = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-tabella-m', className: 'btn-pannello-mobile', title: t('html.btn.tabella') });
