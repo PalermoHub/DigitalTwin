@@ -236,6 +236,7 @@ const LICENZE = {
   'CC BY 4.0': 'https://creativecommons.org/licenses/by/4.0/deed.it',
   'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/deed.it',
   'CC BY 3.0 IT': 'https://creativecommons.org/licenses/by/3.0/it/legalcode',
+  'ODbL 1.0': 'https://opendatacommons.org/licenses/odbl/1-0/',
   'IODL 2.0': 'https://www.dati.gov.it/content/italian-open-data-license-v20',
 };
 
@@ -293,7 +294,7 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   if (dialog.open && dialog.vaiA) return dialog.vaiA(tab);
   const fonti = elenco([
     ...catalogo.filter(v => v.fonte).map(v => voce(`${v.fonte} (${v.data})`, linkCatalogo(v.fonte), v.licenza)),
-    voce('Base cartografica: OpenFreeMap, © OpenMapTiles, dati © OpenStreetMap contributors', [['OpenFreeMap', 'https://openfreemap.org/'], ['OpenStreetMap', 'https://www.openstreetmap.org/copyright']]),
+    voce('Base cartografica: OpenFreeMap, © OpenMapTiles, dati © OpenStreetMap contributors', [['OpenFreeMap', 'https://openfreemap.org/'], ['OpenStreetMap', 'https://www.openstreetmap.org/copyright']], 'ODbL 1.0'),
     voce('Carte tecniche (CSG 2k 1989/91, CTC 2k 2007/09, CTR 10k 2012/13): SiciliaHub / PalermoHub, Comune di Palermo e Regione Siciliana (SITR)', [['SITR Regione Siciliana', 'https://www.sitr.regione.sicilia.it/?page_id=419'], ['Geocatalogo del Comune di Palermo', 'https://geocatalog.comune.palermo.it/geonetwork/srv/ita/catalog.search#/metadata/25562f02-587f-49ca-b5b6-21018efe7c78'], ['Atlante delle carte tecniche', 'https://palermohub.opendatasicilia.it/index_atlante_iframe.html']], 'CC BY 4.0'),
     ['Mappe storiche (1580–1993): ', link('Atlante delle carte tecniche storiche di Palermo', 'https://palermohub.opendatasicilia.it/index_atlante_iframe.html'), ', OpenDataSicilia (A. Borruso, F. P. Paolicelli, C. Spataro, G. B. Vitrano), georeferenziate su ', link('Map Warper', 'https://mapwarper.net/'), ' — ', ...licenza('CC BY 4.0'), '; le fonti originali (BnF Gallica, Library of Congress, Harvard Map Collection, U.S. Army Map Service, Comune di Palermo) sono indicate nell\'attribuzione di ogni mappa. Fonte dati: ', link('Dataset del Comune di Palermo', 'https://opendata.comune.palermo.it/opendata-dataset.php?dataset=1287'), ', ', link('SITR', 'https://www.sitr.regione.sicilia.it/geoportale/it/Metadata/Details/784'), ', ', link('Repertorio cartografico CRICD', 'https://www.cricd.it/'), ', ', link('University of Texas, Perry-Castañeda Library Map Collection', 'https://legacy.lib.utexas.edu/maps/ams/italy_city_plans/')],
     voce('Scuole, asili comunali e sedi delle sezioni elettorali: Comune di Palermo, dati aperti (2017) — condizioni d\'uso da verificare', [['Anagrafe edilizia scolastica, MIUR (scuole)', 'http://www.miur.gov.it/web/guest/-/scuola-online-i-dati-aggiornati-dell-anagrafe-dell-edilizia'], ['Open data del Comune di Palermo', 'https://opendata.comune.palermo.it/index.php']], null, ['IODL 2.0']),
