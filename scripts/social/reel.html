@@ -116,6 +116,10 @@ body { font-family: 'Montserrat', sans-serif; color: #fff; position: relative; }
     <img class="ods" src="../../img/opendatasicilia.png" style="height:96px"><span>Open Data Sicilia</span></div>
 </div>
 
+<!-- firma Open Data Sicilia in alto, nelle scene centrali -->
+<div class="l" id="odsTop" style="left:0;right:0;top:70px;display:flex;justify-content:center;align-items:center;gap:18px;font-size:34px;font-weight:500;color:#e6e8ec;opacity:0">
+  <img class="ods" src="../../img/opendatasicilia.png" style="height:72px"><span>Open Data Sicilia</span></div>
+
 <div class="l" id="sott"><div class="pill" id="pill"></div></div>
 <div class="l" id="flash"></div>
 <div class="l" id="barra"></div>
@@ -215,6 +219,9 @@ window.render = function (t, tr = t) {
   $('sfondo').style.setProperty('--gx', (50 + 30 * Math.sin(t * .6)) + '%');
   $('sfondo').style.setProperty('--gy', (40 + 15 * Math.cos(t * .45)) + '%');
   $('barra').style.width = (t / DURATA * 100) + '%';
+
+  // firma Open Data Sicilia: dalla scena 2 alla 6 (apertura e chiusura hanno già i loghi)
+  set('odsTop', { o: Math.min(out3(p(t, 2.6, 3.0)), 1 - p(t, 22.1, 22.4)) });
 
   // flash sui tagli
   const tagli = [2.6, 5.0, T3 + DT * 6, 13.6 + 0.0, 17.2, 20.4];
