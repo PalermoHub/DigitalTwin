@@ -2077,5 +2077,6 @@
   "pres.strati3d.aiuto": "Drag to turn · Ctrl + scroll to zoom",
   "pres.strati3d.noscript": "The 3D model needs JavaScript.",
   "strati3d.particella": "Sheet {foglio}, parcel {particella}",
-  "strati3d.altre": "+ {n} more"
+  "strati3d.altre": "+ {n} more",
+  "pres.strati3d.beta": "In development"
 }
