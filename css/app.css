@@ -1791,7 +1791,7 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .strati3d-palco { position: absolute; inset: 0; perspective: 2600px; overflow: hidden; cursor: grab; touch-action: none; }
 .strati3d-palco.trascina { cursor: grabbing; }
 .strati3d-palco.su-oggetto:not(.trascina) { cursor: pointer; }
-.strati3d-tooltip { position: absolute; left: 0; top: 0; z-index: 2; max-width: 320px; pointer-events: none; }
+.strati3d-tooltip { position: absolute; left: 0; top: 0; z-index: 2; max-width: 320px; pointer-events: none; color: var(--text); text-align: left; } /* sul palco scuro il testo è bianco: il tooltip riprende quello dell'app */
 .strati3d-tooltip[hidden] { display: none; }
 .strati3d-mondo { position: absolute; width: 0; height: 0; transform-style: preserve-3d; }
 .strati3d-piano { position: absolute; transform-style: preserve-3d; border: 2px solid rgba(255, 255, 255, calc(var(--vetro, 0) * .4));
