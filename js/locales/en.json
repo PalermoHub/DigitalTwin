@@ -2021,7 +2021,7 @@
   "strati3d.alto": "From above",
   "strati3d.in3d": "In 3D",
   "strati3d.prepara": "Preparing the 3D layers… {n} of {tot}",
-  "strati3d.aiuto": "Drag to orbit, scroll or pinch to zoom. Tap a point of the stack to open its place card; use the eye to hide a layer.",
+  "strati3d.aiuto": "Drag to orbit, scroll or pinch to zoom. To move the stack: the arrow pad, right-click or Shift + drag. Tap a point of the stack to open its place card; use the eye to hide a layer.",
   "strati3d.base": "Base map",
   "strati3d.altri": "Other layers",
   "strati3d.nessuno": "Turn on at least one layer to see it in 3D",
@@ -2032,5 +2032,11 @@
   "strati3d.accendi": "Show {nome} in the stack again",
   "strati3d.terreno": "3D terrain",
   "strati3d.beta": "In development",
-  "strati3d.beta.tip": "Feature in development: it may change and have some rough edges"
+  "strati3d.beta.tip": "Feature in development: it may change and have some rough edges",
+  "strati3d.sposta": "Move the stack",
+  "strati3d.sposta.su": "Move the stack up",
+  "strati3d.sposta.giu": "Move the stack down",
+  "strati3d.sposta.sinistra": "Move the stack left",
+  "strati3d.sposta.destra": "Move the stack right",
+  "strati3d.sposta.centra": "Put the stack back in the centre"
 }

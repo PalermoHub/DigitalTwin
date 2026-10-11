@@ -2021,7 +2021,7 @@
   "strati3d.alto": "Dall'alto",
   "strati3d.in3d": "In 3D",
   "strati3d.prepara": "Preparo gli strati in 3D… {n} di {tot}",
-  "strati3d.aiuto": "Trascina per girare, rotella o due dita per avvicinarti. Tocca un punto della pila per aprirne la scheda; con l'occhio spegni uno strato.",
+  "strati3d.aiuto": "Trascina per girare, rotella o due dita per avvicinarti. Per spostare la pila: frecce del riquadro, tasto destro o Maiusc + trascina. Tocca un punto della pila per aprirne la scheda; con l'occhio spegni uno strato.",
   "strati3d.base": "Mappa di base",
   "strati3d.altri": "Altri layer",
   "strati3d.nessuno": "Accendi almeno un layer per vederlo in 3D",
@@ -2032,5 +2032,11 @@
   "strati3d.accendi": "Riaccendi {nome} nella pila",
   "strati3d.terreno": "Terreno 3D",
   "strati3d.beta": "In sviluppo",
-  "strati3d.beta.tip": "Funzione in fase di sviluppo: può cambiare e avere qualche imperfezione"
+  "strati3d.beta.tip": "Funzione in fase di sviluppo: può cambiare e avere qualche imperfezione",
+  "strati3d.sposta": "Sposta la pila",
+  "strati3d.sposta.su": "Sposta la pila in su",
+  "strati3d.sposta.giu": "Sposta la pila in giù",
+  "strati3d.sposta.sinistra": "Sposta la pila a sinistra",
+  "strati3d.sposta.destra": "Sposta la pila a destra",
+  "strati3d.sposta.centra": "Rimetti la pila al centro"
 }

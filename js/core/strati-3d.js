@@ -129,7 +129,23 @@ function apriScena(map, { piani, angoli }, alChiudere) {
   alto.type = 'button';
   comandi.append(etEsplodi, gira, alto);
   const aiuto = el('p', 'strati3d-aiuto', t('strati3d.aiuto'));
-  radice.append(palco, testata, elenco, comandi, aiuto);
+  // croce per spostare la pila nelle quattro direzioni, con «centra» in mezzo
+  const sposta = el('div', 'strati3d-sposta');
+  sposta.setAttribute('role', 'group');
+  sposta.setAttribute('aria-label', t('strati3d.sposta'));
+  const FRECCE = { su: [0, 1, 'M12 5v14M5 12l7-7 7 7'], sinistra: [1, 0, 'M19 12H5M12 5l-7 7 7 7'], centra: [1, 1, null], destra: [1, 2, 'M5 12h14M12 5l7 7-7 7'], giu: [2, 1, 'M12 19V5M5 12l7 7 7-7'] };
+  const bottoniSposta = {};
+  for (const [dir, [r, c, d]] of Object.entries(FRECCE)) {
+    const b = el('button', `strati3d-sposta-${dir}`);
+    b.type = 'button';
+    b.style.gridArea = `${r + 1} / ${c + 1}`;
+    b.title = b.ariaLabel = t(`strati3d.sposta.${dir}`);
+    b.innerHTML = d ? `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`
+      : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>';
+    bottoniSposta[dir] = b;
+    sposta.append(b);
+  }
+  radice.append(palco, testata, elenco, comandi, sposta, aiuto);
   // dentro #corpo, accanto alla scheda: #corpo ha `contain: layout` e fa da contesto, solo così la scheda le sta sopra
   const corpo = map.getContainer().closest('#corpo') || document.body;
   corpo.append(radice);
@@ -197,31 +213,37 @@ function apriScena(map, { piani, angoli }, alChiudere) {
 
   // camera: `meta` è dove va, `cam` dove si trova; ogni gesto arriva morbido
   const piatto = { a: 0, b: 0, k: riquadro.width / cw, e: 0 };
-  const meta = { a: 25, b: 56, k: 1, e: 1, att: -1 };
-  const cam = { ...piatto, zt: 0, dx: 0, dy: 0 };
-  // con la scheda aperta la pila scivola nello spazio libero: a sinistra del pannello, o sopra il foglio su telefono
+  // px/py: spostamento a mano (frecce, tasto destro, due dita); dx/dy: centratura nello spazio libero
+  const meta = { a: 25, b: 56, k: 1, e: 1, att: -1, px: 0, py: 0 };
+  const cam = { ...piatto, zt: 0, dx: 0, dy: 0, px: 0, py: 0 };
+  // Spazio libero della scena: tolti la scheda (a destra, o il foglio in basso su telefono), l'elenco e la testata.
+  // La pila si centra e si adatta lì; elenco, testata e comandi si allineano con le variabili --libero-*.
   const scheda = document.getElementById('scheda');
-  const larghezzaLaterale = () => parseFloat(getComputedStyle(document.body).getPropertyValue('--scheda-l')) || 0;
-  const laterale0 = larghezzaLaterale();
-  const spazioScheda = () => {
-    if (!scheda || scheda.hidden || scheda.classList.contains('collassato')) return [0, 0];
-    if (telefono) return [0, -scheda.getBoundingClientRect().height / 2];
-    return [-(larghezzaLaterale() - laterale0) / 2, 0];
+  const spazio = () => {
+    const r = radice.getBoundingClientRect();
+    const aperta = scheda && !scheda.hidden && !scheda.classList.contains('collassato');
+    const s = aperta ? scheda.getBoundingClientRect() : null;
+    const destra = s && !telefono ? Math.max(260, s.left - r.left) : r.width;
+    const basso = s && telefono ? Math.max(160, s.top - r.top) : r.height;
+    const x1 = destra - (telefono ? 0 : elenco.offsetWidth + 32);
+    const y0 = 60, y1 = telefono ? (s ? basso - 8 : r.height - 210) : r.height - 70;
+    return { aperta, x0: 0, x1, y0, y1, destra: r.width - destra, basso: r.height - basso };
   };
   let girando = !ridotto, ultimoGesto = 0, chiudendo = false, raf = 0;
   const gesto = () => { ultimoGesto = performance.now(); aiuto.classList.add('via'); };
-  const adatta = () => {   // zoom 1 = la pila intera entra nello schermo
-    const { clientWidth: W, clientHeight: H } = radice;
-    return Math.min(W / (lato * 1.25), H / (lato * (telefono ? 1.25 : 1.05)));
-  };
+  const adatta = L => Math.min((L.x1 - L.x0) / (lato * 1.5), (L.y1 - L.y0) / (lato * 1.05)); // zoom 1 = la pila entra nello spazio libero
 
   // ── gesti ──
   const puntatori = new Map();
-  let partenza = null, distanza0 = 0, zoom0 = 1;
+  let partenza = null, distanza0 = 0, zoom0 = 1, spostaMano = false;
+  const medio = () => { const [p1, p2] = [...puntatori.values()]; return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2]; };
+  let medio0 = null;
+  palco.addEventListener('contextmenu', ev => ev.preventDefault()); // il tasto destro sposta la pila
   palco.addEventListener('pointerdown', ev => {
     puntatori.set(ev.pointerId, [ev.clientX, ev.clientY]);
     partenza = { x: ev.clientX, y: ev.clientY, t: performance.now() };
-    if (puntatori.size === 2) { const [p1, p2] = [...puntatori.values()]; distanza0 = Math.hypot(p1[0] - p2[0], p1[1] - p2[1]); zoom0 = meta.k; }
+    spostaMano = ev.button === 2 || ev.button === 1 || ev.shiftKey;
+    if (puntatori.size === 2) { const [p1, p2] = [...puntatori.values()]; distanza0 = Math.hypot(p1[0] - p2[0], p1[1] - p2[1]); zoom0 = meta.k; medio0 = medio(); }
     palco.classList.add('trascina');
     gesto();
   });
@@ -229,8 +251,16 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     if (!puntatori.has(ev.pointerId)) return;
     const [x0, y0] = puntatori.get(ev.pointerId);
     puntatori.set(ev.pointerId, [ev.clientX, ev.clientY]);
-    if (puntatori.size === 1) { meta.a -= (ev.clientX - x0) * 0.35; meta.b = Math.min(82, Math.max(0, meta.b - (ev.clientY - y0) * 0.25)); }
-    else if (puntatori.size === 2) { const [p1, p2] = [...puntatori.values()]; meta.k = Math.min(4, Math.max(0.4, zoom0 * Math.hypot(p1[0] - p2[0], p1[1] - p2[1]) / distanza0)); }
+    if (puntatori.size === 1 && spostaMano) { meta.px += ev.clientX - x0; meta.py += ev.clientY - y0; }
+    else if (puntatori.size === 1) { meta.a -= (ev.clientX - x0) * 0.35; meta.b = Math.min(82, Math.max(0, meta.b - (ev.clientY - y0) * 0.25)); }
+    else if (puntatori.size === 2) {   // due dita: pizzico per lo zoom, il punto medio sposta la pila
+      const [p1, p2] = [...puntatori.values()];
+      meta.k = Math.min(4, Math.max(0.4, zoom0 * Math.hypot(p1[0] - p2[0], p1[1] - p2[1]) / distanza0));
+      const m = medio();
+      meta.px += m[0] - medio0[0];
+      meta.py += m[1] - medio0[1];
+      medio0 = m;
+    }
     gesto();
   };
   const lascia = ev => { puntatori.delete(ev.pointerId); if (!puntatori.size) palco.classList.remove('trascina'); };
@@ -252,6 +282,13 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     gesto();
   });
   cursore.addEventListener('input', () => { meta.e = +cursore.value; gesto(); });
+  const PASSO_MANO = 80;
+  const muoviPila = (x, y) => { meta.px += x; meta.py += y; gesto(); };
+  bottoniSposta.su.addEventListener('click', () => muoviPila(0, -PASSO_MANO));
+  bottoniSposta.giu.addEventListener('click', () => muoviPila(0, PASSO_MANO));
+  bottoniSposta.sinistra.addEventListener('click', () => muoviPila(-PASSO_MANO, 0));
+  bottoniSposta.destra.addEventListener('click', () => muoviPila(PASSO_MANO, 0));
+  bottoniSposta.centra.addEventListener('click', () => { meta.px = meta.py = 0; meta.k = 1; gesto(); });
   gira.setAttribute('aria-pressed', String(girando));
   gira.addEventListener('click', () => { girando = !girando; gira.setAttribute('aria-pressed', String(girando)); });
   alto.addEventListener('click', () => {
@@ -264,6 +301,8 @@ function apriScena(map, { piani, angoli }, alChiudere) {
   const tasti = ev => {
     if (ev.key === 'Escape') { ev.preventDefault(); chiudiScena(); return; }
     if (ev.target instanceof HTMLInputElement) return;
+    const mano = { ArrowLeft: [-PASSO_MANO / 2, 0], ArrowRight: [PASSO_MANO / 2, 0], ArrowUp: [0, -PASSO_MANO / 2], ArrowDown: [0, PASSO_MANO / 2] }[ev.key];
+    if (ev.shiftKey && mano) { ev.preventDefault(); muoviPila(...mano); return; } // Maiusc + frecce: sposta
     const azione = { ArrowLeft: () => { meta.a += 10; }, ArrowRight: () => { meta.a -= 10; },
       ArrowUp: () => { meta.b = Math.min(82, meta.b + 6); }, ArrowDown: () => { meta.b = Math.max(0, meta.b - 6); },
       '+': () => { meta.k = Math.min(4, meta.k * 1.15); }, '-': () => { meta.k = Math.max(0.4, meta.k / 1.15); } }[ev.key];
@@ -279,12 +318,17 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     tPrima = ora;
     if (girando && !chiudendo && ora - ultimoGesto > 2500) meta.a += dt * 8;
     const m = ridotto ? 1 : 1 - Math.exp(-dt * (chiudendo ? 5 : 4));
+    const L = spazio();
+    radice.style.setProperty('--libero-d', `${L.destra}px`);
+    radice.style.setProperty('--libero-b', `${L.basso}px`);
+    radice.classList.toggle('con-scheda', L.aperta);
     const cima = Math.max(0, ...piani.map((_, i) => (spento[i] ? 0 : quota(i) + rilievo[i])));
     const scopo = chiudendo ? { ...piatto, a: Math.round(cam.a / 360) * 360, zt: 0 }
-      : { ...meta, k: meta.k * adatta(), zt: (meta.att >= 0 ? quota(meta.att) : cima / 2) * meta.e };
-    [scopo.dx, scopo.dy] = chiudendo ? [0, 0] : spazioScheda();
-    for (const k of ['a', 'b', 'k', 'e', 'zt', 'dx', 'dy']) cam[k] += (scopo[k] - cam[k]) * m;
-    const tr = `translate(${cam.dx}px,${cam.dy}px) scale3d(${cam.k},${cam.k},${cam.k}) rotateX(${cam.b}deg) rotateZ(${cam.a}deg) translateZ(${-cam.zt}px)`;
+      : { ...meta, k: meta.k * adatta(L), zt: (meta.att >= 0 ? quota(meta.att) : cima / 2) * meta.e };
+    [scopo.dx, scopo.dy] = chiudendo ? [0, 0] : [(L.x0 + L.x1) / 2 - centro[0], (L.y0 + L.y1) / 2 - centro[1]];
+    if (chiudendo) scopo.px = scopo.py = 0;
+    for (const k of ['a', 'b', 'k', 'e', 'zt', 'dx', 'dy', 'px', 'py']) cam[k] += (scopo[k] - cam[k]) * m;
+    const tr = `translate(${cam.dx + cam.px}px,${cam.dy + cam.py}px) scale3d(${cam.k},${cam.k},${cam.k}) rotateX(${cam.b}deg) rotateZ(${cam.a}deg) translateZ(${-cam.zt}px)`;
     mondo.style.transform = tr;
     const vetro = Math.min(1, cam.e * 1.5);
     elPiani.forEach(({ d, b }, i) => {

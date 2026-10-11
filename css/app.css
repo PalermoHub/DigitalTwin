@@ -1796,13 +1796,19 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .strati3d-piano[data-base] { background: none; }
 .strati3d-piano.att { border-color: var(--accent); box-shadow: 0 0 60px rgba(245, 166, 35, .55); }
 .strati3d-img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.strati3d :is(.strati3d-testata, .strati3d-elenco, .strati3d-comandi, .strati3d-aiuto) { transition: opacity .3s ease; }
-.strati3d:not(.aperta) :is(.strati3d-testata, .strati3d-elenco, .strati3d-comandi, .strati3d-aiuto),
-.strati3d.chiude :is(.strati3d-testata, .strati3d-elenco, .strati3d-comandi, .strati3d-aiuto) { opacity: 0; pointer-events: none; }
-.strati3d-testata { position: absolute; left: 16px; right: calc(var(--scheda-l, 0px) + 16px); top: 14px; display: flex; align-items: center; gap: 12px; pointer-events: none; }
+.strati3d :is(.strati3d-testata, .strati3d-elenco, .strati3d-comandi, .strati3d-sposta, .strati3d-aiuto) { transition: opacity .3s ease; }
+.strati3d:not(.aperta) :is(.strati3d-testata, .strati3d-elenco, .strati3d-comandi, .strati3d-sposta, .strati3d-aiuto),
+.strati3d.chiude :is(.strati3d-testata, .strati3d-elenco, .strati3d-comandi, .strati3d-sposta, .strati3d-aiuto) { opacity: 0; pointer-events: none; }
+/* croce per spostare la pila */
+.strati3d-sposta { position: absolute; left: 16px; bottom: 18px; display: grid; grid-template: repeat(3, 34px) / repeat(3, 34px); gap: 3px; padding: 6px;
+  border-radius: var(--r-md); background: rgba(16, 20, 29, .9); border: 1px solid rgba(255, 255, 255, .12); }
+.strati3d-sposta button { display: grid; place-items: center; padding: 0; border: 1px solid rgba(255, 255, 255, .2); border-radius: var(--r-sm); background: none; color: #fff; cursor: pointer; }
+.strati3d-sposta button:hover, .strati3d-sposta button:focus-visible { border-color: var(--accent); color: var(--accent); }
+.strati3d-sposta-centra { color: var(--accent) !important; }
+.strati3d-testata { position: absolute; left: 16px; right: calc(var(--libero-d, 0px) + 16px); top: 14px; display: flex; align-items: center; gap: 12px; pointer-events: none; }
 .strati3d-testata h2 { margin: 0; font-size: var(--fs-sm); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
 .strati3d-chiudi { pointer-events: auto; margin-left: auto; padding: 9px 16px; border-radius: var(--r-pill); border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: var(--fs-sm); cursor: pointer; }
-.strati3d-elenco { position: absolute; right: calc(var(--scheda-l, 0px) + 16px); top: 50%; transform: translateY(-50%); width: 230px; max-height: calc(100% - 200px); overflow: auto;
+.strati3d-elenco { position: absolute; right: calc(var(--libero-d, 0px) + 16px); top: 50%; transform: translateY(-50%); width: 230px; max-height: calc(100% - 200px); overflow: auto;
   padding: 6px; border-radius: var(--r-md); background: rgba(16, 20, 29, .9); border: 1px solid rgba(255, 255, 255, .12); }
 .strati3d-riga { display: flex; align-items: center; gap: 4px; }
 .strati3d-occhio { flex: none; width: 28px !important; height: 28px; padding: 0 !important; justify-content: center; border-radius: 50% !important; color: var(--accent) !important; }
@@ -1814,13 +1820,13 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .strati3d-elenco i { flex: none; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; border: 2px solid rgba(255, 255, 255, .4); font-style: normal; font-size: var(--fs-3xs); font-weight: 700; color: #aab2c0; }
 .strati3d-elenco button.att i { border-color: var(--accent); color: var(--accent); }
 .strati3d-elenco b { font-weight: 600; }
-.strati3d-comandi { position: absolute; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 12px; white-space: nowrap;
+.strati3d-comandi { position: absolute; left: calc((100% - var(--libero-d, 0px)) / 2); bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 12px; white-space: nowrap;
   padding: 8px 16px; border-radius: var(--r-pill); background: rgba(16, 20, 29, .9); border: 1px solid rgba(255, 255, 255, .12); }
 .strati3d-comandi label { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); font-weight: 600; color: #aab2c0; }
 .strati3d-comandi input[type=range] { width: 150px; accent-color: var(--accent); }
 .strati3d-comandi button { padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid rgba(255, 255, 255, .2); background: none; color: #fff; font-size: var(--fs-sm); font-weight: 600; cursor: pointer; }
 .strati3d-comandi button:hover, .strati3d-comandi button:focus-visible, .strati3d-comandi button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
-.strati3d-aiuto { position: absolute; left: 16px; bottom: 80px; max-width: 280px; margin: 0; font-size: var(--fs-xs); line-height: 1.4; color: #aab2c0; pointer-events: none; }
+.strati3d-aiuto { position: absolute; left: 16px; bottom: 150px; max-width: 280px; margin: 0; font-size: var(--fs-xs); line-height: 1.4; color: #aab2c0; pointer-events: none; }
 .strati3d-aiuto.via { opacity: 0; transition-delay: 1.2s; }
 /* spillo sul punto cliccato: due strisce incrociate in verticale e un pallino su ogni strato */
 .strati3d-spillo { position: absolute; width: 0; transform-style: preserve-3d; transform-origin: 0 0; transform: rotateX(90deg); pointer-events: none; }
@@ -1841,5 +1847,7 @@ body.strati3d-attiva :is(#scheda, #rail-pannelli) { z-index: calc(var(--z-viewer
   .strati3d-comandi { left: 8px; right: 8px; transform: none; justify-content: space-between; gap: 8px; padding: 8px 10px; }
   .strati3d-comandi input[type=range] { width: 96px; }
   .strati3d-aiuto { display: none; }
+  .strati3d-sposta { left: auto; right: 8px; bottom: auto; top: 60px; grid-template: repeat(3, 30px) / repeat(3, 30px); gap: 2px; padding: 4px; }
+  .strati3d.con-scheda .strati3d-sposta { top: 60px; }
   body:has(#scheda:not([hidden]):not(.collassato)) .strati3d-elenco { display: none; } /* il foglio della scheda prende il suo posto */
 }
