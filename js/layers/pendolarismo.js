@@ -42,7 +42,7 @@ function applicaFiltri() {
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti legenda-pendolarismo');
   legenda.hidden = true;
-  legenda.append(el('strong', null, 'Pendolarismo da e verso Palermo'));
+  legenda.append(el('strong', null, 'Pendolarismo da e verso Palermo 2021'));
   for (const [chiave, colore, testo] of [['uscita', COLORE_USCITA, 'Uscita (residenti che lavorano fuori)'], ['entrata', COLORE_ENTRATA, 'Entrata (lavoratori da fuori)']]) {
     const simbolo = el('i', 'pend-linea');
     simbolo.style.background = colore;
@@ -59,9 +59,9 @@ function creaLegenda() {
 
 export default {
   id: 'pendolarismo',
-  titolo: 'Pendolarismo da e verso Palermo',
+  titolo: 'Pendolarismo da e verso Palermo 2021',
   argomento: {
-    titolo: 'Pendolarismo da e verso Palermo',
+    titolo: 'Pendolarismo da e verso Palermo 2021',
     descrizione: 'Spostamenti casa-lavoro tra Palermo e gli altri comuni (ISTAT, Censimento 2021): chi esce, chi entra e quanti vivono e lavorano in città, con classifiche dei comuni collegati.',
   },
   gruppo: 'popolazione',
@@ -96,7 +96,7 @@ export default {
     }
   },
   strati: [{
-    id: 'pendolarismo', etichetta: 'Pendolarismo da e verso Palermo', layers: [ARCHI, NODI, PALERMO], attivo: false,
+    id: 'pendolarismo', etichetta: 'Pendolarismo da e verso Palermo 2021', layers: [ARCHI, NODI, PALERMO], attivo: false,
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
   }],
   pannello: creaLegenda,
