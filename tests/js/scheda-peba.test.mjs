@@ -111,3 +111,21 @@ test('ruotaGradi: multipli di 90 tra 0 e 270', () => {
   assert.equal(ruotaGradi(0, -90), 270);
   assert.equal(ruotaGradi(undefined, 90), 90);
 });
+
+test('badge come nell\'originale: codice col colore del gruppo, costo verde, livello e classe col colore del livello, rilevanza rossa se alta', () => {
+  const colore = (righe, e) => righe.find(r => r.etichetta === e)?.colore;
+  const a = righeAnagrafica(P);
+  assert.equal(colore(a, 'Codice'), COLORE_GRUPPO['Sede amministrativa/istituzionale']);
+  assert.equal(colore(a, 'Costo stimato'), '#16a34a');
+  assert.equal(colore(a, 'Nome'), undefined);
+  const x = righeAccessibilita(P);
+  assert.equal(colore(x, 'Livello'), COLORE_LIVELLO['Parzialmente inaccessibile']);
+  assert.equal(colore(x, 'Classe priorità'), COLORE_LIVELLO['Parzialmente inaccessibile']);
+  assert.equal(colore(x, 'Rilevanza'), '#dc2626');
+  assert.equal(colore(righeAccessibilita({ ...P, rilevanza: 'Bassa' }), 'Rilevanza'), '#6b7280');
+  assert.equal(colore(x, 'Punteggio di inaccessibilità'), undefined);
+});
+
+test('badge: un gruppo sconosciuto non rompe, il codice resta senza colore', () => {
+  assert.equal(righeAnagrafica({ codice: 'X_1', gruppo: 'Altro' })[0].colore, undefined);
+});

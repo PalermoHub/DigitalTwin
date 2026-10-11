@@ -46,23 +46,28 @@ export const ruotaGradi = (gradi, delta) => (((gradi ?? 0) + delta) % 360 + 360)
 
 export const criticita = p => String(p.criticita ?? '').split(';').map(v => v.trim()).filter(Boolean);
 
+// Righe con valore a badge (come nell'app originale): `colore` è la tinta del badge, il disegno ne ricava fondo, bordo e testo.
+const VERDE = '#16a34a';
+const conColore = (elenco, colori) => elenco.map(r => (colori[r.etichetta] ? { ...r, colore: colori[r.etichetta] } : r));
+
 export function righeAnagrafica(p) {
-  return righe([
+  return conColore(righe([
     ['Codice', p.codice], ['Costo stimato', p.costo != null ? euro(p.costo) : null], ['Nome', p.nome], ['Indirizzo', p.indirizzo],
     ['Gruppo', p.gruppo], ['Categoria', p.categoria], ['Contesto urbano', p.contesto], ['Elemento', p.elemento],
-  ]);
+  ]), { Codice: COLORE_GRUPPO[p.gruppo], 'Costo stimato': VERDE });
 }
 
 export function righeAccessibilita(p) {
   const scarto = p.punteggio - p.media_circ;
   const media = p.punteggio != null && p.media_circ != null
     ? `${num(p.media_circ)} (${scarto >= 0 ? '+' : '-'}${num(Math.abs(scarto))})` : null;
-  return righe([
+  const livello = COLORE_LIVELLO[p.livello ?? 'Non valutabile'];
+  return conColore(righe([
     ['Livello', p.livello ?? 'Non valutabile'],
     ['Punteggio di inaccessibilità', p.punteggio != null ? `${num(p.punteggio)} / 100` : 'n/d'],
     ['Rilevanza', p.rilevanza], ['Classe priorità', p.classe != null ? `Classe ${p.classe}` : null],
     ['Media della circoscrizione', media],
-  ]);
+  ]), { Livello: livello, 'Classe priorità': livello, Rilevanza: p.rilevanza === 'Alta' ? '#dc2626' : '#6b7280' });
 }
 
 // La scheda di destra; `dinamico` costruisce barra del punteggio, criticità e foto (vedi scheda-peba-dom.js).
