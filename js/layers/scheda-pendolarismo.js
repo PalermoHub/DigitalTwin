@@ -61,7 +61,7 @@ export function voceScheda(nodi, dinamico, cliccato) {
   return {
     chiave: 'pendolarismo', peso: 70, strato: 'pendolarismo', titolo: 'Pendolarismo per lavoro', icona: 'treno',
     badge: '2021', gruppi, dinamico: () => dinamico(nodi),
-    link: [{ testo: 'Apri la mappa originale', icona: 'esterno', url: SITO }],
+    link: [{ testo: 'Mappa Pendolarismo', icona: 'esterno', url: SITO }],
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
 }
