@@ -2012,7 +2012,7 @@
   "lbl.Mappa Pendolarismo 2021, PalermoHub": "Mappa Pendolarismo 2021, PalermoHub",
   "lbl.Pendolarismo da e verso Palermo 2021": "Pendolarismo da e verso Palermo 2021",
   "scheda.suntoMercato": "Quotazioni mercato immobiliare",
-  "html.btn.strati3d": "Strati in 3D: separa i layer accesi e girali attorno",
+  "html.btn.strati3d": "Strati in 3D (in sviluppo): separa i layer accesi e girali attorno",
   "strati3d.titolo": "Strati in 3D",
   "strati3d.chiudi": "Torna alla mappa",
   "strati3d.elenco": "Strati della pila",
@@ -2030,5 +2030,7 @@
   "tab.strati3d": "Strati 3D",
   "strati3d.spegni": "Spegni {nome} nella pila",
   "strati3d.accendi": "Riaccendi {nome} nella pila",
-  "strati3d.terreno": "Terreno 3D"
+  "strati3d.terreno": "Terreno 3D",
+  "strati3d.beta": "In sviluppo",
+  "strati3d.beta.tip": "Funzione in fase di sviluppo: può cambiare e avere qualche imperfezione"
 }

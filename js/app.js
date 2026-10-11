@@ -187,7 +187,7 @@ map.once('style.load', async () => {
   document.getElementById('barra-gruppi').append(btnTabella);
   // strati in 3D: dalla barra strumenti e, su mobile, dal foglio Strati (il foglio si chiude prima di aprire la scena)
   const btnStrati3d = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-strati3d-m', className: 'btn-pannello-mobile' });
-  btnStrati3d.innerHTML = `${document.getElementById('btn-strati3d').querySelector('svg').outerHTML.replace(/width="16" height="16"/, 'width="20" height="20"')}<span class="et">${t('tab.strati3d')}</span>`;
+  btnStrati3d.innerHTML = `${document.getElementById('btn-strati3d').querySelector('svg').outerHTML.replace(/width="16" height="16"/, 'width="20" height="20"')}<span class="et">${t('tab.strati3d')} <span class="strati3d-beta strati3d-beta--mini">β</span></span>`;
   btnStrati3d.addEventListener('click', () => tab.imposta(null), { capture: true });
   document.getElementById('barra-gruppi').append(btnStrati3d);
   collegaStrati3d(map, MODULI, [document.getElementById('btn-strati3d'), btnStrati3d]);

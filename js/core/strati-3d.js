@@ -113,7 +113,9 @@ function apriScena(map, { piani, angoli }, alChiudere) {
   const titolo = el('h2', null, t('strati3d.titolo'));
   const chiudi = el('button', 'strati3d-chiudi', t('strati3d.chiudi'));
   chiudi.type = 'button';
-  testata.append(titolo, chiudi);
+  const beta = el('span', 'strati3d-beta', t('strati3d.beta'));
+  beta.title = t('strati3d.beta.tip');
+  testata.append(titolo, beta, chiudi);
   const elenco = el('nav', 'strati3d-elenco');
   elenco.setAttribute('aria-label', t('strati3d.elenco'));
   const comandi = el('div', 'strati3d-comandi');
