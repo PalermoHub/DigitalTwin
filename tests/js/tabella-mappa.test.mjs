@@ -67,3 +67,24 @@ test('leggiEsterni raggruppa gli strati dei layer aggiunti e legge il nome dai m
   assert.deepEqual(e[0], { id: 'miei-1a2b', nome: 'Ciclabili', strati: ['miei-1a2b-fill', 'miei-1a2b-line', 'miei-1a2b-pt'] });
   assert.equal(e[1].id, 'rndt-zz');
 });
+
+test('sorgente intera: legge il file una volta, elenca tutte le righe a prescindere dalla vista e toglie ciò che il filtro scarta', async () => {
+  const { caricaIntera } = await import('../../js/core/tabella/mappa.js');
+  const intera = { id: 'tutta', strati: ['t-hit'], visibili: ['t'], intera: 'x.geojson', chiave: p => p.id, filtro: p => p.tipo !== 'arco' };
+  const dati = { features: [punto(1, 1, 'a'), punto(2, 2, 'b'), { type: 'Feature', properties: { id: 'c', tipo: 'arco' }, geometry: null }] };
+  const m = mappaFinta({ strati: { 't-hit': 'visible', t: 'visible' } });
+  assert.deepEqual(leggiVista(m, intera), [], 'prima della lettura la tabella è vuota');
+  let letture = 0;
+  const leggi = async file => { letture++; assert.equal(file, 'x.geojson'); return dati; };
+  assert.equal(await caricaIntera(intera, leggi), true);
+  assert.equal(await caricaIntera(intera, leggi), false);
+  assert.equal(letture, 1);
+  assert.deepEqual(leggiVista(m, intera).map(r => r.proprieta.id), ['a', 'b']);
+});
+
+test('sorgente intera: se la lettura fallisce si riprova alla richiesta successiva', async () => {
+  const { caricaIntera } = await import('../../js/core/tabella/mappa.js');
+  const intera = { id: 'rotta', strati: ['r-hit'], visibili: ['r'], intera: 'y.geojson', chiave: p => p.id };
+  assert.equal(await caricaIntera(intera, async () => { throw new Error('rete'); }), false);
+  assert.equal(await caricaIntera(intera, async () => ({ features: [punto(1, 1, 'a')] })), true);
+});

@@ -1757,3 +1757,20 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .peba-nota[open] summary::before { transform: rotate(90deg); }
 .peba-nota summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .peba-nota p { margin: 0; padding: 0 10px 10px; line-height: 1.4; }
+
+/* pendolarismo da e verso Palermo: riquadri, numeri e classifiche della scheda, come nel pannello della mappa originale */
+.pend-riquadri, .pend-numeri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }
+.pend-riquadro, .pend-numero { padding: 8px 6px; border-radius: var(--r-sm); background: var(--accent-soft); text-align: center; }
+.pend-riquadro .pend-val { font-size: var(--fs-md); font-weight: 700; }
+.pend-numero { background: transparent; border: 1px solid var(--border-ui); }
+.pend-numero .pend-val { font-weight: 700; }
+.pend-et { font-size: var(--fs-xs); color: var(--text-muted); overflow-wrap: anywhere; }
+.pend-pos { color: #3d7fff; }
+.pend-neg { color: #ff4400; }
+.pend-classifica h4 { margin: 12px 0 6px; font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.pend-riga { margin-bottom: 6px; }
+.pend-riga-testa { display: flex; justify-content: space-between; gap: 8px; font-size: var(--fs-sm); }
+.pend-riga-val { color: var(--text-muted); white-space: nowrap; }
+.pend-barra { height: 6px; margin-top: 2px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; }
+.pend-barra i { display: block; height: 100%; border-radius: inherit; }
+.legenda-pendolarismo i.pend-linea { display: inline-block; width: 18px; height: 4px; margin-right: 6px; border-radius: 2px; flex: none; vertical-align: middle; }

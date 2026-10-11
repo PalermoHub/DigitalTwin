@@ -6,12 +6,14 @@ import { SORGENTI, LIMITE_RIGHE, MAX_DOM, sincronizzaEsterne } from './sorgenti.
 import { unisciColonne, preferenzeIniziali, applicaPreferenze, ordina, filtra, cella } from './modello.js';
 import { nuovoStato, commutaRiga, tutte, nessuna, inverti, statoTutte, righeDaEsportare, commutaColonna, spostaColonna, colonneDaEsportare } from './selezione.js';
 import { csv, geojson, nomeFile } from './esporta.js';
-import { attiva, leggiEsterni, leggiVista, righeIn, evidenziaRighe, cancellaEvidenza, vaiA } from './mappa.js';
+import { attiva, leggiEsterni, leggiVista, caricaIntera, haIntera, righeIn, evidenziaRighe, cancellaEvidenza, vaiA } from './mappa.js';
 import { collegaStrumenti } from './strumenti.js';
 import { svgTabella } from './icone.js';
 
 const CHIAVE_ALTEZZA = 'dt-tabella-altezza';
 const CHIAVE_COLONNE = id => `dt-tabella-colonne-${id}`;
+// il percorso passa da config.js (link pubblicati dal catalogo) solo quando serve: così il modulo si importa anche senza finestra
+const leggiFile = file => import('../config.js').then(({ urlDati }) => fetch(urlDati(file))).then(r => r.json());
 const RITARDO = 250; // ms: attende che la mappa si fermi prima di rileggere le feature
 const ALTEZZA_MIN = 160;
 
@@ -132,6 +134,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
     if (!stato.has(corrente)) corrente = SORGENTI[0].id;
     for (const s of stato.values()) {
       if (!attiva(map, s.sorgente)) { s.righe = []; s.troppe = false; continue; }
+      if (haIntera(s.sorgente)) caricaIntera(s.sorgente, leggiFile).then(nuovo => { if (nuovo) aggiorna(true); });
       let righe = leggiVista(map, s.sorgente);
       if (criterio.length) righe = righeIn(righe, criterio);
       s.troppe = righe.length > LIMITE_RIGHE;
@@ -353,7 +356,7 @@ export function collegaTabella(map, { pulsante: bottone }) {
     const righe = ordinate(s);
     if (!accesa(s)) { nota.textContent = messaggio; corpo.append(el('p', 'tabella-vuota', t('tabella.nessunLayer'))); return; }
     if (!s.righe.length) { nota.textContent = messaggio; corpo.append(el('p', 'tabella-vuota', t('tabella.vuota'))); return; }
-    const avvisi = [messaggio, criterio.length ? '' : t('tabella.soloVista'), s.sorgente.approssimata ? t('tabella.approssimata') : '',
+    const avvisi = [messaggio, criterio.length || haIntera(s.sorgente) ? '' : t('tabella.soloVista'), s.sorgente.approssimata ? t('tabella.approssimata') : '',
       s.troppe ? t('tabella.troppe', { max: LIMITE_RIGHE }) : '', righe.length > MAX_DOM ? t('tabella.mostrate', { n: MAX_DOM }) : ''];
     nota.textContent = avvisi.filter(Boolean).join(' ');
 

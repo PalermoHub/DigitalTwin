@@ -25,7 +25,29 @@ export function attiva(map, sorgente) {
   return sorgente.visibili.some(id => map.getLayer(id) && map.getLayoutProperty(id, 'visibility') !== 'none');
 }
 
+// Sorgenti con `intera` (file GeoJSON in dati/): la tabella le elenca per intero, non solo ciò che è in vista.
+// Il file si legge una volta; finché non è pronto la tabella è vuota e `caricaIntera` dice quando ridisegnare.
+const intere = new Map(); // id sorgente -> feature[] | Promise
+export const haIntera = sorgente => Boolean(sorgente.intera);
+
+export function caricaIntera(sorgente, leggi) {
+  const gia = intere.get(sorgente.id);
+  if (Array.isArray(gia)) return Promise.resolve(false);
+  if (gia) return gia.then(() => false);
+  const promessa = Promise.resolve().then(() => leggi(sorgente.intera)).then(
+    dati => { intere.set(sorgente.id, dati.features ?? []); return true; },
+    () => { intere.delete(sorgente.id); return false; }, // errore di rete: la prossima lettura riprova
+  );
+  intere.set(sorgente.id, promessa);
+  return promessa;
+}
+
 export function leggiVista(map, sorgente) {
+  if (sorgente.intera) {
+    const tutte = intere.get(sorgente.id);
+    const feature = Array.isArray(tutte) ? tutte : [];
+    return normalizza(sorgente.filtro ? feature.filter(f => sorgente.filtro(f.properties ?? {})) : feature, sorgente);
+  }
   let feature = [];
   try { feature = map.queryRenderedFeatures({ layers: sorgente.strati.filter(id => map.getLayer(id)) }); } catch { feature = []; }
   if (sorgente.filtro) feature = feature.filter(f => sorgente.filtro(f.properties ?? {}));
