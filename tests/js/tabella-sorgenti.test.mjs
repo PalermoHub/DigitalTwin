@@ -112,3 +112,11 @@ test('peba: strati hit e disegnati', () => {
   assert.deepEqual(s.strati, ['peba-hit', 'peba-hit-punti']);
   assert.deepEqual(s.visibili, ['peba-fill', 'peba-linea', 'peba-punti']);
 });
+
+test('pendolarismo: nodi (Palermo e comuni) come strato hit, chiave dal codice ISTAT', () => {
+  const s = sorgentePer('pendolarismo');
+  assert.deepEqual(s.strati, ['pendolarismo-hit']);
+  assert.deepEqual(s.visibili, ['pendolarismo-archi', 'pendolarismo-nodi', 'pendolarismo-palermo']);
+  assert.equal(s.chiave({ codice: '082049' }), '082049');
+  assert.equal(s.chiave({}), null);
+});

@@ -22,6 +22,7 @@ const esterna = t('tabella.fonte.esterna');
 const sicurezza = t('tabella.fonte.incidenti');
 const mef = t('tabella.fonte.mef');
 const peba = t('tabella.fonte.peba');
+const pendolarismo = t('tabella.fonte.pendolarismo');
 
 export const SORGENTI = [
   { id: 'colonnine', nome: t('tabella.layer.colonnine'), strati: ['colonnine-hit'], visibili: ['colonnine-punti'], chiave: p => p.id, fonte: progetto, approssimata: false, esporta: true, colore: '#2b8a3e' },
@@ -62,6 +63,8 @@ export const SORGENTI = [
   { id: 'mef-immobili', nome: t('tabella.layer.mef'), strati: ['mef-immobili-hit', 'mef-immobili-hit-punti'], visibili: ['mef-immobili-fill', 'mef-immobili-linea', 'mef-immobili-terreno', 'mef-immobili-terreno-linea', 'mef-immobili-punti'], chiave: p => p.id_poligono ?? p.id_edificio ?? p.id_bene ?? null, colonne: ['tipologia', 'indirizzo', 'catastale', 'superficie_mq', 'n_beni', 'forma', 'localizzazione', 'verifica', 'posizione', 'anno'], fonte: mef, approssimata: false, esporta: true, colore: '#b5651d' },
   // PEBA: edifici e aree verdi (poligoni) e vie, percorsi e piazze (punti)
   { id: 'peba', nome: t('tabella.layer.peba'), strati: ['peba-hit', 'peba-hit-punti'], visibili: ['peba-fill', 'peba-linea', 'peba-punti'], chiave: p => p.codice ?? null, colonne: ['codice', 'nome', 'indirizzo', 'gruppo', 'livello', 'punteggio', 'rilevanza', 'classe', 'costo', 'circoscrizione', 'quartiere', 'upl', 'n_foto'], fonte: peba, approssimata: false, esporta: true, colore: '#0072b2' },
+  // pendolarismo da/verso Palermo: Palermo (vive e lavora qui) più un punto per comune collegato, con entrata, uscita e saldo
+  { id: 'pendolarismo', nome: t('tabella.layer.pendolarismo'), strati: ['pendolarismo-hit'], visibili: ['pendolarismo-archi', 'pendolarismo-nodi', 'pendolarismo-palermo'], chiave: p => p.codice ?? null, colonne: ['nome', 'codice', 'entrata', 'uscita', 'saldo'], fonte: pendolarismo, approssimata: false, esporta: true, colore: '#ff4400' },
   { id: 'popolazione', nome: t('tabella.layer.popolazione'), strati: ['pop-hit'], visibili: ['pop-fill'], chiave: p => p.SEZ21_ID, colonne: ['SEZ21_ID', 'Circoscrizione', 'Quartiere', 'UPL', 'POP21', 'Pop_2022', 'FAM21', 'ABI21', 'EDI21', 'Area'], fonte: istat, approssimata: true, esporta: true, colore: '#1c7ed6' },
 ];
 
