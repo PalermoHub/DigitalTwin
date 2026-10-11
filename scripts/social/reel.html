@@ -108,7 +108,6 @@ body { font-family: 'Montserrat', sans-serif; color: #fff; position: relative; }
 <!-- 7 · lancio -->
 <div class="scena" id="s7">
   <img class="l" id="s7logo" src="../../img/logo-palermo-digital-twin-scuro.svg" style="left:50%;top:420px;width:760px;margin-left:-380px">
-  <div class="l etich centro" id="s7et" style="top:720px;justify-content:center"><span class="badge" style="background:#f5a623;width:28px;height:28px;border-radius:50%"></span><span>LANCIO UFFICIALE</span></div>
   <div class="l centro" id="s7box" style="top:830px"><span class="box" style="font-size:150px">È online</span></div>
   <div class="l centro" id="s7url" style="top:1080px;font-size:44px;font-weight:600;color:#fff;white-space:nowrap">palermodigitaltwin<span style="color:#f5a623">.</span>opendatasicilia.it</div>
   <div class="l centro" id="s7cta" style="top:1160px;font-size:40px;font-weight:500;color:#8a93a3">Dal computer o dallo smartphone</div>
@@ -311,7 +310,6 @@ window.render = function (t, tr = t) {
   // 7 · lancio 22.4–25
   if (scena('s7', t, 22.4, 99)) {
     set('s7logo', { ...daSu(t, 22.4, .5, -60), s: lerp(.85, 1, out3(p(t, 22.4, 23))) });
-    set('s7et', daSu(t, 22.6, .4, 40));
     set('s7box', { ...slam(t, 22.75, .38), r: lerp(-4, -1.5, out3(p(t, 22.75, 23.2))) });
     $('s7box').style.transform += ` scale(${1 + .025 * Math.sin((t - 23.2) * 5) * (t > 23.2)})`;
     set('s7url', daSu(t, 23.05, .4, 40));
