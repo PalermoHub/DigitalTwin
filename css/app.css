@@ -1749,3 +1749,11 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .peba-visore-strumenti { position: absolute; bottom: 16px; right: 16px; display: flex; gap: 8px; }
 .peba-visore-tondo { position: static; width: 40px; height: 40px; font-size: 18px; }
 @media (max-width: 640px) { .peba-visore-nav { width: 40px; height: 40px; font-size: 24px; } .peba-visore-img { max-width: 96vw; max-height: 60vh; } }
+
+.peba-nota { margin-top: 12px; border-radius: var(--r-sm); background: var(--avviso-scheda); border-left: 3px solid var(--accent-strong); color: var(--avviso-scheda-ink); font-size: var(--fs-xs); }
+.peba-nota summary { cursor: pointer; padding: 8px 10px; font-weight: 700; list-style: none; }
+.peba-nota summary::-webkit-details-marker { display: none; }
+.peba-nota summary::before { content: "▸"; display: inline-block; width: 1em; transition: transform .15s; }
+.peba-nota[open] summary::before { transform: rotate(90deg); }
+.peba-nota summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.peba-nota p { margin: 0; padding: 0 10px 10px; line-height: 1.4; }

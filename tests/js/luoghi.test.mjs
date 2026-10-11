@@ -180,3 +180,28 @@ test('PEBA: si trova per codice, nome, indirizzo e quartiere', () => {
   }, geometry: { type: 'Point', coordinates: [13.3694, 38.1170] } }] }]);
   for (const q of ['direttore generale', 'U_16', 'u 16', 'piazza marina', 'tribunali']) assert.equal(cercaLuoghi(voci, q)[0]?.strato, 'peba', q);
 });
+
+test('PEBA: «U_16» trova prima la scheda con quel codice, anche con concorrenti che contengono «u» e «16»', () => {
+  const peba = FONTI.find(f => f.file === 'peba/peba.geojson');
+  const voci = preparaLuoghi([
+    { strato: 'fontanelle', nota: () => 'Fontanella', campi: p => ['Fontanella', p.indirizzo],
+      features: [{ properties: { indirizzo: 'Via Umberto 16' }, geometry: { type: 'Point', coordinates: [13.3, 38.1] } }] },
+    { ...peba, features: [
+      { properties: { codice: 'U_15', nome: 'UFFICIO', gruppo: 'Sede amministrativa/istituzionale' }, geometry: { type: 'Point', coordinates: [13.31, 38.11] } },
+      { properties: { codice: 'U_16', nome: 'DIRETTORE GENERALE', gruppo: 'Sede amministrativa/istituzionale' }, geometry: { type: 'Point', coordinates: [13.32, 38.12] } },
+    ] },
+  ]);
+  assert.equal(cercaLuoghi(voci, 'U_16')[0].etichetta, 'DIRETTORE GENERALE');
+  assert.equal(cercaLuoghi(voci, 'u 16')[0].etichetta, 'DIRETTORE GENERALE');
+});
+
+test('PEBA: le aree verdi con lo stesso nome si distinguono per l\'indirizzo', () => {
+  const peba = FONTI.find(f => f.file === 'peba/peba.geojson');
+  const voci = preparaLuoghi([{ ...peba, features: [
+    { properties: { codice: 'AV_01', nome: 'Area verde', gruppo: 'Area verde', indirizzo: 'Via Roma' }, geometry: { type: 'Point', coordinates: [13.3, 38.1] } },
+    { properties: { codice: 'AV_02', nome: 'Area verde', gruppo: 'Area verde', indirizzo: 'Via Dante' }, geometry: { type: 'Point', coordinates: [13.4, 38.2] } },
+  ] }]);
+  const r = cercaLuoghi(voci, 'area verde');
+  assert.equal(new Set(r.map(x => x.etichetta)).size, 2);
+  assert.ok(r.every(x => /Via (Roma|Dante)/.test(x.etichetta)));
+});

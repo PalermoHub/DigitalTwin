@@ -27,8 +27,9 @@ export const FONTI = [
   { file: 'mef-immobili/immobili_comunali.geojson', facoltativa: true, strato: 'immobili', zoom: 18, nota: p => [tr('luoghi.immobileComunale'), p.categoria].filter(Boolean).join(' · '), campi: p => [p.nome] },
   { file: 'mef-immobili/mef_immobili.geojson', facoltativa: true, strato: 'mef-immobili', zoom: 18, nota: p => [tr('luoghi.immobileMef'), p.tipologia].filter(Boolean).join(' · '), campi: p => [p.indirizzo, p.catastale] },
   // PEBA: schede del Piano di Eliminazione delle Barriere Architettoniche (poligoni per edifici e aree verdi, punti per vie e piazze)
-  { file: 'peba/peba.geojson', facoltativa: true, strato: 'peba', zoom: 18, nota: p => [tr('luoghi.peba'), p.gruppo].filter(Boolean).join(' · '),
-    campi: p => [p.nome, p.indirizzo, p.codice, p.codice?.replace('_', ' '), p.quartiere, p.categoria] },
+  // il codice (U_16) si cerca come un numero di linea: la corrispondenza esatta viene prima del testo; le aree verdi hanno quasi tutte lo stesso nome, e si distinguono per l'indirizzo
+  { file: 'peba/peba.geojson', facoltativa: true, strato: 'peba', zoom: 18, numero: p => p.codice, nota: p => [tr('luoghi.peba'), p.gruppo].filter(Boolean).join(' · '),
+    campi: p => [p.nome === p.gruppo && p.indirizzo ? `${p.nome} – ${p.indirizzo}` : p.nome, p.indirizzo, p.quartiere, p.categoria] },
 ];
 
 // centro (punto, o centro del riquadro per poligoni e linee) di una geometria GeoJSON
@@ -74,7 +75,7 @@ export function cercaLuoghi(voci, testo, max = 6) {
   }
   const token = q.split(' ').filter(Boolean);
   if (q.length < 3) return linee;
-  return voci
+  const perTesto = voci
     .map(v => {
       const nome = token.every(t => v.norm.includes(t));
       const altrove = !nome && token.every(t => (v.norm + ' ' + v.extra).includes(t));
@@ -84,4 +85,7 @@ export function cercaLuoghi(voci, testo, max = 6) {
     .sort((a, b) => b.prefisso - a.prefisso || b.nome - a.nome || a.v.norm.length - b.v.norm.length || a.v.ordine - b.v.ordine)
     .slice(0, max)
     .map(({ v, prefisso }) => risultato(v, prefisso));
+  // la corrispondenza esatta con un numero o codice (linea, scheda PEBA) precede il resto
+  const esatte = new Set(linee.map(l => l.etichetta));
+  return [...linee, ...perTesto.filter(r => !esatte.has(r.etichetta))].slice(0, max);
 }
