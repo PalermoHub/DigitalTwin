@@ -541,6 +541,14 @@ dialog li { margin: 4px 0; }
 .scheda-cella { text-align: center; padding: 8px 6px; border-radius: var(--r-sm); background: var(--accent-soft); overflow-wrap: anywhere; }
 .scheda-cella-val { display: block; font-weight: 700; font-size: var(--fs-md); }
 .scheda-cella-chiave { font-size: var(--fs-xs); color: var(--text-muted); }
+.peba-barra { height: 8px; margin: 6px 0 10px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; }
+.peba-barra-riempi { height: 100%; border-radius: inherit; }
+.peba-criticita h4, .peba-foto-sez h4 { margin: 10px 0 6px; font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.peba-criticita ul { margin: 0; padding-left: 18px; }
+.peba-foto-griglia { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.peba-foto { display: block; aspect-ratio: 1; overflow: hidden; border-radius: var(--r-sm); background: var(--accent-soft); }
+.peba-foto:first-child { grid-column: span 3; aspect-ratio: 16 / 10; }
+.peba-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .scheda-link { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 8px; padding: 7px 10px; border-radius: var(--r-sm); background: var(--link); color: var(--bianco); text-decoration: none; font-weight: 600; }
 .scheda-link-et { padding: 1px 8px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--bianco) 20%, transparent); font-size: var(--fs-xs); }
 .scheda-link[hidden] { display: none; }

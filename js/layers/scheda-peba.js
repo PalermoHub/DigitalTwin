@@ -1,0 +1,91 @@
+// Modello puro del PEBA (Piano di Eliminazione delle Barriere Architettoniche): palette, righe della scheda di destra, tooltip.
+// Il disegno interattivo (barra del punteggio, criticità, foto) sta in scheda-peba-dom.js e arriva da `voce.dinamico`.
+import { righe } from '../core/scheda-util.js';
+import { localeIntl, t, tl } from '../core/i18n.js';
+
+export const SITO = 'https://palermohub.github.io/peba/';
+export const INFO = 'https://palermohub.opendatasicilia.it/peba.html';
+export const FONTE = 'Comune di Palermo, PEBA (Delibera di Giunta n. 272 del 18/07/2026); elaborazione OpenDataSicilia e PalermoHub';
+
+export const LIVELLI = [
+  ['Accessibile', '#0072b2'], ['Parzialmente accessibile', '#56b4e9'], ['Parzialmente inaccessibile', '#e69f00'],
+  ['Inaccessibile', '#d55e00'], ['Non valutabile', '#999999'],
+];
+export const GRUPPI = [
+  ['Percorso storico', '#6d3ba0'], ['Via cittadina', '#3e548e'], ['Scuola', '#ef9ffc'], ['Asilo', '#c49bfc'],
+  ['Sede amministrativa/istituzionale', '#a4d060'], ['Area verde', '#55af5e'], ['Sito UNESCO (edificio)', '#916a39'],
+  ['Percorso UNESCO', '#e6370c'], ['Piazza', '#db8337'], ['Museo', '#e336b7'],
+];
+export const COLORE_LIVELLO = Object.fromEntries(LIVELLI);
+export const COLORE_GRUPPO = Object.fromEntries(GRUPPI);
+const GRIGIO = '#999999';
+
+export const urlPdf = file => `${SITO}dati/pdf/${encodeURIComponent(file)}`;
+const NN = i => String(i).padStart(2, '0');
+export const urlFoto = (codice, i) => `${SITO}img/foto/${encodeURIComponent(codice)}/${NN(i)}.jpg`;
+export const percorsoMiniatura = (codice, i) => `peba/foto/${encodeURIComponent(codice)}/${NN(i)}_thumb.jpg`;
+
+// colore del testo del badge: la tinta del livello scurita, perché resti leggibile su fondo chiaro
+export function testoBadge(colore) {
+  const n = parseInt(colore.slice(1), 16);
+  const scuro = c => Math.round(c * 0.55).toString(16).padStart(2, '0');
+  return `#${scuro((n >> 16) & 255)}${scuro((n >> 8) & 255)}${scuro(n & 255)}`;
+}
+
+const num = (v, d = 0) => Number(v).toLocaleString(localeIntl(), { minimumFractionDigits: d, maximumFractionDigits: d });
+export const euro = n => Number(n).toLocaleString(localeIntl(), { style: 'currency', currency: 'EUR' });
+
+export function dimensioneFile(byte) {
+  if (!Number.isFinite(byte)) return '';
+  return byte >= 1e6 ? `${num(byte / 1048576, 1)} MB` : `${num(byte / 1024)} kB`;
+}
+
+export const criticita = p => String(p.criticita ?? '').split(';').map(v => v.trim()).filter(Boolean);
+
+export function righeAnagrafica(p) {
+  return righe([
+    ['Codice', p.codice], ['Costo stimato', p.costo != null ? euro(p.costo) : null], ['Nome', p.nome], ['Indirizzo', p.indirizzo],
+    ['Gruppo', p.gruppo], ['Categoria', p.categoria], ['Contesto urbano', p.contesto], ['Elemento', p.elemento],
+  ]);
+}
+
+export function righeAccessibilita(p) {
+  const scarto = p.punteggio - p.media_circ;
+  const media = p.punteggio != null && p.media_circ != null
+    ? `${num(p.media_circ)} (${scarto >= 0 ? '+' : '-'}${num(Math.abs(scarto))})` : null;
+  return righe([
+    ['Livello', p.livello ?? 'Non valutabile'],
+    ['Punteggio di inaccessibilità', p.punteggio != null ? `${num(p.punteggio)} / 100` : 'n/d'],
+    ['Rilevanza', p.rilevanza], ['Classe priorità', p.classe != null ? `Classe ${p.classe}` : null],
+    ['Media della circoscrizione', media],
+  ]);
+}
+
+// La scheda di destra; `dinamico` costruisce barra del punteggio, criticità e foto (vedi scheda-peba-dom.js).
+export function voceScheda(p, dinamico) {
+  const link = [];
+  if (p.pdf) {
+    const dim = dimensioneFile(p.pdf_byte);
+    link.push({ testo: 'Apri scheda PDF originale', icona: 'esterno', url: urlPdf(p.pdf), etichetta: dim || undefined,
+      suggerimento: dim ? t('peba.pdfPesante', { dimensione: dim }) : undefined });
+  }
+  link.push({ testo: 'Maggiori informazioni sul PEBA', icona: 'esterno', url: INFO });
+  return {
+    chiave: `peba-${p.codice}`, peso: 57, strato: 'peba', titolo: 'PEBA – Barriere architettoniche', icona: 'casa',
+    badge: p.livello ?? 'Non valutabile',
+    contesto: { circoscrizione: p.circoscrizione, quartiere: p.quartiere, upl: p.upl },
+    gruppi: [{ titolo: 'Anagrafica', righe: righeAnagrafica(p) }, { titolo: 'Accessibilità', righe: righeAccessibilita(p) }],
+    dinamico: () => dinamico(p), link,
+    nota: 'Schede, testi e foto sono stati estratti in automatico dai PDF originali del rilievo con script Python e assistenza di Claude (Anthropic); le coordinate sono state ricavate per geocodifica degli indirizzi. Possono essere presenti errori, campi mancanti o posizionamenti imprecisi sulla mappa.',
+    fonte: t('layer.fonte', { fonte: tl(FONTE) }),
+  };
+}
+
+// Come il tooltip dell'app originale: pallino, «Codice – Nome» e badge; colore e badge seguono la modalità (livello o gruppo).
+export function modelloTooltipPeba(p, modo) {
+  const nome = p.nome || p.gruppo || '';
+  const titolo = p.codice ? (nome ? `${p.codice} – ${nome}` : p.codice) : nome;
+  const valore = modo === 'gruppo' ? p.gruppo : (p.livello ?? 'Non valutabile');
+  const colore = (modo === 'gruppo' ? COLORE_GRUPPO : COLORE_LIVELLO)[valore] ?? GRIGIO;
+  return { titolo, pallino: colore, badge: valore ? { testo: tl(valore), colore: testoBadge(colore) } : undefined };
+}
