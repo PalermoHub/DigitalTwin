@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { voceScheda, righeAnagrafica, righeAccessibilita, modelloTooltipPeba, criticita, urlPdf, urlFoto, percorsoMiniatura, dimensioneFile, euro, passoFoto, ruotaGradi, LIVELLI, GRUPPI, COLORE_LIVELLO, COLORE_GRUPPO } from '../../js/layers/scheda-peba.js';
+import { voceScheda, righeAnagrafica, righeAccessibilita, modelloTooltipPeba, criticita, urlPdf, urlFoto, percorsoMiniatura, dimensioneFile, euro, passoFoto, ruotaGradi, fuocoDopoTab, NOTA_QUALITA, LIVELLI, GRUPPI, COLORE_LIVELLO, COLORE_GRUPPO } from '../../js/layers/scheda-peba.js';
 import { unisci } from '../../js/core/scheda-modello.js';
 
 const P = {
@@ -128,4 +128,23 @@ test('badge come nell\'originale: codice col colore del gruppo, costo verde, liv
 
 test('badge: un gruppo sconosciuto non rompe, il codice resta senza colore', () => {
   assert.equal(righeAnagrafica({ codice: 'X_1', gruppo: 'Altro' })[0].colore, undefined);
+});
+
+test('costo 0 non è un costo: la riga non compare', () => {
+  assert.equal(valore(righeAnagrafica({ ...P, costo: 0 }), 'Costo stimato'), undefined);
+  assert.ok(valore(righeAnagrafica({ ...P, costo: 10 }), 'Costo stimato'));
+});
+
+test('fuocoDopoTab: il fuoco resta dentro il visore, in avanti e all\'indietro', () => {
+  assert.equal(fuocoDopoTab(0, 5, false), 1);
+  assert.equal(fuocoDopoTab(4, 5, false), 0);
+  assert.equal(fuocoDopoTab(0, 5, true), 4);
+  assert.equal(fuocoDopoTab(-1, 5, false), 0);
+  assert.equal(fuocoDopoTab(-1, 5, true), 4);
+  assert.equal(fuocoDopoTab(0, 0, false), -1);
+});
+
+test('nota sulla qualità dei dati: testo esportato per il blocco apri/chiudi, non più un paragrafo fisso della scheda', () => {
+  assert.match(NOTA_QUALITA, /estratti in automatico dai PDF/);
+  assert.equal(voceScheda(P, () => null).nota, undefined);
 });

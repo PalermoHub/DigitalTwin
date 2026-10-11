@@ -14,10 +14,23 @@ export function nascosti(nodi, eTitolo, chiuso) {
 
 const CHIUSO = n => n.getAttribute('aria-expanded') === 'false';
 
+// Titolo che governa il nodo `n`: l'ultimo titolo che lo precede.
+const titoloDi = (figli, n) => figli.slice(0, figli.indexOf(n)).reverse().find(x => x.matches('h3.gruppo-sezione'));
+
 // Applica lo stato dei titoli del gruppo: i nodi di un sottogruppo chiuso prendono la classe `sotto-chiuso` (display: none).
-export function aggiornaSottogruppi(gruppo) {
+// `ignora`: ricerca in corso, niente resta nascosto (lo strato trovato deve vedersi). `riapri`: dopo un riordino, uno strato finito
+// sotto un titolo chiuso lo riapre, così non sparisce.
+export function aggiornaSottogruppi(gruppo, { ignora = false, riapri = false } = {}) {
   const figli = [...gruppo.children];
-  const fuori = new Set(nascosti(figli, n => n.matches('h3.gruppo-sezione'), CHIUSO));
+  const calcola = () => new Set(ignora ? [] : nascosti(figli, n => n.matches('h3.gruppo-sezione'), CHIUSO));
+  let fuori = calcola();
+  if (riapri) {
+    for (const n of fuori) {
+      if (n.classList.contains('sotto-chiuso')) continue; // era già nascosto: resta com'è
+      titoloDi(figli, n)?.setAttribute('aria-expanded', 'true');
+    }
+    fuori = calcola();
+  }
   for (const n of figli) n.classList.toggle('sotto-chiuso', fuori.has(n));
 }
 

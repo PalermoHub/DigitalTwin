@@ -114,3 +114,14 @@ test('ordine di disegno: salva, rilegge e azzera; storage assente non rompe', ()
   assert.equal(leggiOrdineDisegno(null), null);
   assert.doesNotThrow(() => salvaOrdineDisegno(null, ['a']));
 });
+
+import { vicinoVisibile } from '../../js/core/riordino.js';
+
+test('vicinoVisibile: salta i blocchi nascosti (sottogruppo chiuso) nella direzione data', () => {
+  const blocchi = [{ id: 'a', v: true }, { id: 'b', v: false }, { id: 'c', v: false }, { id: 'd', v: true }, { id: 'e', v: true }];
+  const visibile = b => b.v;
+  assert.equal(vicinoVisibile(blocchi, 3, -1, visibile).id, 'a');
+  assert.equal(vicinoVisibile(blocchi, 0, 1, visibile).id, 'd');
+  assert.equal(vicinoVisibile(blocchi, 0, -1, visibile), null);
+  assert.equal(vicinoVisibile(blocchi, 4, 1, visibile), null);
+});

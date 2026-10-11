@@ -1,6 +1,6 @@
 // Riordino degli strati: trascinamento, frecce e pulsanti dentro i gruppi, e scheda «Ordine layer in mappa».
 import { svgIcona } from './icone.js';
-import { ordina, mosseMappa, mosseSequenza, applicaMosse, leggiOrdine, salvaOrdine, azzeraOrdine, ordineStrati, mosseVicino, mosseOrdine, leggiOrdineDisegno, salvaOrdineDisegno, azzeraOrdineDisegno } from './riordino.js';
+import { ordina, mosseMappa, mosseSequenza, applicaMosse, leggiOrdine, salvaOrdine, azzeraOrdine, ordineStrati, mosseVicino, vicinoVisibile, mosseOrdine, leggiOrdineDisegno, salvaOrdineDisegno, azzeraOrdineDisegno } from './riordino.js';
 import { EVENTO_DISEGNO, EVENTO_GRUPPO, ETICHETTE, intestazione } from './pannello-comune.js';
 import { t } from './i18n.js';
 
@@ -141,8 +141,11 @@ export function abilitaRiordino(map, gruppo, layersDi, storage, { daElenco = fal
         for (let passi = 0; passi < 50; passi++) { // un movimento rapido può scavalcare più strati
           const tutti = blocchi(gruppo);
           const i = tutti.findIndex(x => x.riga === b.riga);
-          const mosso = i > 0 && ev.clientY < meta(tutti[i - 1]) ? muovi(b.riga, -1)
-            : i < tutti.length - 1 && ev.clientY > meta(tutti[i + 1]) ? muovi(b.riga, 1) : false;
+          // le righe nascoste (sottogruppo chiuso) non hanno posizione: ci si confronta col primo vicino visibile
+          const visibile = x => x.riga.offsetParent !== null;
+          const su = vicinoVisibile(tutti, i, -1, visibile), giu = vicinoVisibile(tutti, i, 1, visibile);
+          const mosso = su && ev.clientY < meta(su) ? muovi(b.riga, -1)
+            : giu && ev.clientY > meta(giu) ? muovi(b.riga, 1) : false;
           if (!mosso) break; // fermi, o al confine di una sezione fissa: niente da rifare a ogni movimento
         }
       };

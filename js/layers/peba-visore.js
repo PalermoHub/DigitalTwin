@@ -2,9 +2,9 @@
 // miniature, rotazione e salvataggio. La foto grande viene dal sito del PEBA, le miniature sono locali.
 import { urlDati } from '../core/config.js';
 import { t } from '../core/i18n.js';
-import { passoFoto, percorsoMiniatura, ruotaGradi, urlFoto } from './scheda-peba.js';
+import { fuocoDopoTab, passoFoto, percorsoMiniatura, ruotaGradi, urlFoto } from './scheda-peba.js';
 
-let radice = null;
+let chiudiAttivo = null; // chiusura del visore aperto: ne vive uno solo
 
 function bottone(classe, simbolo, titolo) {
   const b = document.createElement('button');
@@ -69,7 +69,8 @@ export function apriVisore(p, inizio = 0) {
     m.loading = 'lazy';
     m.alt = alt(k);
     m.src = urlDati(percorsoMiniatura(p.codice, k + 1));
-    m.addEventListener('error', () => { if (m.src !== urlFoto(p.codice, k + 1)) m.src = urlFoto(p.codice, k + 1); });
+    // miniatura mancante: ripiega sulla foto grande; se manca anche quella il riquadro si nasconde (gli indici restano allineati)
+    m.addEventListener('error', () => { if (m.src !== urlFoto(p.codice, k + 1)) m.src = urlFoto(p.codice, k + 1); else b.hidden = true; });
     b.append(m);
     b.addEventListener('click', () => { i = k; mostra(); });
     v.strisce.append(b);
@@ -89,19 +90,25 @@ export function apriVisore(p, inizio = 0) {
   function chiudi() {
     document.removeEventListener('keydown', tasti, true);
     v.r.remove();
-    radice = null;
+    chiudiAttivo = null;
     precedente?.focus?.();
   }
   // in fase di cattura e fermando l'evento: Esc e frecce non devono chiudere la scheda o muovere la mappa sotto il visore
   function tasti(e) {
+    if (e.key === 'Tab') { // il visore è modale: il fuoco non esce verso la scheda sotto
+      const dentro = [...v.r.querySelectorAll('button:not([hidden]), a[href]')];
+      const j = fuocoDopoTab(dentro.indexOf(document.activeElement), dentro.length, e.shiftKey);
+      if (j >= 0) { e.preventDefault(); dentro[j].focus(); }
+      return;
+    }
     const azione = { Escape: chiudi, ArrowLeft: () => vai(-1), ArrowRight: () => vai(1), '[': () => ruota(-90), ']': () => ruota(90) }[e.key];
     if (!azione) return;
     e.preventDefault();
     e.stopImmediatePropagation();
     azione();
   }
-  radice?.remove();
-  radice = v.r;
+  chiudiAttivo?.(); // un solo visore alla volta: l'altro toglie anche il suo ascoltatore dei tasti
+  chiudiAttivo = chiudi;
   v.chiudi.addEventListener('click', chiudi);
   v.prec.addEventListener('click', () => vai(-1));
   v.succ.addEventListener('click', () => vai(1));

@@ -112,3 +112,9 @@ export function salvaOrdineDisegno(storage, ids) {
 export function azzeraOrdineDisegno(storage) {
   try { storage.removeItem(CHIAVE_DISEGNO); } catch { /* niente da azzerare */ }
 }
+
+// Il blocco visibile più vicino a `i` nella direzione `verso` (-1 su, +1 giù), saltando quelli nascosti (sottogruppo chiuso); null se non c'è.
+export function vicinoVisibile(blocchi, i, verso, visibile) {
+  for (let j = i + verso; j >= 0 && j < blocchi.length; j += verso) if (visibile(blocchi[j])) return blocchi[j];
+  return null;
+}

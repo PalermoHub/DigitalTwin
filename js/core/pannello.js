@@ -299,7 +299,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
   for (const el of contenitori) abilitaRiordino(map, el, layersDi, storage);
   // i titoli dei sottogruppi (es. «Immobili comunali», «PEBA» in Territorio) si aprono e si chiudono; dopo un riordino si riapplicano
   for (const el of contenitori) rendiPieghevoli(el);
-  document.addEventListener(EVENTO_GRUPPO, () => contenitori.forEach(aggiornaSottogruppi));
+  document.addEventListener(EVENTO_GRUPPO, () => contenitori.forEach(el => aggiornaSottogruppi(el, { ignora: !!cercando, riapri: true })));
   // ordine di disegno globale: un elenco unico degli strati accesi, sotto «Cerca strato»
   const disegno = layer ? creaOrdineDisegno(map, moduli, storage, inizialeDisegno) : null;
   disegno?.ripristinaSalvato();
@@ -322,6 +322,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
           if (o?.classList.contains('strato-opacita')) o.classList.toggle('filtrata', nascosta);
         }
         el.hidden = !!cercando && !trovati;
+        aggiornaSottogruppi(el, { ignora: !!cercando }); // durante la ricerca i sottogruppi chiusi non nascondono i risultati
         el.open = cercando ? trovati > 0 : leggiAperte(storage).includes(el.id.replace('gruppo-', ''));
       }
     });

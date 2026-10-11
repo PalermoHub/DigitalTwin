@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { nascosti } from '../../js/core/sottogruppi.js';
+import { nascosti, aggiornaSottogruppi } from '../../js/core/sottogruppi.js';
 
 // nodi finti: { t: 'titolo' | 'strato', chiuso?: bool }
 const titolo = (chiuso = false) => ({ t: 'titolo', chiuso });
@@ -32,4 +32,56 @@ test('nascosti: l\'ultimo sottogruppo chiuso nasconde tutto ciò che lo segue', 
 test('nascosti: i titoli non si nascondono', () => {
   const t2 = titolo(false);
   assert.equal(nascosti([titolo(true), strato('a'), t2], eTitolo, chiuso).includes(t2), false);
+});
+
+// gruppo finto: figli con matches/classList/attributi, quanto serve ad aggiornaSottogruppi
+const nodo = (tipo, aperto = true) => {
+  const classi = new Set();
+  const attr = { 'aria-expanded': String(aperto) };
+  return { tipo, classi, attr,
+    matches: sel => (sel === 'h3.gruppo-sezione' ? tipo === 'titolo' : false),
+    getAttribute: k => attr[k] ?? null, setAttribute: (k, v) => { attr[k] = v; },
+    classList: { toggle: (c, on) => (on ? classi.add(c) : classi.delete(c)), contains: c => classi.has(c) } };
+};
+const gruppoDi = figli => ({ children: figli });
+const chiusoCls = n => n.classi.has('sotto-chiuso');
+
+test('aggiornaSottogruppi: nasconde gli strati sotto un titolo chiuso e li riporta quando si riapre', () => {
+  const t = nodo('titolo', false), a = nodo('strato'), t2 = nodo('titolo'), b = nodo('strato');
+  const g = gruppoDi([t, a, t2, b]);
+  aggiornaSottogruppi(g);
+  assert.deepEqual([chiusoCls(a), chiusoCls(b), chiusoCls(t)], [true, false, false]);
+  t.setAttribute('aria-expanded', 'true');
+  aggiornaSottogruppi(g);
+  assert.equal(chiusoCls(a), false);
+});
+
+test('aggiornaSottogruppi con ignora (ricerca in corso): nessuno strato resta nascosto', () => {
+  const t = nodo('titolo', false), a = nodo('strato');
+  aggiornaSottogruppi(gruppoDi([t, a]));
+  assert.equal(chiusoCls(a), true);
+  aggiornaSottogruppi(gruppoDi([t, a]), { ignora: true });
+  assert.equal(chiusoCls(a), false);
+  aggiornaSottogruppi(gruppoDi([t, a]));
+  assert.equal(chiusoCls(a), true);
+});
+
+test('aggiornaSottogruppi con riapri (dopo un riordino): lo strato spostato sotto un titolo chiuso lo riapre, gli altri restano nascosti', () => {
+  const t1 = nodo('titolo', false), vecchio = nodo('strato');
+  const g = gruppoDi([t1, vecchio]);
+  aggiornaSottogruppi(g); // vecchio è nascosto
+  const t2 = nodo('titolo'), mosso = nodo('strato');
+  const g2 = gruppoDi([t1, vecchio, mosso, t2]); // «mosso» è finito sotto il titolo chiuso
+  aggiornaSottogruppi(g2, { riapri: true });
+  assert.equal(t1.getAttribute('aria-expanded'), 'true');
+  assert.equal(chiusoCls(mosso), false);
+});
+
+test('aggiornaSottogruppi con riapri: se nulla di nuovo finisce sotto un titolo chiuso, resta chiuso', () => {
+  const t1 = nodo('titolo', false), a = nodo('strato');
+  const g = gruppoDi([t1, a]);
+  aggiornaSottogruppi(g);
+  aggiornaSottogruppi(g, { riapri: true });
+  assert.equal(t1.getAttribute('aria-expanded'), 'false');
+  assert.equal(chiusoCls(a), true);
 });

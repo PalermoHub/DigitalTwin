@@ -20,6 +20,9 @@ export const COLORE_LIVELLO = Object.fromEntries(LIVELLI);
 export const COLORE_GRUPPO = Object.fromEntries(GRUPPI);
 const GRIGIO = '#999999';
 
+// Nota che la scheda mostra in un blocco apri/chiudi in fondo (vedi scheda-peba-dom.js)
+export const NOTA_QUALITA = 'Schede, testi e foto sono stati estratti in automatico dai PDF originali del rilievo con script Python e assistenza di Claude (Anthropic); le coordinate sono state ricavate per geocodifica degli indirizzi. Possono essere presenti errori, campi mancanti o posizionamenti imprecisi sulla mappa.';
+
 export const urlPdf = file => `${SITO}dati/pdf/${encodeURIComponent(file)}`;
 const NN = i => String(i).padStart(2, '0');
 export const urlFoto = (codice, i) => `${SITO}img/foto/${encodeURIComponent(codice)}/${NN(i)}.jpg`;
@@ -42,6 +45,12 @@ export function dimensioneFile(byte) {
 
 // Visore delle foto: indice della foto dopo `delta` passi (circolare) e rotazione in gradi (0, 90, 180, 270)
 export const passoFoto = (i, delta, n) => (n > 0 ? (((i + delta) % n) + n) % n : 0);
+// Fuoco dopo Tab dentro il visore (trappola del fuoco): indice dell'elemento successivo o precedente, circolare; -1 se non ce ne sono
+export function fuocoDopoTab(i, n, indietro) {
+  if (n <= 0) return -1;
+  if (i < 0) return indietro ? n - 1 : 0;
+  return (i + (indietro ? -1 : 1) + n) % n;
+}
 export const ruotaGradi = (gradi, delta) => (((gradi ?? 0) + delta) % 360 + 360) % 360;
 
 export const criticita = p => String(p.criticita ?? '').split(';').map(v => v.trim()).filter(Boolean);
@@ -52,7 +61,7 @@ const conColore = (elenco, colori) => elenco.map(r => (colori[r.etichetta] ? { .
 
 export function righeAnagrafica(p) {
   return conColore(righe([
-    ['Codice', p.codice], ['Costo stimato', p.costo != null ? euro(p.costo) : null], ['Nome', p.nome], ['Indirizzo', p.indirizzo],
+    ['Codice', p.codice], ['Costo stimato', p.costo > 0 ? euro(p.costo) : null], ['Nome', p.nome], ['Indirizzo', p.indirizzo],
     ['Gruppo', p.gruppo], ['Categoria', p.categoria], ['Contesto urbano', p.contesto], ['Elemento', p.elemento],
   ]), { Codice: COLORE_GRUPPO[p.gruppo], 'Costo stimato': VERDE });
 }
@@ -85,7 +94,6 @@ export function voceScheda(p, dinamico) {
     contesto: { circoscrizione: p.circoscrizione, quartiere: p.quartiere, upl: p.upl },
     gruppi: [{ titolo: 'Anagrafica', righe: righeAnagrafica(p) }, { titolo: 'Accessibilità', righe: righeAccessibilita(p) }],
     dinamico: () => dinamico(p), link,
-    nota: 'Schede, testi e foto sono stati estratti in automatico dai PDF originali del rilievo con script Python e assistenza di Claude (Anthropic); le coordinate sono state ricavate per geocodifica degli indirizzi. Possono essere presenti errori, campi mancanti o posizionamenti imprecisi sulla mappa.',
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
 }

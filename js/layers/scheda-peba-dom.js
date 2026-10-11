@@ -3,7 +3,7 @@ import { urlDati } from '../core/config.js';
 import { collegamento } from '../core/url-sicuro.js';
 import { t, tl } from '../core/i18n.js';
 import { apriVisore } from './peba-visore.js';
-import { COLORE_LIVELLO, criticita, percorsoMiniatura, urlFoto, testoBadge } from './scheda-peba.js';
+import { COLORE_LIVELLO, NOTA_QUALITA, criticita, percorsoMiniatura, urlFoto, testoBadge } from './scheda-peba.js';
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -48,6 +48,13 @@ function foto(p, i) {
   return a;
 }
 
+// «Nota sulla qualità dei dati»: chiusa all'apertura, come nell'app originale
+function notaQualita() {
+  const nota = el('details', 'peba-nota');
+  nota.append(el('summary', null, tl('Nota sulla qualità dei dati')), el('p', null, tl(NOTA_QUALITA)));
+  return nota;
+}
+
 export function contenutoDinamico(p) {
   const radice = el('div', 'peba-dinamico');
   if (p.punteggio != null) radice.append(barra(p));
@@ -61,5 +68,6 @@ export function contenutoDinamico(p) {
     sezione.append(griglia);
     radice.append(sezione);
   }
+  radice.append(notaQualita());
   return radice;
 }
