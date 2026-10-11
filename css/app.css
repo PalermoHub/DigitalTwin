@@ -618,6 +618,13 @@ dialog li { margin: 4px 0; }
 .legenda-incendi i.incendi-campione { width: 14px; height: 10px; border: 1.5px solid; border-radius: 2px; }
 .legenda-mef .mef-legenda-riga { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
 .legenda-mef i.mef-campione { width: 14px; height: 10px; border-radius: 2px; border: 1px solid #5c2e0b; flex: none; }
+.legenda-peba i.mef-campione { display: inline-block; width: 14px; height: 10px; margin-right: 6px; border-radius: 2px; border: 1px solid rgb(0 0 0 / .35); flex: none; vertical-align: middle; }
+.legenda .peba-famiglia { flex-direction: column; align-items: stretch; gap: 0; margin-top: 6px; }
+.legenda-peba { max-height: 60vh; overflow-y: auto; }
+.peba-legenda-titolo { display: block; margin-bottom: 2px; font-size: var(--fs-xs); font-style: normal; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+.peba-modo { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: var(--fs-xs); color: var(--text-muted); }
+.peba-modo button { padding: 2px 10px; border: 1px solid var(--border-ui); border-radius: 999px; background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+.peba-modo button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent-strong); font-weight: 600; }
 .incendi-popup-voce + .incendi-popup-voce { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--border); }
 .legenda-pai { max-height: 50vh; overflow-y: auto; }
 .legenda-pai .pai-legenda-tema { display: flex; flex-direction: column; align-items: flex-start; }
@@ -944,6 +951,11 @@ details.scheda-sez[open] > summary > .scheda-riassunto { display: none; }
 .col-legenda b { color: var(--text); }
 @media print { .col-grafici { break-inside: avoid; } }
 .gruppo-sezione { margin: 10px 0 2px; }
+.gruppo-sezione[role="button"] { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+.gruppo-sezione[role="button"]::before { content: "▾"; flex: none; width: 1em; font-size: .9em; color: var(--text-muted); transition: transform .15s; }
+.gruppo-sezione[role="button"][aria-expanded="false"]::before { transform: rotate(-90deg); }
+.gruppo-sezione[role="button"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--r-sm); }
+.sotto-chiuso { display: none !important; }
 
 /* Catalogo RNDT: pannello che si sovrappone alla scheda del luogo */
 #rndt-pannello { position: fixed; z-index: var(--z-foglio); left: 0; right: 0; bottom: 0; top: 8vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm) var(--r-sm) 0 0; box-shadow: var(--ombra); overflow: hidden; }
@@ -1715,3 +1727,24 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .guida-pagina > h2.guida-gruppo { margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--border-ui); }
 .legenda i.monumenti-pallino--assente { background: transparent; border: 1.5px dashed var(--text-muted); }
 .monumenti-assente { margin-top: 4px; color: var(--text-muted); }
+
+.peba-visore { position: fixed; inset: 0; z-index: calc(var(--z-viewer) + 100); background: rgb(10 14 30 / .9); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.peba-visore[hidden] { display: none; }
+.peba-visore-palco { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+.peba-visore-img { max-width: 88vw; max-height: 74vh; object-fit: contain; border-radius: 4px; transition: transform .2s ease; }
+.peba-visore-miniature { flex: 0 0 auto; display: flex; gap: 8px; overflow-x: auto; max-width: 92vw; padding: 10px 6px 4px; margin-bottom: 6px; }
+.peba-visore-mini { flex: 0 0 auto; width: 64px; height: 64px; padding: 0; overflow: hidden; border-radius: 6px; cursor: pointer; border: 2px solid transparent; opacity: .55; background: none; transition: opacity .15s, border-color .15s; }
+.peba-visore-mini img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.peba-visore-mini:hover { opacity: .85; }
+.peba-visore-mini.attiva { opacity: 1; border-color: #fff; }
+.peba-visore-chiudi, .peba-visore-nav, .peba-visore-tondo { position: absolute; background: rgb(255 255 255 / .12); color: #fff; border: 0; border-radius: 50%; cursor: pointer; line-height: 1; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.peba-visore-chiudi:hover, .peba-visore-nav:hover, .peba-visore-tondo:hover { background: rgb(255 255 255 / .25); }
+.peba-visore-chiudi:focus-visible, .peba-visore-nav:focus-visible, .peba-visore-tondo:focus-visible, .peba-visore-mini:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.peba-visore-chiudi { top: 16px; right: 16px; width: 40px; height: 40px; font-size: 18px; }
+.peba-visore-nav { top: 50%; transform: translateY(-50%); width: 52px; height: 52px; font-size: 30px; }
+.peba-visore-prec { left: 16px; }
+.peba-visore-succ { right: 16px; }
+.peba-visore-contatore { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 13px; background: rgb(0 0 0 / .4); padding: 4px 12px; border-radius: 12px; }
+.peba-visore-strumenti { position: absolute; bottom: 16px; right: 16px; display: flex; gap: 8px; }
+.peba-visore-tondo { position: static; width: 40px; height: 40px; font-size: 18px; }
+@media (max-width: 640px) { .peba-visore-nav { width: 40px; height: 40px; font-size: 24px; } .peba-visore-img { max-width: 96vw; max-height: 60vh; } }

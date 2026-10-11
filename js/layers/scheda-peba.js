@@ -5,7 +5,7 @@ import { localeIntl, t, tl } from '../core/i18n.js';
 
 export const SITO = 'https://palermohub.github.io/peba/';
 export const INFO = 'https://palermohub.opendatasicilia.it/peba.html';
-export const FONTE = 'Comune di Palermo, PEBA (Delibera di Giunta n. 272 del 18/07/2026); elaborazione OpenDataSicilia e PalermoHub';
+export const FONTE = 'Comune di Palermo, PEBA (Delibera di Giunta n. 272 del 18/07/2026); elaborazione OpenDataSicilia e PalermoHub; CC BY 4.0';
 
 export const LIVELLI = [
   ['Accessibile', '#0072b2'], ['Parzialmente accessibile', '#56b4e9'], ['Parzialmente inaccessibile', '#e69f00'],
@@ -39,6 +39,10 @@ export function dimensioneFile(byte) {
   if (!Number.isFinite(byte)) return '';
   return byte >= 1e6 ? `${num(byte / 1048576, 1)} MB` : `${num(byte / 1024)} kB`;
 }
+
+// Visore delle foto: indice della foto dopo `delta` passi (circolare) e rotazione in gradi (0, 90, 180, 270)
+export const passoFoto = (i, delta, n) => (n > 0 ? (((i + delta) % n) + n) % n : 0);
+export const ruotaGradi = (gradi, delta) => (((gradi ?? 0) + delta) % 360 + 360) % 360;
 
 export const criticita = p => String(p.criticita ?? '').split(';').map(v => v.trim()).filter(Boolean);
 

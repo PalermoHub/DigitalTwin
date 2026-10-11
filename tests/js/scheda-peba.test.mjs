@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { voceScheda, righeAnagrafica, righeAccessibilita, modelloTooltipPeba, criticita, urlPdf, urlFoto, percorsoMiniatura, dimensioneFile, euro, LIVELLI, GRUPPI, COLORE_LIVELLO, COLORE_GRUPPO } from '../../js/layers/scheda-peba.js';
+import { voceScheda, righeAnagrafica, righeAccessibilita, modelloTooltipPeba, criticita, urlPdf, urlFoto, percorsoMiniatura, dimensioneFile, euro, passoFoto, ruotaGradi, LIVELLI, GRUPPI, COLORE_LIVELLO, COLORE_GRUPPO } from '../../js/layers/scheda-peba.js';
 import { unisci } from '../../js/core/scheda-modello.js';
 
 const P = {
@@ -95,4 +95,19 @@ test('tooltip: «Codice – Nome» con pallino e badge, per livello o per gruppo
 
 test('euro: formato italiano', () => {
   assert.match(euro(161780), /161\.780,00\s?€/);
+});
+
+test('passoFoto: scorre in modo circolare, anche all\'indietro dalla prima', () => {
+  assert.equal(passoFoto(0, 1, 7), 1);
+  assert.equal(passoFoto(6, 1, 7), 0);
+  assert.equal(passoFoto(0, -1, 7), 6);
+  assert.equal(passoFoto(0, 1, 1), 0);
+  assert.equal(passoFoto(0, 1, 0), 0);
+});
+
+test('ruotaGradi: multipli di 90 tra 0 e 270', () => {
+  assert.equal(ruotaGradi(0, 90), 90);
+  assert.equal(ruotaGradi(270, 90), 0);
+  assert.equal(ruotaGradi(0, -90), 270);
+  assert.equal(ruotaGradi(undefined, 90), 90);
 });

@@ -26,6 +26,9 @@ export const FONTI = [
   // immobili comunali (un punto per indirizzo) e immobili dichiarati al MEF (poligoni: si va al centro)
   { file: 'mef-immobili/immobili_comunali.geojson', facoltativa: true, strato: 'immobili', zoom: 18, nota: p => [tr('luoghi.immobileComunale'), p.categoria].filter(Boolean).join(' · '), campi: p => [p.nome] },
   { file: 'mef-immobili/mef_immobili.geojson', facoltativa: true, strato: 'mef-immobili', zoom: 18, nota: p => [tr('luoghi.immobileMef'), p.tipologia].filter(Boolean).join(' · '), campi: p => [p.indirizzo, p.catastale] },
+  // PEBA: schede del Piano di Eliminazione delle Barriere Architettoniche (poligoni per edifici e aree verdi, punti per vie e piazze)
+  { file: 'peba/peba.geojson', facoltativa: true, strato: 'peba', zoom: 18, nota: p => [tr('luoghi.peba'), p.gruppo].filter(Boolean).join(' · '),
+    campi: p => [p.nome, p.indirizzo, p.codice, p.codice?.replace('_', ' '), p.quartiere, p.categoria] },
 ];
 
 // centro (punto, o centro del riquadro per poligoni e linee) di una geometria GeoJSON
