@@ -2021,11 +2021,13 @@
   "strati3d.alto": "From above",
   "strati3d.in3d": "In 3D",
   "strati3d.prepara": "Preparing the 3D layers… {n} of {tot}",
-  "strati3d.aiuto": "Drag to orbit, scroll or pinch to zoom. Tap a layer in the list to highlight it, a point of the stack to open its place card.",
+  "strati3d.aiuto": "Drag to orbit, scroll or pinch to zoom. Tap a point of the stack to open its place card; use the eye to hide a layer.",
   "strati3d.base": "Base map",
   "strati3d.altri": "Other layers",
   "strati3d.nessuno": "Turn on at least one layer to see it in 3D",
   "strati3d.troppi": "Too many active layers: the 3D view shows the top {n}",
   "strati3d.errore": "The 3D layer view did not open: try again",
-  "tab.strati3d": "3D layers"
+  "tab.strati3d": "3D layers",
+  "strati3d.spegni": "Hide {nome} in the stack",
+  "strati3d.accendi": "Show {nome} in the stack again"
 }

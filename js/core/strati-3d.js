@@ -4,7 +4,8 @@ import { eBase } from '../layers/base.js';
 import { gruppiStrati, limitaPiani, puntoDaPiano, quote, MAX_PIANI } from './strati-3d-modello.js';
 
 // «Strati in 3D»: i layer accesi, fotografati uno per uno nell'inquadratura corrente, si separano in una pila
-// che si gira col mouse o col dito. Un clic su un punto di uno strato torna alla mappa e apre la scheda di quel punto.
+// che si gira col mouse o col dito. Un clic su un punto di uno strato apre la scheda di quel punto sopra la scena;
+// dall'elenco ogni strato si spegne e si riaccende (solo nella pila: la mappa resta com'è).
 // Le immagini vengono dalla mappa stessa (stili, filtri e colori sono quelli dell'app); la scena è CSS 3D.
 
 const PROSPETTIVA = 2600;
@@ -122,14 +123,23 @@ function apriScena(map, { piani, angoli }, alChiudere) {
   comandi.append(etEsplodi, gira, alto);
   const aiuto = el('p', 'strati3d-aiuto', t('strati3d.aiuto'));
   radice.append(palco, testata, elenco, comandi, aiuto);
-  document.body.append(radice);
+  // dentro #corpo, accanto alla scheda: #corpo ha `contain: layout` e fa da contesto, solo così la scheda le sta sopra
+  const corpo = map.getContainer().closest('#corpo') || document.body;
+  corpo.append(radice);
+  document.body.classList.add('strati3d-attiva'); // la scheda del luogo e il suo rail salgono sopra la scena
 
   const cw = piani[0].canvas.width, ch = piani[0].canvas.height, lato = Math.max(cw, ch);
   // la pila nasce sopra la mappa, alla stessa scala: aprendosi sembra che sia la mappa a sollevarsi
-  const riquadro = map.getContainer().getBoundingClientRect();
-  Object.assign(mondo.style, { left: `${riquadro.left + riquadro.width / 2}px`, top: `${riquadro.top + riquadro.height / 2}px` });
-  palco.style.perspectiveOrigin = `${riquadro.left + riquadro.width / 2}px ${riquadro.top + riquadro.height / 2}px`;
-  const z = quote(piani.length, lato);
+  const riquadro = map.getContainer().getBoundingClientRect(), origine = radice.getBoundingClientRect();
+  const centro = [riquadro.left - origine.left + riquadro.width / 2, riquadro.top - origine.top + riquadro.height / 2];
+  Object.assign(mondo.style, { left: `${centro[0]}px`, top: `${centro[1]}px` });
+  palco.style.perspectiveOrigin = `${centro[0]}px ${centro[1]}px`;
+  const distanza = quote(2, lato)[1];
+  const spento = piani.map(() => false);
+  // quota di ogni piano: contano solo quelli accesi, così spegnendone uno la pila si ricompatta
+  const quota = i => distanza * spento.slice(0, i).filter(x => !x).length;
+  const zz = piani.map((_, i) => quota(i));
+  const OCCHIO = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
   const elPiani = piani.map((p, i) => {
     const d = el('div', 'strati3d-piano');
     Object.assign(d.style, { width: `${cw}px`, height: `${ch}px`, left: `${-cw / 2}px`, top: `${-ch / 2}px` });
@@ -137,24 +147,56 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     d.append(p.canvas);
     if (p.base) d.dataset.base = '';
     mondo.append(d);
-    const b = el('button');
+    const nome = titoloPiano(p);
+    const riga = el('div', 'strati3d-riga');
+    const occhio = el('button', 'strati3d-occhio');
+    occhio.type = 'button';
+    occhio.innerHTML = OCCHIO;
+    occhio.setAttribute('aria-pressed', 'true');
+    occhio.title = occhio.ariaLabel = t('strati3d.spegni', { nome });
+    occhio.addEventListener('click', () => {
+      spento[i] = !spento[i];
+      occhio.setAttribute('aria-pressed', String(!spento[i]));
+      occhio.title = occhio.ariaLabel = t(spento[i] ? 'strati3d.accendi' : 'strati3d.spegni', { nome });
+      riga.classList.toggle('spenta', spento[i]);
+      if (spento[i] && meta.att === i) meta.att = -1;
+      gesto();
+    });
+    const b = el('button', 'strati3d-nome');
     b.type = 'button';
     b.innerHTML = '<i></i><b></b>';
     b.querySelector('i').textContent = i + 1;
-    b.querySelector('b').textContent = titoloPiano(p);
-    b.addEventListener('click', () => { meta.att = meta.att === i ? -1 : i; meta.zt = meta.att < 0 ? null : z[i]; gesto(); });
-    elenco.prepend(b); // in cima l'ultimo strato, come nella pila
+    b.querySelector('b').textContent = nome;
+    b.addEventListener('click', () => { if (!spento[i]) { meta.att = meta.att === i ? -1 : i; gesto(); } });
+    riga.append(occhio, b);
+    elenco.prepend(riga); // in cima l'ultimo strato, come nella pila
     return { d, b };
   });
+  // spillo sul punto cliccato: attraversa la pila, con un pallino su ogni strato
+  const spillo = el('div', 'strati3d-spillo');
+  spillo.innerHTML = '<i></i><i></i>';
+  spillo.hidden = true;
+  mondo.append(spillo);
+  const punti = elPiani.map(({ d }) => { const pt = el('span', 'strati3d-punto'); pt.hidden = true; d.append(pt); return pt; });
+  let puntoPiano = null;
 
   // camera: `meta` è dove va, `cam` dove si trova; ogni gesto arriva morbido
   const piatto = { a: 0, b: 0, k: riquadro.width / cw, e: 0 };
-  const meta = { a: 25, b: 56, k: 1, e: 1, zt: null, att: -1 };
-  const cam = { ...piatto, zt: 0 };
+  const meta = { a: 25, b: 56, k: 1, e: 1, att: -1 };
+  const cam = { ...piatto, zt: 0, dx: 0, dy: 0 };
+  // con la scheda aperta la pila scivola nello spazio libero: a sinistra del pannello, o sopra il foglio su telefono
+  const scheda = document.getElementById('scheda');
+  const larghezzaLaterale = () => parseFloat(getComputedStyle(document.body).getPropertyValue('--scheda-l')) || 0;
+  const laterale0 = larghezzaLaterale();
+  const spazioScheda = () => {
+    if (!scheda || scheda.hidden || scheda.classList.contains('collassato')) return [0, 0];
+    if (telefono) return [0, -scheda.getBoundingClientRect().height / 2];
+    return [-(larghezzaLaterale() - laterale0) / 2, 0];
+  };
   let girando = !ridotto, ultimoGesto = 0, chiudendo = false, raf = 0;
   const gesto = () => { ultimoGesto = performance.now(); aiuto.classList.add('via'); };
   const adatta = () => {   // zoom 1 = la pila intera entra nello schermo
-    const { innerWidth: W, innerHeight: H } = window;
+    const { clientWidth: W, clientHeight: H } = radice;
     return Math.min(W / (lato * 1.25), H / (lato * (telefono ? 1.25 : 1.05)));
   };
 
@@ -181,13 +223,18 @@ function apriScena(map, { piani, angoli }, alChiudere) {
   window.addEventListener('pointerup', lascia);
   window.addEventListener('pointercancel', lascia);
   palco.addEventListener('wheel', ev => { ev.preventDefault(); meta.k = Math.min(4, Math.max(0.4, meta.k * Math.exp(-ev.deltaY * 0.0015))); gesto(); }, { passive: false });
-  // un tocco (non un trascinamento) su uno strato: si torna alla mappa con la scheda di quel punto
+  // un tocco (non un trascinamento) su uno strato apre la scheda di quel punto, restando nel 3D
   palco.addEventListener('click', ev => {
     if (!partenza || Math.hypot(ev.clientX - partenza.x, ev.clientY - partenza.y) > 6 || performance.now() - partenza.t > 500) return;
     const img = ev.target.closest?.('.strati3d-img');
     if (!img) return;
-    const [x, y] = puntoDaPiano(angoli, ev.offsetX / cw, ev.offsetY / ch);
-    chiudiScena(new maplibregl.MercatorCoordinate(x, y).toLngLat());
+    puntoPiano = [ev.offsetX, ev.offsetY];
+    for (const pt of punti) Object.assign(pt.style, { left: `${puntoPiano[0]}px`, top: `${puntoPiano[1]}px` });
+    Object.assign(spillo.style, { left: `${puntoPiano[0] - cw / 2}px`, top: `${puntoPiano[1] - ch / 2}px` });
+    const [x, y] = puntoDaPiano(angoli, puntoPiano[0] / cw, puntoPiano[1] / ch);
+    const lngLat = new maplibregl.MercatorCoordinate(x, y).toLngLat();
+    map.fire('click', { point: map.project(lngLat), lngLat }); // la scheda dell'app, sopra la scena (vedi css)
+    gesto();
   });
   cursore.addEventListener('input', () => { meta.e = +cursore.value; gesto(); });
   gira.setAttribute('aria-pressed', String(girando));
@@ -217,20 +264,31 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     tPrima = ora;
     if (girando && !chiudendo && ora - ultimoGesto > 2500) meta.a += dt * 8;
     const m = ridotto ? 1 : 1 - Math.exp(-dt * (chiudendo ? 5 : 4));
-    const scopo = chiudendo ? { ...piatto, a: Math.round(cam.a / 360) * 360, zt: 0 } : { ...meta, k: meta.k * adatta(), zt: meta.zt ?? z.at(-1) * meta.e / 2 };
-    for (const k of ['a', 'b', 'k', 'e', 'zt']) cam[k] += (scopo[k] - cam[k]) * m;
-    const tr = `scale3d(${cam.k},${cam.k},${cam.k}) rotateX(${cam.b}deg) rotateZ(${cam.a}deg) translateZ(${-cam.zt}px)`;
+    const cima = Math.max(0, ...piani.map((_, i) => (spento[i] ? 0 : quota(i))));
+    const scopo = chiudendo ? { ...piatto, a: Math.round(cam.a / 360) * 360, zt: 0 }
+      : { ...meta, k: meta.k * adatta(), zt: (meta.att >= 0 ? quota(meta.att) : cima / 2) * meta.e };
+    [scopo.dx, scopo.dy] = chiudendo ? [0, 0] : spazioScheda();
+    for (const k of ['a', 'b', 'k', 'e', 'zt', 'dx', 'dy']) cam[k] += (scopo[k] - cam[k]) * m;
+    const tr = `translate(${cam.dx}px,${cam.dy}px) scale3d(${cam.k},${cam.k},${cam.k}) rotateX(${cam.b}deg) rotateZ(${cam.a}deg) translateZ(${-cam.zt}px)`;
     mondo.style.transform = tr;
     const vetro = Math.min(1, cam.e * 1.5);
     elPiani.forEach(({ d, b }, i) => {
       const att = !chiudendo && i === meta.att;
-      d.style.transform = `translateZ(${z[i] * cam.e + i * 0.4 + (att ? lato * 0.02 : 0)}px)`;
-      d.style.opacity = meta.att < 0 || chiudendo || att ? 1 : i < meta.att ? 0.25 : 0.1;
+      zz[i] += (quota(i) - zz[i]) * m;
+      d.style.transform = `translateZ(${zz[i] * cam.e + i * 0.4 + (att ? lato * 0.02 : 0)}px)`;
+      const fuoco = meta.att < 0 || chiudendo || att ? 1 : i < meta.att ? 0.25 : 0.1;
+      d.style.opacity = spento[i] && !chiudendo ? 0 : fuoco;
+      d.style.pointerEvents = spento[i] ? 'none' : '';
+      punti[i].hidden = !puntoPiano || spento[i];
       d.style.setProperty('--vetro', vetro);
       d.classList.toggle('att', att);
       b.classList.toggle('att', att);
       b.setAttribute('aria-pressed', String(att));
     });
+    if (puntoPiano) {
+      spillo.hidden = chiudendo;
+      spillo.style.height = `${cima * cam.e + lato * 0.08}px`;
+    }
     if (chiudendo && Math.abs(cam.e) < 0.02 && Math.abs(cam.b) < 0.5) { finisci(); return; }
     raf = requestAnimationFrame(passo);
   }
@@ -238,11 +296,9 @@ function apriScena(map, { piani, angoli }, alChiudere) {
   requestAnimationFrame(() => radice.classList.add('aperta'));
   chiudi.focus();
 
-  let puntoScheda = null;
-  function chiudiScena(lngLat = null) {
+  function chiudiScena() {
     if (chiudendo) return;
     chiudendo = true;
-    puntoScheda = lngLat;
     radice.classList.add('chiude');
     if (ridotto) finisci();
     else setTimeout(finisci, 1400); // un dispositivo lento non resta a metà della chiusura
@@ -257,8 +313,9 @@ function apriScena(map, { piani, angoli }, alChiudere) {
     window.removeEventListener('pointercancel', lascia);
     document.removeEventListener('keydown', tasti);
     radice.classList.add('sfuma');
+    document.body.classList.remove('strati3d-attiva');
     setTimeout(() => radice.remove(), ridotto ? 0 : 350);
-    alChiudere(puntoScheda);
+    alChiudere();
   }
 }
 
@@ -286,7 +343,7 @@ export function collegaStrati3d(map, moduli, bottoni) {
     const testo = el('p', null, t('strati3d.prepara', { n: 0, tot: '…' }));
     velo.append(testo);
     velo.setAttribute('role', 'status');
-    document.body.append(velo);
+    (map.getContainer().closest('#corpo') || document.body).append(velo);
     try {
       const max = matchMedia(TELEFONO).matches ? MAX_PIANI.telefono : MAX_PIANI.desktop;
       const { piani: gruppi, fuori } = limitaPiani(gruppiStrati(map.getStyle().layers, strati, acceso, eBase), max);
@@ -294,10 +351,9 @@ export function collegaStrati3d(map, moduli, bottoni) {
       const scena = await cattura(map, gruppi, (n, tot) => { testo.textContent = t('strati3d.prepara', { n, tot }); });
       if (!scena.piani.length) { segnala(t('strati3d.nessuno')); return; }
       premuto(true);
-      apriScena(map, scena, lngLat => {
+      apriScena(map, scena, () => {
         premuto(false);
         bottone.focus();
-        if (lngLat) map.fire('click', { point: map.project(lngLat), lngLat });
       });
     } catch (e) {
       console.warn('strati 3D:', e); // i18n-ok: messaggio solo per la console

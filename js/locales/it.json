@@ -2021,11 +2021,13 @@
   "strati3d.alto": "Dall'alto",
   "strati3d.in3d": "In 3D",
   "strati3d.prepara": "Preparo gli strati in 3D… {n} di {tot}",
-  "strati3d.aiuto": "Trascina per girare, rotella o due dita per avvicinarti. Tocca uno strato nell'elenco per metterlo in evidenza, un punto della pila per aprirne la scheda.",
+  "strati3d.aiuto": "Trascina per girare, rotella o due dita per avvicinarti. Tocca un punto della pila per aprirne la scheda; con l'occhio spegni uno strato.",
   "strati3d.base": "Mappa di base",
   "strati3d.altri": "Altri layer",
   "strati3d.nessuno": "Accendi almeno un layer per vederlo in 3D",
   "strati3d.troppi": "Troppi layer accesi: in 3D si vedono i {n} più in alto",
   "strati3d.errore": "La vista 3D degli strati non si è aperta: riprova",
-  "tab.strati3d": "Strati 3D"
+  "tab.strati3d": "Strati 3D",
+  "strati3d.spegni": "Spegni {nome} nella pila",
+  "strati3d.accendi": "Riaccendi {nome} nella pila"
 }
