@@ -1794,7 +1794,7 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .strati3d.sfuma { opacity: 0; transition: opacity .3s ease; }
 .strati3d-palco { position: absolute; inset: 0; perspective: 2600px; overflow: hidden; cursor: grab; touch-action: none; }
 .strati3d-palco.su-oggetto:not(.trascina) { cursor: pointer; }
-.strati3d-tooltip { position: absolute; left: 0; top: 0; z-index: 2; max-width: 320px; pointer-events: none; color: var(--text); text-align: left; } /* sul palco scuro il testo è bianco: il tooltip riprende quello dell'app */
+.strati3d-tooltip { position: absolute; left: 0; top: 0; z-index: 2; max-width: 380px; pointer-events: none; color: var(--text); text-align: left; } /* sul palco scuro il testo è bianco: il tooltip riprende quello dell'app */
 .strati3d-tooltip[hidden] { display: none; }
 .strati3d-tip { display: flex; flex-direction: column; gap: 4px; min-width: 200px; }
 .strati3d-tip-sez { padding: 4px 6px 5px; border-radius: 6px; border-left: 3px solid transparent; }
@@ -1803,6 +1803,11 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .strati3d-tip-testa { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; font-size: var(--fs-3xs); text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }
 .strati3d-tip-testa i { font-style: normal; font-weight: 700; min-width: 16px; height: 16px; display: grid; place-items: center; border-radius: 4px; border: 1.5px solid currentColor; }
 .strati3d-tip-sez.qui .strati3d-tip-testa { color: var(--accent-strong); }
+/* attributi di un oggetto nel tooltip della pila: campo e valore */
+.strati3d-tip-attr { display: grid; grid-template-columns: auto 1fr; gap: 1px 8px; margin: 2px 0 4px; font-size: var(--fs-3xs); line-height: 1.35; }
+.strati3d-tip-attr dt { color: var(--text-muted); text-transform: lowercase; }
+.strati3d-tip-attr dt::first-letter { text-transform: uppercase; }
+.strati3d-tip-attr dd { margin: 0; color: var(--text); overflow-wrap: anywhere; }
 .strati3d-mondo { position: absolute; width: 0; height: 0; transform-style: preserve-3d; }
 .strati3d-piano { position: absolute; transform-style: preserve-3d; border: 2px solid rgba(255, 255, 255, calc(var(--vetro, 0) * .4));
   background: rgba(20, 26, 38, calc(var(--vetro, 0) * .32)); transition: opacity .25s; }

@@ -3,7 +3,7 @@ import { segnala } from './pannello.js';
 import { eBase } from '../layers/base.js';
 import { gruppiStrati, limitaPiani, quote, unisciTerreno, etichettaFeature, layerDaInterrogare, MAX_PIANI,
   varchi, varcoPer, camminaVarco, opacitaDentro, passoOcchio, trasformaMondo, pianiAccesi, ruotaAttorno, passoAvanti, zoomDentro, ZOOM_DENTRO,
-  assiDaTasti, sommaAssi, avvicina, versoNord, tastoDiMoto, ASSI } from './strati-3d-modello.js';
+  assiDaTasti, sommaAssi, avvicina, versoNord, tastoDiMoto, ASSI, layerFratelli, attributiFeature, zoomSonda, puntoDaPiano } from './strati-3d-modello.js';
 import { creaNavigatore, creaGuida } from './strati-3d-navigatore.js';
 import { gradoni } from './strati-3d-terreno.js';
 import { modelloTooltipDi, disegnaVoceTooltip } from './tooltip.js';
@@ -115,7 +115,7 @@ function el(tag, classe, testo) {
 }
 
 // La scena: si apre «piatta» (identica alla mappa), esplode, si gira; chiudendo si richiude e sfuma sulla mappa vera.
-function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
+function apriScena(map, { piani, angoli, camera, terreno, vista }, alChiudere) {
   const ridotto = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const telefono = matchMedia(TELEFONO).matches;
   const radice = el('div', 'strati3d');
@@ -184,18 +184,35 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   const corpo = map.getContainer().closest('#corpo') || document.body;
   corpo.append(radice);
   document.body.classList.add('strati3d-attiva'); // la scheda del luogo e il suo rail salgono sopra la scena
-  // Sotto la scena la mappa resta ferma sull'inquadratura fotografata (dall'alto, senza rilievo): un punto della pila è
-  // così un pixel della mappa, per la scheda (che cerca gli oggetti disegnati) e per il tooltip. Alla chiusura torna com'era.
+  // Sotto la scena la mappa fa da «sonda» per i dati (scheda e tooltip cercano gli oggetti disegnati): dall'alto, senza
+  // rilievo e abbastanza vicina da avere tutte le sorgenti (il PRG vettoriale parte da zoom 12, il catasto da 15), anche se
+  // la pila è stata fotografata più da lontano. Si sposta da sola sul punto da interrogare; alla chiusura torna com'era.
   if (terreno) map.setTerrain(null);
-  map.jumpTo(vista);
+  let vistaSonda = { center: vista.center, zoom: zoomSonda(vista.zoom), bearing: 0, pitch: 0 };
+  map.jumpTo(vistaSonda);
   let salto = false;
   const tieniFerma = () => {
     if (salto || chiudendo) return;
     salto = true;
-    map.jumpTo(vista);
+    map.jumpTo(vistaSonda);
     salto = false;
   };
   map.on('moveend', tieniFerma);
+  const stile = map.getStyle().layers;
+  // un punto di un piano (u, v in 0..1) → coordinate della mappa, dagli angoli della fotografia
+  const lngLatDi = (u, v) => new maplibregl.MercatorCoordinate(...puntoDaPiano(angoli, u, v)).toLngLat();
+  // porta la sonda su lngLat se serve (fuori dalla parte centrale della vista) e dice dove sta lì sullo schermo
+  async function sonda(lngLat) {
+    const c = map.getContainer(), w = c.clientWidth, h = c.clientHeight;
+    const pt = map.project(lngLat);
+    if (pt.x > w * 0.15 && pt.x < w * 0.85 && pt.y > h * 0.15 && pt.y < h * 0.85) return pt;
+    vistaSonda = { ...vistaSonda, center: lngLat };
+    salto = true;
+    map.jumpTo(vistaSonda);
+    salto = false;
+    await inattiva(map, 2500);
+    return map.project(lngLat);
+  }
 
   const cw = piani[0].canvas.width, ch = piani[0].canvas.height, lato = Math.max(cw, ch);
   // la pila nasce sopra la mappa, alla stessa scala: aprendosi sembra che sia la mappa a sollevarsi
@@ -392,33 +409,36 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     puntoPiano = [ev.offsetX, ev.offsetY];
     for (const pt of punti) Object.assign(pt.style, { left: `${puntoPiano[0]}px`, top: `${puntoPiano[1]}px` });
     Object.assign(spillo.style, { left: `${puntoPiano[0] - cw / 2}px`, top: `${puntoPiano[1] - ch / 2}px` });
-    const punto = puntoMappa(puntoPiano[0] / cw, puntoPiano[1] / ch);
+    const lngLat = lngLatDi(puntoPiano[0] / cw, puntoPiano[1] / ch);
     // la scheda dell'app, sopra la scena (vedi css), aperta sul tab dello strato toccato
     // gli strati in ordine: quello toccato, poi quelli sotto, poi quelli sopra (le parti vuote di un piano non contano)
     const sotto = elPiani.findIndex(({ d }) => d === img.closest('.strati3d-piano'));
     const ordine = piani.map((_, i) => i).filter(i => !spento[i]).sort((a, b) => (a > sotto) - (b > sotto) || (a > sotto ? a - b : b - a));
-    map.fire('click', { point: punto, lngLat: map.unproject(punto), strati: ordine.flatMap(i => piani[i].strati ?? [piani[i].id]) });
     nascondiTip();
     gesto();
+    sonda(lngLat).then(punto => {
+      if (!chiudendo) map.fire('click', { point: punto, lngLat, strati: ordine.flatMap(i => piani[i].strati ?? [piani[i].id]) });
+    });
   });
   // ── puntatore e tooltip: come sulla mappa 2D, con gli stessi fornitori di tooltip dell'app ──
-  const contenitore = map.getContainer();
-  const puntoMappa = (u, v) => new maplibregl.Point(u * contenitore.clientWidth, v * contenitore.clientHeight);
   const tip = el('div', 'maplibregl-popup mappa-tooltip strati3d-tooltip'); // i18n-ok: classi CSS (stile del tooltip della mappa)
   const tipCorpo = el('div', 'maplibregl-popup-content');
   tip.append(tipCorpo);
   tip.hidden = true;
   radice.append(tip);
-  const nascondiTip = () => { tip.hidden = true; palco.classList.remove('su-oggetto'); };
-  // Tutto quello che c'è sotto un punto, strato per strato: lo strato sotto il mouse in cima ed evidenziato, poi gli
-  // altri dall'alto. Per ogni oggetto il modello di tooltip dell'app se c'è, altrimenti un'etichetta dalle proprietà.
+  const nascondiTip = () => { giroTip++; tip.hidden = true; palco.classList.remove('su-oggetto'); };
+  // Tutto quello che c'è sotto un punto, attraverso tutti gli strati della pila: lo strato sotto il mouse in cima ed
+  // evidenziato, poi gli altri dall'alto. Per ogni oggetto il titolo (il modello di tooltip dell'app se c'è, altrimenti
+  // un'etichetta dalle proprietà) e i suoi attributi, campo e valore. Ogni strato si interroga anche nei riempimenti
+  // invisibili della stessa sorgente (i confini si vedono come linee: dentro un poligono si tocca solo il riempimento).
   const MAX_VOCI = 3;
+  const daInterrogare = piani.map(p => [...new Set([...layerDaInterrogare(p), ...layerFratelli(stile, p.layers)])]);
   function descriviPunto(punto, sotto) {
     const riquadro = [[punto.x - 3, punto.y - 3], [punto.x + 3, punto.y + 3]];
     const sezioni = [];
     piani.forEach((p, i) => {
       if (spento[i] || p.base) return;
-      const ids = layerDaInterrogare(p).filter(id => map.getLayer(id));
+      const ids = daInterrogare[i].filter(id => map.getLayer(id));
       if (!ids.length) return;
       const voci = new Map();
       for (const f of map.queryRenderedFeatures(riquadro, { layers: ids })) {
@@ -427,7 +447,9 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
           const e = etichettaFeature(f.properties);
           v = e && (e.foglio ? { titolo: t('strati3d.particella', e) } : { titolo: e.titolo, sottotitolo: e.sotto });
         }
-        if (v?.titolo) voci.set(`${v.titolo}\n${v.sottotitolo ?? ''}`, v);
+        if (!v?.titolo) continue;
+        const attributi = attributiFeature(f.properties, 4, [v.titolo, v.sottotitolo]);
+        voci.set(`${v.titolo}\n${v.sottotitolo ?? ''}\n${attributi.join('|')}`, { ...v, attributi });
       }
       if (voci.size) sezioni.push({ i, voci: [...voci.values()] });
     });
@@ -441,13 +463,21 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
       if (i === qui) sez.classList.add('qui');
       const testa = el('div', 'strati3d-tip-testa');
       testa.append(el('i', null, String(i + 1)), el('b', null, titoloPiano(piani[i])));
-      sez.append(testa, ...voci.slice(0, MAX_VOCI).map(disegnaVoceTooltip));
+      sez.append(testa, ...voci.slice(0, MAX_VOCI).map(v => {
+        const voce = disegnaVoceTooltip(v);
+        if (v.attributi.length) {
+          const dl = el('dl', 'strati3d-tip-attr');
+          for (const [k, val] of v.attributi) dl.append(el('dt', null, k), el('dd', null, val));
+          voce.append(dl);
+        }
+        return voce;
+      }));
       if (voci.length > MAX_VOCI) sez.append(el('div', 'strati-tooltip-altre', t('strati3d.altre', { n: voci.length - MAX_VOCI })));
       corpo.append(sez);
     }
     return corpo;
   }
-  let attesaTip = 0;
+  let attesaTip = 0, giroTip = 0;
   palco.addEventListener('pointermove', ev => {
     if (ev.pointerType !== 'mouse' || puntatori.size || chiudendo) { nascondiTip(); return; }
     const img = ev.target.closest?.('.strati3d-img');
@@ -455,15 +485,30 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     const sotto = elPiani.findIndex(({ d }) => d === img.closest('.strati3d-piano'));
     const { offsetX, offsetY, clientX, clientY } = ev;
     cancelAnimationFrame(attesaTip);
-    attesaTip = requestAnimationFrame(() => {
-      const punto = puntoMappa(offsetX / cw, offsetY / ch);
-      const corpo = descriviPunto(punto, sotto);
+    const giro = ++giroTip;
+    attesaTip = requestAnimationFrame(async () => {
+      const lngLat = lngLatDi(offsetX / cw, offsetY / ch);
+      let punto = await sonda(lngLat);
+      if (giro !== giroTip || chiudendo) return; // il mouse nel frattempo si è mosso
+      let corpo = descriviPunto(punto, sotto);
+      // niente ancora: se la sonda sta caricando i dati del punto, si riprova quando ha finito
+      if (!corpo && !map.areTilesLoaded()) {
+        await inattiva(map, 6000);
+        if (giro !== giroTip || chiudendo) return;
+        punto = map.project(lngLat);
+        corpo = descriviPunto(punto, sotto);
+      }
       palco.classList.toggle('su-oggetto', !!corpo);
       if (!corpo) { tip.hidden = true; return; }
       tipCorpo.replaceChildren(corpo);
+      // accanto al puntatore, ribaltato sopra o a sinistra se uscirebbe dalla scena
       const r = radice.getBoundingClientRect();
-      tip.style.transform = `translate(${clientX - r.left + 14}px, ${clientY - r.top + 16}px)`;
       tip.hidden = false;
+      const { offsetWidth: tw, offsetHeight: th } = tip;
+      let x = clientX - r.left + 14, y = clientY - r.top + 16;
+      if (x + tw > r.width - 8) x = Math.max(8, clientX - r.left - 14 - tw);
+      if (y + th > r.height - 8) y = Math.max(8, clientY - r.top - 16 - th);
+      tip.style.transform = `translate(${x}px, ${y}px)`;
     });
   });
   palco.addEventListener('pointerleave', nascondiTip);

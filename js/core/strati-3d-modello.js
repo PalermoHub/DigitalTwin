@@ -227,3 +227,37 @@ export function assiJoystick(dx, dy, raggio, morta = 0.12) {
 }
 // l'angolo più breve (in -180..180) per tornare a nord da una rotazione `a`
 export const versoNord = a => -(((a % 360) + 540) % 360 - 180);
+
+// I layer «fratelli» di un piano: quelli dello stile che leggono la stessa sorgente (e source-layer) dei layer del piano
+// e ne disegnano le aree. Uno strato di confini, per esempio, si vede come linea ma ha un riempimento invisibile: un punto
+// dentro un poligono tocca solo quello. stile: map.getStyle().layers
+export function layerFratelli(stile, ids) {
+  const chiave = l => `${l.source}\n${l['source-layer'] ?? ''}`;
+  const suoi = new Set(stile.filter(l => ids.includes(l.id) && l.source).map(chiave));
+  return stile.filter(l => !ids.includes(l.id) && l.type === 'fill' && suoi.has(chiave(l))).map(l => l.id);
+}
+
+// Gli attributi da mostrare per una feature: [campo, valore] senza identificativi, valori vuoti od oggetti; i campi
+// parlanti (CHIAVI) per primi, testi lunghi accorciati. `salta`: valori già mostrati come titolo.
+export function attributiFeature(p, max = 4, salta = []) {
+  if (!p) return [];
+  const gia = new Set(salta.filter(Boolean).map(String));
+  const vale = k => p[k] != null && typeof p[k] !== 'object' && String(p[k]).trim() !== '' && !/^(null|undefined)$/i.test(String(p[k]))
+    && !IDENTIFICATIVO.test(k) && !/^(id\d*|fid|shape_.*|objectid_\d+)$/i.test(k);
+  const rango = k => { const i = CHIAVI.indexOf(k.toLowerCase()); return i < 0 ? CHIAVI.length : i; };
+  const campi = Object.keys(p).filter(vale).sort((a, b) => rango(a) - rango(b));
+  const fuori = [];
+  for (const k of campi) {
+    let v = typeof p[k] === 'number' ? p[k].toLocaleString() : String(p[k]).trim();
+    if (gia.has(v)) continue;
+    if (v.length > 90) v = `${v.slice(0, 87)}…`;
+    fuori.push([k, v]);
+    if (fuori.length >= max) break;
+  }
+  return fuori;
+}
+
+// zoom a cui la mappa sotto la scena interroga i dati: abbastanza vicino da avere tutte le sorgenti (il PRG parte da 12,
+// il catasto da 15), mai più lontano di com'era la mappa
+export const ZOOM_SONDA = 15.5;
+export const zoomSonda = zoomVista => Math.max(zoomVista, ZOOM_SONDA);

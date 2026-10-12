@@ -191,3 +191,26 @@ test('movimento continuo: tasti, joystick, accelerazione morbida, nord', async (
   assert.equal(versoNord(350), 10);
   assert.equal(versoNord(-725), 5);
 });
+
+test('layerFratelli: i riempimenti invisibili della stessa sorgente', async () => {
+  const { layerFratelli } = await import('../../js/core/strati-3d-modello.js');
+  const stile = [
+    { id: 'confini-circoscrizioni', type: 'line', source: 'confini', 'source-layer': 'circoscrizioni' },
+    { id: 'confini-circoscrizioni-hit', type: 'fill', source: 'confini', 'source-layer': 'circoscrizioni' },
+    { id: 'confini-quartieri-hit', type: 'fill', source: 'confini', 'source-layer': 'quartieri' },
+    { id: 'altro', type: 'line', source: 'confini', 'source-layer': 'circoscrizioni' },
+    { id: 'raster', type: 'raster', source: 'r' },
+  ];
+  assert.deepEqual(layerFratelli(stile, ['confini-circoscrizioni']), ['confini-circoscrizioni-hit']);
+  assert.deepEqual(layerFratelli(stile, ['raster']), []);
+});
+
+test('attributiFeature: campi parlanti prima, niente id né vuoti, titolo non ripetuto', async () => {
+  const { attributiFeature } = await import('../../js/core/strati-3d-modello.js');
+  const p = { fid: 3, id: 9, ID1: 9, NOTE: 'x'.repeat(120), TIPO: 'Fascia battigia', DESCRIZION: 'Vincolo di inedificabilità', vuoto: '', obj: { a: 1 }, n: 12345 };
+  const a = attributiFeature(p, 4, ['Fascia battigia']);
+  assert.deepEqual(a.map(([k]) => k), ['DESCRIZION', 'NOTE', 'n']);
+  assert.ok(a[1][1].endsWith('…') && a[1][1].length === 88);
+  assert.equal(attributiFeature(p, 1).length, 1);
+  assert.deepEqual(attributiFeature(null), []);
+});
