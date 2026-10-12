@@ -648,8 +648,6 @@ dialog li { margin: 4px 0; }
 .legenda-crociferi .cr-pianta[aria-pressed="true"] { background: var(--accent-strong); color: var(--accent-strong-ink); }
 .legenda-crociferi .cr-tutti { margin: 8px 0 6px; padding: 4px 10px; border: 1.5px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface-alt); color: var(--text); font: inherit; font-size: var(--fs-2xs); font-weight: 600; cursor: pointer; }
 .legenda-crociferi .cr-tutti:hover { border-color: var(--accent-strong); }
-.legenda-crociferi .cr-nota summary { cursor: pointer; font-size: var(--fs-3xs); text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
-.legenda-crociferi .cr-nota summary:hover { color: var(--text); }
 
 
 /* ==========================================================================

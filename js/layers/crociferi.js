@@ -166,9 +166,9 @@ function riempiLegenda() {
     aggiorna();
   });
   // la nota si chiude per lasciare spazio alla legenda; all'inizio è aperta
-  const nota = el('details', 'cr-nota');
+  const nota = el('details', 'peba-nota'); // come le altre note dell'app (PEBA, pendolarismo)
   nota.open = true;
-  nota.append(el('summary', null, t('edificio.notaTitolo')), el('p', 'uffici-nota', t('edificio.nota')));
+  nota.append(el('summary', null, t('edificio.notaTitolo')), el('p', null, t('edificio.nota')));
   legenda.append(tutti, nota);
 }
 
