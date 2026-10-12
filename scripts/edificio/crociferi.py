@@ -7,7 +7,8 @@ Scrive in dati/edificio/crociferi/
   crociferi.geojson  muri, aperture, solai, stanze, coperture e cupola per piano (WGS84, quote in metri da terra)
   crociferi.glb      lo stesso modello come mesh (metri, origine al centro della cupola, asse Y verso l'alto)
   contesto.geojson   le unità volumetriche CTC attorno, senza quelle del Noviziato (per estruderle grigie nella vista)
-  prospetti.json     i prospetti come facciate: spigoli (lon, lat), altezza e immagine prospetti/<lato>.png (solo linee)
+  prospetti.json     le facciate: spigoli (lon, lat), altezza e immagine prospetti/<lato>.webp (foto raddrizzata dove
+                     c'è, altrove le linee del prospetto)
 
 Come funziona
 1. Le sei tavole del DWG (terra, ammezzato, primo, secondo, terzo, copertura) stanno affiancate nello spazio modello:
@@ -23,6 +24,9 @@ Come funziona
    confermano entro il 2-3%; la scala assoluta è fissata dalla gronda CTC, 21,6 m sopra la strada, con il pavimento del
    piano terra ~1,2 m sopra la strada (dalla sezione): 0,068 m/px. Le altre stime della scala (larghezze delle stanze
    e dell'edificio sulla pianta, prospetti) danno gronde tra 20,1 e 22,8 m: le quote assolute valgono ±1 m circa.
+6. Facciate: i prospetti (img/nov_crocif_01-03) danno la geometria in scala; sopra si posano le foto (img/
+   nov_crocif_08, 30, 31) raddrizzate con un'omografia calcolata su punti riconoscibili (FOTO), solo dove inquadrano
+   la facciata libera. Altrove restano le linee del prospetto. Serve OpenCV (pip install opencv-python-headless).
 """
 import argparse
 import json
@@ -80,6 +84,30 @@ FACCIATE = [
     {'lato': 'ovest', 'img': 'nov_crocif_01.JPG', 'x': (35, 495), 'y': (190, 570)},   # su via Torremuzza, fronte della chiesa
     {'lato': 'est', 'img': 'nov_crocif_03.jpg', 'x': (68, 552), 'y': (205, 530)},     # con i balconi, sul giardino
 ]
+# Foto raddrizzate sulle facciate: punti corrispondenti [x_foto, y_foto, x_prospetto, y_prospetto] (pixel delle immagini
+# in img/) per l'omografia foto -> prospetto; `valida` è il poligono della foto con la facciata libera (senza tetti
+# in primo piano e cielo). Dove la foto non arriva restano le linee del prospetto.
+FOTO = {
+    'ovest': {'img': 'nov_crocif_08.JPG', 'valida': None,
+              # sagoma nel prospetto: chiesa col frontone, poi il convento (senza il tetto disegnato dietro al frontone)
+              'sagoma': [[35, 570], [35, 248], [175, 183], [313, 248], [313, 215], [495, 215], [495, 570]],
+              'punti': [
+        [253, 232, 175, 319], [233, 617, 152, 560], [257, 617, 198, 560], [300, 617, 240, 560],    # oculo, portali
+        [364, 615, 363, 567], [402, 270, 497, 210], [122, 615, 35, 570], [127, 45, 35, 248]]},     # convento, spigoli
+    'sud': {'img': 'nov_crocif_30.jpg', 'punti': [
+        [138, 143, 65, 279], [465, 172, 209, 279], [762, 200, 353, 279], [1032, 227, 497, 279], [1273, 251, 644, 279],
+        [138, 330, 65, 360], [470, 349, 209, 360], [771, 368, 353, 360], [1040, 386, 497, 360], [1284, 385, 644, 360],
+        [138, 528, 65, 437], [305, 520, 137, 437]],                                   # finestre di attico, secondo, primo
+        'valida': [[0, 0], [1369, 0], [1369, 400], [1230, 410], [1100, 450], [1000, 500], [900, 470], [735, 400],
+                   [480, 470], [250, 545], [110, 600], [0, 625]]},
+    'est': {'img': 'nov_crocif_31.jpg', 'punti': [
+        [268, 179, 285, 325], [264, 286, 285, 360], [257, 407, 285, 400],             # colonna dell'ovale
+        [481, 207, 353, 325], [575, 200, 389, 313], [675, 221, 425, 325], [850, 257, 497, 325],   # secondo
+        [504, 425, 353, 400], [614, 414, 389, 399], [729, 436, 425, 400],             # primo
+        [468, 46, 353, 247], [554, 61, 389, 247], [643, 75, 427, 247], [793, 104, 497, 247], [268, 14, 285, 247]],
+        'valida': [[0, 0], [700, 0], [906, 75], [906, 640], [0, 640]]},
+}
+RISOLUZIONE = 3  # pixel della texture per pixel del prospetto
 SOLAIO = 0.30          # spessore dei solai (m)
 MURO_GIARDINO = 3.0    # altezza dei muri di recinzione fuori dalle unità CTC (m)
 CHIUSURA = 75          # semiampiezza (cm) con cui si chiudono i varchi delle murature
@@ -440,8 +468,10 @@ def main():
     (OUT / 'prospetti').mkdir(exist_ok=True)
     elenco = []
     for f in prospetti:
-        f['img'].save(OUT / 'prospetti' / f'{f["lato"]}.png', optimize=True)
-        elenco.append({'lato': f['lato'], 'immagine': f'prospetti/{f["lato"]}.png', 'altezza': round(f['alto'], 2),
+        # WebP con trasparenza per il web (un decimo del PNG); il GLB tiene il PNG, che glTF accetta senza estensioni
+        f['img'].save(OUT / 'prospetti' / f'{f["lato"]}.webp', quality=82, method=6)
+        elenco.append({'lato': f['lato'], 'immagine': f'prospetti/{f["lato"]}.webp', 'altezza': round(f['alto'], 2),
+                       'foto': f['foto'],
                        'da': [round(v, 7) for v in UTM.transform(*f['a'])], 'a': [round(v, 7) for v in UTM.transform(*f['b'])]})
     (OUT / 'prospetti.json').write_text(json.dumps(elenco, indent=1))
     if not args.no_glb:
@@ -461,6 +491,48 @@ COLORI = {'muro': (226, 214, 190), 'architrave': (226, 214, 190), 'davanzale': (
           'cupola': (196, 112, 80), 'lanterna': (226, 214, 190)}
 
 
+def texture_facciata(f, foto):
+    """RGBA della facciata: linee del prospetto (bianco trasparente) e sopra la foto raddrizzata, dentro la sagoma."""
+    import cv2
+    (x0, x1), (y0, y1) = f['x'], f['y']
+    k = RISOLUZIONE
+    W, H = (x1 - x0) * k, (y1 - y0) * k
+    g = np.asarray(Image.open(SRC / 'img' / f['img']).convert('L').crop((x0, y0, x1, y1)).resize((W, H), Image.BICUBIC))
+    rgba = np.zeros((H, W, 4), np.uint8)
+    rgba[..., :3] = 40
+    rgba[..., 3] = np.clip((215 - g.astype(int)) * 4, 0, 255)
+    if not foto:
+        return rgba
+    # sagoma del prospetto: per colonna, dal primo tratto scuro in giù (il frontone resta, il cielo no)
+    scuro = g < 160
+    cima = np.where(scuro.any(0), scuro.argmax(0), H)
+    sagoma = (np.arange(H)[:, None] >= cima[None, :])
+    sagoma = cv2.morphologyEx(sagoma.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((1, 9 * k), np.uint8)).astype(bool)
+    if foto.get('sagoma'):
+        m = np.zeros((H, W), np.uint8)
+        cv2.fillPoly(m, [((np.array(foto['sagoma'], float) - (x0, y0)) * k).astype(np.int32)], 1)
+        sagoma = m.astype(bool)
+    P = np.array(foto['punti'], float)
+    Hm, _ = cv2.findHomography(P[:, :2], P[:, 2:], 0)
+    S = np.array([[k, 0, -x0 * k], [0, k, -y0 * k], [0, 0, 1]], float)
+    M = S @ Hm
+    im = cv2.cvtColor(cv2.imread(str(SRC / 'img' / foto['img'])), cv2.COLOR_BGR2RGB)
+    valida = np.zeros(im.shape[:2], np.uint8)
+    if foto.get('valida'):
+        cv2.fillPoly(valida, [np.array(foto['valida'], np.int32)], 255)
+    else:
+        valida[:] = 255
+    raddrizzata = cv2.warpPerspective(im, M, (W, H), flags=cv2.INTER_CUBIC)
+    maschera = cv2.warpPerspective(valida, M, (W, H), flags=cv2.INTER_NEAREST)
+    maschera = cv2.erode(maschera, np.ones((5, 5), np.uint8)) > 0
+    usa = maschera & sagoma
+    rgba[usa, :3] = raddrizzata[usa]
+    rgba[usa, 3] = 255
+    P2 = cv2.perspectiveTransform(P[:, None, :2], Hm)[:, 0] - P[:, 2:]
+    print(f"  foto {foto['img']}: scarto medio {np.hypot(*P2.T).mean():.1f} px di prospetto, copre il {usa.mean() * 100:.0f}%")
+    return rgba
+
+
 def facciate(porta_utm):
     """Per ogni prospetto: estremità sinistra e destra (UTM, viste da fuori), altezza (m) e immagine RGBA delle sole linee."""
     W, E, S, N = FILI['ovest'], FILI['est'], FILI['sud'], FILI['nord']
@@ -470,16 +542,12 @@ def facciate(porta_utm):
         a, b = (np.array(porta_utm(Point(*p)).coords[0]) for p in estremi[f['lato']])
         lungo = np.linalg.norm(b - a)
         (x0, x1), (y0, y1) = f['x'], f['y']
-        im = Image.open(SRC / 'img' / f['img']).convert('L').crop((x0, y0, x1, y1))
         alto = lungo * (y1 - y0) / (x1 - x0)
-        # linee scure opache, bianco trasparente: il disegno si posa sulle murature del modello
-        g = np.asarray(im, np.uint8)
-        rgba = np.zeros((*g.shape, 4), np.uint8)
-        rgba[..., :3] = 40
-        rgba[..., 3] = np.clip((215 - g.astype(int)) * 4, 0, 255)
+        rgba = texture_facciata(f, FOTO.get(f['lato']))
         # fuori dal filo di 5 cm, perché le linee non si mescolino con la faccia del muro
         n = np.array([(b - a)[1], -(b - a)[0]]) / lungo
-        out.append({'lato': f['lato'], 'a': a + n * 0.05, 'b': b + n * 0.05, 'alto': alto, 'img': Image.fromarray(rgba, 'RGBA')})
+        out.append({'lato': f['lato'], 'a': a + n * 0.05, 'b': b + n * 0.05, 'alto': alto, 'img': Image.fromarray(rgba, 'RGBA'),
+                    'foto': FOTO.get(f['lato'], {}).get('img')})
         print(f"prospetto {f['lato']}: {lungo:.1f} m x {alto:.1f} m")
     return out
 
@@ -510,7 +578,9 @@ def scrivi_glb(feats, centro, percorso, prospetti=()):
         a, b = f['a'] - (cx, cy), f['b'] - (cx, cy)
         v = np.array([[*a, 0], [*b, 0], [*b, f['alto']], [*a, f['alto']]])
         uv = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
-        mat = trimesh.visual.material.PBRMaterial(baseColorTexture=f['img'], alphaMode='MASK', alphaCutoff=0.35,
+        # nel GLB la texture a metà risoluzione: le foto di partenza non hanno più dettaglio e il file resta leggero
+        tex = f['img'].resize((f['img'].width // 2, f['img'].height // 2), Image.LANCZOS)
+        mat = trimesh.visual.material.PBRMaterial(baseColorTexture=tex, alphaMode='MASK', alphaCutoff=0.35,
                                                   doubleSided=True, metallicFactor=0, roughnessFactor=1)
         m = trimesh.Trimesh(v, [[0, 1, 2], [0, 2, 3]], visual=trimesh.visual.TextureVisuals(uv=uv, material=mat), process=False)
         scena.add_geometry(m, node_name=f'prospetto_{f["lato"]}', geom_name=f'prospetto_{f["lato"]}')
