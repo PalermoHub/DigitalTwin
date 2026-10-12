@@ -2,10 +2,10 @@
 
   python3 scripts/edificio/crociferi.py                 legge dati/edificio/Noviziato*.dwg con dwgread (LibreDWG)
   python3 scripts/edificio/crociferi.py --json F.json   legge il JSON già esportato con `dwgread -O JSON -o F.json F.dwg`
+  python3 scripts/edificio/crociferi.py --glb DEST.glb  scrive anche il modello come mesh GLB (non pubblicato: resta fuori da git)
 
 Scrive in dati/edificio/crociferi/
   crociferi.geojson  muri, aperture, solai, stanze, coperture e cupola per piano (WGS84, quote in metri da terra)
-  crociferi.glb      lo stesso modello come mesh (metri, origine al centro della cupola, asse Y verso l'alto)
   contesto.geojson   le unità volumetriche CTC attorno, senza quelle del Noviziato (per estruderle grigie nella vista)
   prospetti.json     le facciate: spigoli (lon, lat), altezza e immagine prospetti/<lato>.webp (le linee del prospetto)
 
@@ -92,7 +92,8 @@ LAYER_MURI = 'murature retini'
 LAYER_NUMERI = ('testi numero stanza', 'testi numero stanza grande')
 LAYER_AREE = 'retini e perimetri aree'  # perimetri disegnati delle stanze assegnate: dove ci sono, valgono più delle facce
 LAYER_LUOGHI = 'testi'  # usato solo per riconoscere la chiesa (che sopra il piano terra è un vuoto), non esportato
-CHIESA = 'Chiesa Di S. Mattia'
+CHIESA = 'Chiesa Di S. Mattia'  # etichetta nel DWG
+NOME_CHIESA = 'Ex Chiesa di San Mattia dei Crociferi'  # nome dell'aula della chiesa al piano terra
 
 UTM = Transformer.from_crs(32633, 4326, always_xy=True)
 A_UTM = Transformer.from_crs(4326, 32633, always_xy=True)
@@ -263,7 +264,8 @@ def assegna_numeri(facce, numeri):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--json', help='export JSON di dwgread già pronto')
-    ap.add_argument('--no-glb', action='store_true', help='non scrivere il modello GLB')
+    ap.add_argument('--glb', help='scrive anche il modello GLB in questo percorso (metri, origine al centro della cupola, '
+                    'asse Y in alto); il sito non lo pubblica')
     args = ap.parse_args()
 
     ents = list(leggi_disegno(args).entita())
@@ -370,7 +372,8 @@ def main():
                 aggiungi(v, **base, tipo='davanzale', quota=q, h=round(q + 0.9, 2))
 
         for fc, nn in stanze:
-            aggiungi(fc, **base, tipo='stanza', numero=', '.join(nn) or None, area=round(fc.area, 1),
+            nome = NOME_CHIESA if p['id'] == 'terra' and fc.intersection(chiesa).area / fc.area > 0.5 else None
+            aggiungi(fc, **base, tipo='stanza', nome=nome, numero=', '.join(nn) or None, area=round(fc.area, 1),
                      quota=q, h=round(q + 0.06, 2))
         for fc in vuoti:
             aggiungi(fc, **base, tipo='vuoto', quota=q, h=q)
@@ -447,8 +450,8 @@ def main():
         elenco.append({'lato': f['lato'], 'immagine': f'prospetti/{f["lato"]}.webp', 'altezza': round(f['alto'], 2),
                        'da': [round(v, 7) for v in UTM.transform(*f['a'])], 'a': [round(v, 7) for v in UTM.transform(*f['b'])]})
     (OUT / 'prospetti.json').write_text(json.dumps(elenco, indent=1))
-    if not args.no_glb:
-        scrivi_glb(feats, ott.centroid, OUT / 'crociferi.glb', prospetti)
+    if args.glb:
+        scrivi_glb(feats, ott.centroid, Path(args.glb), prospetti)
 
 
 def _profondita(g):

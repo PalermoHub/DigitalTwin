@@ -40,7 +40,7 @@ test('dati: 39 stanze numerate, ognuna una volta, e nessun testo oltre ai numeri
   const numeri = stanze.map(f => f.properties.numero);
   assert.equal(numeri.length, 39);
   assert.deepEqual([...numeri].sort((a, b) => a - b), Array.from({ length: 39 }, (_, i) => String(i + 1)));
-  const ammessi = new Set(['piano', 'nome_piano', 'livello', 'tipo', 'numero', 'area', 'quota', 'h']);
+  const ammessi = new Set(['piano', 'nome_piano', 'livello', 'tipo', 'nome', 'numero', 'area', 'quota', 'h']);
   for (const f of fc.features) {
     for (const k of Object.keys(f.properties)) assert.ok(ammessi.has(k), `proprietà inattesa ${k}`);
     if (f.properties.numero != null) assert.match(f.properties.numero, /^\d+$/);
@@ -101,4 +101,14 @@ test('poligonoContiene: esclude i fori', () => {
   const ciambella = [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]], [[1, 1], [3, 1], [3, 3], [1, 3], [1, 1]]];
   assert.equal(poligonoContiene(ciambella, [0.5, 0.5]), true);
   assert.equal(poligonoContiene(ciambella, [2, 2]), false);
+});
+
+test('l\'aula della chiesa al piano terra ha il suo nome, anche nella scheda', () => {
+  const nominate = fc.features.filter(f => f.properties.nome);
+  assert.equal(nominate.length, 1);
+  const p = nominate[0].properties;
+  assert.equal(p.nome, 'Ex Chiesa di San Mattia dei Crociferi');
+  assert.equal(p.piano, 'terra');
+  assert.ok(p.area > 300);
+  assert.deepEqual(righeScheda(p)[1], ['Elemento', 'Ex Chiesa di San Mattia dei Crociferi']);
 });

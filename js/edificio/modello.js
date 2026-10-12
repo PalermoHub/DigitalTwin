@@ -134,7 +134,8 @@ export function stanzeDelClic(feature, lngLat, features) {
 
 // Righe della scheda di un oggetto cliccato; `stanze` viene da stanzeDelClic.
 export function righeScheda(p, stanze = {}) {
-  const righe = [[t('edificio.scheda.piano'), nomePiano(p.piano, p.nome_piano)], [t('edificio.scheda.elemento'), t(`edificio.tipo.${p.tipo}`)]];
+  // un ambiente con nome proprio (l'ex chiesa) mostra il nome al posto del tipo
+  const righe = [[t('edificio.scheda.piano'), nomePiano(p.piano, p.nome_piano)], [t('edificio.scheda.elemento'), p.nome || t(`edificio.tipo.${p.tipo}`)]];
   const n = stanze.stanza ?? p.numero;
   if (n) righe.push([t('edificio.scheda.stanza'), n]);
   else if (stanze.adiacenti?.length) {
