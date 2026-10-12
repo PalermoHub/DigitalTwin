@@ -2,8 +2,9 @@ export const DATI = 'dati/';
 // Vista iniziale ed estensione della mappa come nell'app catasto-app di palermohub.opendatasicilia.it.
 export const CENTRO = [13.33225, 38.14074];
 export const ZOOM = window.matchMedia('(max-width: 768px)').matches ? 11 : 12;
-// A ovest arriva un po' oltre l'aeroporto Falcone Borsellino (lon 13,110), fino a Cinisi e Terrasini.
-export const LIMITI = [[13.04, 37.9785], [13.55, 38.2919]];
+// Limiti di spostamento molto larghi e simmetrici attorno al CENTRO: la vista iniziale resta al centro dei limiti.
+const MARGINE = [1.5, 1];
+export const LIMITI = [[CENTRO[0] - MARGINE[0], CENTRO[1] - MARGINE[1]], [CENTRO[0] + MARGINE[0], CENTRO[1] + MARGINE[1]]];
 export const ZOOM_SLIDER = [12, 18];
 // Al clic sulla mappa (scheda del luogo) la vista si avvicina almeno a questo zoom, senza mai allontanarsi.
 export const ZOOM_SCHEDA = 16.5;
