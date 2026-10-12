@@ -20,6 +20,8 @@ dati/*/
 !dati/pendolarismo/
 # eccezione: isole di calore (piccolo, rigenerato da scripts/isole_calore.py)
 !dati/isole-calore/
+# eccezione: edifici in 3D (piante DWG di partenza e modello generato da scripts/edificio/)
+!dati/edificio/
 # dati di lavoro degli script (non servono alla webapp)
 lavoro/
 dati/uffici/grezzo.json
@@ -68,6 +70,7 @@ dati/README.md
 dati/pai/README.md
 scripts/*
 !scripts/serve.py
+!scripts/edificio/
 !scripts/estrai_stile_omi.mjs
 !scripts/colonnine.py
 !scripts/incendi.py
