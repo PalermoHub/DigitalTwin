@@ -3,7 +3,6 @@
   "lato": "sud",
   "immagine": "prospetti/sud.webp",
   "altezza": 21.46,
-  "foto": "nov_crocif_30.jpg",
   "da": [
    13.3727024,
    38.116551
@@ -17,7 +16,6 @@
   "lato": "ovest",
   "immagine": "prospetti/ovest.webp",
   "altezza": 24.34,
-  "foto": "nov_crocif_08.JPG",
   "da": [
    13.3725211,
    38.1167751
@@ -31,7 +29,6 @@
   "lato": "est",
   "immagine": "prospetti/est.webp",
   "altezza": 19.78,
-  "foto": "nov_crocif_31.jpg",
   "da": [
    13.3730929,
    38.1167481
