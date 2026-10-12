@@ -2,7 +2,9 @@
 // con l'esploso dei livelli. Dati: dati/edificio/crociferi/*.geojson (scripts/edificio/crociferi.py).
 import { STILE_BASE } from '../core/config.js';
 import { t, caricaDizionari, applicaDom, creaInterruttoreLingua } from '../core/i18n.js';
-import { GRUPPI, COLORI_PIANI, altezze, filtroVolumi, filtroNumeri, coloreVolumi, righeScheda, pianiDa, nomePiano } from './modello.js';
+import { GRUPPI, COLORI_PIANI, altezze, filtroVolumi, filtroNumeri, coloreVolumi, righeScheda, pianiDa, nomePiano,
+  prospettiVisibili } from './modello.js';
+import { ID_PROSPETTI, creaLayerProspetti } from './prospetti.js';
 
 const DATI = 'dati/edificio/crociferi/';
 const $ = id => document.getElementById(id);
@@ -12,6 +14,7 @@ const stato = {
   piani: [],          // id dei piani accesi
   gruppi: GRUPPI.map(g => g.id),
   pianta: null,       // id del piano in vista pianta, o null
+  prospetti: true,    // disegni dei prospetti sulle facciate
   prima: null,        // stato da ripristinare all'uscita dalla pianta
 };
 
@@ -36,8 +39,9 @@ async function avvia() {
   const rotazione = edificio.metadata?.rotazione ?? 31.5;
 
   const map = new maplibregl.Map({
-    container: 'mappa', style: STILE_BASE, center: centro, zoom: 18.4, pitch: 55,
-    bearing: 180 - rotazione, maxPitch: 85, antialias: true, attributionControl: { compact: true },
+    container: 'mappa', style: STILE_BASE, center: centro, zoom: 18.7, pitch: 58,
+    // da sud-ovest: si vedono il fronte su via Torremuzza e la facciata lunga, quelle con i prospetti
+    bearing: 45 - rotazione, maxPitch: 85, antialias: true, attributionControl: { compact: true },
   });
   // su schermo largo il pannello copre la sinistra: l'edificio va al centro della parte libera
   if (matchMedia('(min-width: 641px)').matches) map.setPadding({ left: 320, top: 0, right: 0, bottom: 0 });
@@ -65,6 +69,11 @@ async function avvia() {
     });
     aggiorna(map);
     interazioni(map);
+    // i prospetti sono un di più: se mancano o three.js non si carica, la vista resta quella delle estrusioni
+    json(DATI + 'prospetti.json')
+      .then(p => creaLayerProspetti(DATI, p, centro))
+      .then(layer => { map.addLayer(layer, 'edificio-numeri'); aggiorna(map); })
+      .catch(err => console.warn('prospetti non disponibili', err)); // i18n-ok: messaggio solo per la console
   });
 
   costruisciPannello(map, piani);
@@ -78,6 +87,9 @@ function aggiorna(map) {
   map.setFilter('edificio-volumi', filtroVolumi(stato.piani, stato.gruppi));
   map.setFilter('edificio-numeri', filtroNumeri(stato.pianta ? [stato.pianta] : []));
   map.setLayoutProperty('edificio-numeri', 'visibility', stato.pianta ? 'visible' : 'none');
+  if (map.getLayer(ID_PROSPETTI)) {
+    map.setLayoutProperty(ID_PROSPETTI, 'visibility', prospettiVisibili({ ...stato, acceso: stato.prospetti }) ? 'visible' : 'none');
+  }
   $('esploso-valore').value = `${String(stato.passo).replace('.', ',')} m`;
   $('esploso').value = stato.passo;
   for (const el of document.querySelectorAll('#piani input')) el.checked = stato.piani.includes(el.value);
@@ -134,6 +146,7 @@ function costruisciPannello(map, piani) {
     if (stato.pianta) esciPianta(map);
     else entraPianta(map, 'primo');
   });
+  $('prospetti').addEventListener('change', e => { stato.prospetti = e.target.checked; aggiorna(map); });
   $('contesto').addEventListener('change', e => {
     if (map.getLayer('contesto')) map.setLayoutProperty('contesto', 'visibility', e.target.checked ? 'visible' : 'none');
   });

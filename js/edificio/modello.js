@@ -77,6 +77,11 @@ export function righeScheda(p) {
   return righe;
 }
 
+// I prospetti coprono l'edificio intero: si vedono solo a piani riuniti, fuori dalla pianta e con le murature accese.
+export function prospettiVisibili({ acceso, passo, pianta, gruppi, piani }) {
+  return Boolean(acceso) && passo === 0 && !pianta && gruppi.includes('muri') && piani.includes('primo');
+}
+
 // Piani nell'ordine dal basso, dai metadati del GeoJSON (o dagli oggetti, se mancano).
 export function pianiDa(fc) {
   if (fc.metadata?.piani?.length) return [...fc.metadata.piani].sort((a, b) => a.livello - b.livello);

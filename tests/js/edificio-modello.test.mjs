@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { GRUPPI, altezze, tipiAccesi, filtroVolumi, filtroNumeri, righeScheda, pianiDa } from '../../js/edificio/modello.js';
+import { GRUPPI, altezze, tipiAccesi, filtroVolumi, filtroNumeri, righeScheda, pianiDa, prospettiVisibili } from '../../js/edificio/modello.js';
+import { verticiFacciata } from '../../js/edificio/prospetti.js';
 
 const fc = JSON.parse(readFileSync(new URL('../../dati/edificio/crociferi/crociferi.geojson', import.meta.url), 'utf8'));
 
@@ -51,5 +52,29 @@ test('dati: tutto attorno al Cortile Crociferi, quote coerenti', () => {
     const pts = f.geometry.type === 'Point' ? [f.geometry.coordinates] : f.geometry.coordinates.flat();
     for (const [x, y] of pts) assert.ok(Math.abs(x - 13.3728) < 0.0008 && Math.abs(y - 38.1166) < 0.0008, `${p.tipo} fuori posto`);
     if (p.h != null) assert.ok(p.h >= p.quota, `${p.piano}/${p.tipo}: cima sotto la base`);
+  }
+});
+
+test('prospettiVisibili: solo a piani riuniti, fuori dalla pianta, con le murature', () => {
+  const base = { acceso: true, passo: 0, pianta: null, gruppi: ['muri'], piani: ['terra', 'primo'] };
+  assert.equal(prospettiVisibili(base), true);
+  assert.equal(prospettiVisibili({ ...base, acceso: false }), false);
+  assert.equal(prospettiVisibili({ ...base, passo: 4 }), false);
+  assert.equal(prospettiVisibili({ ...base, pianta: 'primo' }), false);
+  assert.equal(prospettiVisibili({ ...base, gruppi: ['solai'] }), false);
+});
+
+test('verticiFacciata: terra e cima sugli stessi spigoli, relativi all\'origine', () => {
+  const mercator = ([x, y], z) => ({ x, y, z: z / 10 });
+  const v = verticiFacciata([1, 2], [3, 2], 20, { x: 1, y: 2, z: 0 }, mercator);
+  assert.deepEqual(v, [[0, 0, 0], [2, 0, 0], [2, 0, 2], [0, 0, 2]]);
+});
+
+test('prospetti.json: tre facciate con immagine e spigoli vicini all\'edificio', () => {
+  const p = JSON.parse(readFileSync(new URL('../../dati/edificio/crociferi/prospetti.json', import.meta.url), 'utf8'));
+  assert.deepEqual(p.map(f => f.lato), ['sud', 'ovest', 'est']);
+  for (const f of p) {
+    assert.ok(f.altezza > 15 && f.altezza < 30);
+    for (const [x, y] of [f.da, f.a]) assert.ok(Math.abs(x - 13.3728) < 0.0005 && Math.abs(y - 38.1166) < 0.0005);
   }
 });

@@ -7,6 +7,7 @@ Scrive in dati/edificio/crociferi/
   crociferi.geojson  muri, aperture, solai, stanze, coperture e cupola per piano (WGS84, quote in metri da terra)
   crociferi.glb      lo stesso modello come mesh (metri, origine al centro della cupola, asse Y verso l'alto)
   contesto.geojson   le unità volumetriche CTC attorno, senza quelle del Noviziato (per estruderle grigie nella vista)
+  prospetti.json     i prospetti come facciate: spigoli (lon, lat), altezza e immagine prospetti/<lato>.png (solo linee)
 
 Come funziona
 1. Le sei tavole del DWG (terra, ammezzato, primo, secondo, terzo, copertura) stanno affiancate nello spazio modello:
@@ -70,6 +71,15 @@ PIANI = [
 # gronda (228), colmo (183), muro esterno del tamburo (200), estradosso della cupola (117), cima della lanterna (62)
 COPERTURA = {'id': 'copertura', 'nome': 'Copertura', 'livello': 5, 'gronda': 20.4, 'colmo': 23.5,
              'tamburo': 22.3, 'cupola': 27.9, 'lanterna': 31.7}
+# Prospetti (img/) applicati come texture alle facce esterne nel GLB: riquadro in pixel della facciata (x sinistra-destra,
+# y cima-terra) e lato della pianta. Le estremità dei lati sono i fili esterni del piano di riferimento (cm disegno).
+# La scala verticale è la stessa dell'orizzontale (larghezza in pianta / larghezza in pixel); il bianco è trasparente.
+FILI = {'ovest': 10178, 'est': 14236, 'sud': 10174, 'nord': 13120}
+FACCIATE = [
+    {'lato': 'sud', 'img': 'nov_crocif_02.jpg', 'x': (15, 690), 'y': (236, 593)},     # lungo, 9 campate
+    {'lato': 'ovest', 'img': 'nov_crocif_01.JPG', 'x': (35, 495), 'y': (190, 570)},   # su via Torremuzza, fronte della chiesa
+    {'lato': 'est', 'img': 'nov_crocif_03.jpg', 'x': (68, 552), 'y': (205, 530)},     # con i balconi, sul giardino
+]
 SOLAIO = 0.30          # spessore dei solai (m)
 MURO_GIARDINO = 3.0    # altezza dei muri di recinzione fuori dalle unità CTC (m)
 CHIUSURA = 75          # semiampiezza (cm) con cui si chiudono i varchi delle murature
@@ -426,8 +436,16 @@ def main():
         ext = [[round(x, 7), round(y, 7)] for x, y in (UTM.transform(*xy) for xy in q.exterior.coords)]
         contesto.append({'type': 'Feature', 'properties': {'h': pr.get('height')}, 'geometry': {'type': 'Polygon', 'coordinates': [ext]}})
     (OUT / 'contesto.geojson').write_text(json.dumps({'type': 'FeatureCollection', 'features': contesto}, separators=(',', ':')))
+    prospetti = facciate(porta_utm)
+    (OUT / 'prospetti').mkdir(exist_ok=True)
+    elenco = []
+    for f in prospetti:
+        f['img'].save(OUT / 'prospetti' / f'{f["lato"]}.png', optimize=True)
+        elenco.append({'lato': f['lato'], 'immagine': f'prospetti/{f["lato"]}.png', 'altezza': round(f['alto'], 2),
+                       'da': [round(v, 7) for v in UTM.transform(*f['a'])], 'a': [round(v, 7) for v in UTM.transform(*f['b'])]})
+    (OUT / 'prospetti.json').write_text(json.dumps(elenco, indent=1))
     if not args.no_glb:
-        scrivi_glb(feats, ott.centroid, OUT / 'crociferi.glb')
+        scrivi_glb(feats, ott.centroid, OUT / 'crociferi.glb', prospetti)
 
 
 def _profondita(g):
@@ -443,21 +461,59 @@ COLORI = {'muro': (226, 214, 190), 'architrave': (226, 214, 190), 'davanzale': (
           'cupola': (196, 112, 80), 'lanterna': (226, 214, 190)}
 
 
-def scrivi_glb(feats, centro, percorso):
+def facciate(porta_utm):
+    """Per ogni prospetto: estremità sinistra e destra (UTM, viste da fuori), altezza (m) e immagine RGBA delle sole linee."""
+    W, E, S, N = FILI['ovest'], FILI['est'], FILI['sud'], FILI['nord']
+    estremi = {'sud': ((W, S), (E, S)), 'ovest': ((W, N), (W, S)), 'est': ((E, S), (E, N)), 'nord': ((E, N), (W, N))}
+    out = []
+    for f in FACCIATE:
+        a, b = (np.array(porta_utm(Point(*p)).coords[0]) for p in estremi[f['lato']])
+        lungo = np.linalg.norm(b - a)
+        (x0, x1), (y0, y1) = f['x'], f['y']
+        im = Image.open(SRC / 'img' / f['img']).convert('L').crop((x0, y0, x1, y1))
+        alto = lungo * (y1 - y0) / (x1 - x0)
+        # linee scure opache, bianco trasparente: il disegno si posa sulle murature del modello
+        g = np.asarray(im, np.uint8)
+        rgba = np.zeros((*g.shape, 4), np.uint8)
+        rgba[..., :3] = 40
+        rgba[..., 3] = np.clip((215 - g.astype(int)) * 4, 0, 255)
+        # fuori dal filo di 5 cm, perché le linee non si mescolino con la faccia del muro
+        n = np.array([(b - a)[1], -(b - a)[0]]) / lungo
+        out.append({'lato': f['lato'], 'a': a + n * 0.05, 'b': b + n * 0.05, 'alto': alto, 'img': Image.fromarray(rgba, 'RGBA')})
+        print(f"prospetto {f['lato']}: {lungo:.1f} m x {alto:.1f} m")
+    return out
+
+
+def scrivi_glb(feats, centro, percorso, prospetti=()):
     import trimesh
     cx, cy = centro.x, centro.y
     scena = trimesh.Scene()
-    for i, f in enumerate(feats):
+    # una mesh per piano e tipo, con un materiale per tipo: meno nodi e colori uguali in ogni visualizzatore glTF
+    gruppi = {}
+    for f in feats:
         p = f['properties']
         if f['geometry']['type'] != 'Polygon' or p['tipo'] == 'vuoto' or p['h'] - p['quota'] <= 0:
             continue
         anelli = [[(x - cx, y - cy) for x, y in (A_UTM.transform(*xy) for xy in r)] for r in f['geometry']['coordinates']]
-        poly = Polygon(anelli[0], anelli[1:]).buffer(0)
-        for pp in poligoni(poly):
+        for pp in poligoni(Polygon(anelli[0], anelli[1:]).buffer(0)):
             m = trimesh.creation.extrude_polygon(pp, p['h'] - p['quota'])
             m.apply_translation([0, 0, p['quota']])
-            m.visual.face_colors = [*COLORI.get(p['tipo'], (200, 200, 200)), 255]
-            scena.add_geometry(m, node_name=f'{p["piano"]}_{p["tipo"]}_{i}', geom_name=f'{p["piano"]}_{p["tipo"]}_{i}')
+            gruppi.setdefault((p['piano'], p['tipo']), []).append(m)
+    for (piano, tipo), ms in gruppi.items():
+        m = trimesh.util.concatenate(ms)
+        r, g, b = COLORI.get(tipo, (200, 200, 200))
+        mat = trimesh.visual.material.PBRMaterial(name=tipo, baseColorFactor=[r / 255, g / 255, b / 255, 1.0],
+                                                  metallicFactor=0, roughnessFactor=0.9)
+        m.visual = trimesh.visual.TextureVisuals(material=mat)
+        scena.add_geometry(m, node_name=f'{piano}_{tipo}', geom_name=f'{piano}_{tipo}')
+    for f in prospetti:
+        a, b = f['a'] - (cx, cy), f['b'] - (cx, cy)
+        v = np.array([[*a, 0], [*b, 0], [*b, f['alto']], [*a, f['alto']]])
+        uv = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
+        mat = trimesh.visual.material.PBRMaterial(baseColorTexture=f['img'], alphaMode='MASK', alphaCutoff=0.35,
+                                                  doubleSided=True, metallicFactor=0, roughnessFactor=1)
+        m = trimesh.Trimesh(v, [[0, 1, 2], [0, 2, 3]], visual=trimesh.visual.TextureVisuals(uv=uv, material=mat), process=False)
+        scena.add_geometry(m, node_name=f'prospetto_{f["lato"]}', geom_name=f'prospetto_{f["lato"]}')
     # Z in alto -> Y in alto (glTF)
     scena.apply_transform(trimesh.transformations.rotation_matrix(-math.pi / 2, [1, 0, 0]))
     percorso.write_bytes(scena.export(file_type='glb'))
