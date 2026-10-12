@@ -204,7 +204,7 @@ export default {
     },
   },
   strati: [{
-    id: STRATO, etichetta: 'Ex Noviziato dei Crociferi in 3D', layers: [VOLUMI], attivo: false, legendaIntegrata: '.legenda-crociferi',
+    id: STRATO, etichetta: 'Ex Noviziato dei Crociferi in 3D (in sviluppo)', layers: [VOLUMI], attivo: false, legendaIntegrata: '.legenda-crociferi',
     suCambio(attivo, map) {
       if (legenda) legenda.hidden = !attivo;
       if (!attivo && stato.pianta) esciPianta();
