@@ -7,6 +7,7 @@ import { leggi, salva } from './archivio.js';
 import { anelliDaZone } from './area.js';
 import { archivioIndexedDB } from './dati.js';
 import { scegliProxy } from './proxy.js';
+import { collegaTooltipEstensioni } from './tooltip.js';
 import { urlDati } from '../core/config.js';
 import { segnala } from '../core/pannello.js';
 import { t, lingua } from '../core/i18n.js';
@@ -23,6 +24,7 @@ export function collegaRndt(map, elementoPannello, gruppo) {
   // il confine comunale serve al filtro dei download; è lo stesso file delle zone, già in cache del browser
   const anelliPronti = fetch(urlDati('popolazione/confini_zone.json')).then(r => r.json()).then(z => { anelli = anelliDaZone(z); }).catch(() => {});
 
+  collegaTooltipEstensioni(map);
   const archivioDati = archivioIndexedDB();
   const pannello = creaPannello(elementoPannello);
   const host = creaHost({
