@@ -2121,7 +2121,7 @@
   "edificio.gruppo.muri": "Murature",
   "edificio.gruppo.solai": "Solai",
   "edificio.gruppo.stanze": "Stanze",
-  "edificio.nota": "Piante dal DWG del Settore Centro Storico, allineate alle unità volumetriche CTC del Comune di Palermo. Quote dei piani dalla sezione, in scala con la gronda CTC (±1 m circa). Dei testi del DWG restano solo i numeri delle stanze.",
+  "edificio.nota": "Piante dell'Ex Noviziato dei Crociferi, allineate alle unità volumetriche CTC del Comune di Palermo. Quote dei piani dalla sezione, in scala con la gronda CTC (±1 m circa). È un piccolo test per studiare e valutare la fattibilità di un progetto più ampio: lo stesso metodo si potrebbe applicare a tutti gli edifici di cui siano disponibili piante, sezioni e prospetti.",
   "edificio.piani": "Piani",
   "edificio.piano.ammezzato": "Ammezzato",
   "edificio.piano.copertura": "Copertura",
