@@ -133,3 +133,27 @@ test('trasformaMondo: da fuori come la vista a orbita, da dentro l\'occhio nel p
   assert.match(trasformaMondo({ tx: 0, ty: 0, tz: 2600, a: 0, b: 180, k: 1, ex: 10, ey: -20, zt: 3000 }),
     /^translate3d\(0px,0px,2600px\) rotateX\(180deg\).*translate3d\(-10px,20px,-3000px\)$/);
 });
+
+test('ruotaAttorno: il modello gira sul suo asse, l\'occhio resta dov\'è sullo schermo', async () => {
+  const { ruotaAttorno } = await import('../../js/core/strati-3d-modello.js');
+  const vicino = (a, b) => a.every((x, i) => Math.abs(x - b[i]) < 1e-9);
+  const rot = (deg, [x, y]) => { const t = deg * Math.PI / 180; return [x * Math.cos(t) - y * Math.sin(t), x * Math.sin(t) + y * Math.cos(t)]; };
+  assert.deepEqual(ruotaAttorno({ a: 10, ex: 0, ey: 0 }, 30), { a: 40, ex: 0, ey: 0 }); // occhio al centro: solo rotazione
+  // la camera vecchia sul modello ruotato vede quello che la camera nuova vede sul modello fermo: Rz(a)(Rz(Δ)p − e) = Rz(a')(p − e')
+  const cam = { a: 25, ex: 100, ey: -40 }, delta = 70, nuova = ruotaAttorno(cam, delta);
+  for (const p of [[30, 50], [-200, 10], [0, 0]]) {
+    const r = rot(delta, p);
+    assert.ok(vicino(rot(cam.a, [r[0] - cam.ex, r[1] - cam.ey]), rot(nuova.a, [p[0] - nuova.ex, p[1] - nuova.ey])));
+  }
+});
+
+test('passoAvanti e pianiAccesi', async () => {
+  const { passoAvanti, pianiAccesi, passoOcchio } = await import('../../js/core/strati-3d-modello.js');
+  const vicino = (a, b) => a.every((x, i) => Math.abs(x - b[i]) < 1e-9);
+  assert.ok(vicino(passoAvanti(0, 10), [0, -10]));       // avanti = verso l'alto dello schermo
+  assert.ok(vicino(passoAvanti(0, 0, 10), [10, 0]));
+  assert.ok(vicino(passoAvanti(90, 10), [-10, 0]));
+  // coerente col trascinamento: andare avanti è come tirare giù il piano
+  assert.ok(vicino(passoAvanti(35, 10), passoOcchio(0, 10, 35, 0, 1, 1)));
+  assert.deepEqual(pianiAccesi([false, true, false]), [0, 2]);
+});

@@ -1872,8 +1872,10 @@ body.strati3d-attiva :is(#scheda, #rail-pannelli) { z-index: calc(var(--z-viewer
   .strati3d-comandi input[type=range] { width: 96px; }
   .strati3d-varco { display: none; }
   .strati3d-dentro { gap: 4px; }
-  .strati3d.dentro .strati3d-comandi { gap: 4px; padding: 6px 8px; }
+  .strati3d.dentro .strati3d-comandi { gap: 4px; padding: 6px 8px; flex-wrap: wrap; justify-content: center; border-radius: var(--r-md); }
+  .strati3d.dentro .strati3d-dentro { flex-wrap: wrap; justify-content: center; }
   .strati3d.dentro .strati3d-comandi button:not(.strati3d-varco-giu, .strati3d-varco-su) { padding: 6px 8px; }
+  .strati3d.dentro .strati3d-gira { display: none; } /* su telefono la barra da dentro non ci starebbe: si gira trascinando */
   .strati3d-aiuto { display: none; }
   .strati3d-sposta { left: auto; right: 8px; bottom: auto; top: 104px; grid-template: repeat(3, 30px) / repeat(3, 30px); gap: 2px; padding: 4px; }
 }

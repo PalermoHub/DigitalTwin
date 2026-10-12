@@ -155,3 +155,20 @@ export function passoOcchio(dx, dy, a, b, h, P) {
 // Passando da una all'altra i numeri si interpolano e la camera «entra» nella pila.
 export const trasformaMondo = c => `translate3d(${c.tx}px,${c.ty}px,${c.tz}px) rotateX(${c.b}deg) rotateZ(${c.a}deg) `
   + `scale3d(${c.k},${c.k},${c.k}) translate3d(${-c.ex}px,${-c.ey}px,${-c.zt}px)`;
+
+// i piani accesi, su cui si può camminare (dal più basso)
+export const pianiAccesi = spento => spento.map((s, i) => (s ? -1 : i)).filter(i => i >= 0);
+
+// Da dentro la pila si gira tutto il modello attorno al suo asse (non attorno all'occhio): ruotare il mondo di `delta`
+// gradi con l'occhio fermo sullo schermo equivale a sommare `delta` alla rotazione e a riportare l'occhio nel mondo
+// ruotato di -delta. Con l'occhio al centro della pila è una semplice rotazione.
+export function ruotaAttorno({ a, ex, ey }, delta) {
+  const r = (delta * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r);
+  return { a: a + delta, ex: ex * c + ey * s, ey: -ex * s + ey * c };
+}
+
+// Camminando: un passo in avanti (verso l'alto dello schermo) e di lato (verso destra), con la rotazione `a`
+export function passoAvanti(a, avanti, destra = 0) {
+  const r = (a * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r);
+  return [destra * c - avanti * s, -destra * s - avanti * c];
+}
