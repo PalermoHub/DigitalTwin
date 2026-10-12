@@ -43,7 +43,7 @@ stime campionarie (censimento permanente).
 piani georeferenziati, estrusi alle loro quote e separabili con l'esploso; la vista in pianta mostra i numeri delle stanze.
 I dati (`dati/edificio/crociferi/`) si rigenerano con `python3 scripts/edificio/crociferi.py`, che legge il DWG con
 LibreDWG (`dwgread`) e allinea le piante alle unità volumetriche CTC; nel docstring dello script i passi e le ipotesi
-(le quote dei piani sono stimate dal prospetto).
+(quote dei piani dalla sezione, in scala con la gronda CTC).
 
 ## Struttura
 

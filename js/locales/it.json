@@ -2132,7 +2132,7 @@
   "edificio.linkMappa": "Mappa",
   "edificio.modelloGlb": "Modello GLB",
   "edificio.nome": "Ex Noviziato dei Crociferi",
-  "edificio.nota": "Piante dal DWG del Settore Centro Storico, allineate alle unità volumetriche CTC del Comune di Palermo. Le quote dei piani sono stimate dal prospetto (gronda a 21,6 m): valore indicativo. Dei testi del DWG restano solo i numeri delle stanze.",
+  "edificio.nota": "Piante dal DWG del Settore Centro Storico, allineate alle unità volumetriche CTC del Comune di Palermo. Quote dei piani dalla sezione, in scala con la gronda CTC (±1 m circa). Dei testi del DWG restano solo i numeri delle stanze.",
   "edificio.piani": "Piani",
   "edificio.piano.ammezzato": "Ammezzato",
   "edificio.piano.copertura": "Copertura",

@@ -2132,7 +2132,7 @@
   "edificio.linkMappa": "Map",
   "edificio.modelloGlb": "GLB model",
   "edificio.nome": "Former Noviziato dei Crociferi",
-  "edificio.nota": "Floor plans from the Historic Centre Department DWG, aligned with the City of Palermo CTC building volumes. Floor heights are estimated from the elevation drawing (eaves at 21.6 m): indicative only. Of the DWG texts only the room numbers are kept.",
+  "edificio.nota": "Floor plans from the Historic Centre Department DWG, aligned with the City of Palermo CTC building volumes. Floor heights from the cross-section, scaled to the CTC eaves height (about ±1 m). Of the DWG texts only the room numbers are kept.",
   "edificio.piani": "Floors",
   "edificio.piano.ammezzato": "Mezzanine",
   "edificio.piano.copertura": "Roof",

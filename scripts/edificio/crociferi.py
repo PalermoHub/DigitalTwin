@@ -18,8 +18,10 @@ Come funziona
    la scala resta quella del rilievo (1 unità = 1 cm).
 4. Stanze = impronta del piano meno le murature con i varchi chiusi; i varchi diventano architravi (e davanzali se
    danno sull'esterno). Dei testi restano solo i numeri delle stanze: nomi del personale, scrivanie e destinazioni no.
-5. Le quote dei piani non sono nel DWG (non ci sono sezioni): vengono dal prospetto img/nov_crocif_02.jpg letto in
-   proporzione con la gronda a 21,6 m dell'unità volumetrica CTC. Vanno sostituite con le quote di rilievo se disponibili.
+5. Le quote non sono nel DWG: le proporzioni vengono dalla sezione img/sezione.jpg (cupola e ala sud), che i prospetti
+   confermano entro il 2-3%; la scala assoluta è fissata dalla gronda CTC, 21,6 m sopra la strada, con il pavimento del
+   piano terra ~1,2 m sopra la strada (dalla sezione): 0,068 m/px. Le altre stime della scala (larghezze delle stanze
+   e dell'edificio sulla pianta, prospetti) danno gronde tra 20,1 e 22,8 m: le quote assolute valgono ±1 m circa.
 """
 import argparse
 import json
@@ -56,16 +58,18 @@ CORNICI = {
 }
 RIFERIMENTO = 'primo'
 
-# Quote (m da terra) lette sul prospetto lungo, con la gronda a 21,6 m (CTC). quota = piano di calpestio, cielo = soffitto
+# Quote (m dal pavimento del piano terra) dalla sezione img/sezione.jpg a 0,068 m/px; tra parentesi la riga di pixel
+# (pavimento del piano terra a 528, strada a 545). quota = piano di calpestio, cielo = estradosso del solaio sopra
 PIANI = [
-    {'id': 'terra', 'nome': 'Piano terra', 'livello': 0, 'quota': 0.0, 'cielo': 7.5},
-    {'id': 'ammezzato', 'nome': 'Ammezzato', 'livello': 1, 'quota': 4.0, 'cielo': 7.5},
-    {'id': 'primo', 'nome': 'Piano primo', 'livello': 2, 'quota': 7.5, 'cielo': 12.5},
-    {'id': 'secondo', 'nome': 'Piano secondo', 'livello': 3, 'quota': 12.5, 'cielo': 18.0},
-    {'id': 'terzo', 'nome': 'Piano terzo', 'livello': 4, 'quota': 18.0, 'cielo': 21.6},
+    {'id': 'terra', 'nome': 'Piano terra', 'livello': 0, 'quota': 0.0, 'cielo': 6.3},
+    {'id': 'ammezzato', 'nome': 'Ammezzato', 'livello': 1, 'quota': 2.8, 'cielo': 6.3},     # 487
+    {'id': 'primo', 'nome': 'Piano primo', 'livello': 2, 'quota': 6.3, 'cielo': 11.8},      # 436
+    {'id': 'secondo', 'nome': 'Piano secondo', 'livello': 3, 'quota': 11.8, 'cielo': 17.3}, # 355
+    {'id': 'terzo', 'nome': 'Piano terzo', 'livello': 4, 'quota': 17.3, 'cielo': 20.4},     # 274, soffitto 228
 ]
-COPERTURA = {'id': 'copertura', 'nome': 'Copertura', 'livello': 5, 'gronda': 21.6, 'colmo': 24.4,
-             'tamburo': 24.7, 'cupola': 28.7, 'lanterna': 31.5}
+# gronda (228), colmo (183), muro esterno del tamburo (200), estradosso della cupola (117), cima della lanterna (62)
+COPERTURA = {'id': 'copertura', 'nome': 'Copertura', 'livello': 5, 'gronda': 20.4, 'colmo': 23.5,
+             'tamburo': 22.3, 'cupola': 27.9, 'lanterna': 31.7}
 SOLAIO = 0.30          # spessore dei solai (m)
 MURO_GIARDINO = 3.0    # altezza dei muri di recinzione fuori dalle unità CTC (m)
 CHIUSURA = 75          # semiampiezza (cm) con cui si chiudono i varchi delle murature
@@ -405,7 +409,7 @@ def main():
         'indirizzo': 'Foro Umberto I 14 / Cortile Crociferi, Palermo',
         'fonte': 'Piante DWG «Noviziato planimetrie complete e PLT», Comune di Palermo - Settore Centro Storico',
         'georeferenziazione': 'piante allineate alle unità volumetriche CTC del Comune di Palermo (cupola e bordi)',
-        'quote': 'stimate dal prospetto (gronda 21,6 m da CTC): da sostituire con quote di rilievo',
+        'quote': 'proporzioni dalla sezione, scala dalla gronda CTC (21,6 m dalla strada); m dal pavimento del piano terra, ±1 m',
         'piani': [{k: p[k] for k in ('id', 'nome', 'livello', 'quota', 'cielo')} for p in PIANI]
                  + [{'id': c['id'], 'nome': c['nome'], 'livello': c['livello'], 'quota': c['gronda'], 'cielo': c['lanterna']}],
         'centro': list(UTM.transform(*ott.centroid.coords[0])),
