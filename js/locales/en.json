@@ -2121,7 +2121,7 @@
   "edificio.gruppo.muri": "Walls",
   "edificio.gruppo.solai": "Floor slabs",
   "edificio.gruppo.stanze": "Rooms",
-  "edificio.nota": "Floor plans of the former Noviziato dei Crociferi, aligned with the City of Palermo CTC building volumes. Floor heights from the cross-section, scaled to the CTC eaves height (about ±1 m). This is a small test to study and assess the feasibility of a wider project: the same method could be applied to every building for which floor plans, sections and elevations are available.",
+  "edificio.nota": "Floor plans of the former Noviziato dei Crociferi, aligned with the City of Palermo CTC building volumes. Floor heights from the cross-section, scaled to the CTC eaves height (about ±1 m). This is a small test to study and assess the feasibility of a wider project: the same method could be applied to every building for which floor plans, sections and elevations are available, along with any photographic documentation.",
   "edificio.piani": "Floors",
   "edificio.piano.ammezzato": "Mezzanine",
   "edificio.piano.copertura": "Roof",
