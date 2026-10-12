@@ -182,3 +182,48 @@ export function zoomDentro(k, base, lato) {
   const z = Math.min(ZOOM_DENTRO.max, Math.max(ZOOM_DENTRO.min, k));
   return { P: base * Math.max(1, z), indietro: z < 1 ? (1 / z - 1) * lato * 0.3 : 0 };
 }
+
+// ── Movimento continuo, come in un videogioco ──
+// Tasti tenuti, joystick e pulsanti tenuti danno cinque assi in -1..1; la velocità li insegue con un'accelerazione
+// morbida (avvicina) e ogni fotogramma sposta la camera di velocità × tempo. Così il moto parte e si ferma senza scatti
+// e non dipende dalla ripetizione dei tasti del sistema.
+export const ASSI = ['avanti', 'lato', 'gira', 'inclina', 'zoom'];
+// per codice del tasto (ev.code, indipendente dalla tastiera): [asse, verso]; con Maiusc le frecce su e giù inclinano
+const TASTI = {
+  KeyW: ['avanti', 1], ArrowUp: ['avanti', 1], KeyS: ['avanti', -1], ArrowDown: ['avanti', -1],
+  KeyA: ['gira', 1], ArrowLeft: ['gira', 1], KeyD: ['gira', -1], ArrowRight: ['gira', -1],
+  KeyQ: ['lato', -1], KeyE: ['lato', 1], KeyR: ['inclina', 1], KeyF: ['inclina', -1],
+  Equal: ['zoom', 1], NumpadAdd: ['zoom', 1], Minus: ['zoom', -1], NumpadSubtract: ['zoom', -1],
+};
+export const tastoDiMoto = code => code in TASTI;
+export function assiDaTasti(premuti, maiuscolo = false) {
+  const assi = Object.fromEntries(ASSI.map(a => [a, 0]));
+  for (const code of premuti) {
+    let [asse, verso] = TASTI[code] ?? [];
+    if (!asse) continue;
+    if (maiuscolo && (code === 'ArrowUp' || code === 'ArrowDown')) asse = 'inclina';
+    assi[asse] += verso;
+  }
+  return assi;
+}
+// somma di più sorgenti, ogni asse tenuto in -1..1
+export const sommaAssi = (...fonti) => Object.fromEntries(ASSI.map(a => [a, Math.max(-1, Math.min(1, fonti.reduce((s, f) => s + (f[a] ?? 0), 0)))]));
+// la velocità insegue gli assi: `ritmo` più alto = più reattiva; sotto una soglia si ferma del tutto
+export function avvicina(vel, scopo, dt, ritmo = 7) {
+  const m = 1 - Math.exp(-dt * ritmo);
+  for (const a of ASSI) {
+    vel[a] += ((scopo[a] ?? 0) - vel[a]) * m;
+    if (!scopo[a] && Math.abs(vel[a]) < 1e-3) vel[a] = 0;
+  }
+  return vel;
+}
+// Joystick: spostamento della manopola (dx, dy) in px su un raggio → avanti (su = avanti) e lato, con una zona morta al
+// centro e una curva che rende fini i movimenti piccoli.
+export function assiJoystick(dx, dy, raggio, morta = 0.12) {
+  const d = Math.hypot(dx, dy) / raggio;
+  if (d < morta) return { avanti: 0, lato: 0 };
+  const k = Math.min(1, (d - morta) / (1 - morta)) ** 1.6 / d;
+  return { avanti: -dy / raggio * k, lato: dx / raggio * k };
+}
+// l'angolo più breve (in -180..180) per tornare a nord da una rotazione `a`
+export const versoNord = a => -(((a % 360) + 540) % 360 - 180);

@@ -2,7 +2,9 @@ import { t } from './i18n.js';
 import { segnala } from './pannello.js';
 import { eBase } from '../layers/base.js';
 import { gruppiStrati, limitaPiani, quote, unisciTerreno, etichettaFeature, layerDaInterrogare, MAX_PIANI,
-  varchi, varcoPer, camminaVarco, opacitaDentro, passoOcchio, trasformaMondo, pianiAccesi, ruotaAttorno, passoAvanti, zoomDentro, ZOOM_DENTRO } from './strati-3d-modello.js';
+  varchi, varcoPer, camminaVarco, opacitaDentro, passoOcchio, trasformaMondo, pianiAccesi, ruotaAttorno, passoAvanti, zoomDentro, ZOOM_DENTRO,
+  assiDaTasti, sommaAssi, avvicina, versoNord, tastoDiMoto, ASSI } from './strati-3d-modello.js';
+import { creaNavigatore, creaGuida } from './strati-3d-navigatore.js';
 import { gradoni } from './strati-3d-terreno.js';
 import { modelloTooltipDi, disegnaVoceTooltip } from './tooltip.js';
 
@@ -18,8 +20,12 @@ const PROSPETTIVA = 2600;
 // Lo zoom da dentro: avvicinando stringe il campo visivo, allontanando l'occhio arretra (vedi zoomDentro).
 const ESPLOSO_DENTRO = 6;
 const prospettivaDentro = palco => Math.max(420, palco.clientWidth / 2);
-// camminando l'occhio sta a questa frazione del varco sopra il piano, e ogni passo è questa frazione della pila
-const ALTEZZA_PASSO = 0.05, PASSO_CAMMINO = 0.02;
+// camminando l'occhio sta a questa frazione del varco sopra il piano
+const ALTEZZA_PASSO = 0.05;
+// velocità a comando pieno: gradi al secondo per girare e inclinare, raddoppi al secondo per lo zoom, px al secondo per
+// spostare la pila da fuori, frazioni della pila al secondo per muoversi da dentro e camminando
+const VEL = { gira: 75, inclina: 50, zoom: 1.4, pila: 520, dentro: 0.4, cammina: 0.2 };
+const GUIDA_VISTA = 'dt-strati3d-guida'; // la guida ai comandi si apre da sola solo la prima volta
 const TELEFONO = '(max-width: 720px)';
 
 // attende che la mappa abbia finito di disegnare (con un tetto: un tile lento non blocca la vista)
@@ -162,23 +168,18 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   alto.classList.add('solo-fuori');
   comandi.append(etEsplodi, gira, alto, entra, daDentro);
   const aiuto = el('p', 'strati3d-aiuto', t('strati3d.aiuto'));
-  // croce per spostare la pila nelle quattro direzioni, con «centra» in mezzo
-  const sposta = el('div', 'strati3d-sposta');
-  sposta.setAttribute('role', 'group');
-  sposta.setAttribute('aria-label', t('strati3d.sposta'));
-  const FRECCE = { su: [0, 1, 'M12 5v14M5 12l7-7 7 7'], sinistra: [1, 0, 'M19 12H5M12 5l-7 7 7 7'], centra: [1, 1, null], destra: [1, 2, 'M5 12h14M12 5l7 7-7 7'], giu: [2, 1, 'M12 19V5M5 12l7 7 7-7'] };
-  const bottoniSposta = {};
-  for (const [dir, [r, c, d]] of Object.entries(FRECCE)) {
-    const b = el('button', `strati3d-sposta-${dir}`);
-    b.type = 'button';
-    b.style.gridArea = `${r + 1} / ${c + 1}`;
-    b.title = b.ariaLabel = t(`strati3d.sposta.${dir}`);
-    b.innerHTML = d ? `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`
-      : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>';
-    bottoniSposta[dir] = b;
-    sposta.append(b);
-  }
-  radice.append(palco, testata, elenco, comandi, sposta, aiuto);
+  // navigatore alla Google Earth (bussola, joystick, zoom, inclinazione) e guida ai comandi
+  const assiUI = Object.fromEntries(ASSI.map(a => [a, 0]));
+  const nav = creaNavigatore({
+    assi: assiUI,
+    gira: d => giraModello(d),
+    nord: () => { giraModello(versoNord(meta.a)); gesto(); },
+    centra: () => { Object.assign(meta, { px: 0, py: 0, ex: 0, ey: 0, k: 1 }); gesto(); },
+    guida: () => mostraGuida(guida.hidden),
+    gesto: () => gesto(),
+  });
+  const guida = creaGuida(() => mostraGuida(false));
+  radice.append(palco, testata, elenco, comandi, nav.radice, aiuto, guida);
   // dentro #corpo, accanto alla scheda: #corpo ha `contain: layout` e fa da contesto, solo così la scheda le sta sopra
   const corpo = map.getContainer().closest('#corpo') || document.body;
   corpo.append(radice);
@@ -291,6 +292,7 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   const altezza = () => (meta.c ? ALTEZZA_PASSO : 0.5);
   // da dentro, girare: a metà del varco gira tutto il modello attorno al suo asse; camminando gira la testa
   const giraDentro = delta => { if (meta.c) meta.a += delta; else Object.assign(meta, ruotaAttorno(meta, delta)); };
+  const giraModello = delta => { if (meta.d) giraDentro(delta); else meta.a += delta; };
   const cam = { ...piatto, zt: 0, tx: 0, ty: 0, tz: 0, ex: 0, ey: 0, P: PROSPETTIVA };
   // Spazio libero della scena: tolti la scheda (a destra, o il foglio in basso su telefono), l'elenco e la testata.
   // La pila si centra e si adatta lì; elenco, testata e comandi si allineano con le variabili --libero-*.
@@ -319,7 +321,16 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   const medio = () => { const [p1, p2] = [...puntatori.values()]; return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2]; };
   let medio0 = null;
   palco.addEventListener('contextmenu', ev => ev.preventDefault()); // il tasto destro sposta la pila
+  // inerzia: lasciando un trascinamento ancora in corsa, giro e spostamento continuano e rallentano da soli
+  const inerzia = { a: 0, x: 0, y: 0 }, corsa = { a: 0, x: 0, y: 0, t: 0 };
+  const traccia = (k, d) => {
+    const ora = performance.now(), dt = Math.max(8, ora - corsa.t) / 1000;
+    for (const c of ['a', 'x', 'y']) corsa[c] = corsa[c] * 0.6 + (c === k[0] || c === k[1] ? (d[k.indexOf(c)] / dt) * 0.4 : 0);
+    corsa.t = ora;
+  };
   palco.addEventListener('pointerdown', ev => {
+    Object.assign(inerzia, { a: 0, x: 0, y: 0 });
+    Object.assign(corsa, { a: 0, x: 0, y: 0, t: performance.now() });
     puntatori.set(ev.pointerId, [ev.clientX, ev.clientY]);
     partenza = { x: ev.clientX, y: ev.clientY, t: performance.now() };
     spostaMano = ev.button === 2 || ev.button === 1 || ev.shiftKey;
@@ -331,9 +342,10 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     if (!puntatori.has(ev.pointerId)) return;
     const [x0, y0] = puntatori.get(ev.pointerId);
     puntatori.set(ev.pointerId, [ev.clientX, ev.clientY]);
-    if (puntatori.size === 1 && spostaMano) muoviPila(ev.clientX - x0, ev.clientY - y0);
-    else if (puntatori.size === 1 && meta.d) { giraDentro(-(ev.clientX - x0) * 0.25); meta.b = Math.min(180, Math.max(0, meta.b - (ev.clientY - y0) * 0.3)); }
-    else if (puntatori.size === 1) { meta.a -= (ev.clientX - x0) * 0.35; meta.b = Math.min(82, Math.max(0, meta.b - (ev.clientY - y0) * 0.25)); }
+    const dx = ev.clientX - x0, dy = ev.clientY - y0;
+    if (puntatori.size === 1 && spostaMano) { muoviPila(dx, dy); traccia('xy', [dx, dy]); }
+    else if (puntatori.size === 1 && meta.d) { giraDentro(-dx * 0.25); traccia('a', [-dx * 0.25]); meta.b = Math.min(180, Math.max(0, meta.b - dy * 0.3)); }
+    else if (puntatori.size === 1) { meta.a -= dx * 0.35; traccia('a', [-dx * 0.35]); meta.b = Math.min(82, Math.max(0, meta.b - dy * 0.25)); }
     else if (puntatori.size === 2) {   // due dita: pizzico per lo zoom, il punto medio sposta la pila
       const [p1, p2] = [...puntatori.values()];
       meta.k = Math.min(4, Math.max(zoomMin(), zoom0 * Math.hypot(p1[0] - p2[0], p1[1] - p2[1]) / distanza0));
@@ -343,11 +355,24 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     }
     gesto();
   };
-  const lascia = ev => { puntatori.delete(ev.pointerId); if (!puntatori.size) palco.classList.remove('trascina'); };
+  const lascia = ev => {
+    if (!puntatori.has(ev.pointerId)) return;
+    puntatori.delete(ev.pointerId);
+    if (puntatori.size) return;
+    palco.classList.remove('trascina');
+    // solo se il gesto era ancora in movimento al rilascio (non dopo una pausa)
+    if (!ridotto && performance.now() - corsa.t < 80) Object.assign(inerzia, { a: corsa.a, x: corsa.x, y: corsa.y });
+  };
   window.addEventListener('pointermove', muovi);
   window.addEventListener('pointerup', lascia);
   window.addEventListener('pointercancel', lascia);
-  palco.addEventListener('wheel', ev => { ev.preventDefault(); meta.k = Math.min(4, Math.max(zoomMin(), meta.k * Math.exp(-ev.deltaY * 0.0015))); gesto(); }, { passive: false });
+  let zoomRotella = { verso: '', t: 0 }; // per il cursore: lente col + o col - mentre si usa la rotella
+  palco.addEventListener('wheel', ev => {
+    ev.preventDefault();
+    meta.k = Math.min(4, Math.max(zoomMin(), meta.k * Math.exp(-ev.deltaY * 0.0015)));
+    zoomRotella = { verso: ev.deltaY < 0 ? 'zoom-in' : 'zoom-out', t: performance.now() };
+    gesto();
+  }, { passive: false });
   // un tocco (non un trascinamento) su uno strato apre la scheda di quel punto, restando nel 3D
   palco.addEventListener('click', ev => {
     if (!partenza || Math.hypot(ev.clientX - partenza.x, ev.clientY - partenza.y) > 6 || performance.now() - partenza.t > 500) return;
@@ -441,7 +466,6 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   palco.addEventListener('pointerdown', nascondiTip);
   palco.addEventListener('wheel', nascondiTip, { passive: true });
   cursore.addEventListener('input', () => { meta.e = +cursore.value; gesto(); });
-  const PASSO_MANO = 80;
   // da fuori si sposta la pila sullo schermo; da dentro si cammina sul piano (quello che c'è sotto il dito lo segue)
   const muoviPila = (x, y) => {
     if (meta.d) {
@@ -453,12 +477,6 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     } else { meta.px += x; meta.py += y; }
     gesto();
   };
-  // camminando la croce fa andare avanti e indietro e girare
-  bottoniSposta.su.addEventListener('click', () => (meta.c ? avanza(2) : muoviPila(0, -PASSO_MANO)));
-  bottoniSposta.giu.addEventListener('click', () => (meta.c ? avanza(-2) : muoviPila(0, PASSO_MANO)));
-  bottoniSposta.sinistra.addEventListener('click', () => { if (meta.c) { giraDentro(15); gesto(); } else muoviPila(-PASSO_MANO, 0); });
-  bottoniSposta.destra.addEventListener('click', () => { if (meta.c) { giraDentro(-15); gesto(); } else muoviPila(PASSO_MANO, 0); });
-  bottoniSposta.centra.addEventListener('click', () => { meta.px = meta.py = meta.ex = meta.ey = 0; meta.k = 1; gesto(); });
   // ── da dentro la pila ──
   const aggiornaVarco = () => {
     entra.disabled = !varchi(spento).length && !meta.d;
@@ -516,12 +534,6 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     aggiornaVarco();
   }
   cammina.addEventListener('click', () => vaiCammina(!meta.c));
-  const avanza = (avanti, destra = 0) => {
-    const [wx, wy] = passoAvanti(cam.a, avanti * lato * PASSO_CAMMINO, destra * lato * PASSO_CAMMINO);
-    meta.ex = Math.min(cw / 2, Math.max(-cw / 2, meta.ex + wx));
-    meta.ey = Math.min(ch / 2, Math.max(-ch / 2, meta.ey + wy));
-    gesto();
-  };
   entra.addEventListener('click', () => vaiDentro(!meta.d));
   scendi.addEventListener('click', () => cambiaVarco(-1));
   sali.addEventListener('click', () => cambiaVarco(1));
@@ -537,32 +549,73 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     alto.textContent = daAlto ? t('strati3d.in3d') : t('strati3d.alto');
     gesto();
   });
+  // tastiera: i tasti di moto contano finché sono premuti (il moto lo fa il disegno, fotogramma per fotogramma);
+  // gli altri sono colpi singoli
+  const premuti = new Set(), fisici = new Map(); // fisici: tasto premuto → tasto di moto che conta (per + e - sotto)
+  let maiuscolo = false;
+  // + e - stanno su tasti diversi secondo la tastiera (sull'italiana non sono Equal e Minus): contano per il carattere
+  const codiceDi = ev => (ev.key === '+' ? 'NumpadAdd' : ev.key === '-' ? 'NumpadSubtract' : ev.code);
   const tasti = ev => {
-    if (ev.key === 'Escape') { ev.preventDefault(); chiudiScena(); return; }
-    if (ev.target instanceof HTMLInputElement) return;
-    const mano = { ArrowLeft: [-PASSO_MANO / 2, 0], ArrowRight: [PASSO_MANO / 2, 0], ArrowUp: [0, -PASSO_MANO / 2], ArrowDown: [0, PASSO_MANO / 2] }[ev.key];
-    if (ev.shiftKey && mano) { ev.preventDefault(); muoviPila(...mano); return; } // Maiusc + frecce: sposta
+    maiuscolo = ev.shiftKey;
+    if (ev.key === 'Escape') { ev.preventDefault(); if (!guida.hidden) mostraGuida(false); else chiudiScena(); return; }
+    if (ev.target instanceof HTMLInputElement || ev.ctrlKey || ev.metaKey || ev.altKey) return;
     if (meta.d && (ev.key === 'PageUp' || ev.key === 'PageDown')) { ev.preventDefault(); cambiaVarco(ev.key === 'PageUp' ? 1 : -1); return; }
-    // camminando: frecce o WASD per andare avanti e indietro e girarsi, Q ed E per passi di lato
-    const passi = meta.c && { ArrowUp: () => avanza(1), w: () => avanza(1), ArrowDown: () => avanza(-1), s: () => avanza(-1),
-      ArrowLeft: () => giraDentro(8), a: () => giraDentro(8), ArrowRight: () => giraDentro(-8), d: () => giraDentro(-8),
-      q: () => avanza(0, -1), e: () => avanza(0, 1) }[ev.key.length === 1 ? ev.key.toLowerCase() : ev.key];
-    if (passi) { ev.preventDefault(); passi(); gesto(); return; }
-    const inclina = meta.d ? 180 : 82;
-    const azione = { ArrowLeft: () => { if (meta.d) giraDentro(10); else meta.a += 10; }, ArrowRight: () => { if (meta.d) giraDentro(-10); else meta.a -= 10; },
-      ArrowUp: () => { meta.b = Math.min(inclina, meta.b + 6); }, ArrowDown: () => { meta.b = Math.max(0, meta.b - 6); },
-      '+': () => { meta.k = Math.min(4, meta.k * 1.15); }, '-': () => { meta.k = Math.max(zoomMin(), meta.k / 1.15); } }[ev.key];
-    if (azione) { azione(); gesto(); }
+    if (ev.key === '?') { mostraGuida(guida.hidden); return; }
+    const code = codiceDi(ev);
+    if (tastoDiMoto(code)) { ev.preventDefault(); premuti.add(code); fisici.set(ev.code, code); gesto(); }
+  };
+  const tastiSu = ev => { maiuscolo = ev.shiftKey; premuti.delete(fisici.get(ev.code) ?? ev.code); fisici.delete(ev.code); };
+  const lasciaTutto = () => { premuti.clear(); fisici.clear(); maiuscolo = false; for (const a of ASSI) assiUI[a] = 0; };
+  document.addEventListener('keyup', tastiSu);
+  window.addEventListener('blur', lasciaTutto);
+  const mostraGuida = si => {
+    guida.hidden = !si;
+    if (si) guida.querySelector('button')?.focus();
+    else try { localStorage.setItem(GUIDA_VISTA, '1'); } catch { /* senza storage la guida tornerà la prossima volta */ }
   };
   document.addEventListener('keydown', tasti);
   chiudi.addEventListener('click', () => chiudiScena());
+
+  // ── moto continuo: tasti tenuti + navigatore → velocità morbide; poi l'inerzia dei trascinamenti ──
+  const vel = Object.fromEntries(ASSI.map(a => [a, 0]));
+  const tieniOcchio = () => {
+    meta.ex = Math.min(cw / 2, Math.max(-cw / 2, meta.ex));
+    meta.ey = Math.min(ch / 2, Math.max(-ch / 2, meta.ey));
+  };
+  function muoviContinuo(dt, ora) {
+    avvicina(vel, sommaAssi(assiDaTasti(premuti, maiuscolo), assiUI), dt, ridotto ? 30 : 7);
+    if (vel.gira) giraModello(vel.gira * VEL.gira * dt);
+    if (vel.inclina) meta.b = Math.min(meta.d ? 180 : 82, Math.max(0, meta.b + vel.inclina * VEL.inclina * dt));
+    if (vel.zoom) meta.k = Math.min(4, Math.max(zoomMin(), meta.k * Math.exp(vel.zoom * VEL.zoom * dt)));
+    if (vel.avanti || vel.lato) {
+      if (meta.d) {
+        const v = lato * (meta.c ? VEL.cammina : VEL.dentro) * dt;
+        const [wx, wy] = passoAvanti(cam.a, vel.avanti * v, vel.lato * v);
+        meta.ex += wx;
+        meta.ey += wy;
+        tieniOcchio();
+      } else { meta.px -= vel.lato * VEL.pila * dt; meta.py += vel.avanti * VEL.pila * dt; }
+    }
+    if (ASSI.some(a => vel[a])) { ultimoGesto = ora; aiuto.classList.add('via'); }
+    // inerzia dei trascinamenti
+    const smorza = Math.exp(-dt * 3.2);
+    if (Math.abs(inerzia.a) > 0.5) { giraModello(inerzia.a * dt); inerzia.a *= smorza; } else inerzia.a = 0;
+    if (Math.hypot(inerzia.x, inerzia.y) > 4) { muoviPila(inerzia.x * dt, inerzia.y * dt); inerzia.x *= smorza; inerzia.y *= smorza; } else inerzia.x = inerzia.y = 0;
+    // cursore secondo quello che fa il mouse adesso
+    const zoomando = ora - zoomRotella.t < 350 && zoomRotella.verso;
+    const c = puntatori.size ? (spostaMano || puntatori.size > 1 ? 'sposta' : meta.c ? 'guarda' : 'trascina')
+      : zoomando || (maiuscolo ? 'sposta' : meta.c ? 'cammina' : 'ruota');
+    if (palco.dataset.cursore !== c) palco.dataset.cursore = c;
+    nav.orienta(cam.a);
+  }
 
   // ── disegno ──
   let tPrima = performance.now();
   function passo(ora) {
     const dt = Math.min(0.05, (ora - tPrima) / 1000);
     tPrima = ora;
-    if (girando && !chiudendo && ora - ultimoGesto > 2500) { if (meta.d) giraDentro(dt * 8); else meta.a += dt * 8; }
+    if (girando && !chiudendo && ora - ultimoGesto > 2500) giraModello(dt * 8);
+    if (!chiudendo) muoviContinuo(dt, ora);
     const m = ridotto ? 1 : 1 - Math.exp(-dt * (chiudendo ? 5 : 4));
     const L = spazio();
     radice.style.setProperty('--libero-d', `${L.destra}px`);
@@ -609,6 +662,9 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   raf = requestAnimationFrame(passo);
   requestAnimationFrame(() => radice.classList.add('aperta'));
   chiudi.focus();
+  let guidaVista = null;
+  try { guidaVista = localStorage.getItem(GUIDA_VISTA); } catch { /* storage bloccato: la guida si mostra */ }
+  if (!guidaVista) setTimeout(() => { if (!chiudendo) mostraGuida(true); }, ridotto ? 0 : 900);
 
   function chiudiScena() {
     if (chiudendo) return;
@@ -626,6 +682,8 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     window.removeEventListener('pointerup', lascia);
     window.removeEventListener('pointercancel', lascia);
     document.removeEventListener('keydown', tasti);
+    document.removeEventListener('keyup', tastiSu);
+    window.removeEventListener('blur', lasciaTutto);
     map.off('moveend', tieniFerma);
     piani.forEach((p, i) => { if (spento[i]) for (const id of p.layers) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', 'visible'); });
     if (terreno) map.setTerrain(terreno);

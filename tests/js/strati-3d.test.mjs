@@ -167,3 +167,27 @@ test('zoomDentro: avvicinando si stringe il campo visivo, allontanando si arretr
   assert.deepEqual(zoomDentro(0.01, 700, 1000), zoomDentro(ZOOM_DENTRO.min, 700, 1000)); // con un tetto
   assert.ok(zoomDentro(ZOOM_DENTRO.min, 700, 1000).indietro > 1500); // abbastanza da vedere la pila da fuori
 });
+
+test('movimento continuo: tasti, joystick, accelerazione morbida, nord', async () => {
+  const { assiDaTasti, sommaAssi, avvicina, assiJoystick, versoNord, tastoDiMoto } = await import('../../js/core/strati-3d-modello.js');
+  assert.deepEqual(assiDaTasti(new Set(['KeyW', 'KeyD'])), { avanti: 1, lato: 0, gira: -1, inclina: 0, zoom: 0 });
+  assert.deepEqual(assiDaTasti(new Set(['KeyW', 'ArrowDown'])).avanti, 0);              // opposti si annullano
+  assert.deepEqual(assiDaTasti(new Set(['ArrowUp']), true), { avanti: 0, lato: 0, gira: 0, inclina: 1, zoom: 0 }); // Maiusc: inclina
+  assert.ok(tastoDiMoto('KeyQ') && !tastoDiMoto('KeyZ'));
+  assert.deepEqual(sommaAssi({ avanti: 1 }, { avanti: 0.7, zoom: -0.4 }), { avanti: 1, lato: 0, gira: 0, inclina: 0, zoom: -0.4 });
+  // la velocità sale con continuità, senza superare lo scopo, e torna a zero
+  const vel = { avanti: 0, lato: 0, gira: 0, inclina: 0, zoom: 0 };
+  const v = [];
+  for (let i = 0; i < 30; i++) v.push(avvicina(vel, { avanti: 1 }, 1 / 60).avanti);
+  assert.ok(v.every((x, i) => i === 0 || x > v[i - 1]) && v.at(-1) < 1 && v.at(-1) > 0.9);
+  for (let i = 0; i < 200; i++) avvicina(vel, {}, 1 / 60);
+  assert.equal(vel.avanti, 0);
+  // joystick: zona morta, pieno sul bordo, su = avanti
+  assert.deepEqual(assiJoystick(2, 2, 40), { avanti: 0, lato: 0 });
+  const pieno = assiJoystick(0, -40, 40);
+  assert.ok(Math.abs(pieno.avanti - 1) < 1e-9 && Math.abs(pieno.lato) < 1e-9);
+  assert.ok(assiJoystick(20, 0, 40).lato < 0.5); // curva: a metà corsa meno di metà velocità
+  assert.equal(versoNord(30), -30);
+  assert.equal(versoNord(350), 10);
+  assert.equal(versoNord(-725), 5);
+});
