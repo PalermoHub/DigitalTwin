@@ -1839,6 +1839,13 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .strati3d-comandi input[type=range] { width: 150px; accent-color: var(--accent); }
 .strati3d-comandi button { padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid rgba(255, 255, 255, .2); background: none; color: #fff; font-size: var(--fs-sm); font-weight: 600; cursor: pointer; }
 .strati3d-comandi button:hover, .strati3d-comandi button:focus-visible, .strati3d-comandi button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+/* da dentro la pila: compaiono i comandi del varco, spariscono esplodi, gira e «dall'alto» */
+.strati3d-dentro { display: none; align-items: center; gap: 6px; }
+.strati3d.dentro .strati3d-dentro { display: flex; }
+.strati3d.dentro .solo-fuori { display: none; }
+.strati3d-comandi .strati3d-dentro button:is(.strati3d-varco-giu, .strati3d-varco-su) { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; }
+.strati3d-comandi button:disabled { opacity: .4; cursor: default; }
+.strati3d-varco { font-size: var(--fs-xs); font-weight: 600; color: #aab2c0; }
 .strati3d-aiuto { position: absolute; left: 16px; bottom: 150px; max-width: 280px; margin: 0; font-size: var(--fs-xs); line-height: 1.4; color: #aab2c0; pointer-events: none; }
 .strati3d-aiuto.via { opacity: 0; transition-delay: 1.2s; }
 /* spillo sul punto cliccato: due strisce incrociate in verticale e un pallino su ogni strato */
@@ -1863,6 +1870,10 @@ body.strati3d-attiva :is(#scheda, #rail-pannelli) { z-index: calc(var(--z-viewer
   .strati3d-elenco button { padding: 3px 6px; font-size: var(--fs-xs); }
   .strati3d-comandi { left: 8px; right: 8px; transform: none; justify-content: space-between; gap: 8px; padding: 8px 10px; }
   .strati3d-comandi input[type=range] { width: 96px; }
+  .strati3d-varco { display: none; }
+  .strati3d-dentro { gap: 4px; }
+  .strati3d.dentro .strati3d-comandi { gap: 4px; padding: 6px 8px; }
+  .strati3d.dentro .strati3d-comandi button:not(.strati3d-varco-giu, .strati3d-varco-su) { padding: 6px 8px; }
   .strati3d-aiuto { display: none; }
   .strati3d-sposta { left: auto; right: 8px; bottom: auto; top: 104px; grid-template: repeat(3, 30px) / repeat(3, 30px); gap: 2px; padding: 4px; }
 }

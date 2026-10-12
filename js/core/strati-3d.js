@@ -1,16 +1,22 @@
 import { t } from './i18n.js';
 import { segnala } from './pannello.js';
 import { eBase } from '../layers/base.js';
-import { gruppiStrati, limitaPiani, quote, unisciTerreno, etichettaFeature, layerDaInterrogare, MAX_PIANI } from './strati-3d-modello.js';
+import { gruppiStrati, limitaPiani, quote, unisciTerreno, etichettaFeature, layerDaInterrogare, MAX_PIANI,
+  varchi, varcoPer, camminaVarco, opacitaDentro, passoOcchio, trasformaMondo } from './strati-3d-modello.js';
 import { gradoni } from './strati-3d-terreno.js';
 import { modelloTooltipDi, disegnaVoceTooltip } from './tooltip.js';
 
 // «Strati in 3D»: i layer accesi, fotografati uno per uno nell'inquadratura corrente, si separano in una pila
 // che si gira col mouse o col dito. Un clic su un punto di uno strato apre la scheda di quel punto sopra la scena;
 // dall'elenco ogni strato si spegne e si riaccende (solo nella pila: la mappa resta com'è).
+// Con «Entra tra gli strati» l'occhio va in un varco tra due piani e guarda in giù, in su e attorno.
 // Le immagini vengono dalla mappa stessa (stili, filtri e colori sono quelli dell'app); la scena è CSS 3D.
 
 const PROSPETTIVA = 2600;
+// Da dentro la pila l'occhio ha un grandangolo (prospettiva corta, circa 45° per lato) e i piani si allontanano di tanto
+// (diviso lo zoom): dal varco il piano vicino si vede per metà circa, e guardando di sbieco lo sguardo resta sui piani.
+const ESPLOSO_DENTRO = 6;
+const prospettivaDentro = palco => Math.max(420, palco.clientWidth / 2);
 const TELEFONO = '(max-width: 720px)';
 
 // attende che la mappa abbia finito di disegnare (con un tetto: un tile lento non blocca la vista)
@@ -128,7 +134,29 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   gira.type = 'button';
   const alto = el('button', null, t('strati3d.alto'));
   alto.type = 'button';
-  comandi.append(etEsplodi, gira, alto);
+  const entra = el('button', 'strati3d-entra', t('strati3d.dentro'));
+  entra.type = 'button';
+  entra.setAttribute('aria-pressed', 'false');
+  // comandi della vista da dentro: varco sotto/sopra e sguardo in giù/in su
+  const bottone = (classe, testo, tip, svg) => {
+    const b = el('button', classe, svg ? null : testo);
+    b.type = 'button';
+    if (svg) b.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${svg}"/></svg>`;
+    b.title = b.ariaLabel = tip ?? testo;
+    return b;
+  };
+  const scendi = bottone('strati3d-varco-giu', null, t('strati3d.varco.giu'), 'M12 5v14M6 13l6 6 6-6');
+  const guardaGiu = bottone('strati3d-guarda', t('strati3d.guarda.giu'));
+  const guardaSu = bottone('strati3d-guarda', t('strati3d.guarda.su'));
+  const sali = bottone('strati3d-varco-su', null, t('strati3d.varco.su'), 'M12 19V5M6 11l6-6 6 6');
+  const varcoEt = el('span', 'strati3d-varco');
+  varcoEt.setAttribute('aria-live', 'polite');
+  const daDentro = el('span', 'strati3d-dentro');
+  daDentro.append(scendi, guardaGiu, guardaSu, sali, varcoEt);
+  etEsplodi.classList.add('solo-fuori');
+  gira.classList.add('solo-fuori');
+  alto.classList.add('solo-fuori');
+  comandi.append(etEsplodi, gira, alto, entra, daDentro);
   const aiuto = el('p', 'strati3d-aiuto', t('strati3d.aiuto'));
   // croce per spostare la pila nelle quattro direzioni, con «centra» in mezzo
   const sposta = el('div', 'strati3d-sposta');
@@ -206,6 +234,12 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
       // anche sulla mappa sotto (fino alla chiusura): così lo strato spento non dà tooltip né scheda
       for (const id of p.layers) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', spento[i] ? 'none' : 'visible');
       if (spento[i] && meta.att === i) meta.att = -1;
+      if (meta.d) {
+        const lista = varchi(spento);
+        if (!lista.length) vaiDentro(false);
+        else if (!lista.includes(meta.v)) meta.v = varcoPer(lista, meta.v);
+      }
+      aggiornaVarco();
       gesto();
     });
     const b = el('button', 'strati3d-nome');
@@ -213,7 +247,12 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     b.innerHTML = '<i></i><b></b>';
     b.querySelector('i').textContent = i + 1;
     b.querySelector('b').textContent = nome;
-    b.addEventListener('click', () => { if (!spento[i]) { meta.att = meta.att === i ? -1 : i; gesto(); } });
+    b.addEventListener('click', () => {
+      if (spento[i]) return;
+      if (meta.d) { meta.v = varcoPer(varchi(spento), i); aggiornaVarco(); } // da dentro: si va sopra quello strato
+      else meta.att = meta.att === i ? -1 : i;
+      gesto();
+    });
     riga.append(occhio, b);
     elenco.prepend(riga); // in cima l'ultimo strato, come nella pila
     return { d, b };
@@ -229,8 +268,9 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   // camera: `meta` è dove va, `cam` dove si trova; ogni gesto arriva morbido
   const piatto = { a: 0, b: 0, k: riquadro.width / cw, e: 0 };
   // px/py: spostamento a mano (frecce, tasto destro, due dita); dx/dy: centratura nello spazio libero
-  const meta = { a: 25, b: 56, k: 1, e: 1, att: -1, px: 0, py: 0 };
-  const cam = { ...piatto, zt: 0, dx: 0, dy: 0, px: 0, py: 0 };
+  // d: da dentro la pila, nel varco v (indice del piano sotto), con l'occhio in ex, ey sul piano
+  const meta = { a: 25, b: 56, k: 1, e: 1, att: -1, px: 0, py: 0, d: false, v: -1, ex: 0, ey: 0 };
+  const cam = { ...piatto, zt: 0, tx: 0, ty: 0, tz: 0, ex: 0, ey: 0, P: PROSPETTIVA };
   // Spazio libero della scena: tolti la scheda (a destra, o il foglio in basso su telefono), l'elenco e la testata.
   // La pila si centra e si adatta lì; elenco, testata e comandi si allineano con le variabili --libero-*.
   const scheda = document.getElementById('scheda');
@@ -270,14 +310,14 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     if (!puntatori.has(ev.pointerId)) return;
     const [x0, y0] = puntatori.get(ev.pointerId);
     puntatori.set(ev.pointerId, [ev.clientX, ev.clientY]);
-    if (puntatori.size === 1 && spostaMano) { meta.px += ev.clientX - x0; meta.py += ev.clientY - y0; }
+    if (puntatori.size === 1 && spostaMano) muoviPila(ev.clientX - x0, ev.clientY - y0);
+    else if (puntatori.size === 1 && meta.d) { meta.a -= (ev.clientX - x0) * 0.25; meta.b = Math.min(180, Math.max(0, meta.b - (ev.clientY - y0) * 0.3)); }
     else if (puntatori.size === 1) { meta.a -= (ev.clientX - x0) * 0.35; meta.b = Math.min(82, Math.max(0, meta.b - (ev.clientY - y0) * 0.25)); }
     else if (puntatori.size === 2) {   // due dita: pizzico per lo zoom, il punto medio sposta la pila
       const [p1, p2] = [...puntatori.values()];
       meta.k = Math.min(4, Math.max(0.4, zoom0 * Math.hypot(p1[0] - p2[0], p1[1] - p2[1]) / distanza0));
       const m = medio();
-      meta.px += m[0] - medio0[0];
-      meta.py += m[1] - medio0[1];
+      muoviPila(m[0] - medio0[0], m[1] - medio0[1]);
       medio0 = m;
     }
     gesto();
@@ -370,12 +410,57 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   palco.addEventListener('wheel', nascondiTip, { passive: true });
   cursore.addEventListener('input', () => { meta.e = +cursore.value; gesto(); });
   const PASSO_MANO = 80;
-  const muoviPila = (x, y) => { meta.px += x; meta.py += y; gesto(); };
+  // da fuori si sposta la pila sullo schermo; da dentro si cammina sul piano (quello che c'è sotto il dito lo segue)
+  const muoviPila = (x, y) => {
+    if (meta.d) {
+      const [wx, wy] = passoOcchio(x, y, cam.a, cam.b, (distanza / 2) * ESPLOSO_DENTRO / meta.k, cam.P);
+      meta.ex = Math.min(cw / 2, Math.max(-cw / 2, meta.ex + wx));
+      meta.ey = Math.min(ch / 2, Math.max(-ch / 2, meta.ey + wy));
+    } else { meta.px += x; meta.py += y; }
+    gesto();
+  };
   bottoniSposta.su.addEventListener('click', () => muoviPila(0, -PASSO_MANO));
   bottoniSposta.giu.addEventListener('click', () => muoviPila(0, PASSO_MANO));
   bottoniSposta.sinistra.addEventListener('click', () => muoviPila(-PASSO_MANO, 0));
   bottoniSposta.destra.addEventListener('click', () => muoviPila(PASSO_MANO, 0));
-  bottoniSposta.centra.addEventListener('click', () => { meta.px = meta.py = 0; meta.k = 1; gesto(); });
+  bottoniSposta.centra.addEventListener('click', () => { meta.px = meta.py = meta.ex = meta.ey = 0; meta.k = 1; gesto(); });
+  // ── da dentro la pila ──
+  const aggiornaVarco = () => {
+    const lista = varchi(spento);
+    entra.disabled = !lista.length && !meta.d;
+    if (!meta.d) return;
+    const sopra = spento.findIndex((s, j) => j > meta.v && !s);
+    varcoEt.textContent = t('strati3d.varco', { sotto: meta.v + 1, sopra: sopra + 1 });
+    varcoEt.title = `${titoloPiano(piani[sopra])} / ${titoloPiano(piani[meta.v])}`;
+    scendi.disabled = meta.v === lista[0];
+    sali.disabled = meta.v === lista[lista.length - 1];
+  };
+  const vaiDentro = dentro => {
+    const lista = varchi(spento);
+    if (dentro && !lista.length) return;
+    meta.d = dentro;
+    if (dentro) {
+      // si entra sopra lo strato evidenziato o, se non c'è, nel varco più alto: guardando giù si vede tutta la pila
+      meta.v = varcoPer(lista, meta.att >= 0 ? meta.att : Infinity);
+      Object.assign(meta, { b: 0, k: 1, ex: 0, ey: 0, att: -1 });
+      girando = false;
+      gira.setAttribute('aria-pressed', 'false');
+    } else Object.assign(meta, { b: 56, k: 1, px: 0, py: 0 });
+    radice.classList.toggle('dentro', dentro);
+    entra.textContent = t(dentro ? 'strati3d.fuori' : 'strati3d.dentro');
+    entra.setAttribute('aria-pressed', String(dentro));
+    aiuto.textContent = t(dentro ? 'strati3d.aiuto.dentro' : 'strati3d.aiuto');
+    aiuto.classList.remove('via');
+    ultimoGesto = performance.now();
+    aggiornaVarco();
+  };
+  const cambiaVarco = passo => { if (meta.d) { meta.v = camminaVarco(varchi(spento), meta.v, passo); aggiornaVarco(); gesto(); } };
+  entra.addEventListener('click', () => vaiDentro(!meta.d));
+  scendi.addEventListener('click', () => cambiaVarco(-1));
+  sali.addEventListener('click', () => cambiaVarco(1));
+  guardaGiu.addEventListener('click', () => { meta.b = 0; gesto(); });
+  guardaSu.addEventListener('click', () => { meta.b = 180; gesto(); });
+  aggiornaVarco();
   gira.setAttribute('aria-pressed', String(girando));
   gira.addEventListener('click', () => { girando = !girando; gira.setAttribute('aria-pressed', String(girando)); });
   alto.addEventListener('click', () => {
@@ -390,8 +475,10 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     if (ev.target instanceof HTMLInputElement) return;
     const mano = { ArrowLeft: [-PASSO_MANO / 2, 0], ArrowRight: [PASSO_MANO / 2, 0], ArrowUp: [0, -PASSO_MANO / 2], ArrowDown: [0, PASSO_MANO / 2] }[ev.key];
     if (ev.shiftKey && mano) { ev.preventDefault(); muoviPila(...mano); return; } // Maiusc + frecce: sposta
+    if (meta.d && (ev.key === 'PageUp' || ev.key === 'PageDown')) { ev.preventDefault(); cambiaVarco(ev.key === 'PageUp' ? 1 : -1); return; }
+    const inclina = meta.d ? 180 : 82;
     const azione = { ArrowLeft: () => { meta.a += 10; }, ArrowRight: () => { meta.a -= 10; },
-      ArrowUp: () => { meta.b = Math.min(82, meta.b + 6); }, ArrowDown: () => { meta.b = Math.max(0, meta.b - 6); },
+      ArrowUp: () => { meta.b = Math.min(inclina, meta.b + 6); }, ArrowDown: () => { meta.b = Math.max(0, meta.b - 6); },
       '+': () => { meta.k = Math.min(4, meta.k * 1.15); }, '-': () => { meta.k = Math.max(0.4, meta.k / 1.15); } }[ev.key];
     if (azione) { azione(); gesto(); }
   };
@@ -410,21 +497,28 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     radice.style.setProperty('--libero-b', `${L.basso}px`);
     radice.classList.toggle('con-scheda', L.aperta);
     const cima = Math.max(0, ...piani.map((_, i) => (spento[i] ? 0 : quota(i) + rilievo[i])));
-    const scopo = chiudendo ? { ...piatto, a: Math.round(cam.a / 360) * 360, zt: 0 }
-      : { ...meta, k: meta.k * adatta(L), zt: (meta.att >= 0 ? quota(meta.att) : cima / 2) * meta.e };
-    [scopo.dx, scopo.dy] = chiudendo ? [0, 0] : [(L.x0 + L.x1) / 2 - centro[0], (L.y0 + L.y1) / 2 - centro[1]];
-    if (chiudendo) scopo.px = scopo.py = 0;
-    for (const k of ['a', 'b', 'k', 'e', 'zt', 'dx', 'dy', 'px', 'py']) cam[k] += (scopo[k] - cam[k]) * m;
-    const tr = `translate(${cam.dx + cam.px}px,${cam.dy + cam.py}px) scale3d(${cam.k},${cam.k},${cam.k}) rotateX(${cam.b}deg) rotateZ(${cam.a}deg) translateZ(${-cam.zt}px)`;
-    mondo.style.transform = tr;
+    const dentro = meta.d && !chiudendo;
+    let scopo;
+    if (chiudendo) scopo = { ...piatto, a: Math.round(cam.a / 360) * 360, zt: 0, tx: 0, ty: 0, tz: 0, ex: 0, ey: 0, P: PROSPETTIVA };
+    else if (dentro) {
+      // l'occhio a metà del varco, sopra il rilievo del piano sotto
+      const e = ESPLOSO_DENTRO / meta.k, P = prospettivaDentro(palco);
+      scopo = { a: meta.a, b: meta.b, k: 1, e, P, tx: 0, ty: 0, tz: P, ex: meta.ex, ey: meta.ey, zt: (quota(meta.v) + rilievo[meta.v] + distanza / 2) * e };
+    } else {
+      scopo = { ...meta, k: meta.k * adatta(L), zt: (meta.att >= 0 ? quota(meta.att) : cima / 2) * meta.e, tz: 0, ex: 0, ey: 0, P: PROSPETTIVA,
+        tx: (L.x0 + L.x1) / 2 - centro[0] + meta.px, ty: (L.y0 + L.y1) / 2 - centro[1] + meta.py };
+    }
+    for (const k of ['a', 'b', 'k', 'e', 'zt', 'tx', 'ty', 'tz', 'ex', 'ey', 'P']) cam[k] += (scopo[k] - cam[k]) * m;
+    palco.style.perspective = `${cam.P}px`;
+    mondo.style.transform = trasformaMondo(cam);
     const vetro = Math.min(1, cam.e * 1.5);
     elPiani.forEach(({ d, b }, i) => {
-      const att = !chiudendo && i === meta.att;
+      const att = !chiudendo && !dentro && i === meta.att;
       zz[i] += (quota(i) - zz[i]) * m;
       d.style.transform = `translateZ(${zz[i] * cam.e + i * 0.4 + (att ? lato * 0.02 : 0)}px)`;
-      const fuoco = meta.att < 0 || chiudendo || att ? 1 : i < meta.att ? 0.25 : 0.1;
+      const fuoco = dentro ? opacitaDentro(spento, meta.v, i, cam.b) : meta.att < 0 || chiudendo || att ? 1 : i < meta.att ? 0.25 : 0.1;
       d.style.opacity = spento[i] && !chiudendo ? 0 : fuoco;
-      d.style.pointerEvents = spento[i] ? 'none' : '';
+      d.style.pointerEvents = spento[i] || !fuoco ? 'none' : ''; // i piani nascosti alle spalle dell'occhio non si toccano
       if (piani[i].gradoni) for (const f of d.children) if (f.dataset.z) f.style.transform = `translateZ(${f.dataset.z * cam.e}px)`;
       punti[i].hidden = !puntoPiano || spento[i];
       d.style.setProperty('--vetro', vetro);

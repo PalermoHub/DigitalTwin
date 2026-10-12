@@ -89,3 +89,47 @@ test('layerDaInterrogare: i layer di servizio degli strati disegnati come immagi
   assert.deepEqual(layerDaInterrogare({ id: 'terreno', strati: ['rilievo3d', 'elevazione'], layers: ['h', 'e'] }), ['h', 'e', 'griglia-hit']);
   assert.deepEqual(layerDaInterrogare({ id: 'altri', layers: ['x'] }), ['x']);
 });
+
+test('varchi: uno tra ogni coppia di piani accesi, indicato col piano sotto', async () => {
+  const { varchi, varcoPer, camminaVarco } = await import('../../js/core/strati-3d-modello.js');
+  const spento = [false, false, true, false, false];
+  const lista = varchi(spento);
+  assert.deepEqual(lista, [0, 1, 3]);
+  assert.deepEqual(varchi([false]), []);
+  assert.deepEqual(varchi([true, false, true]), []);
+  assert.equal(varcoPer(lista, 1), 1);
+  assert.equal(varcoPer(lista, 2), 3); // uno strato spento: il varco sopra
+  assert.equal(varcoPer(lista, 4), 3); // l'ultimo strato: il varco sotto
+  assert.equal(varcoPer(lista, Infinity), 3);
+  assert.equal(varcoPer([], 0), -1);
+  assert.equal(camminaVarco(lista, 1, 1), 3);
+  assert.equal(camminaVarco(lista, 3, 1), 3); // non esce dalla pila
+  assert.equal(camminaVarco(lista, 0, -1), 0);
+  assert.equal(camminaVarco(lista, 2, -1), 3); // varco non più valido: il più vicino
+});
+
+test('opacitaDentro: pieni i due piani del varco, sfumano gli altri, spariscono quelli alle spalle', async () => {
+  const { opacitaDentro } = await import('../../js/core/strati-3d-modello.js');
+  const spento = [false, false, false, true, false, false];
+  const op = b => spento.map((_, i) => opacitaDentro(spento, 1, i, b));
+  assert.deepEqual(op(90), [0.6, 1, 1, 0, 0.6, 0.35]);
+  assert.deepEqual(op(0), [0.6, 1, 0, 0, 0, 0]);   // dritto giù: niente sopra
+  assert.deepEqual(op(180), [0, 0, 1, 0, 0.6, 0.35]); // dritto su: niente sotto
+});
+
+test('passoOcchio: quello che sta sotto il dito segue il dito', async () => {
+  const { passoOcchio } = await import('../../js/core/strati-3d-modello.js');
+  const vicino = (a, b) => a.every((x, i) => Math.abs(x - b[i]) < 1e-9);
+  assert.ok(vicino(passoOcchio(100, 0, 0, 0, 260, 2600), [-10, 0]));   // a destra: l'occhio va a sinistra
+  assert.ok(vicino(passoOcchio(0, 100, 0, 0, 260, 2600), [0, -10]));
+  assert.ok(vicino(passoOcchio(0, 100, 0, 180, 260, 2600), [0, 10]));  // guardando su il verticale si ribalta
+  assert.ok(vicino(passoOcchio(100, 0, 90, 0, 260, 2600), [0, 10]));   // girati di 90°
+});
+
+test('trasformaMondo: da fuori come la vista a orbita, da dentro l\'occhio nel punto scelto', async () => {
+  const { trasformaMondo } = await import('../../js/core/strati-3d-modello.js');
+  assert.equal(trasformaMondo({ tx: 5, ty: -3, tz: 0, a: 25, b: 56, k: 0.5, ex: 0, ey: 0, zt: 100 }),
+    'translate3d(5px,-3px,0px) rotateX(56deg) rotateZ(25deg) scale3d(0.5,0.5,0.5) translate3d(0px,0px,-100px)');
+  assert.match(trasformaMondo({ tx: 0, ty: 0, tz: 2600, a: 0, b: 180, k: 1, ex: 10, ey: -20, zt: 3000 }),
+    /^translate3d\(0px,0px,2600px\) rotateX\(180deg\).*translate3d\(-10px,20px,-3000px\)$/);
+});

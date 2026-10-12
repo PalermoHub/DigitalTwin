@@ -107,3 +107,51 @@ export const LAYER_DA_INTERROGARE = {
 };
 // i layer da interrogare per un piano della pila (il terreno riunisce più strati)
 export const layerDaInterrogare = g => [...new Set([...g.layers, ...(g.strati ?? [g.id]).flatMap(id => LAYER_DA_INTERROGARE[id] ?? [])])];
+
+// ── «Dentro la pila»: l'occhio sta in un varco tra due piani accesi e guarda in su o in giù ──
+// Un varco si indica con l'indice del piano acceso che ha sotto; ce n'è uno tra ogni coppia di piani accesi.
+export function varchi(spento) {
+  const accesi = spento.map((s, i) => (s ? -1 : i)).filter(i => i >= 0);
+  return accesi.slice(0, -1);
+}
+
+// il varco sopra il piano `i` (o, se sopra non c'è niente, l'ultimo): -1 se non ce n'è nessuno
+export function varcoPer(lista, i) {
+  if (!lista.length) return -1;
+  return lista.find(v => v >= i) ?? lista[lista.length - 1];
+}
+
+// sale (passo > 0) o scende di un varco, senza uscire dalla pila
+export function camminaVarco(lista, v, passo) {
+  const at = lista.indexOf(v);
+  if (at < 0) return varcoPer(lista, v);
+  return lista[Math.min(lista.length - 1, Math.max(0, at + passo))];
+}
+
+// Opacità di un piano visto dal varco `v` con l'inclinazione `b` (0 = giù, 90 = orizzontale, 180 = su): i due piani che
+// chiudono il varco pieni, gli altri sempre più trasparenti allontanandosi. Guardando dritto giù (o su) quelli alle
+// spalle si nascondono: stanno dietro l'occhio e alcuni browser li disegnerebbero male.
+const SFUMA = [1, 0.6, 0.35, 0.2];
+export function opacitaDentro(spento, v, i, b) {
+  if (spento[i]) return 0;
+  const accesi = spento.map((s, j) => (s ? -1 : j)).filter(j => j >= 0);
+  const p = accesi.indexOf(i), ps = accesi.indexOf(v);
+  const sopra = p > ps;
+  if ((sopra && b < 45) || (!sopra && b > 135)) return 0;
+  return SFUMA[Math.min(SFUMA.length - 1, sopra ? p - ps - 1 : ps - p)];
+}
+
+// Un trascinamento sullo schermo (dx, dy) diventa un passo dell'occhio sul piano, perché quello che sta sotto il dito
+// segua il dito: `a` è la rotazione, `b` l'inclinazione, `h` la distanza dal piano più vicino, `P` la prospettiva.
+// Guardando in su l'asse verticale dello schermo si ribalta.
+export function passoOcchio(dx, dy, a, b, h, P) {
+  const r = (a * Math.PI) / 180, f = h / P, sy = b > 90 ? -1 : 1;
+  const x = dx, y = dy * sy;
+  return [-(x * Math.cos(r) + y * Math.sin(r)) * f, -(-x * Math.sin(r) + y * Math.cos(r)) * f];
+}
+
+// La trasformazione del mondo, una sola per le due viste: da fuori l'occhio è a distanza (tz = 0) e la pila gira attorno
+// al suo centro; da dentro tz = prospettiva porta l'occhio nel punto (ex, ey, zt) e la vista gira attorno all'occhio.
+// Passando da una all'altra i numeri si interpolano e la camera «entra» nella pila.
+export const trasformaMondo = c => `translate3d(${c.tx}px,${c.ty}px,${c.tz}px) rotateX(${c.b}deg) rotateZ(${c.a}deg) `
+  + `scale3d(${c.k},${c.k},${c.k}) translate3d(${-c.ex}px,${-c.ey}px,${-c.zt}px)`;
