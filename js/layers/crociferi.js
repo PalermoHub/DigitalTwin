@@ -3,8 +3,9 @@ import { aggiorna3D } from '../core/mappa.js';
 import { primo } from '../core/scheda-util.js';
 import { voceFiltro } from '../core/legenda.js';
 import { t, tl } from '../core/i18n.js';
+import { registraTooltip, disegnaVoceTooltip } from '../core/tooltip.js';
 import { GRUPPI, COLORI_PIANI, altezze, filtroVolumi, filtroNumeri, coloreVolumi, righeScheda, pianiDa, nomePiano,
-  prospettiVisibili, stanzeDelClic } from '../edificio/modello.js';
+  prospettiVisibili, stanzeDelClic, puntoPiuVicino } from '../edificio/modello.js';
 import { ID_PROSPETTI, creaLayerProspetti } from '../edificio/prospetti.js';
 
 // Ex Noviziato dei Crociferi (Foro Umberto I 14): le piante DWG del Comune georeferenziate e messe in quota, piano per
@@ -23,6 +24,41 @@ let mappa = null;
 let dati = null;
 let legenda = null;
 let prospettiPronti = null;
+let selezionato = null;
+
+const volumiAccesi = map => map.getLayer(VOLUMI) && map.getLayoutProperty(VOLUMI, 'visibility') === 'visible';
+// l'oggetto 3D sotto il pixel (il più vicino all'occhio), con la geometria intera del GeoJSON
+function oggettoAl(map, point) {
+  if (!dati || !volumiAccesi(map)) return null;
+  const f = map.queryRenderedFeatures(point, { layers: [VOLUMI] })[0];
+  return f ? (dati.features[f.id] ?? f) : null;
+}
+
+function seleziona(id) {
+  if (selezionato != null) mappa.setFeatureState({ source: SRC, id: selezionato }, { selezionato: false });
+  selezionato = id;
+  if (id != null) mappa.setFeatureState({ source: SRC, id }, { selezionato: true });
+}
+
+// Tooltip dell'oggetto 3D: elemento (o nome dell'ambiente), stanza e piano. Esclusivo: sopra l'edificio non si leggono
+// i tooltip della mappa che sta sotto.
+function tooltip(e) {
+  const f = oggettoAl(mappa, e.point);
+  if (!f) return null;
+  const p = f.properties;
+  const stanze = stanzeDelClic(f, puntoPiuVicino(f.geometry.coordinates, [e.lngLat.lng, e.lngLat.lat]), dati.features);
+  const n = stanze.stanza ?? p.numero;
+  const stanza = n ? `${t('edificio.scheda.stanza')} ${n}` : stanze.adiacenti?.length
+    ? `${t(stanze.adiacenti.length === 1 ? 'edificio.scheda.adiacente' : 'edificio.scheda.adiacenti')}: ${stanze.adiacenti.join(', ')}` : '';
+  const voce = disegnaVoceTooltip({
+    titolo: p.nome || t(`edificio.tipo.${p.tipo}`),
+    sottotitolo: [stanza, nomePiano(p.piano, p.nome_piano)].filter(Boolean).join(' · '),
+    pallino: COLORI_PIANI[p.piano],
+  });
+  const corpo = el('div', 'strati-tooltip-corpo');
+  corpo.append(voce);
+  return { contenuto: corpo, cursore: true, esclusivo: true };
+}
 
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
@@ -179,6 +215,7 @@ export default {
       map.setFeatureState({ source: SRC, id: f.id }, { evidenza: true });
     });
     map.on('mouseleave', VOLUMI, spegni);
+    registraTooltip(map, tooltip, -1);
   },
   async avvia(map) {
     dati = await (await fetch(urlDati(`${DATI}crociferi.geojson`))).json();
@@ -189,8 +226,16 @@ export default {
   },
   scheda: {
     layers: [VOLUMI],
+    // cliccato un oggetto 3D: la scheda si apre dove sta l'oggetto, non sul terreno dietro di lui
+    puntoAlClic(map, e) {
+      const f = oggettoAl(map, e.point);
+      if (!f) return null;
+      const [lng, lat] = puntoPiuVicino(f.geometry.coordinates, [e.lngLat.lng, e.lngLat.lat]);
+      return new maplibregl.LngLat(lng, lat);
+    },
     voci(trovati, lngLat) {
       const scelto = primo(trovati, VOLUMI);
+      seleziona(scelto?.id ?? null);
       if (!scelto || !dati) return [];
       const f = dati.features[scelto.id] ?? scelto; // con generateId l'id è l'indice nel GeoJSON: lì la geometria è intera
       const stanze = stanzeDelClic(f, [lngLat.lng, lngLat.lat], dati.features);
@@ -212,6 +257,7 @@ export default {
     suCambio(attivo, map) {
       if (legenda) legenda.hidden = !attivo;
       if (!attivo && stato.pianta) esciPianta();
+      if (!attivo) seleziona(null);
       aggiorna3D(map); // prima: la sua animazione (inclinazione) interromperebbe il volo verso l'edificio
       if (attivo) {
         aggiungiProspetti();

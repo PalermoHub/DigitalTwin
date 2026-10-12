@@ -48,11 +48,12 @@ export function filtroNumeri(piani) {
   return ['all', ['==', ['get', 'tipo'], 'numero'], ['in', ['get', 'piano'], ['literal', piani]]];
 }
 
-// Stanze del colore del loro piano, il resto del colore del tipo; in evidenza (hover) un giallo.
+// Stanze del colore del loro piano, il resto del colore del tipo; in evidenza (hover) un giallo, selezionato (clic) arancio.
 export function coloreVolumi() {
   const perPiano = ['match', ['get', 'piano'], ...Object.entries(COLORI_PIANI).flat(), '#cccccc'];
   const perTipo = ['match', ['get', 'tipo'], ...Object.entries(COLORI_TIPI).flat(), '#cccccc'];
   return ['case',
+    ['boolean', ['feature-state', 'selezionato'], false], '#e8590c',
     ['boolean', ['feature-state', 'evidenza'], false], '#ffcf33',
     ['==', ['get', 'tipo'], 'stanza'], perPiano,
     perTipo];
@@ -100,6 +101,29 @@ export function distanzaPoligono(coords, pt) {
   const lat0 = pt[1];
   return Math.min(...coords.map(r => distBordo(inMetri(pt, lat0), r.map(q => inMetri(q, lat0)))));
 }
+// Il punto del poligono più vicino a `pt` ([lon, lat]): `pt` stesso se è dentro. Serve a ritrovare a terra un oggetto 3D
+// cliccato: il clic sulla mappa dà il punto del terreno dietro l'oggetto (più in là lungo lo sguardo), di lato resta giusto.
+export function puntoPiuVicino(coords, pt) {
+  if (poligonoContiene(coords, pt)) return pt;
+  let migliore = null, dmin = Infinity;
+  const k = Math.cos(pt[1] * Math.PI / 180);
+  for (const anello of coords) {
+    for (let i = 1; i < anello.length; i++) {
+      const [a, b] = [anello[i - 1], anello[i]];
+      const [dx, dy] = [(b[0] - a[0]) * k, b[1] - a[1]];
+      const l2 = dx * dx + dy * dy;
+      const u = l2 ? Math.max(0, Math.min(1, (((pt[0] - a[0]) * k) * dx + (pt[1] - a[1]) * dy) / l2)) : 0;
+      const q = [a[0] + u * (b[0] - a[0]), a[1] + u * (b[1] - a[1])];
+      const d = Math.hypot((pt[0] - q[0]) * k, pt[1] - q[1]);
+      if (d < dmin) { dmin = d; migliore = q; }
+    }
+  }
+  // un passo dentro dal bordo, verso il baricentro dell'anello esterno: il punto cade sull'oggetto, non sul suo margine
+  const est = coords[0].slice(0, -1);
+  const c = est.reduce((s, q) => [s[0] + q[0] / est.length, s[1] + q[1] / est.length], [0, 0]);
+  return [migliore[0] + (c[0] - migliore[0]) * 0.02, migliore[1] + (c[1] - migliore[1]) * 0.02];
+}
+
 // due poligoni si toccano se un vertice dell'uno sta entro `soglia` metri dal bordo dell'altro
 function siToccano(a, b, soglia) {
   const lat0 = a[0][0][1];
