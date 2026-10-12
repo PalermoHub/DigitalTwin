@@ -37,6 +37,14 @@ Serve la rete: base cartografica (OpenFreeMap), tile PRG/terreno e PMTiles sono 
 Catasto, PRG e vincoli sono informativi e senza valore legale; il PRG vigente è la Variante generale 2004. I dati 2023 sono
 stime campionarie (censimento permanente).
 
+## Edifici in 3D
+
+Nel gruppo «Edifici» lo strato **Ex Noviziato dei Crociferi in 3D** (Foro Umberto I 14) ricostruisce l'edificio dalle
+piante DWG: piani georeferenziati ed estrusi alle loro quote, esploso dei livelli e vista in pianta con i numeri delle
+stanze dalla legenda, prospetti disegnati sulle facciate. I dati (`dati/edificio/crociferi/`) si rigenerano con
+`python3 scripts/edificio/crociferi.py`, che legge il DWG con LibreDWG (`dwgread`) e allinea le piante alle unità
+volumetriche CTC; nel docstring dello script i passi e le ipotesi (quote dei piani dalla sezione, in scala con la gronda CTC).
+
 ## Struttura
 
 `js/core/` nucleo (mappa, catalogo, pannello, scheda, ricerca) · `js/layers/` un modulo per tema · `js/geoimage/` mappe storiche georeferenziate sulla base · `worker/` proxy CORS (Cloudflare Worker) · `scripts/` server locale e aggiornamento automatico dei dati · `tests/js/` test (eseguiti dalla CI).

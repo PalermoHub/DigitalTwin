@@ -638,6 +638,16 @@ dialog li { margin: 4px 0; }
 .legenda-pai i.pai-campione--linea { border: 0; border-radius: 1px; }
 .pai-popup-voce + .pai-popup-voce { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--border); }
 .legenda-uffici .uffici-nota { margin: 0 0 4px; font-size: var(--fs-2xs); color: var(--text-muted); }
+/* Ex Noviziato dei Crociferi in 3D: esploso dei piani, piani con la vista in pianta, elementi */
+.legenda-crociferi .ic-etichetta { display: block; margin: 8px 0 4px; font-size: var(--fs-3xs); text-transform: uppercase; color: var(--text-muted); }
+.legenda-crociferi .cr-esploso input { display: block; width: 80%; margin-top: 6px; accent-color: var(--accent-strong); }
+.legenda-crociferi .cr-esploso output { font-variant-numeric: tabular-nums; text-transform: none; }
+.legenda-crociferi i.cr-vuoto { display: none; }
+.legenda-crociferi .cr-pianta { margin-left: auto; padding: 1px 6px; border: 1px solid var(--border-ui); border-radius: var(--r-xs); background: var(--surface-alt); color: var(--text-muted); font: inherit; font-size: 10px; cursor: pointer; }
+.legenda-crociferi .cr-pianta:hover, .legenda-crociferi .cr-pianta[aria-pressed="true"] { border-color: var(--accent-strong); color: var(--text); }
+.legenda-crociferi .cr-pianta[aria-pressed="true"] { background: var(--accent-strong); color: var(--accent-strong-ink); }
+.legenda-crociferi .cr-tutti { margin: 8px 0 6px; padding: 4px 10px; border: 1.5px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface-alt); color: var(--text); font: inherit; font-size: var(--fs-2xs); font-weight: 600; cursor: pointer; }
+.legenda-crociferi .cr-tutti:hover { border-color: var(--accent-strong); }
 
 
 /* ==========================================================================

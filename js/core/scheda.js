@@ -394,19 +394,25 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     const voci = [];
     const trovatiTutti = [];
     let tabIniziale = null; // lo strato cliccato può chiedere il suo tab; solo per un clic vero (non per il ripristino da un link condiviso)
+    // Un oggetto 3D sopra la mappa (es. l'edificio per piani, anche esploso) sta più in alto del terreno: e.lngLat è il punto
+    // a terra dietro di lui. Lo strato che lo possiede dice dove sta l'oggetto, e la scheda (luogo, edificio, catasto…) si
+    // apre lì; il suo strato si interroga invece al pixel cliccato.
+    const sopra = conScheda.map(m => ({ m, lngLat: m.scheda.puntoAlClic?.(map, e) })).find(x => x.lngLat);
+    const lngLat = sopra?.lngLat ?? e.lngLat;
+    const punto = sopra ? map.project(lngLat) : e.point;
     for (const m of conScheda) {
       const layers = m.scheda.layers.filter(id => map.getLayer(id));
       if (!layers.length) continue;
-      const trovati = trovaFeature(map, e.point, layers);
+      const trovati = trovaFeature(map, m === sopra?.m ? e.point : punto, layers);
       if (trovati.length && e.originalEvent) tabIniziale ??= m.scheda.tabAlClic?.(map) ?? null;
       trovatiTutti.push(...trovati);
-      voci.push(...m.scheda.voci(trovati, e.lngLat));
+      voci.push(...m.scheda.voci(trovati, lngLat));
     }
     // dalla vista «Strati in 3D» il clic dice quali strati ha toccato: la scheda si apre sul tab del primo che ha dati qui
     // (PRG e vincoli: «Strumenti urbanistici»)
     const daStrato = e.strati?.map(id => voci.find(v => v.strato === id)).find(Boolean);
     if (daStrato) tabIniziale = tabScheda(daStrato.peso, daStrato.chiave);
-    const interrogabili = rndt ? rndt.layerAlPunto(e.lngLat) : [];
+    const interrogabili = rndt ? rndt.layerAlPunto(lngLat) : [];
     if (interrogabili.length) voci.push(rndt.segnaposto()); // la scheda si apre subito: le risposte dei servizi arrivano dopo
     const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);
     const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); adattaVista(); };
@@ -418,13 +424,13 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     }
     // I layer RNDT si interrogano subito, come i layer nativi (trovaFeature): scheda e evidenza adattano la vista della mappa
     // (con «riduci animazioni» attivo lo spostamento è immediato), e dopo non si saprebbe più cosa c'era sotto il clic.
-    const risposte = interrogabili.length ? rndt.interroga(interrogabili, e.lngLat, e.point, map.getZoom()) : null;
+    const risposte = interrogabili.length ? rndt.interroga(interrogabili, lngLat, punto, map.getZoom()) : null;
     const extra = voci.flatMap(v => v.evidenza ?? []); // luoghi vicini che un layer vuole vedere sulla mappa
-    const base = soloCliccato(sceltePerLayer(trovatiTutti, e.lngLat));
+    const base = soloCliccato(sceltePerLayer(trovatiTutti, lngLat));
     for (const m of conScheda) m.scheda.suEvidenza?.(base); // chi ridisegna l'evidenza dopo il clic (es. percorso di una linea) tiene anche questa
     const scelte = [...base, ...extra];
     evidenzia(map, scelte);
-    const scheda = mostra(contenitore, e.lngLat, dati, chiudiScheda, adattaVista, pref, tabIniziale);
+    const scheda = mostra(contenitore, lngLat, dati, chiudiScheda, adattaVista, pref, tabIniziale);
     if (risposte) {
       const punto = contenitore.dataset.punto;
       risposte.then(nuove => {

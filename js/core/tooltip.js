@@ -6,8 +6,9 @@ let collegato = false;
 let popup = null;
 let mioCursore = false; // il cursore lo tocchiamo solo se l'abbiamo messo noi: monumenti e scuole hanno il loro «mano»
 
-// fornitore(e) → { contenuto: Node, cursore?: boolean } oppure null se sotto il cursore non c'è nulla.
-// Le sezioni seguono `priorita` crescente (a parità, l'ordine di registrazione).
+// fornitore(e) → { contenuto: Node, cursore?: boolean, esclusivo?: boolean } oppure null se sotto il cursore non c'è nulla.
+// Le sezioni seguono `priorita` crescente (a parità, l'ordine di registrazione). Una sezione `esclusivo` (un oggetto 3D
+// sopra la mappa, es. l'edificio per piani) nasconde le altre: quello che sta sotto il cursore è l'oggetto, non la mappa.
 export function registraTooltip(map, fornitore, priorita = 0) {
   fornitori.push({ fornitore, priorita });
   fornitori.sort((a, b) => a.priorita - b.priorita);
@@ -23,8 +24,9 @@ function nascondi(map) {
 // Il contenuto del tooltip per un punto della mappa ({ point, lngLat }, come un evento del mouse): lo usa anche la vista
 // «Strati in 3D», che lo mostra sopra la pila. null se sotto il punto non c'è nulla.
 export function contenutoTooltip(e) {
-  const sezioni = fornitori.map(({ fornitore }) => fornitore(e)).filter(Boolean);
+  let sezioni = fornitori.map(({ fornitore }) => fornitore(e)).filter(Boolean);
   if (!sezioni.length) return null;
+  if (sezioni.some(s => s.esclusivo)) sezioni = sezioni.filter(s => s.esclusivo);
   const corpo = document.createElement('div');
   corpo.className = 'mappa-tooltip-corpo';
   for (const s of sezioni) {
