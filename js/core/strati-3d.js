@@ -393,7 +393,11 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     for (const pt of punti) Object.assign(pt.style, { left: `${puntoPiano[0]}px`, top: `${puntoPiano[1]}px` });
     Object.assign(spillo.style, { left: `${puntoPiano[0] - cw / 2}px`, top: `${puntoPiano[1] - ch / 2}px` });
     const punto = puntoMappa(puntoPiano[0] / cw, puntoPiano[1] / ch);
-    map.fire('click', { point: punto, lngLat: map.unproject(punto) }); // la scheda dell'app, sopra la scena (vedi css)
+    // la scheda dell'app, sopra la scena (vedi css), aperta sul tab dello strato toccato
+    // gli strati in ordine: quello toccato, poi quelli sotto, poi quelli sopra (le parti vuote di un piano non contano)
+    const sotto = elPiani.findIndex(({ d }) => d === img.closest('.strati3d-piano'));
+    const ordine = piani.map((_, i) => i).filter(i => !spento[i]).sort((a, b) => (a > sotto) - (b > sotto) || (a > sotto ? a - b : b - a));
+    map.fire('click', { point: punto, lngLat: map.unproject(punto), strati: ordine.flatMap(i => piani[i].strati ?? [piani[i].id]) });
     nascondiTip();
     gesto();
   });

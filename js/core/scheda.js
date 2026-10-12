@@ -37,6 +37,9 @@ function copiaTesto(testo) {
   return Promise.resolve();
 }
 
+// Il tab di una sezione della scheda, dal suo peso (e per alcune dalla chiave)
+const tabScheda = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : 'luogo');
+
 function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabIniziale = null) {
   const { contesto, sezioni, legale } = dati;
   let corrente = dati; // le sezioni RNDT arrivano dopo: `aggiungi` le fonde qui e ridisegna il corpo
@@ -79,7 +82,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   const disclaimer = el('p', 'scheda-disclaimer', DISCLAIMER_STAMPA);
   // Schede (tab) per argomento: l'ordine è la gerarchia delle informazioni, dal luogo cliccato ai dati di contesto.
   const SCHEDE = [['luogo', tr('scheda.tab.luogo')], ['strumenti', tr('scheda.tab.strumenti')], ['mercato', tr('scheda.tab.mercato')], ['popolazione', tr('scheda.tab.popolazione')], ['terreno', tr('scheda.tab.terreno')], ['servizi', tr('scheda.tab.servizi')], ['rndt', tr('scheda.tab.rndt')]];
-  const tabDi = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : 'luogo');
+  const tabDi = tabScheda;
   const tabs = el('div', 'scheda-tabs');
   const prev = el('button', 'scheda-tabs-freccia', '\u2039');
   const next = el('button', 'scheda-tabs-freccia', '\u203a');
@@ -399,6 +402,10 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
       trovatiTutti.push(...trovati);
       voci.push(...m.scheda.voci(trovati, e.lngLat));
     }
+    // dalla vista «Strati in 3D» il clic dice quali strati ha toccato: la scheda si apre sul tab del primo che ha dati qui
+    // (PRG e vincoli: «Strumenti urbanistici»)
+    const daStrato = e.strati?.map(id => voci.find(v => v.strato === id)).find(Boolean);
+    if (daStrato) tabIniziale = tabScheda(daStrato.peso, daStrato.chiave);
     const interrogabili = rndt ? rndt.layerAlPunto(e.lngLat) : [];
     if (interrogabili.length) voci.push(rndt.segnaposto()); // la scheda si apre subito: le risposte dei servizi arrivano dopo
     const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);

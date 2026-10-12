@@ -1883,6 +1883,10 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .strati3d-riga.spenta .strati3d-nome { opacity: .45; text-decoration: line-through; }
 .strati3d-comandi { position: absolute; left: calc((100% - var(--libero-d, 0px)) / 2); bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 12px; white-space: nowrap;
   padding: 8px 16px; border-radius: var(--r-pill); background: rgba(16, 20, 29, .9); border: 1px solid rgba(255, 255, 255, .12); }
+/* con la scheda aperta lo spazio si stringe: la barra si mette a destra del navigatore e, se serve, va a capo */
+@media (min-width: 721px) {
+  .strati3d.con-scheda .strati3d-comandi { left: 252px; transform: none; max-width: calc(100% - var(--libero-d, 0px) - 268px); flex-wrap: wrap; white-space: normal; border-radius: var(--r-md); }
+}
 .strati3d-comandi label { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); font-weight: 600; color: #aab2c0; }
 .strati3d-comandi input[type=range] { width: 150px; accent-color: var(--accent); }
 .strati3d-comandi button { padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid rgba(255, 255, 255, .2); background: none; color: #fff; font-size: var(--fs-sm); font-weight: 600; cursor: pointer; }
