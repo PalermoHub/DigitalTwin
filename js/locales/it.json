@@ -2046,6 +2046,7 @@
   "strati3d.varco.giu": "Scendi di uno strato",
   "strati3d.varco.su": "Sali di uno strato",
   "strati3d.varco": "Tra {sotto} e {sopra}",
+  "strati3d.bordo": "{nome}: clic per sceglierlo, di nuovo per entrarci (da dentro: per andarci)",
   "strati3d.cammina": "Cammina",
   "strati3d.cammina.tip": "Cammina sul piano sotto di te, con lo sguardo in avanti",
   "strati3d.sul": "Sul piano {n}",

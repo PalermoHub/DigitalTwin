@@ -2046,6 +2046,7 @@
   "strati3d.varco.giu": "Go down one layer",
   "strati3d.varco.su": "Go up one layer",
   "strati3d.varco": "Between {sotto} and {sopra}",
+  "strati3d.bordo": "{nome}: click to pick it, again to step in (from inside: to go there)",
   "strati3d.cammina": "Walk",
   "strati3d.cammina.tip": "Walk on the layer below you, looking ahead",
   "strati3d.sul": "On layer {n}",

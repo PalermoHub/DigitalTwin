@@ -130,14 +130,15 @@ export function camminaVarco(lista, v, passo) {
 
 // Opacità di un piano visto dal varco `v` con l'inclinazione `b` (0 = giù, 90 = orizzontale, 180 = su): i due piani che
 // chiudono il varco pieni, gli altri sempre più trasparenti allontanandosi. Guardando dritto giù (o su) quelli alle
-// spalle si nascondono: stanno dietro l'occhio e alcuni browser li disegnerebbero male.
+// spalle si nascondono: stanno dietro l'occhio e alcuni browser li disegnerebbero male. Con l'occhio arretrato
+// (`lontano`, zoom indietro) non c'è niente alle spalle: si vedono tutti.
 const SFUMA = [1, 0.6, 0.35, 0.2];
-export function opacitaDentro(spento, v, i, b) {
+export function opacitaDentro(spento, v, i, b, lontano = false) {
   if (spento[i]) return 0;
   const accesi = spento.map((s, j) => (s ? -1 : j)).filter(j => j >= 0);
   const p = accesi.indexOf(i), ps = accesi.indexOf(v);
   const sopra = p > ps;
-  if ((sopra && b < 45) || (!sopra && b > 135)) return 0;
+  if (!lontano && ((sopra && b < 45) || (!sopra && b > 135))) return 0;
   return SFUMA[Math.min(SFUMA.length - 1, sopra ? p - ps - 1 : ps - p)];
 }
 
@@ -171,4 +172,13 @@ export function ruotaAttorno({ a, ex, ey }, delta) {
 export function passoAvanti(a, avanti, destra = 0) {
   const r = (a * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r);
   return [destra * c - avanti * s, -destra * s - avanti * c];
+}
+
+// Zoom da dentro la pila (k: 1 = normale). Avvicinando (k > 1) si stringe il campo visivo come un teleobiettivo;
+// allontanando (k < 1) l'occhio arretra lungo lo sguardo, fino a vedere la pila da fuori: allargare soltanto il campo
+// visivo rimpicciolirebbe poco e deformerebbe i bordi. `base` è la prospettiva normale, `lato` il lato dei piani.
+export const ZOOM_DENTRO = { min: 0.15, max: 4 };
+export function zoomDentro(k, base, lato) {
+  const z = Math.min(ZOOM_DENTRO.max, Math.max(ZOOM_DENTRO.min, k));
+  return { P: base * Math.max(1, z), indietro: z < 1 ? (1 / z - 1) * lato * 0.3 : 0 };
 }

@@ -2,7 +2,7 @@ import { t } from './i18n.js';
 import { segnala } from './pannello.js';
 import { eBase } from '../layers/base.js';
 import { gruppiStrati, limitaPiani, quote, unisciTerreno, etichettaFeature, layerDaInterrogare, MAX_PIANI,
-  varchi, varcoPer, camminaVarco, opacitaDentro, passoOcchio, trasformaMondo, pianiAccesi, ruotaAttorno, passoAvanti } from './strati-3d-modello.js';
+  varchi, varcoPer, camminaVarco, opacitaDentro, passoOcchio, trasformaMondo, pianiAccesi, ruotaAttorno, passoAvanti, zoomDentro, ZOOM_DENTRO } from './strati-3d-modello.js';
 import { gradoni } from './strati-3d-terreno.js';
 import { modelloTooltipDi, disegnaVoceTooltip } from './tooltip.js';
 
@@ -15,9 +15,9 @@ import { modelloTooltipDi, disegnaVoceTooltip } from './tooltip.js';
 const PROSPETTIVA = 2600;
 // Da dentro la pila l'occhio ha un grandangolo (prospettiva corta, circa 45° per lato) e i piani si allontanano di tanto:
 // dal varco il piano vicino si vede per metà circa, e guardando di sbieco lo sguardo resta sui piani.
-// Lo zoom da dentro stringe o allarga il campo visivo (la prospettiva), senza spostare né l'occhio né i piani.
+// Lo zoom da dentro: avvicinando stringe il campo visivo, allontanando l'occhio arretra (vedi zoomDentro).
 const ESPLOSO_DENTRO = 6;
-const prospettivaDentro = (palco, zoom) => Math.max(260, Math.max(420, palco.clientWidth / 2) * zoom);
+const prospettivaDentro = palco => Math.max(420, palco.clientWidth / 2);
 // camminando l'occhio sta a questa frazione del varco sopra il piano, e ogni passo è questa frazione della pila
 const ALTEZZA_PASSO = 0.05, PASSO_CAMMINO = 0.02;
 const TELEFONO = '(max-width: 720px)';
@@ -202,6 +202,7 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   const centro = [riquadro.left - origine.left + riquadro.width / 2, riquadro.top - origine.top + riquadro.height / 2];
   Object.assign(mondo.style, { left: `${centro[0]}px`, top: `${centro[1]}px` });
   palco.style.perspectiveOrigin = `${centro[0]}px ${centro[1]}px`;
+  mondo.style.setProperty('--bordo', `${Math.round(Math.max(cw, ch) * 0.03)}px`); // spessore del bordo cliccabile dei piani
   const distanza = quote(2, lato)[1];
   const spento = piani.map(() => false);
   // quota di ogni piano: contano solo quelli accesi, così spegnendone uno la pila si ricompatta
@@ -222,8 +223,17 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
       d.append(p.canvas);
     }
     if (p.base) d.dataset.base = '';
+    // bordo cliccabile attorno al piano: sceglie lo strato su cui entrare o camminare (le strisce stanno fuori dal piano,
+    // così un clic dentro apre sempre la scheda del punto)
+    for (const lato of ['su', 'giu', 'sx', 'dx']) {
+      const s = el('span', `strati3d-bordo strati3d-bordo-${lato}`);
+      s.ariaHidden = 'true'; // da tastiera lo stesso si fa dall'elenco
+      s.dataset.piano = i;
+      d.append(s);
+    }
     mondo.append(d);
     const nome = titoloPiano(p);
+    for (const s of d.querySelectorAll('.strati3d-bordo')) s.title = t('strati3d.bordo', { nome });
     const riga = el('div', 'strati3d-riga');
     const occhio = el('button', 'strati3d-occhio');
     occhio.type = 'button';
@@ -253,7 +263,7 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     b.querySelector('b').textContent = nome;
     b.addEventListener('click', () => {
       if (spento[i]) return;
-      if (meta.d) { meta.v = meta.c ? i : varcoPer(varchi(spento), i); aggiornaVarco(); } // da dentro: si va sopra quello strato
+      if (meta.d) vaiAlPiano(i);
       else meta.att = meta.att === i ? -1 : i;
       gesto();
     });
@@ -276,6 +286,7 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   // c: camminando sul piano v (l'occhio poco sopra), invece che a metà del varco
   const meta = { a: 25, b: 56, k: 1, e: 1, att: -1, px: 0, py: 0, d: false, c: false, v: -1, ex: 0, ey: 0 };
   // da dentro: i varchi tra due piani accesi o, camminando, i piani accesi; altezza dell'occhio (frazione del varco)
+  const zoomMin = () => (meta.d ? ZOOM_DENTRO.min : 0.4);
   const tappe = () => (meta.c ? pianiAccesi(spento) : varchi(spento));
   const altezza = () => (meta.c ? ALTEZZA_PASSO : 0.5);
   // da dentro, girare: a metà del varco gira tutto il modello attorno al suo asse; camminando gira la testa
@@ -325,7 +336,7 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     else if (puntatori.size === 1) { meta.a -= (ev.clientX - x0) * 0.35; meta.b = Math.min(82, Math.max(0, meta.b - (ev.clientY - y0) * 0.25)); }
     else if (puntatori.size === 2) {   // due dita: pizzico per lo zoom, il punto medio sposta la pila
       const [p1, p2] = [...puntatori.values()];
-      meta.k = Math.min(4, Math.max(0.4, zoom0 * Math.hypot(p1[0] - p2[0], p1[1] - p2[1]) / distanza0));
+      meta.k = Math.min(4, Math.max(zoomMin(), zoom0 * Math.hypot(p1[0] - p2[0], p1[1] - p2[1]) / distanza0));
       const m = medio();
       muoviPila(m[0] - medio0[0], m[1] - medio0[1]);
       medio0 = m;
@@ -336,10 +347,21 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   window.addEventListener('pointermove', muovi);
   window.addEventListener('pointerup', lascia);
   window.addEventListener('pointercancel', lascia);
-  palco.addEventListener('wheel', ev => { ev.preventDefault(); meta.k = Math.min(4, Math.max(0.4, meta.k * Math.exp(-ev.deltaY * 0.0015))); gesto(); }, { passive: false });
+  palco.addEventListener('wheel', ev => { ev.preventDefault(); meta.k = Math.min(4, Math.max(zoomMin(), meta.k * Math.exp(-ev.deltaY * 0.0015))); gesto(); }, { passive: false });
   // un tocco (non un trascinamento) su uno strato apre la scheda di quel punto, restando nel 3D
   palco.addEventListener('click', ev => {
     if (!partenza || Math.hypot(ev.clientX - partenza.x, ev.clientY - partenza.y) > 6 || performance.now() - partenza.t > 500) return;
+    // un clic sul bordo di uno strato: da fuori lo sceglie (un secondo clic ci entra), da dentro ci si porta sopra
+    const bordo = ev.target.closest?.('.strati3d-bordo');
+    if (bordo) {
+      const i = +bordo.dataset.piano;
+      if (spento[i]) return;
+      if (meta.d) vaiAlPiano(i);
+      else if (meta.att === i && varchi(spento).length) vaiDentro(true);
+      else meta.att = i;
+      gesto();
+      return;
+    }
     const img = ev.target.closest?.('.strati3d-img');
     if (!img) return;
     puntoPiano = [ev.offsetX, ev.offsetY];
@@ -424,7 +446,7 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
   const muoviPila = (x, y) => {
     if (meta.d) {
       // la distanza dal piano lungo lo sguardo: guardando in avanti il terreno inquadrato è più lontano dei piedi
-      const h = distanza * altezza() * ESPLOSO_DENTRO / Math.max(0.2, Math.abs(Math.cos(cam.b * Math.PI / 180)));
+      const h = distanza * altezza() * ESPLOSO_DENTRO / Math.max(0.2, Math.abs(Math.cos(cam.b * Math.PI / 180))) + (cam.P - cam.tz);
       const [wx, wy] = passoOcchio(x, y, cam.a, cam.b, h, cam.P);
       meta.ex = Math.min(cw / 2, Math.max(-cw / 2, meta.ex + wx));
       meta.ey = Math.min(ch / 2, Math.max(-ch / 2, meta.ey + wy));
@@ -475,6 +497,8 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     ultimoGesto = performance.now();
     aggiornaVarco();
   };
+  // da dentro, portarsi sullo strato i: camminando ci si sta sopra, altrimenti nel varco sopra di lui
+  const vaiAlPiano = i => { meta.v = meta.c ? i : varcoPer(varchi(spento), i); aggiornaVarco(); };
   const cambiaVarco = passo => { if (meta.d) { meta.v = camminaVarco(tappe(), meta.v, passo); aggiornaVarco(); gesto(); } };
   // camminare sul piano sotto il varco (o tornare a metà del varco sopra il piano su cui si cammina)
   function vaiCammina(si) {
@@ -527,7 +551,7 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     const inclina = meta.d ? 180 : 82;
     const azione = { ArrowLeft: () => { if (meta.d) giraDentro(10); else meta.a += 10; }, ArrowRight: () => { if (meta.d) giraDentro(-10); else meta.a -= 10; },
       ArrowUp: () => { meta.b = Math.min(inclina, meta.b + 6); }, ArrowDown: () => { meta.b = Math.max(0, meta.b - 6); },
-      '+': () => { meta.k = Math.min(4, meta.k * 1.15); }, '-': () => { meta.k = Math.max(0.4, meta.k / 1.15); } }[ev.key];
+      '+': () => { meta.k = Math.min(4, meta.k * 1.15); }, '-': () => { meta.k = Math.max(zoomMin(), meta.k / 1.15); } }[ev.key];
     if (azione) { azione(); gesto(); }
   };
   document.addEventListener('keydown', tasti);
@@ -550,8 +574,8 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     if (chiudendo) scopo = { ...piatto, a: Math.round(cam.a / 360) * 360, zt: 0, tx: 0, ty: 0, tz: 0, ex: 0, ey: 0, P: PROSPETTIVA };
     else if (dentro) {
       // l'occhio a metà del varco, sopra il rilievo del piano sotto
-      const e = ESPLOSO_DENTRO, P = prospettivaDentro(palco, meta.k);
-      scopo = { a: meta.a, b: meta.b, k: 1, e, P, tx: 0, ty: 0, tz: P, ex: meta.ex, ey: meta.ey, zt: (quota(meta.v) + rilievo[meta.v] + distanza * altezza()) * e };
+      const e = ESPLOSO_DENTRO, { P, indietro } = zoomDentro(meta.k, prospettivaDentro(palco), lato);
+      scopo = { a: meta.a, b: meta.b, k: 1, e, P, tx: 0, ty: 0, tz: P - indietro, ex: meta.ex, ey: meta.ey, zt: (quota(meta.v) + rilievo[meta.v] + distanza * altezza()) * e };
     } else {
       scopo = { ...meta, k: meta.k * adatta(L), zt: (meta.att >= 0 ? quota(meta.att) : cima / 2) * meta.e, tz: 0, ex: 0, ey: 0, P: PROSPETTIVA,
         tx: (L.x0 + L.x1) / 2 - centro[0] + meta.px, ty: (L.y0 + L.y1) / 2 - centro[1] + meta.py };
@@ -560,11 +584,12 @@ function apriScena(map, { piani, camera, terreno, vista }, alChiudere) {
     palco.style.perspective = `${cam.P}px`;
     mondo.style.transform = trasformaMondo(cam);
     const vetro = Math.min(1, cam.e * 1.5);
+    const lontano = cam.P - cam.tz > distanza * ESPLOSO_DENTRO * 0.5; // zoom indietro: l'occhio è uscito dal varco
     elPiani.forEach(({ d, b }, i) => {
       const att = !chiudendo && !dentro && i === meta.att;
       zz[i] += (quota(i) - zz[i]) * m;
       d.style.transform = `translateZ(${zz[i] * cam.e + i * 0.4 + (att ? lato * 0.02 : 0)}px)`;
-      const fuoco = dentro ? opacitaDentro(spento, meta.v, i, cam.b) : meta.att < 0 || chiudendo || att ? 1 : i < meta.att ? 0.25 : 0.1;
+      const fuoco = dentro ? opacitaDentro(spento, meta.v, i, cam.b, lontano) : meta.att < 0 || chiudendo || att ? 1 : i < meta.att ? 0.25 : 0.1;
       d.style.opacity = spento[i] && !chiudendo ? 0 : fuoco;
       d.style.pointerEvents = spento[i] || !fuoco ? 'none' : ''; // i piani nascosti alle spalle dell'occhio non si toccano
       if (piani[i].gradoni) for (const f of d.children) if (f.dataset.z) f.style.transform = `translateZ(${f.dataset.z * cam.e}px)`;

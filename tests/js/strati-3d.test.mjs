@@ -115,6 +115,7 @@ test('opacitaDentro: pieni i due piani del varco, sfumano gli altri, spariscono 
   assert.deepEqual(op(90), [0.6, 1, 1, 0, 0.6, 0.35]);
   assert.deepEqual(op(0), [0.6, 1, 0, 0, 0, 0]);   // dritto giù: niente sopra
   assert.deepEqual(op(180), [0, 0, 1, 0, 0.6, 0.35]); // dritto su: niente sotto
+  assert.deepEqual(spento.map((_, i) => opacitaDentro(spento, 1, i, 0, true)), [0.6, 1, 1, 0, 0.6, 0.35]); // arretrato: tutti
 });
 
 test('passoOcchio: quello che sta sotto il dito segue il dito', async () => {
@@ -156,4 +157,13 @@ test('passoAvanti e pianiAccesi', async () => {
   // coerente col trascinamento: andare avanti è come tirare giù il piano
   assert.ok(vicino(passoAvanti(35, 10), passoOcchio(0, 10, 35, 0, 1, 1)));
   assert.deepEqual(pianiAccesi([false, true, false]), [0, 2]);
+});
+
+test('zoomDentro: avvicinando si stringe il campo visivo, allontanando si arretra', async () => {
+  const { zoomDentro, ZOOM_DENTRO } = await import('../../js/core/strati-3d-modello.js');
+  assert.deepEqual(zoomDentro(1, 700, 1000), { P: 700, indietro: 0 });
+  assert.deepEqual(zoomDentro(2, 700, 1000), { P: 1400, indietro: 0 });
+  assert.deepEqual(zoomDentro(0.5, 700, 1000), { P: 700, indietro: 300 });
+  assert.deepEqual(zoomDentro(0.01, 700, 1000), zoomDentro(ZOOM_DENTRO.min, 700, 1000)); // con un tetto
+  assert.ok(zoomDentro(ZOOM_DENTRO.min, 700, 1000).indietro > 1500); // abbastanza da vedere la pila da fuori
 });
