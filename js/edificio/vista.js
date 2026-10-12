@@ -3,7 +3,7 @@
 import { STILE_BASE } from '../core/config.js';
 import { t, caricaDizionari, applicaDom, creaInterruttoreLingua } from '../core/i18n.js';
 import { GRUPPI, COLORI_PIANI, altezze, filtroVolumi, filtroNumeri, coloreVolumi, righeScheda, pianiDa, nomePiano,
-  prospettiVisibili } from './modello.js';
+  prospettiVisibili, stanzeDelClic } from './modello.js';
 import { ID_PROSPETTI, creaLayerProspetti } from './prospetti.js';
 
 const DATI = 'dati/edificio/crociferi/';
@@ -68,7 +68,7 @@ async function avvia() {
       paint: { 'text-color': '#1f2328', 'text-halo-color': '#ffffff', 'text-halo-width': 2 },
     });
     aggiorna(map);
-    interazioni(map);
+    interazioni(map, edificio);
     // i prospetti sono un di più: se mancano o three.js non si carica, la vista resta quella delle estrusioni
     json(DATI + 'prospetti.json')
       .then(p => creaLayerProspetti(DATI, p, centro))
@@ -193,7 +193,7 @@ function esciPianta(map) {
   aggiorna(map);
 }
 
-function interazioni(map) {
+function interazioni(map, edificio) {
   let evidenziato = null;
   const spegni = () => {
     if (evidenziato != null) map.setFeatureState({ source: 'edificio', id: evidenziato }, { evidenza: false });
@@ -209,9 +209,14 @@ function interazioni(map) {
   });
   map.on('mouseleave', 'edificio-volumi', () => { spegni(); map.getCanvas().style.cursor = ''; });
   map.on('click', 'edificio-volumi', e => {
-    const f = e.features?.[0];
-    if (!f) return;
-    const righe = righeScheda(f.properties).map(([k, v]) => `<tr><td>${escape(k)}</td><td>${escape(v)}</td></tr>`).join('');
+    const trovati = e.features ?? [];
+    if (!trovati.length) return;
+    // il primo è il più vicino all'occhio. Con generateId l'id è l'indice nel GeoJSON: lì la geometria è intera
+    // (quella dei tile è ritagliata)
+    const scelto = trovati[0];
+    const f = edificio.features[scelto.id] ?? scelto;
+    const stanze = stanzeDelClic(f, [e.lngLat.lng, e.lngLat.lat], edificio.features);
+    const righe = righeScheda(f.properties, stanze).map(([k, v]) => `<tr><td>${escape(k)}</td><td>${escape(v)}</td></tr>`).join('');
     new maplibregl.Popup({ closeButton: true, maxWidth: '280px' })
       .setLngLat(e.lngLat).setHTML(`<div class="scheda"><table>${righe}</table></div>`).addTo(map);
   });

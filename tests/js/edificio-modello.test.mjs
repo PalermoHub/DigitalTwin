@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { GRUPPI, altezze, tipiAccesi, filtroVolumi, filtroNumeri, righeScheda, pianiDa, prospettiVisibili } from '../../js/edificio/modello.js';
+import { GRUPPI, altezze, tipiAccesi, filtroVolumi, filtroNumeri, righeScheda, pianiDa, prospettiVisibili,
+  stanzeDelClic, poligonoContiene } from '../../js/edificio/modello.js';
 import { verticiFacciata } from '../../js/edificio/prospetti.js';
 
 const fc = JSON.parse(readFileSync(new URL('../../dati/edificio/crociferi/crociferi.geojson', import.meta.url), 'utf8'));
@@ -77,4 +78,27 @@ test('prospetti.json: tre facciate con immagine e spigoli vicini all\'edificio',
     assert.ok(f.altezza > 15 && f.altezza < 30);
     for (const [x, y] of [f.da, f.a]) assert.ok(Math.abs(x - 13.3728) < 0.0005 && Math.abs(y - 38.1166) < 0.0005);
   }
+});
+
+test('stanzeDelClic: il numero c\'è anche cliccando solaio o muro', () => {
+  const q = (x0, y0, x1, y1) => ({ type: 'Polygon', coordinates: [[[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]]] });
+  const st = (n, g) => ({ properties: { tipo: 'stanza', piano: 'primo', numero: n }, geometry: g });
+  const features = [st('23', q(0, 0, 1, 1)), st('24', q(1.1, 0, 2, 1)), { properties: { tipo: 'stanza', piano: 'secondo', numero: '13' }, geometry: q(0, 0, 1, 1) }];
+  const muro = { properties: { tipo: 'muro', piano: 'primo' }, geometry: q(1, 0, 1.1, 1) };
+  const solaio = { properties: { tipo: 'solaio', piano: 'primo' }, geometry: q(0, 0, 2, 1) };
+  assert.deepEqual(stanzeDelClic(features[0], [0.5, 0.5], features), { stanza: '23' });
+  assert.deepEqual(stanzeDelClic(solaio, [1.5, 0.5], features), { stanza: '24' });
+  assert.deepEqual(stanzeDelClic(solaio, [5, 5], features), {});
+  assert.deepEqual(stanzeDelClic(muro, [1.05, 0.5], features), { adiacenti: ['23', '24'] });
+  // un muro lungo tocca molte stanze: restano le più vicine al clic
+  const spina = { properties: { tipo: 'muro', piano: 'primo' }, geometry: q(0, 1, 2, 1.000003) };
+  assert.deepEqual(stanzeDelClic(spina, [0.2, 1.000001], features), { adiacenti: ['23'] });
+  assert.deepEqual(righeScheda({ ...muro.properties, quota: 6.3, h: 11.5 }, { adiacenti: ['23', '24'] })[2], ['Stanze adiacenti', '23, 24']);
+  assert.deepEqual(righeScheda({ ...solaio.properties, quota: 6.3 }, { stanza: '24' })[2], ['Stanza n.', '24']);
+});
+
+test('poligonoContiene: esclude i fori', () => {
+  const ciambella = [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]], [[1, 1], [3, 1], [3, 3], [1, 3], [1, 1]]];
+  assert.equal(poligonoContiene(ciambella, [0.5, 0.5]), true);
+  assert.equal(poligonoContiene(ciambella, [2, 2]), false);
 });
