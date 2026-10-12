@@ -104,7 +104,7 @@ test('poligonoContiene: esclude i fori', () => {
 });
 
 test('il corpo della chiesa al piano terra ha il suo nome (aula, servizi, magazzini), anche nella scheda', () => {
-  const nominate = fc.features.filter(f => f.properties.nome);
+  const nominate = fc.features.filter(f => f.properties.nome === 'Ex Chiesa di San Mattia dei Crociferi');
   assert.ok(nominate.length > 1);
   for (const f of nominate) {
     assert.equal(f.properties.nome, 'Ex Chiesa di San Mattia dei Crociferi');
@@ -112,6 +112,10 @@ test('il corpo della chiesa al piano terra ha il suo nome (aula, servizi, magazz
   }
   const aula = nominate.find(f => f.properties.area > 300).properties;
   assert.deepEqual(righeScheda(aula)[1], ['Elemento', 'Ex Chiesa di San Mattia dei Crociferi']);
-  // le stanze dell'ala sud oltre il passaggio no
-  assert.ok(!nominate.some(f => f.properties.numero === '39'));
+  // le stanze dell'ala sud oltre il passaggio no, e nemmeno portineria e archivio
+  assert.ok(!nominate.some(f => f.properties.numero === '39' || f.properties.numero === '38'));
+  const nome = n => fc.features.filter(f => f.properties.nome === n);
+  assert.equal(nome('Portineria').length, 1);
+  assert.equal(nome('Archivio').length, 1);
+  assert.equal(nome('Archivio')[0].properties.numero, '38');
 });

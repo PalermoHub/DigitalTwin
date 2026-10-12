@@ -28,6 +28,7 @@ import confini from './layers/confini.js';
 import popolazione from './layers/popolazione.js';
 import territorio from './layers/territorio.js';
 import edifici from './layers/edifici.js';
+import crociferi from './layers/crociferi.js';
 import monumenti from './layers/monumenti.js';
 import alberi from './layers/alberi.js';
 import fontanelle from './layers/fontanelle.js';
@@ -63,7 +64,7 @@ riduciLegenda.addEventListener('click', () => {
 });
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [base, terreno, popolazione, territorio, mefImmobili, peba, pendolarismo, edifici, pai, monumenti, alberi, fontanelle, trasporto, sicurezza, colonnine, uffici, scuole, incendi, isoleCalore, confini];
+const MODULI = [base, terreno, popolazione, territorio, mefImmobili, peba, pendolarismo, edifici, crociferi, pai, monumenti, alberi, fontanelle, trasporto, sicurezza, colonnine, uffici, scuole, incendi, isoleCalore, confini];
 traduciModuli(MODULI); // in inglese: titoli, etichette e descrizioni dei layer dai dizionari (lbl.*)
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);

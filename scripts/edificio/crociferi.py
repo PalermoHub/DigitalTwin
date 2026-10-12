@@ -94,6 +94,10 @@ LAYER_AREE = 'retini e perimetri aree'  # perimetri disegnati delle stanze asseg
 LAYER_LUOGHI = 'testi'  # usato solo per riconoscere la chiesa (che sopra il piano terra è un vuoto), non esportato
 CHIESA = 'Chiesa Di S. Mattia'  # etichetta nel DWG
 NOME_CHIESA = 'Ex Chiesa di San Mattia dei Crociferi'  # il corpo della chiesa al piano terra: aula, servizi, magazzini
+# Ambienti del piano terra con un nome proprio (escono dal corpo della chiesa): per etichetta del DWG o per numero di
+# stanza, quando l'etichetta del DWG è superata (la 38 nel DWG è ancora «Polizia Municipale»).
+NOMI_PER_ETICHETTA = {'Portineria': 'Portineria'}
+NOMI_PER_NUMERO = {'38': 'Archivio'}
 
 UTM = Transformer.from_crs(32633, 4326, always_xy=True)
 A_UTM = Transformer.from_crs(4326, 32633, always_xy=True)
@@ -385,7 +389,11 @@ def main():
  
         corpo = corpo_chiesa(u['impronta'].intersection(sagoma), chiesa, esterni) if p['id'] == 'terra' else None
         for fc, nn in stanze:
-            nome = NOME_CHIESA if p['id'] == 'terra' and fc.intersection(corpo).area / fc.area > 0.5 else None
+            nome = None
+            if p['id'] == 'terra':
+                etichetta = next((NOMI_PER_ETICHETTA[n] for pt, n in u['luoghi'] if n in NOMI_PER_ETICHETTA and fc.contains(pt)), None)
+                nome = (etichetta or next((NOMI_PER_NUMERO[n] for n in nn if n in NOMI_PER_NUMERO), None)
+                        or (NOME_CHIESA if fc.intersection(corpo).area / fc.area > 0.5 else None))
             aggiungi(fc, **base, tipo='stanza', nome=nome, numero=', '.join(nn) or None, area=round(fc.area, 1),
                      quota=q, h=round(q + 0.06, 2))
         for fc in vuoti:

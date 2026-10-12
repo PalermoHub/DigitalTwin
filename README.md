@@ -39,11 +39,11 @@ stime campionarie (censimento permanente).
 
 ## Edifici in 3D
 
-[`crociferi.html`](crociferi.html) mostra l'ex Noviziato dei Crociferi (Foro Umberto I 14) ricostruito dalle piante DWG:
-piani georeferenziati, estrusi alle loro quote e separabili con l'esploso; la vista in pianta mostra i numeri delle stanze.
-I dati (`dati/edificio/crociferi/`) si rigenerano con `python3 scripts/edificio/crociferi.py`, che legge il DWG con
-LibreDWG (`dwgread`) e allinea le piante alle unità volumetriche CTC; nel docstring dello script i passi e le ipotesi
-(quote dei piani dalla sezione, in scala con la gronda CTC).
+Nel gruppo «Edifici» lo strato **Ex Noviziato dei Crociferi in 3D** (Foro Umberto I 14) ricostruisce l'edificio dalle
+piante DWG: piani georeferenziati ed estrusi alle loro quote, esploso dei livelli e vista in pianta con i numeri delle
+stanze dalla legenda, prospetti disegnati sulle facciate. I dati (`dati/edificio/crociferi/`) si rigenerano con
+`python3 scripts/edificio/crociferi.py`, che legge il DWG con LibreDWG (`dwgread`) e allinea le piante alle unità
+volumetriche CTC; nel docstring dello script i passi e le ipotesi (quote dei piani dalla sezione, in scala con la gronda CTC).
 
 ## Struttura
 

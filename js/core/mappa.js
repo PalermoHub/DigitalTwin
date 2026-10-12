@@ -18,7 +18,7 @@ function abilitaInclinazione(map, abilita) {
 
 // La vista è 3D se è acceso uno strato 3D (edifici o rilievo); altrimenti torna 2D, a nord e senza inclinazione.
 export function aggiorna3D(map) {
-  const attivo = ['strato-edifici3d', 'strato-rilievo3d'].some(id => document.getElementById(id)?.checked);
+  const attivo = ['strato-edifici3d', 'strato-rilievo3d', 'strato-crociferi3d'].some(id => document.getElementById(id)?.checked);
   abilitaInclinazione(map, attivo);
   map.easeTo(attivo ? { pitch: 55, duration: 300 } : { pitch: 0, bearing: 0, duration: 300 });
   document.dispatchEvent(new CustomEvent('vista3d', { detail: attivo }));
