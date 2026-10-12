@@ -129,7 +129,11 @@ function riempiLegenda() {
     Object.assign(stato, { piani: pianiDa(dati).map(p => p.id), gruppi: GRUPPI.map(g => g.id), passo: 0 });
     aggiorna();
   });
-  legenda.append(tutti, el('p', 'uffici-nota', t('edificio.nota')));
+  // la nota si chiude per lasciare spazio alla legenda; all'inizio è aperta
+  const nota = el('details', 'cr-nota');
+  nota.open = true;
+  nota.append(el('summary', null, t('edificio.notaTitolo')), el('p', 'uffici-nota', t('edificio.nota')));
+  legenda.append(tutti, nota);
 }
 
 async function aggiungiProspetti() {
