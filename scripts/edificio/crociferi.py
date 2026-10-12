@@ -93,7 +93,7 @@ LAYER_NUMERI = ('testi numero stanza', 'testi numero stanza grande')
 LAYER_AREE = 'retini e perimetri aree'  # perimetri disegnati delle stanze assegnate: dove ci sono, valgono più delle facce
 LAYER_LUOGHI = 'testi'  # usato solo per riconoscere la chiesa (che sopra il piano terra è un vuoto), non esportato
 CHIESA = 'Chiesa Di S. Mattia'  # etichetta nel DWG
-NOME_CHIESA = 'Ex Chiesa di San Mattia dei Crociferi'  # nome dell'aula della chiesa al piano terra
+NOME_CHIESA = 'Ex Chiesa di San Mattia dei Crociferi'  # il corpo della chiesa al piano terra: aula, servizi, magazzini
 
 UTM = Transformer.from_crs(32633, 4326, always_xy=True)
 A_UTM = Transformer.from_crs(4326, 32633, always_xy=True)
@@ -244,6 +244,16 @@ def stanze_e_varchi(muri, impronta, aree=Polygon()):
     return facce, varchi
 
 
+def corpo_chiesa(impronta, aula, esterni):
+    """Il corpo della chiesa al piano terra: l'impronta meno gli spazi scoperti (il passaggio del Cortile Crociferi e il
+    giardino) si divide in corpi separati; quello che contiene l'aula è la chiesa con servizi e piccoli magazzini."""
+    corpi = poligoni(impronta.difference(unary_union(esterni).buffer(0.6, join_style=2)))
+    corpo = max(corpi, key=lambda c: c.intersection(aula).area)
+    # le fasce sottili (il muro lungo il lato nord del giardino) non uniscono alla chiesa i vani oltre il giardino
+    pezzi = poligoni(corpo.buffer(-1.5, join_style=2).buffer(1.5, join_style=2))
+    return max(pezzi, key=lambda c: c.intersection(aula).area).buffer(0.5, join_style=2)
+
+
 def assegna_numeri(facce, numeri):
     """Ogni numero va alla faccia che lo contiene; se cade su un muro, alla faccia più vicina (entro 1,5 m) ancora senza numero."""
     out = [[] for _ in facce]
@@ -336,12 +346,13 @@ def main():
 
         numeri = u['numeri']
         num_di = assegna_numeri(facce, numeri)
-        vuoti, stanze = [], []
+        vuoti, stanze, esterni = [], [], []
         for i, fc in enumerate(facce):
             fuori = fc.difference(sagoma).area / fc.area > 0.5
             if p['id'] != 'terra' and not num_di[i] and fc.intersection(chiesa).area / fc.area > 0.5:
                 vuoti.append(fc)
             elif fuori:
+                esterni.append(fc)
                 aggiungi(fc, **base, tipo='esterno', quota=q, h=q + 0.05)
             else:
                 stanze.append((fc, num_di[i]))
@@ -371,8 +382,10 @@ def main():
             if v.buffer(0.3).intersects(esterno):
                 aggiungi(v, **base, tipo='davanzale', quota=q, h=round(q + 0.9, 2))
 
+ 
+        corpo = corpo_chiesa(u['impronta'].intersection(sagoma), chiesa, esterni) if p['id'] == 'terra' else None
         for fc, nn in stanze:
-            nome = NOME_CHIESA if p['id'] == 'terra' and fc.intersection(chiesa).area / fc.area > 0.5 else None
+            nome = NOME_CHIESA if p['id'] == 'terra' and fc.intersection(corpo).area / fc.area > 0.5 else None
             aggiungi(fc, **base, tipo='stanza', nome=nome, numero=', '.join(nn) or None, area=round(fc.area, 1),
                      quota=q, h=round(q + 0.06, 2))
         for fc in vuoti:
