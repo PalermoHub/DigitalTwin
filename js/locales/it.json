@@ -1478,6 +1478,7 @@
   "riordino.ripristina": "Ripristina ordine",
   "riordino.su": "Sposta su {nome}",
   "riordino.suggerimento": "Metti un layer sopra o sotto un altro",
+  "tooltip.interruttore": "Tooltip sulla mappa",
   "riordino.titolo": "Ordine layer in mappa",
   "riordino.trascina": "Trascina per spostare",
   "ripristino.conferma": "Ripristinare colori, schede, ordine degli strati e invito ai valori iniziali? I layer RNDT aggiunti restano.",

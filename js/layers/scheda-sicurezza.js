@@ -1,6 +1,6 @@
 // Modello puro della sicurezza stradale (studio «Rete stradale»): le righe fisse della scheda di destra.
 import { righe } from '../core/scheda-util.js';
-import { localeIntl, t, tn } from '../core/i18n.js';
+import { localeIntl, t, tn, tl } from '../core/i18n.js';
 
 export const NOTA_DATI = t('sicurezza.notaDati');
 
@@ -90,4 +90,14 @@ export function tooltipArco(p) {
   const n = Number(p.n_incidenti);
   const inc = tn('ricerca.incidenti.n', n, { n: num(n, 0) });
   return { titolo, dettaglio: p.tasso_affidabile ? t('sicurezza.perKm', { inc, tasso: num(p.tasso_km) }) : inc };
+}
+
+// Tooltip di incidenti e hotspot: titolo con icona, poi i dati essenziali della scheda.
+export function tooltipIncidente(p) {
+  const dettagli = [p.anno, GRAVITA[p.Tipologia]?.nome, ha(p.feriti_n) ? `${tl('Feriti')}: ${num(p.feriti_n, 0)}` : null].filter(Boolean);
+  return { titolo: p.Luogo || 'Incidente', icona: 'strada', dettaglio: dettagli.join(' · ') };
+}
+
+export function tooltipHotspot(p) {
+  return { titolo: 'Zona a incidenti concentrati', icona: 'strada', dettaglio: ha(p.n_incidenti) ? tn('ricerca.incidenti.n', Number(p.n_incidenti), { n: num(p.n_incidenti, 0) }) : '' };
 }

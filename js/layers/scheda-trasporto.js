@@ -44,13 +44,16 @@ export function voceLinee(linee, costruisci) {
 
 // Tooltip al passaggio del mouse: stesse informazioni essenziali della scheda.
 export function tooltipFermata(p) {
-  return { titolo: p.nome, dettaglio: p.linee.length ? t('trasporto.lineeElenco', { elenco: p.linee.join(', ') }) : p.stato ? t('trasporto.inApertura') : 'Nessuna corsa nel feed' };
+  return { titolo: p.nome, icona: ICONA[p.tipo] ?? 'bus', dettaglio: p.linee.length ? t('trasporto.lineeElenco', { elenco: p.linee.join(', ') }) : p.stato ? t('trasporto.inApertura') : 'Nessuna corsa nel feed' };
 }
 
 // Una riga per linea (le due direzioni insieme), al massimo `max`: su una strada principale ne passano molte.
 export function tooltipLinee(linee, max = 4) {
   const gruppi = raggruppaLinee(linee);
+  const una = gruppi.length === 1 ? gruppi[0] : null;
   return {
+    titolo: una ? t('trasporto.linea', { numero: una.numero }) : t('trasporto.lineeN', { n: gruppi.length }),
+    icona: ICONA[linee[0]?.tipo] ?? 'bus',
     linee: gruppi.slice(0, max).map(g => ({ numero: g.numero, nome: g.nome, colore: g.direzioni[0].colore })),
     altre: Math.max(0, gruppi.length - max),
   };

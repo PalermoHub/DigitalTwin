@@ -191,7 +191,6 @@ select { width: 100%; margin: 2px 0 6px; }
 }
 .mappa-tooltip .maplibregl-popup-tip { display: none; }
 .mappa-tooltip-sezione + .mappa-tooltip-sezione { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--tooltip-bordo); }
-.confini-tooltip strong { color: var(--tooltip-enfasi); margin-right: 4px; }
 
 dialog { max-width: 640px; width: calc(100% - 32px); background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--r-sm); }
 dialog li { margin: 4px 0; }
@@ -1625,6 +1624,14 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
 .tooltip-pallino { display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 50%; border: 1px solid rgb(0 0 0 / .25); }
 .tooltip-badge { display: inline-block; margin-top: 4px; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; color: var(--colore); background: color-mix(in srgb, var(--colore) 14%, transparent); border: 1px solid color-mix(in srgb, var(--colore) 53%, transparent); }
 .strati-tooltip-altre { color: var(--text-muted); }
+/* voce del tooltip organizzata come la scheda: titolo con filetto, poi righe etichetta (attenuata) / valore (grassetto, a destra) */
+.strati-tooltip-corpo > div > strong { display: block; padding-bottom: 3px; border-bottom: 1px solid var(--tooltip-bordo); }
+.strati-tooltip-corpo > div > strong { color: var(--accent-strong); }
+.tooltip-icona { display: inline-flex; vertical-align: -.2em; margin-right: 6px; }
+.tooltip-riga { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 2px 0; border-bottom: 1px solid var(--tooltip-bordo); }
+.tooltip-riga:last-child { border-bottom: 0; }
+.tooltip-riga > span { flex: none; color: var(--text-muted); }
+.tooltip-riga > b { min-width: 0; font-weight: 600; text-align: right; overflow-wrap: anywhere; }
 
 /* scala: a sinistra del box zoom, con il pannello laterale */
 .maplibregl-ctrl-bottom-right { transition: right var(--t-rapida); }
@@ -1951,3 +1958,4 @@ body.strati3d-attiva :is(#scheda, #rail-pannelli) { z-index: calc(var(--z-viewer
   .strati3d-nav-colonna { grid-template-columns: repeat(3, 26px); gap: 3px; }
   .strati3d-nav-colonna button { width: 26px; height: 26px; }
 }
+.interruttore-tip { margin: 0 0 8px; }

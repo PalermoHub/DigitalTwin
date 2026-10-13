@@ -26,11 +26,15 @@ function collegaTooltip(map) {
     if (!righe.length) return null;
     const html = document.createElement('div');
     html.className = 'confini-tooltip';
-    righe.forEach(([nome, valore], i) => {
-      if (i) html.append(document.createElement('br'));
-      const b = document.createElement('strong');
-      b.textContent = nome;
-      html.append(b, valore);
+    righe.forEach(([nome, valore]) => {
+      const riga = document.createElement('div');
+      riga.className = 'tooltip-riga';
+      const et = document.createElement('span');
+      et.textContent = nome;
+      const val = document.createElement('b');
+      val.textContent = valore;
+      riga.append(et, val);
+      html.append(riga);
     });
     return { contenuto: html };
   }, 10);

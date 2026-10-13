@@ -88,7 +88,7 @@ function contenutoPopup(p) {
 
 function collegaPopup(map) {
   let popup = null;
-  registraTooltipStrati(map, [{ layers: [POLI, PUNTI], modello: p => ({ titolo: completo(p).nome, sottotitolo: completo(p).categoria }) }]);
+  registraTooltipStrati(map, [{ layers: [POLI, PUNTI], icona: 'monumento', modello: p => ({ titolo: completo(p).nome, sottotitolo: completo(p).categoria }) }]);
   map.on('click', e => {
     if (map.getLayoutProperty(POLI, 'visibility') !== 'visible') return;
     const f = map.queryRenderedFeatures(e.point, { layers: LAYERS.filter(id => map.getLayer(id)) })[0];

@@ -9,6 +9,7 @@ export { abilitaRiordino }; // l'API pubblica resta qui: i gruppi RNDT e «I mie
 import { ETICHETTE, EVENTO_GRUPPO } from './pannello-comune.js';
 import { aggiornaSottogruppi, rendiPieghevoli } from './sottogruppi.js';
 import { t } from './i18n.js';
+import { tooltipAttivi, impostaTooltipAttivi } from './tooltip.js';
 
 
 const mostrati = new Set();
@@ -327,8 +328,18 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
       }
     });
     layer.querySelector(':scope > h2').after(campo);
-    campo.after(disegno.el);
-    campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; });
+    // interruttore dei tooltip sulla mappa (acceso di default), prima dell'ordine dei layer
+    const interruttore = document.createElement('label');
+    interruttore.classList.add('strato', 'interruttore-tip');
+    const cbTip = document.createElement('input');
+    cbTip.type = 'checkbox';
+    cbTip.id = 'interruttore-tooltip';
+    cbTip.dataset.filtro = 'tooltip'; // non è uno strato: non va nei conteggi degli strati accesi
+    cbTip.checked = tooltipAttivi();
+    cbTip.addEventListener('change', () => impostaTooltipAttivi(cbTip.checked));
+    interruttore.append(cbTip, occhio(), ' ', t('tooltip.interruttore'));
+    campo.after(interruttore, disegno.el);
+    campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; interruttore.hidden = !!cercando; });
     contenitore.addEventListener('change', e => { if (e.target.matches?.('label.strato input[type=checkbox]')) { if (disegno.el.open) disegno.ridisegna(); else disegno.aggiornaTestata(); } });
   }
   aggiornaConteggio();

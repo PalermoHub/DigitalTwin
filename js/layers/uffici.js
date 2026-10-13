@@ -173,7 +173,7 @@ export default {
       popup = new maplibregl.Popup({ maxWidth: '340px', className: 'monumento-popup-box', offset: 8 })
         .setLngLat(f.geometry.coordinates).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
     });
-    registraTooltipStrati(map, [{ layers: [PUNTI], modello: p => modelloPopupSede(completo(p)) }]);
+    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'uffici', modello: p => modelloPopupSede(completo(p)) }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
   },

@@ -39,7 +39,7 @@ function collegaPopup(map) {
     popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
       .setLngLat(e.lngLat).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
   });
-  registraTooltipStrati(map, [{ layers: [PUNTI], modello: p => modelloPopupFontanella(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'fontanella', modello: p => modelloPopupFontanella(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }

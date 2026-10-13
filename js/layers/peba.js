@@ -112,7 +112,7 @@ export default {
     // trasparenti e sempre presenti: la scheda del luogo mostra le schede PEBA anche a strato spento
     map.addLayer({ id: HIT, type: 'fill', source: SRC, filter: POLIGONO, paint: { 'fill-opacity': 0 } });
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: PUNTO, paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
-    registraTooltipStrati(map, [{ layers: [FILL, PUNTI], modello: p => modelloTooltipPeba(p, modo) }]);
+    registraTooltipStrati(map, [{ layers: [FILL, PUNTI], icona: 'casa', modello: p => modelloTooltipPeba(p, modo) }]);
     for (const id of [FILL, PUNTI]) {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
       map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });

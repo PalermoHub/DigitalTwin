@@ -238,7 +238,7 @@ export default {
       popup = new maplibregl.Popup({ maxWidth: '300px', className: 'monumento-popup-box', offset: 8 })
         .setLngLat(e.lngLat).setDOMContent(contenutoPopup(lista)).addTo(map);
     });
-    registraTooltipStrati(map, TEMI.map(tema => ({ layers: layerDelTema(tema).slice(0, 1), modello: p => modelloPopup(tema.ds, tema.t, p) })));
+    registraTooltipStrati(map, TEMI.map(tema => ({ layers: layerDelTema(tema).slice(0, 1), icona: 'pai', modello: p => modelloPopup(tema.ds, tema.t, p) })));
     const tuttiLayer = TEMI.flatMap(layerDelTema);
     for (const id of tuttiLayer) {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });

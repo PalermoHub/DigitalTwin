@@ -1478,6 +1478,7 @@
   "riordino.ripristina": "Reset order",
   "riordino.su": "Move {nome} up",
   "riordino.suggerimento": "Put a layer above or below another",
+  "tooltip.interruttore": "Map tooltips",
   "riordino.titolo": "Layer order on the map",
   "riordino.trascina": "Drag to move",
   "ripristino.conferma": "Reset colours, panels, layer order and the click prompt to their initial values? Added RNDT layers are kept.",

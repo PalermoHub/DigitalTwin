@@ -1,9 +1,12 @@
 // Un solo tooltip sulla mappa. Confini, trasporto e sicurezza stradale registrano un «fornitore»: a ogni movimento del
 // mouse ognuno dice cosa c'è sotto il cursore e il contenuto di tutti finisce in un unico riquadro, una sezione sotto
 // l'altra, così i tooltip non si sovrappongono mai.
+import { svgIcona } from './icone.js';
+
 const fornitori = [];
 let collegato = false;
 let popup = null;
+let abilitato = true; // interruttore nel pannello Layer: spento, sulla mappa non compare nessun tooltip
 let mioCursore = false; // il cursore lo tocchiamo solo se l'abbiamo messo noi: monumenti e scuole hanno il loro «mano»
 
 // fornitore(e) → { contenuto: Node, cursore?: boolean, esclusivo?: boolean } oppure null se sotto il cursore non c'è nulla.
@@ -13,6 +16,12 @@ export function registraTooltip(map, fornitore, priorita = 0) {
   fornitori.push({ fornitore, priorita });
   fornitori.sort((a, b) => a.priorita - b.priorita);
   if (!collegato) { collegato = true; collega(map); }
+}
+
+export const tooltipAttivi = () => abilitato;
+export function impostaTooltipAttivi(valore) {
+  abilitato = !!valore;
+  if (!abilitato) { popup?.remove(); popup = null; }
 }
 
 function nascondi(map) {
@@ -40,6 +49,7 @@ export function contenutoTooltip(e) {
 
 function collega(map) {
   map.on('mousemove', e => {
+    if (!abilitato) return;
     const tip = contenutoTooltip(e);
     if (!tip) return nascondi(map);
     if (tip.cursore) { map.getCanvas().style.cursor = 'pointer'; mioCursore = true; }
@@ -62,6 +72,12 @@ export function disegnaVoceTooltip(m) {
     pallino.className = 'tooltip-pallino';
     pallino.style.background = m.pallino;
     titolo.append(pallino);
+  }
+  if (m.icona && svgIcona(m.icona)) { // iconcina davanti al titolo, come nella scheda
+    const i = document.createElement('span');
+    i.className = 'tooltip-icona';
+    i.innerHTML = svgIcona(m.icona, 14);
+    titolo.append(i);
   }
   titolo.append(m.titolo);
   voce.append(titolo);
@@ -92,11 +108,12 @@ export function registraTooltipStrati(map, gruppi, priorita = 2) {
   registraTooltip(map, e => {
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];
     const voci = new Map();
-    for (const { layers, modello } of gruppi) {
+    for (const { layers, modello, icona } of gruppi) {
       const attivi = layers.filter(acceso);
       if (!attivi.length) continue;
       for (const f of map.queryRenderedFeatures(riquadro, { layers: attivi })) {
         const m = modello(f.properties);
+        if (m && !m.icona && icona) m.icona = icona;
         if (m?.titolo) voci.set(`${m.titolo}\n${m.sottotitolo ?? ''}`, m);
       }
     }

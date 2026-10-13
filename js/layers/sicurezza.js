@@ -1,8 +1,8 @@
 import { pmt } from '../core/config.js';
 import { primo, tutti } from '../core/scheda-util.js';
-import { voceArco, voceHotspot, voceIncidente, tooltipArco, GRAVITA } from './scheda-sicurezza.js';
+import { voceArco, voceHotspot, voceIncidente, tooltipArco, tooltipIncidente, tooltipHotspot, GRAVITA } from './scheda-sicurezza.js';
 import { ZOOM_BASE } from './sicurezza-filtro.js';
-import { registraTooltip } from '../core/tooltip.js';
+import { registraTooltip, disegnaVoceTooltip } from '../core/tooltip.js';
 import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
 import { t as tr, tl } from '../core/i18n.js';
 
@@ -83,14 +83,21 @@ function mostraSezione(chiave, attivo) {
 
 // Tooltip sugli archi, solo a strato acceso (sezione di quello condiviso).
 function collegaTooltip(map) {
+  const acceso = id => map.getLayoutProperty(id, 'visibility') === 'visible';
   registraTooltip(map, e => {
-    if (![L.archi, L.pericolose].some(id => map.getLayoutProperty(id, 'visibility') === 'visible')) return null;
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];
-    const f = map.queryRenderedFeatures(riquadro, { layers: [L.hitArchi] })[0];
-    if (!f) return null;
-    const t = tooltipArco(f.properties);
-    const corpo = el('div', 'sicurezza-tooltip-corpo');
-    corpo.append(el('strong', null, t.titolo), el('div', null, t.dettaglio));
+    const sotto = (acceso(L.incidenti) ? tutti(map.queryRenderedFeatures(riquadro, { layers: [L.hitIncidenti] }), L.hitIncidenti).slice(0, 3).map(f => tooltipIncidente(f.properties)) : []);
+    if (acceso(L.hotspot)) {
+      const h = map.queryRenderedFeatures(riquadro, { layers: [L.hitHotspot] })[0];
+      if (h) sotto.push(tooltipHotspot(h.properties));
+    }
+    if ([L.archi, L.pericolose].some(acceso)) {
+      const f = map.queryRenderedFeatures(riquadro, { layers: [L.hitArchi] })[0];
+      if (f) sotto.push({ ...tooltipArco(f.properties), icona: 'strada' });
+    }
+    if (!sotto.length) return null;
+    const corpo = el('div', 'sicurezza-tooltip-corpo strati-tooltip-corpo');
+    for (const t of sotto) corpo.append(disegnaVoceTooltip({ titolo: t.titolo, icona: t.icona, sottotitolo: t.dettaglio }));
     return { contenuto: corpo, cursore: true };
   }, 1);
 }

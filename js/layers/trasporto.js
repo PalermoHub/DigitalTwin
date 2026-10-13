@@ -6,7 +6,7 @@ import { orariFermata, elencoLinee, elencoFermateVicine } from './trasporto-ui.j
 import { percorsoLinea } from './trasporto-percorso.js';
 import { evidenzia } from '../core/evidenza.js';
 import { fermateVicine, voceTrasportoVicino } from './trasporto-vicino.js';
-import { registraTooltip } from '../core/tooltip.js';
+import { registraTooltip, disegnaVoceTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { giornoIniziale, oggiISO, colorePerTesto, uniscimOrari } from './trasporto-orari.js';
 import { t as tr, tl } from '../core/i18n.js';
@@ -163,12 +163,13 @@ function collegaTooltip(map) {
     const sotto = fermata ? [] : map.queryRenderedFeatures(riquadro, { layers: [L.hitLinee, L.hitMetro] })
       .map(f => linee.get(f.properties.id)).filter(l => l && acceso(stratoLinea(l.tipo)));
     if (!fermata && !sotto.length) return null;
-    const html = el('div', 'trasporto-tooltip-corpo');
+    const html = el('div', 'trasporto-tooltip-corpo strati-tooltip-corpo');
     if (fermata) {
       const t = tooltipFermata(fermate.get(fermata.properties.id) ?? { ...fermata.properties, linee: [] });
-      html.append(el('strong', null, t.titolo), el('div', null, t.dettaglio));
+      html.append(disegnaVoceTooltip({ titolo: t.titolo, icona: t.icona, sottotitolo: t.dettaglio }));
     } else {
       const t = tooltipLinee(sotto);
+      html.append(disegnaVoceTooltip({ titolo: t.titolo, icona: t.icona }));
       for (const l of t.linee) {
         const riga = el('div', 'trasporto-tooltip-linea');
         const chip = el('span', 'trasporto-chip', l.numero);
