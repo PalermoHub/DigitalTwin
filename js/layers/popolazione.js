@@ -152,6 +152,7 @@ export default {
   stato: () => stato,
   scheda: {
     layers: ['pop-hit'],
+    tooltip: true,
     voci(trovati) {
       const f = primo(trovati, 'pop-hit');
       if (!f) return [];

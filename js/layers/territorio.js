@@ -173,6 +173,8 @@ export default {
   ],
   pannello(gruppo, map) { creaLegendaCatasto(gruppo, map); creaLegendaOmi(gruppo, map); },
   scheda: {
+    tooltip: true,
+    senzaTooltip: ['immobili'], // ha già il suo tooltip (registraTooltipStrati)
     layers: ['catasto-hit', 'prg-zto-hit', 'prg-ns-hit', 'prg-cs-hit', 'prg-va-hit', 'prg-vl-hit',
              'omi-hit', 'immobili-hit', 'civici-hit'],
     voci(trovati, lngLat) {

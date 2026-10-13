@@ -40,6 +40,7 @@ export default {
   }],
   scheda: {
     layers: ['edifici-hit'],
+    tooltip: true,
     voci(trovati) {
       const f = primo(trovati, 'edifici-hit');
       if (!f) return [];

@@ -81,6 +81,7 @@ export default {
   },
   scheda: {
     layers: ['griglia-hit'],
+    tooltip: true,
     // il punto di griglia più vicino al clic (i cerchi si sovrappongono)
     voci(trovati, lngLat) {
       const f = piuVicino(trovati, 'griglia-hit', lngLat);

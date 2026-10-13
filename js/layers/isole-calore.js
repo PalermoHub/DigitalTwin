@@ -166,6 +166,7 @@ export default {
   },
   scheda: {
     layers: [HIT],
+    tooltip: true,
     voci: trovati => {
       if (!dati) return [];
       return distinte(tutti(trovati, HIT)).slice(0, 1).flatMap(f => voceIsolaCalore(f.properties, dati, () => graficoAndamento(f.properties, dati.serie, t('isole.sezioneEMedia', { da: dati.anni[0], a: dati.anno }))) ?? []);
