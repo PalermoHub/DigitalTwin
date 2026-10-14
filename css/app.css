@@ -1992,3 +1992,11 @@ body.strati3d-attiva :is(#scheda, #rail-pannelli) { z-index: calc(var(--z-viewer
 .prg-voce span { min-width: 0; overflow-wrap: anywhere; }
 .prg-voce-titolo { margin-top: 6px; font-weight: 600; }
 .prg-sezione { margin: 6px 0 2px; font-size: var(--fs-xs); font-weight: 600; color: var(--text-muted); }
+.prg-ppe { margin-top: 8px; font-size: var(--fs-sm); color: var(--text); }
+.prg-gruppo { margin-left: 8px; color: var(--text); }
+.prg-voce-sotto { margin-left: 18px; }
+/* menu «Overlay informativi»: tooltip e legende sulla mappa */
+.opzioni-overlay { margin: 0 0 8px; border-top: 0; }
+.opzioni-overlay > summary h2 { font-size: var(--fs-sm); }
+.opzioni-overlay .interruttore-tip { margin: 0 0 2px; }
+.filtri-nota { margin: 12px 0 0; color: var(--text-muted); font-size: var(--fs-xs); line-height: 1.4; }

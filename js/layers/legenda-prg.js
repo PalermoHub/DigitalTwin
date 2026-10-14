@@ -46,12 +46,75 @@ const VINCOLI_AREALI = [
 const VINCOLI_LINEARI = ['Corsi d\'acqua', 'Corsi d\'acqua interrati', 'Faglie e Sovrascorrimenti', 'Regie Trazzere']
   .map((testo, i) => [`vl-${i}`, testo]);
 
+// PPE (Piano Particolareggiato Esecutivo del centro storico): simboli disegnati come SVG 16×16 che ripetono quelli della legenda
+// QGIS originale (tratteggi neri per la modalità di intervento, campiture a tinta unita o a punti per la tipologia edilizia)
+const tratti = (d, sp, col = '#000') => {
+  let linee = '';
+  for (let i = -16; i <= 32; i += sp) linee += d === 'h' ? `M0 ${i}H16` : `M${i} 0L${i + (d === 'd' ? 16 : -16)} 16`;
+  return `<path d="${linee}" stroke="${col}" stroke-width="0.8" fill="none"/>`;
+};
+const punti = (sp, col = '#000', r = 0.9, off = 2) => {
+  let c = '';
+  for (let y = off; y < 16; y += sp) for (let x = off + ((y / sp) % 2 && sp > 3 ? sp / 2 : 0); x < 16; x += sp) c += `<circle cx="${x}" cy="${y}" r="${r}" fill="${col}"/>`;
+  return c;
+};
+const campo = (fill, extra = '', bordo = 'rgba(0,0,0,.35)') => `<rect x=".5" y=".5" width="15" height="15" fill="${fill}" stroke="${bordo}"/>${extra}`;
+const SIMBOLI_PPE = {
+  'ppe-restauro': campo('#fff', tratti('d', 4), '#999'),
+  'ppe-ristrutturazione': campo('#fff', tratti('d', 4) + tratti('r', 4), '#999'),
+  'ppe-ripr-filologico': campo('#fff', tratti('d', 2.5), '#999'),
+  'ppe-ripr-tipologico': campo('#fff', tratti('r', 4), '#999'),
+  'ppe-dem-filologico': campo('#fff', `<path d="${[3, 6, 9, 12].map(y => `M1 ${y}H15`).join('')}" stroke="#000" stroke-width="0.8" stroke-dasharray="3 1.5" fill="none"/>`, '#999'),
+  'ppe-dem-tipologico': campo('#fff', `<path d="${[2.5, 5.5, 8.5, 11.5, 14].map(y => `M1 ${y}H15`).join('')}" stroke="#000" stroke-width="0.8" stroke-dasharray="4 1" fill="none"/>`, '#999'),
+  'ppe-dem-senza': campo('#fff', tratti('d', 3) + tratti('r', 3), '#999'),
+  'ppe-archeologica': campo('#fff', punti(3), '#999'),
+  'ppe-archeologica-dem': campo('#fff', punti(3) + tratti('d', 4) + tratti('r', 4), '#555'),
+  'ppe-base': campo('#f7a74f'),
+  'ppe-palazzetto': campo('#fb9a99'),
+  'ppe-plurifamiliare': campo('#fb9a99', tratti('h', 3, '#e31a1c')),
+  'ppe-palazzo': campo('#e31a1c'),
+  'ppe-religiosi-chiese': campo('#e063f5'),
+  'ppe-religiosi-conventi': campo('#c42a7a'),
+  'ppe-civili-pubblici': campo('#ccffff', '', '#9ac'),
+  'ppe-civili-produttivi': campo('#f4ffff', tratti('r', 3.5, '#17a6b8'), '#17a6b8'),
+  'ppe-giarrusso': campo('#cc7a45'),
+  'ppe-postbellica': campo('#a9b4b0'),
+  'ppe-superfetazioni': campo('#fff', punti(4, '#000', 1), '#999'),
+  'ppe-superf-chiese': campo('#d65cf0', punti(4, '#000', 1)),
+  'ppe-superf-verde-privato': campo('#cfe8a8', punti(4, '#000', 1)),
+  'ppe-superf-verde-pubblico': campo('#7fbf4f', punti(4, '#000', 1)),
+  'ppe-torri': campo('#7ccbf5'),
+  'ppe-mura': campo('#7ccbf5'),
+  'ppe-verde-privato': campo('#cfe8a8'),
+  'ppe-verde-pubblico': campo('#7fbf4f'),
+};
+const svgUrl = id => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">${SIMBOLI_PPE[id]}</svg>`)}`;
+
+const PPE_MODALITA = [
+  ['ppe-restauro', 'Restauro'], ['ppe-ristrutturazione', 'Ristrutturazione'], ['ppe-ripr-filologico', 'Ripristino Filologico'],
+  ['ppe-ripr-tipologico', 'Ripristino Tipologico'], ['ppe-dem-filologico', 'Demolizione delle superfetazioni e ripristino filologico'],
+  ['ppe-dem-tipologico', 'Demolizione delle superfetazioni e ripristino tipologico'], ['ppe-dem-senza', 'Demolizione senza ricostruzione'],
+  ['ppe-archeologica', 'Area Archeologica'], ['ppe-archeologica-dem', 'Area Archeologica - Demolizione senza ricostruzione'],
+];
+
+const PPE_TIPOLOGIA = [
+  ['ppe-base', 'Edilizia di Base'], ['ppe-palazzetto', 'Palazzetto'], ['ppe-plurifamiliare', 'Palazzetto Plurifamiliare'],
+  ['ppe-palazzo', 'Palazzo'], ['ppe-religiosi-chiese', 'Edilizia Specialistici religiosi (chiese, oratori, cappelle)'],
+  ['ppe-religiosi-conventi', 'Edilizia Specialistici religiosi (conventi, collegi, seminari)'],
+  ['ppe-civili-pubblici', 'Edifici Specialistici Civili Pubblici'], ['ppe-civili-produttivi', 'Edifici Specialistici Civili Produttivi'],
+  ['ppe-giarrusso', 'Edilizia Conseguente al Piano Giarrusso'], ['ppe-postbellica', 'Edilizia Postbellica'],
+  ['ppe-superfetazioni', 'Superfetazioni'], ['ppe-superf-chiese', 'Superfetazioni - Chiese'],
+  ['ppe-superf-verde-privato', 'Superfetazioni - Verde Privato'], ['ppe-superf-verde-pubblico', 'Superfetazioni - Verde Pubblico'],
+  ['ppe-torri', 'Torri Difensive'], ['ppe-mura', 'Mura Bastioni Fortificazioni'], ['ppe-verde-privato', 'Verde Privato'],
+  ['ppe-verde-pubblico', 'Verde Pubblico'],
+];
+
 const el = (tag, classe, testo) => Object.assign(document.createElement(tag), { className: classe ?? '', textContent: testo ?? '' });
 
 function riga([simbolo, testo], classe = 'prg-voce') {
   const r = el('div', classe);
   const img = el('img');
-  img.src = `img/prg/${simbolo}.png`;
+  img.src = simbolo in SIMBOLI_PPE ? svgUrl(simbolo) : `img/prg/${simbolo}.png`;
   img.alt = '';
   img.width = img.height = 16;
   r.append(img, el('span', '', tl(testo)));
@@ -62,13 +125,16 @@ function legenda(classe, titolo, sezioni) {
   const l = el('div', `legenda legenda-prg ${classe}`);
   l.hidden = true;
   l.append(el('strong', '', tl(titolo)));
-  for (const [sottotitolo, voci, classeRiga] of sezioni) {
-    if (sottotitolo) l.append(el('div', 'prg-sezione', tl(sottotitolo)));
+  for (const [sottotitolo, voci, classeRiga, classeTitolo] of sezioni) {
+    if (sottotitolo) l.append(el('div', classeTitolo ?? 'prg-sezione', tl(sottotitolo)));
     l.append(...voci.map(v => riga(v, classeRiga)));
   }
   document.getElementById('legende').append(l);
   return l;
 }
 
-export const creaLegendaZonizzazione = () => legenda('lg-prg', 'Zonizzazione', [[null, ZONIZZAZIONE], [null, [CITTA_STORICA], 'prg-voce prg-voce-titolo']]);
+export const creaLegendaZonizzazione = () => legenda('lg-prg', 'Zonizzazione', [[null, ZONIZZAZIONE], [null, [CITTA_STORICA], 'prg-voce prg-voce-titolo'],
+  ['PPE', [], null, 'prg-sezione prg-ppe'],
+  ['Modalità Intervento', PPE_MODALITA, 'prg-voce prg-voce-sotto', 'prg-sezione prg-gruppo'],
+  ['Tipologia edilizia', PPE_TIPOLOGIA, 'prg-voce prg-voce-sotto', 'prg-sezione prg-gruppo']]);
 export const creaLegendaVincoli = () => legenda('lg-vincoli', 'Vincoli', [['Vincoli areali', VINCOLI_AREALI], ['Vincoli lineari', VINCOLI_LINEARI]]);

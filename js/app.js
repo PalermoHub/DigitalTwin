@@ -50,6 +50,7 @@ import sicurezza, { STRATI_INCIDENTI, legendaSicurezza } from './layers/sicurezz
 import { collegaFiltroIncidenti } from './layers/sicurezza-filtro.js';
 import { collegaRicercaTerritorio } from './layers/ricerca-territorio.js';
 import { collegaRicercaIncidenti } from './layers/sicurezza-ricerca.js';
+import { collegaRicercaGuide } from './core/ricerca-guide.js';
 import { collegaFiltroLinea } from './layers/trasporto-filtro.js';
 import terreno from './layers/terreno.js';
 import base from './layers/base.js';
@@ -185,9 +186,15 @@ map.once('style.load', async () => {
     chips: document.getElementById('filtri-incidenti-chips'), layers: STRATI_INCIDENTI, strato: 'sicurezza-incidenti',
   });
   legendaSicurezza.suTipologie = tipologie => filtroIncidenti.imposta({ tipologie }); // la legenda degli incidenti filtra per gravità
+  // gli argomenti delle tre guide: la pagina si apre (la stessa già aperta resta) e scorre alla sezione
+  const apriGuida = (scheda, sezione) => {
+    const foglio = document.getElementById('crediti');
+    if (!(foglio.open && foglio.dataset.tab === scheda)) document.querySelector(`#menu-info button[data-scheda="${scheda}"]`)?.click();
+    document.getElementById(sezione)?.scrollIntoView({ block: 'start' });
+  };
   collegaRicerca(map, document.getElementById('cerca'),
     document.getElementById('cerca-testo'), document.getElementById('cerca-risultati'), vaiParticella, zone,
-    collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti)));
+    collegaRicercaGuide(apriGuida, collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti))));
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
   collegaChipBarra(document.getElementById('strati-chip'), document.getElementById('barra-strumenti')); // i chip scendono sotto la barra se la toccano

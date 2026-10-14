@@ -68,6 +68,7 @@ export const PASSI = [
     gruppo: 'funzioni',
     titolo: 'Mettere un layer sopra o sotto un altro',
     paragrafi: [
+      'Subito sotto «Cerca strato» il menu «Overlay informativi» raccoglie due interruttori. «Tooltip sulla mappa» mostra, passando il mouse su un elemento, una scheda con i suoi dati principali. «Legende sulla mappa», se acceso, tiene sulla mappa le legende degli strati accesi; spento, le legende restano solo sotto ciascuno strato nel pannello. Il menu è aperto di default e si chiude con un clic sul titolo.',
       'In cima al tab «Layer», sotto «Cerca strato», la scheda arancione «Ordine layer in mappa» elenca tutti gli strati accesi, di qualsiasi gruppo, con accanto il gruppo di provenienza. Il contatore dice quanti sono, anche a scheda chiusa; servono almeno due strati accesi per cambiare l\'ordine.',
       'In alto nell\'elenco vuol dire sopra sulla mappa. Si riordina con le frecce su e giù oppure trascinando la maniglia. Vale anche per i layer di «I miei layer» e del catalogo RNDT, e un layer appena aggiunto parte in cima a tutto. «Ripristina ordine» riporta l\'ordine di partenza; l\'ordine scelto è salvato nel browser e ritrovato alla visita successiva.',
     ],

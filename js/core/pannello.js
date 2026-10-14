@@ -342,8 +342,18 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     cbTip.checked = tooltipAttivi();
     cbTip.addEventListener('change', () => impostaTooltipAttivi(cbTip.checked));
     interruttore.append(cbTip, occhio(), ' ', t('tooltip.interruttore'));
-    campo.after(interruttore, ...(legendeUi ? [legendeUi.interruttore] : []), disegno.el);
-    campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; interruttore.hidden = !!cercando; if (legendeUi) legendeUi.interruttore.hidden = !!cercando; });
+    // i due interruttori stanno in un unico menu a tendina, aperto di default
+    const opzioni = document.createElement('details');
+    opzioni.id = 'opzioni-overlay';
+    opzioni.open = true;
+    opzioni.className = 'layer-sezione opzioni-overlay';
+    const sommarioOpz = document.createElement('summary');
+    const titoloOpz = document.createElement('h2');
+    titoloOpz.textContent = t('pannello.overlay.titolo');
+    sommarioOpz.append(titoloOpz);
+    opzioni.append(sommarioOpz, interruttore, ...(legendeUi ? [legendeUi.interruttore] : []));
+    campo.after(opzioni, disegno.el);
+    campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; opzioni.hidden = !!cercando; });
     contenitore.addEventListener('change', e => { if (e.target.matches?.('label.strato input[type=checkbox]')) { if (disegno.el.open) disegno.ridisegna(); else disegno.aggiornaTestata(); } });
   }
   aggiornaConteggio();
