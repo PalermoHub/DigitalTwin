@@ -126,7 +126,7 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
       { id: `${id}-pt`, metadata: { dtNome: nome }, type: 'circle', source: id, filter: ['==', ['geometry-type'], 'Point'], paint: { 'circle-color': colore, 'circle-radius': 5, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } },
     ];
     for (const s of strati) map.addLayer(s);
-    const rec = { id, tipo: 'geojson', nome, visibile: true, sorgente: url ? { url } : {}, idMappa: strati.map(s => s.id), idSorgente: id, salvato: Boolean(url) };
+    const rec = { id, tipo: 'geojson', nome, visibile: true, sorgente: url ? { url } : {}, idMappa: strati.map(s => s.id), idSorgente: id, salvato: Boolean(url), colore };
     if (url) return registra(rec, { salva });
     // senza URL: i dati si salvano a parte, dopo che il layer è in mappa
     rec.sorgente = { dati: true };
@@ -243,8 +243,8 @@ export function creaHost({ map, proxy, stato: iniziale, scrivi, anelli = () => [
     openRightPanel: () => pannello.apri?.(),
     closeRightPanel: () => pannello.chiudi?.(),
 
-    elenco: () => [...layers.values()].map(({ id, tipo, nome, visibile, indisponibile, errore, salvato, sorgente, idMappa }) => ({
-      id, tipo, nome, visibile, indisponibile: Boolean(indisponibile), errore: Boolean(errore), salvato, sorgente, idMappa: [...(idMappa ?? [])],
+    elenco: () => [...layers.values()].map(({ id, tipo, nome, visibile, indisponibile, errore, salvato, sorgente, idMappa, colore }) => ({
+      id, tipo, nome, visibile, indisponibile: Boolean(indisponibile), errore: Boolean(errore), salvato, sorgente, idMappa: [...(idMappa ?? [])], colore,
     })),
     mostra: impostaVisibilita,
     elimina(id) {

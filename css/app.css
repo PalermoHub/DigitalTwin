@@ -454,6 +454,14 @@ dialog li { margin: 4px 0; }
 .legenda-omi .omi-zone div { display: flex; flex-wrap: wrap; gap: 2px 8px; margin-top: 3px; }
 .legenda-omi .omi-zone label { display: inline-flex; align-items: center; gap: 3px; }
 .legenda-omi .omi-zone i { width: 10px; height: 10px; }
+.legenda-esterna-corpo { max-height: 40vh; overflow: auto; }
+.legenda-esterna-origine { display: block; margin-bottom: 4px; color: var(--text-muted); font-size: var(--fs-2xs); overflow-wrap: anywhere; }
+.tooltip-origine { display: block; margin-top: 2px; color: var(--text-muted); font-size: var(--fs-2xs); }
+.legenda-esterna-img { display: block; max-width: 100%; height: auto; }
+.legenda-esterna-voce small { color: var(--text-muted); }
+.legenda-esterna-classe { display: flex; align-items: center; gap: 6px; }
+.legenda-esterna-classe .legenda-esterna-img { flex: none; }
+.legenda-esterna-gruppo { margin-top: 4px; font-size: var(--fs-2xs); }
 .mappa-tooltip .legenda { max-width: 260px; }
 .mappa-tooltip .tooltip-campione { display: inline-flex; vertical-align: middle; margin-right: 6px; max-height: none; overflow: visible; }
 .mappa-tooltip .legenda div { align-items: flex-start; padding: 3px 0; }

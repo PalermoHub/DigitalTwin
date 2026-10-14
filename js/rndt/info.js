@@ -2,6 +2,7 @@
 // Cosa dice un layer RNDT in un punto: richieste GetFeatureInfo (WMS), proprietà delle feature (GeoJSON) e voci
 // nel formato della scheda (scheda-modello.js). Modulo puro: la rete e la mappa arrivano come parametri.
 import { t as tr } from '../core/i18n.js';
+import { urlQueryArcgisPunto } from './legenda.js';
 
 const R = 20037508.342789244; // metà circonferenza in Web Mercator
 const PIXEL = 101; // finestra della richiesta, con il punto cliccato al centro
@@ -40,7 +41,7 @@ export function urlGetFeatureInfo(sorgente, lngLat, zoom, formato) {
 
 export function proprieta(props) {
   return Object.entries(props ?? {})
-    .filter(([k, v]) => v != null && v !== '' && typeof v !== 'object' && !NASCOSTE.test(k))
+    .filter(([k, v]) => v != null && String(v).trim() !== '' && typeof v !== 'object' && !NASCOSTE.test(k))
     .slice(0, 25)
     .map(([k, v]) => ({ etichetta: k, valore: String(v).slice(0, 300) }));
 }
@@ -112,6 +113,14 @@ async function interrogaWms(sorgente, lngLat, zoom, leggiTesto) {
   return { tipo: 'errore' };
 }
 
+// ArcGIS: query del punto sul layer (GeoJSON); gli elementi trovati come per i dati vettoriali
+async function interrogaArcgis(url, leggiTesto) {
+  const j = JSON.parse(await leggiTesto(url));
+  if (j?.error || !Array.isArray(j?.features)) return { tipo: 'errore' };
+  const elementi = uniche(j.features.map(f => f.properties)).map(proprieta).filter(r => r.length);
+  return elementi.length ? { tipo: 'json', elementi } : { tipo: 'vuoto' };
+}
+
 const uniche = lista => {
   const viste = new Set();
   return lista.filter(p => { const k = JSON.stringify(p); return !viste.has(k) && viste.add(k); });
@@ -126,6 +135,8 @@ export async function interrogaTutti({ layers, lngLat, zoom, leggiTesto, feature
       }
       if (layer.tipo === 'wms' && layer.sorgente?.queryable === false) return vociDa(layer, { tipo: 'non-interrogabile' }); // il server lo dichiara non interrogabile
       if (layer.tipo === 'wms') return vociDa(layer, await conTimeout(interrogaWms(layer.sorgente, lngLat, zoom, leggiTesto), timeoutMs));
+      const arcgis = layer.tipo === 'tile' && urlQueryArcgisPunto(layer.sorgente?.url, lngLat, zoom);
+      if (arcgis) return vociDa(layer, await conTimeout(interrogaArcgis(arcgis, leggiTesto), timeoutMs));
       return vociDa(layer, { tipo: 'non-interrogabile' });
     } catch {
       return vociDa(layer, { tipo: 'errore' });

@@ -1,7 +1,9 @@
 // js/rndt/tooltip.js
 // Le estensioni dei dati del catalogo RNDT (il plugin le disegna come riquadri) finiscono nel tooltip unico della mappa,
 // una sezione sotto le altre, dalla più piccola alla più grande. Il tooltip proprio del plugin è spento (vedi vendor).
-import { registraTooltip } from '../core/tooltip.js';
+import { registraTooltip, campioneTooltip, disegnaVoceTooltip } from '../core/tooltip.js';
+import { proprieta } from './info.js';
+import { origineLayer } from './legenda.js';
 
 const MAX_VOCI = 5;
 const LAYER_ESTENSIONI = /-footprints-fill$/;
@@ -49,6 +51,53 @@ export function collegaTooltipEstensioni(map) {
       altre.textContent = `+ altri ${voci.length - MAX_VOCI}`;
       corpo.append(altre);
     }
+    return { contenuto: corpo, cursore: true };
+  }, 3);
+}
+
+const MAX_RIGHE = 3;
+const MAX_LAYER = 3;
+
+// Tooltip dei layer vettoriali aggiunti (file, WFS, ArcGIS): sotto il cursore, per ogni layer acceso, il nome, la prima
+// proprietà con il colore del layer (come in legenda) e un paio di righe. I WMS no: ogni movimento del mouse sarebbe una richiesta al server.
+export function collegaTooltipLayerEsterni(map, hosts) {
+  registraTooltip(map, e => {
+    const voci = [];
+    for (const host of hosts) {
+      for (const layer of host.elenco()) {
+        if (layer.tipo !== 'geojson' || !layer.visibile || layer.indisponibile) continue;
+        const f = host.featureAlPunto(layer.id, e.point)[0];
+        const righe = f ? proprieta(f.properties) : [];
+        if (!righe.length) continue;
+        const [prima, ...altre] = righe;
+        const voce = disegnaVoceTooltip({
+          titolo: layer.nome, sottotitolo: `${prima.etichetta}: ${prima.valore}`,
+          campione: layer.colore ? campioneTooltip('legenda-esterna', ['', { background: layer.colore }]) : undefined,
+        });
+        for (const r of altre.slice(0, MAX_RIGHE - 1)) {
+          const riga = document.createElement('div');
+          riga.className = 'tooltip-riga';
+          const etichetta = document.createElement('span');
+          etichetta.textContent = r.etichetta;
+          const valore = document.createElement('b');
+          valore.textContent = r.valore;
+          riga.append(etichetta, valore);
+          voce.append(riga);
+        }
+        const { servizio, server } = origineLayer(layer);
+        if (servizio) {
+          const origine = document.createElement('small');
+          origine.className = 'tooltip-origine';
+          origine.textContent = `${servizio} · ${server}`;
+          voce.append(origine);
+        }
+        voci.push(voce);
+      }
+    }
+    if (!voci.length) return null;
+    const corpo = document.createElement('div');
+    corpo.className = 'strati-tooltip-corpo';
+    corpo.append(...voci.slice(0, MAX_LAYER));
     return { contenuto: corpo, cursore: true };
   }, 3);
 }

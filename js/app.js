@@ -10,6 +10,9 @@ import { collegaTooltipScheda } from './core/tooltip-scheda.js';
 import { collegaRndt, creaInterrogazione } from './rndt/index.js';
 import { creaGruppo, creaGruppoRndt, OPZIONI_MIEI } from './rndt/gruppo.js';
 import { collegaAggiungi } from './aggiungi/index.js';
+import { collegaLegendeEsterne } from './rndt/legenda-ui.js';
+import { collegaTooltipLayerEsterni } from './rndt/tooltip.js';
+import { collegaTooltipRemoto } from './rndt/tooltip-remoto.js';
 import { migraFileLocali } from './aggiungi/migrazione.js';
 import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
@@ -111,8 +114,12 @@ map.once('style.load', async () => {
   costruisciPannello(map, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
   const rndt = collegaRndt(map, document.getElementById('rndt-pannello'), gruppoRndt);
   const aggiungi = collegaAggiungi(map, gruppoMiei);
+  collegaLegendeEsterne([rndt.host, aggiungi.host], document.getElementById('legende')); // legende dei layer di servizi esterni
+  collegaTooltipLayerEsterni(map, [rndt.host, aggiungi.host]); // tooltip dei layer vettoriali aggiunti
   collegaTooltipScheda(map, MODULI);
-  collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt: creaInterrogazione([rndt.host, aggiungi.host]) }); // la scheda interroga i layer RNDT e i «miei layer»
+  const interrogazione = creaInterrogazione([rndt.host, aggiungi.host]); // la scheda interroga i layer RNDT e i «miei layer»
+  collegaTooltipRemoto(map, interrogazione); // lo stesso vale per il tooltip dei WMS e degli ArcGIS a immagine, a mouse fermo
+  collegaScheda(map, MODULI, document.getElementById('scheda'), { rndt: interrogazione });
   // Geoimage (circa 100 KB di moduli) si carica al primo clic sul suo tab, o all'avvio solo se c'è un progetto da ripristinare.
   const pannelloGeo = document.getElementById('geoimage-pannello');
   let geoPronto = null;
