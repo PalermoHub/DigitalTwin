@@ -96,7 +96,8 @@ export function disegnaVoceTooltip(m) {
   return voce;
 }
 
-// Tooltip per i layer con un modello di popup {titolo, sottotitolo, pallino?, badge?: {testo, colore}}: `gruppi` = [{ layers, modello(props) }]. Si cerca solo
+// Tooltip per i layer con un modello di popup {titolo, sottotitolo, pallino?, badge?: {testo, colore}}: `gruppi` = [{ layers, modello(props), colore?(props, idLayer) }].
+// `colore` dà il colore dell'attributo mostrato (lo stesso della legenda) se il modello non ha già un pallino. Si cerca solo
 // negli strati accesi (a strato spento sulla mappa non c'è nulla da indicare); nel riquadro di ±4 px cadono anche i punti piccoli.
 // i modelli di tooltip registrati, per layer: la vista «Strati in 3D» li riusa per descrivere ogni strato della pila
 const modelli = [];
@@ -108,12 +109,13 @@ export function registraTooltipStrati(map, gruppi, priorita = 2) {
   registraTooltip(map, e => {
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];
     const voci = new Map();
-    for (const { layers, modello, icona } of gruppi) {
+    for (const { layers, modello, icona, colore } of gruppi) {
       const attivi = layers.filter(acceso);
       if (!attivi.length) continue;
       for (const f of map.queryRenderedFeatures(riquadro, { layers: attivi })) {
         const m = modello(f.properties);
         if (m && !m.icona && icona) m.icona = icona;
+        if (m && !m.pallino && colore) m.pallino = colore(f.properties, f.layer.id) ?? undefined; // il colore dell'attributo, come nella legenda
         if (m?.titolo) voci.set(`${m.titolo}\n${m.sottotitolo ?? ''}`, m);
       }
     }

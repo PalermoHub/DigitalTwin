@@ -26,3 +26,16 @@ test('con pallino e badge: pallino nel titolo, badge dopo il titolo', () => {
   assert.equal(v.figli[1].textContent, 'Accessibile');
   assert.equal(v.figli[1].vars['--colore'], '#003');
 });
+
+test('registraTooltipStrati: il colore dell\'attributo diventa il pallino, se il modello non ne ha già uno', async () => {
+  const { registraTooltipStrati, contenutoTooltip } = await import('../../js/core/tooltip.js');
+  const map = {
+    on() {}, getLayer: () => true, getLayoutProperty: () => 'visible',
+    queryRenderedFeatures: () => [{ properties: { cls: 'P4' }, layer: { id: 'a' } }],
+  };
+  registraTooltipStrati(map, [{ layers: ['a'], modello: p => ({ titolo: 'PAI', sottotitolo: p.cls }), colore: (p, id) => (p.cls === 'P4' && id === 'a' ? '#c00' : undefined) }]);
+  const { corpo } = contenutoTooltip({ point: { x: 0, y: 0 } });
+  const titolo = corpo.figli[0].figli[0].figli[0].figli[0].figli[0];
+  assert.equal(titolo.className, 'tooltip-pallino');
+  assert.equal(titolo.style.background, '#c00');
+});

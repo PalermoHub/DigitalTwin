@@ -18,6 +18,7 @@ test('una voce per zona, con badge e dati di zona una sola volta', () => {
   assert.equal(v[0].chiave, 'omi-B12');
   assert.equal(v[0].titolo, 'Quotazioni OMI');
   assert.equal(v[0].badge, 'Zona B12');
+  assert.equal(v[0].pallino, '#662933'); // colore della zona nella mappa (STILE_OMI)
   assert.deepEqual(v[0].gruppi[0].righe, [
     { etichetta: 'Fascia', valore: 'B – Centrale' },
     { etichetta: 'Descrizione', valore: 'MASSIMO-PIGNATELLI V.E.ORLANDO-AMICO ARAGONA-GOETHE-' },

@@ -1,6 +1,7 @@
 // Voci «Quotazioni OMI» della scheda: una per zona, con le tipologie in fisarmonica. Logica e
 // formati di buildOMIPopup (pmtiles/js/catasto_script.js). Il tile ha una feature per tipologia.
 import { t, localeIntl } from '../core/i18n.js';
+import { STILE_OMI } from './stile-omi.js';
 
 const pulisci = s => String(s ?? '').replace(/^'|'$/g, '').trim();
 const SUPERFICIE = { L: 'sup.lorda', N: 'sup.netta' };
@@ -18,6 +19,9 @@ function intervallo(min, max, unita, sup) {
   if (a == null || b == null) return '—';
   return `${it(a)} – ${it(b)} ${unita}${sup ? ` (${sup})` : ''}`;
 }
+
+// Colore della zona nella mappa: dalla coppia «codice, colore» di STILE_OMI (l'ultimo elemento è il colore di riserva).
+const coloreZona = zona => { const i = STILE_OMI.indexOf(zona, 2); return i > 1 && i % 2 === 0 ? STILE_OMI[i + 1] : undefined; };
 
 function voceZona(features) {
   const p0 = features[0];
@@ -55,6 +59,7 @@ function voceZona(features) {
     strato: 'omi',
     titolo: 'Quotazioni OMI',
     icona: 'euro',
+    pallino: coloreZona(zona),
     badge: `Zona ${zona}`,
     gruppi: [{ righe }],
     accordion: { aperto: true, icona: 'casa', suggerimento: 'Seleziona una tipologia per vedere compravendita e locazione', riassunto: t('omi.tipoPrevalente', { tipo: `${codice ? `[${codice}] ` : ''}${pulisci(p0.Descr_tip_prev) || '—'}` }), elementi },

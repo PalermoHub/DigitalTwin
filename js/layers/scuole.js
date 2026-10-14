@@ -42,7 +42,7 @@ function contenutoPopup(p) {
 
 function collegaPopup(map, s) {
   const { punti, poli } = ids(s.chiave);
-  registraTooltipStrati(map, [{ layers: [punti, poli], icona: 'scuola', modello: p => modelloPopupScuola(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [punti, poli], icona: 'scuola', colore: p => (s.chiave === 'seggi' ? SEGGI_COLORE : TIPI_SCUOLA.find(([n]) => n === p.tipo)?.[1]), modello: p => modelloPopupScuola(completo(p)) }]);
   let popup = null;
   map.on('click', e => {
     if (map.getLayoutProperty(poli, 'visibility') !== 'visible') return;

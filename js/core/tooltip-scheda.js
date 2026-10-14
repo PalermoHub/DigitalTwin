@@ -17,7 +17,7 @@ export function modelliDaVoci(voci, { acceso, escludi = [] }) {
     if (visti.has(chiave)) continue;
     visti.add(chiave);
     const rr = (v.gruppi ?? []).flatMap(g => g.righe ?? []).filter(r => r?.etichetta && r?.valore != null).slice(0, MAX_RIGHE);
-    modelli.push({ titolo: v.titolo, icona: v.icona, badge: v.badge, righe: rr });
+    modelli.push({ titolo: v.titolo, icona: v.icona, badge: v.badge, pallino: v.pallino, righe: rr });
   }
   return modelli;
 }
@@ -34,6 +34,12 @@ function disegna(modelli) {
       i.className = 'tooltip-icona';
       i.innerHTML = svg;
       titolo.append(i);
+    }
+    if (m.pallino) { // il colore dell'attributo, come nella legenda
+      const pallino = document.createElement('span');
+      pallino.className = 'tooltip-pallino';
+      pallino.style.background = m.pallino;
+      titolo.prepend(pallino);
     }
     titolo.append(m.titolo);
     voce.append(titolo);
