@@ -229,6 +229,20 @@ map.once('style.load', async () => {
   aggiornaCoord();
   // scala metrica in basso a destra (segue il pannello via CSS); bussola nella barra strumenti, solo in vista 3D
   map.addControl(new maplibregl.ScaleControl({ unit: 'metric', maxWidth: 120 }), 'bottom-right');
+  // logo PA Hub sopra la scala (aggiunto dopo: MapLibre lo impila più in alto), si sposta con lei
+  map.addControl({
+    onAdd() {
+      const a = document.createElement('a');
+      a.className = 'maplibregl-ctrl logo-pahub';
+      a.href = 'https://palermohub.opendatasicilia.it/';
+      a.title = 'https://palermohub.opendatasicilia.it/';
+      a.target = '_blank'; a.rel = 'noopener';
+      a.innerHTML = '<img src="img/pa_hub000.svg" alt="Palermo Hub" width="110" height="22">';
+      this._el = a;
+      return a;
+    },
+    onRemove() { this._el.remove(); },
+  }, 'bottom-right');
   const btnBussola = document.getElementById('btn-bussola');
   const ago = document.getElementById('bussola-ago');
   map.on('rotate', () => { ago.style.transform = `rotate(${-map.getBearing()}deg)`; });

@@ -1662,6 +1662,9 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
 /* scala: a sinistra del box zoom, con il pannello laterale */
 .maplibregl-ctrl-bottom-right { transition: right var(--t-rapida); }
 @media (min-width: 721px) { .maplibregl-ctrl-bottom-right .maplibregl-ctrl-scale { margin-right: 68px; } }
+.maplibregl-ctrl-bottom-right .logo-pahub { display: block; margin: 0 10px 20px 0; line-height: 0; }
+.logo-pahub img { display: block; width: 110px; height: auto; }
+@media (min-width: 721px) { .maplibregl-ctrl-bottom-right .logo-pahub { margin-right: 68px; } }
 #bussola-ago { transition: transform .1s linear; }
 #barra-strumenti button[hidden] { display: none; }
 
