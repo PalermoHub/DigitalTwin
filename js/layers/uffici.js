@@ -1,5 +1,5 @@
 import { urlDati } from '../core/config.js';
-import { registraTooltipStrati } from '../core/tooltip.js';
+import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { modelloPopupSede, voceUffici } from './scheda-uffici.js';
@@ -173,7 +173,7 @@ export default {
       popup = new maplibregl.Popup({ maxWidth: '340px', className: 'monumento-popup-box', offset: 8 })
         .setLngLat(f.geometry.coordinates).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
     });
-    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'uffici', colore: p => { const a = modelloPopupSede(completo(p)).aree; return a.length === 1 ? aree.find(x => x.area === a[0].area)?.colore : undefined; }, modello: p => modelloPopupSede(completo(p)) }]);
+    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'uffici', campione: p => { const a = modelloPopupSede(completo(p)).aree; const col = a.length === 1 ? aree.find(x => x.area === a[0].area)?.colore : null; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: col }]) : null; }, modello: p => modelloPopupSede(completo(p)) }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
   },

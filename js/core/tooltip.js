@@ -90,14 +90,31 @@ export function disegnaVoceTooltip(m) {
   }
   if (m.sottotitolo && m.sottotitolo !== m.titolo) {
     const dettaglio = document.createElement('div');
-    dettaglio.textContent = m.sottotitolo;
+    if (m.campione) dettaglio.append(m.campione); // il simbolo della legenda, accanto all'attributo
+    dettaglio.append(m.sottotitolo);
     voce.append(dettaglio);
   }
   return voce;
 }
 
-// Tooltip per i layer con un modello di popup {titolo, sottotitolo, pallino?, badge?: {testo, colore}}: `gruppi` = [{ layers, modello(props), colore?(props, idLayer) }].
-// `colore` dà il colore dell'attributo mostrato (lo stesso della legenda) se il modello non ha già un pallino. Si cerca solo
+// Il simbolo di legenda di un attributo, per il tooltip: lo stesso elemento `<i>` della legenda (stessa classe, stessa forma),
+// dentro un involucro `.legenda <legenda>` perché gli stili della legenda sono limitati a quel contesto.
+// `i` è l'elemento già pronto (quello che costruisce la legenda del layer) oppure [classe, stile] per crearlo qui.
+export function campioneTooltip(legenda, i) {
+  const involucro = document.createElement('span');
+  involucro.className = `legenda ${legenda} tooltip-campione`;
+  if (Array.isArray(i)) {
+    const [classe, stile = {}] = i;
+    i = document.createElement('i');
+    if (classe) i.className = classe;
+    Object.assign(i.style, stile);
+  }
+  involucro.append(i);
+  return involucro;
+}
+
+// Tooltip per i layer con un modello di popup {titolo, sottotitolo, pallino?, campione?, badge?: {testo, colore}}: `gruppi` = [{ layers, modello(props), campione?(props, idLayer) }].
+// `campione` dà il simbolo dell'attributo mostrato (come in legenda, vedi campioneTooltip) e compare accanto al sottotitolo. Si cerca solo
 // negli strati accesi (a strato spento sulla mappa non c'è nulla da indicare); nel riquadro di ±4 px cadono anche i punti piccoli.
 // i modelli di tooltip registrati, per layer: la vista «Strati in 3D» li riusa per descrivere ogni strato della pila
 const modelli = [];
@@ -109,13 +126,13 @@ export function registraTooltipStrati(map, gruppi, priorita = 2) {
   registraTooltip(map, e => {
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];
     const voci = new Map();
-    for (const { layers, modello, icona, colore } of gruppi) {
+    for (const { layers, modello, icona, campione } of gruppi) {
       const attivi = layers.filter(acceso);
       if (!attivi.length) continue;
       for (const f of map.queryRenderedFeatures(riquadro, { layers: attivi })) {
         const m = modello(f.properties);
         if (m && !m.icona && icona) m.icona = icona;
-        if (m && !m.pallino && colore) m.pallino = colore(f.properties, f.layer.id) ?? undefined; // il colore dell'attributo, come nella legenda
+        if (m && !m.campione && campione) m.campione = campione(f.properties, f.layer.id) ?? undefined;
         if (m?.titolo) voci.set(`${m.titolo}\n${m.sottotitolo ?? ''}`, m);
       }
     }

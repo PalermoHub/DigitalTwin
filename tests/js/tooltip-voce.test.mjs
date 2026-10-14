@@ -27,15 +27,20 @@ test('con pallino e badge: pallino nel titolo, badge dopo il titolo', () => {
   assert.equal(v.figli[1].vars['--colore'], '#003');
 });
 
-test('registraTooltipStrati: il colore dell\'attributo diventa il pallino, se il modello non ne ha già uno', async () => {
-  const { registraTooltipStrati, contenutoTooltip } = await import('../../js/core/tooltip.js');
+test('registraTooltipStrati: il simbolo di legenda sta accanto al sottotitolo, non al titolo', async () => {
+  const { registraTooltipStrati, contenutoTooltip, campioneTooltip } = await import('../../js/core/tooltip.js');
   const map = {
     on() {}, getLayer: () => true, getLayoutProperty: () => 'visible',
     queryRenderedFeatures: () => [{ properties: { cls: 'P4' }, layer: { id: 'a' } }],
   };
-  registraTooltipStrati(map, [{ layers: ['a'], modello: p => ({ titolo: 'PAI', sottotitolo: p.cls }), colore: (p, id) => (p.cls === 'P4' && id === 'a' ? '#c00' : undefined) }]);
+  registraTooltipStrati(map, [{ layers: ['a'], modello: p => ({ titolo: 'PAI', sottotitolo: p.cls }), campione: (p, id) => (p.cls === 'P4' && id === 'a' ? campioneTooltip('legenda-pai', ['pai-campione', { background: '#c00' }]) : null) }]);
   const { corpo } = contenutoTooltip({ point: { x: 0, y: 0 } });
-  const titolo = corpo.figli[0].figli[0].figli[0].figli[0].figli[0];
-  assert.equal(titolo.className, 'tooltip-pallino');
-  assert.equal(titolo.style.background, '#c00');
+  const voce = corpo.figli[0].figli[0].figli[0];
+  const [titolo, dettaglio] = voce.figli;
+  assert.equal(titolo.figli.length, 1); // solo il testo del titolo
+  const involucro = dettaglio.figli[0];
+  assert.match(involucro.className, /legenda legenda-pai/);
+  assert.equal(involucro.figli[0].className, 'pai-campione');
+  assert.equal(involucro.figli[0].style.background, '#c00');
+  assert.equal(dettaglio.figli[1], 'P4');
 });

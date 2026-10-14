@@ -449,7 +449,13 @@ dialog li { margin: 4px 0; }
 .legenda .selezione-testo { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
 .legenda .selezione-testo b { font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
 .legenda .selezione-testo > span { color: var(--text-muted); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: .03em; }
+.legenda-omi .omi-zone { margin: 0 0 6px 20px; font-size: var(--fs-2xs); color: var(--text-muted); }
+.legenda-omi .omi-zone summary { cursor: pointer; }
+.legenda-omi .omi-zone div { display: flex; flex-wrap: wrap; gap: 2px 8px; margin-top: 3px; }
+.legenda-omi .omi-zone label { display: inline-flex; align-items: center; gap: 3px; }
+.legenda-omi .omi-zone i { width: 10px; height: 10px; }
 .mappa-tooltip .legenda { max-width: 260px; }
+.mappa-tooltip .tooltip-campione { display: inline-flex; vertical-align: middle; margin-right: 6px; max-height: none; overflow: visible; }
 .mappa-tooltip .legenda div { align-items: flex-start; padding: 3px 0; }
 .mappa-tooltip .legenda i.selezione-simbolo { flex: none; margin-top: 2px; }
 .legenda i.selezione-simbolo { width: 14px; height: 14px; border: 3px solid var(--colore); border-radius: var(--r-xs); background: color-mix(in srgb, var(--colore) 20%, transparent); }

@@ -1,10 +1,10 @@
 import { pmt, urlTileset } from '../core/config.js';
 import { piuVicino, presente, primo, righe, tutti } from '../core/scheda-util.js';
-import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
+import { filtroInsieme, dopoClicMultiplo, voceFiltro, voceStrato } from '../core/legenda.js';
 import { STILE_OMI } from './stile-omi.js';
-import { vociOmi } from './scheda-omi.js';
+import { vociOmi, FASCE_OMI, coloreZona } from './scheda-omi.js';
 import { t, tl } from '../core/i18n.js';
-import { registraTooltipStrati } from '../core/tooltip.js';
+import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 
 // Come nell'app originale (catasto-app): la vestizione di PRG, PPE e vincoli è fatta di tile
 // raster già pubblicati; i poligoni vettoriali restano trasparenti e servono solo ai dati
@@ -16,7 +16,6 @@ const vuoto = { 'fill-opacity': 0 };
 
 // Legenda delle zone OMI in #legende: la fascia è la lettera del codice zona (B1, C3, D8…) e ogni zona ha una tonalità
 // propria in STILE_OMI; qui il colore è quello rappresentativo della fascia. Compare solo a strato acceso.
-const FASCE_OMI = [['B', 'Centrale', '#b3243b'], ['C', 'Semicentrale', '#f2f23d'], ['D', 'Periferica', '#0029f2'], ['E', 'Suburbana', '#a89ab8'], ['R', 'Rurale', '#00ff00']];
 let legendaOmi = null;
 // i codici zona di ogni fascia, ricavati da STILE_OMI (coppie codice, colore dopo ['match', ['get', …])
 const CODICI_OMI = STILE_OMI.slice(2, -1).filter((_, i) => i % 2 === 0);
@@ -27,16 +26,41 @@ function creaLegendaOmi(_gruppo, map) {
   const titolo = document.createElement('strong');
   titolo.textContent = tl('Zone OMI 2025 (fascia)');
   legendaOmi.append(titolo);
-  const accese = new Set(FASCE_OMI.map(([lettera]) => lettera));
+  // Il filtro sta sui codici zona; il clic su una zona o su una fascia (tutte le sue zone) seleziona, vedi dopoClicMultiplo.
+  let attive = new Set(CODICI_OMI);
+  const caselleZone = new Map(); // codice -> casella
+  const caselleFasce = new Map(); // lettera -> casella
+  const clic = voci => {
+    attive = dopoClicMultiplo(attive, CODICI_OMI, voci);
+    for (const [c, casella] of caselleZone) casella.checked = attive.has(c);
+    for (const [lettera, casella] of caselleFasce) casella.checked = CODICI_OMI.some(c => c[0] === lettera && attive.has(c));
+    const filtro = filtroInsieme(['get', 'Zona_OMI'], attive, CODICI_OMI.length);
+    for (const id of ['omi', 'omi-line', 'omi-hit']) map.setFilter(id, filtro);
+  };
   for (const [lettera, nome, colore] of FASCE_OMI) {
+    const codiciFascia = CODICI_OMI.filter(c => c[0] === lettera);
     const campione = document.createElement('i');
     campione.style.background = colore;
-    legendaOmi.append(voceFiltro(campione, `${lettera} · ${tl(nome)}`, acceso => {
-      acceso ? accese.add(lettera) : accese.delete(lettera);
-      const codici = new Set(CODICI_OMI.filter(c => accese.has(c[0])));
-      const filtro = filtroInsieme(['get', 'Zona_OMI'], codici, CODICI_OMI.length);
-      for (const id of ['omi', 'omi-line', 'omi-hit']) map.setFilter(id, filtro);
-    }));
+    const rigaFascia = voceFiltro(campione, `${lettera} · ${tl(nome)}`, () => clic(codiciFascia), true, false);
+    caselleFasce.set(lettera, rigaFascia._filtro.casella);
+    legendaOmi.append(rigaFascia);
+    // sotto ogni fascia, le sue zone con la tonalità che hanno sulla mappa, come filtri
+    // (chiuso di default: la legenda occupa poco spazio)
+    const zone = document.createElement('details');
+    zone.className = 'omi-zone';
+    const sommario = document.createElement('summary');
+    sommario.textContent = `${tl('Zona')} (${codiciFascia.length})`;
+    zone.append(sommario);
+    const elenco = document.createElement('div');
+    zone.append(elenco);
+    for (const codice of codiciFascia) {
+      const i = document.createElement('i');
+      i.style.background = coloreZona(codice);
+      const riga = voceFiltro(i, codice, () => clic([codice]), true, false);
+      caselleZone.set(codice, riga._filtro.casella);
+      elenco.append(riga);
+    }
+    legendaOmi.append(zone);
   }
   const nota = document.createElement('div');
   nota.className = 'nota-omi';
@@ -139,7 +163,7 @@ export default {
     });
     map.addLayer({ id: 'omi-hit', type: 'fill', source: 'omi', 'source-layer': 'Zone_OMI_2025_II', paint: vuoto });
     map.addLayer({ id: 'immobili-hit', type: 'fill', source: 'immobili', 'source-layer': 'immobili_comunali_2024', paint: vuoto });
-    registraTooltipStrati(map, [{ layers: ['immobili'], icona: 'monumento', colore: () => '#6a3d9a', modello: p => ({ titolo: tl('Immobile comunale'), sottotitolo: p.INDIRIZZO || p.TIPO || '' }) }]);
+    registraTooltipStrati(map, [{ layers: ['immobili'], icona: 'monumento', campione: () => campioneTooltip('legenda-immobili', ['', { background: '#6a3d9a', opacity: '0.5' }]), modello: p => ({ titolo: tl('Immobile comunale'), sottotitolo: p.INDIRIZZO || p.TIPO || '' }) }]);
     // numeri civici: testo come nell'app originale (font forniti dallo stile della base)
     map.addLayer({
       id: 'civici', type: 'symbol', source: 'civici', 'source-layer': 'civici_wgs84', minzoom: 14,

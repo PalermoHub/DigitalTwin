@@ -1,6 +1,6 @@
 // Tooltip «di riserva» dai dati della scheda: ogni strato con una scheda (poligoni «hit» trasparenti) e senza un tooltip
 // proprio mostra, a strato acceso, titolo e prime righe della sua voce di scheda. Così il tooltip descrive tutti gli strati aperti.
-import { registraTooltip } from './tooltip.js';
+import { registraTooltip, campioneTooltip } from './tooltip.js';
 import { svgIcona } from './icone.js';
 
 const MAX_VOCI = 3;
@@ -16,8 +16,8 @@ export function modelliDaVoci(voci, { acceso, escludi = [] }) {
     const chiave = v.chiave ?? v.titolo;
     if (visti.has(chiave)) continue;
     visti.add(chiave);
-    const rr = (v.gruppi ?? []).flatMap(g => g.righe ?? []).filter(r => r?.etichetta && r?.valore != null).slice(0, MAX_RIGHE);
-    modelli.push({ titolo: v.titolo, icona: v.icona, badge: v.badge, pallino: v.pallino, righe: rr });
+    const rr = (v.gruppi ?? []).flatMap(g => g.righe ?? []).filter(r => r?.etichetta && r?.valore != null).slice(0, v.maxRighe ?? MAX_RIGHE);
+    modelli.push({ titolo: v.titolo, icona: v.icona, badge: v.badge, righe: rr });
   }
   return modelli;
 }
@@ -35,12 +35,6 @@ function disegna(modelli) {
       i.innerHTML = svg;
       titolo.append(i);
     }
-    if (m.pallino) { // il colore dell'attributo, come nella legenda
-      const pallino = document.createElement('span');
-      pallino.className = 'tooltip-pallino';
-      pallino.style.background = m.pallino;
-      titolo.prepend(pallino);
-    }
     titolo.append(m.titolo);
     voce.append(titolo);
     // righe come nella scheda: etichetta attenuata a sinistra, valore in grassetto a destra
@@ -51,6 +45,8 @@ function disegna(modelli) {
       etichetta.textContent = r.etichetta;
       const valore = document.createElement('b');
       valore.textContent = r.valore;
+      // una riga con `campione` ({ legenda, colore }) mostra il simbolo di legenda accanto al valore
+      if (r.campione) valore.prepend(campioneTooltip(r.campione.legenda, ['', { background: r.campione.colore }]));
       riga.append(etichetta, valore);
       voce.append(riga);
     }

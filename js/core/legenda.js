@@ -8,6 +8,17 @@ export function dopoClic(stati, k) {
   return stati.map((_, i) => (soloQuesta ? true : i === k));
 }
 
+// Filtro a selezione multipla (per le legende con tante voci, come le zone OMI): con tutto acceso il clic su `voci` (una voce, o le voci
+// di una fascia) lascia accese solo quelle; poi ogni clic le aggiunge se erano spente o le toglie se erano accese. Se non resta nulla
+// si torna a tutto acceso: il secondo clic sull'unica voce selezionata rimostra tutto. Restituisce il nuovo insieme di voci accese.
+export function dopoClicMultiplo(accese, tutte, voci) {
+  if (accese.size >= tutte.length) return new Set(voci);
+  const prossime = new Set(accese);
+  if (voci.some(v => accese.has(v))) voci.forEach(v => prossime.delete(v));
+  else voci.forEach(v => prossime.add(v));
+  return prossime.size ? prossime : new Set(tutte);
+}
+
 // Righe di filtro dello stesso gruppo (stesso contenitore) della riga data.
 const gruppoDi = riga => [...(riga.parentElement?.children ?? [])].filter(r => r._filtro?.esclusivo);
 

@@ -20,15 +20,25 @@ function intervallo(min, max, unita, sup) {
   return `${it(a)} – ${it(b)} ${unita}${sup ? ` (${sup})` : ''}`;
 }
 
-// Colore della zona nella mappa: dalla coppia «codice, colore» di STILE_OMI (l'ultimo elemento è il colore di riserva).
-const coloreZona = zona => { const i = STILE_OMI.indexOf(zona, 2); return i > 1 && i % 2 === 0 ? STILE_OMI[i + 1] : undefined; };
+// Le fasce della legenda (lettera del codice zona, nome, colore rappresentativo): la legenda e il tooltip usano gli stessi colori.
+export const FASCE_OMI = [['B', 'Centrale', '#b3243b'], ['C', 'Semicentrale', '#f2f23d'], ['D', 'Periferica', '#0029f2'], ['E', 'Suburbana', '#a89ab8'], ['R', 'Rurale', '#00ff00']];
+
+// Colore proprio della zona sulla mappa: dalle coppie «codice, colore» di STILE_OMI (l'ultimo elemento è il colore di riserva).
+export const coloreZona = zona => { const i = STILE_OMI.indexOf(zona, 2); return i > 1 && i % 2 === 0 ? STILE_OMI[i + 1] : undefined; };
+const campioneDi = colore => (colore ? { legenda: 'legenda-omi', colore } : undefined);
+
+const zona0 = p => p.Zona_OMI || p.Zona || '—';
 
 function voceZona(features) {
   const p0 = features[0];
   const fascia = p0.Fascia || p0.Fasce || '—';
   const fasciaDescr = pulisci(p0.Fascia_Descr);
   const descrizione = pulisci(p0.Zona_Descr);
-  const righe = [{ etichetta: 'Fascia', valore: fasciaDescr ? `${fascia} – ${fasciaDescr}` : fascia }];
+  const colore = FASCE_OMI.find(([lettera]) => lettera === String(zona0(p0))[0])?.[2];
+  const righe = [
+    { etichetta: 'Zona', valore: String(zona0(p0)), campione: campioneDi(coloreZona(zona0(p0))) },
+    { etichetta: 'Fascia', valore: fasciaDescr ? `${fascia} – ${fasciaDescr}` : fascia, campione: campioneDi(colore) },
+  ];
   if (descrizione) righe.push({ etichetta: 'Descrizione', valore: descrizione });
   if (p0.Microzona != null && p0.Microzona !== '') righe.push({ etichetta: 'Microzona', valore: String(p0.Microzona) });
 
@@ -50,16 +60,16 @@ function voceZona(features) {
     });
   }
 
-  const zona = p0.Zona_OMI || p0.Zona || '—';
+  const zona = zona0(p0);
   const codice = p0.Cod_tip_prev || '';
   const semestre = p0.Anno_Semestre ? `OMI ${p0.Anno_Semestre.replace(' / ', ' S')}` : 'OMI 2025 S2';
   return {
     chiave: `omi-${zona}`,
     peso: 60,
+    maxRighe: 4, // nel tooltip: zona, fascia, descrizione e microzona
     strato: 'omi',
     titolo: 'Quotazioni OMI',
     icona: 'euro',
-    pallino: coloreZona(zona),
     badge: `Zona ${zona}`,
     gruppi: [{ righe }],
     accordion: { aperto: true, icona: 'casa', suggerimento: 'Seleziona una tipologia per vedere compravendita e locazione', riassunto: t('omi.tipoPrevalente', { tipo: `${codice ? `[${codice}] ` : ''}${pulisci(p0.Descr_tip_prev) || '—'}` }), elementi },

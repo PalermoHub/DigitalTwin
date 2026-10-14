@@ -1,5 +1,5 @@
 import { urlDati } from '../core/config.js';
-import { registraTooltipStrati } from '../core/tooltip.js';
+import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { voceFontanella, modelloPopupFontanella } from './scheda-fontanelle.js';
 import { tl, t } from '../core/i18n.js';
@@ -39,7 +39,7 @@ function collegaPopup(map) {
     popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
       .setLngLat(e.lngLat).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
   });
-  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'fontanella', colore: () => COLORE, modello: p => modelloPopupFontanella(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'fontanella', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: COLORE }]), modello: p => modelloPopupFontanella(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }

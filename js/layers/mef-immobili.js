@@ -1,5 +1,5 @@
 import { urlDati } from '../core/config.js';
-import { registraTooltipStrati } from '../core/tooltip.js';
+import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { modelloTooltipMef, voceMef } from './scheda-mef.js';
 import { tl } from '../core/i18n.js';
@@ -113,7 +113,10 @@ export default {
     map.addLayer({ id: HIT, type: 'fill', source: SRC, filter: POLIGONO, paint: { 'fill-opacity': 0 } });
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: PUNTO, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
     registraTooltipStrati(map, [{ layers: [FILL, FILL_TERRENO, PUNTI], icona: 'monumento', modello: modelloTooltipMef,
-      colore: (p, id) => (id === FILL ? (p.n_beni > 1 ? COLORE_PIU : COLORE_UNO) : id === FILL_TERRENO ? COLORE_TERRENO : COLORE_PUNTO) }]);
+      campione: (p, id) => {
+        const col = id === FILL ? (p.n_beni > 1 ? COLORE_PIU : COLORE_UNO) : id === FILL_TERRENO ? COLORE_TERRENO : COLORE_PUNTO;
+        return campioneTooltip('legenda-mef', [id === PUNTI ? 'monumenti-pallino' : 'mef-campione', { background: col }]);
+      } }]);
     for (const id of [FILL, FILL_TERRENO, PUNTI]) {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
       map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });

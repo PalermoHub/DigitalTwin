@@ -1,5 +1,5 @@
 import { urlDati, pmt } from '../core/config.js';
-import { registraTooltipStrati } from '../core/tooltip.js';
+import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { modelloPopup, vociIncendi } from './scheda-incendi.js';
@@ -116,7 +116,7 @@ export default {
       popup = new maplibregl.Popup({ maxWidth: '300px', className: 'monumento-popup-box', offset: 8 })
         .setLngLat(e.lngLat).setDOMContent(contenutoPopup(lista)).addTo(map);
     });
-    registraTooltipStrati(map, [{ layers: [FILL], icona: 'incendio', colore: p => p.colore, modello: modelloPopup }]);
+    registraTooltipStrati(map, [{ layers: [FILL], icona: 'incendio', campione: p => campioneTooltip('legenda-incendi', simbolo({ colore: p.colore, bordo: p.bordo, opacita: p.opacita })), modello: modelloPopup }]);
     map.on('mouseenter', FILL, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', FILL, () => { map.getCanvas().style.cursor = ''; });
   },
