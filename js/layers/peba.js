@@ -66,7 +66,7 @@ function famiglia(titolo, voci, accesi, perGruppo) {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-monumenti legenda-peba');
+  legenda = el('div', 'legenda legenda-monumenti legenda-peba lg-peba');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'PEBA – Barriere architettoniche'));
   const scelta = el('div', 'peba-modo');
@@ -118,6 +118,7 @@ export default {
       map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
     }
   },
+  legendaPannello: '.lg-peba', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: 'peba', etichetta: 'Barriere architettoniche', layers: [FILL, LINEA, PUNTI], attivo: false,
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },

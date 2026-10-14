@@ -84,7 +84,7 @@ function disegnaScala() {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-isole-calore');
+  legenda = el('div', 'legenda legenda-isole-calore lg-isole-calore');
   legenda.hidden = true;
   document.getElementById('legende').append(legenda);
 }
@@ -172,6 +172,7 @@ export default {
       return distinte(tutti(trovati, HIT)).slice(0, 1).flatMap(f => voceIsolaCalore(f.properties, dati, () => graficoAndamento(f.properties, dati.serie, t('isole.sezioneEMedia', { da: dati.anni[0], a: dati.anno }))) ?? []);
     },
   },
+  legendaPannello: '.lg-isole-calore', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: 'isole-calore', etichetta: 'Isole di calore (da zoom 10)', layers: [FILL, BORDO], attivo: false, legendaIntegrata: '.legenda-isole-calore',
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },

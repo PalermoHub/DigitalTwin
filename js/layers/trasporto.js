@@ -135,16 +135,17 @@ function logoStazione() {
   return img;
 }
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-trasporto');
+  legenda = el('div', 'legenda legenda-trasporto lg-trasporto');
   legenda.hidden = true;
   const tratto = (classe, colore = '#7B263E') => { const i = el('i', `trasporto-tratto ${classe}`); i.style.background = colore; return i; };
+  const voce = (simbolo, testo, id) => { const r = voceStrato(simbolo, testo, id); r.dataset.legendaStrato = id; return r; }; // sotto il suo strato nel pannello
   legenda.append(
     el('strong', null, 'Trasporto pubblico'),
-    voceStrato(tratto(''), 'Linea bus (colore AMAT)', L.bus),
-    voceStrato(tratto('trasporto-tratto--tram'), 'Linea tram', L.tram),
-    voceStrato(el('i', 'trasporto-pallino'), 'Fermata (da zoom 13)', L.fermate),
-    voceStrato(el('i', 'trasporto-tratto trasporto-tratto--binario'), 'Linea metro (RFI)', L.metro),
-    voceStrato(logoStazione(), 'Stazione (RFI, più chiara se in apertura)', L.stazioni),
+    voce(tratto(''), 'Linea bus (colore AMAT)', L.bus),
+    voce(tratto('trasporto-tratto--tram'), 'Linea tram', L.tram),
+    voce(el('i', 'trasporto-pallino'), 'Fermata (da zoom 13)', L.fermate),
+    voce(el('i', 'trasporto-tratto trasporto-tratto--binario'), 'Linea metro (RFI)', L.metro),
+    voce(logoStazione(), 'Stazione (RFI, più chiara se in apertura)', L.stazioni),
   );
   document.getElementById('legende').append(legenda);
 }
@@ -276,6 +277,7 @@ export default {
     }
   },
   sezioniFisse: true, // AMAT e RFI restano due sezioni: il riordino degli strati non attraversa le intestazioni
+  legendaPerStrato: true, // ogni voce della legenda sta sotto il proprio strato (core/legenda-pannello.js)
   strati: creaStrati(aggiornaLegenda),
   pannello: creaLegenda,
   // per il filtro Linea del pannello Filtri (valido dopo `avvia`)

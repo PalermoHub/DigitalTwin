@@ -114,7 +114,9 @@ function costruisciFoglio(map, immagine, { scala = null, centro = map.getCenter(
       el('span', { textContent: tr('stampa.nota.scala', { etichetta: barra.etichetta, scala: scala.toLocaleString(localeIntl()) }) })));
   }
   const copia = legende?.cloneNode(true);
-  copia?.querySelectorAll('[hidden]').forEach(n => n.remove()); // restano solo le legende dei layer accesi
+  // le legende spostate sotto gli strati (core/legenda-pannello.js) si stampano come le altre: si copia il nodo, non l'involucro ripiegabile
+  document.querySelectorAll('.legenda-in-pannello > .legenda').forEach(n => copia?.append(n.cloneNode(true)));
+  copia?.querySelectorAll('[hidden], .legenda-sostituita, .legenda-vuota').forEach(n => n.remove()); // restano solo le legende dei layer accesi
   if (copia?.textContent.trim()) {
     copia.removeAttribute('id');
     foglio.append(el('section', { className: 'stampa-legende' }, el('h2', { textContent: tr('stampa.legenda') }), copia));

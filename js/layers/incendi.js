@@ -79,7 +79,7 @@ function riempiLegenda(map) {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-monumenti legenda-uffici legenda-incendi');
+  legenda = el('div', 'legenda legenda-monumenti legenda-uffici legenda-incendi lg-incendi');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Incendi per anno (n. incendi)'));
   legenda.append(el('p', 'uffici-nota', 'Colori della simbologia della Regione Siciliana'));
@@ -129,6 +129,7 @@ export default {
     layers: [HIT],
     voci: trovati => vociIncendi(distinti(tutti(trovati, HIT)).slice(0, MAX_NELLA_SCHEDA).map(f => f.properties)),
   },
+  legendaPannello: '.lg-incendi', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: 'incendi', etichetta: 'Incendi (da zoom 12)', layers: [FILL, BORDO], attivo: false,
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },

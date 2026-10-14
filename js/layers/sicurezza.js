@@ -35,11 +35,12 @@ function el(tag, classe, testo) {
 export const legendaSicurezza = { suTipologie: () => {} };
 const sezioni = {};
 function creaLegenda(_gruppo, map) {
-  const box = el('div', 'legenda legenda-sicurezza');
+  const box = el('div', 'legenda legenda-sicurezza lg-sicurezza');
   const tratto = (colore, extra = '') => { const i = el('i', `sicurezza-tratto ${extra}`.trim()); i.style.background = colore; return i; };
   const sezione = (chiave, titolo, voci) => {
     const s = el('div', 'sicurezza-sezione');
     s.hidden = true;
+    s.dataset.legendaStrato = chiave; // sposta la sezione sotto il suo strato (core/legenda-pannello.js)
     s.append(el('div', 'sicurezza-legenda-titolo', titolo), ...voci);
     sezioni[chiave] = s;
     box.append(s);
@@ -143,6 +144,7 @@ export default {
     map.addLayer({ id: L.hitIncidenti, type: 'circle', source: 'sicurezza-incidenti', 'source-layer': 'incidenti', minzoom: ZOOM_MIN_PUNTI, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
     collegaTooltip(map);
   },
+  legendaPerStrato: true, // ogni sezione della legenda sta sotto il proprio strato (core/legenda-pannello.js)
   strati: [
     { id: 'sicurezza-archi', etichetta: 'Incidenti per km sulle strade', layers: [L.archi], attivo: false, suCambio: attivo => mostraSezione(L.archi, attivo) },
     { id: 'sicurezza-pericolose', etichetta: 'Le 20 strade più pericolose', layers: [L.pericolose], attivo: false, suCambio: attivo => mostraSezione(L.pericolose, attivo) },

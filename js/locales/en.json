@@ -1489,6 +1489,8 @@
   "legenda.esterna.nonDisponibile": "Legend not available",
   "legenda.esterna.caricamento": "Loading legend…",
   "legenda.esterna.vettoriale": "Layer colour",
+  "legenda.pannello.suMappa": "Legends on the map",
+  "legenda.pannello.titolo": "Legend",
   "legenda.esterna.file": "Uploaded file",
   "rndt.erroriLayer": "{etichetta} layer with loading errors: {nome}",
   "rndt.fuori.altri": "“{nome}”: {fuori} features out of {n} are outside the municipality of Palermo and are not shown.",

@@ -83,7 +83,7 @@ function pannelloFiltri(gruppo, tipo, titolo, voci) {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-monumenti');
+  legenda = el('div', 'legenda legenda-monumenti lg-colonnine');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Colonnine di ricarica'));
   const pallino = col => { const p = el('i', 'monumenti-pallino'); p.style.background = col; return p; };
@@ -169,6 +169,7 @@ export default {
       return vociColonnine([...viste.values()], aggiornato, () => graficiColonnine([...dettagli.values()]));
     },
   },
+  legendaPannello: '.lg-colonnine', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: 'colonnine', etichetta: 'Colonnine di ricarica', layers: [PUNTI], attivo: false,
     sottovoci: [

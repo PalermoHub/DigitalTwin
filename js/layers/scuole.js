@@ -63,7 +63,7 @@ function collegaPopup(map, s) {
 function creaLegenda(_gruppo, map) {
   legenda = {};
   for (const s of STRATI) {
-    const box = el('div', 'legenda legenda-monumenti');
+    const box = el('div', `legenda legenda-monumenti lg-${s.chiave}`);
     box.hidden = true;
     box.append(el('strong', null, s.titolo));
     const pallino = col => { const p = el('i', 'monumenti-pallino'); p.style.background = col; return p; };
@@ -124,7 +124,7 @@ export default {
     }));
   },
   strati: STRATI.map(s => ({
-    id: s.chiave, etichetta: s.etichetta, layers: visibili(s.chiave), attivo: false,
+    id: s.chiave, legendaPannello: `.lg-${s.chiave}`, etichetta: s.etichetta, layers: visibili(s.chiave), attivo: false,
     suCambio(attivo) { if (legenda) legenda[s.chiave].hidden = !attivo; },
   })),
   pannello: creaLegenda,

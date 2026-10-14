@@ -136,7 +136,7 @@ function riempiLegenda() {
 function creaLegenda(gruppo) {
   blocco = el('div', 'colonnine-filtri');
   gruppo.append(blocco);
-  legenda = el('div', 'legenda legenda-monumenti legenda-uffici');
+  legenda = el('div', 'legenda legenda-monumenti legenda-uffici lg-uffici');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Uffici comunali per area'));
   legenda.append(el('p', 'uffici-nota', 'Anello: più aree nella stessa sede'));
@@ -199,6 +199,7 @@ export default {
       });
     },
   },
+  legendaPannello: '.lg-uffici', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: 'uffici', etichetta: 'Uffici comunali (sedi)', layers: [PUNTI], attivo: false,
     // le aree si conoscono solo a dati caricati: l'elenco si legge quando serve (tab Argomenti)

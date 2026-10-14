@@ -4,6 +4,7 @@ import { limitiStrato, zoomMinimoStrato } from './zoom-strato.js';
 import { creaPannelloTema } from './pannello-tema.js';
 import { ordinaSezioni, leggiAperte, salvaAperta } from './layer-sezioni.js';
 import { ordineStrati } from './riordino.js';
+import { raccogliLegende, collegaLegendePannello } from './legenda-pannello.js';
 import { abilitaRiordino, creaOrdineDisegno } from './pannello-riordino.js';
 export { abilitaRiordino }; // l'API pubblica resta qui: i gruppi RNDT e «I miei layer» la importano da pannello.js
 import { ETICHETTE, EVENTO_GRUPPO } from './pannello-comune.js';
@@ -328,6 +329,9 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
       }
     });
     layer.querySelector(':scope > h2').after(campo);
+    // legende sotto lo strato (come nei GIS), con l'interruttore per tenerle sulla mappa
+    const contenitoreLegende = document.getElementById('legende');
+    const legendeUi = contenitoreLegende ? collegaLegendePannello({ legende: raccogliLegende(moduli), contenitore: contenitoreLegende, layer, occhio, storage }) : null;
     // interruttore dei tooltip sulla mappa (acceso di default), prima dell'ordine dei layer
     const interruttore = document.createElement('label');
     interruttore.classList.add('strato', 'interruttore-tip');
@@ -338,8 +342,8 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     cbTip.checked = tooltipAttivi();
     cbTip.addEventListener('change', () => impostaTooltipAttivi(cbTip.checked));
     interruttore.append(cbTip, occhio(), ' ', t('tooltip.interruttore'));
-    campo.after(interruttore, disegno.el);
-    campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; interruttore.hidden = !!cercando; });
+    campo.after(interruttore, ...(legendeUi ? [legendeUi.interruttore] : []), disegno.el);
+    campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; interruttore.hidden = !!cercando; if (legendeUi) legendeUi.interruttore.hidden = !!cercando; });
     contenitore.addEventListener('change', e => { if (e.target.matches?.('label.strato input[type=checkbox]')) { if (disegno.el.open) disegno.ridisegna(); else disegno.aggiornaTestata(); } });
   }
   aggiornaConteggio();

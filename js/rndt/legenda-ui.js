@@ -78,6 +78,7 @@ export function collegaLegendeEsterne(hosts, contenitore) {
           const origine = el('small', 'legenda-esterna-origine', servizio ? `${servizio} · ${server}` : t('legenda.esterna.file'));
           blocco.append(el('strong', null, layer.nome), origine, corpo);
           blocco._corpo = corpo;
+          blocco.dataset.legendaStrato = layer.id; // sotto il suo layer nel pannello (core/legenda-pannello.js)
           blocchi.set(chiave, blocco);
           contenitore.append(blocco);
         }

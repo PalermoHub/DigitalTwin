@@ -59,7 +59,7 @@ export default {
       },
     },
     {
-      id: 'elevazione', etichetta: 'Elevazione (raster colorato)', layers: ['elevazione-raster'], attivo: false,
+      id: 'elevazione', legendaPannello: '.lg-elevazione', etichetta: 'Elevazione (raster colorato)', layers: ['elevazione-raster'], attivo: false,
       suCambio(attivo, map) {
         if (legenda) legenda.hidden = !attivo;
         if (attivo && map.getLayer('elevazione-raster')) map.moveLayer('elevazione-raster'); // come nell'app originale
@@ -68,7 +68,7 @@ export default {
   ],
   pannello(el) {
     legenda = document.createElement('div');
-    legenda.className = 'legenda legenda-elevazione';
+    legenda.className = 'legenda legenda-elevazione lg-elevazione';
     legenda.hidden = true;
     legenda.replaceChildren(...ELEVATION_STOPS.map(({ value, color }) => {
       const riga = document.createElement('div');

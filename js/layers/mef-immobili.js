@@ -60,7 +60,7 @@ function applicaFiltri() {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-monumenti legenda-mef');
+  legenda = el('div', 'legenda legenda-monumenti legenda-mef lg-mef-immobili');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Immobili dichiarati al MEF'));
   for (const { chiave, colore, testo, tondo } of CATEGORIE) {
@@ -122,6 +122,7 @@ export default {
       map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
     }
   },
+  legendaPannello: '.lg-mef-immobili', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: 'mef-immobili', etichetta: 'Immobili dichiarati al MEF', layers: [FILL, LINEA, FILL_TERRENO, LINEA_TERRENO, PUNTI], attivo: false,
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },

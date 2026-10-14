@@ -1489,6 +1489,8 @@
   "legenda.esterna.nonDisponibile": "Legenda non disponibile",
   "legenda.esterna.caricamento": "Caricamento legenda…",
   "legenda.esterna.vettoriale": "Colore del layer",
+  "legenda.pannello.suMappa": "Legende sulla mappa",
+  "legenda.pannello.titolo": "Legenda",
   "legenda.esterna.file": "File caricato",
   "rndt.erroriLayer": "Layer {etichetta} con errori di caricamento: {nome}",
   "rndt.fuori.altri": "«{nome}»: {fuori} elementi su {n} sono fuori dal Comune di Palermo e non vengono mostrati.",

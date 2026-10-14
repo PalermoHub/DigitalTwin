@@ -702,12 +702,24 @@ dialog li { margin: 4px 0; }
 
 
 #legende-box { position: fixed; z-index: var(--z-mappa-ui); left: calc(var(--sx) + 12px); bottom: 28px; width: 260px; max-width: calc(100% - var(--sx) - 20px); background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
-#legende-box:not(:has(#legende > :not([hidden]))) { display: none; }
+#legende-box:not(:has(#legende > :not([hidden]):not(.legenda-vuota))) { display: none; }
 #legende-riduci { width: 100%; padding: 8px 10px; border: 0; background: none; text-align: left; font-size: var(--fs-xs); font-weight: 700; color: var(--text); }
 #legende-box.ridotta #legende { display: none; }
 #legende { position: static; max-width: none; padding: 0 10px 8px; overflow-y: auto; min-height: 0; }
 #legende-box { --legende-bottom: 28px; --legende-alto: 172px; display: flex; flex-direction: column; max-height: calc(100dvh - var(--legende-bottom) - var(--legende-alto)); }
 #legende .legenda { padding: 0; border: 0; box-shadow: none; background: none; }
+
+/* Legenda sotto lo strato, nel pannello Layer (js/core/legenda-pannello.js) */
+.legenda-sostituita, .legenda-vuota { display: none; }
+.legenda-in-pannello { margin: 0 0 8px 38px; padding: 4px 8px 6px; border-left: 2px solid var(--border-ui); font-size: var(--fs-xs); }
+.legenda-in-pannello:has(> .legenda[hidden]), .legenda-in-pannello:has(> .legenda > [hidden]), .legenda-in-pannello:has(> .legenda-sostituita) { display: none; }
+.legenda-in-pannello > summary { cursor: pointer; font-weight: 700; color: var(--text-muted); list-style: none; }
+.legenda-in-pannello > summary::-webkit-details-marker { display: none; }
+.legenda-in-pannello > summary::before { content: '▸ '; }
+.legenda-in-pannello[open] > summary::before { content: '▾ '; }
+.legenda-in-pannello > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.legenda-in-pannello > .legenda { margin-top: 4px; max-height: 260px; overflow-y: auto; }
+.legenda-in-pannello .legenda-esterna > strong { display: none; } /* il nome del layer è già nella riga sopra */
 
 .scheda-intestazione { padding-bottom: 0; }
 .scheda-indice { display: flex; gap: 2px; margin: 8px -18px 0; padding: 0 14px; overflow-x: auto; scrollbar-width: none; }

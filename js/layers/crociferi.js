@@ -107,7 +107,7 @@ function esciPianta() {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-monumenti legenda-uffici legenda-pai legenda-crociferi');
+  legenda = el('div', 'legenda legenda-monumenti legenda-uffici legenda-pai legenda-crociferi lg-crociferi');
   legenda.hidden = true;
   document.getElementById('legende').append(legenda);
 }
@@ -252,6 +252,7 @@ export default {
       }];
     },
   },
+  legendaPannello: '.lg-crociferi', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: STRATO, etichetta: 'Ex Noviziato dei Crociferi in 3D (in sviluppo)', layers: [VOLUMI], attivo: false, legendaIntegrata: '.legenda-crociferi',
     suCambio(attivo, map) {

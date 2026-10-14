@@ -136,7 +136,7 @@ function creaLegenda(gruppo, map) {
     for (const [dove, casella] of Object.entries(caselle.get(nome))) if (dove !== origine) casella.checked = acceso;
     applica();
   };
-  legenda = el('div', 'legenda legenda-monumenti');
+  legenda = el('div', 'legenda legenda-monumenti lg-monumenti');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Monumenti'));
   const blocco = el('div', 'colonnine-filtri');
@@ -218,6 +218,7 @@ export default {
     filtraEdifici(map);
     attenuaScomparsi(map, scomparsi);
   },
+  legendaPannello: '.lg-monumenti', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{ id: 'monumenti', etichetta: 'Monumenti (Portale del Turismo)', layers: LAYERS, attivo: false,
     sottovoci: [{ titolo: 'Categorie', voci: MONUMENTI_CATEGORIE.map(([nome]) => ({ id: `categoria:${nome}`, etichetta: nome })) }],
     suCambio(attivo) {

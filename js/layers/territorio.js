@@ -21,7 +21,7 @@ let legendaOmi = null;
 const CODICI_OMI = STILE_OMI.slice(2, -1).filter((_, i) => i % 2 === 0);
 function creaLegendaOmi(_gruppo, map) {
   legendaOmi = document.createElement('div');
-  legendaOmi.className = 'legenda legenda-omi';
+  legendaOmi.className = 'legenda legenda-omi lg-omi';
   legendaOmi.hidden = true;
   const titolo = document.createElement('strong');
   titolo.textContent = tl('Zone OMI 2025 (fascia)');
@@ -73,7 +73,7 @@ function creaLegendaOmi(_gruppo, map) {
 let legendaCatasto = null;
 function creaLegendaCatasto(_gruppo, map) {
   legendaCatasto = document.createElement('div');
-  legendaCatasto.className = 'legenda legenda-catasto';
+  legendaCatasto.className = 'legenda legenda-catasto lg-catasto';
   legendaCatasto.hidden = true;
   const titolo = document.createElement('strong');
   titolo.textContent = tl('Catasto');
@@ -185,11 +185,11 @@ export default {
   },
   sezioniFisse: true, // «Immobili comunali» (con lo strato MEF di mef-immobili.js) resta una sezione a sé: il riordino non attraversa le intestazioni
   strati: [
-    { id: 'catasto', etichetta: 'Catasto: particelle (da zoom 12)', layers: ['catasto', 'catasto-etichette'], attivo: false,
+    { id: 'catasto', legendaPannello: '.lg-catasto', etichetta: 'Catasto: particelle (da zoom 12)', layers: ['catasto', 'catasto-etichette'], attivo: false,
       suCambio(attivo) { if (legendaCatasto) legendaCatasto.hidden = !attivo; } },
     { id: 'prg', etichetta: 'PRG 2004: zonizzazione e PPE', layers: ['prg-zto', 'prg-ppe'], attivo: false },
     { id: 'vincoli', etichetta: 'PRG 2004: vincoli', layers: ['prg-va', 'prg-vl'], attivo: false },
-    { id: 'omi', etichetta: 'Zone OMI 2025', layers: ['omi', 'omi-line'], attivo: false,
+    { id: 'omi', legendaPannello: '.lg-omi', etichetta: 'Zone OMI 2025', layers: ['omi', 'omi-line'], attivo: false,
       suCambio(attivo) { if (legendaOmi) legendaOmi.hidden = !attivo; } },
     { id: 'civici', etichetta: 'Numeri civici (da zoom 14)', layers: ['civici'], attivo: false },
     // ultimo del modulo: il sottogruppo prosegue con lo strato «Immobili dichiarati al MEF» (js/layers/mef-immobili.js, che segue in MODULI)

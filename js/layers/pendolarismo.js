@@ -40,7 +40,7 @@ function applicaFiltri() {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-monumenti legenda-pendolarismo');
+  legenda = el('div', 'legenda legenda-monumenti legenda-pendolarismo lg-pendolarismo');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Pendolarismo da e verso Palermo 2021'));
   for (const [chiave, colore, testo] of [['uscita', COLORE_USCITA, 'Uscita (residenti che lavorano fuori)'], ['entrata', COLORE_ENTRATA, 'Entrata (lavoratori da fuori)']]) {
@@ -95,6 +95,7 @@ export default {
       map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
     }
   },
+  legendaPannello: '.lg-pendolarismo', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: 'pendolarismo', etichetta: 'Pendolarismo da e verso Palermo 2021', layers: [ARCHI, NODI, PALERMO], attivo: false,
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },

@@ -121,7 +121,7 @@ function applicaFiltro(map, tema) {
 }
 
 function creaLegenda() {
-  legenda = el('div', 'legenda legenda-monumenti legenda-uffici legenda-pai');
+  legenda = el('div', 'legenda legenda-monumenti legenda-uffici legenda-pai lg-pai');
   legenda.hidden = true;
   legenda.append(el('p', 'uffici-nota', 'Simbologia della Regione Siciliana (PAI)'));
   document.getElementById('legende').append(legenda);
@@ -133,6 +133,7 @@ function riempiLegenda(map) {
     const classi = classiConElementi(t);
     const blocco = el('div', 'pai-legenda-tema');
     blocco.dataset.tema = t.id;
+    blocco.dataset.legendaStrato = t.id; // sposta il blocco sotto il suo strato (core/legenda-pannello.js)
     blocco.hidden = true;
     blocco.append(el('strong', null, t.titolo));
     if (t.campo) {
@@ -259,6 +260,7 @@ export default {
       }).slice(0, MAX_PER_DATASET_IN_SCHEDA).map(p => ({ ds, p }));
     })),
   },
+  legendaPerStrato: true, // ogni blocco della legenda sta sotto il proprio strato (core/legenda-pannello.js)
   strati: ordinaPerAlbero(TEMI).map(tema => ({
     id: tema.t.id, etichetta: tema.t.titolo, layers: layerDelTema(tema), attivo: false, sezione: ALBERO.get(tema.t.id)?.[0] ?? 'Coste',
     suCambio: aggiornaLegenda,
