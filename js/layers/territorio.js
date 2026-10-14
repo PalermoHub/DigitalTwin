@@ -4,6 +4,7 @@ import { filtroInsieme, dopoClicMultiplo, voceFiltro, voceStrato } from '../core
 import { STILE_OMI } from './stile-omi.js';
 import { vociOmi, FASCE_OMI, coloreZona } from './scheda-omi.js';
 import { t, tl } from '../core/i18n.js';
+import { creaLegendaZonizzazione, creaLegendaVincoli } from './legenda-prg.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 
 // Come nell'app originale (catasto-app): la vestizione di PRG, PPE e vincoli è fatta di tile
@@ -71,6 +72,8 @@ function creaLegendaOmi(_gruppo, map) {
 // Legenda del catasto in #legende, a strato acceso: la particella è lo strato stesso, le etichette e la particella cercata
 // si accendono e si spengono a parte.
 let legendaCatasto = null;
+let legendaPrg = null;
+let legendaVincoli = null;
 function creaLegendaCatasto(_gruppo, map) {
   legendaCatasto = document.createElement('div');
   legendaCatasto.className = 'legenda legenda-catasto lg-catasto';
@@ -187,15 +190,17 @@ export default {
   strati: [
     { id: 'catasto', legendaPannello: '.lg-catasto', etichetta: 'Catasto: particelle (da zoom 12)', layers: ['catasto', 'catasto-etichette'], attivo: false,
       suCambio(attivo) { if (legendaCatasto) legendaCatasto.hidden = !attivo; } },
-    { id: 'prg', etichetta: 'PRG 2004: zonizzazione e PPE', layers: ['prg-zto', 'prg-ppe'], attivo: false },
-    { id: 'vincoli', etichetta: 'PRG 2004: vincoli', layers: ['prg-va', 'prg-vl'], attivo: false },
+    { id: 'prg', legendaPannello: '.lg-prg', etichetta: 'PRG 2004: zonizzazione e PPE', layers: ['prg-zto', 'prg-ppe'], attivo: false,
+      suCambio(attivo) { if (legendaPrg) legendaPrg.hidden = !attivo; } },
+    { id: 'vincoli', legendaPannello: '.lg-vincoli', etichetta: 'PRG 2004: vincoli', layers: ['prg-va', 'prg-vl'], attivo: false,
+      suCambio(attivo) { if (legendaVincoli) legendaVincoli.hidden = !attivo; } },
     { id: 'omi', legendaPannello: '.lg-omi', etichetta: 'Zone OMI 2025', layers: ['omi', 'omi-line'], attivo: false,
       suCambio(attivo) { if (legendaOmi) legendaOmi.hidden = !attivo; } },
     { id: 'civici', etichetta: 'Numeri civici (da zoom 14)', layers: ['civici'], attivo: false },
     // ultimo del modulo: il sottogruppo prosegue con lo strato «Immobili dichiarati al MEF» (js/layers/mef-immobili.js, che segue in MODULI)
     { id: 'immobili', etichetta: 'Immobili comunali', sezione: 'Immobili comunali', nota: 'I layer sono il risultato di una georeferenziazione automatica e hanno carattere puramente dimostrativo', layers: ['immobili'], attivo: false },
   ],
-  pannello(gruppo, map) { creaLegendaCatasto(gruppo, map); creaLegendaOmi(gruppo, map); },
+  pannello(gruppo, map) { creaLegendaCatasto(gruppo, map); legendaPrg = creaLegendaZonizzazione(); legendaVincoli = creaLegendaVincoli(); creaLegendaOmi(gruppo, map); },
   scheda: {
     tooltip: true,
     senzaTooltip: ['immobili'], // ha già il suo tooltip (registraTooltipStrati)

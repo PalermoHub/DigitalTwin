@@ -1985,3 +1985,10 @@ body.strati3d-attiva :is(#scheda, #rail-pannelli) { z-index: calc(var(--z-viewer
   .strati3d-nav-colonna button { width: 26px; height: 26px; }
 }
 .interruttore-tip { margin: 0 0 8px; }
+/* legende del PRG 2004: simbolo 16×16 e testo che va a capo */
+.legenda-prg strong { display: block; margin-bottom: 4px; font-size: var(--fs-xs); }
+.prg-voce { display: flex; align-items: flex-start; gap: 6px; padding: 2px 0; font-size: var(--fs-xs); line-height: 1.3; }
+.prg-voce img { flex: none; width: 16px; height: 16px; margin-top: 1px; image-rendering: pixelated; }
+.prg-voce span { min-width: 0; overflow-wrap: anywhere; }
+.prg-voce-titolo { margin-top: 6px; font-weight: 600; }
+.prg-sezione { margin: 6px 0 2px; font-size: var(--fs-xs); font-weight: 600; color: var(--text-muted); }
