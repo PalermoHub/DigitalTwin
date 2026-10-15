@@ -68,6 +68,8 @@ def test_interruttore_variazione_trend_charts(apri):
     v.page.wait_for_function("window.dt.map.getSource('trend-grafici')._data.features?.length > 0", timeout=30000)
     # 88 aree × 4 elementi per il livello iniziale; i filtri scelgono i Trend Charts del livello scelto
     assert v.js("window.dt.map.getSource('trend-grafici')._data.features.length") == (55 + 25 + 8) * 4
+    # modo «Variazione»: un'etichetta ▲/▼ per ogni valore, con l'immagine pronta
+    assert v.js("window.dt.map.hasImage('trend-var-27.26')")  # Tribunali o Kalsa +27,3%
     prima = v.js("JSON.stringify(window.dt.map.getFilter('trend-grafico-linea'))")
     assert '"upl"' not in prima  # con le frecce i Trend Charts non selezionano nulla
     v.page.click(".lg-trend-popolazione .trend-livello >> text=Trend Charts")
@@ -82,7 +84,6 @@ def test_interruttore_variazione_trend_charts(apri):
     assert '"quartiere"' not in v.js("JSON.stringify(window.dt.map.getFilter('trend-grafico-linea'))")
     assert _errori(v) == []
     if os.environ.get("TREND_SCREENSHOT"):
-        v.page.click(".lg-trend-popolazione .trend-livello >> text=Trend Charts")
         v.page.click(".lg-trend-popolazione .trend-livello >> text=UPL")
         for z in (12, 13.5, 15):
             v.vai(13.3617, 38.1157, z)
