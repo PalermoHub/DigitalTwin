@@ -168,3 +168,43 @@ def test_sintesi_limita_settori_e_attuatori():
     elenco = [{"missione": "M1", "stato": "Concluso", "pnrr": 1, "settore": f"S{i}", "attuatore": f"A{i}"} for i in range(20)]
     s = m.sintesi(elenco, 0, None)
     assert len(s["per_settore"]) == m.TOP_SETTORI and len(s["per_attuatore"]) == m.TOP_ATTUATORI
+
+
+def test_sedi_scuole_solo_istituti_statali_di_palermo(tmp_path):
+    f = tmp_path / "ipa.txt"
+    righe = [("111", "Palermo", m.TIPO_SCUOLE, "Via Imera, 32"), ("222", "Palermo", "Università", "Piazza Marina 61"),
+             ("333", "Catania", m.TIPO_SCUOLE, "Via Etnea 1"), ("", "Palermo", m.TIPO_SCUOLE, "Via X 1")]
+    f.write_text("cod_amm\tComune\ttipologia_istat\tIndirizzo\tcf\n" + "".join(f"A\t{c}\t{t}\t{i}\t{cf}\n" for cf, c, t, i in righe), encoding="utf-8")
+    assert m.sedi_scuole(f) == {"111": "Via Imera, 32"}
+
+
+def test_layer_scuole_chiave_via_e_civico(tmp_path):
+    f = tmp_path / "scuole.geojson"
+    feat = lambda nome, ind, lon, lat: {"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": {"nome": nome, "indirizzo": ind}}
+    f.write_text(json.dumps({"type": "FeatureCollection", "features": [feat("Colozza", "Via Imera 32", 13.3, 38.1), feat("Senza civico", "Via Roma", 13.3, 38.1)]}), encoding="utf-8")
+    s = m.layer_scuole(f)
+    assert s == {("VIA IMERA", "32"): (13.3, 38.1, "Colozza")}
+    assert m.layer_scuole(tmp_path / "manca.geojson") == {}
+
+
+def test_progetto_senza_indirizzo_va_sulla_sede_della_scuola(tmp_path):
+    civici = civici_finti(tmp_path)
+    loc = {"A": {"righe": [riga_loc("A")], "solo": True}, "B": {"righe": [riga_loc("B")], "solo": True}, "C": {"righe": [riga_loc("C")], "solo": True}}
+    progetti = {c: {"Codice Fiscale Soggetto Attuatore": cf, "Soggetto Attuatore": "SCUOLA"} for c, cf in (("A", "111"), ("B", "222"), ("C", "999"))}
+    sedi = {"111": "Via Gino Marinuzzi, 3", "222": "Via Roma 1"}
+    scuole = {("VIA ROMA", "1"): (13.361, 38.111, "Scuola Roma")}
+    elenco, feature, cont = m.costruisci(loc, progetti, civici, sedi, scuole)
+    per_cup = {f["properties"]["cup"]: f for f in feature}
+    assert set(per_cup) == {"A", "B"}                                   # C: attuatore non è una scuola nota
+    assert per_cup["A"]["properties"]["precisione"] == "sede" and per_cup["A"]["geometry"]["coordinates"] == [13.35, 38.12]
+    assert per_cup["B"]["properties"]["scuola"] == "Scuola Roma" and per_cup["B"]["geometry"]["coordinates"] == [13.361, 38.111]
+    assert "scuola" not in per_cup["A"]["properties"] and "cf_attuatore" not in per_cup["A"]["properties"]
+    assert cont["posizione_sede"] == 2 and cont["sede_da_layer_scuole"] == 1 and cont["senza_indirizzo"] == 1
+
+
+def test_un_indirizzo_proprio_vince_sulla_sede(tmp_path):
+    civici = civici_finti(tmp_path)
+    loc = {"A": {"righe": [riga_loc("A", indirizzo="Via Gino Marinuzzi, 3")], "solo": True}}
+    progetti = {"A": {"Codice Fiscale Soggetto Attuatore": "111"}}
+    _, feature, cont = m.costruisci(loc, progetti, civici, {"111": "Via Roma 1"}, {})
+    assert feature[0]["properties"]["precisione"] == "civico" and "posizione_sede" not in cont

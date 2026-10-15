@@ -29,7 +29,7 @@ def test_strato_pnrr_si_accende_con_legenda_e_punti(apri):
     v.page.wait_for_function("window.dt.map.querySourceFeatures('pnrr').length > 0", timeout=30000)
     _apri_legenda(v)
     assert v.page.is_visible(".lg-pnrr")
-    assert len(v.page.query_selector_all(".lg-pnrr input[type=checkbox]")) == 7
+    assert len(v.page.query_selector_all(".lg-pnrr input[type=checkbox]")) == 9
 
 
 def test_legenda_pnrr_filtra_per_missione(apri):
@@ -40,8 +40,25 @@ def test_legenda_pnrr_filtra_per_missione(apri):
     assert v.js("window.dt.map.getFilter('pnrr-punti') ?? null") is None
     _apri_legenda(v)
     v.page.click(".lg-pnrr label.monumenti-cat:nth-of-type(4)")   # M4: il clic isola la missione
-    filtro = v.js("window.dt.map.getFilter('pnrr-punti')")
-    assert filtro[0] == "in" and filtro[2][1] == ["M4"]
+    filtro = json.dumps(v.js("window.dt.map.getFilter('pnrr-punti')"))
+    assert '"in"' in filtro and '["M4"]' in filtro
+
+
+def test_legenda_pnrr_filtri_sede_e_comune(apri):
+    v = apri()
+    v.attendi_pronto()
+    v.mostra("#strato-pnrr")
+    v.page.check("#strato-pnrr")
+    _apri_legenda(v)
+    caselle = v.page.locator(".lg-pnrr label.monumenti-cat")      # si clicca l'etichetta, come l'utente
+    assert caselle.count() == 9                                    # 7 missioni + sede delle scuole + solo Comune
+    caselle.nth(7).click()                                         # toglie i progetti sulla sede dell'istituto
+    assert "sede" in json.dumps(v.js("window.dt.map.getFilter('pnrr-punti')"))
+    caselle.nth(8).click()                                         # solo Comune di Palermo
+    assert "COMUNE DI PALERMO" in json.dumps(v.js("window.dt.map.getFilter('pnrr-punti')"))
+    caselle.nth(7).click()
+    caselle.nth(8).click()
+    assert v.js("window.dt.map.getFilter('pnrr-punti') ?? null") is None
 
 
 def test_clic_su_un_progetto_apre_la_scheda(apri):

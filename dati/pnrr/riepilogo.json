@@ -1,11 +1,13 @@
 {
   "estrazione": "13/06/2026",
   "cup": 2633,
-  "su_mappa": 334,
+  "su_mappa": 781,
   "con_dati_progetto": 2633,
-  "senza_indirizzo": 2236,
+  "senza_indirizzo": 1812,
   "posizione_civico": 298,
-  "indirizzo_non_trovato": 63,
+  "posizione_sede": 447,
+  "indirizzo_non_trovato": 40,
+  "sede_da_layer_scuole": 153,
   "posizione_via": 36,
   "importo_pnrr_eur": 921364866.52,
   "per_missione": {

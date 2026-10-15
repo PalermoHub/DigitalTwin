@@ -12,8 +12,13 @@ Regole:
   1. si tengono i CUP con almeno una localizzazione a Palermo (Sicilia 019, Palermo 082, comune 053);
   2. si scartano quelli localizzati anche in altri comuni (programmi nazionali o regionali): non sono «lavori della città»;
   3. si uniscono ai file dei progetti sul CUP;
-  4. la posizione si ricava dall'indirizzo, cercandolo nei civici già nel repo (dati/civici-omi/): nessun geocoder esterno.
-     Senza indirizzo, o con indirizzo non trovato, il progetto resta nella tabella (CSV) ma non sulla mappa.
+  4. la posizione si ricava dall'indirizzo, cercandolo nei civici già nel repo (dati/civici-omi/): nessun geocoder esterno;
+  5. se il progetto non ha un indirizzo ma il soggetto attuatore è un istituto scolastico statale, si usa la sede dell'istituto
+     (Indice delle Pubbliche Amministrazioni, agganciato per codice fiscale): precisione «sede», posizione approssimata.
+     Se l'indirizzo della sede coincide con una scuola del layer «Scuole» dell'app (dati/scuole/scuole.geojson) si usano le coordinate
+     di quel layer (proprietà `scuola`); le scuole che nel layer mancano (superiori, plessi non censiti) si posizionano con i civici.
+     Senza posizione il progetto resta nella tabella (CSV) ma non sulla mappa. Università, Comune e altri enti non si posizionano
+     sulla propria sede: troverebbero tutti nello stesso punto e non è dove si fa il lavoro.
 
 Scrive in dati/pnrr/:
   pnrr.geojson      un punto per CUP con una posizione (civico esatto o solo la via)
@@ -38,6 +43,10 @@ RADICE = Path(__file__).resolve().parent.parent
 BASE = "https://www.italiadomani.gov.it/content/dam/sogei-ng/opendata/"
 LOCALIZZAZIONE = "PNRR_Localizzazione.csv"
 PROGETTI = [f"PNRR_Progetti_M{n}.csv" for n in range(1, 8)]
+IPA_URL = ("https://indicepa.gov.it/ipa-dati/dataset/502ff370-1b2c-4310-94c7-f39ceb7500e3/resource/"
+           "3ed63523-ff9c-41f6-a6fe-980f3d9e501f/download/amministrazioni.txt")
+IPA_FILE = "ipa_amministrazioni.txt"
+TIPO_SCUOLE = "Istituti di Istruzione Statale di Ogni Ordine e Grado"   # tipologia_istat dell'IPA
 LICENZA = "CC BY 4.0"
 FONTE = "Italia Domani — Struttura di missione PNRR, Sogei (catalogo open data)"
 # Palermo nei codici ISTAT dei file: regione 019, provincia 082, comune 053 (ISTAT 082053)
@@ -53,7 +62,7 @@ CAMPI_TESTO = {
     "submisura": "Codice Univoco Submisura", "submisura_nome": "Descrizione Submisura", "titolare": "Amministrazione Titolare",
     "stato": "Stato Avanzamento Progetto", "natura": "CUP Descrizione Natura", "tipologia": "CUP Descrizione Tipologia",
     "settore": "CUP Descrizione Settore", "sottosettore": "CUP Descrizione Sottosettore", "categoria": "CUP Descrizione Categoria",
-    "attuatore": "Soggetto Attuatore", "inizio_previsto": "Data Inizio Progetto Prevista", "inizio_effettivo": "Data Inizio Progetto Effettiva",
+    "attuatore": "Soggetto Attuatore", "cf_attuatore": "Codice Fiscale Soggetto Attuatore", "inizio_previsto": "Data Inizio Progetto Prevista", "inizio_effettivo": "Data Inizio Progetto Effettiva",
     "fine_prevista": "Data Fine Progetto Prevista", "fine_effettiva": "Data Fine Progetto Effettiva",
 }
 CAMPI_IMPORTO = {"pnrr": "Finanziamento PNRR", "totale": "Finanziamento Totale", "totale_pubblico": "Finanziamento Totale Pubblico"}
@@ -200,6 +209,30 @@ def localizzazioni(percorso):
     return {cup: {"righe": righe, "solo": cup not in altrove} for cup, righe in palermo.items()}
 
 
+def sedi_scuole(percorso):
+    """{codice fiscale: indirizzo} degli istituti scolastici statali di Palermo, dall'elenco IPA (tab-separated)."""
+    sedi = {}
+    with open(percorso, encoding="utf-8-sig", errors="replace", newline="") as f:
+        for r in csv.DictReader(f, delimiter="\t"):
+            cf = (r.get("cf") or "").strip()
+            if cf and (r.get("Comune") or "").strip().lower() == "palermo" and (r.get("tipologia_istat") or "").strip() == TIPO_SCUOLE:
+                sedi[cf] = (r.get("Indirizzo") or "").strip()
+    return sedi
+
+
+def layer_scuole(percorso):
+    """{(via, civico): (lon, lat, nome)} dalle scuole già nell'app, per riusarne le coordinate."""
+    scuole = {}
+    if not Path(percorso).exists():
+        return scuole
+    for f in json.loads(Path(percorso).read_text(encoding="utf-8"))["features"]:
+        p = f["properties"]
+        via, civico = separa_indirizzo(p.get("indirizzo") or "")
+        if via and civico and f["geometry"]["type"] == "Point":
+            scuole.setdefault((via, civico), (*f["geometry"]["coordinates"][:2], p.get("nome")))
+    return scuole
+
+
 def progetti_dei(cup_richiesti, percorsi):
     """{cup: riga del file dei progetti} per i CUP richiesti; il primo file che lo contiene vince."""
     trovati = {}
@@ -230,8 +263,10 @@ def proprieta(cup, loc_righe, progetto):
     return p
 
 
-def costruisci(loc, progetti, civici):
-    """(elenco di proprietà, feature GeoJSON, contatori) per i soli CUP localizzati solo a Palermo."""
+def costruisci(loc, progetti, civici, sedi=None, scuole=None):
+    """(elenco di proprietà, feature GeoJSON, contatori) per i soli CUP localizzati solo a Palermo.
+    `sedi` = {codice fiscale: indirizzo} degli istituti scolastici: posiziona i progetti senza indirizzo sulla sede dell'attuatore;
+    `scuole` = {(via, civico): (lon, lat, nome)} del layer Scuole dell'app, da preferire al calcolo dai civici."""
     elenco, feature = [], []
     contatori = Counter()
     for cup in sorted(c for c, v in loc.items() if v["solo"]):
@@ -243,12 +278,25 @@ def costruisci(loc, progetti, civici):
                 pos = civici.posizione(r["Indirizzo"])
                 if pos and pos[2] == "civico":
                     break
+        if not pos and sedi and p.get("cf_attuatore") in sedi:
+            indirizzo = sedi[p["cf_attuatore"]]
+            nota = (scuole or {}).get(separa_indirizzo(indirizzo))
+            if nota:
+                pos = (round(nota[0], 6), round(nota[1], 6), "sede", None)
+                p["scuola"] = nota[2]
+                contatori["sede_da_layer_scuole"] += 1
+            else:
+                sede = civici.posizione(indirizzo)
+                if sede:
+                    pos = (sede[0], sede[1], "sede", sede[3])
+            if pos:
+                p["sede"] = indirizzo
         if pos:
             p["precisione"] = pos[2]
             p["lon"], p["lat"] = pos[0], pos[1]
             contatori["posizione_" + pos[2]] += 1
             feature.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [pos[0], pos[1]]},
-                            "properties": {k: v for k, v in p.items() if k not in ("lon", "lat") and v is not None}})
+                            "properties": {k: v for k, v in p.items() if k not in ("lon", "lat", "cf_attuatore") and v is not None}})
         else:
             p["precisione"] = None
             contatori["indirizzo_non_trovato" if p["indirizzo"] else "senza_indirizzo"] += 1
@@ -327,14 +375,15 @@ Generato da `scripts/pnrr.py` (workflow «Aggiorna PNRR»). Non modificare a man
 - **Licenza**: {LICENZA}, con citazione della fonte
 - **Data di estrazione dei dati**: {r['estrazione']}
 - **Progetti** localizzati solo a Palermo: {r['cup']} (finanziamento PNRR complessivo {r['importo_it']} €)
-- **Sulla mappa**: {r['su_mappa']} (civico {r.get('posizione_civico', 0)}, solo la via {r.get('posizione_via', 0)}); gli altri sono in `pnrr_palermo.csv`
+- **Sulla mappa**: {r['su_mappa']} (civico {r.get('posizione_civico', 0)}, solo la via {r.get('posizione_via', 0)}, sede dell'istituto scolastico {r.get('posizione_sede', 0)}, di cui {r.get('sede_da_layer_scuole', 0)} con le coordinate del layer Scuole dell'app); gli altri sono in `pnrr_palermo.csv`
+- **Sede degli istituti scolastici**: Indice delle Pubbliche Amministrazioni (IPA, AgID), <https://indicepa.gov.it/ipa-dati/dataset/amministrazioni>, CC BY 4.0; indirizzi posizionati con i numeri civici ANNCSU
 - Progetti localizzati anche in altri comuni: esclusi
 
 ## File
 
 | File | Contenuto |
 |---|---|
-| `pnrr.geojson` | un punto per progetto con posizione; `precisione` è «civico» o «via» (posizione approssimata) |
+| `pnrr.geojson` | un punto per progetto con posizione; `precisione` è «civico», «via» o «sede» (le ultime due approssimate) |
 | `pnrr_palermo.csv` | tutti i progetti, con o senza posizione |
 | `sintesi.json` | aggregati su tutti i progetti, per i grafici della scheda |
 | `riepilogo.json` | conteggi dell'ultima esecuzione |
@@ -345,12 +394,12 @@ Regole di selezione, fonti e limiti: intestazione di `scripts/pnrr.py`. Per aggi
 
 # ---------- scarico ----------
 
-def scarica(nome, cartella, riscarica=False):
+def scarica(nome, cartella, riscarica=False, url=None):
     destinazione = cartella / nome
     if destinazione.exists() and not riscarica:
         return destinazione
     cartella.mkdir(parents=True, exist_ok=True)
-    richiesta = urllib.request.Request(BASE + nome, headers={"User-Agent": "Mozilla/5.0"})   # senza User-Agent il sito risponde 403
+    richiesta = urllib.request.Request(url or BASE + nome, headers={"User-Agent": "Mozilla/5.0"})   # senza User-Agent il sito risponde 403
     print(f"scarico {nome}…", file=sys.stderr)
     with urllib.request.urlopen(richiesta, timeout=300) as r, open(destinazione.with_suffix(".parte"), "wb") as f:
         shutil.copyfileobj(r, f)
@@ -364,6 +413,7 @@ def main(argv=None):
     ap.add_argument("--riscarica", action="store_true", help="scarica di nuovo anche se i file ci sono già")
     ap.add_argument("--uscita", type=Path, default=RADICE / "dati" / "pnrr")
     ap.add_argument("--civici", type=Path, default=RADICE / "dati" / "civici-omi")
+    ap.add_argument("--scuole", type=Path, default=RADICE / "dati" / "scuole" / "scuole.geojson", help="layer Scuole dell'app")
     args = ap.parse_args(argv)
 
     loc = localizzazioni(scarica(LOCALIZZAZIONE, args.cache, args.riscarica))
@@ -381,7 +431,13 @@ def main(argv=None):
             print(f"ATTENZIONE: {nome} non scaricato ({e})", file=sys.stderr)
     progetti = progetti_dei(solo, percorsi)
 
-    elenco, feature, contatori = costruisci(loc, progetti, Civici(args.civici))
+    sedi = {}
+    try:
+        sedi = sedi_scuole(scarica(IPA_FILE, args.cache, args.riscarica, url=IPA_URL))
+    except OSError as e:   # senza l'elenco IPA i progetti delle scuole restano senza posizione
+        mancanti.append(IPA_FILE)
+        print(f"ATTENZIONE: elenco IPA non scaricato ({e}): niente posizione dalla sede delle scuole", file=sys.stderr)
+    elenco, feature, contatori = costruisci(loc, progetti, Civici(args.civici), sedi, layer_scuole(args.scuole))
     r = scrivi(args.uscita, elenco, feature, contatori, estrazione, mancanti)
     print(json.dumps(r, ensure_ascii=False, indent=2))
     return 0

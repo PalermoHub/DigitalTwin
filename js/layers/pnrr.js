@@ -13,11 +13,16 @@ import { contenutoDinamico } from './scheda-pnrr-dom.js';
 const SRC = 'pnrr';
 const PUNTI = 'pnrr-punti';
 const HIT = 'pnrr-hit';
+const COLORE_NEUTRO = '#868e96';
+const COMUNE = 'COMUNE DI PALERMO'; // i18n-ok: valore del campo «soggetto attuatore» nella fonte
+const MAX_NELLA_SCHEDA = 12; // una scuola può avere decine di progetti nello stesso punto
 
 let mappa = null;
 let legenda = null;
 let sintesi = null; // aggregati su tutti i progetti di Palermo (dati/pnrr/sintesi.json), per i grafici della tab PNRR
 const accese = new Set(MISSIONI.map(([c]) => c));
+let conSede = true; // progetti posizionati sulla sede dell'istituto scolastico (posizione approssimata)
+let soloComune = false; // solo i progetti di cui il Comune di Palermo è soggetto attuatore
 
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
@@ -30,8 +35,12 @@ const colore = () => ['match', ['get', 'missione'], ...MISSIONI.flatMap(([c, , c
 
 function applicaFiltri() {
   if (!mappa?.getLayer(PUNTI)) return;
-  const f = filtroInsieme(['get', 'missione'], accese, MISSIONI.length);
-  mappa.setFilter(PUNTI, f);
+  const filtri = [
+    filtroInsieme(['get', 'missione'], accese, MISSIONI.length),
+    !conSede && ['!=', ['get', 'precisione'], 'sede'],
+    soloComune && ['==', ['get', 'attuatore'], COMUNE],
+  ].filter(Boolean);
+  mappa.setFilter(PUNTI, filtri.length ? ['all', ...filtri] : null);
 }
 
 function creaLegenda() {
@@ -43,6 +52,14 @@ function creaLegenda() {
     simbolo.style.background = col;
     legenda.append(voceFiltro(simbolo, `${codice} · ${tl(nome)}`, acceso => { acceso ? accese.add(codice) : accese.delete(codice); applicaFiltri(); }));
   }
+  // filtri che non dipendono dalla missione: la sede delle scuole si può togliere, il Comune come attuatore si può isolare
+  legenda.append(el('em', 'peba-legenda-titolo', 'Posizione e soggetto'));
+  const anello = el('i', 'monumenti-pallino');
+  anello.style.cssText = `background: transparent; border: 2px solid ${COLORE_NEUTRO}`;
+  legenda.append(voceFiltro(anello, 'Sede dell’istituto scolastico (posizione approssimata)', acceso => { conSede = acceso; applicaFiltri(); }, true, false));
+  const comune = el('i', 'monumenti-pallino');
+  comune.style.background = COLORE_NEUTRO;
+  legenda.append(voceFiltro(comune, 'Solo progetti del Comune di Palermo', acceso => { soloComune = acceso; applicaFiltri(); }, false, false));
   document.getElementById('legende').append(legenda);
 }
 
@@ -67,8 +84,8 @@ export default {
       paint: {
         'circle-color': colore(), 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5,
         'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 3, 17, 8],
-        // la posizione «solo via» è approssimata: cerchio più trasparente
-        'circle-opacity': ['case', ['==', ['get', 'precisione'], 'via'], 0.6, 0.95],
+        // «solo via» e «sede dell'istituto» sono posizioni approssimate: cerchio più trasparente
+        'circle-opacity': ['case', ['==', ['get', 'precisione'], 'civico'], 0.95, 0.6],
       },
     });
     // trasparente e sempre presente: la scheda del luogo mostra i progetti anche a strato spento
@@ -94,7 +111,7 @@ export default {
       const progetti = tutti(trovati, HIT)
         .map(f => voceScheda(f.properties))
         .filter(v => !visti.has(v.chiave) && visti.add(v.chiave))
-        .slice(0, 6);
+        .slice(0, MAX_NELLA_SCHEDA);
       return sintesi ? [...progetti, voceSintesi(sintesi, contenutoDinamico)] : progetti;
     },
   },

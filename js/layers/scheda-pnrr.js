@@ -29,6 +29,7 @@ export const coloreMissione = codice => MISSIONI.find(([c]) => c === codice)?.[2
 const PRECISIONE = {
   civico: 'Indirizzo (civico)',
   via: 'Solo la via: posizione approssimata',
+  sede: 'Sede dell’istituto scolastico: posizione approssimata',
 };
 
 const euro = v => (v != null && Number.isFinite(Number(v))
@@ -57,7 +58,7 @@ export function righeProgetto(p) {
     ['Inizio previsto', p.inizio_previsto], ['Inizio effettivo', p.inizio_effettivo],
     ['Fine prevista', p.fine_prevista], ['Fine effettiva', p.fine_effettiva],
     ['Natura', frase(p.natura)], ['Tipologia', frase(p.tipologia)], ['Settore', frase(p.settore)],
-    ['Indirizzo', p.indirizzo], ['Posizione', PRECISIONE[p.precisione] ? tl(PRECISIONE[p.precisione]) : null],
+    ['Indirizzo', p.indirizzo], ['Sede del soggetto attuatore', p.sede], ['Scuola (layer Scuole)', p.scuola], ['Posizione', PRECISIONE[p.precisione] ? tl(PRECISIONE[p.precisione]) : null],
     ['CUP', p.cup],
   ]);
 }
