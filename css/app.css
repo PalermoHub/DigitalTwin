@@ -2054,3 +2054,17 @@ body.strati3d-attiva :is(#scheda, #rail-pannelli) { z-index: calc(var(--z-viewer
 .opzioni-overlay > summary h2 { font-size: var(--fs-sm); }
 .opzioni-overlay .interruttore-tip { margin: 0 0 2px; }
 .filtri-nota { margin: 12px 0 0; color: var(--text-muted); font-size: var(--fs-xs); line-height: 1.4; }
+
+/* trend della popolazione: scelta del livello, rampa di colore e grafico della scheda */
+.trend-livelli { display: flex; flex-wrap: nowrap; gap: 4px; margin: 6px 0; }
+.trend-livello { display: inline-flex; align-items: center; padding: 3px 7px; white-space: nowrap; min-width: 0; border: 1px solid var(--border-ui); border-radius: var(--r-pill); font-size: var(--fs-xs); color: var(--text-muted); cursor: pointer; }
+.trend-livello input { position: absolute; opacity: 0; pointer-events: none; }
+.trend-livello:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); color: var(--text); font-weight: 700; }
+.trend-livello:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 1px; }
+.trend-rampa { height: 10px; border-radius: 5px; border: 1px solid var(--border-ui); }
+.trend-rampa-estremi { display: flex; justify-content: space-between; font-size: var(--fs-xs); color: var(--text-muted); }
+.trend-grafico { width: 100%; height: auto; color: var(--text-muted); }
+.trend-livello-dettaglio { margin-top: 8px; }
+.trend-livello-dettaglio > summary { cursor: pointer; font-weight: 700; font-size: var(--fs-sm); }
+.trend-numeri { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 4px 0; font-size: var(--fs-xs); color: var(--text-muted); }
+.trend-grafico-tip { width: 260px; max-width: 100%; margin-top: 4px; }
