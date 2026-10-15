@@ -1472,6 +1472,32 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #menu-info button, #menu-info a { display: block; box-sizing: border-box; text-decoration: none; padding: 10px 12px; border: 0; border-bottom: 3px solid transparent; border-radius: var(--r-sm) var(--r-sm) 0 0; background: none; color: var(--text-muted); font: inherit; font-weight: 600; white-space: nowrap; cursor: pointer; }
 #menu-info button:hover, #menu-info a:hover { background: var(--surface-hover); color: var(--text); }
 #menu-info button[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
+/* «Guide»: le tre guide in una tendina sotto la voce (sotto i 1180 px il menu le elenca già sotto il titolo «Guide») */
+.menu-tendina { position: relative; }
+.menu-tendina-toggle::after { content: " ▾"; font-size: .75em; }
+.menu-tendina-toggle[aria-expanded="true"], .menu-tendina-toggle.attiva { color: var(--text); }
+#menu-info .menu-tendina-toggle.attiva { border-bottom-color: var(--accent); }
+.menu-tendina-lista { display: none; position: absolute; top: 100%; left: 0; white-space: nowrap; z-index: calc(var(--z-header) + 1); min-width: 100%; padding: 6px 0; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
+.menu-tendina.aperta .menu-tendina-lista { display: block; }
+#menu-altro .menu-tendina-lista { left: auto; right: 0; }
+.menu-diviso { display: flex; align-items: center; } /* «About» è una voce vera; la freccia accanto apre le altre due */
+#menu-info .menu-diviso .menu-tendina-toggle { padding-left: 4px; padding-right: 8px; }
+.menu-diviso .menu-tendina-toggle::after { content: "▾"; }
+@media (min-width: 1181px) {
+  #menu-info .menu-tendina-lista :is(button, a) { width: 100%; text-align: left; border-radius: 0; border-bottom: 0; }
+  #menu-info .menu-tendina-lista :is(button, a)[aria-current="page"] { background: var(--surface-hover); }
+}
+@media (max-width: 1180px) {
+  #menu-info .menu-gruppo { display: none; }
+  #menu-info .menu-tendina-toggle { width: 100%; }
+  #menu-info .menu-tendina-lista { position: static; min-width: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; background: var(--surface-alt); }
+  #menu-info .menu-tendina-lista :is(button, a) { width: 100%; padding-right: 32px; font-weight: 500; }
+  #menu-altro .menu-tendina-lista { right: auto; }
+  .menu-diviso { flex-wrap: wrap; }
+  #menu-info .menu-diviso > [data-scheda="about"] { flex: 1; width: auto; }
+  #menu-info .menu-diviso .menu-tendina-toggle { width: 48px; min-height: 48px; padding: 0; text-align: center; }
+  #menu-info .menu-diviso .menu-tendina-lista { flex-basis: 100%; }
+}
 #menu-info-toggle { display: none; margin-left: auto; width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; border: 0; border-radius: var(--r-sm); background: none; color: var(--text); cursor: pointer; }
 #menu-info-toggle:hover { background: var(--surface-hover); }
 #switch-lingua { display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 10px; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface-alt); color: var(--text); font: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer; }
@@ -1490,13 +1516,8 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
   #menu-info { left: auto; right: 8px; top: calc(100% + 4px); width: 260px; max-height: 75dvh; overflow-y: auto; padding: 10px 0; text-align: right; border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
   #menu-info button, #menu-info a { text-align: right; border-left-width: 0; border-right: 3px solid transparent; }
   #menu-info button[aria-current="page"] { border-left-color: transparent; border-right-color: var(--accent); }
-  #menu-info .menu-gruppo { display: block; margin: 4px 0; padding: 0 19px 0 16px; font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
-  #menu-info [data-scheda="mappa"] { order: 0; }
-  #menu-info .menu-gruppo[data-gruppo="guide"] { order: 1; }
-  #menu-info [data-scheda="guida"] { order: 2; } #menu-info [data-scheda="plugin"] { order: 3; } #menu-info [data-scheda="geoimage"] { order: 4; }
-  #menu-info .menu-gruppo[data-gruppo="info"] { order: 5; margin-top: 12px; }
-  #menu-info [data-scheda="digitaltwin"] { order: 6; } #menu-info [data-scheda="argomenti"] { order: 7; }
-  #menu-info [data-scheda="fonti"] { order: 8; } #menu-info [data-scheda="privacy"] { order: 9; } #menu-info #link-presentazione { order: 10; } #menu-info [data-scheda="about"] { order: 11; }
+  #menu-info [data-scheda="mappa"] { order: 0; } #menu-info [data-scheda="digitaltwin"] { order: 1; } #menu-info [data-scheda="argomenti"] { order: 2; } #menu-info #menu-guide { order: 3; }
+  #menu-info [data-scheda="fonti"] { order: 4; } #menu-info #menu-altro { order: 5; }
 }
 #app-logo img { display: block; height: 44px; width: auto; }
 
@@ -1673,13 +1694,6 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #menu-info button, #menu-info a { text-align: right; border-left-width: 0; border-right: 3px solid transparent; }
   #menu-info button[aria-current="page"] { border-left-color: transparent; border-right-color: var(--accent); }
   #menu-info [data-scheda="mappa"] { display: none; }
-  #menu-info .menu-gruppo { display: block; }
-  #menu-info .menu-gruppo { margin: 4px 0; padding: 0 19px 0 16px; font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
-  #menu-info .menu-gruppo[data-gruppo="guide"] { order: 1; }
-  #menu-info [data-scheda="guida"] { order: 2; } #menu-info [data-scheda="plugin"] { order: 3; } #menu-info [data-scheda="geoimage"] { order: 4; }
-  #menu-info .menu-gruppo[data-gruppo="info"] { order: 5; margin-top: 12px; }
-  #menu-info [data-scheda="digitaltwin"] { order: 6; } #menu-info [data-scheda="argomenti"] { order: 7; }
-  #menu-info [data-scheda="fonti"] { order: 8; } #menu-info [data-scheda="privacy"] { order: 9; } #menu-info #link-presentazione { order: 10; } #menu-info [data-scheda="about"] { order: 11; }
 }
 .btn-consenso { min-height: 44px; padding: 8px 16px; border: 2px solid var(--accent-strong, #b45309); border-radius: var(--r-md); background: transparent; color: inherit; font-weight: 700; cursor: pointer; }
 .strati-tooltip-corpo strong { color: var(--tooltip-enfasi); }

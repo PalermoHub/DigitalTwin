@@ -264,15 +264,26 @@ map.once('style.load', async () => {
   const foglio = document.getElementById('crediti');
   const menu = document.getElementById('menu-info');
   const toggle = document.getElementById('menu-info-toggle');
-  const chiudiMenu = () => { menu.classList.remove('aperto'); toggle.setAttribute('aria-expanded', 'false'); };
+  const tendine = [...menu.querySelectorAll('.menu-tendina')];
+  const chiudiTendine = salvo => tendine.forEach(t => {
+    if (t === salvo) return;
+    t.classList.remove('aperta'); t.querySelector('.menu-tendina-toggle').setAttribute('aria-expanded', 'false');
+  });
+  const chiudiMenu = () => { menu.classList.remove('aperto'); toggle.setAttribute('aria-expanded', 'false'); chiudiTendine(); };
+  tendine.forEach(t => t.querySelector('.menu-tendina-toggle').addEventListener('click', () => {
+    chiudiTendine(t); // una sola tendina aperta alla volta
+    t.querySelector('.menu-tendina-toggle').setAttribute('aria-expanded', String(t.classList.toggle('aperta')));
+  }));
+  document.addEventListener('click', e => chiudiTendine(e.target.closest('.menu-tendina')));
   const commuta = tab => {
     if (tab === 'mappa') return foglio.open && foglio.close();
     if (catalogo) commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], tab);
     else segnala(t('app.fonti.errore'));
   };
-  const segna = tab => menu.querySelectorAll('button').forEach(b => {
+  const segnaVoci = tab => menu.querySelectorAll('button').forEach(b => {
     if (b.dataset.scheda === (tab ?? 'mappa')) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
+  const segna = tab => { segnaVoci(tab); tendine.forEach(t => t.querySelector('.menu-tendina-toggle').classList.toggle('attiva', !!t.querySelector('[aria-current="page"]'))); };
   menu.addEventListener('click', e => {
     const b = e.target.closest('button[data-scheda]');
     if (!b) return;
