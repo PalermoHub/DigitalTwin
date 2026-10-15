@@ -1,6 +1,6 @@
 # Progetti PNRR localizzati a Palermo
 
-Generato da `scripts/pnrr.py` (workflow «Aggiorna PNRR»). Non modificare a mano.
+Generato da `scripts/pnrr.py`. Non modificare a mano.
 
 - **Fonte**: Italia Domani — Struttura di missione PNRR, Sogei (catalogo open data), <https://www.italiadomani.gov.it/content/sogei-ng/it/it/catalogo-open-data.html>
 - **Licenza**: CC BY 4.0, con citazione della fonte
@@ -20,4 +20,4 @@ Generato da `scripts/pnrr.py` (workflow «Aggiorna PNRR»). Non modificare a man
 | `sintesi.json` | aggregati su tutti i progetti, per i grafici della scheda |
 | `riepilogo.json` | conteggi dell'ultima esecuzione |
 
-Regole di selezione, fonti e limiti: intestazione di `scripts/pnrr.py`. Per aggiornare: workflow «Aggiorna PNRR» (avvio manuale).
+Regole di selezione, fonti e limiti: intestazione di `scripts/pnrr.py`. Per aggiornare i dati: `AGGIORNAMENTO.md` in questa cartella (a mano: il sito di Italia Domani blocca i server di GitHub).

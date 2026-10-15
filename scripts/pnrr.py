@@ -480,7 +480,7 @@ def readme(r):
     r = {**r, 'importo_it': f"{r['importo_pnrr_eur']:,.0f}".replace(',', '.')}
     return f"""# Progetti PNRR localizzati a Palermo
 
-Generato da `scripts/pnrr.py` (workflow «Aggiorna PNRR»). Non modificare a mano.
+Generato da `scripts/pnrr.py`. Non modificare a mano.
 
 - **Fonte**: {FONTE}, <https://www.italiadomani.gov.it/content/sogei-ng/it/it/catalogo-open-data.html>
 - **Licenza**: {LICENZA}, con citazione della fonte
@@ -500,7 +500,7 @@ Generato da `scripts/pnrr.py` (workflow «Aggiorna PNRR»). Non modificare a man
 | `sintesi.json` | aggregati su tutti i progetti, per i grafici della scheda |
 | `riepilogo.json` | conteggi dell'ultima esecuzione |
 
-Regole di selezione, fonti e limiti: intestazione di `scripts/pnrr.py`. Per aggiornare: workflow «Aggiorna PNRR» (avvio manuale).
+Regole di selezione, fonti e limiti: intestazione di `scripts/pnrr.py`. Per aggiornare i dati: `AGGIORNAMENTO.md` in questa cartella (a mano: il sito di Italia Domani blocca i server di GitHub).
 """
 
 
@@ -517,7 +517,7 @@ TENTATIVI = 3
 
 
 class ErroreScarico(OSError):
-    """Scarico fallito dopo i tentativi: il messaggio dice file, indirizzo e motivo (si legge nel log del workflow)."""
+    """Scarico fallito dopo i tentativi: il messaggio dice file, indirizzo e motivo (si legge nel terminale)."""
 
 
 def scarica(nome, cartella, riscarica=False, url=None):

@@ -8,7 +8,7 @@ import { contenutoDinamico, contenutoTendina, testoCopertura } from './scheda-pn
 import { conteggiAttuatori, elencoLuogo, firma, modelloTooltipLuogo, nomeProgetto, progettiDa, raggruppa } from './pnrr-luoghi.js';
 import { PR, iconaFette } from './marker-fette.js';
 
-// Progetti del PNRR localizzati nella sola città di Palermo (open data di Italia Domani, dati/pnrr/, workflow «Aggiorna PNRR»).
+// Progetti del PNRR localizzati nella sola città di Palermo (open data di Italia Domani, dati/pnrr/, generati da scripts/pnrr.py).
 // Un punto per progetto con un indirizzo trovato nei civici (civico esatto o solo la via), o sulla sede dell'attuatore per le scuole e il
 // Comune; gli altri (Università, reti) stanno nel CSV e nel menu a tendina della tab PNRR.
 // Sulla mappa i progetti nello stesso luogo sono un solo marker, come le sedi degli uffici: anello a fette colorate (una per missione)
