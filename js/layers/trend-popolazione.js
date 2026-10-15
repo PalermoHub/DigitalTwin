@@ -17,7 +17,7 @@ const FILL = 'trend-popolazione-fill';
 const LINEA = 'trend-popolazione-linea';
 const FRECCE = 'trend-popolazione-frecce';
 const HIT = 'trend-popolazione-hit';
-const GRAFICO = ['linea', 'proiezione', 'punta', 'nome'].map(tipo => ({ tipo, id: `trend-grafico-${tipo}` }));
+const GRAFICO = ['linea', 'proiezione', 'punta', 'nome', 'valore'].map(tipo => ({ tipo, id: `trend-grafico-${tipo}` }));
 const IDS_GRAFICO = GRAFICO.map(g => g.id);
 const PR = 2;
 
@@ -130,15 +130,17 @@ export default {
     map.addLayer({ id: 'trend-grafico-linea', type: 'line', ...grafico(), layout: { ...nascosto, 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': colore, 'line-width': larghezza } });
     map.addLayer({ id: 'trend-grafico-proiezione', type: 'line', ...grafico(), layout: { ...nascosto, 'line-cap': 'butt' }, paint: { 'line-color': colore, 'line-width': larghezza, 'line-dasharray': [2, 1.5] } });
     map.addLayer({ id: 'trend-grafico-punta', type: 'fill', ...grafico(), paint: { 'fill-color': colore } });
-    map.addLayer({
-      id: 'trend-grafico-nome', type: 'symbol', ...grafico(),
+    // nome sopra la linea e variazione % sotto, a 5 px (text-translate); il nome è nero, il valore nel colore del segno
+    const testo = (anchor, dy, campo, paint) => ({
+      type: 'symbol', ...grafico(),
       layout: {
-        ...nascosto, 'text-font': ['Noto Sans Bold'],
-        'text-field': ['format', ['get', 'nome'], {}, '\n', {}, ['get', 'variazione'], { 'text-color': ['get', 'colore'], 'font-scale': 1.2 }],
-        'text-size': ['interpolate', ['linear'], ['zoom'], 11, 8, 15, 12], 'text-anchor': 'top',
+        ...nascosto, 'text-field': ['get', campo], 'text-font': ['Noto Sans Bold'], 'text-anchor': anchor,
+        'text-size': ['interpolate', ['linear'], ['zoom'], 11, 8, 15, 12],
       },
-      paint: { 'text-color': '#2b2b2b', 'text-halo-color': 'rgba(255,255,255,0.85)', 'text-halo-width': 1.2 },
+      paint: { 'text-translate': [0, dy], 'text-halo-color': 'rgba(255,255,255,0.85)', 'text-halo-width': 1.2, ...paint },
     });
+    map.addLayer({ id: 'trend-grafico-nome', ...testo('bottom', -5, 'nome', { 'text-color': '#2b2b2b' }) });
+    map.addLayer({ id: 'trend-grafico-valore', ...testo('top', 5, 'variazione', { 'text-color': colore }) });
     caricaDati(map);
     applicaFiltri();
     // trasparente e sempre presente: la scheda del luogo mostra il trend anche a strato spento

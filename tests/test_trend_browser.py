@@ -66,8 +66,8 @@ def test_interruttore_variazione_trend_charts(apri):
     _accendi(v)
     v.js("document.getElementById('dt-consenso')?.remove()")
     v.page.wait_for_function("window.dt.map.getSource('trend-grafici')._data.features?.length > 0", timeout=30000)
-    # 88 aree × 4 elementi per il livello iniziale; i filtri scelgono i Trend Charts del livello scelto
-    assert v.js("window.dt.map.getSource('trend-grafici')._data.features.length") == (55 + 25 + 8) * 4
+    # 88 aree × 5 elementi per il livello iniziale; i filtri scelgono i Trend Charts del livello scelto
+    assert v.js("window.dt.map.getSource('trend-grafici')._data.features.length") == (55 + 25 + 8) * 5
     # modo «Variazione»: un'etichetta ▲/▼ per ogni valore, con l'immagine pronta
     assert v.js("window.dt.map.hasImage('trend-var-27.26')")  # Tribunali o Kalsa +27,3%
     prima = v.js("JSON.stringify(window.dt.map.getFilter('trend-grafico-linea'))")

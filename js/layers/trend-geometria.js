@@ -15,7 +15,7 @@ const SCURO = { [COLORE_CRESCITA]: '#1b5e1b', [COLORE_CALO]: '#521a85' };
 const PUNTA = 0.035; // lato della freccia / larghezza del riquadro: piccola, solo per dare il verso
 
 // `p`: proprietà del punto (dati del trend e riquadro gx, gy, gw). Ritorna feature GeoJSON con `tipo`: linea e
-// proiezione (linee), punta (poligono), nome (punto).
+// proiezione (linee), punta (poligono), nome e valore (punti).
 export function costruisciGrafico(p) {
   const { gx: lon, gy: lat, gw } = p;
   const cos = Math.cos((lat * Math.PI) / 180);
@@ -31,7 +31,8 @@ export function costruisciGrafico(p) {
   const percorso = locali.map(d => [d[0], d[1]]);
   const comuni = { livello: p.livello, nome: p.nome, colore: SCURO[c] ?? c };
   const f = (tipo, geometry) => ({ type: 'Feature', properties: { ...comuni, tipo }, geometry });
-  const fondo = su - altezza / 2;
+  const alto = Math.max(...percorso.map(d => d[1]));
+  const basso = Math.min(...percorso.map(d => d[1]));
   // freccia in punta, orientata come l'ultimo tratto del percorso
   const [x1, y1] = percorso.at(-2);
   const [x2, y2] = percorso.at(-1);
@@ -44,8 +45,10 @@ export function costruisciGrafico(p) {
     f('linea', { type: 'LineString', coordinates: osservati.map(d => aGradi(d)) }),
     f('proiezione', { type: 'LineString', coordinates: proiezione.map(d => aGradi(d)) }),
     f('punta', { type: 'Polygon', coordinates: [[...punta.map(aGradi), aGradi(punta[0])]] }),
-    // sotto il grafico: nome dell'area e, a capo, la variazione % 2011-2021 nel colore del segno
-    { ...f('nome', { type: 'Point', coordinates: aGradi([0, fondo - 0.01 * gw]) }), properties: { ...comuni, tipo: 'nome', variazione: conSegno(p.var1121) } },
+    // etichette: il nome sta sopra il punto più alto della linea, il valore (variazione % 2011-2021) sotto quello più basso;
+    // la distanza di 5 px dalla linea la dà il layer (text-translate)
+    f('nome', { type: 'Point', coordinates: aGradi([0, alto]) }),
+    { ...f('valore', { type: 'Point', coordinates: aGradi([0, basso]) }), properties: { ...comuni, tipo: 'valore', variazione: conSegno(p.var1121) } },
   ];
 }
 
