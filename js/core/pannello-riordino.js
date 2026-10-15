@@ -21,6 +21,9 @@ function blocchi(gruppo) {
     } else if (n.matches('h3.gruppo-sezione')) {
       if (n.dataset.fissa !== undefined) sez++; else titoli.push(n);
       corrente = null;
+    } else if (n.matches('h4.gruppo-sottosezione')) {
+      titoli.push(n);
+      corrente = null;
     } else if (corrente) corrente.nodi.push(n);
   }
   return r;

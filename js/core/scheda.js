@@ -3,7 +3,8 @@ import { applicaPreferenze, registraVisti, leggiPreferenze, salvaPreferenze } fr
 import { svgIcona } from './icone.js';
 import { segnala } from './pannello.js';
 import { ZOOM_SCHEDA } from './config.js';
-import { sceltePerLayer, soloCliccato, evidenzia, cancellaEvidenza } from './evidenza.js';
+import { sceltePerLayer, soloCliccato, evidenzia, cancellaEvidenza, evidenzaVicine } from './evidenza.js';
+import { featureVicine } from './scheda-util.js';
 import { el, icona, sincronizzaStrato, acceseDaScheda, spegniStratiDaScheda, creaInterruttoreStrato, disegnaSezione } from './scheda-disegno.js';
 import { ICONA_INGRANAGGIO, ICONA_X, creaPannelloPreferenze } from './scheda-pannello-preferenze.js';
 import { t as tr, tl } from './i18n.js';
@@ -393,6 +394,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     if (window.dt && window.dt.differitiPronti === false) await window.dt.differiti();
     const voci = [];
     const trovatiTutti = [];
+    const viciniTutti = []; // punti dei dintorni (`scheda.vicini`): evidenziati ma non cambiano il tab né l'evidenza principale
     let tabIniziale = null; // lo strato cliccato può chiedere il suo tab; solo per un clic vero (non per il ripristino da un link condiviso)
     // Un oggetto 3D sopra la mappa (es. l'edificio per piani, anche esploso) sta più in alto del terreno: e.lngLat è il punto
     // a terra dietro di lui. Lo strato che lo possiede dice dove sta l'oggetto, e la scheda (luogo, edificio, catasto…) si
@@ -403,10 +405,13 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     for (const m of conScheda) {
       const layers = m.scheda.layers.filter(id => map.getLayer(id));
       if (!layers.length) continue;
-      const trovati = trovaFeature(map, m === sopra?.m ? e.point : punto, layers);
-      if (trovati.length && e.originalEvent) tabIniziale ??= m.scheda.tabAlClic?.(map) ?? null;
-      trovatiTutti.push(...trovati);
-      voci.push(...m.scheda.voci(trovati, lngLat));
+      const esatti = trovaFeature(map, m === sopra?.m ? e.point : punto, layers);
+      if (esatti.length && e.originalEvent) tabIniziale ??= m.scheda.tabAlClic?.(map) ?? null;
+      trovatiTutti.push(...esatti);
+      // `scheda.vicini` ({ raggio, max }): il layer mostra anche i suoi punti nei dintorni del clic, a strato acceso o spento
+      const vicini = m.scheda.vicini ? featureVicine(map, lngLat, layers, m.scheda.vicini, esatti) : [];
+      viciniTutti.push(...vicini);
+      voci.push(...m.scheda.voci(esatti.concat(vicini), lngLat));
     }
     // dalla vista «Strati in 3D» il clic dice quali strati ha toccato: la scheda si apre sul tab del primo che ha dati qui
     // (PRG e vincoli: «Strumenti urbanistici»)
@@ -425,7 +430,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     // I layer RNDT si interrogano subito, come i layer nativi (trovaFeature): scheda e evidenza adattano la vista della mappa
     // (con «riduci animazioni» attivo lo spostamento è immediato), e dopo non si saprebbe più cosa c'era sotto il clic.
     const risposte = interrogabili.length ? rndt.interroga(interrogabili, lngLat, punto, map.getZoom()) : null;
-    const extra = voci.flatMap(v => v.evidenza ?? []); // luoghi vicini che un layer vuole vedere sulla mappa
+    const extra = [...voci.flatMap(v => v.evidenza ?? []), ...evidenzaVicine(viciniTutti)]; // luoghi vicini che un layer vuole vedere sulla mappa
     const base = soloCliccato(sceltePerLayer(trovatiTutti, lngLat));
     for (const m of conScheda) m.scheda.suEvidenza?.(base); // chi ridisegna l'evidenza dopo il clic (es. percorso di una linea) tiene anche questa
     const scelte = [...base, ...extra];

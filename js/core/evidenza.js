@@ -26,6 +26,7 @@ export const FONTI = {
   'scuole-hit-punti': { etichetta: t('evidenza.scuola'), colore: '#1971c2' },
   'seggi-hit-poli': { etichetta: t('evidenza.seggio'), colore: '#0c8599' },
   'seggi-hit-punti': { etichetta: t('evidenza.seggio'), colore: '#0c8599' },
+  'distributori-hit': { etichetta: t('evidenza.distributore'), colore: '#f2b705' },
   'colonnine-hit': { etichetta: t('evidenza.colonnina'), colore: '#2b8a3e' },
   'uffici-hit': { etichetta: t('evidenza.uffici'), colore: '#a61e4d' },
   'trasporto-hit-fermate': { etichetta: t('evidenza.fermata'), colore: '#364fc7' },
@@ -78,6 +79,16 @@ export function sceltePerLayer(trovati, lngLat) {
       : trovati.filter(f => f.layer.id === id && uguali(f, prima));
     return { id, ...FONTI[id], features: pezzi };
   });
+}
+
+// Evidenza dei punti trovati nei dintorni del clic (`featureVicine`): una scelta per layer, nello stile della sua fonte.
+export function evidenzaVicine(vicini) {
+  const perLayer = new Map();
+  for (const f of vicini) if (FONTI[f.layer.id]) perLayer.set(f.layer.id, [...(perLayer.get(f.layer.id) ?? []), f]);
+  return [...perLayer].map(([id, lista]) => ({
+    id: `${id}-vicini`, ...FONTI[id],
+    features: lista.map(f => ({ type: 'Feature', geometry: f.geometry, properties: { attributo: attributoDi(id, f.properties) ?? '' } })),
+  }));
 }
 
 // GeoJSON da disegnare: ogni geometria porta il colore della propria fonte.

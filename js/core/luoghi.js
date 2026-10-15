@@ -19,6 +19,7 @@ export const FONTI = [
   { file: 'trasporto/ferrovia-linee.geojson', facoltativa: true, strato: 'trasporto-metro', zoom: 12, numero: p => p.numero,
     nota: p => tr('luoghi.linea', { tipo: 'Metro', da: p.da, a: p.a }), campi: p => [`Linea ${p.numero} ${p.nome}`] },
   { file: 'colonnine/colonnine.geojson', strato: 'colonnine', zoom: 17, nota: p => tr('luoghi.colonnina', { stato: tl(p.stato).toLowerCase(), kw: p.potenza_kw }), campi: p => [p.operatore, p.indirizzo] },
+  { file: 'distributori/distributori.geojson', facoltativa: true, strato: 'distributori', zoom: 17, nota: p => [tr('luoghi.distributore'), p.marchio].filter(Boolean).join(' · '), campi: p => [p.bandiera, p.gestore, p.indirizzo] },
   // sedi degli uffici (es. «Polo Tecnico»), prima degli uffici che ospitano
   { file: 'uffici/sedi.geojson', strato: 'uffici', zoom: 17, nota: p => tr('luoghi.sede', { n: p.n_uffici }), campi: p => [p.nome, p.indirizzo] },
   // uffici comunali: per nome, sede o responsabile; le coordinate stanno nella geometria

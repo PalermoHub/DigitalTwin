@@ -122,6 +122,7 @@ async function aggiornaDalVivo() {
 export default {
   id: 'colonnine',
   titolo: 'Servizi',
+  sezioniFisse: true, // «Servizi su strada», «Uffici comunali» e «Scuole» restano sezioni a sé: il riordino non attraversa le intestazioni
   argomento: { titolo: 'Servizi su strada', descrizione: 'Colonnine di ricarica per veicoli elettrici di Palermo, con stato dal vivo, potenza e operatore.' },
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: urlDati('colonnine/colonnine.geojson') });
@@ -160,6 +161,7 @@ export default {
     aggiornaDalVivo(); // senza attendere: la mappa parte subito con il file
   },
   scheda: {
+    vicini: { raggio: 300, max: 5 }, // anche i punti nei dintorni del clic (vedi docs/NUOVO_LAYER.md)
     layers: [HIT],
     // con lo strato acceso, cliccare una colonnina apre subito il suo tab della scheda
     tabAlClic: map => (map.getLayoutProperty(PUNTI, 'visibility') === 'visible' ? 'servizi' : null),
@@ -171,7 +173,7 @@ export default {
   },
   legendaPannello: '.lg-colonnine', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
-    id: 'colonnine', etichetta: 'Colonnine di ricarica', layers: [PUNTI], attivo: false,
+    id: 'colonnine', etichetta: 'Colonnine di ricarica', sottosezione: 'Colonnine di ricarica', layers: [PUNTI], attivo: false,
     sottovoci: [
       { titolo: 'Stato', voci: STATI.map(([s]) => ({ id: `stato:${s}`, etichetta: s })) },
       { titolo: 'Corrente', voci: CORRENTI.map(([c, nome]) => ({ id: `corrente:${c}`, etichetta: nome })) },

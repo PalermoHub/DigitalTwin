@@ -1,0 +1,42 @@
+name: Aggiorna distributori
+
+# Ogni giorno (e a mano): scarica da MIMIT (Osservaprezzi carburanti) l'anagrafica degli impianti e i prezzi comunicati dai gestori,
+# tiene i distributori di Palermo e rigenera dati/distributori/distributori.geojson. I prezzi escono ogni mattina: il cron parte a metà mattina.
+# Se i CSV sono incompleti o rotti lo script fallisce e il file in repository resta quello precedente.
+on:
+  schedule:
+    - cron: "40 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-distributori
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Estrai i distributori di Palermo
+        run: python3 scripts/distributori.py | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Salva nel repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dati/distributori/distributori.geojson
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione nei dati."
+          else
+            git commit -m "dati: aggiornamento distributori di carburante ($(date -u +%F' '%H:%M))"
+            git push
+          fi

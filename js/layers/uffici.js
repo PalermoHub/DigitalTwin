@@ -116,6 +116,7 @@ export default {
   argomento: { titolo: 'Uffici comunali', descrizione: 'Sedi degli uffici del Comune di Palermo, con responsabili e contatti.' },
   gruppo: 'colonnine', // dentro «Servizi su strada»
   sezione: 'Uffici comunali',
+  sezioniFisse: true, // il titolo non viaggia con lo strato nel riordino
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
     map.addSource(SRC_HIT, { type: 'geojson', data: urlDati('uffici/sedi.geojson') });
@@ -154,6 +155,7 @@ export default {
     riempiLegenda();
   },
   scheda: {
+    vicini: { raggio: 300, max: 5 }, // anche i punti nei dintorni del clic (vedi docs/NUOVO_LAYER.md)
     layers: [HIT],
     voci(trovati) {
       const visti = new Set();

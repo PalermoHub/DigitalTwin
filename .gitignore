@@ -9,6 +9,8 @@ dati/*/
 # fontanelle, monumenti (punti, edifici e foto), civici (sezioni di ricerca), classifica della popolazione, trasporto (fermate, linee, orari).
 # eccezione: uffici (piccoli, rigenerati dal workflow «Aggiorna uffici»)
 !dati/uffici/
+# eccezione: distributori di carburante (piccoli, rigenerati dal workflow «Aggiorna distributori»)
+!dati/distributori/
 # eccezione: incendi (piccoli, rigenerati dal workflow «Aggiorna incendi»)
 !dati/incedi/
 # eccezione: PAI (rigenerato dal workflow «Aggiorna PAI»)
@@ -76,6 +78,7 @@ scripts/*
 !scripts/edificio/
 !scripts/estrai_stile_omi.mjs
 !scripts/colonnine.py
+!scripts/distributori.py
 !scripts/trend_demografico.py
 !scripts/incendi.py
 !scripts/pai.py
