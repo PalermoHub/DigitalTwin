@@ -9,17 +9,27 @@ const p = {
 };
 const per = (fs, tipo) => fs.find(f => f.properties.tipo === tipo);
 
-test('costruisciGrafico: quattro elementi, tutti con livello, nome e colore', () => {
+test('costruisciGrafico: cinque elementi, tutti con livello, nome e colore', () => {
   const fs = costruisciGrafico(p);
-  assert.deepEqual(fs.map(f => f.properties.tipo), ['linea', 'proiezione', 'punta', 'nome']);
+  assert.deepEqual(fs.map(f => f.properties.tipo), ['linea', 'proiezione', 'punta', 'nome', 'valore']);
   assert.ok(fs.every(f => f.properties.livello === 'upl' && f.properties.nome === 'Kalsa'));
   assert.equal(fs[0].properties.colore, '#1b5e1b'); // crescita = verde scuro, così la linea si stacca dal fondo
   assert.ok(!fs.some(f => f.properties.tipo === 'sotto')); // nessuna area sotto la curva: coprirebbe il colore della mappa
 });
 
-test('nome: porta anche la variazione % 2011-2021, col segno', () => {
-  assert.equal(per(costruisciGrafico(p), 'nome').properties.variazione, '+27,3%');
-  assert.equal(per(costruisciGrafico({ ...p, var1121: -4.62 }), 'nome').properties.variazione, '−4,6%');
+test('valore: porta la variazione % 2011-2021, col segno', () => {
+  assert.equal(per(costruisciGrafico(p), 'valore').properties.variazione, '+27,3%');
+  assert.equal(per(costruisciGrafico({ ...p, var1121: -4.62 }), 'valore').properties.variazione, '−4,6%');
+});
+
+test('etichette: il nome sta sopra il punto più alto della linea, il valore sotto il più basso, entrambi al centro', () => {
+  const fs = costruisciGrafico(p);
+  const lat = f => f.geometry.coordinates[1];
+  const lati = [...per(fs, 'linea').geometry.coordinates, ...per(fs, 'proiezione').geometry.coordinates].map(c => c[1]);
+  assert.ok(Math.abs(lat(per(fs, 'nome')) - Math.max(...lati)) < 1e-9);
+  assert.ok(Math.abs(lat(per(fs, 'valore')) - Math.min(...lati)) < 1e-9);
+  assert.equal(per(fs, 'nome').geometry.coordinates[0], p.gx);
+  assert.equal(per(fs, 'valore').geometry.coordinates[0], p.gx);
 });
 
 test('linea: tre dati osservati da sinistra a destra, il 2011 a sinistra del centro e la proiezione parte dal 2023', () => {
@@ -70,5 +80,5 @@ test('costruisciGrafici: un disegno per ogni punto con rettangolo, gli altri ele
     { properties: { ...p, tipo: 'area' } },
     { properties: { livello: 'upl', nome: 'X', tipo: 'punto', p11: 1, p21: 1, p23: 1, var1121: 0 } }, // senza riquadro
   ] };
-  assert.equal(costruisciGrafici(collezione).features.length, 4);
+  assert.equal(costruisciGrafici(collezione).features.length, 5);
 });
