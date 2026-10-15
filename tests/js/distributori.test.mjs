@@ -48,3 +48,33 @@ test('popup: bandiera, indirizzo, solo prezzi', () => {
 test('senza bandiera il titolo è il gestore', () => {
   assert.equal(modelloPopupDistributore({ id: '2', gestore: 'Rossi', prezzi: [] }).titolo, 'Rossi');
 });
+
+import { distributoriVicini } from '../../js/layers/scheda-distributori.js';
+
+const A = { id: 'A' }, B = { id: 'B' }, C = { id: 'C' }, D = { id: 'D' };
+const proprieta = new Map([['A', A], ['B', B], ['C', C], ['D', D]]);
+// ~111 m per 0,001° di latitudine
+const coordinate = new Map([['A', [13.3, 38.1005]], ['B', [13.3, 38.102]], ['C', [13.3, 38.11]], ['D', [13.3, 38.1015]]]);
+const PUNTO = [13.3, 38.1];
+
+test('vicini: entro il raggio, dal più vicino, al massimo `max`', () => {
+  assert.deepEqual(distributoriVicini(PUNTO, proprieta, coordinate, 400, 5).map(x => x.p.id), ['A', 'D', 'B']); // C è a ~1,1 km
+  assert.deepEqual(distributoriVicini(PUNTO, proprieta, coordinate, 400, 2).map(x => x.p.id), ['A', 'D']);
+});
+
+test('vicini: i distributori cliccati restano anche oltre raggio e massimo', () => {
+  assert.deepEqual(distributoriVicini(PUNTO, proprieta, coordinate, 400, 1, new Set(['C'])).map(x => x.p.id), ['A', 'C']);
+});
+
+test('vicini: senza coordinate o fuori raggio, nessun risultato', () => {
+  assert.deepEqual(distributoriVicini(PUNTO, proprieta, new Map(), 400, 5), []);
+  assert.deepEqual(distributoriVicini([14, 39], proprieta, coordinate, 400, 5), []);
+});
+
+test('card: riga Distanza arrotondata a 10 m solo se nota; evidenza sul punto', () => {
+  const v = voceDistributore(P, 187, [13.3, 38.1]);
+  assert.equal(riga(v, 'Distanza'), '190 m');
+  assert.deepEqual(v.evidenza[0].features[0].geometry.coordinates, [13.3, 38.1]);
+  assert.equal(riga(voceDistributore(P), 'Distanza'), undefined);
+  assert.equal(voceDistributore(P).evidenza, undefined);
+});
