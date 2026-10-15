@@ -640,7 +640,8 @@ dialog li { margin: 4px 0; }
 .legenda .peba-famiglia { flex-direction: column; align-items: stretch; gap: 0; margin-top: 6px; }
 .legenda-peba { max-height: 60vh; overflow-y: auto; }
 .legenda-pnrr { max-height: 60vh; overflow-y: auto; }
-.legenda-pnrr .pnrr-soggetti select { width: 100%; margin-top: 4px; font: inherit; font-size: var(--fs-sm); }
+.legenda-pnrr .pnrr-sezione-soggetti { display: block; width: 100%; }
+.legenda-pnrr .pnrr-sezione-soggetti > p { margin: 6px 0 0; }
 .legenda-pnrr .pnrr-soggetti { display: flex; flex-direction: column; align-items: stretch; gap: 2px; }   /* un soggetto per riga */
 .legenda-pnrr .pnrr-soggetti > label { display: flex; align-items: center; gap: 4px; }
 .legenda-pnrr .pnrr-soggetti input[type=radio] { margin: 0 4px 0 0; flex: none; }
@@ -653,7 +654,14 @@ dialog li { margin: 4px 0; }
 .tooltip-elenco { margin-top: 4px; font-size: var(--fs-xs); font-weight: 400; }
 .tooltip-suggerimento { margin-top: 6px; font-size: var(--fs-xs); font-weight: 400; font-style: italic; color: var(--text-muted); }
 .tooltip-elenco > div { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pnrr-tendina select { display: block; width: 100%; margin-top: 8px; font: inherit; font-size: var(--fs-sm); }
+.pnrr-copertura { margin: 6px 0 8px; padding: 6px 8px; border-left: 3px solid #7048e8; border-radius: 0 var(--r-sm) var(--r-sm) 0; background: var(--accent-soft); font-size: var(--fs-xs); font-weight: 600; line-height: 1.35; }
+/* menu a tendina ben riconoscibili (scheda e legenda): bordo e fondo colorati, testo in grassetto, etichetta sopra */
+.pnrr-scelta { display: block; margin-top: 10px; }
+.pnrr-scelta-et { display: block; margin-bottom: 3px; font-size: var(--fs-xs); font-weight: 700; letter-spacing: .03em; color: #7048e8; }
+.pnrr-tendina select, .legenda-pnrr .pnrr-soggetti select { display: block; width: 100%; padding: 8px 10px; border: 2px solid #7048e8; border-radius: var(--r-sm); background-color: var(--accent-soft); color: inherit; font: inherit; font-size: var(--fs-sm); font-weight: 600; cursor: pointer; }
+.pnrr-tendina select:hover:not(:disabled), .legenda-pnrr .pnrr-soggetti select:hover { background-color: color-mix(in srgb, #7048e8 14%, var(--accent-soft)); }
+.pnrr-tendina select:focus-visible, .legenda-pnrr .pnrr-soggetti select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.pnrr-tendina select:disabled { opacity: .55; cursor: not-allowed; border-style: dashed; }
 .pnrr-tendina-carta { margin-top: 10px; }
 .pnrr-popup { padding: 14px 16px 12px; }
 .pnrr-popup h3 { margin: 0 24px 4px 0; }               /* a destra resta lo spazio della × di chiusura */

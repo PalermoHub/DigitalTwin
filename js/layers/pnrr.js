@@ -3,8 +3,8 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { t, tl, tn } from '../core/i18n.js';
-import { MISSIONI, coloreMissione, euroCompatto, nomeSoggetto, voceScheda, voceSintesi } from './scheda-pnrr.js';
-import { contenutoDinamico } from './scheda-pnrr-dom.js';
+import { MISSIONI, coloreMissione, nomeSoggetto, voceScheda, voceSintesi, voceTendina } from './scheda-pnrr.js';
+import { contenutoDinamico, contenutoTendina, testoCopertura } from './scheda-pnrr-dom.js';
 import { conteggiAttuatori, elencoLuogo, firma, modelloTooltipLuogo, nomeProgetto, progettiDa, raggruppa } from './pnrr-luoghi.js';
 import { PR, iconaFette } from './marker-fette.js';
 
@@ -38,6 +38,7 @@ let attuatoreSel = null; // soggetto attuatore scelto (null = tutti)
 let radio = []; // [{ valore, input }] delle voci della legenda per soggetto
 let menu = null; // <select> degli altri soggetti
 let avviso = null; // nota «nessun progetto in mappa»
+let copertura = null; // avviso «sulla mappa X progetti su Y»
 
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
@@ -104,6 +105,12 @@ function suFiltroDaScheda(e) {
   selezionaSoggetto(attuatoreSel === d.valore ? null : d.valore);
 }
 
+// «43 di 448»: i progetti del soggetto in mappa e quelli totali (gli altri non hanno un punto e si aprono dal menu della scheda)
+const conteggio = (voce, n) => {
+  const tot = sintesi?.totali_attuatore?.[voce];
+  return tot > n ? t('pnrr.inMappaDi', { n, tot }) : String(n);
+};
+
 function rigaSoggetto(valore, testo, n) {
   const riga = el('label', 'monumenti-cat');
   const input = document.createElement('input');
@@ -111,7 +118,7 @@ function rigaSoggetto(valore, testo, n) {
   input.name = 'pnrr-attuatore';
   input.checked = valore === attuatoreSel;
   input.addEventListener('change', () => selezionaSoggetto(valore));
-  riga.append(input, el('i', 'monumenti-pallino'), `${tl(testo)}${n != null ? ` (${n})` : ''}`);
+  riga.append(input, el('i', 'monumenti-pallino'), `${tl(testo)}${n != null ? ` (${valore ? conteggio(valore, n) : n})` : ''}`);
   radio.push({ valore, input });
   return riga;
 }
@@ -126,15 +133,19 @@ function riempiSoggetti(contenitore) {
   const righe = [rigaSoggetto(null, 'Tutti i soggetti', progetti.length), ...principali.map(x => rigaSoggetto(x.voce, nomeSoggetto(x.voce), x.n))];
   menu = document.createElement('select');
   menu.setAttribute('aria-label', t('pnrr.altroSoggetto'));
-  menu.append(new Option(t('pnrr.altroSoggetto'), ''), ...elenco.filter(x => !principali.includes(x)).map(x => new Option(`${nomeSoggetto(x.voce)} (${x.n})`, x.voce)));
+  menu.append(new Option(t('pnrr.altroSoggetto'), ''), ...elenco.filter(x => !principali.includes(x)).map(x => new Option(`${nomeSoggetto(x.voce)} (${conteggio(x.voce, x.n)})`, x.voce)));
   menu.addEventListener('change', () => selezionaSoggetto(menu.value || null));
-  contenitore.replaceChildren(...righe, menu);
+  const etichetta = el('label', 'pnrr-scelta');
+  etichetta.append(el('span', 'pnrr-scelta-et', 'Cerca tra tutti i soggetti'), menu);
+  contenitore.replaceChildren(...righe, etichetta);
 }
 
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti legenda-pnrr lg-pnrr');
   legenda.hidden = true;
-  legenda.append(el('strong', null, 'PNRR – Progetti a Palermo'), el('p', 'uffici-nota', 'Anello: più missioni nello stesso luogo; il numero indica i progetti'));
+  copertura = el('p', 'pnrr-copertura');
+  copertura.textContent = testoCopertura(sintesi);   // i numeri arrivano con la sintesi: prima, il testo senza numeri
+  legenda.append(el('strong', null, 'PNRR – Progetti a Palermo'), copertura, el('p', 'uffici-nota', 'Anello: più missioni nello stesso luogo; il numero indica i progetti'));
   for (const [codice, nome, col] of MISSIONI) {
     const simbolo = el('i', 'monumenti-pallino');
     simbolo.style.background = col;
@@ -146,11 +157,12 @@ function creaLegenda() {
   legenda.append(voceFiltro(anello, 'Sede del soggetto attuatore (posizione approssimata)', acceso => { conSede = acceso; programma(); }, true, false));
   legenda.append(el('em', 'peba-legenda-titolo', 'Soggetto attuatore'));
   const soggetti = el('div', 'pnrr-soggetti');
+  const nota = el('p', 'uffici-nota', 'Tra parentesi i progetti sulla mappa e, se sono di più, quelli totali.');
   avviso = el('p', 'scheda-nota', 'Nessun progetto di questo soggetto è sulla mappa: non ha un indirizzo (vedi l’elenco completo nella scheda).');
   avviso.hidden = true;
   // l'avviso sta in un contenitore: un figlio diretto `hidden` farebbe sparire l'intera legenda dal pannello (css/app.css)
-  const sezione = el('div');
-  sezione.append(soggetti, avviso);
+  const sezione = el('div', 'pnrr-sezione-soggetti');
+  sezione.append(soggetti, nota, avviso);
   legenda.append(sezione);
   document.getElementById('legende').append(legenda);
   riempiSoggetti(soggetti);
@@ -192,7 +204,7 @@ export default {
   titolo: 'PNRR – Progetti a Palermo',
   argomento: {
     titolo: 'PNRR – Progetti a Palermo',
-    descrizione: 'Progetti del Piano nazionale di ripresa e resilienza localizzati nella sola città di Palermo (open data di Italia Domani): missione, stato di avanzamento, importi e soggetto attuatore. Sulla mappa i progetti con un indirizzo, raggruppati per luogo; l’elenco completo si scarica in CSV.',
+    descrizione: 'Progetti del Piano nazionale di ripresa e resilienza localizzati nella sola città di Palermo (open data di Italia Domani): missione, stato di avanzamento, importi e soggetto attuatore. Sulla mappa solo i progetti che hanno un luogo, raggruppati (circa la metà): gli altri si consultano nella scheda, tab PNRR, e nell’elenco completo in CSV.',
   },
   gruppo: 'territorio',
   sezione: 'PNRR', // sottogruppo a sé in Territorio
@@ -200,7 +212,7 @@ export default {
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
     map.addSource(SRC_HIT, { type: 'geojson', data: urlDati('pnrr/pnrr.geojson') });
-    fetch(urlDati('pnrr/sintesi.json')).then(r => r.json()).then(d => { sintesi = d; }).catch(() => { sintesi = null; });
+    fetch(urlDati('pnrr/sintesi.json')).then(r => r.json()).then(d => { sintesi = d; riempiSoggetti(legenda?.querySelector('.pnrr-soggetti')); if (copertura) copertura.textContent = testoCopertura(sintesi); }).catch(() => { sintesi = null; });
     fetch(urlDati('pnrr/soggetti.json')).then(r => r.json()).then(d => { elenchi = d.soggetti; }).catch(() => { elenchi = null; });
   },
   aggiungiLayer(map) {
@@ -253,7 +265,8 @@ export default {
         .map(f => voceScheda(f.properties))
         .filter(v => !visti.has(v.chiave) && visti.add(v.chiave))
         .slice(0, MAX_NELLA_SCHEDA);
-      return sintesi ? [...dellaScheda, voceSintesi(sintesi, contenutoDinamico, elenchi)] : dellaScheda;
+      // il menu a tendina in testa alla tab (si trova subito), poi i progetti cliccati, poi la sintesi con i grafici
+      return [...(elenchi?.length ? [voceTendina(elenchi, contenutoTendina, sintesi)] : []), ...dellaScheda, ...(sintesi ? [voceSintesi(sintesi, contenutoDinamico)] : [])];
     },
   },
 };

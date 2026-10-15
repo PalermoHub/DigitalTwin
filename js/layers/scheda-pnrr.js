@@ -159,8 +159,25 @@ export const quotaConclusi = s => {
   return s.n > 0 ? Math.round((c / s.n) * 1000) / 10 : 0;
 };
 
+// Sezione in cima alla tab PNRR con il menu a tendina per aprire la scheda di ogni progetto di Comune e Università (anche quelli senza
+// punto sulla mappa); `dinamico` disegna i due menu (scheda-pnrr-dom.js). I soggetti sono [{ voce, n, progetti }] di soggetti.json.
+export function voceTendina(soggetti, dinamico, sintesi = null) {
+  const totale = soggetti.reduce((s, x) => s + x.n, 0);
+  return {
+    chiave: 'pnrr-tendina',
+    peso: 94, // prima delle schede dei progetti cliccati (95) e della sintesi (96)
+    strato: 'pnrr',
+    titolo: 'Tutti i progetti di Comune e Università',
+    icona: 'euro',
+    badge: String(totale),
+    sempre: true,
+    gruppi: [],
+    dinamico: () => dinamico(soggetti, sintesi),
+  };
+}
+
 // Sezione della tab PNRR con i numeri e i grafici dell'insieme dei progetti di Palermo; `dinamico` li disegna (scheda-pnrr-dom.js).
-export function voceSintesi(sintesi, dinamico, soggetti = null) {
+export function voceSintesi(sintesi, dinamico) {
   return {
     chiave: 'pnrr-sintesi',
     peso: 96,
@@ -170,7 +187,7 @@ export function voceSintesi(sintesi, dinamico, soggetti = null) {
     badge: sintesi.estrazione ? String(sintesi.estrazione).slice(-4) : undefined,
     sempre: true,
     gruppi: [],
-    dinamico: () => dinamico(sintesi, soggetti),
+    dinamico: () => dinamico(sintesi),
     link: LINK_FONTI,
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };

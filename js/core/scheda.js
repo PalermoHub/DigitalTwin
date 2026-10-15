@@ -38,7 +38,7 @@ function copiaTesto(testo) {
 }
 
 // Il tab di una sezione della scheda, dal suo peso (e per alcune dalla chiave)
-const tabScheda = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : p === 95 || p === 96 ? 'pnrr' : 'luogo');
+const tabScheda = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : p >= 94 && p <= 96 ? 'pnrr' : 'luogo');
 
 function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabIniziale = null) {
   const { contesto, sezioni, legale } = dati;

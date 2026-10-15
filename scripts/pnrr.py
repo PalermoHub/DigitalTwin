@@ -424,6 +424,7 @@ def sintesi(elenco, su_mappa, estrazione):
         "per_anno_fine": [g for g in per_anno if g["voce"]],
         "senza_data_fine": sum(1 for p in elenco if not anno(p.get("fine_prevista"))),
         "per_settore": _gruppi(elenco, lambda p: p.get("settore"))[:TOP_SETTORI],
+        "totali_attuatore": dict(Counter(p.get("attuatore") for p in elenco if p.get("attuatore")).most_common()),   # tutti i soggetti, per la legenda («43 di 448»)
         "per_attuatore": _con_mappa(_gruppi(elenco, lambda p: p.get("attuatore"))[:TOP_ATTUATORI], elenco),
     }
 

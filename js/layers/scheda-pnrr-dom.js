@@ -54,11 +54,14 @@ function grafico(titolo, righe) {
 
 const progetti = n => tn('pnrr.nProgetti', n, { n: num(n) });
 
-// Menu a tendina per Comune e Università: scelto il soggetto e poi il progetto, la scheda completa compare qui sotto, anche per i
+// «Sulla mappa 1.284 progetti su 2.633»: chi non sa che molti progetti non hanno un luogo crede che siano solo quelli
+export const testoCopertura = s => (s?.n ? t('pnrr.copertura', { n: num(s.su_mappa), tot: num(s.n), altri: num(s.n - s.su_mappa) }) : t('pnrr.coperturaGenerica'));
+
+// Contenuto della sezione «Tutti i progetti di Comune e Università» (voceTendina): scelto il soggetto e poi il progetto, la scheda completa compare qui sotto, anche per i
 // progetti che non hanno un punto sulla mappa. `soggetti` = [{ voce, n, progetti }] da dati/pnrr/soggetti.json.
-function schedaDaTendina(soggetti) {
+export function contenutoTendina(soggetti, sintesi = null) {
   const blocco = el('div', 'pnrr-tendina');
-  blocco.append(el('h4', null, t('pnrr.tendinaTitolo')), el('p', 'scheda-nota', t('pnrr.tendinaNota')));
+  blocco.append(el('p', 'pnrr-copertura', testoCopertura(sintesi)), el('p', 'scheda-nota', t('pnrr.tendinaNota')));
   const scelteSoggetto = document.createElement('select');
   scelteSoggetto.setAttribute('aria-label', t('pnrr.scegliSoggetto'));
   scelteSoggetto.append(new Option(t('pnrr.scegliSoggetto'), ''), ...soggetti.map((s, i) => new Option(`${nomeSoggetto(s.voce)} (${num(s.n)})`, String(i))));
@@ -82,17 +85,20 @@ function schedaDaTendina(soggetti) {
     sezione.dataset.tab = 'pnrr'; // segue la tab: scheda.js nasconde le sezioni delle altre
     carta.replaceChildren(sezione);
   });
-  blocco.append(scelteSoggetto, scelteProgetto, carta);
+  const campo = (testo, select) => { // etichetta sopra il menu: si capisce che sono i due passi per aprire una scheda
+    const c = el('label', 'pnrr-scelta');
+    c.append(el('span', 'pnrr-scelta-et', testo), select);
+    return c;
+  };
+  blocco.append(campo(t('pnrr.passo1'), scelteSoggetto), campo(t('pnrr.passo2'), scelteProgetto), carta);
   return blocco;
 }
 
-export function contenutoDinamico(s, soggetti = null) {
+export function contenutoDinamico(s) {
   const radice = el('div', 'pend-dinamico');
   const riquadri = el('div', 'pend-riquadri');
   riquadri.append(cella(num(s.n), t('pnrr.progetti')), cella(euroCompatto(s.pnrr), t('pnrr.finanziamento')), cella(`${quotaConclusi(s).toLocaleString(localeIntl())}%`, t('pnrr.conclusi')));
   radice.append(riquadri, el('p', 'scheda-nota', t('pnrr.sullaMappa', { n: num(s.su_mappa), tot: num(s.n) })));
-
-  if (soggetti?.length) radice.append(schedaDaTendina(soggetti));
 
   const nomeMissione = codice => MISSIONI.find(([c]) => c === codice)?.[1];
   radice.append(grafico(t('pnrr.perMissione'), barre(s.per_missione, 'pnrr').map(g => ({

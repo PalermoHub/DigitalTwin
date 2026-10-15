@@ -4,6 +4,11 @@ import json
 from conftest import ROOT
 
 
+def _it(n):
+    """Numero come lo scrive l'italiano: il punto delle migliaia solo da 5 cifre (1284, 12.840)."""
+    return f"{n:,}".replace(",", ".") if n >= 10000 else str(n)
+
+
 def _errori(v):
     """Errori di script; i 404 delle immagini delle legende PRG (img/prg/va-26.png, va-27.png) mancano già da prima e non c'entrano."""
     return [e for e in v.errori if not e.startswith("Failed to load resource")]
@@ -53,6 +58,10 @@ def test_strato_pnrr_si_accende_con_legenda_e_marker_per_luogo(apri):
     assert len(v.page.query_selector_all(".lg-pnrr input[type=checkbox]")) == 8        # 7 missioni + sede delle scuole
     assert len(v.page.query_selector_all(".lg-pnrr input[type=radio]")) == 9           # Tutti + 8 soggetti
     assert v.page.locator(".lg-pnrr select option").count() > 1                        # gli altri soggetti
+    # chi non lo sa deve capire che i progetti sono più di quelli in mappa: avviso con i numeri e totali per soggetto
+    sintesi_json = json.loads((ROOT / "dati" / "pnrr" / "sintesi.json").read_text(encoding="utf-8"))
+    v.page.wait_for_function(f"document.querySelector('.lg-pnrr .pnrr-copertura').textContent.includes('{_it(sintesi_json['n'])}')", timeout=15000)
+    assert f"di {sintesi_json['totali_attuatore'][chr(85) + 'NIVERSITA' + chr(39) + ' DEGLI STUDI DI PALERMO']}" in v.page.locator(".lg-pnrr label.monumenti-cat", has_text="Università").inner_text()
     # un marker per luogo (stessa posizione = un solo marker) e il numero conta tutti i progetti
     luoghi = {tuple(f["geometry"]["coordinates"]) for f in _punti()}
     _attendi_progetti(v, len(_punti()))
@@ -131,7 +140,7 @@ def test_tab_pnrr_ha_progetto_e_grafici(apri):
     _apri_scheda_pnrr(v, primo)
     # progetto cliccato e sintesi sono nella tab PNRR, non più in Luogo
     sez = v.js("[...document.querySelectorAll('.scheda-sez')].filter(s => !s.hidden).map(s => s.dataset.chiave)")
-    assert f"pnrr-{primo['properties']['cup']}" in sez and "pnrr-sintesi" in sez
+    assert f"pnrr-{primo['properties']['cup']}" in sez and "pnrr-sintesi" in sez and "pnrr-tendina" in sez
     assert not v.js("[...document.querySelectorAll('.scheda-sez')].some(s => s.dataset.tab === 'luogo' && String(s.dataset.chiave).startsWith('pnrr'))")
     # i grafici: tre riquadri e le barre per missione, stato, anno, settore, attuatore
     # lo stato è un badge colorato
@@ -209,7 +218,14 @@ def test_menu_a_tendina_apre_la_scheda_dei_progetti_dell_universita(apri):
     v.attendi_pronto()
     primo = next(f for f in _punti() if f["properties"].get("precisione") == "civico")
     _apri_scheda_pnrr(v, primo)
-    tendine = v.page.locator(".scheda-sez[data-chiave='pnrr-sintesi'] .pnrr-tendina select")
+    # il menu è la prima sezione della tab (si trova subito) e dice quanti progetti sono in mappa su quanti
+    visibili = v.js("[...document.querySelectorAll('.scheda-sez')].filter(s => !s.hidden).map(s => s.dataset.chiave)")
+    assert visibili[0] == "pnrr-tendina" and visibili[-1] == "pnrr-sintesi"
+    copertura = v.page.locator(".scheda-sez[data-chiave='pnrr-tendina'] .pnrr-copertura").inner_text()
+    sintesi_json = json.loads((ROOT / "dati" / "pnrr" / "sintesi.json").read_text(encoding="utf-8"))
+    assert _it(sintesi_json["n"]) in copertura and _it(sintesi_json["su_mappa"]) in copertura
+    assert v.page.locator(".scheda-sez[data-chiave='pnrr-tendina'] .pnrr-scelta-et").count() == 2           # le due etichette sopra i menu
+    tendine = v.page.locator(".scheda-sez[data-chiave='pnrr-tendina'] select")
     assert tendine.count() == 2 and tendine.nth(1).is_disabled()
     assert tendine.nth(0).locator("option").count() == 3                           # segnaposto, Comune, Università
     tendine.nth(0).select_option(label=f"Università degli Studi di Palermo ({universita['n']})")
