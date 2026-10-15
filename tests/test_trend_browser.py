@@ -50,11 +50,14 @@ def test_clic_apre_la_scheda_nel_tab_popolazione_con_il_grafico(apri):
     assert v.js("document.querySelector(\".scheda-sez[data-chiave='trend-popolazione']\").dataset.tab") == "popolazione"
     v.page.click("button[role=tab][data-tab=popolazione]")
     v.page.wait_for_selector(".scheda-sez[data-chiave='trend-popolazione'] svg.trend-grafico", timeout=10000)
+    # sul grafico: l'anno e il valore di ognuno dei 5 punti (2011, 2021, 2023, 2030, 2035)
+    assert v.js("document.querySelectorAll(\".scheda-sez[data-chiave='trend-popolazione'] svg.trend-grafico text\").length") == 3 * 10
     # i tre livelli nel punto, indipendenti dal livello scelto nella legenda
     assert v.js("document.querySelectorAll(\".scheda-sez[data-chiave='trend-popolazione'] .trend-livello-dettaglio\").length") == 3
     assert "Circoscrizione" in v.js("document.querySelector(\".scheda-sez[data-chiave='trend-popolazione']\").innerText")
     assert _errori(v) == []
     if os.environ.get("TREND_SCREENSHOT"):
+        v.js("document.querySelector(\".scheda-sez[data-chiave='trend-popolazione'] svg.trend-grafico\").scrollIntoView()")
         v.page.screenshot(path=os.environ["TREND_SCREENSHOT"].replace(".png", "_scheda.png"))
 
 

@@ -3,8 +3,7 @@ import { localeIntl, tl } from '../core/i18n.js';
 import { serie, nomeLivello, NOTA, COLORE_CALO, COLORE_CRESCITA } from './scheda-trend.js';
 
 const NS = 'http://www.w3.org/2000/svg';
-const L = 300, ALTEZZA_BASE = 140, M = { s: 8, d: 10, su: 10, giu: 22 };
-const M_VALORI = { s: 24, d: 24, su: 26, giu: 22 }; // con i valori serve spazio ai lati e in alto
+const L = 300, H = 160, M = { s: 26, d: 26, su: 22, giu: 38 }; // spazio ai lati e in alto per i valori, sotto per i valori del 2023 e per gli anni
 
 const svg = (tag, attr) => {
   const e = document.createElementNS(NS, tag);
@@ -18,15 +17,13 @@ const el = (tag, classe, testo) => {
   return e;
 };
 
-// `conValori`: più alto, con il numero di abitanti sopra ogni punto (per il tooltip della mappa)
-export function grafico(p, { conValori = false } = {}) {
-  const H = conValori ? 150 : ALTEZZA_BASE;
+// Il numero di abitanti è scritto su ogni punto: sopra, tranne il 2023 che sta sotto perché il 2021 è a due anni di distanza.
+export function grafico(p) {
   const punti = serie(p);
   const valori = punti.flatMap(d => [d.valore, d.min ?? d.valore, d.max ?? d.valore]);
   const lo = Math.min(...valori), hi = Math.max(...valori), margine = (hi - lo || hi * 0.1) * 0.1;
-  const m = conValori ? M_VALORI : M;
-  const x = anno => m.s + ((anno - 2011) / (2035 - 2011)) * (L - m.s - m.d);
-  const y = v => m.su + (1 - (v - (lo - margine)) / (hi - lo + 2 * margine)) * (H - m.su - m.giu);
+  const x = anno => M.s + ((anno - 2011) / (2035 - 2011)) * (L - M.s - M.d);
+  const y = v => M.su + (1 - (v - (lo - margine)) / (hi - lo + 2 * margine)) * (H - M.su - M.giu);
   const colore = p.var1121 >= 0 ? COLORE_CRESCITA : COLORE_CALO;
   const radice = svg('svg', { viewBox: `0 0 ${L} ${H}`, class: 'trend-grafico', role: 'img', 'aria-label': tl('Andamento della popolazione 2011-2035') });
   const proiettati = punti.filter(d => !d.osservato);
@@ -40,21 +37,20 @@ export function grafico(p, { conValori = false } = {}) {
   radice.append(svg('polyline', { points: punti.filter(d => d.osservato).map(d => `${x(d.anno)},${y(d.valore)}`).join(' '), fill: 'none', stroke: colore, 'stroke-width': 2.5 }));
   for (const d of punti) {
     radice.append(svg('circle', { cx: x(d.anno), cy: y(d.valore), r: d.osservato ? 3.5 : 2.5, fill: d.osservato ? colore : '#fff', stroke: colore, 'stroke-width': 1.5 }));
-    const et = svg('text', { x: x(d.anno), y: H - 6, 'text-anchor': 'middle', 'font-size': 10, fill: 'currentColor' });
-    et.textContent = String(d.anno);
-    radice.append(et);
-    if (conValori) {
-      const num = svg('text', { x: x(d.anno), y: y(d.valore) - 7, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 700, fill: colore, stroke: '#fff', 'stroke-width': 3, 'paint-order': 'stroke' });
-      num.textContent = Math.round(d.valore).toLocaleString(localeIntl());
-      radice.append(num);
-    }
+    const anno = svg('text', { x: x(d.anno), y: H - 6, 'text-anchor': 'middle', 'font-size': 10, fill: 'currentColor' });
+    anno.textContent = `’${String(d.anno).slice(2)}`; // ’11 ’21 ’23 ’30 ’35: intere si toccherebbero e uscirebbero dai bordi
+    radice.append(anno);
+    const sotto = d.anno === 2023;
+    const num = svg('text', { x: x(d.anno), y: y(d.valore) + (sotto ? 15 : -7), 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 700, fill: colore, stroke: '#fff', 'stroke-width': 3, 'paint-order': 'stroke' });
+    num.textContent = Math.round(d.valore).toLocaleString(localeIntl());
+    radice.append(num);
   }
   return radice;
 }
 
-// Il grafico con i valori, per il tooltip: titolo di sezione e i tre dati osservati più lo scenario (tratteggio).
+// Il grafico per il tooltip della mappa: più stretto.
 export function graficoConValori(p) {
-  const g = grafico(p, { conValori: true });
+  const g = grafico(p);
   g.classList.add('trend-grafico-tip');
   return g;
 }
@@ -64,9 +60,7 @@ function dettaglio(p, aperto) {
   const blocco = el('details', 'trend-livello-dettaglio');
   blocco.open = aperto;
   blocco.append(el('summary', null, `${tl(nomeLivello(p.livello))}: ${p.nome}`));
-  const righe = el('div', 'trend-numeri');
-  for (const [anno, v] of [[2011, p.p11], [2021, p.p21], [2023, p.p23]]) righe.append(el('span', null, `${anno}: ${f(v)}`));
-  blocco.append(righe, grafico(p));
+  blocco.append(grafico(p));
   if (p.p2035_centrale != null) {
     blocco.append(el('p', 'scheda-nota', `${tl('Scenario di tendenza al 2035')}: ${f(p.p2035_centrale)} (${f(p.p2035_min)}–${f(p.p2035_max)})`));
   }
