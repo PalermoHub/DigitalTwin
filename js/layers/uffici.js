@@ -3,7 +3,8 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { modelloPopupSede, voceUffici } from './scheda-uffici.js';
-import { fette, raggio, archi, areeDaSedi } from './uffici-fette.js';
+import { fette, areeDaSedi } from './uffici-fette.js';
+import { PR, iconaFette } from './marker-fette.js';
 import { tl } from '../core/i18n.js';
 
 // Sedi degli uffici comunali (dati/uffici/sedi.geojson), tematizzate per area. Ogni sede è un'icona disegnata su canvas:
@@ -13,7 +14,6 @@ const SRC = 'uffici';
 const SRC_HIT = 'uffici-hit-src';
 const PUNTI = 'uffici-punti';
 const HIT = 'uffici-hit';
-const PR = 2; // pixelRatio delle icone
 const VUOTO = { type: 'FeatureCollection', features: [] };
 
 const dettagli = new Map(); // id sede -> proprietà complete (gli array annidati non sopravvivono alla mappa)
@@ -44,40 +44,6 @@ function contenutoPopup(p) {
   return radice;
 }
 
-// Icona della sede: anello (più aree) o cerchio pieno (una), numero al centro.
-function icona(lista) {
-  const n = lista.reduce((s, f) => s + f.n, 0);
-  const r = raggio(n);
-  const lato = (r + 2) * 2;
-  const c = document.createElement('canvas');
-  c.width = c.height = lato * PR;
-  const g = c.getContext('2d');
-  g.scale(PR, PR);
-  const cx = lato / 2;
-  g.lineWidth = 1.5;
-  g.strokeStyle = '#fff';
-  for (const a of archi(lista)) {
-    g.beginPath();
-    if (lista.length > 1) g.moveTo(cx, cx);
-    g.arc(cx, cx, r, a.da, a.a);
-    g.closePath();
-    g.fillStyle = a.colore;
-    g.fill();
-    if (lista.length > 1) g.stroke();
-  }
-  if (lista.length > 1) { // foro dell'anello
-    g.beginPath(); g.arc(cx, cx, r * 0.58, 0, 2 * Math.PI);
-    g.fillStyle = '#fff'; g.fill();
-  } else {
-    g.beginPath(); g.arc(cx, cx, r, 0, 2 * Math.PI); g.stroke();
-  }
-  g.font = `700 ${Math.max(10, Math.round(r * (lista.length > 1 ? 0.62 : 0.8)))}px sans-serif`;
-  g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillStyle = lista.length > 1 ? '#222' : '#fff';
-  g.fillText(String(n), cx, cx + 0.5);
-  return g.getImageData(0, 0, c.width, c.height);
-}
-
 // Ridisegna le sedi in base alle aree accese in legenda (le sedi senza aree accese spariscono).
 // Le icone (una per sede, disegnate su canvas) servono solo a strato acceso: a strato spento non si disegnano.
 let stratoAcceso = false;
@@ -89,7 +55,7 @@ function aggiorna() {
     const nome = `uffici-sede-${id}`;
     if (mappa.hasImage(nome)) mappa.removeImage(nome);
     if (!lista.length) continue;
-    mappa.addImage(nome, icona(lista), { pixelRatio: PR });
+    mappa.addImage(nome, iconaFette(lista), { pixelRatio: PR });
     features.push({ type: 'Feature', geometry: geometrie.get(id), properties: { id, icona: nome, n: lista.reduce((s, f) => s + f.n, 0) } });
   }
   mappa.getSource(SRC)?.setData({ type: 'FeatureCollection', features });

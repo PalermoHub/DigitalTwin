@@ -32,6 +32,15 @@ function disegnaRiga(r) {
     return riga;
   }
   riga.append(el('span', 'scheda-et', tl(r.etichetta)));
+  if (r.filtro) { // il valore è un filtro: un clic lo propone al layer (evento `dt:filtro`), un secondo clic lo toglie
+    const b = el('button', 'scheda-val scheda-filtro', r.valore);
+    b.type = 'button';
+    b.title = tr('scheda.filtro.titolo');
+    b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('dt:filtro', { detail: r.filtro })));
+    riga.append(b);
+    if (valoreLungo(r.valore)) riga.classList.add('scheda-riga--lunga');
+    return riga;
+  }
   if (r.colore) { // valore a badge con tinta propria (es. PEBA: livello, rilevanza, codice del gruppo)
     const badge = el('span', 'scheda-val scheda-badge-tinta', r.valore);
     badge.style.setProperty('--tinta', r.colore);

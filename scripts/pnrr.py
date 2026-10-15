@@ -13,6 +13,8 @@ Regole:
   2. si scartano quelli localizzati anche in altri comuni (programmi nazionali o regionali): non sono «lavori della città»;
   3. si uniscono ai file dei progetti sul CUP;
   4. la posizione si ricava dall'indirizzo, cercandolo nei civici già nel repo (dati/civici-omi/): nessun geocoder esterno;
+  4b. se l'indirizzo della localizzazione manca o non si trova, si prova quello scritto nella descrizione del progetto
+     (`Sintesi Progetto` ha la forma «descrizione*INDIRIZZO*descrizione»): proprietà `indirizzo_da = descrizione`;
   5. se il progetto non ha un indirizzo ma il soggetto attuatore è un istituto scolastico statale, si usa la sede dell'istituto
      (Indice delle Pubbliche Amministrazioni, agganciato per codice fiscale): precisione «sede», posizione approssimata.
      Se l'indirizzo della sede coincide con una scuola del layer «Scuole» dell'app (dati/scuole/scuole.geojson) si usano le coordinate
@@ -83,6 +85,28 @@ def normalizza(s):
     return re.sub(r"\s+", " ", s).strip()
 
 
+def _romano(token):
+    """«XXVII» → «27» (le vie con numeri romani nell'indice hanno le cifre)."""
+    if len(token) < 2 or not re.fullmatch(r"[IVXL]+", token):
+        return token
+    valori = {"I": 1, "V": 5, "X": 10, "L": 50}
+    n = 0
+    for a, b in zip(token, token[1:] + " "):
+        n += -valori[a] if b in valori and valori[b] > valori[a] else valori[a]
+    return str(n)
+
+
+TIPI_NORM = {normalizza(x) for x in TIPI_VIA}
+
+
+def senza_tipo(norm):
+    """Parole di un nome di via senza il tipo di strada (VIA, VIALE, PIAZZA…) e con i numeri romani in cifre."""
+    return [_romano(x) for x in norm.split() if x not in TIPI_NORM and len(x) > 1]
+
+
+MAX_DISTANZA_AMBIGUA = 0.005   # gradi (~500 m): più vie con lo stesso nome vicine tra loro non sono un problema
+
+
 def chiave_sezione(via):
     """File dei civici in cui sta una via: FNV-1a del nome su 32 file (stessa regola di js/core/compatto.js)."""
     h = 0x811C9DC5
@@ -94,6 +118,9 @@ def chiave_sezione(via):
 def separa_indirizzo(testo):
     """«Via Gino Marinuzzi, 3» → («VIA GINO MARINUZZI», «3»). Civico «» se assente."""
     s = (testo or "").strip()
+    s = re.sub(r"[,\s-]*\b9\d{4}\b[,\s-]*(palermo\b)?", " ", s, flags=re.IGNORECASE)   # CAP (90100-90151) e «- 90142 Palermo»
+    s = re.sub(r"[,\s-]+\bpalermo\b\s*(\(pa\))?\s*$", "", s, flags=re.IGNORECASE)      # «…, Palermo» in coda
+    s = s.strip(" ,-")
     if not s:
         return "", ""
     # via dal primo tipo di strada in poi: scarta i nomi di edifici davanti
@@ -145,23 +172,41 @@ class Civici:
         """Nome della via nell'indice, o None se assente o ambigua."""
         if via_norm in self.per_norm:
             return self.per_norm[via_norm][0]
-        token = via_norm.split()
+        token = [x for x in via_norm.split() if len(x) > 1]   # le iniziali («G.») e i numeri romani isolati («I») non contano
         if len(token) < 2:
             return None
-        candidate = [v for v, n in self.norm.items() if all(t in n.split() for t in token)]
+        candidate = [v for v, n in self.norm.items() if all(x in n.split() for x in token)]
         if len(candidate) == 1:
             return candidate[0]
         vicine = difflib.get_close_matches(via_norm, list(self.per_norm), n=1, cutoff=0.93)   # refusi: «Emanule»
         return self.per_norm[vicine[0]][0] if vicine else None
+
+    def candidate(self, via_norm):
+        """Vie dell'indice che corrispondono al testo: prima il nome esatto, poi ignorando il tipo di strada
+        («Via del Fante» → «Viale del Fante», «Via Largo Camastra» → «Largo Camastra»)."""
+        via = self.trova_via(via_norm)
+        if via:
+            return [via]
+        q = senza_tipo(via_norm)
+        if not q or len(" ".join(q)) < 5:
+            return []
+        return [v for v, n in self.norm.items() if all(x in senza_tipo(n) for x in q)]
 
     def posizione(self, indirizzo):
         """(lon, lat, precisione, via) con precisione «civico» o «via»; None se non si trova o cade fuori città."""
         via_norm, civico = separa_indirizzo(indirizzo)
         if not via_norm:
             return None
-        via = self.trova_via(via_norm)
-        if not via:
+        candidate = self.candidate(via_norm)
+        if not candidate:
             return None
+        # più vie possibili: si tiene quella che ha il civico; se restano distanti tra loro l'indirizzo è ambiguo
+        con_civico = [v for v in candidate if civico and civico in self._civici_della_via(v)]
+        scelte = con_civico or candidate
+        primo = self.vie[scelte[0]]
+        if any(abs(self.vie[v][0] - primo[0]) > MAX_DISTANZA_AMBIGUA or abs(self.vie[v][1] - primo[1]) > MAX_DISTANZA_AMBIGUA for v in scelte):
+            return None
+        via = scelte[0]
         civici = self._civici_della_via(via)
         # «4» quando esistono solo 4A, 4B…: si prende la prima variante
         esatto = civico if civico in civici else next((k for k in civici if civico and re.fullmatch(rf"{re.escape(civico)}[A-Z]", k)), None)
@@ -218,6 +263,14 @@ def sedi_scuole(percorso):
             if cf and (r.get("Comune") or "").strip().lower() == "palermo" and (r.get("tipologia_istat") or "").strip() == TIPO_SCUOLE:
                 sedi[cf] = (r.get("Indirizzo") or "").strip()
     return sedi
+
+
+def indirizzo_da_sintesi(sintesi):
+    """Il campo «Sintesi Progetto» ha la forma «descrizione*INDIRIZZO*descrizione»: restituisce la parte di mezzo se sembra un indirizzo."""
+    parti = [x.strip() for x in (sintesi or "").split("*")]
+    if len(parti) < 3 or not parti[1] or len(parti[1]) > 80 or not re.search(r"[A-Za-z]{3}", parti[1]):
+        return None
+    return parti[1]
 
 
 def layer_scuole(percorso):
@@ -278,6 +331,12 @@ def costruisci(loc, progetti, civici, sedi=None, scuole=None):
                 pos = civici.posizione(r["Indirizzo"])
                 if pos and pos[2] == "civico":
                     break
+        if not pos:
+            da_sintesi = indirizzo_da_sintesi((progetti.get(cup) or {}).get("Sintesi Progetto"))
+            pos = civici.posizione(da_sintesi) if da_sintesi else None
+            if pos:
+                p["indirizzo"], p["indirizzo_da"] = da_sintesi, "descrizione"
+                contatori["posizione_da_descrizione"] += 1
         if not pos and sedi and p.get("cf_attuatore") in sedi:
             indirizzo = sedi[p["cf_attuatore"]]
             nota = (scuole or {}).get(separa_indirizzo(indirizzo))
@@ -307,7 +366,7 @@ def costruisci(loc, progetti, civici, sedi=None, scuole=None):
 # ---------- sintesi per i grafici ----------
 
 TOP_SETTORI = 6
-TOP_ATTUATORI = 8
+TOP_ATTUATORI = 10
 
 
 def _gruppi(elenco, chiave, vuoto="n.d."):
@@ -318,6 +377,12 @@ def _gruppi(elenco, chiave, vuoto="n.d."):
         n[v] += 1
         importo[v] += p.get("pnrr") or 0
     return [{"voce": v, "n": n[v], "pnrr": round(importo[v], 2)} for v, _ in n.most_common()]
+
+
+def _con_mappa(gruppi, elenco):
+    """Aggiunge a ogni soggetto quanti dei suoi progetti hanno una posizione in mappa (`n_mappa`): il filtro non mostrerebbe gli altri."""
+    sulla_mappa = Counter(p.get("attuatore") or "n.d." for p in elenco if p.get("precisione"))
+    return [{**g, "n_mappa": sulla_mappa[g["voce"]]} for g in gruppi]
 
 
 def sintesi(elenco, su_mappa, estrazione):
@@ -334,7 +399,7 @@ def sintesi(elenco, su_mappa, estrazione):
         "per_anno_fine": [g for g in per_anno if g["voce"]],
         "senza_data_fine": sum(1 for p in elenco if not anno(p.get("fine_prevista"))),
         "per_settore": _gruppi(elenco, lambda p: p.get("settore"))[:TOP_SETTORI],
-        "per_attuatore": _gruppi(elenco, lambda p: p.get("attuatore"))[:TOP_ATTUATORI],
+        "per_attuatore": _con_mappa(_gruppi(elenco, lambda p: p.get("attuatore"))[:TOP_ATTUATORI], elenco),
     }
 
 
@@ -342,7 +407,7 @@ def sintesi(elenco, su_mappa, estrazione):
 
 COLONNE_CSV = ["cup", "titolo", "missione", "missione_nome", "componente_nome", "submisura", "submisura_nome", "stato", "settore",
                "tipologia", "attuatore", "pnrr", "totale", "inizio_previsto", "fine_prevista", "fine_effettiva", "indirizzo", "cap",
-               "precisione", "lon", "lat", "n_sedi", "con_dati_progetto"]
+               "indirizzo_da", "precisione", "lon", "lat", "n_sedi", "con_dati_progetto"]
 
 
 def scrivi(uscita, elenco, feature, contatori, estrazione, file_mancanti):
@@ -375,7 +440,7 @@ Generato da `scripts/pnrr.py` (workflow «Aggiorna PNRR»). Non modificare a man
 - **Licenza**: {LICENZA}, con citazione della fonte
 - **Data di estrazione dei dati**: {r['estrazione']}
 - **Progetti** localizzati solo a Palermo: {r['cup']} (finanziamento PNRR complessivo {r['importo_it']} €)
-- **Sulla mappa**: {r['su_mappa']} (civico {r.get('posizione_civico', 0)}, solo la via {r.get('posizione_via', 0)}, sede dell'istituto scolastico {r.get('posizione_sede', 0)}, di cui {r.get('sede_da_layer_scuole', 0)} con le coordinate del layer Scuole dell'app); gli altri sono in `pnrr_palermo.csv`
+- **Sulla mappa**: {r['su_mappa']} (di cui {r.get('posizione_da_descrizione', 0)} con l'indirizzo scritto nella descrizione del progetto; civico {r.get('posizione_civico', 0)}, solo la via {r.get('posizione_via', 0)}, sede dell'istituto scolastico {r.get('posizione_sede', 0)}, di cui {r.get('sede_da_layer_scuole', 0)} con le coordinate del layer Scuole dell'app); gli altri sono in `pnrr_palermo.csv`
 - **Sede degli istituti scolastici**: Indice delle Pubbliche Amministrazioni (IPA, AgID), <https://indicepa.gov.it/ipa-dati/dataset/amministrazioni>, CC BY 4.0; indirizzi posizionati con i numeri civici ANNCSU
 - Progetti localizzati anche in altri comuni: esclusi
 

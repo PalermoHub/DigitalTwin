@@ -44,23 +44,44 @@ export function frase(testo) {
   return s.charAt(0) + s.slice(1).toLowerCase();
 }
 
+const MINUSCOLE = new Set(['di', 'del', 'della', 'dello', 'dei', 'degli', 'delle', 'e', 'per', 'a', 'da', 'in', 'al', 'alla', 'ai', 'con', 'il', 'la', 'lo']);
+const ACCENTATE = { A: '\u00e0', E: '\u00e8', I: '\u00ec', O: '\u00f2', U: '\u00f9' }; // i18n-ok: lettere accentate, non testi
+
+// «UNIVERSITA' DEGLI STUDI DI PALERMO» → «Università degli Studi di Palermo»: i nomi propri tengono le maiuscole (frase() le toglierebbe).
+// Solo i testi tutti maiuscoli: le sigle con i punti («I.C.») e i numeri romani restano come sono.
+export function nomeSoggetto(testo) {
+  if (!testo) return null;
+  const s = String(testo).trim();
+  if (s !== s.toUpperCase()) return s;
+  return s.toLowerCase().replace(/([a-z])'(?=\s|$)/g, (_, v) => ACCENTATE[v.toUpperCase()] ?? `${v}'`).split(/(\s+)/).map((parola, i) => {
+    if (/^\s*$/.test(parola)) return parola;
+    const origine = s.split(/\s+/)[Math.floor(i / 2)] ?? '';
+    if (/\./.test(origine) || /^[IVXL]{1,5}$/.test(origine)) return origine;       // sigle («I.C.», «E.») e numeri romani
+    if (i > 0 && MINUSCOLE.has(parola)) return parola;
+    return parola.replace(/(^|[-'])([a-z\u00e0\u00e8\u00ec\u00f2\u00f9])/g, (m, a, b) => a + b.toUpperCase()); // i18n-ok
+  }).join('');
+}
+
 export function titoloProgetto(p) {
   return frase(p.titolo) ?? frase(p.submisura_nome) ?? p.cup;
 }
+
+// Il soggetto attuatore è un filtro: il clic mostra in mappa solo i suoi progetti (layer pnrr.js, evento `dt:filtro`).
+export const filtroAttuatore = valore => ({ strato: 'pnrr', campo: 'attuatore', valore });
 
 export function righeProgetto(p) {
   return righe([
     ['Missione', p.missione ? `${p.missione} — ${tl(MISSIONI.find(([c]) => c === p.missione)?.[1] ?? p.missione_nome ?? '')}` : null],
     ['Componente', p.componente_nome],
     ['Misura', p.submisura_nome ?? p.misura],
-    ['Stato', p.stato ? tl(frase(p.stato)) : null], ['Soggetto attuatore', p.attuatore],
+    ['Stato', p.stato ? tl(frase(p.stato)) : null], ['Soggetto attuatore', nomeSoggetto(p.attuatore)],
     ['Finanziamento PNRR', euro(p.pnrr)], ['Costo totale', euro(p.totale)],
     ['Inizio previsto', p.inizio_previsto], ['Inizio effettivo', p.inizio_effettivo],
     ['Fine prevista', p.fine_prevista], ['Fine effettiva', p.fine_effettiva],
     ['Natura', frase(p.natura)], ['Tipologia', frase(p.tipologia)], ['Settore', frase(p.settore)],
     ['Indirizzo', p.indirizzo], ['Sede del soggetto attuatore', p.sede], ['Scuola (layer Scuole)', p.scuola], ['Posizione', PRECISIONE[p.precisione] ? tl(PRECISIONE[p.precisione]) : null],
     ['CUP', p.cup],
-  ]);
+  ]).map(r => (r.etichetta === 'Soggetto attuatore' ? { ...r, filtro: filtroAttuatore(p.attuatore) } : r));
 }
 
 export function voceScheda(p) {

@@ -106,3 +106,13 @@ test('voceSintesi: sezione sempre presente, badge con l’anno dell’estrazione
   assert.equal(typeof v.dinamico, 'function');
   assert.match(v.link[0].url, /^https:\/\/www\.italiadomani\.gov\.it\//);
 });
+
+test('nomeSoggetto: nomi propri in forma leggibile, solo se tutti maiuscoli', async () => {
+  const { nomeSoggetto } = await import('../../js/layers/scheda-pnrr.js');
+  assert.equal(nomeSoggetto("UNIVERSITA' DEGLI STUDI DI PALERMO"), 'Università degli Studi di Palermo');
+  assert.equal(nomeSoggetto('COMUNE DI PALERMO'), 'Comune di Palermo');
+  assert.equal(nomeSoggetto('REGIONE SICILIANA'), 'Regione Siciliana');
+  assert.equal(nomeSoggetto('ISTITUTO COMPRENSIVO - I.C. MICHELANGELO BUONARROTI'), 'Istituto Comprensivo - I.C. Michelangelo Buonarroti');
+  assert.equal(nomeSoggetto('Già in forma Corretta'), 'Già in forma Corretta');
+  assert.equal(nomeSoggetto(null), null);
+});

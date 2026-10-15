@@ -3,7 +3,7 @@
 // Gli stili sono quelli delle barre del pendolarismo (.pend-*).
 import { urlDati } from '../core/config.js';
 import { localeIntl, t, tl, tn } from '../core/i18n.js';
-import { MISSIONI, barre, coloreMissione, euroCompatto, frase, quotaConclusi } from './scheda-pnrr.js';
+import { MISSIONI, barre, coloreMissione, euroCompatto, filtroAttuatore, frase, nomeSoggetto, quotaConclusi } from './scheda-pnrr.js';
 
 const num = v => Number(v).toLocaleString(localeIntl());
 const COLORE = '#7048e8';
@@ -28,8 +28,16 @@ function grafico(titolo, righe) {
   for (const r of righe) {
     const riga = el('div', 'pend-riga');
     const testa = el('div', 'pend-riga-testa');
-    const nome = el('span', null, r.etichetta);
-    nome.title = r.etichetta;
+    let nome;
+    if (r.filtro) { // la voce è un filtro della mappa (soggetto attuatore)
+      nome = el('button', 'scheda-filtro', r.etichetta);
+      nome.type = 'button';
+      nome.addEventListener('click', () => document.dispatchEvent(new CustomEvent('dt:filtro', { detail: r.filtro })));
+      nome.title = t('scheda.filtro.titolo');
+    } else {
+      nome = el('span', null, r.etichetta);
+      nome.title = r.etichetta;
+    }
     testa.append(nome, el('span', 'pend-riga-val', r.testo));
     const traccia = el('div', 'pend-barra');
     const riempi = el('i');
@@ -61,7 +69,10 @@ export function contenutoDinamico(s) {
   radice.append(grafico(t('pnrr.perAnno'), barre(s.per_anno_fine, 'n').map(g => ({ etichetta: g.voce, testo: progetti(g.n), quota: g.quota }))));
   if (s.senza_data_fine) radice.append(el('p', 'scheda-nota', t('pnrr.senzaData', { n: num(s.senza_data_fine) })));
   radice.append(grafico(t('pnrr.perSettore'), barre(s.per_settore, 'n').map(g => ({ etichetta: frase(g.voce), testo: progetti(g.n), quota: g.quota }))));
-  radice.append(grafico(t('pnrr.perAttuatore'), barre(s.per_attuatore, 'n').map(g => ({ etichetta: frase(g.voce), testo: progetti(g.n), quota: g.quota }))));
+  radice.append(grafico(t('pnrr.perAttuatore'), barre(s.per_attuatore, 'n').map(g => ({
+    etichetta: nomeSoggetto(g.voce), filtro: filtroAttuatore(g.voce), quota: g.quota,
+    testo: g.n_mappa != null && g.n_mappa < g.n ? t('pnrr.nSullaMappa', { n: progetti(g.n), m: num(g.n_mappa) }) : progetti(g.n),
+  }))), el('p', 'scheda-nota', t('pnrr.filtraSoggetto')));
 
   const csv = el('a', 'scheda-link', t('pnrr.scarica'));
   csv.href = urlDati('pnrr/pnrr_palermo.csv');

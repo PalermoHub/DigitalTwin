@@ -640,6 +640,24 @@ dialog li { margin: 4px 0; }
 .legenda .peba-famiglia { flex-direction: column; align-items: stretch; gap: 0; margin-top: 6px; }
 .legenda-peba { max-height: 60vh; overflow-y: auto; }
 .legenda-pnrr { max-height: 60vh; overflow-y: auto; }
+.legenda-pnrr .pnrr-soggetti select { width: 100%; margin-top: 4px; font: inherit; font-size: var(--fs-sm); }
+.legenda-pnrr .pnrr-soggetti { display: flex; flex-direction: column; align-items: stretch; gap: 2px; }   /* un soggetto per riga */
+.legenda-pnrr .pnrr-soggetti > label { display: flex; align-items: center; gap: 4px; }
+.legenda-pnrr .pnrr-soggetti input[type=radio] { margin: 0 4px 0 0; flex: none; }
+/* come una scelta singola: nessuna voce sbiadita, la selezionata ha il pallino pieno e il testo in grassetto */
+.legenda-pnrr .pnrr-soggetti > label:has(input:not(:checked)) { opacity: 1; }
+.legenda-pnrr .pnrr-soggetti > label:has(input:not(:checked)) > :not(input) { filter: none; }
+.legenda-pnrr .pnrr-soggetti > label i.monumenti-pallino { background: transparent; border: 2px solid #868e96; flex: none; }
+.legenda-pnrr .pnrr-soggetti > label:has(input:checked) { font-weight: 700; }
+.legenda-pnrr .pnrr-soggetti > label:has(input:checked) i.monumenti-pallino { background: #7048e8; border-color: #7048e8; }
+.pnrr-popup-elenco { margin: 6px 0 0; padding: 0; list-style: none; max-height: 240px; overflow-y: auto; font-size: var(--fs-xs); }
+.pnrr-popup-elenco li { display: flex; gap: 6px; align-items: flex-start; padding: 3px 0; border-top: 1px solid var(--border-ui); }
+.pnrr-popup-elenco li:first-child { border-top: 0; }
+.pnrr-popup-elenco i.monumenti-pallino { flex: none; margin-top: 3px; }
+.pnrr-popup-elenco small { display: block; color: var(--text-muted); }
+/* valore o voce di un grafico che fa da filtro della mappa: si presenta come un collegamento */
+.scheda-filtro { padding: 0; border: 0; background: none; font: inherit; color: var(--accent); text-align: left; text-decoration: underline dotted; cursor: pointer; }
+.scheda-filtro:hover, .scheda-filtro:focus-visible { text-decoration: underline; }
 .peba-legenda-titolo { display: block; margin-bottom: 2px; font-size: var(--fs-xs); font-style: normal; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
 .peba-modo { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: var(--fs-xs); color: var(--text-muted); }
 .peba-modo button { padding: 2px 10px; border: 1px solid var(--border-ui); border-radius: 999px; background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }

@@ -161,7 +161,7 @@ def test_sintesi_aggrega_tutti_i_progetti_anche_senza_posizione():
     assert {g["voce"]: g["n"] for g in s["per_stato"]} == {"In Corso": 2, "Concluso": 1}
     assert [g["voce"] for g in s["per_anno_fine"]] == ["2025", "2026"] and s["senza_data_fine"] == 1
     assert s["per_settore"][0]["voce"] == "S1" and {g["voce"] for g in s["per_settore"]} == {"S1", "n.d."}
-    assert s["per_attuatore"][0] == {"voce": "A", "n": 2, "pnrr": 150}
+    assert s["per_attuatore"][0] == {"voce": "A", "n": 2, "pnrr": 150, "n_mappa": 0}
 
 
 def test_sintesi_limita_settori_e_attuatori():
@@ -208,3 +208,54 @@ def test_un_indirizzo_proprio_vince_sulla_sede(tmp_path):
     progetti = {"A": {"Codice Fiscale Soggetto Attuatore": "111"}}
     _, feature, cont = m.costruisci(loc, progetti, civici, {"111": "Via Roma 1"}, {})
     assert feature[0]["properties"]["precisione"] == "civico" and "posizione_sede" not in cont
+
+
+def test_separa_indirizzo_toglie_cap_e_citta():
+    assert m.separa_indirizzo("VIA PAPA SERGIO I N. 5 - 90142 PALERMO") == ("VIA PAPA SERGIO I", "5")
+    assert m.separa_indirizzo("VIA G. LA LOGGIA N 5, PALERMO") == ("VIA G LA LOGGIA", "5")
+    assert m.separa_indirizzo("Via Roma 1, 90133 Palermo") == ("VIA ROMA", "1")
+
+
+def test_indirizzo_da_sintesi_prende_la_parte_di_mezzo():
+    assert m.indirizzo_da_sintesi("ASILO NIDO*VIA LAUDICINA*COSTRUZIONE") == "VIA LAUDICINA"
+    assert m.indirizzo_da_sintesi("solo testo senza asterischi") is None
+    assert m.indirizzo_da_sintesi("a**c") is None
+    assert m.indirizzo_da_sintesi("a*" + "x" * 100 + "*c") is None
+    assert m.indirizzo_da_sintesi(None) is None
+
+
+def test_posizione_ignora_il_tipo_di_strada_ma_non_le_ambiguita(tmp_path):
+    c = civici_finti(tmp_path)
+    assert c.posizione("Viale Gino Marinuzzi 3")[3] == "VIA GINO MARINUZZI"      # tipo diverso
+    assert c.posizione("Via Largo Gino Marinuzzi")[3] == "VIA GINO MARINUZZI"    # doppio tipo
+    assert c.posizione("Gino Marinuzzi, 3")[2] == "civico"                       # tipo mancante
+    assert m.senza_tipo("VIALE XXVII MAGGIO") == ["27", "MAGGIO"]
+
+
+def test_ambiguita_tra_vie_lontane_non_si_posiziona(tmp_path):
+    d = tmp_path / "civici-omi"
+    (d / "civici").mkdir(parents=True)
+    vie = {"VIA NORD DEL FANTE": [13.30, 38.20], "VIALE SUD DEL FANTE": [13.40, 38.05]}
+    (d / "civici_vie.json").write_text(json.dumps(vie), encoding="utf-8")
+    for n in range(m.SEZIONI_CIVICI):
+        (d / "civici" / f"{n:02d}.json").write_text("{}", encoding="utf-8")
+    assert m.Civici(d).posizione("Largo del Fante 3") is None
+
+
+def test_indirizzo_della_descrizione_vince_sulla_sede_ma_non_su_quello_della_localizzazione(tmp_path):
+    civici = civici_finti(tmp_path)
+    loc = {"A": {"righe": [riga_loc("A")], "solo": True}, "B": {"righe": [riga_loc("B", indirizzo="Via Roma 1")], "solo": True}}
+    progetti = {c: {"Sintesi Progetto": "LAVORI*VIA GINO MARINUZZI, 3*FINE", "Codice Fiscale Soggetto Attuatore": "111"} for c in "AB"}
+    _, feature, cont = m.costruisci(loc, progetti, civici, {"111": "Via Roma 1"}, {})
+    a, b = (next(f for f in feature if f["properties"]["cup"] == c)["properties"] for c in "AB")
+    assert a["precisione"] == "civico" and a["indirizzo"] == "VIA GINO MARINUZZI, 3" and a["indirizzo_da"] == "descrizione"
+    assert b["indirizzo"] == "Via Roma 1" and "indirizzo_da" not in b                # la localizzazione ha la precedenza
+    assert cont["posizione_da_descrizione"] == 1 and "posizione_sede" not in cont
+
+
+def test_sintesi_conta_per_ogni_soggetto_i_progetti_in_mappa():
+    elenco = [{"attuatore": "A", "precisione": "civico", "missione": "M1", "stato": "Concluso"},
+              {"attuatore": "A", "precisione": None, "missione": "M1", "stato": "Concluso"},
+              {"attuatore": "B", "precisione": "sede", "missione": "M1", "stato": "Concluso"}]
+    s = m.sintesi(elenco, 2, None)
+    assert {g["voce"]: (g["n"], g["n_mappa"]) for g in s["per_attuatore"]} == {"A": (2, 1), "B": (1, 1)}
