@@ -122,6 +122,7 @@ async function aggiornaDalVivo() {
 export default {
   id: 'colonnine',
   titolo: 'Servizi',
+  sezioniFisse: true, // «Servizi su strada», «Uffici comunali» e «Scuole» restano sezioni a sé: il riordino non attraversa le intestazioni
   argomento: { titolo: 'Servizi su strada', descrizione: 'Colonnine di ricarica per veicoli elettrici di Palermo, con stato dal vivo, potenza e operatore.' },
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: urlDati('colonnine/colonnine.geojson') });

@@ -238,7 +238,8 @@ dialog li { margin: 4px 0; }
 .colonnine-filtri { margin: 2px 0 6px 22px; }
 .colonnine-filtri h3 { margin: 6px 0 2px; }
 .colonnine-filtri input:disabled + * , .colonnine-filtri label:has(input:disabled) { opacity: .5; }
-.sotto-pannello h3 { margin: 10px 0 6px; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text); }
+.sotto-pannello h3, .sotto-pannello h4.gruppo-sottosezione { margin: 10px 0 6px; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text); }
+.sotto-pannello h4.gruppo-sottosezione { margin-left: 14px; }
 .sotto-pannello select { padding: 5px; }
 
 /* selettore delle cartografie di base (cerchi con miniatura, come nell'atlante) */
@@ -1031,7 +1032,6 @@ details.scheda-sez[open] > summary > .scheda-riassunto { display: none; }
 .gruppo-sezione[role="button"], .gruppo-sottosezione[role="button"] { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
 .gruppo-sezione[role="button"]::before, .gruppo-sottosezione[role="button"]::before { content: "▾"; flex: none; width: 1em; font-size: .9em; color: var(--text-muted); transition: transform .15s; }
 .gruppo-sezione[role="button"][aria-expanded="false"]::before, .gruppo-sottosezione[role="button"][aria-expanded="false"]::before { transform: rotate(-90deg); }
-.gruppo-sottosezione { margin: 8px 0 2px 4px; font-size: .85em; font-weight: 600; color: var(--text-muted); }
 .gruppo-sezione[role="button"]:focus-visible, .gruppo-sottosezione[role="button"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--r-sm); }
 .sotto-chiuso { display: none !important; }
 
