@@ -1,0 +1,68 @@
+name: Aggiorna PNRR
+
+# Avvio manuale: scarica dal catalogo open data di Italia Domani i file di localizzazione e dei progetti del PNRR (circa 330 MB),
+# tiene i progetti localizzati nella sola città di Palermo, li posiziona dagli indirizzi con i civici già nel repository
+# (dati/civici-omi/) e rigenera dati/pnrr/. Le regole sono nell'intestazione di scripts/pnrr.py.
+on:
+  workflow_dispatch:
+    inputs:
+      committa:
+        description: "Salva i dati aggiornati nel repository (altrimenti solo artefatto scaricabile)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-pnrr
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30   # in locale servono circa 10 secondi, più lo scarico dei file
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Scarica i CSV e genera i dati di Palermo
+        run: python3 scripts/pnrr.py --cache "$RUNNER_TEMP/pnrr"
+
+      - name: Riepilogo
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r = json.load(open("dati/pnrr/riepilogo.json"))
+          print(f"## Progetti PNRR a Palermo — dati estratti il {r['estrazione']}")
+          print(f"- Progetti localizzati solo a Palermo: {r['cup']}  ·  sulla mappa: {r['su_mappa']}")
+          print(f"- Posizione: civico {r.get('posizione_civico', 0)}, solo la via {r.get('posizione_via', 0)}, indirizzo non trovato {r.get('indirizzo_non_trovato', 0)}, senza indirizzo {r.get('senza_indirizzo', 0)}")
+          print(f"- Senza dati del progetto: {r.get('senza_dati_progetto', 0)}  ·  file dei progetti non scaricati: {r['file_progetti_mancanti'] or 'nessuno'}")
+          print(f"- Per missione: {r['per_missione']}  ·  per stato: {r['per_stato']}")
+          PY
+
+      - name: Artefatto
+        uses: actions/upload-artifact@v4
+        with:
+          name: dati-pnrr
+          path: |
+            dati/pnrr/pnrr.geojson
+            dati/pnrr/pnrr_palermo.csv
+            dati/pnrr/riepilogo.json
+            dati/pnrr/README.md
+
+      - name: Salva nel repository
+        if: ${{ inputs.committa }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dati/pnrr/pnrr.geojson dati/pnrr/pnrr_palermo.csv dati/pnrr/riepilogo.json dati/pnrr/README.md
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione nei dati."
+          else
+            git commit -m "dati: aggiornamento progetti PNRR a Palermo ($(date -u +%F))"
+            git push
+          fi

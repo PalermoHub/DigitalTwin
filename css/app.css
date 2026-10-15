@@ -639,6 +639,7 @@ dialog li { margin: 4px 0; }
 .legenda-peba i.mef-campione { display: inline-block; width: 14px; height: 10px; margin-right: 6px; border-radius: 2px; border: 1px solid rgb(0 0 0 / .35); flex: none; vertical-align: middle; }
 .legenda .peba-famiglia { flex-direction: column; align-items: stretch; gap: 0; margin-top: 6px; }
 .legenda-peba { max-height: 60vh; overflow-y: auto; }
+.legenda-pnrr { max-height: 60vh; overflow-y: auto; }
 .peba-legenda-titolo { display: block; margin-bottom: 2px; font-size: var(--fs-xs); font-style: normal; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
 .peba-modo { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: var(--fs-xs); color: var(--text-muted); }
 .peba-modo button { padding: 2px 10px; border: 1px solid var(--border-ui); border-radius: 999px; background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }

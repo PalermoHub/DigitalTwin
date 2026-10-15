@@ -127,3 +127,13 @@ test('pendolarismo: la tabella legge il file intero (342 righe), non solo i comu
   assert.equal(s.filtro({ tipo: 'arco' }), false);
   assert.equal(s.filtro({ tipo: 'comune' }), true);
 });
+
+test('progetti PNRR: un punto per CUP, chiave dal CUP, importi e posizione tra le colonne', () => {
+  const s = sorgentePer('pnrr');
+  assert.deepEqual(s.strati, ['pnrr-hit']);
+  assert.deepEqual(s.visibili, ['pnrr-punti']);
+  assert.equal(s.chiave({ cup: 'B71C23000340006' }), 'B71C23000340006');
+  assert.equal(s.chiave({}), null);
+  assert.ok(['cup', 'titolo', 'missione', 'stato', 'pnrr', 'precisione'].every(c => s.colonne.includes(c)));
+  assert.equal(s.approssimata, false);
+});

@@ -30,6 +30,9 @@ export const FONTI = [
   // il codice (U_16) si cerca come un numero di linea: la corrispondenza esatta viene prima del testo; le aree verdi hanno quasi tutte lo stesso nome, e si distinguono per l'indirizzo
   { file: 'peba/peba.geojson', facoltativa: true, strato: 'peba', zoom: 18, numero: p => p.codice, nota: p => [tr('luoghi.peba'), p.gruppo].filter(Boolean).join(' · '),
     campi: p => [p.nome === p.gruppo && p.indirizzo ? `${p.nome} – ${p.indirizzo}` : p.nome, p.indirizzo, p.quartiere, p.categoria] },
+  // progetti PNRR a Palermo: per titolo, indirizzo o soggetto attuatore; il CUP si cerca come un numero di linea
+  { file: 'pnrr/pnrr.geojson', facoltativa: true, strato: 'pnrr', zoom: 18, numero: p => p.cup, nota: p => [tr('luoghi.pnrr'), p.missione].filter(Boolean).join(' · '),
+    campi: p => [p.titolo, p.indirizzo, p.attuatore] },
 ];
 
 // centro (punto, o centro del riquadro per poligoni e linee) di una geometria GeoJSON
