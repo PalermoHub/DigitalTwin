@@ -22,7 +22,7 @@ const PR = 2;
 let mappa = null;
 let legenda = null;
 let livello = 'upl';
-let simbolo = 'frecce'; // 'frecce' (segno e intensità della variazione) o 'grafico' (Trend Charts: andamento 2011-2035)
+let simbolo = 'frecce'; // 'frecce' (modo «Variazione»: segno e intensità del cambiamento) o 'grafico' (Trend Charts: andamento 2011-2035)
 let datiGrafici = null;
 const ICONA_FRECCIA = ['case', ['>=', ['number', ['get', 'var1121']], 0], 'trend-su', 'trend-giu'];
 // Freccia: piccola da lontano, grande da vicino (zoom 10 → metà, 13 → piena, 16 → quasi il doppio) e tanto più grande quanto
@@ -87,7 +87,7 @@ function creaLegenda() {
     scelta.append(et);
   }
   const simboli = el('div', 'trend-livelli');
-  for (const [chiave, nome] of [['frecce', 'Frecce'], ['grafico', 'Trend Charts']]) {
+  for (const [chiave, nome] of [['frecce', 'Variazione'], ['grafico', 'Trend Charts']]) {
     const et = el('label', 'trend-livello');
     const r = document.createElement('input');
     r.type = 'radio'; r.name = 'trend-simbolo'; r.checked = chiave === simbolo;
@@ -99,7 +99,7 @@ function creaLegenda() {
   rampa.style.background = `linear-gradient(90deg, ${RAMPA.map(([, c]) => c).join(', ')})`;
   const estremi = el('div', 'trend-rampa-estremi');
   estremi.append(el('span', null, '−15%'), el('span', null, '0'), el('span', null, '+20%'));
-  legenda.append(scelta, simboli, rampa, estremi, el('p', 'scheda-nota', 'Frecce: segno e intensità della variazione (più grande = variazione più forte). Trend Charts: andamento 2011-2035 (tratteggio = scenario). Più ingrandisci, più i simboli crescono.'));
+  legenda.append(scelta, simboli, rampa, estremi, el('p', 'scheda-nota', 'Variazione: segno e intensità del cambiamento (freccia più grande = cambiamento più forte). Trend Charts: andamento 2011-2035 (tratteggio = scenario). Più ingrandisci, più i simboli crescono.'));
   document.getElementById('legende').append(legenda);
 }
 

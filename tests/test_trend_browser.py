@@ -61,7 +61,7 @@ def test_clic_apre_la_scheda_nel_tab_popolazione_con_il_grafico(apri):
         v.page.screenshot(path=os.environ["TREND_SCREENSHOT"].replace(".png", "_scheda.png"))
 
 
-def test_interruttore_frecce_trend_charts(apri):
+def test_interruttore_variazione_trend_charts(apri):
     v = apri()
     _accendi(v)
     v.js("document.getElementById('dt-consenso')?.remove()")
@@ -78,7 +78,7 @@ def test_interruttore_frecce_trend_charts(apri):
     assert '"quartiere"' in v.js("JSON.stringify(window.dt.map.getFilter('trend-grafico-linea'))")
     # i layer dei Trend Charts fanno parte dello strato: restano visibili finché lo strato è acceso
     assert v.js("window.dt.map.getLayoutProperty('trend-grafico-linea', 'visibility')") == "visible"
-    v.page.click(".lg-trend-popolazione .trend-livello >> text=Frecce")
+    v.page.click(".lg-trend-popolazione .trend-livello >> text=Variazione")
     assert '"quartiere"' not in v.js("JSON.stringify(window.dt.map.getFilter('trend-grafico-linea'))")
     assert _errori(v) == []
     if os.environ.get("TREND_SCREENSHOT"):
