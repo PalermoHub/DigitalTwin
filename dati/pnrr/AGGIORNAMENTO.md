@@ -7,6 +7,37 @@ Italia Domani pubblica una nuova estrazione.
 > Perché a mano: il sito di Italia Domani risponde «HTTP 403» ai server di GitHub, quindi un workflow automatico non può scaricare i file
 > (provato il 15/10/2026). Dal proprio computer lo scarico funziona.
 
+## Come lanciarlo
+
+Dal terminale, **dentro la cartella del progetto** (quella che contiene `index.html` e `scripts/`):
+
+```bash
+cd percorso/della/cartella/DigitalTwin
+python3 scripts/aggiorna_pnrr.py --controlla      # 1. c'è qualcosa di nuovo? (pochi secondi, non modifica nulla)
+python3 scripts/aggiorna_pnrr.py                  # 2. se sì: aggiorna e pubblica
+```
+
+Servono Python 3, Node (per i test JS), `git` con l'accesso a GitHub già configurato e una connessione internet. Non serve installare altro.
+
+**Il controllo** (`--controlla`) scrive, per esempio:
+
+```
+Dati nel repository: estrazione del 13/06/2026  (2633 progetti, 1284 sulla mappa)
+Dati sul sito di Italia Domani: estrazione del 13/06/2026
+→ Nessun dato nuovo: non c'è nulla da aggiornare.
+```
+Se invece la data del sito è successiva, l'ultima riga dice «Ci sono dati nuovi: lancia `python3 scripts/aggiorna_pnrr.py`».
+
+**L'aggiornamento** (senza opzioni) scrive i passi man mano («Aggiorno main…», «Rigenero i dati…», «Controlli ok», «Test…», «Commit fatto…») e finisce con
+«→ Pubblicato su main». Se si ferma, la riga che inizia con `ERRORE:` dice il motivo. Per guardare i risultati prima di pubblicare usa `--senza-push` e poi
+`git push origin main`.
+
+**Da Claude Code** puoi scrivere nella conversazione il comando preceduto da `!` (ad esempio `! python3 scripts/aggiorna_pnrr.py --controlla`): il risultato
+compare nella conversazione. Oppure chiedere a Claude «aggiorna i dati PNRR».
+
+**Ogni quanto**: non c'è un'automazione. Basta lanciare `--controlla` ogni tanto (ad esempio una volta al mese, o quando Italia Domani annuncia un
+aggiornamento): se non ci sono dati nuovi non succede nulla.
+
 ## In un comando
 
 ```bash
