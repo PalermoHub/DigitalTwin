@@ -17,6 +17,11 @@ test('costruisciGrafico: quattro elementi, tutti con livello, nome e colore', ()
   assert.ok(!fs.some(f => f.properties.tipo === 'sotto')); // nessuna area sotto la curva: coprirebbe il colore della mappa
 });
 
+test('nome: porta anche la variazione % 2011-2021, col segno', () => {
+  assert.equal(per(costruisciGrafico(p), 'nome').properties.variazione, '+27,3%');
+  assert.equal(per(costruisciGrafico({ ...p, var1121: -4.62 }), 'nome').properties.variazione, '−4,6%');
+});
+
 test('linea: tre dati osservati da sinistra a destra, il 2011 a sinistra del centro e la proiezione parte dal 2023', () => {
   const fs = costruisciGrafico(p);
   const linea = per(fs, 'linea').geometry.coordinates;

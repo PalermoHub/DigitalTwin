@@ -132,7 +132,11 @@ export default {
     map.addLayer({ id: 'trend-grafico-punta', type: 'fill', ...grafico(), paint: { 'fill-color': colore } });
     map.addLayer({
       id: 'trend-grafico-nome', type: 'symbol', ...grafico(),
-      layout: { ...nascosto, 'text-field': ['get', 'nome'], 'text-font': ['Noto Sans Bold'], 'text-size': ['interpolate', ['linear'], ['zoom'], 11, 8, 15, 12], 'text-anchor': 'top' },
+      layout: {
+        ...nascosto, 'text-font': ['Noto Sans Bold'],
+        'text-field': ['format', ['get', 'nome'], {}, '\n', {}, ['get', 'variazione'], { 'text-color': ['get', 'colore'], 'font-scale': 1.2 }],
+        'text-size': ['interpolate', ['linear'], ['zoom'], 11, 8, 15, 12], 'text-anchor': 'top',
+      },
       paint: { 'text-color': '#2b2b2b', 'text-halo-color': 'rgba(255,255,255,0.85)', 'text-halo-width': 1.2 },
     });
     caricaDati(map);

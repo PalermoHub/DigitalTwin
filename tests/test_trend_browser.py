@@ -23,7 +23,7 @@ def test_il_layer_si_accende_con_aree_e_legenda(apri):
     assert v.js(CONTA % "quartiere") == 25
     assert v.js(CONTA % "circoscrizione") == 8
     assert v.js("window.dt.map.getLayoutProperty('trend-popolazione-fill', 'visibility')") == "visible"
-    assert v.js("window.dt.map.hasImage('trend-su') && window.dt.map.hasImage('trend-giu')")
+    v.page.wait_for_function("window.dt.map.hasImage('trend-var-27.26') && window.dt.map.hasImage('trend-var--4.62')", timeout=30000)  # etichette ▲/▼ della variazione
     assert _errori(v) == []
 
 
