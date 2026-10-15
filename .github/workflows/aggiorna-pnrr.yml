@@ -52,6 +52,7 @@ jobs:
             dati/pnrr/pnrr.geojson
             dati/pnrr/pnrr_palermo.csv
             dati/pnrr/sintesi.json
+            dati/pnrr/soggetti.json
             dati/pnrr/riepilogo.json
             dati/pnrr/README.md
 
@@ -60,7 +61,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f dati/pnrr/pnrr.geojson dati/pnrr/pnrr_palermo.csv dati/pnrr/sintesi.json dati/pnrr/riepilogo.json dati/pnrr/README.md
+          git add -f dati/pnrr/pnrr.geojson dati/pnrr/pnrr_palermo.csv dati/pnrr/sintesi.json dati/pnrr/soggetti.json dati/pnrr/riepilogo.json dati/pnrr/README.md
           if git diff --cached --quiet; then
             echo "Nessuna variazione nei dati."
           else

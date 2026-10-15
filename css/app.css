@@ -653,6 +653,8 @@ dialog li { margin: 4px 0; }
 .tooltip-elenco { margin-top: 4px; font-size: var(--fs-xs); font-weight: 400; }
 .tooltip-suggerimento { margin-top: 6px; font-size: var(--fs-xs); font-weight: 400; font-style: italic; color: var(--text-muted); }
 .tooltip-elenco > div { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pnrr-tendina select { display: block; width: 100%; margin-top: 8px; font: inherit; font-size: var(--fs-sm); }
+.pnrr-tendina-carta { margin-top: 10px; }
 .pnrr-popup { padding: 14px 16px 12px; }
 .pnrr-popup h3 { margin: 0 24px 4px 0; }               /* a destra resta lo spazio della × di chiusura */
 .pnrr-popup .monumento-cat { margin: 0 0 8px; }

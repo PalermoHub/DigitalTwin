@@ -199,3 +199,33 @@ def test_clic_sul_marker_elenca_i_progetti_del_luogo(apri):
     v.page.wait_for_selector("button[role=tab][data-tab=pnrr]", timeout=15000)
     assert v.page.locator(".scheda-sez[data-tab=pnrr][data-chiave^='pnrr-']:not([data-chiave='pnrr-sintesi'])").count() >= len(progetti)
     assert _errori(v) == []
+
+
+def test_menu_a_tendina_apre_la_scheda_dei_progetti_dell_universita(apri):
+    """L'Università non ha punti sulla mappa: la scheda dei suoi progetti si apre dal menu a tendina nella tab PNRR."""
+    universita = [f for f in json.loads((ROOT / "dati" / "pnrr" / "soggetti.json").read_text(encoding="utf-8"))["soggetti"] if "UNIVERSITA" in f["voce"]][0]
+    senza_punto = next(p for p in universita["progetti"] if "precisione" not in p)
+    v = apri()
+    v.attendi_pronto()
+    primo = next(f for f in _punti() if f["properties"].get("precisione") == "civico")
+    _apri_scheda_pnrr(v, primo)
+    tendine = v.page.locator(".scheda-sez[data-chiave='pnrr-sintesi'] .pnrr-tendina select")
+    assert tendine.count() == 2 and tendine.nth(1).is_disabled()
+    assert tendine.nth(0).locator("option").count() == 3                           # segnaposto, Comune, Università
+    tendine.nth(0).select_option(label=f"Università degli Studi di Palermo ({universita['n']})")
+    assert tendine.nth(1).is_enabled() and tendine.nth(1).locator("option").count() == universita["n"] + 1
+    indice = next(i for i, p in enumerate(universita["progetti"]) if p["cup"] == senza_punto["cup"])
+    tendine.nth(1).select_option(index=indice + 1)
+    carta = v.page.locator(".pnrr-tendina-carta .scheda-sez")
+    carta.wait_for(timeout=10000)
+    assert senza_punto["cup"] in carta.inner_text() and carta.is_visible()
+    assert "Soggetto attuatore" in carta.inner_text()
+    # cambiando tab e tornando, la scheda scelta resta
+    v.page.click("button[role=tab][data-tab=luogo]")
+    assert not carta.is_visible()
+    v.page.click("button[role=tab][data-tab=pnrr]")
+    assert carta.is_visible()
+    # Comune: 40 progetti, tutti scelgibili
+    tendine.nth(0).select_option(index=1)
+    assert tendine.nth(1).locator("option").count() == 41
+    assert _errori(v) == []

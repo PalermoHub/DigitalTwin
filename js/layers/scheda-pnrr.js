@@ -29,7 +29,7 @@ export const coloreMissione = codice => MISSIONI.find(([c]) => c === codice)?.[2
 const PRECISIONE = {
   civico: 'Indirizzo (civico)',
   via: 'Solo la via: posizione approssimata',
-  sede: 'Sede dell’istituto scolastico: posizione approssimata',
+  sede: 'Sede del soggetto attuatore: posizione approssimata',
 };
 
 const euro = v => (v != null && Number.isFinite(Number(v))
@@ -160,7 +160,7 @@ export const quotaConclusi = s => {
 };
 
 // Sezione della tab PNRR con i numeri e i grafici dell'insieme dei progetti di Palermo; `dinamico` li disegna (scheda-pnrr-dom.js).
-export function voceSintesi(sintesi, dinamico) {
+export function voceSintesi(sintesi, dinamico, soggetti = null) {
   return {
     chiave: 'pnrr-sintesi',
     peso: 96,
@@ -170,7 +170,7 @@ export function voceSintesi(sintesi, dinamico) {
     badge: sintesi.estrazione ? String(sintesi.estrazione).slice(-4) : undefined,
     sempre: true,
     gruppi: [],
-    dinamico: () => dinamico(sintesi),
+    dinamico: () => dinamico(sintesi, soggetti),
     link: LINK_FONTI,
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };

@@ -145,3 +145,10 @@ test('descrizioneProgetto: senza asterischi e senza ripetere il titolo', () => {
   assert.equal(descrizioneProgetto({ ...p, titolo: 'Implementazione del sito web scolastico' }), 'Via valdemone n. 7 · Personalizzazione, migrazione');
   assert.equal(descrizioneProgetto({ cup: 'C' }), undefined);
 });
+
+test('etichettaOpzione: missione, nome e «senza posizione» per i progetti che non sono in mappa', async () => {
+  const { etichettaOpzione } = await import('../../js/layers/pnrr-luoghi.js');
+  assert.equal(etichettaOpzione({ cup: 'X', missione: 'M4', titolo: 'RICERCA SUL CLIMA MEDITERRANEO', precisione: 'civico' }), 'M4 · Ricerca sul clima mediterraneo');
+  assert.equal(etichettaOpzione({ cup: 'X', missione: 'M4', titolo: 'RICERCA SUL CLIMA MEDITERRANEO' }), 'M4 · Ricerca sul clima mediterraneo (senza posizione)');
+  assert.ok(etichettaOpzione({ cup: 'X', missione: 'M1', titolo: 'parola '.repeat(60), precisione: 'via' }).length < 100);
+});

@@ -2,8 +2,10 @@
 // attuatore, calcolati su tutti i progetti di Palermo (anche quelli senza posizione, che non hanno un punto sulla mappa).
 // Gli stili sono quelli delle barre del pendolarismo (.pend-*).
 import { urlDati } from '../core/config.js';
+import { disegnaSezione } from '../core/scheda-disegno.js';
 import { localeIntl, t, tl, tn } from '../core/i18n.js';
-import { MISSIONI, barre, coloreMissione, euroCompatto, filtroAttuatore, frase, nomeSoggetto, quotaConclusi } from './scheda-pnrr.js';
+import { MISSIONI, barre, coloreMissione, euroCompatto, filtroAttuatore, frase, nomeSoggetto, quotaConclusi, voceScheda } from './scheda-pnrr.js';
+import { etichettaOpzione } from './pnrr-luoghi.js';
 
 const num = v => Number(v).toLocaleString(localeIntl());
 const COLORE = '#7048e8';
@@ -52,11 +54,45 @@ function grafico(titolo, righe) {
 
 const progetti = n => tn('pnrr.nProgetti', n, { n: num(n) });
 
-export function contenutoDinamico(s) {
+// Menu a tendina per Comune e Università: scelto il soggetto e poi il progetto, la scheda completa compare qui sotto, anche per i
+// progetti che non hanno un punto sulla mappa. `soggetti` = [{ voce, n, progetti }] da dati/pnrr/soggetti.json.
+function schedaDaTendina(soggetti) {
+  const blocco = el('div', 'pnrr-tendina');
+  blocco.append(el('h4', null, t('pnrr.tendinaTitolo')), el('p', 'scheda-nota', t('pnrr.tendinaNota')));
+  const scelteSoggetto = document.createElement('select');
+  scelteSoggetto.setAttribute('aria-label', t('pnrr.scegliSoggetto'));
+  scelteSoggetto.append(new Option(t('pnrr.scegliSoggetto'), ''), ...soggetti.map((s, i) => new Option(`${nomeSoggetto(s.voce)} (${num(s.n)})`, String(i))));
+  const scelteProgetto = document.createElement('select');
+  scelteProgetto.setAttribute('aria-label', t('pnrr.scegliProgetto'));
+  scelteProgetto.disabled = true;
+  scelteProgetto.append(new Option(t('pnrr.scegliProgetto'), ''));
+  const carta = el('div', 'pnrr-tendina-carta');
+  let corrente = [];
+  scelteSoggetto.addEventListener('change', () => {
+    corrente = soggetti[Number(scelteSoggetto.value)]?.progetti ?? [];
+    scelteProgetto.replaceChildren(new Option(t('pnrr.scegliProgetto'), ''), ...corrente.map((p, i) => new Option(etichettaOpzione(p), String(i))));
+    scelteProgetto.disabled = !corrente.length;
+    carta.replaceChildren();
+  });
+  scelteProgetto.addEventListener('change', () => {
+    const p = corrente[Number(scelteProgetto.value)];
+    if (!p) return carta.replaceChildren();
+    // la scheda del progetto, come quella cliccata sulla mappa ma senza i link ripetuti (stanno già in fondo alla tab)
+    const sezione = disegnaSezione({ ...voceScheda(p), link: undefined, fonte: undefined }, 0);
+    sezione.dataset.tab = 'pnrr'; // segue la tab: scheda.js nasconde le sezioni delle altre
+    carta.replaceChildren(sezione);
+  });
+  blocco.append(scelteSoggetto, scelteProgetto, carta);
+  return blocco;
+}
+
+export function contenutoDinamico(s, soggetti = null) {
   const radice = el('div', 'pend-dinamico');
   const riquadri = el('div', 'pend-riquadri');
   riquadri.append(cella(num(s.n), t('pnrr.progetti')), cella(euroCompatto(s.pnrr), t('pnrr.finanziamento')), cella(`${quotaConclusi(s).toLocaleString(localeIntl())}%`, t('pnrr.conclusi')));
   radice.append(riquadri, el('p', 'scheda-nota', t('pnrr.sullaMappa', { n: num(s.su_mappa), tot: num(s.n) })));
+
+  if (soggetti?.length) radice.append(schedaDaTendina(soggetti));
 
   const nomeMissione = codice => MISSIONI.find(([c]) => c === codice)?.[1];
   radice.append(grafico(t('pnrr.perMissione'), barre(s.per_missione, 'pnrr').map(g => ({

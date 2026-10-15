@@ -134,13 +134,13 @@ def test_sintesi_lunga_viene_accorciata():
     assert len(p["sintesi"]) <= m.MAX_SINTESI + 1 and p["sintesi"].endswith("…")
 
 
-def test_scrivi_produce_i_cinque_file(tmp_path):
+def test_scrivi_produce_i_sei_file(tmp_path):
     civici = civici_finti(tmp_path)
     loc = {"A": {"righe": [riga_loc("A", indirizzo="Via Gino Marinuzzi, 3")], "solo": True}}
     elenco, feature, cont = m.costruisci(loc, {"A": {"Missione": "M1", "Finanziamento PNRR": "50"}}, civici)
     r = m.scrivi(tmp_path / "out", elenco, feature, cont, "13/06/2026", [])
     assert r["cup"] == 1 and r["su_mappa"] == 1 and r["importo_pnrr_eur"] == 50
-    for nome in ("pnrr.geojson", "pnrr_palermo.csv", "sintesi.json", "riepilogo.json", "README.md"):
+    for nome in ("pnrr.geojson", "pnrr_palermo.csv", "sintesi.json", "soggetti.json", "riepilogo.json", "README.md"):
         assert (tmp_path / "out" / nome).exists()
     gj = json.loads((tmp_path / "out" / "pnrr.geojson").read_text(encoding="utf-8"))
     assert gj["estrazione"] == "13/06/2026" and len(gj["features"]) == 1
@@ -268,3 +268,32 @@ def test_titolo_completo_usa_la_sintesi_solo_se_ricomincia_uguale():
     assert m.titolo_completo("Titolo", "Titolo") == "Titolo"
     assert m.titolo_completo(None, "x*y*z") is None
     assert m.proprieta("A", [riga_loc("A")], {"Titolo Progetto": troncato, "Sintesi Progetto": "Animatore digitale: formazione del personale*V*x"})["titolo"] == "Animatore digitale: formazione del personale"
+
+
+def test_sedi_includono_il_comune_agganciato_per_nome(tmp_path):
+    f = tmp_path / "ipa.txt"
+    righe = [("c_g273", "Comune di Palermo", "Palermo", "Comuni e loro Consorzi e Associazioni", "80016350821", "Piazza Pretoria, 1"),
+             ("x", "Comune di Catania", "Catania", "Comuni e loro Consorzi e Associazioni", "1", "Via Etnea 1")]
+    f.write_text("cod_amm\tdes_amm\tComune\ttipologia_istat\tcf\tIndirizzo\n" + "".join("\t".join(r) + "\n" for r in righe), encoding="utf-8")
+    sedi = m.sedi_scuole(f)
+    assert sedi == {"00519560825": "Piazza Pretoria, 1"}      # chiave: il codice fiscale che il Comune ha nei file PNRR
+
+
+def test_il_comune_senza_indirizzo_va_sulla_sede(tmp_path):
+    civici = civici_finti(tmp_path)
+    loc = {"A": {"righe": [riga_loc("A")], "solo": True}}
+    progetti = {"A": {"Codice Fiscale Soggetto Attuatore": "00519560825", "Soggetto Attuatore": "COMUNE DI PALERMO"}}
+    _, feature, cont = m.costruisci(loc, progetti, civici, {"00519560825": "Via Gino Marinuzzi, 3"}, {})
+    assert feature[0]["properties"]["precisione"] == "sede" and cont["posizione_sede"] == 1
+
+
+def test_elenco_soggetti_ha_tutti_i_progetti_anche_senza_posizione():
+    elenco = [{"cup": "1", "attuatore": "COMUNE DI PALERMO", "missione": "M4", "titolo": "b", "precisione": "civico", "lon": 1, "lat": 2, "cf_attuatore": "x"},
+              {"cup": "2", "attuatore": "COMUNE DI PALERMO", "missione": "M1", "titolo": "a", "precisione": None},
+              {"cup": "3", "attuatore": "UNIVERSITA' DEGLI STUDI DI PALERMO", "missione": "M4", "titolo": "c", "precisione": None},
+              {"cup": "4", "attuatore": "REGIONE SICILIANA", "missione": "M4", "titolo": "d"}]
+    s = m.elenco_soggetti(elenco)
+    assert [(x["voce"], x["n"]) for x in s] == [("COMUNE DI PALERMO", 2), ("UNIVERSITA' DEGLI STUDI DI PALERMO", 1)]
+    assert [p["cup"] for p in s[0]["progetti"]] == ["2", "1"]                  # per missione (M1, M4)
+    assert "lon" not in s[0]["progetti"][1] and "cf_attuatore" not in s[0]["progetti"][1]
+    assert "precisione" not in s[0]["progetti"][0]                              # i valori vuoti non si portano

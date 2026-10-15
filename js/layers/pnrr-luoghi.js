@@ -57,6 +57,9 @@ export function nomeProgetto(p) {
 
 const accorcia = (s, max) => (s.length > max ? `${s.slice(0, max).replace(/\s+\S*$/, '')}…` : s);
 
+// Etichetta di un progetto nei menu: missione, nome e, se non ha un punto sulla mappa, lo dice.
+export const etichettaOpzione = p => `${p.missione ?? '?'} · ${accorcia(nomeProgetto(p), 90)}${p.precisione ? '' : ` (${t('pnrr.senzaPosizione')})`}`;
+
 // Progetti del luogo per missione (come l'anello) e poi per titolo: serve all'elenco del popup.
 export function elencoLuogo(luogo) {
   const ordine = new Map(luogo.fette.map((f, i) => [f.area, i]));

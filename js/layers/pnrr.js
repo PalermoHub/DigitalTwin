@@ -9,7 +9,8 @@ import { conteggiAttuatori, elencoLuogo, firma, modelloTooltipLuogo, nomeProgett
 import { PR, iconaFette } from './marker-fette.js';
 
 // Progetti del PNRR localizzati nella sola città di Palermo (open data di Italia Domani, dati/pnrr/, workflow «Aggiorna PNRR»).
-// Un punto per progetto con un indirizzo trovato nei civici (civico esatto o solo la via); gli altri stanno solo nel CSV.
+// Un punto per progetto con un indirizzo trovato nei civici (civico esatto o solo la via), o sulla sede dell'attuatore per le scuole e il
+// Comune; gli altri (Università, reti) stanno nel CSV e nel menu a tendina della tab PNRR.
 // Sulla mappa i progetti nello stesso luogo sono un solo marker, come le sedi degli uffici: anello a fette colorate (una per missione)
 // e numero dei progetti al centro. La legenda fa da filtro (missione, sede delle scuole, soggetto attuatore); lo strato «hit»
 // trasparente è sempre presente, così la scheda di destra mostra i progetti anche a strato spento.
@@ -25,6 +26,7 @@ const VUOTO = { type: 'FeatureCollection', features: [] };
 
 let mappa = null;
 let legenda = null;
+let elenchi = null; // progetti di Comune e Università (dati/pnrr/soggetti.json), per il menu a tendina della scheda
 let sintesi = null; // aggregati su tutti i progetti di Palermo (dati/pnrr/sintesi.json), per i grafici della tab PNRR
 let progetti = []; // un elemento per progetto in mappa (pnrr-luoghi.js)
 let luoghi = new Map(); // id luogo -> luogo (le proprietà annidate non sopravvivono alla mappa)
@@ -141,7 +143,7 @@ function creaLegenda() {
   legenda.append(el('em', 'peba-legenda-titolo', 'Posizione'));
   const anello = el('i', 'monumenti-pallino');
   anello.style.cssText = `background: transparent; border: 2px solid ${COLORE_NEUTRO}`;
-  legenda.append(voceFiltro(anello, 'Sede dell’istituto scolastico (posizione approssimata)', acceso => { conSede = acceso; programma(); }, true, false));
+  legenda.append(voceFiltro(anello, 'Sede del soggetto attuatore (posizione approssimata)', acceso => { conSede = acceso; programma(); }, true, false));
   legenda.append(el('em', 'peba-legenda-titolo', 'Soggetto attuatore'));
   const soggetti = el('div', 'pnrr-soggetti');
   avviso = el('p', 'scheda-nota', 'Nessun progetto di questo soggetto è sulla mappa: non ha un indirizzo (vedi l’elenco completo nella scheda).');
@@ -199,6 +201,7 @@ export default {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
     map.addSource(SRC_HIT, { type: 'geojson', data: urlDati('pnrr/pnrr.geojson') });
     fetch(urlDati('pnrr/sintesi.json')).then(r => r.json()).then(d => { sintesi = d; }).catch(() => { sintesi = null; });
+    fetch(urlDati('pnrr/soggetti.json')).then(r => r.json()).then(d => { elenchi = d.soggetti; }).catch(() => { elenchi = null; });
   },
   aggiungiLayer(map) {
     mappa = map;
@@ -250,7 +253,7 @@ export default {
         .map(f => voceScheda(f.properties))
         .filter(v => !visti.has(v.chiave) && visti.add(v.chiave))
         .slice(0, MAX_NELLA_SCHEDA);
-      return sintesi ? [...dellaScheda, voceSintesi(sintesi, contenutoDinamico)] : dellaScheda;
+      return sintesi ? [...dellaScheda, voceSintesi(sintesi, contenutoDinamico, elenchi)] : dellaScheda;
     },
   },
 };

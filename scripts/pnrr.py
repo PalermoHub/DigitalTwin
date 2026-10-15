@@ -19,12 +19,16 @@ Regole:
      (Indice delle Pubbliche Amministrazioni, agganciato per codice fiscale): precisione «sede», posizione approssimata.
      Se l'indirizzo della sede coincide con una scuola del layer «Scuole» dell'app (dati/scuole/scuole.geojson) si usano le coordinate
      di quel layer (proprietà `scuola`); le scuole che nel layer mancano (superiori, plessi non censiti) si posizionano con i civici.
-     Senza posizione il progetto resta nella tabella (CSV) ma non sulla mappa. Università, Comune e altri enti non si posizionano
-     sulla propria sede: troverebbero tutti nello stesso punto e non è dove si fa il lavoro.
+     Lo stesso vale per il Comune di Palermo (sede: Palazzo delle Aquile). Senza posizione il progetto resta nella tabella (CSV) ma non
+     sulla mappa. L'Università e gli altri enti non si posizionano sulla propria sede: troverebbero tutti nello stesso punto e non è
+     dove si fa il lavoro;
+  6. di Comune e Università l'elenco completo dei progetti, con posizione o no, va in `soggetti.json`: la scheda ha un menu a tendina
+     per aprire la scheda di ogni progetto anche quando non ha un punto sulla mappa.
 
 Scrive in dati/pnrr/:
   pnrr.geojson      un punto per CUP con una posizione (civico esatto o solo la via)
   pnrr_palermo.csv  una riga per CUP, con o senza posizione
+  soggetti.json     elenco completo dei progetti di Comune e Università, per il menu a tendina della scheda
   sintesi.json      aggregati su tutti i progetti (missione, stato, anno di fine, settore, attuatore) per i grafici della scheda
   riepilogo.json    conteggi dell'esecuzione
   README.md         fonte, data di estrazione, licenza, conteggi
@@ -49,6 +53,11 @@ IPA_URL = ("https://indicepa.gov.it/ipa-dati/dataset/502ff370-1b2c-4310-94c7-f39
            "3ed63523-ff9c-41f6-a6fe-980f3d9e501f/download/amministrazioni.txt")
 IPA_FILE = "ipa_amministrazioni.txt"
 TIPO_SCUOLE = "Istituti di Istruzione Statale di Ogni Ordine e Grado"   # tipologia_istat dell'IPA
+# Comune di Palermo: anche lui si posiziona sulla sede (Palazzo delle Aquile). Nei file PNRR ha il codice 00519560825, nell'IPA 80016350821:
+# si aggancia per nome. {codice fiscale nei file PNRR: denominazione IPA}
+ENTI_SULLA_SEDE = {"00519560825": "Comune di Palermo"}
+# soggetti con molti progetti senza un luogo: la scheda ne elenca tutti con un menu a tendina (valore di `attuatore` nella fonte)
+SOGGETTI_CON_ELENCO = ("COMUNE DI PALERMO", "UNIVERSITA' DEGLI STUDI DI PALERMO")
 LICENZA = "CC BY 4.0"
 FONTE = "Italia Domani — Struttura di missione PNRR, Sogei (catalogo open data)"
 # Palermo nei codici ISTAT dei file: regione 019, provincia 082, comune 053 (ISTAT 082053)
@@ -254,14 +263,19 @@ def localizzazioni(percorso):
     return {cup: {"righe": righe, "solo": cup not in altrove} for cup, righe in palermo.items()}
 
 
-def sedi_scuole(percorso):
-    """{codice fiscale: indirizzo} degli istituti scolastici statali di Palermo, dall'elenco IPA (tab-separated)."""
+def sedi_scuole(percorso, enti=ENTI_SULLA_SEDE):
+    """{codice fiscale: indirizzo} degli istituti scolastici statali di Palermo e degli enti in `enti` ({cf nei file PNRR: denominazione IPA}),
+    dall'elenco IPA (tab-separated)."""
     sedi = {}
+    per_nome = {nome.lower(): cf for cf, nome in enti.items()}
     with open(percorso, encoding="utf-8-sig", errors="replace", newline="") as f:
         for r in csv.DictReader(f, delimiter="\t"):
             cf = (r.get("cf") or "").strip()
             if cf and (r.get("Comune") or "").strip().lower() == "palermo" and (r.get("tipologia_istat") or "").strip() == TIPO_SCUOLE:
                 sedi[cf] = (r.get("Indirizzo") or "").strip()
+            cf_ente = per_nome.get((r.get("des_amm") or "").strip().lower())
+            if cf_ente:
+                sedi[cf_ente] = (r.get("Indirizzo") or "").strip()
     return sedi
 
 
@@ -360,7 +374,7 @@ def costruisci(loc, progetti, civici, sedi=None, scuole=None):
                 if sede:
                     pos = (sede[0], sede[1], "sede", sede[3])
             if pos:
-                p["sede"] = indirizzo
+                p["sede"] = indirizzo   # per le scuole è la sede dell'istituto, per il Comune Palazzo delle Aquile
         if pos:
             p["precisione"] = pos[2]
             p["lon"], p["lat"] = pos[0], pos[1]
@@ -414,6 +428,22 @@ def sintesi(elenco, su_mappa, estrazione):
     }
 
 
+# ---------- elenco dei progetti per soggetto ----------
+
+def _pubbliche(p):
+    return {k: v for k, v in p.items() if k not in ("lon", "lat", "cf_attuatore") and v is not None}
+
+
+def elenco_soggetti(elenco, soggetti=SOGGETTI_CON_ELENCO):
+    """[{voce, n, progetti}] con tutti i progetti dei soggetti indicati, in mappa o no, per missione e titolo."""
+    out = []
+    for voce in soggetti:
+        progetti = sorted((_pubbliche(p) for p in elenco if p.get("attuatore") == voce), key=lambda p: (p.get("missione") or "", (p.get("titolo") or "").lower()))
+        if progetti:
+            out.append({"voce": voce, "n": len(progetti), "progetti": progetti})
+    return out
+
+
 # ---------- file di uscita ----------
 
 COLONNE_CSV = ["cup", "titolo", "missione", "missione_nome", "componente_nome", "submisura", "submisura_nome", "stato", "settore",
@@ -431,6 +461,8 @@ def scrivi(uscita, elenco, feature, contatori, estrazione, file_mancanti):
         w.writeheader()
         w.writerows(elenco)
     totale = sum(p["pnrr"] or 0 for p in elenco)
+    (uscita / "soggetti.json").write_text(
+        json.dumps({"estrazione": estrazione, "soggetti": elenco_soggetti(elenco)}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (uscita / "sintesi.json").write_text(
         json.dumps(sintesi(elenco, len(feature), estrazione), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     r = {"estrazione": estrazione, "cup": len(elenco), "su_mappa": len(feature), **dict(contatori),
@@ -461,6 +493,7 @@ Generato da `scripts/pnrr.py` (workflow «Aggiorna PNRR»). Non modificare a man
 |---|---|
 | `pnrr.geojson` | un punto per progetto con posizione; `precisione` è «civico», «via» o «sede» (le ultime due approssimate) |
 | `pnrr_palermo.csv` | tutti i progetti, con o senza posizione |
+| `soggetti.json` | tutti i progetti di Comune e Università (anche senza punto sulla mappa), per il menu a tendina della scheda |
 | `sintesi.json` | aggregati su tutti i progetti, per i grafici della scheda |
 | `riepilogo.json` | conteggi dell'ultima esecuzione |
 
