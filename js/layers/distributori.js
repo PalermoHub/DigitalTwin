@@ -144,8 +144,8 @@ export default {
   },
   scheda: {
     layers: [HIT],
-    // con lo strato acceso, cliccare un distributore apre subito il tab «Servizi su strada»
-    tabAlClic: map => (map.getLayoutProperty(PUNTI, 'visibility') === 'visible' ? 'servizi' : null),
+    // cliccare un distributore apre subito il tab «Servizi su strada», anche a strato spento (i punti si interrogano comunque)
+    tabAlClic: () => 'servizi',
     voci(trovati) {
       const visti = new Set();
       return trovati.flatMap(f => {
