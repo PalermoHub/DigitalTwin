@@ -41,6 +41,8 @@ import re
 import shutil
 import sys
 import unicodedata
+import time
+import urllib.error
 import urllib.request
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -504,17 +506,43 @@ Regole di selezione, fonti e limiti: intestazione di `scripts/pnrr.py`. Per aggi
 
 # ---------- scarico ----------
 
+# Il sito di Italia Domani risponde solo a richieste «da browser»: intestazioni complete e pagina del catalogo come provenienza
+INTESTAZIONI = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+    "Accept": "text/csv,text/plain,application/octet-stream,*/*;q=0.8",
+    "Accept-Language": "it-IT,it;q=0.9,en;q=0.5",
+    "Referer": "https://www.italiadomani.gov.it/content/sogei-ng/it/it/catalogo-open-data.html",
+}
+TENTATIVI = 3
+
+
+class ErroreScarico(OSError):
+    """Scarico fallito dopo i tentativi: il messaggio dice file, indirizzo e motivo (si legge nel log del workflow)."""
+
+
 def scarica(nome, cartella, riscarica=False, url=None):
     destinazione = cartella / nome
     if destinazione.exists() and not riscarica:
         return destinazione
     cartella.mkdir(parents=True, exist_ok=True)
-    richiesta = urllib.request.Request(url or BASE + nome, headers={"User-Agent": "Mozilla/5.0"})   # senza User-Agent il sito risponde 403
-    print(f"scarico {nome}…", file=sys.stderr)
-    with urllib.request.urlopen(richiesta, timeout=300) as r, open(destinazione.with_suffix(".parte"), "wb") as f:
-        shutil.copyfileobj(r, f)
-    destinazione.with_suffix(".parte").replace(destinazione)
-    return destinazione
+    indirizzo = url or BASE + nome
+    ultimo = None
+    for tentativo in range(1, TENTATIVI + 1):
+        print(f"scarico {nome} (tentativo {tentativo}/{TENTATIVI})…", file=sys.stderr)
+        try:
+            with urllib.request.urlopen(urllib.request.Request(indirizzo, headers=INTESTAZIONI), timeout=300) as r, open(destinazione.with_suffix(".parte"), "wb") as f:
+                shutil.copyfileobj(r, f)
+            destinazione.with_suffix(".parte").replace(destinazione)
+            return destinazione
+        except urllib.error.HTTPError as e:
+            ultimo = f"HTTP {e.code} {e.reason}"
+            if e.code in (401, 403, 404):   # rifiuto o file assente: riprovare non serve
+                break
+        except OSError as e:   # rete, timeout
+            ultimo = f"{type(e).__name__}: {e}"
+        time.sleep(2 * tentativo)
+    destinazione.with_suffix(".parte").unlink(missing_ok=True)
+    raise ErroreScarico(f"impossibile scaricare {nome} da {indirizzo}: {ultimo}")
 
 
 def main(argv=None):
@@ -526,7 +554,11 @@ def main(argv=None):
     ap.add_argument("--scuole", type=Path, default=RADICE / "dati" / "scuole" / "scuole.geojson", help="layer Scuole dell'app")
     args = ap.parse_args(argv)
 
-    loc = localizzazioni(scarica(LOCALIZZAZIONE, args.cache, args.riscarica))
+    try:
+        file_loc = scarica(LOCALIZZAZIONE, args.cache, args.riscarica)
+    except ErroreScarico as e:
+        sys.exit(f"ERRORE: {e}\nSe il sito rifiuta le richieste (403) scarica i file dal browser, mettili in --cache e rilancia lo script.")
+    loc = localizzazioni(file_loc)
     estrazioni = {r["Data di Estrazione"] for v in loc.values() for r in v["righe"]}
     estrazione = sorted(estrazioni, key=lambda d: d[6:] + d[3:5] + d[:2])[-1] if estrazioni else None
     solo = {c for c, v in loc.items() if v["solo"]}

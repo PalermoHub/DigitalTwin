@@ -297,3 +297,46 @@ def test_elenco_soggetti_ha_tutti_i_progetti_anche_senza_posizione():
     assert [p["cup"] for p in s[0]["progetti"]] == ["2", "1"]                  # per missione (M1, M4)
     assert "lon" not in s[0]["progetti"][1] and "cf_attuatore" not in s[0]["progetti"][1]
     assert "precisione" not in s[0]["progetti"][0]                              # i valori vuoti non si portano
+
+
+def test_scarico_rifiutato_da_un_errore_leggibile(tmp_path, monkeypatch):
+    import urllib.error
+    chiamate = []
+
+    def rifiuta(richiesta, timeout=0):
+        chiamate.append(richiesta.full_url)
+        raise urllib.error.HTTPError(richiesta.full_url, 403, "Forbidden", {}, None)
+
+    monkeypatch.setattr(m.urllib.request, "urlopen", rifiuta)
+    try:
+        m.scarica("PNRR_Localizzazione.csv", tmp_path)
+    except m.ErroreScarico as e:
+        assert "PNRR_Localizzazione.csv" in str(e) and "HTTP 403" in str(e) and "italiadomani.gov.it" in str(e)
+    else:
+        raise AssertionError("doveva fallire")
+    assert len(chiamate) == 1                                       # un 403 non si riprova
+    assert not list(tmp_path.glob("*.parte"))
+
+
+def test_scarico_riprova_su_errori_di_rete_e_poi_riesce(tmp_path, monkeypatch):
+    import io
+    esiti = [OSError("timeout"), io.BytesIO(b"a;b\n1;2\n")]
+
+    class Risposta(io.BytesIO):
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+
+    def a_volte(richiesta, timeout=0):
+        e = esiti.pop(0)
+        if isinstance(e, Exception):
+            raise e
+        return Risposta(e.getvalue())
+
+    monkeypatch.setattr(m.urllib.request, "urlopen", a_volte)
+    monkeypatch.setattr(m.time, "sleep", lambda s: None)
+    f = m.scarica("x.csv", tmp_path)
+    assert f.read_bytes() == b"a;b\n1;2\n" and not esiti
+
+
+def test_le_intestazioni_sono_da_browser():
+    assert m.INTESTAZIONI["User-Agent"].startswith("Mozilla/5.0") and "italiadomani.gov.it" in m.INTESTAZIONI["Referer"]
