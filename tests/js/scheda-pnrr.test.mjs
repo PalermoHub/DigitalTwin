@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { MISSIONI, coloreMissione, frase, titoloProgetto, righeProgetto, voceScheda, modelloTooltipPnrr } from '../../js/layers/scheda-pnrr.js';
+import { MISSIONI, coloreMissione, frase, titoloProgetto, righeProgetto, voceScheda, modelloTooltipPnrr, euroCompatto, barre, quotaConclusi, voceSintesi } from '../../js/layers/scheda-pnrr.js';
 
 const P = {
   cup: 'B71C23000340006', titolo: 'LAVORI DI RIQUALIFICAZIONE DELLA SCUOLA', sintesi: 'MIGRAZIONE AL CLOUD DEI SERVIZI', missione: 'M4',
@@ -52,7 +52,9 @@ test('voceScheda: chiave dal CUP, strato, badge e testo di sintesi', () => {
   assert.equal(v.strato, 'pnrr');
   assert.equal(v.badge, 'PNRR M4');
   assert.equal(v.testo, 'Migrazione al cloud dei servizi');
-  assert.match(v.link.url, /^https:\/\/www\.italiadomani\.gov\.it\//);
+  assert.ok(v.link.length >= 3 && v.link.every(l => /^https:\/\//.test(l.url)));
+  assert.match(v.link[0].url, /^https:\/\/www\.italiadomani\.gov\.it\//);
+  assert.ok(v.link.some(l => l.url.includes('cruscotto-italia.dati.gov.it') && l.url.includes('082053')));
   assert.equal(voceScheda({ cup: 'X' }).badge, 'PNRR');
 });
 
@@ -69,4 +71,38 @@ test('modelloTooltipPnrr: un titolo lungo viene accorciato, la scheda lo tiene i
   const m = modelloTooltipPnrr(lungo);
   assert.ok(m.titolo.length <= 91 && m.titolo.endsWith('…'));
   assert.ok(titoloProgetto(lungo).length > 300);
+});
+
+test('voci PNRR: i pesi mandano progetti e sintesi nella tab PNRR (95 e 96)', () => {
+  assert.equal(voceScheda(P).peso, 95);
+  assert.equal(voceSintesi({ n: 1, per_stato: [] }, () => null).peso, 96);
+});
+
+test('euroCompatto: miliardi, milioni, migliaia e unità', () => {
+  assert.equal(euroCompatto(921364866.52), '921,4 M€');
+  assert.equal(euroCompatto(1_250_000_000), '1,25 Mld €');
+  assert.equal(euroCompatto(128000), '128 k€');
+  assert.equal(euroCompatto(950), '950 €');
+  assert.equal(euroCompatto('x'), null);
+});
+
+test('barre: la quota è rispetto al massimo, senza dati resta 0', () => {
+  const b = barre([{ voce: 'a', n: 10 }, { voce: 'b', n: 5 }, { voce: 'c', n: 0 }], 'n');
+  assert.deepEqual(b.map(x => x.quota), [100, 50, 0]);
+  assert.deepEqual(barre([{ voce: 'a', n: 0 }], 'n')[0].quota, 0);
+  assert.deepEqual(barre([], 'n'), []);
+});
+
+test('quotaConclusi: percentuale con un decimale', () => {
+  assert.equal(quotaConclusi({ n: 2633, per_stato: [{ voce: 'Concluso', n: 380 }, { voce: 'In Corso', n: 2253 }] }), 14.4);
+  assert.equal(quotaConclusi({ n: 0, per_stato: [] }), 0);
+});
+
+test('voceSintesi: sezione sempre presente, badge con l’anno dell’estrazione e link alla fonte', () => {
+  const v = voceSintesi({ n: 2633, estrazione: '13/06/2026', per_stato: [] }, () => null);
+  assert.equal(v.chiave, 'pnrr-sintesi');
+  assert.equal(v.badge, '2026');
+  assert.equal(v.sempre, true);
+  assert.equal(typeof v.dinamico, 'function');
+  assert.match(v.link[0].url, /^https:\/\/www\.italiadomani\.gov\.it\//);
 });

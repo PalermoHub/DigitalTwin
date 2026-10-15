@@ -134,15 +134,37 @@ def test_sintesi_lunga_viene_accorciata():
     assert len(p["sintesi"]) <= m.MAX_SINTESI + 1 and p["sintesi"].endswith("…")
 
 
-def test_scrivi_produce_i_quattro_file(tmp_path):
+def test_scrivi_produce_i_cinque_file(tmp_path):
     civici = civici_finti(tmp_path)
     loc = {"A": {"righe": [riga_loc("A", indirizzo="Via Gino Marinuzzi, 3")], "solo": True}}
     elenco, feature, cont = m.costruisci(loc, {"A": {"Missione": "M1", "Finanziamento PNRR": "50"}}, civici)
     r = m.scrivi(tmp_path / "out", elenco, feature, cont, "13/06/2026", [])
     assert r["cup"] == 1 and r["su_mappa"] == 1 and r["importo_pnrr_eur"] == 50
-    for nome in ("pnrr.geojson", "pnrr_palermo.csv", "riepilogo.json", "README.md"):
+    for nome in ("pnrr.geojson", "pnrr_palermo.csv", "sintesi.json", "riepilogo.json", "README.md"):
         assert (tmp_path / "out" / nome).exists()
     gj = json.loads((tmp_path / "out" / "pnrr.geojson").read_text(encoding="utf-8"))
     assert gj["estrazione"] == "13/06/2026" and len(gj["features"]) == 1
     righe = list(csv.DictReader(open(tmp_path / "out" / "pnrr_palermo.csv", encoding="utf-8")))
     assert righe[0]["cup"] == "A" and righe[0]["precisione"] == "civico"
+
+
+def test_sintesi_aggrega_tutti_i_progetti_anche_senza_posizione():
+    elenco = [
+        {"missione": "M4", "stato": "Concluso", "pnrr": 100, "totale": 120, "fine_prevista": "30/06/2025", "settore": "S1", "attuatore": "A"},
+        {"missione": "M4", "stato": "In Corso", "pnrr": 50, "totale": 50, "fine_prevista": "01/01/2026", "settore": "S1", "attuatore": "A"},
+        {"missione": "M1", "stato": "In Corso", "pnrr": None, "totale": None, "fine_prevista": None, "settore": None, "attuatore": "B"},
+    ]
+    s = m.sintesi(elenco, 1, "13/06/2026")
+    assert s["n"] == 3 and s["su_mappa"] == 1 and s["pnrr"] == 150 and s["totale"] == 170
+    assert [g["voce"] for g in s["per_missione"]] == ["M1", "M4"]
+    assert next(g for g in s["per_missione"] if g["voce"] == "M4") == {"voce": "M4", "n": 2, "pnrr": 150}
+    assert {g["voce"]: g["n"] for g in s["per_stato"]} == {"In Corso": 2, "Concluso": 1}
+    assert [g["voce"] for g in s["per_anno_fine"]] == ["2025", "2026"] and s["senza_data_fine"] == 1
+    assert s["per_settore"][0]["voce"] == "S1" and {g["voce"] for g in s["per_settore"]} == {"S1", "n.d."}
+    assert s["per_attuatore"][0] == {"voce": "A", "n": 2, "pnrr": 150}
+
+
+def test_sintesi_limita_settori_e_attuatori():
+    elenco = [{"missione": "M1", "stato": "Concluso", "pnrr": 1, "settore": f"S{i}", "attuatore": f"A{i}"} for i in range(20)]
+    s = m.sintesi(elenco, 0, None)
+    assert len(s["per_settore"]) == m.TOP_SETTORI and len(s["per_attuatore"]) == m.TOP_ATTUATORI

@@ -3,7 +3,8 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { tl } from '../core/i18n.js';
-import { MISSIONI, coloreMissione, modelloTooltipPnrr, voceScheda } from './scheda-pnrr.js';
+import { MISSIONI, coloreMissione, modelloTooltipPnrr, voceScheda, voceSintesi } from './scheda-pnrr.js';
+import { contenutoDinamico } from './scheda-pnrr-dom.js';
 
 // Progetti del PNRR localizzati nella sola città di Palermo (open data di Italia Domani, dati/pnrr/, workflow «Aggiorna PNRR»).
 // Un punto per progetto con un indirizzo trovato nei civici (civico esatto o solo la via); gli altri stanno solo nel CSV.
@@ -15,6 +16,7 @@ const HIT = 'pnrr-hit';
 
 let mappa = null;
 let legenda = null;
+let sintesi = null; // aggregati su tutti i progetti di Palermo (dati/pnrr/sintesi.json), per i grafici della tab PNRR
 const accese = new Set(MISSIONI.map(([c]) => c));
 
 const el = (tag, classe, testo) => {
@@ -56,6 +58,7 @@ export default {
   sezioniFisse: true, // il titolo non viaggia con lo strato nel riordino
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: urlDati('pnrr/pnrr.geojson') });
+    fetch(urlDati('pnrr/sintesi.json')).then(r => r.json()).then(d => { sintesi = d; }).catch(() => { sintesi = null; });
   },
   aggiungiLayer(map) {
     mappa = map;
@@ -85,12 +88,14 @@ export default {
   pannello: creaLegenda,
   scheda: {
     layers: [HIT],
+    // nella tab PNRR: i progetti cliccati e, sempre, la sintesi con i grafici di tutti i progetti di Palermo
     voci(trovati) {
       const visti = new Set();
-      return tutti(trovati, HIT)
+      const progetti = tutti(trovati, HIT)
         .map(f => voceScheda(f.properties))
         .filter(v => !visti.has(v.chiave) && visti.add(v.chiave))
         .slice(0, 6);
+      return sintesi ? [...progetti, voceSintesi(sintesi, contenutoDinamico)] : progetti;
     },
   },
 };

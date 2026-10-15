@@ -5,6 +5,14 @@ import { localeIntl, t, tl } from '../core/i18n.js';
 
 export const FONTE = 'Italia Domani — Struttura di missione PNRR, Sogei: catalogo open data (CC BY 4.0)';
 const LINK = 'https://www.italiadomani.gov.it/content/sogei-ng/it/it/catalogo-open-data.html';
+const LINK_LOCALIZZAZIONE = 'https://www.italiadomani.gov.it/content/dam/sogei-ng/opendata/PNRR_Localizzazione.csv';
+const LINK_CRUSCOTTO = 'https://cruscotto-italia.dati.gov.it/comune.html?istat=082053#pnrr';
+// link in fondo alla tab PNRR: catalogo open data (file dei progetti e di localizzazione), elenco nazionale delle localizzazioni, Cruscotto Italia
+const LINK_FONTI = [
+  { testo: 'Catalogo open data di Italia Domani', icona: 'esterno', url: LINK },
+  { testo: 'Localizzazione dei progetti (CSV)', icona: 'esterno', url: LINK_LOCALIZZAZIONE },
+  { testo: 'PNRR di Palermo su Cruscotto Italia', icona: 'esterno', url: LINK_CRUSCOTTO },
+];
 
 // [codice, nome, colore]
 export const MISSIONI = [
@@ -44,7 +52,7 @@ export function righeProgetto(p) {
     ['Missione', p.missione ? `${p.missione} — ${tl(MISSIONI.find(([c]) => c === p.missione)?.[1] ?? p.missione_nome ?? '')}` : null],
     ['Componente', p.componente_nome],
     ['Misura', p.submisura_nome ?? p.misura],
-    ['Stato', p.stato], ['Soggetto attuatore', p.attuatore],
+    ['Stato', p.stato ? tl(frase(p.stato)) : null], ['Soggetto attuatore', p.attuatore],
     ['Finanziamento PNRR', euro(p.pnrr)], ['Costo totale', euro(p.totale)],
     ['Inizio previsto', p.inizio_previsto], ['Inizio effettivo', p.inizio_effettivo],
     ['Fine prevista', p.fine_prevista], ['Fine effettiva', p.fine_effettiva],
@@ -57,7 +65,7 @@ export function righeProgetto(p) {
 export function voceScheda(p) {
   return {
     chiave: `pnrr-${p.cup}`,
-    peso: 57,
+    peso: 95, // tab «PNRR» della scheda (core/scheda.js)
     strato: 'pnrr',
     titolo: titoloProgetto(p),
     icona: 'euro',
@@ -65,7 +73,7 @@ export function voceScheda(p) {
     sempre: true,
     gruppi: [{ righe: righeProgetto(p) }],
     testo: p.sintesi ? frase(p.sintesi) : undefined,
-    link: { testo: 'Open data di Italia Domani', icona: 'esterno', url: LINK },
+    link: LINK_FONTI,
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
 }
@@ -78,5 +86,46 @@ export function modelloTooltipPnrr(p) {
     titolo: accorcia(titoloProgetto(p)),
     sottotitolo: p.missione ? `${p.missione} · ${p.stato ?? ''}`.replace(/ · $/, '') : (p.stato ?? ''),
     righe: righe([['Finanziamento PNRR', euro(p.pnrr)], ['Soggetto attuatore', p.attuatore], ['Indirizzo', p.indirizzo]]),
+  };
+}
+
+// ---------- sintesi cittadina per i grafici (dati/pnrr/sintesi.json, generata da scripts/pnrr.py) ----------
+
+// 921364866 → «921,4 M€»; 128000 → «128 k€»; 950 → «950 €»
+export function euroCompatto(v) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return null;
+  const f = (x, d) => x.toLocaleString(localeIntl(), { minimumFractionDigits: 0, maximumFractionDigits: d });
+  if (Math.abs(n) >= 1e9) return `${f(n / 1e9, 2)} Mld €`;
+  if (Math.abs(n) >= 1e6) return `${f(n / 1e6, 1)} M€`;
+  if (Math.abs(n) >= 1e3) return `${f(n / 1e3, 0)} k€`;
+  return `${f(n, 0)} €`;
+}
+
+// [{voce, n, pnrr}] → [{voce, valore, quota}] con la quota (0-100) rispetto al massimo: serve alla lunghezza delle barre
+export function barre(gruppi, campo) {
+  const max = Math.max(0, ...gruppi.map(g => Number(g[campo]) || 0));
+  return gruppi.map(g => ({ ...g, valore: Number(g[campo]) || 0, quota: max > 0 ? ((Number(g[campo]) || 0) / max) * 100 : 0 }));
+}
+
+export const quotaConclusi = s => {
+  const c = s.per_stato?.find(g => g.voce === 'Concluso')?.n ?? 0;
+  return s.n > 0 ? Math.round((c / s.n) * 1000) / 10 : 0;
+};
+
+// Sezione della tab PNRR con i numeri e i grafici dell'insieme dei progetti di Palermo; `dinamico` li disegna (scheda-pnrr-dom.js).
+export function voceSintesi(sintesi, dinamico) {
+  return {
+    chiave: 'pnrr-sintesi',
+    peso: 96,
+    strato: 'pnrr',
+    titolo: 'PNRR a Palermo',
+    icona: 'euro',
+    badge: sintesi.estrazione ? String(sintesi.estrazione).slice(-4) : undefined,
+    sempre: true,
+    gruppi: [],
+    dinamico: () => dinamico(sintesi),
+    link: LINK_FONTI,
+    fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
 }

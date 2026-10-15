@@ -52,5 +52,31 @@ def test_clic_su_un_progetto_apre_la_scheda(apri):
     v.vai(lon, lat, 17)
     v.page.wait_for_function("window.dt.map.querySourceFeatures('pnrr').length > 0", timeout=30000)
     v.clic(lon, lat)
-    v.page.wait_for_function(f"document.body.innerText.includes('{primo['properties']['cup']}')", timeout=15000)
+    # la scheda sta nella tab PNRR (nascosta finché non la si sceglie): si cerca la sezione, non il testo visibile
+    v.page.wait_for_selector(f".scheda-sez[data-chiave='pnrr-{primo['properties']['cup']}']", state="attached", timeout=15000)
+    assert _errori(v) == []
+
+
+def test_tab_pnrr_ha_progetto_e_grafici(apri):
+    v = apri()
+    v.attendi_pronto()
+    primo = next(f for f in _punti() if f["properties"].get("precisione") == "civico")
+    lon, lat = primo["geometry"]["coordinates"]
+    v.vai(lon, lat, 17)
+    v.page.wait_for_function("window.dt.map.querySourceFeatures('pnrr').length > 0", timeout=30000)
+    v.clic(lon, lat)
+    v.page.wait_for_selector("button[role=tab][data-tab=pnrr]", timeout=15000)
+    v.page.click("button[role=tab][data-tab=pnrr]")
+    # progetto cliccato e sintesi sono nella tab PNRR, non più in Luogo
+    sez = v.js("[...document.querySelectorAll('.scheda-sez')].filter(s => !s.hidden).map(s => s.dataset.chiave)")
+    assert f"pnrr-{primo['properties']['cup']}" in sez and "pnrr-sintesi" in sez
+    assert not v.js("[...document.querySelectorAll('.scheda-sez')].some(s => s.dataset.tab === 'luogo' && String(s.dataset.chiave).startsWith('pnrr'))")
+    # i grafici: tre riquadri e le barre per missione, stato, anno, settore, attuatore
+    sintesi = ".scheda-sez[data-chiave='pnrr-sintesi']"
+    assert v.page.locator(f"{sintesi} .pend-riquadro").count() == 3
+    assert v.page.locator(f"{sintesi} .pend-classifica").count() == 5
+    # fonti e link: catalogo di Italia Domani, localizzazione, Cruscotto Italia e il CSV completo
+    href = v.js("[...document.querySelectorAll('.scheda-link')].filter(a => !a.hidden).map(a => a.href)")
+    assert any("italiadomani.gov.it" in h for h in href) and any("cruscotto-italia.dati.gov.it" in h for h in href)
+    assert any(h.endswith("pnrr_palermo.csv") for h in href)
     assert _errori(v) == []

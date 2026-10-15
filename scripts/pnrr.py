@@ -18,6 +18,7 @@ Regole:
 Scrive in dati/pnrr/:
   pnrr.geojson      un punto per CUP con una posizione (civico esatto o solo la via)
   pnrr_palermo.csv  una riga per CUP, con o senza posizione
+  sintesi.json      aggregati su tutti i progetti (missione, stato, anno di fine, settore, attuatore) per i grafici della scheda
   riepilogo.json    conteggi dell'esecuzione
   README.md         fonte, data di estrazione, licenza, conteggi
 """
@@ -255,6 +256,40 @@ def costruisci(loc, progetti, civici):
     return elenco, feature, contatori
 
 
+# ---------- sintesi per i grafici ----------
+
+TOP_SETTORI = 6
+TOP_ATTUATORI = 8
+
+
+def _gruppi(elenco, chiave, vuoto="n.d."):
+    """[{voce, n, pnrr}] per valore di `chiave`, in ordine di numero di progetti decrescente."""
+    n, importo = Counter(), Counter()
+    for p in elenco:
+        v = chiave(p) or vuoto
+        n[v] += 1
+        importo[v] += p.get("pnrr") or 0
+    return [{"voce": v, "n": n[v], "pnrr": round(importo[v], 2)} for v, _ in n.most_common()]
+
+
+def sintesi(elenco, su_mappa, estrazione):
+    """Aggregati su tutti i progetti di Palermo (non solo quelli in mappa): alimentano i grafici della scheda."""
+    anno = lambda d: d[-4:] if d and re.fullmatch(r"\d\d/\d\d/\d{4}", d) else None
+    per_anno = sorted(_gruppi(elenco, lambda p: anno(p.get("fine_prevista")), vuoto=None) or [], key=lambda g: g["voce"] or "")
+    return {
+        "estrazione": estrazione,
+        "n": len(elenco), "su_mappa": su_mappa,
+        "pnrr": round(sum(p.get("pnrr") or 0 for p in elenco), 2),
+        "totale": round(sum(p.get("totale") or 0 for p in elenco), 2),
+        "per_missione": sorted(_gruppi(elenco, lambda p: p.get("missione")), key=lambda g: g["voce"]),
+        "per_stato": _gruppi(elenco, lambda p: p.get("stato")),
+        "per_anno_fine": [g for g in per_anno if g["voce"]],
+        "senza_data_fine": sum(1 for p in elenco if not anno(p.get("fine_prevista"))),
+        "per_settore": _gruppi(elenco, lambda p: p.get("settore"))[:TOP_SETTORI],
+        "per_attuatore": _gruppi(elenco, lambda p: p.get("attuatore"))[:TOP_ATTUATORI],
+    }
+
+
 # ---------- file di uscita ----------
 
 COLONNE_CSV = ["cup", "titolo", "missione", "missione_nome", "componente_nome", "submisura", "submisura_nome", "stato", "settore",
@@ -272,6 +307,8 @@ def scrivi(uscita, elenco, feature, contatori, estrazione, file_mancanti):
         w.writeheader()
         w.writerows(elenco)
     totale = sum(p["pnrr"] or 0 for p in elenco)
+    (uscita / "sintesi.json").write_text(
+        json.dumps(sintesi(elenco, len(feature), estrazione), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     r = {"estrazione": estrazione, "cup": len(elenco), "su_mappa": len(feature), **dict(contatori),
          "importo_pnrr_eur": totale, "per_missione": dict(Counter(p.get("missione") or "?" for p in elenco)),
          "per_stato": dict(Counter(p.get("stato") or "?" for p in elenco)), "file_progetti_mancanti": file_mancanti}
@@ -299,6 +336,7 @@ Generato da `scripts/pnrr.py` (workflow «Aggiorna PNRR»). Non modificare a man
 |---|---|
 | `pnrr.geojson` | un punto per progetto con posizione; `precisione` è «civico» o «via» (posizione approssimata) |
 | `pnrr_palermo.csv` | tutti i progetti, con o senza posizione |
+| `sintesi.json` | aggregati su tutti i progetti, per i grafici della scheda |
 | `riepilogo.json` | conteggi dell'ultima esecuzione |
 
 Regole di selezione, fonti e limiti: intestazione di `scripts/pnrr.py`. Per aggiornare: workflow «Aggiorna PNRR» (avvio manuale).

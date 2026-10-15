@@ -15,6 +15,7 @@ Generato da `scripts/pnrr.py` (workflow «Aggiorna PNRR»). Non modificare a man
 |---|---|
 | `pnrr.geojson` | un punto per progetto con posizione; `precisione` è «civico» o «via» (posizione approssimata) |
 | `pnrr_palermo.csv` | tutti i progetti, con o senza posizione |
+| `sintesi.json` | aggregati su tutti i progetti, per i grafici della scheda |
 | `riepilogo.json` | conteggi dell'ultima esecuzione |
 
 Regole di selezione, fonti e limiti: intestazione di `scripts/pnrr.py`. Per aggiornare: workflow «Aggiorna PNRR» (avvio manuale).
