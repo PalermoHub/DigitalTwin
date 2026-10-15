@@ -1782,6 +1782,7 @@
   "luoghi.pnrr": "NRRP project",
   "tabella.layer.pnrr": "NRRP – Projects in Palermo",
   "tabella.fonte.pnrr": "Italia Domani, NRRP Mission Unit and Sogei: open data catalogue (CC BY 4.0); processed by DigitalTwin Palermo, CC BY 4.0; see NOTICE.md",
+  "pnrr.cliccaInfo": "Click for the list and more information",
   "pnrr.eAltri": "… and {n} more",
   "pnrr.popupSuggerimento": "Each project’s details are in the sheet on the right, NRRP tab.",
   "lbl.Progetti del Piano nazionale di ripresa e resilienza localizzati nella sola città di Palermo (open data di Italia Domani): missione, stato di avanzamento, importi e soggetto attuatore. Sulla mappa i progetti con un indirizzo, raggruppati per luogo; l’elenco completo si scarica in CSV.": "Projects of the National Recovery and Resilience Plan (NRRP) located only in the city of Palermo (Italia Domani open data): mission, progress status, amounts and implementing body. The map shows the projects with an address, grouped by place; the full list can be downloaded as CSV.",

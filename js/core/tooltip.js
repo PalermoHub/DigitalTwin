@@ -94,6 +94,28 @@ export function disegnaVoceTooltip(m) {
     dettaglio.append(m.sottotitolo);
     voce.append(dettaglio);
   }
+  if (m.elenco?.length) { // righe di testo sotto il sottotitolo (es. i primi progetti di un marker aggregato)
+    const elenco = document.createElement('div');
+    elenco.className = 'tooltip-elenco';
+    for (const riga of m.elenco) { // una stringa, o { testo, pallino } con il colore della legenda
+      const r = document.createElement('div');
+      if (riga.pallino) {
+        const pallino = document.createElement('span');
+        pallino.className = 'tooltip-pallino';
+        pallino.style.background = riga.pallino;
+        r.append(pallino);
+      }
+      r.append(typeof riga === 'string' ? riga : riga.testo);
+      elenco.append(r);
+    }
+    voce.append(elenco);
+  }
+  if (m.suggerimento) { // invito a cliccare per saperne di più
+    const s = document.createElement('div');
+    s.className = 'tooltip-suggerimento';
+    s.textContent = m.suggerimento;
+    voce.append(s);
+  }
   return voce;
 }
 

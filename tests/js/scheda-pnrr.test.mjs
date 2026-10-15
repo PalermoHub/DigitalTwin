@@ -116,3 +116,11 @@ test('nomeSoggetto: nomi propri in forma leggibile, solo se tutti maiuscoli', as
   assert.equal(nomeSoggetto('Già in forma Corretta'), 'Già in forma Corretta');
   assert.equal(nomeSoggetto(null), null);
 });
+
+test('titoloProgetto: il titolo troncato dalla fonte si completa con la descrizione solo se ne è l\'inizio', () => {
+  const troncato = 'Animatore digitale: formazione del perso';
+  assert.equal(titoloProgetto({ titolo: troncato, sintesi: 'Animatore digitale: formazione del personale della scuola*VIA ROMA 1*dettagli' }), 'Animatore digitale: formazione del personale della scuola');
+  assert.equal(titoloProgetto({ titolo: troncato, sintesi: 'SETTORE CITTADINANZA SOLIDALE*VIA GARIBALDI, 26*altro' }), troncato);
+  assert.equal(titoloProgetto({ titolo: 'Titolo corto', sintesi: 'Titolo corto' }), 'Titolo corto');
+  assert.equal(titoloProgetto({ titolo: 'x', descrizione: 'x' }), 'x');
+});

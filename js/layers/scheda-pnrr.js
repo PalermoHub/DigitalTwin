@@ -62,7 +62,12 @@ export function nomeSoggetto(testo) {
   }).join('');
 }
 
+// La fonte tronca spesso il titolo a 40 caratteri; il titolo intero sta di solito nella prima parte della descrizione
+// («titolo*INDIRIZZO*dettagli»): lo si usa solo se ricomincia con lo stesso testo.
 export function titoloProgetto(p) {
+  const titolo = (p.titolo ?? '').trim();
+  const intero = String(p.descrizione ?? p.sintesi ?? '').split('*')[0].trim();
+  if (titolo && intero.length > titolo.length && intero.toLowerCase().startsWith(titolo.toLowerCase().slice(0, 25))) return frase(intero);
   return frase(p.titolo) ?? frase(p.submisura_nome) ?? p.cup;
 }
 

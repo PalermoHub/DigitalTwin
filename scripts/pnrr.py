@@ -299,6 +299,16 @@ def progetti_dei(cup_richiesti, percorsi):
 
 # ---------- composizione ----------
 
+def titolo_completo(titolo, sintesi):
+    """La fonte tronca spesso `Titolo Progetto` a 40 caratteri; il titolo intero è di solito la prima parte della sintesi
+    («titolo*INDIRIZZO*dettagli»): lo si usa solo se ricomincia con lo stesso testo (altrimenti è un altro dato, come un settore)."""
+    titolo = (titolo or "").strip()
+    intero = (sintesi or "").split("*")[0].strip()
+    if titolo and len(intero) > len(titolo) and intero.lower().startswith(titolo.lower()[:25]):
+        return intero
+    return titolo or None
+
+
 def proprieta(cup, loc_righe, progetto):
     """Proprietà piatte di un CUP: campi del progetto, importi e localizzazione. Senza progetto restano solo CUP e sede."""
     prima = next((r for r in loc_righe if r["Indirizzo"].strip()), loc_righe[0])
@@ -310,6 +320,7 @@ def proprieta(cup, loc_righe, progetto):
             p[chiave] = valore or None
         for chiave, colonna in CAMPI_IMPORTO.items():
             p[chiave] = numero(progetto.get(colonna))
+        p["titolo"] = titolo_completo(p.get("titolo"), progetto.get("Sintesi Progetto"))
         if p.get("sintesi") and len(p["sintesi"]) > MAX_SINTESI:
             p["sintesi"] = p["sintesi"][:MAX_SINTESI].rsplit(" ", 1)[0] + "…"
     p["con_dati_progetto"] = bool(progetto)

@@ -182,7 +182,7 @@ function contenutoPopup(luogo) {
 }
 const campioneLuogo = p => {
   const l = luogoDi(p);
-  return l.fette.length === 1 ? campioneTooltip('legenda-pnrr', ['monumenti-pallino', { background: coloreMissione(l.fette[0].area) }]) : null;
+  return l.fette.length === 1 && l.n > 1 ? campioneTooltip('legenda-pnrr', ['monumenti-pallino', { background: coloreMissione(l.fette[0].area) }]) : null;
 };
 
 export default {

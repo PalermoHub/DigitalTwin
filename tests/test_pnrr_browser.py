@@ -186,6 +186,9 @@ def test_clic_sul_marker_elenca_i_progetti_del_luogo(apri):
     assert v.page.locator(".pnrr-popup h3").inner_text().startswith(str(len(progetti)))
     # ogni voce porta la missione e un nome
     assert all(t.strip() for t in v.page.locator(".pnrr-popup-elenco li").all_inner_texts())
+    # e il pallino col colore della missione, ben visibile (non solo dentro la legenda)
+    pallini = v.js("[...document.querySelectorAll('.pnrr-popup-elenco li i')].map(i => { const s = getComputedStyle(i); return [s.width, s.backgroundColor]; })")
+    assert len(pallini) == len(progetti) and all(w == "10px" and c not in ("rgba(0, 0, 0, 0)", "transparent") for w, c in pallini)
     # la scheda di destra ha una sezione per ogni progetto del luogo
     v.page.wait_for_selector("button[role=tab][data-tab=pnrr]", timeout=15000)
     assert v.page.locator(".scheda-sez[data-tab=pnrr][data-chiave^='pnrr-']:not([data-chiave='pnrr-sintesi'])").count() >= len(progetti)

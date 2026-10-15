@@ -259,3 +259,12 @@ def test_sintesi_conta_per_ogni_soggetto_i_progetti_in_mappa():
               {"attuatore": "B", "precisione": "sede", "missione": "M1", "stato": "Concluso"}]
     s = m.sintesi(elenco, 2, None)
     assert {g["voce"]: (g["n"], g["n_mappa"]) for g in s["per_attuatore"]} == {"A": (2, 1), "B": (1, 1)}
+
+
+def test_titolo_completo_usa_la_sintesi_solo_se_ricomincia_uguale():
+    troncato = "Animatore digitale: formazione del perso"
+    assert m.titolo_completo(troncato, "Animatore digitale: formazione del personale*VIA ROMA 1*altro") == "Animatore digitale: formazione del personale"
+    assert m.titolo_completo(troncato, "SETTORE CITTADINANZA SOLIDALE*VIA GARIBALDI, 26*altro") == troncato
+    assert m.titolo_completo("Titolo", "Titolo") == "Titolo"
+    assert m.titolo_completo(None, "x*y*z") is None
+    assert m.proprieta("A", [riga_loc("A")], {"Titolo Progetto": troncato, "Sintesi Progetto": "Animatore digitale: formazione del personale*V*x"})["titolo"] == "Animatore digitale: formazione del personale"

@@ -1782,6 +1782,7 @@
   "luoghi.pnrr": "Progetto PNRR",
   "tabella.layer.pnrr": "PNRR – Progetti a Palermo",
   "tabella.fonte.pnrr": "Italia Domani, Struttura di missione PNRR e Sogei: catalogo open data (CC BY 4.0); elaborazione DigitalTwin Palermo, CC BY 4.0; vedi NOTICE.md",
+  "pnrr.cliccaInfo": "Clicca per l’elenco e ulteriori informazioni",
   "pnrr.eAltri": "… e altri {n}",
   "pnrr.popupSuggerimento": "Il dettaglio di ogni progetto è nella scheda a destra, tab PNRR.",
   "lbl.Progetti del Piano nazionale di ripresa e resilienza localizzati nella sola città di Palermo (open data di Italia Domani): missione, stato di avanzamento, importi e soggetto attuatore. Sulla mappa i progetti con un indirizzo, raggruppati per luogo; l’elenco completo si scarica in CSV.": "Progetti del Piano nazionale di ripresa e resilienza localizzati nella sola città di Palermo (open data di Italia Domani): missione, stato di avanzamento, importi e soggetto attuatore. Sulla mappa i progetti con un indirizzo, raggruppati per luogo; l’elenco completo si scarica in CSV.",

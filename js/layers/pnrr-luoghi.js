@@ -10,7 +10,7 @@ export const chiaveLuogo = ([lon, lat]) => `${Number(lon).toFixed(5)},${Number(l
 // Proprietà utili del GeoJSON dei progetti (una feature per CUP, già con la posizione).
 export const progettiDa = features => features.filter(f => f.geometry?.type === 'Point').map(f => ({
   cup: f.properties.cup, missione: f.properties.missione ?? '?', attuatore: f.properties.attuatore ?? null, precisione: f.properties.precisione ?? null,
-  titolo: f.properties.titolo ?? null, submisura_nome: f.properties.submisura_nome ?? null, indirizzo: f.properties.indirizzo ?? null, coordinates: f.geometry.coordinates,
+  titolo: f.properties.titolo ?? null, descrizione: String(f.properties.sintesi ?? '').split('*')[0].trim() || null, submisura_nome: f.properties.submisura_nome ?? null, indirizzo: f.properties.indirizzo ?? null, coordinates: f.geometry.coordinates,
 }));
 
 // filtri = { missioni: Set | null (tutte), conSede: boolean, attuatore: string | null (tutti) }
@@ -48,10 +48,12 @@ export function conteggiAttuatori(progetti) {
 
 const MAX_PROGETTI_TOOLTIP = 4;
 
-// Come si chiama un progetto nell'elenco: il titolo, o la misura del PNRR quando il titolo è solo un codice («p3», «1.2c_g273…»).
+// Come si chiama un progetto nell'elenco: il titolo; se è solo un codice («p3», «1.2istsc_paic89800x…») la misura del PNRR e il soggetto.
+const SEMBRA_CODICE = /^\d+(\.\d+)+[a-z_]/i;
 export function nomeProgetto(p) {
   const titolo = titoloProgetto(p);
-  return (p.titolo ?? '').length < 12 && p.submisura_nome ? `${p.submisura_nome} (${titolo})` : titolo;
+  if (!((p.titolo ?? '').length < 12 || SEMBRA_CODICE.test(p.titolo ?? '')) || !p.submisura_nome) return titolo;
+  return p.attuatore ? `${p.submisura_nome} – ${nomeSoggetto(p.attuatore)}` : p.submisura_nome;
 }
 
 const accorcia = (s, max) => (s.length > max ? `${s.slice(0, max).replace(/\s+\S*$/, '')}…` : s);
@@ -66,11 +68,19 @@ export function elencoLuogo(luogo) {
 export function modelloTooltipLuogo(luogo) {
   if (luogo.n === 1) {
     const p = luogo.progetti[0];
-    return { titolo: titoloProgetto(p), sottotitolo: p.missione, righe: righe([['Soggetto attuatore', nomeSoggetto(p.attuatore)], ['Indirizzo', p.indirizzo]]) };
+    return {
+      titolo: titoloProgetto(p), sottotitolo: p.missione, pallino: coloreMissione(p.missione),
+      righe: righe([['Soggetto attuatore', nomeSoggetto(p.attuatore)], ['Indirizzo', p.indirizzo]]), suggerimento: t('pnrr.cliccaInfo'),
+    };
   }
   const indirizzi = [...new Set(luogo.progetti.map(p => p.indirizzo).filter(Boolean))];
   const elenco = elencoLuogo(luogo);
   const voci = elenco.slice(0, MAX_PROGETTI_TOOLTIP).map(p => [p.missione, accorcia(nomeProgetto(p), 70)]);
   if (elenco.length > MAX_PROGETTI_TOOLTIP) voci.push(['…', t('pnrr.eAltri', { n: elenco.length - MAX_PROGETTI_TOOLTIP })]);
-  return { titolo: tn('pnrr.luogo', luogo.n), sottotitolo: indirizzi.length === 1 ? indirizzi[0] : t('pnrr.luogoVari'), righe: righe(voci) };
+  return {
+    titolo: tn('pnrr.luogo', luogo.n), sottotitolo: indirizzi.length === 1 ? indirizzi[0] : t('pnrr.luogoVari'),
+    righe: righe(voci), suggerimento: t('pnrr.cliccaInfo'),
+    // il tooltip della mappa disegna `elenco`: un pallino con il colore della missione davanti a ogni progetto
+    elenco: voci.map(([missione, testo]) => (missione === '…' ? testo : { testo: `${missione} · ${testo}`, pallino: coloreMissione(missione) })),
+  };
 }

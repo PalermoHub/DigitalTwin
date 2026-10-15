@@ -44,3 +44,19 @@ test('registraTooltipStrati: il simbolo di legenda sta accanto al sottotitolo, n
   assert.equal(involucro.figli[0].style.background, '#c00');
   assert.equal(dettaglio.figli[1], 'P4');
 });
+
+test('con un elenco: una riga di testo per voce sotto il sottotitolo; senza elenco nulla in più', () => {
+  const v = disegnaVoceTooltip({ titolo: '3 progetti', sottotitolo: 'Via Roma', elenco: ['M4 · Scuola A', 'M1 · App B'] });
+  assert.deepEqual(testi(v), ['3 progetti', 'Via Roma', 'M4 · Scuola A', 'M1 · App B']);
+  assert.equal(v.figli.at(-1).className, 'tooltip-elenco');
+  assert.equal(disegnaVoceTooltip({ titolo: 'x', elenco: [] }).figli.length, 1);
+});
+
+test('elenco con pallino colorato e suggerimento in fondo', () => {
+  const v = disegnaVoceTooltip({ titolo: 'T', elenco: [{ testo: 'M4 · A', pallino: '#7048e8' }, 'B'], suggerimento: 'Clicca' });
+  const riga = v.figli[1].figli[0];
+  assert.equal(riga.figli[0].className, 'tooltip-pallino');
+  assert.equal(riga.figli[0].style.background, '#7048e8');
+  assert.deepEqual(testi(v), ['T', 'M4 · A', 'B', 'Clicca']);
+  assert.equal(v.figli.at(-1).className, 'tooltip-suggerimento');
+});

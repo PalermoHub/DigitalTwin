@@ -60,11 +60,18 @@ test('conteggiAttuatori: dal più numeroso, a parità per nome', () => {
 test('modelloTooltipLuogo: un progetto → il titolo; più progetti → il numero e le missioni', () => {
   const [b, a] = [raggruppa(TUTTI).find(x => x.id === chiaveLuogo(B)), raggruppa(TUTTI).find(x => x.id === chiaveLuogo(A))];
   assert.match(modelloTooltipLuogo(b).titolo, /^Titolo 4$/i);
+  assert.match(modelloTooltipLuogo(b).pallino, /^#/);
+  assert.match(modelloTooltipLuogo(b).suggerimento, /Clicca/);
   const m = modelloTooltipLuogo(a);
   assert.equal(m.titolo, '3 progetti PNRR');
   assert.equal(m.sottotitolo, 'Via Roma 1');
   assert.deepEqual(m.righe.map(r => r.etichetta), ['M4', 'M4', 'M1']);                  // un titolo per progetto, per missione
   assert.deepEqual(m.righe.map(r => r.valore), ['Titolo 1', 'Titolo 2', 'Titolo 3']);
+  assert.deepEqual(m.elenco.map(r => r.testo), ['M4 · Titolo 1', 'M4 · Titolo 2', 'M1 · Titolo 3']);   // è `elenco` che il tooltip della mappa disegna
+  assert.ok(m.elenco.every(r => /^#[0-9a-f]{6}$/i.test(r.pallino)));                                   // col colore della missione
+  assert.equal(m.elenco[0].pallino, m.elenco[1].pallino);
+  assert.notEqual(m.elenco[0].pallino, m.elenco[2].pallino);
+  assert.match(m.suggerimento, /Clicca/);
 });
 
 test('scheda: il soggetto attuatore è un filtro della mappa', () => {
@@ -80,10 +87,13 @@ test('modelloTooltipLuogo: oltre i primi titoli dice quanti altri ce ne sono', (
   const m = modelloTooltipLuogo(raggruppa(molti)[0]);
   assert.equal(m.righe.length, 5);
   assert.deepEqual(m.righe.at(-1), { etichetta: '…', valore: '… e altri 3' });
+  assert.equal(m.elenco.at(-1), '… e altri 3');                                                    // senza pallino
 });
 
 test('nomeProgetto: se il titolo è solo un codice si aggiunge la misura del PNRR', () => {
-  assert.equal(nomeProgetto({ titolo: 'p3', submisura_nome: 'Scuola 4.0', cup: 'X' }), 'Scuola 4.0 (p3)');
+  assert.equal(nomeProgetto({ titolo: 'p3', submisura_nome: 'Scuola 4.0', cup: 'X' }), 'Scuola 4.0');
+  assert.equal(nomeProgetto({ titolo: '1.2istsc_paic89800xI.C.S. Rita Borsellin', submisura_nome: 'Abilitazione al cloud', attuatore: 'ISTITUTO COMPRENSIVO RITA BORSELLINO', cup: 'X' }),
+    'Abilitazione al cloud – Istituto Comprensivo Rita Borsellino');
   assert.equal(nomeProgetto({ titolo: 'LAVORI DI RIQUALIFICAZIONE DELLA SCUOLA', submisura_nome: 'Scuola 4.0', cup: 'X' }), 'Lavori di riqualificazione della scuola');
 });
 
