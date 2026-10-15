@@ -2401,5 +2401,7 @@
   "lbl.Distributori di carburante (impianti e prezzi): MIMIT, Osservaprezzi carburanti, dati aperti aggiornati ogni giorno": "Fuel stations (stations and prices): MIMIT, Osservaprezzi carburanti, open data updated daily",
   "lbl.Open data carburanti del MIMIT": "MIMIT fuel open data",
   "lbl.Osservaprezzi carburanti": "Osservaprezzi carburanti",
-  "lbl.Distanza": "Distance"
+  "distributori.distributore.uno": "{n} fuel station",
+  "distributori.distributore.altri": "{n} fuel stations",
+  "lbl.Seleziona un distributore per vedere i prezzi": "Select a station to see the prices"
 }

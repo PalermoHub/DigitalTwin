@@ -1,6 +1,5 @@
 import { righe } from '../core/scheda-util.js';
-import { PESO_SERVIZI } from './scheda-colonnine.js';
-import { t, tl, localeIntl } from '../core/i18n.js';
+import { t, tn, tl, localeIntl } from '../core/i18n.js';
 import { distanzaM, metri } from './trasporto-vicino.js';
 
 // Modello puro dei distributori di carburante: stesse righe per il popup e per la scheda di destra (tab «Servizi su strada»).
@@ -8,6 +7,8 @@ import { distanzaM, metri } from './trasporto-vicino.js';
 
 const FONTE = 'MIMIT, Osservaprezzi carburanti (anagrafica degli impianti e prezzi comunicati dai gestori) — IODL 2.0';
 const LINK = 'https://carburanti.mise.gov.it/ospzSearch/zona';
+// Peso 8 = tab «Luogo» della scheda, accanto al trasporto pubblico vicino: si vede subito, senza cercare il tab dei servizi.
+const PESO_LUOGO = 8;
 export const CARBURANTI = ['Benzina', 'Gasolio', 'GPL', 'Metano'];
 
 const euro = n => n.toLocaleString(localeIntl(), { minimumFractionDigits: 3, maximumFractionDigits: 3 });
@@ -29,9 +30,9 @@ function altriCarburanti(p) {
 // «14/10/2026» dalla data più recente comunicata dai gestori («GG/MM/AAAA HH:MM:SS»)
 const giorno = p => (p.prezzi_del ?? '').slice(0, 10);
 
-function righeDistributore(p, distanza) {
+function righeDistributore(p) {
   return righe([
-    ['Distanza', distanza != null ? metri(distanza) : ''], ['Gestore', p.gestore], ['Indirizzo', p.indirizzo],
+    ['Gestore', p.gestore], ['Indirizzo', p.indirizzo],
     ...CARBURANTI.map(c => [c, prezziCarburante(p, c)]),
     ['Altri carburanti', altriCarburanti(p)],
     ['Prezzi del', giorno(p)],
@@ -49,21 +50,27 @@ export function distributoriVicini(punto, proprieta, geometrie, raggio, max, obb
   return [...vicini, ...tutti.filter(x => obbligati.has(x.p.id) && !vicini.includes(x))].sort((a, b) => a.distanza - b.distanza);
 }
 
-export function voceDistributore(p, distanza = null, coordinate = null) {
-  return {
-    chiave: `distributore-${p.id}`,
-    peso: PESO_SERVIZI,
-    strato: 'distributori',
-    titolo: titolo(p),
-    icona: 'distributori',
-    badge: 'Distributore di carburante',
-    sempre: true,
-    gruppi: [{ righe: righeDistributore(p, distanza) }],
-    // a strato spento il punto non si vede: la scheda lo porta sulla mappa come gli altri luoghi
-    ...(coordinate && { evidenza: [{ id: 'distributori-vicini', etichetta: t('evidenza.distributore'), colore: '#f2b705', features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: coordinate }, properties: { attributo: titolo(p) } }] }] }),
+// Sezione unica «Distributori di carburante» nel tab «Luogo» (come «Trasporto pubblico vicino»), a fisarmonica: una card per distributore,
+// con la distanza dal punto cliccato e il pulsante «Mappa» per accendere lo strato. `elenco` = [{ p, distanza, coordinate }], dal più vicino.
+// L'evidenza porta gli stessi distributori sulla mappa, anche a strato spento.
+export function vociDistributori(elenco) {
+  if (!elenco.length) return [];
+  const n = elenco.length;
+  return [{
+    chiave: 'distributori:gruppo', peso: PESO_LUOGO, titolo: 'Distributori di carburante', icona: 'distributori', badge: tn('distributori.distributore', n), sempre: true,
+    gruppi: [],
+    accordion: {
+      icona: 'distributori', suggerimento: 'Seleziona un distributore per vedere i prezzi',
+      riassunto: tn('distributori.distributore', n),
+      elementi: elenco.map(({ p, distanza }) => ({ strato: 'distributori', titolo: titolo(p), anteprima: distanza != null ? metri(distanza) : '', righe: righeDistributore(p) })),
+    },
+    evidenza: [{
+      id: 'distributori-vicini', etichetta: t('evidenza.distributore'), colore: '#f2b705',
+      features: elenco.filter(x => x.coordinate).map(({ p, coordinate }) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: coordinate }, properties: { attributo: titolo(p) } })),
+    }],
     link: { testo: 'Cerca i prezzi più bassi su Osservaprezzi carburanti', url: LINK, icona: 'esterno', suggerimento: 'Sito del MIMIT con i prezzi dei carburanti per zona' },
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
-  };
+  }];
 }
 
 export function modelloPopupDistributore(p) {

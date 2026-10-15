@@ -2,7 +2,7 @@ import { urlDati } from '../core/config.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
-import { modelloPopupDistributore, voceDistributore, distributoriVicini, CARBURANTI } from './scheda-distributori.js';
+import { modelloPopupDistributore, vociDistributori, distributoriVicini, CARBURANTI } from './scheda-distributori.js';
 import { tl } from '../core/i18n.js';
 
 // Distributori di carburante di Palermo (dati/distributori/distributori.geojson, rigenerato ogni giorno da un workflow dai CSV del MIMIT:
@@ -150,18 +150,16 @@ export default {
   },
   scheda: {
     layers: [HIT],
-    // cliccare un distributore apre subito il tab «Servizi su strada», anche a strato spento (i punti si interrogano comunque)
-    tabAlClic: () => 'servizi',
-    // i distributori sotto il clic e quelli entro RAGGIO_VICINO, anche a strato spento: una card ciascuno, con la distanza
+    // i distributori sotto il clic e quelli entro RAGGIO_VICINO, anche a strato spento: una sezione unica con una card ciascuno
     voci(trovati, lngLat) {
       const cliccati = new Set(trovati.map(f => f.properties.id));
       const punto = lngLat ? [lngLat.lng, lngLat.lat] : null;
       const vicini = punto ? distributoriVicini(punto, dettagli, coordinate, RAGGIO_VICINO, MAX_VICINI, cliccati) : [];
-      const ids = new Set(vicini.map(x => x.p.id));
-      const voci = vicini.map(({ p, distanza }) => voceDistributore(p, distanza, coordinate.get(p.id)));
+      const visti = new Set(vicini.map(x => x.p.id));
+      const elenco = vicini.map(({ p, distanza }) => ({ p, distanza, coordinate: coordinate.get(p.id) }));
       // senza posizione (o con i dati non ancora caricati) restano almeno quelli sotto il clic
-      for (const id of cliccati) if (!ids.has(id) && dettagli.has(id)) voci.push(voceDistributore(dettagli.get(id), null, coordinate.get(id)));
-      return voci;
+      for (const id of cliccati) if (!visti.has(id) && dettagli.has(id)) elenco.push({ p: dettagli.get(id), distanza: null, coordinate: coordinate.get(id) });
+      return vociDistributori(elenco);
     },
   },
   legendaPannello: '.lg-distributori', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
