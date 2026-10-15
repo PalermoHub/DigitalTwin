@@ -1,7 +1,7 @@
 // Modello puro dei luoghi PNRR sulla mappa: i progetti nello stesso punto (una scuola, un palazzo, una via) diventano un solo marker,
 // con un anello a fette colorate (una per missione) e il numero dei progetti al centro, come le sedi degli uffici.
 import { fette } from './uffici-fette.js';
-import { coloreMissione, nomeSoggetto, titoloProgetto } from './scheda-pnrr.js';
+import { SEMBRA_CODICE, coloreMissione, nomeSoggetto, titoloProgetto } from './scheda-pnrr.js';
 import { righe } from '../core/scheda-util.js';
 import { t, tn } from '../core/i18n.js';
 
@@ -49,7 +49,6 @@ export function conteggiAttuatori(progetti) {
 const MAX_PROGETTI_TOOLTIP = 4;
 
 // Come si chiama un progetto nell'elenco: il titolo; se è solo un codice («p3», «1.2istsc_paic89800x…») la misura del PNRR e il soggetto.
-const SEMBRA_CODICE = /^\d+(\.\d+)+[a-z_]/i;
 export function nomeProgetto(p) {
   const titolo = titoloProgetto(p);
   if (!((p.titolo ?? '').length < 12 || SEMBRA_CODICE.test(p.titolo ?? '')) || !p.submisura_nome) return titolo;

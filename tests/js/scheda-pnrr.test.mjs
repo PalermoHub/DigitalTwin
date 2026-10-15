@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { MISSIONI, coloreMissione, frase, titoloProgetto, righeProgetto, voceScheda, modelloTooltipPnrr, euroCompatto, barre, quotaConclusi, voceSintesi } from '../../js/layers/scheda-pnrr.js';
+import { COLORI_STATO, descrizioneProgetto, MISSIONI, coloreMissione, frase, titoloProgetto, righeProgetto, voceScheda, modelloTooltipPnrr, euroCompatto, barre, quotaConclusi, voceSintesi } from '../../js/layers/scheda-pnrr.js';
 
 const P = {
   cup: 'B71C23000340006', titolo: 'LAVORI DI RIQUALIFICAZIONE DELLA SCUOLA', sintesi: 'MIGRAZIONE AL CLOUD DEI SERVIZI', missione: 'M4',
@@ -123,4 +123,25 @@ test('titoloProgetto: il titolo troncato dalla fonte si completa con la descrizi
   assert.equal(titoloProgetto({ titolo: troncato, sintesi: 'SETTORE CITTADINANZA SOLIDALE*VIA GARIBALDI, 26*altro' }), troncato);
   assert.equal(titoloProgetto({ titolo: 'Titolo corto', sintesi: 'Titolo corto' }), 'Titolo corto');
   assert.equal(titoloProgetto({ titolo: 'x', descrizione: 'x' }), 'x');
+});
+
+test('righeProgetto: lo stato è un badge colorato', () => {
+  const stato = p => righeProgetto({ cup: 'X', stato: p }).find(r => r.etichetta === 'Stato');
+  assert.equal(stato('Concluso').colore, COLORI_STATO.Concluso);
+  assert.equal(stato('In Corso').colore, COLORI_STATO['In Corso']);
+  assert.notEqual(COLORI_STATO.Concluso, COLORI_STATO['In Corso']);
+  assert.equal(stato('Sospeso').colore, undefined);
+});
+
+test('titoloProgetto: un titolo che è solo un codice si sostituisce con la prima parte della descrizione', () => {
+  assert.equal(titoloProgetto({ titolo: '1.4.1fwk8r3v1i.c. publio virgilio marone', sintesi: 'IMPLEMENTAZIONE E STANDARDIZZAZIONE DEL SITO WEB SCOLASTICO*VIA VALDEMONE N. 7*PERSONALIZZAZIONE' }),
+    'Implementazione e standardizzazione del sito web scolastico');
+  assert.equal(titoloProgetto({ titolo: 'p3', submisura_nome: 'Scuola 4.0' }), 'p3');
+});
+
+test('descrizioneProgetto: senza asterischi e senza ripetere il titolo', () => {
+  const p = { titolo: 'x', sintesi: 'IMPLEMENTAZIONE DEL SITO WEB SCOLASTICO*VIA VALDEMONE N. 7*PERSONALIZZAZIONE, MIGRAZIONE', cup: 'C' };
+  assert.equal(titoloProgetto({ ...p, titolo: 'Implementazione del sito web scolastico' }), 'Implementazione del sito web scolastico');
+  assert.equal(descrizioneProgetto({ ...p, titolo: 'Implementazione del sito web scolastico' }), 'Via valdemone n. 7 · Personalizzazione, migrazione');
+  assert.equal(descrizioneProgetto({ cup: 'C' }), undefined);
 });

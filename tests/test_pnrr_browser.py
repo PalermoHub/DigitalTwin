@@ -134,6 +134,9 @@ def test_tab_pnrr_ha_progetto_e_grafici(apri):
     assert f"pnrr-{primo['properties']['cup']}" in sez and "pnrr-sintesi" in sez
     assert not v.js("[...document.querySelectorAll('.scheda-sez')].some(s => s.dataset.tab === 'luogo' && String(s.dataset.chiave).startsWith('pnrr'))")
     # i grafici: tre riquadri e le barre per missione, stato, anno, settore, attuatore
+    # lo stato è un badge colorato
+    badge = v.page.locator(f".scheda-sez[data-chiave='pnrr-{primo['properties']['cup']}'] .scheda-riga", has_text="Stato").locator(".scheda-badge-tinta")
+    assert badge.count() == 1 and badge.get_attribute("style") and "--tinta" in badge.get_attribute("style")
     sintesi = ".scheda-sez[data-chiave='pnrr-sintesi']"
     assert v.page.locator(f"{sintesi} .pend-riquadro").count() == 3
     assert v.page.locator(f"{sintesi} .pend-classifica").count() == 5
@@ -186,6 +189,9 @@ def test_clic_sul_marker_elenca_i_progetti_del_luogo(apri):
     assert v.page.locator(".pnrr-popup h3").inner_text().startswith(str(len(progetti)))
     # ogni voce porta la missione e un nome
     assert all(t.strip() for t in v.page.locator(".pnrr-popup-elenco li").all_inner_texts())
+    # il popup ha margini interni: il testo non tocca i bordi
+    assert v.js("parseFloat(getComputedStyle(document.querySelector('.pnrr-popup')).paddingLeft)") >= 12
+    assert v.js("parseFloat(getComputedStyle(document.querySelector('.pnrr-popup-elenco li')).paddingTop)") >= 6
     # e il pallino col colore della missione, ben visibile (non solo dentro la legenda)
     pallini = v.js("[...document.querySelectorAll('.pnrr-popup-elenco li i')].map(i => { const s = getComputedStyle(i); return [s.width, s.backgroundColor]; })")
     assert len(pallini) == len(progetti) and all(w == "10px" and c not in ("rgba(0, 0, 0, 0)", "transparent") for w, c in pallini)

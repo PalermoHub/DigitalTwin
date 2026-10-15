@@ -64,12 +64,27 @@ export function nomeSoggetto(testo) {
 
 // La fonte tronca spesso il titolo a 40 caratteri; il titolo intero sta di solito nella prima parte della descrizione
 // («titolo*INDIRIZZO*dettagli»): lo si usa solo se ricomincia con lo stesso testo.
+// Un titolo che è solo un codice («p3», «1.4.1fwk8r3v1i.c. publio…») si sostituisce con la prima parte della descrizione.
+export const SEMBRA_CODICE = /^\d+(\.\d+)+[a-z_]/i;
+const primaParte = p => String(p.descrizione ?? p.sintesi ?? '').split('*')[0].trim();
 export function titoloProgetto(p) {
   const titolo = (p.titolo ?? '').trim();
-  const intero = String(p.descrizione ?? p.sintesi ?? '').split('*')[0].trim();
+  const intero = primaParte(p);
   if (titolo && intero.length > titolo.length && intero.toLowerCase().startsWith(titolo.toLowerCase().slice(0, 25))) return frase(intero);
+  if ((titolo.length < 12 || SEMBRA_CODICE.test(titolo)) && intero.length >= 12) return frase(intero);
   return frase(p.titolo) ?? frase(p.submisura_nome) ?? p.cup;
 }
+
+// La descrizione della fonte è «titolo*INDIRIZZO*dettagli»: senza gli asterischi e senza ripetere il titolo già mostrato.
+export function descrizioneProgetto(p) {
+  const parti = String(p.sintesi ?? '').split('*').map(x => x.trim()).filter(Boolean);
+  const titolo = titoloProgetto(p).toLowerCase();
+  const altre = parti.filter(x => frase(x).toLowerCase() !== titolo);
+  return altre.length ? altre.map(frase).join(' · ') : undefined;
+}
+
+// Colori del badge dello stato di avanzamento (valori della fonte)
+export const COLORI_STATO = { Concluso: '#2f9e44', 'In Corso': '#e8590c' };
 
 // Il soggetto attuatore è un filtro: il clic mostra in mappa solo i suoi progetti (layer pnrr.js, evento `dt:filtro`).
 export const filtroAttuatore = valore => ({ strato: 'pnrr', campo: 'attuatore', valore });
@@ -86,7 +101,11 @@ export function righeProgetto(p) {
     ['Natura', frase(p.natura)], ['Tipologia', frase(p.tipologia)], ['Settore', frase(p.settore)],
     ['Indirizzo', p.indirizzo], ['Sede del soggetto attuatore', p.sede], ['Scuola (layer Scuole)', p.scuola], ['Posizione', PRECISIONE[p.precisione] ? tl(PRECISIONE[p.precisione]) : null],
     ['CUP', p.cup],
-  ]).map(r => (r.etichetta === 'Soggetto attuatore' ? { ...r, filtro: filtroAttuatore(p.attuatore) } : r));
+  ]).map(r => {
+    if (r.etichetta === 'Soggetto attuatore') return { ...r, filtro: filtroAttuatore(p.attuatore) };
+    if (r.etichetta === 'Stato' && COLORI_STATO[p.stato]) return { ...r, colore: COLORI_STATO[p.stato] }; // badge colorato
+    return r;
+  });
 }
 
 export function voceScheda(p) {
@@ -99,7 +118,7 @@ export function voceScheda(p) {
     badge: p.missione ? `PNRR ${p.missione}` : 'PNRR',
     sempre: true,
     gruppi: [{ righe: righeProgetto(p) }],
-    testo: p.sintesi ? frase(p.sintesi) : undefined,
+    testo: descrizioneProgetto(p),
     link: LINK_FONTI,
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
