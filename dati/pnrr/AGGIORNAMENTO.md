@@ -7,16 +7,44 @@ Italia Domani pubblica una nuova estrazione.
 > Perché a mano: il sito di Italia Domani risponde «HTTP 403» ai server di GitHub, quindi un workflow automatico non può scaricare i file
 > (provato il 15/10/2026). Dal proprio computer lo scarico funziona.
 
+## In un comando
+
+```bash
+python3 scripts/aggiorna_pnrr.py
+```
+
+Fa tutto da solo, nell'ordine, e **si ferma al primo problema** senza lasciare file a metà:
+1. controlla di essere su `main` senza modifiche in sospeso e lo aggiorna (`git pull --rebase`);
+2. legge sul sito la data dell'ultima estrazione (pochi KB) e la confronta con quella nel repository: **se non c'è nulla di nuovo si ferma qui**;
+3. rigenera i dati con `scripts/pnrr.py` (scarica circa 330 MB, meno di un minuto);
+4. controlla che i numeri siano ragionevoli rispetto a prima (stessi ordini di grandezza, nessun file mancante, data non tornata indietro): se no, **ripristina i file e non salva niente**;
+5. lancia i test (JS e Python del layer);
+6. fa il commit, riallinea con `origin/main` e pubblica (`git push`).
+
+Opzioni:
+
+| Comando | Cosa fa |
+|---|---|
+| `python3 scripts/aggiorna_pnrr.py --controlla` | dice solo se ci sono dati nuovi, senza scaricare né modificare nulla |
+| `python3 scripts/aggiorna_pnrr.py --senza-push` | fa tutto ma si ferma al commit: guardi e poi pubblichi tu |
+| `python3 scripts/aggiorna_pnrr.py --forza` | prosegue anche se la data non è cambiata o se i numeri sembrano sospetti |
+| `python3 scripts/aggiorna_pnrr.py --senza-test` | salta i test |
+
+Se i dati sul sito sono quelli di sempre scrive «Nessun dato nuovo» e termina in pochi secondi. Se lo script si ferma con un `ERRORE`, il messaggio
+dice cosa non va; i casi più comuni sono nella tabella «Se qualcosa non torna» più sotto. In alternativa puoi chiedere a Claude: «aggiorna i dati PNRR».
+
+Quando e come controllare se ci sono dati nuovi: basta `--controlla`, ad esempio una volta al mese o quando Italia Domani annuncia un aggiornamento.
+
 ## Quando aggiornare
 
 I file di Italia Domani portano la data dell'estrazione (colonna `Data di Estrazione`). I dati attuali sono quelli del **13/06/2026**
 (`estrazione` in `riepilogo.json`). Aggiorna quando:
 - sai che Italia Domani ha pubblicato dati nuovi (la pagina del catalogo dice «aggiornati periodicamente»), oppure
-- vuoi controllare: lancia lo script (passo 2) e guarda se `estrazione` è cambiata. Se è uguale i file non cambiano e non c'è nulla da pubblicare.
+- vuoi controllare: `python3 scripts/aggiorna_pnrr.py --controlla` confronta la data del sito con quella nel repository, senza scaricare nulla.
 
-## Procedura
+## Procedura manuale (passo per passo)
 
-Servono Python 3 (solo libreria standard), una connessione internet e circa 400 MB liberi per i file scaricati.
+È quello che fa lo script `aggiorna_pnrr.py`; serve se vuoi fare i passi a mano o se lo script si ferma e devi capire dove. Servono Python 3 (solo libreria standard), una connessione internet e circa 400 MB liberi per i file scaricati.
 
 **1. Parti da `main` aggiornato**
 ```bash
@@ -68,8 +96,6 @@ git push origin main
 `git add -f` serve perché la cartella `dati/` è ignorata da git, tranne l'eccezione per questa. Il sito si aggiorna con il push su `main`.
 Non serve cambiare la versione del service worker (`sw.js`) se cambiano solo i dati.
 
-In alternativa puoi chiedere a Claude: «aggiorna i dati PNRR» (si ferma prima del push per chiedere conferma).
-
 ## Se qualcosa non torna
 
 | Sintomo | Causa probabile | Cosa fare |
@@ -83,7 +109,7 @@ In alternativa puoi chiedere a Claude: «aggiorna i dati PNRR» (si ferma prima 
 | `con_dati_progetto` falso per alcuni progetti | il CUP non è in nessun file dei progetti | di solito è un'incoerenza della fonte: i progetti restano con i soli dati di localizzazione |
 | Il Comune non è più sulla sede | il codice fiscale o il nome del Comune sono cambiati nell'IPA | aggiorna `ENTI_SULLA_SEDE` in `scripts/pnrr.py` |
 
-## Cosa fa lo script (in breve)
+## Cosa fa `scripts/pnrr.py` (in breve)
 
 1. Tiene i progetti **localizzati solo a Palermo** (codici ISTAT 019/082/053), escludendo quelli diffusi su più comuni.
 2. Li unisce per CUP ai file dei progetti e trova la posizione dall'indirizzo (localizzazione, poi descrizione del progetto, poi sede della scuola
