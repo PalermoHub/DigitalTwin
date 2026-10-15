@@ -1,7 +1,7 @@
 // Mini-grafico dell'andamento 2011-2035 come geometria sulla mappa: linea dei dati osservati, tratteggio dello scenario,
 // freccia in punta e nome (nessuna area sotto la curva: coprirebbe il colore della mappa). Essendo disegnato in coordinate geografiche, si rimpicciolisce e ingrandisce con lo
 // zoom come i confini. Il profilo normalizzato viene da `profilo` in scheda-trend.js.
-import { profilo, COLORE_CALO, COLORE_CRESCITA } from './scheda-trend.js';
+import { profilo, conSegno, COLORE_CALO, COLORE_CRESCITA } from './scheda-trend.js';
 
 const M_LON = 111320; // metri per grado di longitudine all'equatore (× cos latitudine)
 const M_LAT = 110574; // metri per grado di latitudine
@@ -44,7 +44,8 @@ export function costruisciGrafico(p) {
     f('linea', { type: 'LineString', coordinates: osservati.map(d => aGradi(d)) }),
     f('proiezione', { type: 'LineString', coordinates: proiezione.map(d => aGradi(d)) }),
     f('punta', { type: 'Polygon', coordinates: [[...punta.map(aGradi), aGradi(punta[0])]] }),
-    f('nome', { type: 'Point', coordinates: aGradi([0, fondo - 0.01 * gw]) }),
+    // sotto il grafico: nome dell'area e, a capo, la variazione % 2011-2021 nel colore del segno
+    { ...f('nome', { type: 'Point', coordinates: aGradi([0, fondo - 0.01 * gw]) }), properties: { ...comuni, tipo: 'nome', variazione: conSegno(p.var1121) } },
   ];
 }
 

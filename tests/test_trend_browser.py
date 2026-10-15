@@ -23,7 +23,7 @@ def test_il_layer_si_accende_con_aree_e_legenda(apri):
     assert v.js(CONTA % "quartiere") == 25
     assert v.js(CONTA % "circoscrizione") == 8
     assert v.js("window.dt.map.getLayoutProperty('trend-popolazione-fill', 'visibility')") == "visible"
-    assert v.js("window.dt.map.hasImage('trend-su') && window.dt.map.hasImage('trend-giu')")
+    v.page.wait_for_function("window.dt.map.hasImage('trend-var-27.26') && window.dt.map.hasImage('trend-var--4.62')", timeout=30000)  # etichette ▲/▼ della variazione
     assert _errori(v) == []
 
 
@@ -61,13 +61,15 @@ def test_clic_apre_la_scheda_nel_tab_popolazione_con_il_grafico(apri):
         v.page.screenshot(path=os.environ["TREND_SCREENSHOT"].replace(".png", "_scheda.png"))
 
 
-def test_interruttore_frecce_trend_charts(apri):
+def test_interruttore_variazione_trend_charts(apri):
     v = apri()
     _accendi(v)
     v.js("document.getElementById('dt-consenso')?.remove()")
     v.page.wait_for_function("window.dt.map.getSource('trend-grafici')._data.features?.length > 0", timeout=30000)
     # 88 aree × 4 elementi per il livello iniziale; i filtri scelgono i Trend Charts del livello scelto
     assert v.js("window.dt.map.getSource('trend-grafici')._data.features.length") == (55 + 25 + 8) * 4
+    # modo «Variazione»: un'etichetta ▲/▼ per ogni valore, con l'immagine pronta
+    assert v.js("window.dt.map.hasImage('trend-var-27.26')")  # Tribunali o Kalsa +27,3%
     prima = v.js("JSON.stringify(window.dt.map.getFilter('trend-grafico-linea'))")
     assert '"upl"' not in prima  # con le frecce i Trend Charts non selezionano nulla
     v.page.click(".lg-trend-popolazione .trend-livello >> text=Trend Charts")
@@ -78,11 +80,10 @@ def test_interruttore_frecce_trend_charts(apri):
     assert '"quartiere"' in v.js("JSON.stringify(window.dt.map.getFilter('trend-grafico-linea'))")
     # i layer dei Trend Charts fanno parte dello strato: restano visibili finché lo strato è acceso
     assert v.js("window.dt.map.getLayoutProperty('trend-grafico-linea', 'visibility')") == "visible"
-    v.page.click(".lg-trend-popolazione .trend-livello >> text=Frecce")
+    v.page.click(".lg-trend-popolazione .trend-livello >> text=Variazione")
     assert '"quartiere"' not in v.js("JSON.stringify(window.dt.map.getFilter('trend-grafico-linea'))")
     assert _errori(v) == []
     if os.environ.get("TREND_SCREENSHOT"):
-        v.page.click(".lg-trend-popolazione .trend-livello >> text=Trend Charts")
         v.page.click(".lg-trend-popolazione .trend-livello >> text=UPL")
         for z in (12, 13.5, 15):
             v.vai(13.3617, 38.1157, z)

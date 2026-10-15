@@ -2,12 +2,14 @@ import { urlDati } from '../core/config.js';
 import { registraTooltipStrati } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { tl } from '../core/i18n.js';
-import { LIVELLI, RAMPA, COLORE_CALO, COLORE_CRESCITA, modelloTooltipTrend, voceScheda } from './scheda-trend.js';
+import { LIVELLI, RAMPA, modelloTooltipTrend, voceScheda } from './scheda-trend.js';
 import { contenutoTrend, graficoConValori } from './scheda-trend-dom.js';
 import { costruisciGrafici } from './trend-geometria.js';
+import { iconaEtichetta, idEtichetta } from './trend-icone.js';
 
 // Trend della popolazione 2011 → 2021 → 2023 per UPL, quartiere o circoscrizione (ISTAT). Colore = variazione % 2011-2021
-// (viola calo, verde crescita), freccia su/giù = segno, dimensione = abitanti 2023. La legenda sceglie il livello; il
+// (viola calo, verde crescita); simbolo a scelta: etichetta ▲/▼ con la variazione % oppure Trend Charts (linea 2011-2035). La
+// legenda sceglie livello e simbolo; il
 // layer «hit» è sempre presente, così la scheda mostra il trend anche a strato spento.
 const SRC = 'trend-popolazione';
 const SRC_GRAFICI = 'trend-grafici';
@@ -22,13 +24,13 @@ const PR = 2;
 let mappa = null;
 let legenda = null;
 let livello = 'upl';
-let simbolo = 'frecce'; // 'frecce' (segno e intensità della variazione) o 'grafico' (Trend Charts: andamento 2011-2035)
-let datiGrafici = null;
-const ICONA_FRECCIA = ['case', ['>=', ['number', ['get', 'var1121']], 0], 'trend-su', 'trend-giu'];
-// Freccia: piccola da lontano, grande da vicino (zoom 10 → metà, 13 → piena, 16 → quasi il doppio) e tanto più grande quanto
-// più forte è la variazione 2011-2021 (±0% minima, ±30% o più massima). I Trend Charts sono geometrie: crescono con lo zoom da sole.
-const perVariazione = ['interpolate', ['linear'], ['abs', ['number', ['get', 'var1121']]], 0, 0.3, 5, 0.55, 15, 0.9, 30, 1.3];
-const DIMENSIONE_FRECCE = ['interpolate', ['linear'], ['zoom'], 10, ['*', 0.5, perVariazione], 13, perVariazione, 16, ['*', 1.8, perVariazione]];
+let simbolo = 'variazione'; // 'variazione' (etichette ▲/▼ con la variazione %) o 'grafico' (Trend Charts: andamento 2011-2035)
+let datiTrend = null;
+const ICONA_VARIAZIONE = ['concat', 'trend-var-', ['to-string', ['get', 'var1121']]]; // un'etichetta per ogni valore (vedi trend-icone.js)
+// Etichetta «▲ +27,3%»: piccola da lontano, più grande da vicino (zoom 10 → 0,7, 13 → piena, 16 → una volta e mezza) e un po' più
+// grande quanto più forte è la variazione 2011-2021. I Trend Charts sono geometrie: crescono con lo zoom da sole.
+const perVariazione = ['interpolate', ['linear'], ['abs', ['number', ['get', 'var1121']]], 0, 0.8, 5, 0.9, 15, 1, 30, 1.15];
+const DIMENSIONE_ETICHETTE = ['interpolate', ['linear'], ['zoom'], 10, ['*', 0.7, perVariazione], 13, perVariazione, 16, ['*', 1.5, perVariazione]];
 const NESSUNO = ['==', ['get', 'livello'], '']; // filtro che non seleziona nulla
 
 const el = (tag, classe, testo) => {
@@ -51,26 +53,16 @@ function applicaFiltri() {
   for (const { tipo, id } of GRAFICO) mappa.setFilter(id, grafico ? delGrafico(tipo) : NESSUNO);
 }
 
-// i Trend Charts si costruiscono una volta dai punti del trend e si caricano nella loro sorgente
-function caricaGrafici(map) {
-  datiGrafici ??= fetch(urlDati('trend/trend.geojson')).then(r => r.json()).then(costruisciGrafici);
-  datiGrafici.then(d => map.getSource(SRC_GRAFICI)?.setData(d)).catch(() => { datiGrafici = null; });
-}
-
-// freccia piena su canvas: punta verso l'alto, o verso il basso se `giu`; bordo bianco per leggerla su ogni colore
-function freccia(colore, giu) {
-  const d = 40 * PR;
-  const c = document.createElement('canvas');
-  c.width = c.height = d;
-  const g = c.getContext('2d');
-  g.translate(d / 2, d / 2);
-  if (giu) g.rotate(Math.PI);
-  g.beginPath();
-  g.moveTo(0, -d * 0.42); g.lineTo(d * 0.36, 0); g.lineTo(d * 0.14, 0); g.lineTo(d * 0.14, d * 0.4);
-  g.lineTo(-d * 0.14, d * 0.4); g.lineTo(-d * 0.14, 0); g.lineTo(-d * 0.36, 0); g.closePath();
-  g.fillStyle = colore; g.strokeStyle = '#fff'; g.lineWidth = 2.5 * PR; g.lineJoin = 'round';
-  g.stroke(); g.fill();
-  return g.getImageData(0, 0, d, d);
+// dati del trend, caricati una volta: servono per i Trend Charts (geometrie) e per le etichette della variazione (icone)
+function caricaDati(map) {
+  datiTrend ??= fetch(urlDati('trend/trend.geojson')).then(r => r.json());
+  datiTrend.then(d => {
+    map.getSource(SRC_GRAFICI)?.setData(costruisciGrafici(d));
+    for (const v of new Set(d.features.filter(f => f.properties.tipo === 'punto').map(f => f.properties.var1121))) {
+      if (!map.hasImage(idEtichetta(v))) map.addImage(idEtichetta(v), iconaEtichetta(v, PR), { pixelRatio: PR });
+    }
+    map.triggerRepaint();
+  }).catch(() => { datiTrend = null; });
 }
 
 function creaLegenda() {
@@ -87,7 +79,7 @@ function creaLegenda() {
     scelta.append(et);
   }
   const simboli = el('div', 'trend-livelli');
-  for (const [chiave, nome] of [['frecce', 'Frecce'], ['grafico', 'Trend Charts']]) {
+  for (const [chiave, nome] of [['variazione', 'Variazione'], ['grafico', 'Trend Charts']]) {
     const et = el('label', 'trend-livello');
     const r = document.createElement('input');
     r.type = 'radio'; r.name = 'trend-simbolo'; r.checked = chiave === simbolo;
@@ -99,7 +91,7 @@ function creaLegenda() {
   rampa.style.background = `linear-gradient(90deg, ${RAMPA.map(([, c]) => c).join(', ')})`;
   const estremi = el('div', 'trend-rampa-estremi');
   estremi.append(el('span', null, '−15%'), el('span', null, '0'), el('span', null, '+20%'));
-  legenda.append(scelta, simboli, rampa, estremi, el('p', 'scheda-nota', 'Frecce: segno e intensità della variazione (più grande = variazione più forte). Trend Charts: andamento 2011-2035 (tratteggio = scenario). Più ingrandisci, più i simboli crescono.'));
+  legenda.append(scelta, simboli, rampa, estremi, el('p', 'scheda-nota', 'Variazione: ▲ crescita, ▼ calo, con la variazione % 2011-2021 (a zoom basso restano le più forti). Trend Charts: andamento 2011-2035 (tratteggio = scenario). Più ingrandisci, più i simboli crescono.'));
   document.getElementById('legende').append(legenda);
 }
 
@@ -119,8 +111,6 @@ export default {
     mappa = map;
     const nascosto = { visibility: 'none' };
     const v = ['number', ['get', 'var1121']];
-    if (!map.hasImage('trend-su')) map.addImage('trend-su', freccia(COLORE_CRESCITA, false), { pixelRatio: PR });
-    if (!map.hasImage('trend-giu')) map.addImage('trend-giu', freccia(COLORE_CALO, true), { pixelRatio: PR });
     map.addLayer({
       id: FILL, type: 'fill', source: SRC, filter: delLivello('area'), layout: nascosto,
       paint: { 'fill-color': ['interpolate', ['linear'], v, ...RAMPA.flat()], 'fill-opacity': 0.72 },
@@ -129,8 +119,8 @@ export default {
     map.addLayer({
       id: FRECCE, type: 'symbol', source: SRC, filter: delLivello('punto'),
       layout: {
-        ...nascosto, 'icon-image': ICONA_FRECCIA, 'icon-allow-overlap': true, 'icon-size': DIMENSIONE_FRECCE,
-        'symbol-sort-key': ['-', ['get', 'p23']], // se i simboli si sovrappongono vincono le aree più popolose
+        ...nascosto, 'icon-image': ICONA_VARIAZIONE, 'icon-size': DIMENSIONE_ETICHETTE, 'icon-allow-overlap': false,
+        'symbol-sort-key': ['-', ['abs', ['number', ['get', 'var1121']]]], // se le etichette si sovrappongono vincono le variazioni più forti
       },
     });
     // Trend Charts: linea dei dati, tratteggio dello scenario, freccia in punta e nome (come geometrie in scala con lo zoom)
@@ -142,10 +132,14 @@ export default {
     map.addLayer({ id: 'trend-grafico-punta', type: 'fill', ...grafico(), paint: { 'fill-color': colore } });
     map.addLayer({
       id: 'trend-grafico-nome', type: 'symbol', ...grafico(),
-      layout: { ...nascosto, 'text-field': ['get', 'nome'], 'text-font': ['Noto Sans Bold'], 'text-size': ['interpolate', ['linear'], ['zoom'], 11, 8, 15, 12], 'text-anchor': 'top' },
+      layout: {
+        ...nascosto, 'text-font': ['Noto Sans Bold'],
+        'text-field': ['format', ['get', 'nome'], {}, '\n', {}, ['get', 'variazione'], { 'text-color': ['get', 'colore'], 'font-scale': 1.2 }],
+        'text-size': ['interpolate', ['linear'], ['zoom'], 11, 8, 15, 12], 'text-anchor': 'top',
+      },
       paint: { 'text-color': '#2b2b2b', 'text-halo-color': 'rgba(255,255,255,0.85)', 'text-halo-width': 1.2 },
     });
-    caricaGrafici(map);
+    caricaDati(map);
     applicaFiltri();
     // trasparente e sempre presente: la scheda del luogo mostra il trend anche a strato spento
     // copre tutti i livelli: un clic restituisce UPL, quartiere e circoscrizione del punto
