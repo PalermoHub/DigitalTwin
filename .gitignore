@@ -20,6 +20,7 @@ dati/*/
 # eccezione: progetti PNRR a Palermo (generati a mano da scripts/pnrr.py, vedi dati/pnrr/AGGIORNAMENTO.md)
 !dati/pnrr/
 !dati/pendolarismo/
+!dati/trend/
 # eccezione: isole di calore (piccolo, rigenerato da scripts/isole_calore.py)
 !dati/isole-calore/
 # eccezione: edifici in 3D (piante DWG di partenza e modello generato da scripts/edificio/)
@@ -75,6 +76,7 @@ scripts/*
 !scripts/edificio/
 !scripts/estrai_stile_omi.mjs
 !scripts/colonnine.py
+!scripts/trend_demografico.py
 !scripts/incendi.py
 !scripts/pai.py
 !scripts/uffici_build.py

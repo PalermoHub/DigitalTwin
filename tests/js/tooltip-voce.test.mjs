@@ -27,6 +27,13 @@ test('con pallino e badge: pallino nel titolo, badge dopo il titolo', () => {
   assert.equal(v.figli[1].vars['--colore'], '#003');
 });
 
+test('con un elemento pronto (dom): compare dopo il titolo e il badge', () => {
+  const grafico = new Nodo('svg');
+  const v = disegnaVoceTooltip({ titolo: 'Kalsa', badge: { testo: 'Trend +27%', colore: '#2e8b2e' }, dom: grafico });
+  assert.equal(v.figli.at(-1), grafico);
+  assert.equal(disegnaVoceTooltip({ titolo: 'Kalsa' }).figli.length, 1);
+});
+
 test('registraTooltipStrati: il simbolo di legenda sta accanto al sottotitolo, non al titolo', async () => {
   const { registraTooltipStrati, contenutoTooltip, campioneTooltip } = await import('../../js/core/tooltip.js');
   const map = {

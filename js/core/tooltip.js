@@ -110,6 +110,7 @@ export function disegnaVoceTooltip(m) {
     }
     voce.append(elenco);
   }
+  if (m.dom) voce.append(m.dom); // un elemento già pronto (es. il grafico del trend)
   if (m.suggerimento) { // invito a cliccare per saperne di più
     const s = document.createElement('div');
     s.className = 'tooltip-suggerimento';
