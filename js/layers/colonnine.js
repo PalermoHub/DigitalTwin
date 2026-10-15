@@ -171,7 +171,7 @@ export default {
   },
   legendaPannello: '.lg-colonnine', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
-    id: 'colonnine', etichetta: 'Colonnine di ricarica', layers: [PUNTI], attivo: false,
+    id: 'colonnine', etichetta: 'Colonnine di ricarica', sottosezione: 'Colonnine di ricarica', layers: [PUNTI], attivo: false,
     sottovoci: [
       { titolo: 'Stato', voci: STATI.map(([s]) => ({ id: `stato:${s}`, etichetta: s })) },
       { titolo: 'Corrente', voci: CORRENTI.map(([c, nome]) => ({ id: `corrente:${c}`, etichetta: nome })) },

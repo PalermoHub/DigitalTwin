@@ -1,14 +1,14 @@
 // Service worker dell'app: visite ripetute immediate e interfaccia disponibile anche senza rete.
 // Strategie (decise da `strategia`, provata nei test):
 //  - pagina (navigazione): rete prima, con la copia salvata come ripiego;
-//  - dati dell'app (cartella dati/): rete prima, copia salvata come ripiego (cambiano: colonnine ogni ora, incendi, PAI);
+//  - dati dell'app (cartella dati/): rete prima, copia salvata come ripiego (cambiano: colonnine ogni ora, distributori ogni giorno, incendi, PAI);
 //  - file statici dell'app (js, css, immagini, caratteri): copia salvata subito e aggiornamento in secondo piano;
 //  - PMTiles letti a intervalli di byte (Range) dai nostri host: ogni intervallo si salva come risposta intera sotto una
 //    chiave propria e si rifà 206 al ritorno (la Cache API non salva le 206). Vale 24 ore, così non si riscarica ogni
 //    10 minuti come impone GitHub Pages (max-age=600);
 //  - tutto il resto (altri siti, POST, file interi pesanti): non si tocca.
 // Per rilasciare una versione nuova basta cambiare VERSIONE: le cache vecchie si cancellano all'attivazione.
-const VERSIONE = 'dt-v150';
+const VERSIONE = 'dt-v152';
 const STATICA = `${VERSIONE}-statica`;
 const DATI = `${VERSIONE}-dati`;
 const INTERVALLI = `${VERSIONE}-intervalli`;

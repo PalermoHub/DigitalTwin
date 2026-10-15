@@ -243,6 +243,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
       gruppo.append(h);
     }
     let sezioneStrato = null;
+    let sottosezioneStrato = null;
     for (const s of m.strati) {
       // `sezione` su uno strato: sottotitolo che raggruppa gli strati consecutivi (es. Geomorfologia / Idraulica nel PAI)
       if (s.sezione && s.sezione !== sezioneStrato) {
@@ -258,6 +259,14 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
           n.textContent = s.nota;
           gruppo.append(n);
         }
+      }
+      // `sottosezione` su uno strato: titolo di secondo livello dentro la sezione (es. Colonnine di ricarica in Servizi su strada); non si ripiega da solo
+      if (s.sottosezione && s.sottosezione !== sottosezioneStrato) {
+        sottosezioneStrato = s.sottosezione;
+        const h = document.createElement('h4');
+        h.className = 'gruppo-sottosezione';
+        h.textContent = s.sottosezione;
+        gruppo.append(h);
       }
       const label = document.createElement('label');
       const cb = document.createElement('input');

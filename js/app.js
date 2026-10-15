@@ -39,6 +39,7 @@ import fontanelle from './layers/fontanelle.js';
 import scuole from './layers/scuole.js';
 import uffici from './layers/uffici.js';
 import colonnine from './layers/colonnine.js';
+import distributori from './layers/distributori.js';
 import incendi from './layers/incendi.js';
 import isoleCalore from './layers/isole-calore.js';
 import mefImmobili from './layers/mef-immobili.js';
@@ -71,7 +72,7 @@ riduciLegenda.addEventListener('click', () => {
 });
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [base, terreno, popolazione, territorio, mefImmobili, peba, pnrr, pendolarismo, trendPopolazione, edifici, crociferi, pai, monumenti, alberi, fontanelle, trasporto, sicurezza, colonnine, uffici, scuole, incendi, isoleCalore, confini];
+const MODULI = [base, terreno, popolazione, territorio, mefImmobili, peba, pnrr, pendolarismo, trendPopolazione, edifici, crociferi, pai, monumenti, alberi, fontanelle, trasporto, sicurezza, colonnine, distributori, uffici, scuole, incendi, isoleCalore, confini];
 traduciModuli(MODULI); // in inglese: titoli, etichette e descrizioni dei layer dai dizionari (lbl.*)
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
@@ -80,7 +81,7 @@ const condivisionePromessa = preparaCondivisione(window); // un link condiviso p
 // Gli strati puntuali nascono spenti, ma la scheda li interroga anche da spenti: i loro dati (GeoJSON) non bloccano l'avvio.
 // Partono in secondo piano poco dopo (o alla prima accensione, o al primo clic sulla mappa, se arriva prima): vedi core/differiti.js.
 // Il trasporto resta fuori perché il filtro Linea ha bisogno dei suoi dati subito.
-const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine']);
+const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine', 'distributori']);
 
 // la mappa (hash: true) riscrive subito l'hash con la vista: la scheda richiesta dall'indirizzo (#guida, #fonti…) va letta prima
 const SCHEDA_INDIRIZZO = location.hash.slice(1);

@@ -23,10 +23,12 @@ const sicurezza = t('tabella.fonte.incidenti');
 const mef = t('tabella.fonte.mef');
 const peba = t('tabella.fonte.peba');
 const pnrr = t('tabella.fonte.pnrr');
+const mimit = t('tabella.fonte.mimit');
 const pendolarismo = t('tabella.fonte.pendolarismo');
 
 export const SORGENTI = [
   { id: 'colonnine', nome: t('tabella.layer.colonnine'), strati: ['colonnine-hit'], visibili: ['colonnine-punti'], chiave: p => p.id, fonte: progetto, approssimata: false, esporta: true, colore: '#2b8a3e' },
+  { id: 'distributori', nome: t('tabella.layer.distributori'), strati: ['distributori-hit'], visibili: ['distributori-punti'], chiave: p => p.id, colonne: ['bandiera', 'gestore', 'indirizzo', 'benzina', 'gasolio', 'gpl', 'metano', 'prezzi_del'], fonte: mimit, approssimata: false, esporta: true, colore: '#f2b705' },
   { id: 'scuole', nome: t('tabella.layer.scuole'), strati: ['scuole-hit-punti'], visibili: ['scuole-punti'], chiave: p => p.id, fonte: comune, approssimata: false, esporta: true, colore: '#1971c2' },
   { id: 'uffici', nome: t('tabella.layer.uffici'), strati: ['uffici-hit'], visibili: ['uffici-punti'], chiave: p => p.id, fonte: comune, approssimata: false, esporta: true, colore: '#a61e4d' },
   { id: 'fermate', nome: t('tabella.layer.fermate'), strati: ['trasporto-hit-fermate'], visibili: ['trasporto-fermate'], chiave: p => p.id, fonte: comune, approssimata: false, esporta: true, colore: '#364fc7' },

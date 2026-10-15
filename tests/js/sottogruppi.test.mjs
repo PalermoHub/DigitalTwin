@@ -85,3 +85,22 @@ test('aggiornaSottogruppi con riapri: se nulla di nuovo finisce sotto un titolo 
   assert.equal(t1.getAttribute('aria-expanded'), 'false');
   assert.equal(chiusoCls(a), true);
 });
+
+// titoli di secondo livello (es. «Colonnine di ricarica» dentro «Servizi su strada»)
+const sotto = (chiuso = false) => ({ t: 'sotto', chiuso });
+const eSotto = n => n.t === 'sotto';
+
+test('nascosti: un titolo di secondo livello chiuso nasconde i suoi strati fino al titolo successivo, non gli altri', () => {
+  const a = strato('a'), b = strato('b'), c = strato('c');
+  assert.deepEqual(nascosti([titolo(), sotto(true), a, sotto(false), b, titolo(), c], eTitolo, chiuso, eSotto), [a]);
+});
+
+test('nascosti: una sezione chiusa nasconde anche i titoli di secondo livello e i loro strati', () => {
+  const s1 = sotto(false), a = strato('a'), s2 = sotto(true), b = strato('b'), t2 = titolo(false), c = strato('c');
+  assert.deepEqual(nascosti([titolo(true), s1, a, s2, b, t2, c], eTitolo, chiuso, eSotto), [s1, a, s2, b]);
+});
+
+test('nascosti: una nuova sezione azzera lo stato del titolo di secondo livello chiuso', () => {
+  const a = strato('a'), c = strato('c');
+  assert.deepEqual(nascosti([titolo(), sotto(true), a, titolo(false), c], eTitolo, chiuso, eSotto), [a]);
+});
