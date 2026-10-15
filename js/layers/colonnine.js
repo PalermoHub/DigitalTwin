@@ -161,6 +161,7 @@ export default {
     aggiornaDalVivo(); // senza attendere: la mappa parte subito con il file
   },
   scheda: {
+    vicini: { raggio: 300, max: 5 }, // anche i punti nei dintorni del clic (vedi docs/NUOVO_LAYER.md)
     layers: [HIT],
     // con lo strato acceso, cliccare una colonnina apre subito il suo tab della scheda
     tabAlClic: map => (map.getLayoutProperty(PUNTI, 'visibility') === 'visible' ? 'servizi' : null),

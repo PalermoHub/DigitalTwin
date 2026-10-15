@@ -83,6 +83,7 @@ export default {
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; } }],
   pannello: creaLegenda,
   scheda: {
+    vicini: { raggio: 200, max: 5 }, // anche i punti nei dintorni del clic (vedi docs/NUOVO_LAYER.md)
     layers: [HIT],
     voci(trovati) {
       const visti = new Set();

@@ -257,6 +257,7 @@ export default {
   }],
   pannello: creaLegenda,
   scheda: {
+    vicini: { raggio: 300, max: 5 }, // anche i punti nei dintorni del clic (vedi docs/NUOVO_LAYER.md)
     layers: [HIT],
     // nella tab PNRR: i progetti cliccati e, sempre, la sintesi con i grafici di tutti i progetti di Palermo
     voci(trovati) {

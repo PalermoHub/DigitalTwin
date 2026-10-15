@@ -81,6 +81,16 @@ export function sceltePerLayer(trovati, lngLat) {
   });
 }
 
+// Evidenza dei punti trovati nei dintorni del clic (`featureVicine`): una scelta per layer, nello stile della sua fonte.
+export function evidenzaVicine(vicini) {
+  const perLayer = new Map();
+  for (const f of vicini) if (FONTI[f.layer.id]) perLayer.set(f.layer.id, [...(perLayer.get(f.layer.id) ?? []), f]);
+  return [...perLayer].map(([id, lista]) => ({
+    id: `${id}-vicini`, ...FONTI[id],
+    features: lista.map(f => ({ type: 'Feature', geometry: f.geometry, properties: { attributo: attributoDi(id, f.properties) ?? '' } })),
+  }));
+}
+
 // GeoJSON da disegnare: ogni geometria porta il colore della propria fonte.
 export function collezione(scelte) {
   return {
