@@ -3,11 +3,11 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { voceFontanella, modelloPopupFontanella } from './scheda-fontanelle.js';
 import { tl, t } from '../core/i18n.js';
-import { registraForme, layerForme, stileForma, simboloForma } from '../core/forme.js';
+import { registraGlifo, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 
 const COLORE = '#1c7ed6';
 const SRC = 'fontanelle';
-const FORMA = 'triangolo-giu'; // ogni layer ha la sua forma (vedi core/forme.js)
+const ICONA = 'fontanella'; // in mappa è la sagoma dell'icona (vedi core/icone-mappa.js)
 const PUNTI = 'fontanelle-punti';
 const HIT = 'fontanelle-hit-punti'; // punti trasparenti, sempre presenti: la scheda mostra la fontanella anche a strato spento
 
@@ -41,7 +41,7 @@ function collegaPopup(map) {
     popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
       .setLngLat(e.lngLat).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
   });
-  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'fontanella', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileForma(FORMA, COLORE)]), modello: p => modelloPopupFontanella(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'fontanella', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, COLORE)]), modello: p => modelloPopupFontanella(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }
@@ -50,7 +50,7 @@ function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti legenda-fontanelle lg-fontanelle');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Fontanelle'));
-  legenda.append(voceStrato(simboloForma(FORMA, COLORE), 'Fontanella pubblica', 'fontanelle'));
+  legenda.append(voceStrato(simboloGlifo(ICONA, COLORE), 'Fontanella pubblica', 'fontanelle'));
   document.getElementById('legende').append(legenda);
 }
 
@@ -64,8 +64,8 @@ export default {
     map.addSource(SRC, { type: 'geojson', data: urlDati('fontanelle/fontanelle.geojson') });
   },
   aggiungiLayer(map) {
-    registraForme(map, [FORMA]);
-    map.addLayer(layerForme({ id: PUNTI, source: SRC, forma: FORMA, colore: COLORE, layout: { visibility: 'none' } }));
+    registraGlifo(map, ICONA);
+    map.addLayer(layerGlifo({ id: PUNTI, source: SRC, icona: ICONA, colore: COLORE, layout: { visibility: 'none' } }));
     map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
     collegaPopup(map);
   },

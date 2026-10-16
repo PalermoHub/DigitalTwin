@@ -7,7 +7,7 @@ import { voceMonumento, modelloPopup, idScomparsi, filtroEdifici } from './sched
 import { coloraEdifici3d, coloriPerFid, volumi3dAcceso } from '../core/colori-3d.js';
 import { voceUsoEdificio } from './scheda-uso.js';
 import { tl, t } from '../core/i18n.js';
-import { registraForme, layerForme, stileForma, simboloForma } from '../core/forme.js';
+import { registraGlifo, layerGlifo, espressioneGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 
 // Un colore per categoria (poligono dell'edificio e marker). palette.js è una copia vincolata
 // di quella di palermo_popolazione e non si tocca: questi colori sono specifici del viewer.
@@ -28,7 +28,14 @@ const MONUMENTI_CATEGORIE = [
 
 const SRC = 'monumenti'; // punti, raggruppati in cluster
 const SRC_EDIFICI = 'monumenti-edifici'; // poligoni degli edifici (non si raggruppano)
-const FORMA = 'stella'; // ogni layer ha la sua forma (vedi core/forme.js); i gruppi di luoghi restano cerchi
+// In mappa il luogo singolo è la sagoma di un'icona che dipende dalla categoria (vedi core/icone-mappa.js); i gruppi di luoghi restano cerchi.
+const ICONE_CATEGORIE = [
+  ['Chiese ed Oratori', 'chiesa'], ['Monumenti', 'monumento'], ['Teatri', 'teatro'], ['Dimore e Ville storiche', 'casa'],
+  ['Palazzi', 'edifici'], ["Gallerie d'Arte e Musei", 'tavolozza'], ['Biblioteche', 'biblioteca'], ['Giardini e Spazi verdi', 'parco'],
+  ['Mercati storici', 'mercato'], ['Zone Archeologiche', 'rovine'], ['Rifugi e memoria bellica', 'vincolo'],
+];
+const ICONA_ALTRI = 'indirizzo'; // «Altri luoghi» e ogni categoria non prevista
+const iconaCategoria = nome => ICONE_CATEGORIE.find(([n]) => n === nome)?.[1] ?? ICONA_ALTRI;
 const PUNTI = 'monumenti-punti';
 const CLUSTER = 'monumenti-cluster';
 const CLUSTER_N = 'monumenti-cluster-n';
@@ -106,7 +113,7 @@ function contenutoPopup(p) {
 
 function collegaPopup(map) {
   let popup = null;
-  registraTooltipStrati(map, [{ layers: [POLI, PUNTI], icona: 'monumento', campione: p => { const col = MONUMENTI_CATEGORIE.find(([n]) => n === completo(p).categoria)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileForma(FORMA, col)]) : null; }, modello: p => ({ titolo: completo(p).nome, sottotitolo: completo(p).categoria }) }]);
+  registraTooltipStrati(map, [{ layers: [POLI, PUNTI], icona: 'monumento', campione: p => { const col = MONUMENTI_CATEGORIE.find(([n]) => n === completo(p).categoria)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(iconaCategoria(completo(p).categoria), col)]) : null; }, modello: p => ({ titolo: completo(p).nome, sottotitolo: completo(p).categoria }) }]);
   map.on('click', e => {
     if (map.getLayoutProperty(POLI, 'visibility') !== 'visible') return;
     const f = map.queryRenderedFeatures(e.point, { layers: LAYERS.filter(id => map.getLayer(id)) })[0];
@@ -159,7 +166,7 @@ function creaLegenda(gruppo, map) {
   legenda.append(el('strong', null, 'Monumenti'));
   const blocco = el('div', 'colonnine-filtri');
   for (const [nome, col] of MONUMENTI_CATEGORIE) {
-    const pallino = simboloForma(FORMA, col);
+    const pallino = simboloGlifo(iconaCategoria(nome), col);
     pallino.dataset.temaCat = `monumenti|${nome}`; // il pannellino dei colori lo aggiorna
     const riga = voceFiltro(pallino, nome, acceso => imposta(nome, acceso, 'legenda'));
     legenda.append(riga);
@@ -215,8 +222,8 @@ export default {
       paint: { 'text-color': '#fff' },
     });
     // luogo singolo: unico segno per giardini/aree archeologiche e riferimento sopra il poligono
-    registraForme(map, [FORMA]);
-    map.addLayer({ ...layerForme({ id: PUNTI, source: SRC, forma: FORMA, colore, layout: nascosto }), filter: singolo });
+    for (const icona of new Set([...ICONE_CATEGORIE.map(([, i]) => i), ICONA_ALTRI])) registraGlifo(map, icona);
+    map.addLayer({ ...layerGlifo({ id: PUNTI, source: SRC, immagine: espressioneGlifo('categoria', ICONE_CATEGORIE, ICONA_ALTRI), colore, layout: nascosto }), filter: singolo });
     // poligoni e punti trasparenti, sempre presenti: la scheda mostra il monumento anche a layer spento
     map.addLayer({ id: HIT_POLI, type: 'fill', source: SRC_EDIFICI, 'source-layer': 'edifici', paint: { 'fill-opacity': 0 } });
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: singolo, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
