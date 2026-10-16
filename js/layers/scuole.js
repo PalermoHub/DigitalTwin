@@ -5,16 +5,18 @@ import { voceScuola, voceSeggio, voceIndirizzo, modelloPopupScuola } from './sch
 import { voceUsoEdificio } from './scheda-uso.js';
 import { coloraEdifici3d, coloriPerFid, senzaVolume, volumi3dAcceso } from '../core/colori-3d.js';
 import { tl } from '../core/i18n.js';
-import { registraForme, layerForme, stileForma, simboloForma } from '../core/forme.js';
+import { idBadge, registraBadge, layerBadge, espressioneBadge, stileBadge, simboloBadge } from '../core/icone-mappa.js';
 
 // Due strati con la stessa struttura: punto della sede + poligono dell'edificio abbinato in dati/scuole/.
 // I colori sono propri del viewer (palette.js è una copia vincolata e non si tocca).
 const TIPI_SCUOLA = [['Asilo nido', '#f08c00'], ['Plesso scolastico', '#1971c2'], ["Sede dell'istituto", '#2b8a3e']];
 const SEGGI_COLORE = '#0c8599';
-// Ogni layer ha la sua forma (vedi core/forme.js): quadrato per le scuole, rombo per le sedi elettorali.
-const FORMA_SCUOLE = 'quadrato';
-const FORMA_SEGGI = 'rombo';
-const formaDi = k => (k === 'seggi' ? FORMA_SEGGI : FORMA_SCUOLE);
+// In mappa ogni punto ha l'icona del tema (scuola, seggio) nel colore del tipo (vedi core/icone-mappa.js).
+const ICONA_SCUOLE = 'scuola';
+const ICONA_SEGGI = 'seggio';
+const ALTRO = '#555';
+const iconaDi = k => (k === 'seggi' ? ICONA_SEGGI : ICONA_SCUOLE);
+const immagineDi = k => (k === 'seggi' ? idBadge(ICONA_SEGGI, SEGGI_COLORE) : espressioneBadge(ICONA_SCUOLE, 'tipo', TIPI_SCUOLA, ALTRO));
 
 const STRATI = [
   { chiave: 'scuole', etichetta: 'Scuole e asili comunali', titolo: 'Scuole e asili',
@@ -66,7 +68,7 @@ function contenutoPopup(p) {
 
 function collegaPopup(map, s) {
   const { punti, poli } = ids(s.chiave);
-  registraTooltipStrati(map, [{ layers: [punti, poli], icona: 'scuola', campione: p => { const col = s.chiave === 'seggi' ? SEGGI_COLORE : TIPI_SCUOLA.find(([n]) => n === p.tipo)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileForma(formaDi(s.chiave), col)]) : null; }, modello: p => modelloPopupScuola(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [punti, poli], icona: 'scuola', campione: p => { const col = s.chiave === 'seggi' ? SEGGI_COLORE : TIPI_SCUOLA.find(([n]) => n === p.tipo)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(iconaDi(s.chiave), col)]) : null; }, modello: p => modelloPopupScuola(completo(p)) }]);
   let popup = null;
   map.on('click', e => {
     if (map.getLayoutProperty(poli, 'visibility') !== 'visible') return;
@@ -92,13 +94,13 @@ function creaLegenda(_gruppo, map) {
     box.append(el('strong', null, s.titolo));
     if (s.chiave === 'scuole') {
       for (const [nome, col] of TIPI_SCUOLA) {
-        box.append(voceFiltro(simboloForma(FORMA_SCUOLE, col), nome, acceso => {
+        box.append(voceFiltro(simboloBadge(ICONA_SCUOLE, col), nome, acceso => {
           acceso ? tipiAccesi.add(nome) : tipiAccesi.delete(nome);
           aggiorna3d(map, s);
         }));
       }
     } else {
-      box.append(voceStrato(simboloForma(FORMA_SEGGI, SEGGI_COLORE), 'Sede di sezioni elettorali', s.chiave));
+      box.append(voceStrato(simboloBadge(ICONA_SEGGI, SEGGI_COLORE), 'Sede di sezioni elettorali', s.chiave));
     }
     legenda[s.chiave] = box;
     document.getElementById('legende').append(box);
@@ -119,14 +121,15 @@ export default {
     }
   },
   aggiungiLayer(map) {
-    registraForme(map, [FORMA_SCUOLE, FORMA_SEGGI]);
+    registraBadge(map, ICONA_SCUOLE, [...TIPI_SCUOLA.map(([, c]) => c), ALTRO]);
+    registraBadge(map, ICONA_SEGGI, [SEGGI_COLORE]);
     const nascosto = { visibility: 'none' };
     for (const s of STRATI) {
       const i = ids(s.chiave);
       const edifici = `${s.chiave}-edifici`;
       map.addLayer({ id: i.poli, type: 'fill', source: edifici, layout: nascosto, paint: { 'fill-color': s.colore, 'fill-opacity': 0.85 } });
       map.addLayer({ id: i.contorni, type: 'line', source: edifici, layout: nascosto, paint: { 'line-color': '#222', 'line-width': 1 } });
-      map.addLayer(layerForme({ id: i.punti, source: s.chiave, forma: formaDi(s.chiave), colore: s.colore, layout: nascosto }));
+      map.addLayer(layerBadge({ id: i.punti, source: s.chiave, immagine: immagineDi(s.chiave), layout: nascosto }));
       // poligoni e punti trasparenti, sempre presenti: la scheda mostra i dati anche a strato spento
       map.addLayer({ id: i.hitPoli, type: 'fill', source: edifici, paint: { 'fill-opacity': 0 } });
       map.addLayer({ id: i.hitPunti, type: 'circle', source: s.chiave, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
