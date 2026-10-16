@@ -6,7 +6,7 @@ import { coloraEdifici3d, coloriPerFid, volumi3dAcceso } from '../core/colori-3d
 import { tl } from '../core/i18n.js';
 import { GRUPPI, LIVELLI, modelloTooltipPeba, voceScheda } from './scheda-peba.js';
 import { contenutoDinamico } from './scheda-peba-dom.js';
-import { registraForme, layerForme } from '../core/forme.js';
+import { registraGlifo, layerGlifo, espressioneGlifo, simboloGlifo } from '../core/icone-mappa.js';
 
 // PEBA (Piano di Eliminazione delle Barriere Architettoniche, Comune di Palermo): edifici e aree verdi sono poligoni, vie, percorsi
 // e piazze punti. La legenda fa da filtro (livello di accessibilità e gruppo) e sceglie il colore della mappa; i layer «hit»
@@ -14,7 +14,14 @@ import { registraForme, layerForme } from '../core/forme.js';
 const SRC = 'peba';
 const FILL = 'peba-fill';
 const LINEA = 'peba-linea';
-const FORMA = 'ottagono'; // ogni layer ha la sua forma (vedi core/forme.js)
+// Un'icona per ogni gruppo (vedi core/icone-mappa.js): in mappa la portano i punti (percorsi, vie, piazze), in legenda tutti i gruppi.
+const ICONE_GRUPPI = [
+  ['Percorso storico', 'monumento'], ['Via cittadina', 'camminata'], ['Scuola', 'scuola'], ['Asilo', 'popolazione'],
+  ['Sede amministrativa/istituzionale', 'uffici'], ['Area verde', 'parco'], ['Sito UNESCO (edificio)', 'vincolo'],
+  ['Percorso UNESCO', 'mappa'], ['Piazza', 'indirizzo'], ['Museo', 'tavolozza'],
+];
+const ICONA_ALTRI = 'indirizzo';
+const iconaGruppo = nome => ICONE_GRUPPI.find(([n]) => n === nome)?.[1] ?? ICONA_ALTRI;
 const PUNTI = 'peba-punti';
 const HIT = 'peba-hit';
 const HIT_PUNTI = 'peba-hit-punti';
@@ -79,8 +86,8 @@ function famiglia(titolo, voci, accesi, perGruppo) {
   const blocco = el('div', 'peba-famiglia'); // un contenitore per famiglia: il clic isola solo dentro la propria
   blocco.append(el('em', 'peba-legenda-titolo', titolo));
   for (const [nome, c] of voci) {
-    const simbolo = el('i', 'mef-campione');
-    simbolo.style.background = c;
+    const simbolo = perGruppo ? simboloGlifo(iconaGruppo(nome), c) : el('i', 'mef-campione');
+    if (!perGruppo) simbolo.style.background = c;
     if (perGruppo) simboliGruppo.push([simbolo, c]);
     blocco.append(voceFiltro(simbolo, nome, acceso => { acceso ? accesi.add(nome) : accesi.delete(nome); applicaFiltri(); }));
   }
@@ -127,8 +134,8 @@ export default {
     const nascosto = { visibility: 'none' };
     map.addLayer({ id: FILL, type: 'fill', source: SRC, filter: POLIGONO, layout: nascosto, paint: { 'fill-color': colore(), 'fill-opacity': 0.7 } });
     map.addLayer({ id: LINEA, type: 'line', source: SRC, filter: POLIGONO, layout: nascosto, paint: { 'line-color': '#1f2937', 'line-width': 0.8 } });
-    registraForme(map, [FORMA]);
-    map.addLayer({ ...layerForme({ id: PUNTI, source: SRC, forma: FORMA, colore: colore(), layout: nascosto }), filter: PUNTO });
+    for (const icona of new Set([...ICONE_GRUPPI.map(([, i]) => i), ICONA_ALTRI])) registraGlifo(map, icona);
+    map.addLayer({ ...layerGlifo({ id: PUNTI, source: SRC, immagine: espressioneGlifo('gruppo', ICONE_GRUPPI, ICONA_ALTRI), colore: colore(), layout: nascosto }), filter: PUNTO });
     // trasparenti e sempre presenti: la scheda del luogo mostra le schede PEBA anche a strato spento
     map.addLayer({ id: HIT, type: 'fill', source: SRC, filter: POLIGONO, paint: { 'fill-opacity': 0 } });
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: PUNTO, paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
