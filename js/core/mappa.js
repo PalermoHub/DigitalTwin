@@ -1,3 +1,4 @@
+import { allineaLayerAlPiano } from './allinea-piano.js';
 import { CENTRO, ZOOM, LIMITI, STILE_BASE } from './config.js';
 
 const STILE_VUOTO = {
@@ -32,6 +33,7 @@ export function creaMappa(idContenitore, suRipiego = () => {}) {
     pitch: 0, bearing: 0,
   });
   abilitaInclinazione(map, false);
+  allineaLayerAlPiano(map);
   let stileCaricato = false;
   let ripiegato = false;
   map.on('style.load', () => { stileCaricato = true; });
