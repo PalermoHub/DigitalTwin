@@ -31,3 +31,18 @@ test('areeDaSedi: aree distinte con totale e ordine alfabetico', () => {
   const r = areeDaSedi([{ uffici }, { uffici: [u('A', '#a')] }]);
   assert.deepEqual(r.map(x => [x.area, x.n]), [['A', 2], ['B', 3], ['C', 1]]);
 });
+
+import { coloriSedi } from '../../js/layers/uffici-fette.js';
+
+test('coloriSedi: colore dell\'area più numerosa della sede, solo aree accese', () => {
+  const dettagli = new Map([
+    ['s1', { uffici: [u('B', '#b'), u('B', '#b'), u('A', '#a')] }],
+    ['s2', { uffici: [u('C', '#c')] }],
+    ['s3', { uffici: [u('A', '#a')] }],
+  ]);
+  const geom = id => ({ s1: 'k1', s2: 'k2', s3: 'k3' })[id];
+  const fidPerSede = { k1: [10, 11], k2: [20], k3: [30] };
+  assert.deepEqual([...coloriSedi(fidPerSede, dettagli, geom, null)], [[10, '#b'], [11, '#b'], [20, '#c'], [30, '#a']]);
+  assert.deepEqual([...coloriSedi(fidPerSede, dettagli, geom, new Set(['A']))], [[10, '#a'], [11, '#a'], [30, '#a']]);
+  assert.equal(coloriSedi(fidPerSede, dettagli, geom, new Set()).size, 0);
+});

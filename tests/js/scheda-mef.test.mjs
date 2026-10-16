@@ -110,3 +110,13 @@ test('voceMef: la chiave usa id_poligono (e id_edificio per i dati vecchi)', () 
   assert.equal(voceMef({ forma: 'terreno', id_poligono: 't55-1704', n_beni: 1, beni: JSON.stringify([BENE]) }).chiave, 'mef-t55-1704');
   assert.equal(voceMef({ forma: 'edificio', id_edificio: 5, n_beni: 1, beni: JSON.stringify([BENE]) }).chiave, 'mef-5');
 });
+
+import { coloriMef } from '../../js/layers/scheda-mef.js';
+
+test('coloriMef: un colore per gli edifici con un bene, uno per quelli con più beni, secondo le categorie accese', () => {
+  const dati = { e1: { n: 1, fid: [10] }, m2: { n: 3, fid: [20, 21] } };
+  const colori = { uno: '#d98', piu: '#a45' };
+  assert.deepEqual([...coloriMef(dati, new Set(['uno', 'piu']), colori)], [[10, '#d98'], [20, '#a45'], [21, '#a45']]);
+  assert.deepEqual([...coloriMef(dati, new Set(['piu']), colori)], [[20, '#a45'], [21, '#a45']]);
+  assert.equal(coloriMef(dati, new Set(), colori).size, 0);
+});

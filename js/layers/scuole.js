@@ -3,6 +3,7 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
 import { voceScuola, voceSeggio, voceIndirizzo, modelloPopupScuola } from './scheda-scuole.js';
 import { voceUsoEdificio } from './scheda-uso.js';
+import { coloraEdifici3d, coloriPerFid, senzaVolume, volumi3dAcceso } from '../core/colori-3d.js';
 import { tl } from '../core/i18n.js';
 
 // Due strati con la stessa struttura: punto della sede + poligono dell'edificio abbinato in dati/scuole/.
@@ -20,6 +21,24 @@ const ids = k => ({
   punti: `${k}-punti`, poli: `${k}-poli`, contorni: `${k}-contorni`, hitPoli: `${k}-hit-poli`, hitPunti: `${k}-hit-punti`,
 });
 const visibili = k => [ids(k).poli, ids(k).contorni, ids(k).punti];
+
+const fidPerBene = { scuole: {}, seggi: {} }; // id -> fid degli edifici (stesso id del tile edificato), da <strato>_fid.json
+const accesi = { scuole: false, seggi: false }; // strato acceso
+let tipiAccesi = new Set(TIPI_SCUOLA.map(([nome]) => nome));
+
+// Filtri dei poligoni e colore dei volumi 3D: con edifici-3d acceso l'edificio col fid si colora nel volume e il poligono piatto sparisce.
+function aggiorna3d(map, s) {
+  const i = ids(s.chiave);
+  const tipo = s.chiave === 'scuole';
+  const filtro = tipo ? filtroInsieme(['get', 'tipo'], tipiAccesi, TIPI_SCUOLA.length) : null;
+  const volume = volumi3dAcceso(map);
+  for (const id of [i.poli, i.contorni]) map.setFilter(id, volume ? senzaVolume(filtro) : filtro);
+  for (const id of [i.punti, i.hitPoli, i.hitPunti]) map.setFilter(id, filtro);
+  const colori = tipo
+    ? coloriPerFid(fidPerBene.scuole, id => dettagli.get(id)?.tipo, Object.fromEntries(TIPI_SCUOLA), [...tipiAccesi])
+    : coloriPerFid(fidPerBene.seggi, () => 'seggi', { seggi: SEGGI_COLORE }, ['seggi']);
+  coloraEdifici3d(map, s.chiave, accesi[s.chiave] ? colori : null);
+}
 
 const dettagli = new Map(); // id -> proprietà complete (stanno solo sul punto; i poligoni portano id, nome e tipo)
 const completo = p => dettagli.get(p.id) ?? p;
@@ -68,13 +87,10 @@ function creaLegenda(_gruppo, map) {
     box.append(el('strong', null, s.titolo));
     const pallino = col => { const p = el('i', 'monumenti-pallino'); p.style.background = col; return p; };
     if (s.chiave === 'scuole') {
-      const accesi = new Set(TIPI_SCUOLA.map(([nome]) => nome));
-      const i = ids(s.chiave);
       for (const [nome, col] of TIPI_SCUOLA) {
         box.append(voceFiltro(pallino(col), nome, acceso => {
-          acceso ? accesi.add(nome) : accesi.delete(nome);
-          const filtro = filtroInsieme(['get', 'tipo'], accesi, TIPI_SCUOLA.length);
-          for (const id of [i.poli, i.contorni, i.punti, i.hitPoli, i.hitPunti]) map.setFilter(id, filtro);
+          acceso ? tipiAccesi.add(nome) : tipiAccesi.delete(nome);
+          aggiorna3d(map, s);
         }));
       }
     } else {
@@ -118,15 +134,24 @@ export default {
       collegaPopup(map, s);
     }
   },
-  async avvia() {
+  async avvia(map) {
     await Promise.all(STRATI.map(async s => {
       const dati = await (await fetch(urlDati(`scuole/${s.chiave}.geojson`))).json(); // già in cache: è il file della sorgente
       for (const f of dati.features) dettagli.set(f.properties.id, f.properties);
+      try {
+        fidPerBene[s.chiave] = await (await fetch(urlDati(`scuole/${s.chiave}_fid.json`))).json();
+      } catch { fidPerBene[s.chiave] = {}; } // senza il file gli edifici restano poligoni piatti
     }));
+    document.addEventListener('vista3d', () => STRATI.forEach(s => aggiorna3d(map, s))); // i volumi 3D si accendono e spengono
+    STRATI.forEach(s => aggiorna3d(map, s));
   },
   strati: STRATI.map(s => ({
     id: s.chiave, legendaPannello: `.lg-${s.chiave}`, etichetta: s.etichetta, layers: visibili(s.chiave), attivo: false,
-    suCambio(attivo) { if (legenda) legenda[s.chiave].hidden = !attivo; },
+    suCambio(attivo, map) {
+      accesi[s.chiave] = attivo;
+      aggiorna3d(map, s);
+      if (legenda) legenda[s.chiave].hidden = !attivo;
+    },
   })),
   pannello: creaLegenda,
   scheda: {

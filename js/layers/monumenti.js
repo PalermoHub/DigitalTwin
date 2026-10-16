@@ -4,6 +4,7 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { voceMonumento, modelloPopup, idScomparsi, filtroEdifici } from './scheda-monumenti.js';
+import { coloraEdifici3d, coloriPerFid, volumi3dAcceso } from '../core/colori-3d.js';
 import { voceUsoEdificio } from './scheda-uso.js';
 import { tl, t } from '../core/i18n.js';
 
@@ -40,18 +41,33 @@ const HIT_POLI = 'monumenti-hit-poli';
 const HIT_PUNTI = 'monumenti-hit-punti';
 let legenda = null;
 let scomparsi = []; // id dei beni non più presenti: niente poligono, solo il punto
+let fidPerBene = {}; // id del bene -> fid degli edifici (stesso id del tile edificato), da edifici_fid.json
+let strato = false; // lo strato è acceso
 let categorieAccese = MONUMENTI_CATEGORIE.map(([nome]) => nome);
 // Il disegno salta i poligoni dei beni non più presenti (sono edifici di oggi); lo strato dei clic li tiene, così la scheda
 // racconta anche cosa sorgeva lì.
 const filtraEdifici = map => {
-  for (const id of [POLI, CONTORNI]) map.setFilter(id, filtroEdifici(categorieAccese, scomparsi));
+  const volume3d = volumi3dAcceso(map);
+  stileCluster(map, volume3d);
+  for (const id of [POLI, CONTORNI]) map.setFilter(id, filtroEdifici(categorieAccese, scomparsi, volume3d));
   map.setFilter(HIT_POLI, filtroEdifici(categorieAccese, []));
+  // in 3D l'edificio del monumento si colora nel volume di edifici-3d (stesso fid del tile edificato)
+  coloraEdifici3d(map, 'monumenti', strato && Object.keys(fidPerBene).length
+    ? coloriPerFid(fidPerBene, id => dettagli.get(id)?.categoria, coloriCategorie, categorieAccese, scomparsi) : null);
+};
+// In 3D i gruppi coprirebbero i tetti: cerchi più piccoli e più trasparenti.
+const RAGGI_CLUSTER = [14, 10, 18, 50, 23, 200, 29];
+const stileCluster = (map, volume3d) => {
+  const r = volume3d ? RAGGI_CLUSTER.map((v, i) => (i % 2 === 0 ? Math.round(v * 0.7) : v)) : RAGGI_CLUSTER;
+  map.setPaintProperty(CLUSTER, 'circle-radius', ['step', ['get', 'point_count'], ...r]);
+  map.setPaintProperty(CLUSTER, 'circle-opacity', volume3d ? 0.6 : 0.85);
 };
 // dettagli completi per id (stanno solo sul punto: i poligoni portano id, nome e categoria)
 const dettagli = new Map();
 const completo = p => dettagli.get(p.id) ?? p;
 
 const risolvi = rel => urlDati(`monumenti/${rel}`);
+const coloriCategorie = Object.fromEntries(MONUMENTI_CATEGORIE);
 const colore = ['match', ['get', 'categoria'], ...MONUMENTI_CATEGORIE.flat(), '#555'];
 
 function el(tag, classe, testo) {
@@ -186,7 +202,7 @@ export default {
       id: CLUSTER, type: 'circle', source: SRC, filter: ['has', 'point_count'], layout: nascosto,
       paint: {
         'circle-color': '#4a5d8a', 'circle-opacity': 0.85, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2,
-        'circle-radius': ['step', ['get', 'point_count'], 14, 10, 18, 50, 23, 200, 29],
+        'circle-radius': ['step', ['get', 'point_count'], ...RAGGI_CLUSTER],
       },
     });
     map.addLayer({
@@ -215,13 +231,19 @@ export default {
     puntiTutti = dati.features;
     for (const f of puntiTutti) dettagli.set(f.properties.id, f.properties);
     scomparsi = idScomparsi(puntiTutti.map(f => f.properties));
+    try {
+      fidPerBene = await (await fetch(risolvi('edifici_fid.json'))).json();
+    } catch { fidPerBene = {}; } // senza il file i monumenti restano poligoni piatti
+    document.addEventListener('vista3d', () => filtraEdifici(map)); // i volumi 3D si accendono e spengono
     filtraEdifici(map);
     attenuaScomparsi(map, scomparsi);
   },
   legendaPannello: '.lg-monumenti', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{ id: 'monumenti', etichetta: 'Monumenti (Portale del Turismo)', layers: LAYERS, attivo: false,
     sottovoci: [{ titolo: 'Categorie', voci: MONUMENTI_CATEGORIE.map(([nome]) => ({ id: `categoria:${nome}`, etichetta: nome })) }],
-    suCambio(attivo) {
+    suCambio(attivo, map) {
+      strato = attivo;
+      filtraEdifici(map);
       if (legenda) legenda.hidden = !attivo;
       for (const { pannello } of caselle.values()) pannello.disabled = !attivo;
     },

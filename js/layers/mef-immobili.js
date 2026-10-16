@@ -1,7 +1,8 @@
 import { urlDati } from '../core/config.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
-import { modelloTooltipMef, voceMef } from './scheda-mef.js';
+import { coloriMef, modelloTooltipMef, voceMef } from './scheda-mef.js';
+import { coloraEdifici3d, volumi3dAcceso } from '../core/colori-3d.js';
 import { tl } from '../core/i18n.js';
 import { voceFiltro } from '../core/legenda.js';
 
@@ -47,6 +48,8 @@ const CATEGORIE = [
 const accese = new Set(CATEGORIE.map(c => c.chiave));
 const NESSUNO = ['==', 1, 0];
 let mappa = null;
+let fidPerPoligono = {}; // id poligono -> {n beni, fid degli edifici} (id del tile edificato), da edifici_fid.json
+let stratoAcceso = false;
 
 // Filtro dei layer di ogni forma secondo le categorie accese.
 function applicaFiltri() {
@@ -54,7 +57,10 @@ function applicaFiltri() {
   const edifici = [accese.has('uno') && ['<=', ['get', 'n_beni'], 1], accese.has('piu') && ['>', ['get', 'n_beni'], 1]].filter(Boolean);
   const filtroEdifici = edifici.length === 2 ? EDIFICIO : edifici.length ? ['all', EDIFICIO, edifici[0]] : NESSUNO;
   const imposta = (ids, filtro) => { for (const id of ids) if (mappa.getLayer(id)) mappa.setFilter(id, filtro); };
-  imposta([FILL, LINEA], filtroEdifici);
+  // con i volumi 3D accesi l'edificio si colora nel volume (stesso fid del tile edificato): il poligono piatto sparisce
+  const nelVolume = volumi3dAcceso(mappa) && Object.keys(fidPerPoligono).length > 0;
+  imposta([FILL, LINEA], nelVolume ? NESSUNO : filtroEdifici);
+  coloraEdifici3d(mappa, 'mef-immobili', stratoAcceso ? coloriMef(fidPerPoligono, accese, { uno: COLORE_UNO, piu: COLORE_PIU }) : null);
   imposta([FILL_TERRENO, LINEA_TERRENO], accese.has('terreno') ? TERRENO : NESSUNO);
   imposta([PUNTI], accese.has('punto') ? PUNTO : NESSUNO);
 }
@@ -125,8 +131,19 @@ export default {
   legendaPannello: '.lg-mef-immobili', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: 'mef-immobili', etichetta: 'Immobili dichiarati al MEF', layers: [FILL, LINEA, FILL_TERRENO, LINEA_TERRENO, PUNTI], attivo: false,
-    suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
+    suCambio(attivo) {
+      stratoAcceso = attivo;
+      applicaFiltri();
+      if (legenda) legenda.hidden = !attivo;
+    },
   }],
+  async avvia() {
+    try {
+      fidPerPoligono = await (await fetch(urlDati('mef-immobili/edifici_fid.json'))).json();
+    } catch { fidPerPoligono = {}; } // senza il file gli edifici restano poligoni piatti
+    document.addEventListener('vista3d', applicaFiltri); // i volumi 3D si accendono e spengono
+    applicaFiltri();
+  },
   pannello: creaLegenda,
   scheda: {
     layers: [HIT, HIT_PUNTI],

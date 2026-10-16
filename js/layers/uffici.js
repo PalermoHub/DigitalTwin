@@ -3,7 +3,8 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
 import { modelloPopupSede, voceUffici } from './scheda-uffici.js';
-import { fette, areeDaSedi } from './uffici-fette.js';
+import { fette, areeDaSedi, coloriSedi } from './uffici-fette.js';
+import { coloraEdifici3d } from '../core/colori-3d.js';
 import { PR, iconaFette } from './marker-fette.js';
 import { tl } from '../core/i18n.js';
 
@@ -18,6 +19,7 @@ const VUOTO = { type: 'FeatureCollection', features: [] };
 
 const dettagli = new Map(); // id sede -> proprietà complete (gli array annidati non sopravvivono alla mappa)
 const geometrie = new Map();
+let fidPerSede = {}; // coordinate della sede -> fid degli edifici (stesso id del tile edificato), da edifici_fid.json
 const completo = p => dettagli.get(p.id) ?? p;
 let mappa = null;
 let legenda = null;
@@ -44,6 +46,12 @@ function contenutoPopup(p) {
   return radice;
 }
 
+// In 3D l'edificio della sede si colora nel volume di edifici-3d, con il colore della sua area più numerosa tra quelle accese.
+const chiaveSede = id => { const [lon, lat] = geometrie.get(id).coordinates; return `${lon.toFixed(7)},${lat.toFixed(7)}`; };
+function colora3d() {
+  if (mappa) coloraEdifici3d(mappa, 'uffici', stratoAcceso ? coloriSedi(fidPerSede, dettagli, chiaveSede, accese) : null);
+}
+
 // Ridisegna le sedi in base alle aree accese in legenda (le sedi senza aree accese spariscono).
 // Le icone (una per sede, disegnate su canvas) servono solo a strato acceso: a strato spento non si disegnano.
 let stratoAcceso = false;
@@ -59,6 +67,7 @@ function aggiorna() {
     features.push({ type: 'Feature', geometry: geometrie.get(id), properties: { id, icona: nome, n: lista.reduce((s, f) => s + f.n, 0) } });
   }
   mappa.getSource(SRC)?.setData({ type: 'FeatureCollection', features });
+  colora3d();
 }
 
 // «Solo questa» cambia molte voci insieme: si ridisegna una volta sola.
@@ -151,6 +160,9 @@ export default {
       geometrie.set(f.properties.id, f.geometry);
     }
     aree = areeDaSedi([...dettagli.values()]);
+    try {
+      fidPerSede = await (await fetch(urlDati('uffici/edifici_fid.json'))).json();
+    } catch { fidPerSede = {}; } // senza il file le sedi restano solo punti
     aggiorna();
     riempiLegenda();
   },
@@ -178,6 +190,7 @@ export default {
       const prima = stratoAcceso;
       stratoAcceso = attivo;
       if (attivo && !prima) aggiorna();
+      else colora3d();
       if (legenda) legenda.hidden = !attivo;
       for (const { pannello } of caselle.values()) pannello.disabled = !attivo;
     },

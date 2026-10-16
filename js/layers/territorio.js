@@ -1,4 +1,5 @@
-import { pmt, urlTileset } from '../core/config.js';
+import { pmt, urlDati, urlTileset } from '../core/config.js';
+import { coloraEdifici3d } from '../core/colori-3d.js';
 import { piuVicino, presente, primo, righe, tutti } from '../core/scheda-util.js';
 import { filtroInsieme, dopoClicMultiplo, voceFiltro, voceStrato } from '../core/legenda.js';
 import { STILE_OMI } from './stile-omi.js';
@@ -14,6 +15,17 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 const ATTRIBUZIONE_PRG = tl('Comune di Palermo - Variante Generale al P.R.G. 2004 - Rielaborazione di OpenDataSicilia');
 const NOTA_PRG = 'Il PRG vigente è la Variante generale 2004: varianti successive potrebbero non essere incluse.';
 const vuoto = { 'fill-opacity': 0 };
+
+// Immobili comunali: le particelle restano piatte; gli edifici che coprono (immobili_fid.json, fid = id del tile edificato)
+// si colorano anche nel volume 3D. Il file si scarica alla prima accensione.
+const COLORE_IMMOBILI = '#6a3d9a';
+let fidImmobili = null;
+async function colora3dImmobili(map, attivo) {
+  if (!attivo) { coloraEdifici3d(map, 'immobili', null); return; }
+  fidImmobili ??= fetch(urlDati('civici-omi/immobili_fid.json')).then(r => r.json()).catch(() => []); // senza il file restano le sole particelle
+  const fids = await fidImmobili;
+  if (document.getElementById('strato-immobili')?.checked) coloraEdifici3d(map, 'immobili', new Map(fids.map(f => [f, COLORE_IMMOBILI])));
+}
 
 // Legenda delle zone OMI in #legende: la fascia è la lettera del codice zona (B1, C3, D8…) e ogni zona ha una tonalità
 // propria in STILE_OMI; qui il colore è quello rappresentativo della fascia. Compare solo a strato acceso.
@@ -198,7 +210,8 @@ export default {
       suCambio(attivo) { if (legendaOmi) legendaOmi.hidden = !attivo; } },
     { id: 'civici', etichetta: 'Numeri civici (da zoom 14)', layers: ['civici'], attivo: false },
     // ultimo del modulo: il sottogruppo prosegue con lo strato «Immobili dichiarati al MEF» (js/layers/mef-immobili.js, che segue in MODULI)
-    { id: 'immobili', etichetta: 'Immobili comunali', sezione: 'Immobili comunali', nota: 'I layer sono il risultato di una georeferenziazione automatica e hanno carattere puramente dimostrativo', layers: ['immobili'], attivo: false },
+    { id: 'immobili', etichetta: 'Immobili comunali', sezione: 'Immobili comunali', nota: 'I layer sono il risultato di una georeferenziazione automatica e hanno carattere puramente dimostrativo', layers: ['immobili'], attivo: false,
+      suCambio(attivo, map) { colora3dImmobili(map, attivo); } },
   ],
   pannello(gruppo, map) { creaLegendaCatasto(gruppo, map); legendaPrg = creaLegendaZonizzazione(); legendaVincoli = creaLegendaVincoli(); creaLegendaOmi(gruppo, map); },
   scheda: {

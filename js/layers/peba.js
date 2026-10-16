@@ -2,6 +2,7 @@ import { urlDati } from '../core/config.js';
 import { registraTooltipStrati } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
+import { coloraEdifici3d, coloriPerFid, volumi3dAcceso } from '../core/colori-3d.js';
 import { tl } from '../core/i18n.js';
 import { GRUPPI, LIVELLI, modelloTooltipPeba, voceScheda } from './scheda-peba.js';
 import { contenutoDinamico } from './scheda-peba-dom.js';
@@ -20,6 +21,9 @@ const POLIGONO = ['!=', ['get', 'forma'], 'punto'];
 
 let mappa = null;
 let legenda = null;
+let stratoAcceso = false;
+let fidPerCodice = {}; // codice PEBA -> fid degli edifici (id del tile edificato), da edifici_fid.json
+const schede = new Map(); // codice -> proprietà (livello e gruppo colorano il volume 3D)
 let modo = 'livello'; // colore della mappa e del tooltip: 'livello' | 'gruppo'
 const livelliAccesi = new Set(LIVELLI.map(([n]) => n));
 const gruppiAccesi = new Set(GRUPPI.map(([n]) => n));
@@ -38,12 +42,27 @@ function colore() {
   return ['match', ['get', propr], ...palette.flatMap(([nome, c]) => [nome, c]), '#999999'];
 }
 
+// Con i volumi 3D accesi gli edifici si colorano nel volume (stesso fid del tile edificato) e il poligono piatto resta solo per le aree verdi.
+function colora3d() {
+  if (!mappa) return;
+  const [propr, palette] = modo === 'gruppo' ? ['gruppo', GRUPPI] : ['livello', LIVELLI];
+  const fuori = Object.keys(fidPerCodice).filter(c => {
+    const p = schede.get(c);
+    return !p || !livelliAccesi.has(p.livello) || !gruppiAccesi.has(p.gruppo);
+  });
+  coloraEdifici3d(mappa, 'peba', stratoAcceso
+    ? coloriPerFid(fidPerCodice, c => schede.get(c)?.[propr], Object.fromEntries(palette), palette.map(([n]) => n), fuori) : null);
+}
+
 function applicaFiltri() {
   if (!mappa) return;
   const filtri = [filtroInsieme(['get', 'livello'], livelliAccesi, LIVELLI.length), filtroInsieme(['get', 'gruppo'], gruppiAccesi, GRUPPI.length)].filter(Boolean);
   const con = forma => (filtri.length ? ['all', forma, ...filtri] : forma);
-  for (const id of [FILL, LINEA]) if (mappa.getLayer(id)) mappa.setFilter(id, con(POLIGONO));
+  const nelVolume = volumi3dAcceso(mappa) && Object.keys(fidPerCodice).length > 0;
+  const poligoni = nelVolume ? ['==', ['get', 'forma'], 'area_verde'] : POLIGONO;
+  for (const id of [FILL, LINEA]) if (mappa.getLayer(id)) mappa.setFilter(id, con(poligoni));
   if (mappa.getLayer(PUNTI)) mappa.setFilter(PUNTI, con(PUNTO));
+  colora3d();
 }
 
 function applicaColore() {
@@ -51,6 +70,7 @@ function applicaColore() {
   if (!mappa) return;
   mappa.setPaintProperty(FILL, 'fill-color', colore());
   mappa.setPaintProperty(PUNTI, 'circle-color', colore());
+  colora3d();
 }
 
 function famiglia(titolo, voci, accesi, perGruppo) {
@@ -121,8 +141,21 @@ export default {
   legendaPannello: '.lg-peba', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
     id: 'peba', etichetta: 'Barriere architettoniche', layers: [FILL, LINEA, PUNTI], attivo: false,
-    suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
+    suCambio(attivo) {
+      stratoAcceso = attivo;
+      applicaFiltri();
+      if (legenda) legenda.hidden = !attivo;
+    },
   }],
+  async avvia() {
+    try {
+      const dati = await (await fetch(urlDati('peba/peba.geojson'))).json(); // già in cache: è il file della sorgente
+      for (const f of dati.features) schede.set(f.properties.codice, f.properties);
+      fidPerCodice = await (await fetch(urlDati('peba/edifici_fid.json'))).json();
+    } catch { fidPerCodice = {}; } // senza i dati gli edifici restano poligoni piatti
+    document.addEventListener('vista3d', applicaFiltri); // i volumi 3D si accendono e spengono
+    applicaFiltri();
+  },
   pannello: creaLegenda,
   scheda: {
     layers: [HIT, HIT_PUNTI],

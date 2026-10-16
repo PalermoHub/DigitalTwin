@@ -41,3 +41,15 @@ export function areeDaSedi(sedi) {
   }
   return [...per.values()].sort((a, b) => a.area.localeCompare(b.area, 'it'));
 }
+
+// {fid dell'edificio → colore} per i volumi 3D: ogni sede prende il colore della sua area più numerosa tra quelle accese.
+// chiaveDi(id sede) = chiave delle coordinate usata in edifici_fid.json.
+export function coloriSedi(fidPerSede, dettagli, chiaveDi, accese = null) {
+  const perFid = new Map();
+  for (const [id, p] of dettagli) {
+    const prima = fette(p.uffici, accese)[0];
+    if (!prima) continue;
+    for (const fid of fidPerSede[chiaveDi(id)] ?? []) perFid.set(fid, prima.colore);
+  }
+  return perFid;
+}

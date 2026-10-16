@@ -91,3 +91,14 @@ export function modelloTooltipMef(p) {
     righe: righe([['Beni dichiarati', String(p.n_beni ?? beni.length)], ['Indirizzo', beni[0]?.indirizzo]]),
   };
 }
+
+// {fid dell'edificio → colore} per i volumi 3D: dati = edifici_fid.json {id poligono: {n beni, fid}}, accese = categorie 'uno' | 'piu'.
+export function coloriMef(dati, accese, colori) {
+  const perFid = new Map();
+  for (const { n, fid } of Object.values(dati)) {
+    const categoria = n > 1 ? 'piu' : 'uno';
+    if (!accese.has(categoria)) continue;
+    for (const f of fid) perFid.set(f, colori[categoria]);
+  }
+  return perFid;
+}

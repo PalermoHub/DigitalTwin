@@ -118,3 +118,25 @@ test('filtroEdifici: esclude i poligoni dei beni non più presenti, solo se ce n
   assert.equal(f[0], 'all');
   assert.deepEqual(f[2], ['!', ['in', ['get', 'id'], ['literal', ['k-1053']]]]);
 });
+
+import { coloriPerFid, filtroEdifici as filtroEd } from '../../js/layers/scheda-monumenti.js';
+
+test('coloriPerFid: colore di categoria per ogni edificio, solo categorie accese e mai i beni non più presenti', () => {
+  const fidPerBene = { a: [1, 2], b: [3], c: [4] };
+  const categoria = id => ({ a: 'Chiese', b: 'Teatri', c: 'Chiese' })[id];
+  const colori = { Chiese: '#80f', Teatri: '#d50' };
+  const m = coloriPerFid(fidPerBene, categoria, colori, ['Chiese', 'Teatri'], ['c']);
+  assert.deepEqual([...m], [[1, '#80f'], [2, '#80f'], [3, '#d50']]);
+  assert.deepEqual([...coloriPerFid(fidPerBene, categoria, colori, ['Teatri'], [])], [[3, '#d50']]);
+  assert.equal(coloriPerFid(fidPerBene, categoria, colori, [], []).size, 0);
+});
+
+test('coloriPerFid: bene senza categoria nota non colora nulla', () => {
+  assert.equal(coloriPerFid({ x: [1] }, () => undefined, { Chiese: '#80f' }, ['Chiese'], []).size, 0);
+});
+
+test('filtroEdifici con volumi 3D accesi esclude i poligoni che hanno già il volume colorato (fid)', () => {
+  const f = filtroEd(['Chiese'], [], true);
+  assert.deepEqual(f, ['all', ['in', ['get', 'categoria'], ['literal', ['Chiese']]], ['!', ['has', 'fid']]]);
+  assert.deepEqual(filtroEd(['Chiese'], []), ['in', ['get', 'categoria'], ['literal', ['Chiese']]]);
+});

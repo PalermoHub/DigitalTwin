@@ -56,6 +56,24 @@ def ricomponi(frammenti) -> dict:
     return {i: (unary_union(gs), p) for i, (gs, p) in per_id.items()}
 
 
+def fid_per_poligono(feats, geometrie_edifici, soglia: float = 0.5) -> dict:
+    """{id_poligono: {"n": n_beni, "fid": [fid]}} per gli edifici (forma «edificio»): fid = id del tile edificato, usato dal viewer per colorare il volume 3D.
+    Un edificio conta se il poligono ne copre oltre `soglia` (un compendio e' l'unione di piu' edifici)."""
+    ids = list(geometrie_edifici)
+    validi = [shapely.make_valid(geometrie_edifici[i]) for i in ids]
+    albero = STRtree(validi)
+    uscita = {}
+    for f in feats:
+        p = f["properties"]
+        if p.get("forma") != "edificio" or "id_poligono" not in p:
+            continue
+        g = shapely.make_valid(shape(f["geometry"]))
+        fids = sorted(int(ids[i]) for i in albero.query(g) if validi[i].area and validi[i].intersection(g).area > soglia * validi[i].area)
+        if fids:
+            uscita[p["id_poligono"]] = {"n": p.get("n_beni", 1), "fid": fids}
+    return uscita
+
+
 def tile_xy(lon: float, lat: float, z: int) -> tuple[int, int]:
     n = 2 ** z
     return int((lon + 180) / 360 * n), int((1 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2 * n)

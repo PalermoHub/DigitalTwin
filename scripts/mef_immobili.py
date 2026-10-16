@@ -33,7 +33,7 @@ from shapely.geometry import Point, shape
 from shapely.ops import unary_union
 from shapely.strtree import STRtree
 
-from mef_geo import (SOGLIA_M, a_lonlat, aggancia, aggancia_uno, frammenti_pmtiles, frammenti_tile, in_metri,  # noqa: F401
+from mef_geo import (SOGLIA_M, a_lonlat, aggancia, aggancia_uno, fid_per_poligono, frammenti_pmtiles, frammenti_tile, in_metri,  # noqa: F401
                      motivo_punto, punto_m, ricomponi, tile_xy)
 from mef_fonti import (carica_immobili, carica_particelle, carica_riferimenti, chiavi_richieste,
                        controlla_particelle)
@@ -478,6 +478,8 @@ def main(argv=None) -> None:
     verifica(beni, feats)
     riep = riepilogo(beni, scartati, feats, locs)
     scrivi(Path(args.uscita), anno, beni, locs, feats, riep)
+    (Path(args.uscita) / "edifici_fid.json").write_text(  # per colorare i volumi 3D (js/core/colori-3d.js)
+        json.dumps(fid_per_poligono(feats, {i: g for i, (g, _) in edifici.items()}), separators=(",", ":")), encoding="utf-8")
     (Path(args.uscita) / "immobili_comunali.geojson").write_text(
         json.dumps(ricerca_immobili_comunali(immobili), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(json.dumps(riep, ensure_ascii=False), file=sys.stderr)
