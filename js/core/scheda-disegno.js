@@ -32,6 +32,13 @@ function disegnaRiga(r) {
     return riga;
   }
   riga.append(el('span', 'scheda-et', tl(r.etichetta)));
+  if (r.urlValore) { // il valore stesso è il collegamento (es. CUP → scheda del progetto su OpenCUP)
+    const a = el('a', r.colore ? 'scheda-val scheda-badge-tinta' : 'scheda-val', r.valore);
+    if (r.colore) a.style.setProperty('--tinta', r.colore); // badge cliccabile
+    collegamento(a, r.urlValore);
+    riga.append(a);
+    return riga;
+  }
   if (r.filtro) { // il valore è un filtro: un clic lo propone al layer (evento `dt:filtro`), un secondo clic lo toglie
     const b = el('button', 'scheda-val scheda-filtro', r.valore);
     b.type = 'button';

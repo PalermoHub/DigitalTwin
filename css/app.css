@@ -2079,3 +2079,5 @@ body.strati3d-attiva :is(#scheda, #rail-pannelli) { z-index: calc(var(--z-viewer
 .strati-tooltip-corpo > div:has(.trend-grafico-tip) + div:has(.trend-grafico-tip) { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-ui); }
 .trend-livello-dettaglio > summary { cursor: pointer; font-weight: 700; font-size: var(--fs-sm); }
 .trend-grafico-tip { width: 260px; max-width: 100%; margin-top: 4px; }
+a.scheda-badge-tinta { text-decoration: none; }
+a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: color-mix(in srgb, var(--tinta) 26%, transparent); }

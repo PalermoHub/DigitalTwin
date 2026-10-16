@@ -152,3 +152,8 @@ test('etichettaOpzione: missione, nome e «senza posizione» per i progetti che 
   assert.equal(etichettaOpzione({ cup: 'X', missione: 'M4', titolo: 'RICERCA SUL CLIMA MEDITERRANEO' }), 'M4 · Ricerca sul clima mediterraneo (senza posizione)');
   assert.ok(etichettaOpzione({ cup: 'X', missione: 'M1', titolo: 'parola '.repeat(60), precisione: 'via' }).length < 100);
 });
+
+test('righeProgetto: il CUP è un collegamento alla scheda del progetto su OpenCUP', () => {
+  const r = righeProgetto(P).find(x => x.etichetta === 'CUP');
+  assert.equal(r.urlValore, 'https://opencup.gov.it/portale/progetto/-/cup/B71C23000340006');
+});

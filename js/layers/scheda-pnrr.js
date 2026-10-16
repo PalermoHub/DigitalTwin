@@ -84,6 +84,7 @@ export function descrizioneProgetto(p) {
 }
 
 // Colori del badge dello stato di avanzamento (valori della fonte)
+const COLORE_CUP = '#7048e8'; // viola del layer PNRR
 export const COLORI_STATO = { Concluso: '#2f9e44', 'In Corso': '#e8590c' };
 
 // Il soggetto attuatore è un filtro: il clic mostra in mappa solo i suoi progetti (layer pnrr.js, evento `dt:filtro`).
@@ -102,6 +103,7 @@ export function righeProgetto(p) {
     ['Indirizzo', p.indirizzo], ['Sede del soggetto attuatore', p.sede], ['Scuola (layer Scuole)', p.scuola], ['Posizione', PRECISIONE[p.precisione] ? tl(PRECISIONE[p.precisione]) : null],
     ['CUP', p.cup],
   ]).map(r => {
+    if (r.etichetta === 'CUP') return { ...r, colore: COLORE_CUP, urlValore: `https://opencup.gov.it/portale/progetto/-/cup/${encodeURIComponent(p.cup)}` };
     if (r.etichetta === 'Soggetto attuatore') return { ...r, filtro: filtroAttuatore(p.attuatore) };
     if (r.etichetta === 'Stato' && COLORI_STATO[p.stato]) return { ...r, colore: COLORI_STATO[p.stato] }; // badge colorato
     return r;
