@@ -59,13 +59,19 @@ export function riscriviMatch(espressione, sostituti) {
   return copia;
 }
 
-const PROPRIETA_COLORE = { fill: 'fill-color', circle: 'circle-color', line: 'line-color' };
-const PROPRIETA_OPACITA = { fill: 'fill-opacity', circle: 'circle-opacity', line: 'line-opacity' };
+// «forme» = punti a forma (layer symbol con icone SDF, metadata.forme: vedi forme.js): colore e bordo (alone) sono quelli dell'icona.
+// Gli altri layer symbol (etichette, icone a colori) non fanno parte del tema.
+const PROPRIETA_COLORE = { fill: 'fill-color', circle: 'circle-color', line: 'line-color', forme: 'icon-color' };
+const PROPRIETA_OPACITA = { fill: 'fill-opacity', circle: 'circle-opacity', line: 'line-opacity', forme: 'icon-opacity' };
+const tipoLayer = l => (l?.type === 'symbol' ? (l.metadata?.forme ? 'forme' : null) : l?.type);
+
+// Proprietà del bordo di un layer di punti: il contorno del cerchio o l'alone dell'icona.
+export const proprietaBordoPunto = (map, id) => (map.getLayer(id)?.type === 'symbol' ? 'icon-halo-color' : 'circle-stroke-color');
 
 // Proprietà del colore principale di un layer di riempimento o di punti (null per gli altri tipi).
 export function proprietaColore(map, id) {
-  const tipo = map.getLayer(id)?.type;
-  return tipo === 'fill' || tipo === 'circle' ? PROPRIETA_COLORE[tipo] : null;
+  const tipo = tipoLayer(map.getLayer(id));
+  return tipo === 'fill' || tipo === 'circle' || tipo === 'forme' ? PROPRIETA_COLORE[tipo] : null;
 }
 
 // Layer dello strato che il tema colora (esclusi quelli trasparenti di sola selezione):
@@ -80,19 +86,20 @@ export function partiStrato(map, ids) {
   const p = { riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [] };
   for (const id of ids) {
     const l = map.getLayer(id);
-    const prop = l && PROPRIETA_COLORE[l.type];
+    const tipo = tipoLayer(l);
+    const prop = tipo && PROPRIETA_COLORE[tipo];
     if (!prop) continue;
-    if (map.getPaintProperty(id, PROPRIETA_OPACITA[l.type]) === 0) continue;
+    if (map.getPaintProperty(id, PROPRIETA_OPACITA[tipo]) === 0) continue;
     const colore = map.getPaintProperty(id, prop);
     const m = leggiMatch(colore);
     const semplice = colore == null || typeof colore === 'string';
     if (m) p.categorie.push({ id, prop, ...m });
-    if (l.type === 'line') {
+    if (tipo === 'line') {
       p.linee.push(id);
       if (!m && semplice) p.lineeColore.push(id);
     } else {
       if (!m && semplice) p.uniformi.push(id);
-      (l.type === 'fill' ? p.riempimenti : p.punti).push(id);
+      (tipo === 'fill' ? p.riempimenti : p.punti).push(id);
     }
   }
   return p;
@@ -111,14 +118,14 @@ export function applicaTema(map, parti, tema, originali) {
   const sole = !parti.riempimenti.length && !parti.punti.length;
   const perAttributo = [
     ...parti.riempimenti.map(id => [id, 'fill-color']),
-    ...parti.punti.map(id => [id, 'circle-color']),
+    ...parti.punti.map(id => [id, proprietaColore(map, id)]),
     ...(sole ? parti.linee.map(id => [id, 'line-color']) : []),
   ];
   for (const [id, prop] of perAttributo) imposta(id, prop, espr ?? undefined);
   const inAttributo = new Set(espr ? perAttributo.map(([id, prop]) => `${id}|${prop}`) : []);
   for (const id of parti.uniformi) if (!inAttributo.has(`${id}|${proprietaColore(map, id)}`)) imposta(id, proprietaColore(map, id), tema?.riempimento);
   for (const id of parti.riempimenti) imposta(id, 'fill-outline-color', tema?.bordo);
-  for (const id of parti.punti) imposta(id, 'circle-stroke-color', tema?.bordo);
+  for (const id of parti.punti) imposta(id, proprietaBordoPunto(map, id), tema?.bordo);
   for (const id of parti.lineeColore) if (!inAttributo.has(`${id}|line-color`)) imposta(id, 'line-color', tema?.bordo);
   for (const id of parti.linee) imposta(id, 'line-width', tema?.spessore);
   for (const { id, prop } of parti.categorie) {

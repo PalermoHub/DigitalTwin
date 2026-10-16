@@ -6,10 +6,13 @@ import { modelloPopupColonnina, vociColonnine } from './scheda-colonnine.js';
 import { graficiColonnine } from './colonnine-grafici.js';
 import { applicaSnapshot, scaricaSnapshot } from './colonnine-live.js';
 import { tl } from '../core/i18n.js';
+import { registraBadge, layerBadge, espressioneBadge, stileBadge, simboloBadge } from '../core/icone-mappa.js';
 
 // Colonnine di ricarica di Palermo (dati/colonnine/colonnine.geojson, rigenerato ogni ora da un workflow dalla serie storica
 // PalermoHub/evcharginglogsicilia). All'apertura lo stato si aggiorna dallo snapshot remoto: se non risponde resta quello del file.
 const SRC = 'colonnine';
+const ICONA = 'colonnine'; // in mappa ogni punto ha l'icona del tema nel colore dello stato (vedi core/icone-mappa.js)
+const ALTRO = '#555';
 const PUNTI = 'colonnine-punti';
 const HIT = 'colonnine-hit';
 const STATI = [['Disponibile', '#2b8a3e'], ['In ricarica', '#1971c2'], ['Non attiva', '#868e96']];
@@ -86,7 +89,7 @@ function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti lg-colonnine');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Colonnine di ricarica'));
-  const pallino = col => { const p = el('i', 'monumenti-pallino'); p.style.background = col; return p; };
+  const pallino = col => simboloBadge(ICONA, col);
   const riga = (tipo, chiave, nome, col) => {
     const r = voceFiltro(pallino(col), nome, acceso => impostaFiltro(tipo, chiave, acceso, 'legenda'));
     caselle.set(`${tipo}:${chiave}`, { ...caselle.get(`${tipo}:${chiave}`), legenda: r._filtro.casella });
@@ -129,13 +132,8 @@ export default {
   },
   aggiungiLayer(map) {
     mappa = map;
-    map.addLayer({
-      id: PUNTI, type: 'circle', source: SRC, layout: { visibility: 'none' },
-      paint: {
-        'circle-color': ['match', ['get', 'stato'], ...STATI.flat(), '#555'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5,
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 4, 17, 8],
-      },
-    });
+    registraBadge(map, ICONA, [...STATI.map(([, c]) => c), ALTRO]);
+    map.addLayer(layerBadge({ id: PUNTI, source: SRC, immagine: espressioneBadge(ICONA, 'stato', STATI, ALTRO), layout: { visibility: 'none' } }));
     // punti trasparenti sempre presenti: la scheda del luogo mostra le colonnine vicine anche a strato spento
     map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
     let popup = null;
@@ -147,7 +145,7 @@ export default {
       popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
         .setLngLat(f.geometry.coordinates).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
     });
-    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'colonnine', campione: p => { const col = STATI.find(([s]) => s === completo(p).stato)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: col }]) : null; }, modello: p => modelloPopupColonnina(completo(p)) }]);
+    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'colonnine', campione: p => { const col = STATI.find(([s]) => s === completo(p).stato)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(ICONA, col)]) : null; }, modello: p => modelloPopupColonnina(completo(p)) }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
   },

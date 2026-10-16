@@ -6,6 +6,7 @@ import { coloraEdifici3d, coloriPerFid, volumi3dAcceso } from '../core/colori-3d
 import { tl } from '../core/i18n.js';
 import { GRUPPI, LIVELLI, modelloTooltipPeba, voceScheda } from './scheda-peba.js';
 import { contenutoDinamico } from './scheda-peba-dom.js';
+import { registraForme, layerForme } from '../core/forme.js';
 
 // PEBA (Piano di Eliminazione delle Barriere Architettoniche, Comune di Palermo): edifici e aree verdi sono poligoni, vie, percorsi
 // e piazze punti. La legenda fa da filtro (livello di accessibilità e gruppo) e sceglie il colore della mappa; i layer «hit»
@@ -13,6 +14,7 @@ import { contenutoDinamico } from './scheda-peba-dom.js';
 const SRC = 'peba';
 const FILL = 'peba-fill';
 const LINEA = 'peba-linea';
+const FORMA = 'ottagono'; // ogni layer ha la sua forma (vedi core/forme.js)
 const PUNTI = 'peba-punti';
 const HIT = 'peba-hit';
 const HIT_PUNTI = 'peba-hit-punti';
@@ -69,7 +71,7 @@ function applicaColore() {
   for (const [simbolo, c] of simboliGruppo) simbolo.style.background = modo === 'gruppo' ? c : '#c7ccd6';
   if (!mappa) return;
   mappa.setPaintProperty(FILL, 'fill-color', colore());
-  mappa.setPaintProperty(PUNTI, 'circle-color', colore());
+  mappa.setPaintProperty(PUNTI, 'icon-color', colore());
   colora3d();
 }
 
@@ -125,10 +127,8 @@ export default {
     const nascosto = { visibility: 'none' };
     map.addLayer({ id: FILL, type: 'fill', source: SRC, filter: POLIGONO, layout: nascosto, paint: { 'fill-color': colore(), 'fill-opacity': 0.7 } });
     map.addLayer({ id: LINEA, type: 'line', source: SRC, filter: POLIGONO, layout: nascosto, paint: { 'line-color': '#1f2937', 'line-width': 0.8 } });
-    map.addLayer({
-      id: PUNTI, type: 'circle', source: SRC, filter: PUNTO, layout: nascosto,
-      paint: { 'circle-color': colore(), 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5, 'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 3, 17, 8] },
-    });
+    registraForme(map, [FORMA]);
+    map.addLayer({ ...layerForme({ id: PUNTI, source: SRC, forma: FORMA, colore: colore(), layout: nascosto }), filter: PUNTO });
     // trasparenti e sempre presenti: la scheda del luogo mostra le schede PEBA anche a strato spento
     map.addLayer({ id: HIT, type: 'fill', source: SRC, filter: POLIGONO, paint: { 'fill-opacity': 0 } });
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: PUNTO, paint: { 'circle-radius': 10, 'circle-opacity': 0 } });

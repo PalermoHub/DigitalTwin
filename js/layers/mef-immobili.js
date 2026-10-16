@@ -5,6 +5,7 @@ import { coloriMef, modelloTooltipMef, voceMef } from './scheda-mef.js';
 import { coloraEdifici3d, volumi3dAcceso } from '../core/colori-3d.js';
 import { tl } from '../core/i18n.js';
 import { voceFiltro } from '../core/legenda.js';
+import { registraForme, layerForme, stileForma, simboloForma } from '../core/forme.js';
 
 // Beni immobili del Comune di Palermo dichiarati al censimento del MEF (dati/mef-immobili/, workflow «Aggiorna MEF»).
 // Gli edifici con almeno un bene sono poligoni (un colore se i beni sono più d'uno); terreni e beni georiferiti solo dalla strada o
@@ -13,6 +14,7 @@ import { voceFiltro } from '../core/legenda.js';
 const SRC = 'mef-immobili';
 const FILL = 'mef-immobili-fill';
 const LINEA = 'mef-immobili-linea';
+const FORMA = 'croce'; // ogni layer ha la sua forma (vedi core/forme.js)
 const PUNTI = 'mef-immobili-punti';
 const FILL_TERRENO = 'mef-immobili-terreno';
 const LINEA_TERRENO = 'mef-immobili-terreno-linea';
@@ -70,8 +72,8 @@ function creaLegenda() {
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Immobili dichiarati al MEF'));
   for (const { chiave, colore, testo, tondo } of CATEGORIE) {
-    const simbolo = el('i', tondo ? 'monumenti-pallino' : 'mef-campione');
-    simbolo.style.background = colore;
+    const simbolo = tondo ? simboloForma(FORMA, colore) : el('i', 'mef-campione');
+    if (!tondo) simbolo.style.background = colore;
     legenda.append(voceFiltro(simbolo, testo, acceso => { acceso ? accese.add(chiave) : accese.delete(chiave); applicaFiltri(); }));
   }
   document.getElementById('legende').append(legenda);
@@ -108,20 +110,15 @@ export default {
       id: LINEA_TERRENO, type: 'line', source: SRC, filter: TERRENO, layout: nascosto,
       paint: { 'line-color': '#386641', 'line-width': 1, 'line-dasharray': [3, 2] },
     });
-    map.addLayer({
-      id: PUNTI, type: 'circle', source: SRC, filter: PUNTO, layout: nascosto,
-      paint: {
-        'circle-color': COLORE_PUNTO, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5,
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 3, 17, 7],
-      },
-    });
+    registraForme(map, [FORMA]);
+    map.addLayer({ ...layerForme({ id: PUNTI, source: SRC, forma: FORMA, colore: COLORE_PUNTO, layout: nascosto }), filter: PUNTO });
     // trasparenti e sempre presenti: la scheda del luogo mostra i beni anche a strato spento
     map.addLayer({ id: HIT, type: 'fill', source: SRC, filter: POLIGONO, paint: { 'fill-opacity': 0 } });
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: PUNTO, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
     registraTooltipStrati(map, [{ layers: [FILL, FILL_TERRENO, PUNTI], icona: 'monumento', modello: modelloTooltipMef,
       campione: (p, id) => {
         const col = id === FILL ? (p.n_beni > 1 ? COLORE_PIU : COLORE_UNO) : id === FILL_TERRENO ? COLORE_TERRENO : COLORE_PUNTO;
-        return campioneTooltip('legenda-mef', [id === PUNTI ? 'monumenti-pallino' : 'mef-campione', { background: col }]);
+        return campioneTooltip('legenda-mef', id === PUNTI ? ['monumenti-pallino', stileForma(FORMA, col)] : ['mef-campione', { background: col }]);
       } }]);
     for (const id of [FILL, FILL_TERRENO, PUNTI]) {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });

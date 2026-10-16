@@ -3,7 +3,7 @@
 import { svgIcona } from './icone.js';
 import { creaSezioneAttributo } from './pannello-attributo.js';
 import { legendaAttributo } from './tema-attributo.js';
-import { partiStrato, proprietaColore, applicaTema, validaTema, comeEsadecimale, leggiTemi, salvaTemi, esportaTemi, importaTemi } from './tema.js';
+import { partiStrato, proprietaColore, proprietaBordoPunto, applicaTema, validaTema, comeEsadecimale, leggiTemi, salvaTemi, esportaTemi, importaTemi } from './tema.js';
 import { t as tr } from './i18n.js';
 
 const partiVuote = () => ({ riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [] });
@@ -182,7 +182,7 @@ export function creaPannelloTema(map, strato, stato) {
     riempimento.riga.hidden = !u;
     if (u) riempimento.input.value = tema?.riempimento ?? comeEsadecimale(originali.get(`${u}|${proprietaColore(map, u)}`) ?? map.getPaintProperty(u, proprietaColore(map, u)));
     // il bordo è quello dei poligoni, altrimenti dei punti, altrimenti il colore delle linee
-    const [idBordo, propBordo] = f ? [f, 'fill-outline-color'] : pt ? [pt, 'circle-stroke-color'] : [lc, 'line-color'];
+    const [idBordo, propBordo] = f ? [f, 'fill-outline-color'] : pt ? [pt, proprietaBordoPunto(map, pt)] : [lc, 'line-color'];
     bordo.riga.hidden = !idBordo;
     etichettaBordo.textContent = f || pt ? tr('tema.bordo') : tr('tema.coloreLinea');
     if (idBordo) bordo.input.value = tema?.bordo ?? comeEsadecimale(originali.get(`${idBordo}|${propBordo}`) ?? map.getPaintProperty(idBordo, propBordo), u ? riempimento.input.value : '#444444');

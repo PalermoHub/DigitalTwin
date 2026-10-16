@@ -7,7 +7,7 @@ function finta(layers) {
   const paint = {};
   return {
     paint,
-    getLayer: id => layers[id] && { type: layers[id].type },
+    getLayer: id => layers[id] && { type: layers[id].type, metadata: layers[id].metadata },
     getPaintProperty: (id, p) => (`${id}|${p}` in paint ? paint[`${id}|${p}`] : layers[id].paint?.[p]),
     setPaintProperty: (id, p, v) => { paint[`${id}|${p}`] = v; },
   };
@@ -188,4 +188,17 @@ test('legendaAttributo: classi per le graduate, categorie accorciate, null se no
   assert.equal(c.voci.length, 13);
   assert.equal(c.voci.at(-1).testo, '… altre 3');
   assert.equal(legendaAttributo({ campo: '', tipo: 'graduata' }), null);
+});
+
+test('punti a forma (symbol con metadata.forme): colore e alone seguono il tema; gli altri symbol restano fuori', () => {
+  const map = finta({
+    p: { type: 'symbol', metadata: { forme: true }, paint: { 'icon-color': '#111111', 'icon-halo-color': '#ffffff' } },
+    etichetta: { type: 'symbol', paint: {} },
+  });
+  const parti = partiStrato(map, ['p', 'etichetta']);
+  assert.deepEqual(parti.punti, ['p']);
+  assert.deepEqual(parti.uniformi, ['p']);
+  applicaTema(map, parti, { riempimento: '#aa0000', bordo: '#00aa00' }, new Map());
+  assert.equal(map.paint['p|icon-color'], '#aa0000');
+  assert.equal(map.paint['p|icon-halo-color'], '#00aa00');
 });

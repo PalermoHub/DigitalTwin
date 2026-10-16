@@ -4,10 +4,13 @@ import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { modelloPopupDistributore, vociDistributori, distributoriVicini, CARBURANTI } from './scheda-distributori.js';
 import { tl } from '../core/i18n.js';
+import { registraBadge, layerBadge, espressioneBadge, stileBadge, simboloBadge } from '../core/icone-mappa.js';
 
 // Distributori di carburante di Palermo (dati/distributori/distributori.geojson, rigenerato ogni giorno da un workflow dai CSV del MIMIT:
 // anagrafica degli impianti e prezzi comunicati dai gestori). Un punto per impianto, colorato per bandiera (marchio).
 const SRC = 'distributori';
+const ICONA = 'distributori'; // in mappa ogni punto ha l'icona del tema nel colore della bandiera (vedi core/icone-mappa.js)
+const ALTRO = '#555';
 const PUNTI = 'distributori-punti';
 const HIT = 'distributori-hit';
 const ALTRE = 'Altre';
@@ -89,7 +92,7 @@ function creaLegenda() {
     caselle.set(`${tipo}:${chiave}`, { ...caselle.get(`${tipo}:${chiave}`), legenda: r._filtro.casella });
     return r;
   };
-  for (const [nome, col] of MARCHI) legenda.append(riga('marchio', nome, pallino(col)));
+  for (const [nome, col] of MARCHI) legenda.append(riga('marchio', nome, simboloBadge(ICONA, col)));
   const carburanti = el('div');
   for (const c of CARBURANTI) carburanti.append(riga('carburante', c, pallino('#fff')));
   legenda.append(carburanti);
@@ -100,7 +103,7 @@ function creaLegenda() {
 // Sotto la voce dello strato: i filtri per bandiera e per carburante venduto, attivi solo con lo strato acceso.
 function creaPannello(gruppo) {
   creaLegenda();
-  pannelloFiltri(gruppo, 'marchio', 'Bandiera', MARCHI, pallino);
+  pannelloFiltri(gruppo, 'marchio', 'Bandiera', MARCHI, col => simboloBadge(ICONA, col));
   pannelloFiltri(gruppo, 'carburante', 'Carburante', CARBURANTI.map(c => [c]));
 }
 
@@ -115,13 +118,8 @@ export default {
   },
   aggiungiLayer(map) {
     mappa = map;
-    map.addLayer({
-      id: PUNTI, type: 'circle', source: SRC, layout: { visibility: 'none' },
-      paint: {
-        'circle-color': ['match', ['get', 'marchio'], ...MARCHI.flat(), '#555'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5,
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 4, 17, 8],
-      },
-    });
+    registraBadge(map, ICONA, [...MARCHI.map(([, c]) => c), ALTRO]);
+    map.addLayer(layerBadge({ id: PUNTI, source: SRC, immagine: espressioneBadge(ICONA, 'marchio', MARCHI, ALTRO), layout: { visibility: 'none' } }));
     // punti trasparenti sempre presenti: la scheda del luogo mostra i distributori vicini anche a strato spento
     map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
     let popup = null;
@@ -135,7 +133,7 @@ export default {
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: 'distributori',
-      campione: p => { const col = MARCHI.find(([m]) => m === completo(p).marchio)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: col }]) : null; },
+      campione: p => { const col = MARCHI.find(([m]) => m === completo(p).marchio)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(ICONA, col)]) : null; },
       modello: p => modelloPopupDistributore(completo(p)),
     }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });

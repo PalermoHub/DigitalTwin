@@ -3,9 +3,11 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { voceFontanella, modelloPopupFontanella } from './scheda-fontanelle.js';
 import { tl, t } from '../core/i18n.js';
+import { registraForme, layerForme, stileForma, simboloForma } from '../core/forme.js';
 
 const COLORE = '#1c7ed6';
 const SRC = 'fontanelle';
+const FORMA = 'triangolo-giu'; // ogni layer ha la sua forma (vedi core/forme.js)
 const PUNTI = 'fontanelle-punti';
 const HIT = 'fontanelle-hit-punti'; // punti trasparenti, sempre presenti: la scheda mostra la fontanella anche a strato spento
 
@@ -39,7 +41,7 @@ function collegaPopup(map) {
     popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
       .setLngLat(e.lngLat).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
   });
-  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'fontanella', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: COLORE }]), modello: p => modelloPopupFontanella(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'fontanella', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileForma(FORMA, COLORE)]), modello: p => modelloPopupFontanella(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }
@@ -48,9 +50,7 @@ function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti legenda-fontanelle lg-fontanelle');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Fontanelle'));
-  const pallino = el('i', 'monumenti-pallino');
-  pallino.style.background = COLORE;
-  legenda.append(voceStrato(pallino, 'Fontanella pubblica', 'fontanelle'));
+  legenda.append(voceStrato(simboloForma(FORMA, COLORE), 'Fontanella pubblica', 'fontanelle'));
   document.getElementById('legende').append(legenda);
 }
 
@@ -64,13 +64,8 @@ export default {
     map.addSource(SRC, { type: 'geojson', data: urlDati('fontanelle/fontanelle.geojson') });
   },
   aggiungiLayer(map) {
-    map.addLayer({
-      id: PUNTI, type: 'circle', source: SRC, layout: { visibility: 'none' },
-      paint: {
-        'circle-color': COLORE, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5,
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 4, 17, 8],
-      },
-    });
+    registraForme(map, [FORMA]);
+    map.addLayer(layerForme({ id: PUNTI, source: SRC, forma: FORMA, colore: COLORE, layout: { visibility: 'none' } }));
     map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
     collegaPopup(map);
   },
