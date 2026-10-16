@@ -1,0 +1,35 @@
+{
+  "estrazione": "30/09/2026",
+  "opere": 1352,
+  "su_mappa": 705,
+  "del_comune": 337,
+  "posizione_via": 335,
+  "posizione_civico": 370,
+  "indirizzo_non_trovato": 422,
+  "senza_indirizzo_utile": 225,
+  "costo_previsto_eur": 2121262260.58,
+  "per_stato": {
+    "ATTIVO": 1052,
+    "CHIUSO": 300
+  },
+  "per_fase": {
+    "In esecuzione": 133,
+    "In funzione": 182,
+    "Lavori conclusi": 404,
+    "Esecuzione terminata": 155,
+    "In progettazione": 222,
+    "Fase non indicata": 256
+  },
+  "per_titolare": {
+    "COMUNE DI PALERMO": 337,
+    "ANAS - SOCIETA' PER AZIONI": 196,
+    "CITTA' METROPOLITANA DI PALERMO": 189,
+    "UNIVERSITA' DEGLI STUDI DI PALERMO": 102,
+    "REGIONE SICILIANA": 70,
+    "AUTORITA' DI SISTEMA PORTUALE DEL MARE DI SICILIA OCCIDENTALE": 61,
+    "AZIENDA OSPEDALIERA OSPEDALI RIUNITI VILLA SOFIA CERVELLO DI PALERMO": 51,
+    "ISTITUTO NAZIONALE DELLA PREVIDENZA SOCIALE - INPS": 44,
+    "ISTITUTO AUTONOMO PER LE CASE POPOLARI DELLA PROVINCIA PALERMO": 41,
+    "AZIENDA OSPEDALIERA UNIVERSITARIA POLICLINICO PAOLO GIACCONE DI PALERMO": 41
+  }
+}

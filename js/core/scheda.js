@@ -39,7 +39,7 @@ function copiaTesto(testo) {
 }
 
 // Il tab di una sezione della scheda, dal suo peso (e per alcune dalla chiave)
-const tabScheda = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : p >= 94 && p <= 96 ? 'pnrr' : 'luogo');
+const tabScheda = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : p >= 94 && p <= 96 ? 'pnrr' : p >= 97 && p <= 99 ? 'opere' : 'luogo');
 
 function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabIniziale = null) {
   const { contesto, sezioni, legale } = dati;
@@ -82,7 +82,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   // visibile solo in stampa, sempre, anche se la nota legale è nascosta dalle preferenze
   const disclaimer = el('p', 'scheda-disclaimer', DISCLAIMER_STAMPA);
   // Schede (tab) per argomento: l'ordine è la gerarchia delle informazioni, dal luogo cliccato ai dati di contesto.
-  const SCHEDE = [['luogo', tr('scheda.tab.luogo')], ['strumenti', tr('scheda.tab.strumenti')], ['mercato', tr('scheda.tab.mercato')], ['popolazione', tr('scheda.tab.popolazione')], ['terreno', tr('scheda.tab.terreno')], ['servizi', tr('scheda.tab.servizi')], ['pnrr', tr('scheda.tab.pnrr')], ['rndt', tr('scheda.tab.rndt')]];
+  const SCHEDE = [['luogo', tr('scheda.tab.luogo')], ['strumenti', tr('scheda.tab.strumenti')], ['mercato', tr('scheda.tab.mercato')], ['popolazione', tr('scheda.tab.popolazione')], ['terreno', tr('scheda.tab.terreno')], ['servizi', tr('scheda.tab.servizi')], ['pnrr', tr('scheda.tab.pnrr')], ['opere', tr('scheda.tab.opere')], ['rndt', tr('scheda.tab.rndt')]];
   const tabDi = tabScheda;
   const tabs = el('div', 'scheda-tabs');
   const prev = el('button', 'scheda-tabs-freccia', '\u2039');

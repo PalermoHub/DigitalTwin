@@ -21,6 +21,8 @@ dati/*/
 !dati/peba/
 # eccezione: progetti PNRR a Palermo (generati a mano da scripts/pnrr.py, vedi dati/pnrr/AGGIORNAMENTO.md)
 !dati/pnrr/
+# eccezione: opere pubbliche a Palermo (BDAP-MOP; generate a mano da scripts/opere.py, vedi dati/opere/AGGIORNAMENTO.md)
+!dati/opere/
 !dati/pendolarismo/
 !dati/trend/
 # eccezione: isole di calore (piccolo, rigenerato da scripts/isole_calore.py)
@@ -89,3 +91,4 @@ scripts/*
 !scripts/mef_catasto.py
 !scripts/mef_fonti.py
 !scripts/mef_localizza.py
+!scripts/opere.py

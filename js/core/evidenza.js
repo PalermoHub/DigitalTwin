@@ -27,6 +27,7 @@ export const FONTI = {
   'seggi-hit-poli': { etichetta: t('evidenza.seggio'), colore: '#0c8599' },
   'seggi-hit-punti': { etichetta: t('evidenza.seggio'), colore: '#0c8599' },
   'distributori-hit': { etichetta: t('evidenza.distributore'), colore: '#f2b705' },
+  'opere-hit': { etichetta: t('evidenza.opera'), colore: '#e8590c' },
   'colonnine-hit': { etichetta: t('evidenza.colonnina'), colore: '#2b8a3e' },
   'uffici-hit': { etichetta: t('evidenza.uffici'), colore: '#a61e4d' },
   'trasporto-hit-fermate': { etichetta: t('evidenza.fermata'), colore: '#364fc7' },

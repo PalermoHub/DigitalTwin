@@ -23,6 +23,7 @@ const sicurezza = t('tabella.fonte.incidenti');
 const mef = t('tabella.fonte.mef');
 const peba = t('tabella.fonte.peba');
 const pnrr = t('tabella.fonte.pnrr');
+const opere = t('tabella.fonte.opere');
 const mimit = t('tabella.fonte.mimit');
 const pendolarismo = t('tabella.fonte.pendolarismo');
 
@@ -68,6 +69,8 @@ export const SORGENTI = [
   { id: 'peba', nome: t('tabella.layer.peba'), strati: ['peba-hit', 'peba-hit-punti'], visibili: ['peba-fill', 'peba-linea', 'peba-punti'], chiave: p => p.codice ?? null, colonne: ['codice', 'nome', 'indirizzo', 'gruppo', 'livello', 'punteggio', 'rilevanza', 'classe', 'costo', 'circoscrizione', 'quartiere', 'upl', 'n_foto'], fonte: peba, approssimata: false, esporta: true, colore: '#0072b2' },
   // PNRR: progetti localizzati nella sola città di Palermo (un punto per progetto con un indirizzo trovato nei civici)
   { id: 'pnrr', nome: t('tabella.layer.pnrr'), strati: ['pnrr-hit'], visibili: ['pnrr-punti'], chiave: p => p.cup ?? null, collegamenti: { cup: cup => `https://opencup.gov.it/portale/progetto/-/cup/${encodeURIComponent(cup)}` }, colonne: ['cup', 'titolo', 'missione', 'stato', 'attuatore', 'pnrr', 'totale', 'inizio_previsto', 'fine_prevista', 'indirizzo', 'precisione', 'submisura_nome'], fonte: pnrr, approssimata: false, esporta: true, colore: '#7048e8' },
+  // opere pubbliche localizzate nella sola città di Palermo (un punto per opera con un indirizzo trovato nei civici)
+  { id: 'opere', nome: t('tabella.layer.opere'), strati: ['opere-hit'], visibili: ['opere-punti'], chiave: p => p.cup ?? null, collegamenti: { cup: cup => `https://opencup.gov.it/portale/progetto/-/cup/${encodeURIComponent(cup)}` }, colonne: ['cup', 'titolo', 'titolare', 'stato', 'fase', 'settore', 'tipologia', 'costo_previsto', 'costo_effettivo', 'esec_fine_prev', 'concl_fine_prev', 'indirizzo', 'precisione'], fonte: opere, approssimata: false, esporta: true, colore: '#e8590c' },
   // pendolarismo da/verso Palermo: Palermo (vive e lavora qui) più un punto per comune collegato, con entrata, uscita e saldo
   { id: 'pendolarismo', nome: t('tabella.layer.pendolarismo'), strati: ['pendolarismo-hit'], intera: 'pendolarismo/pendolarismo.geojson', filtro: p => p.tipo !== 'arco', visibili: ['pendolarismo-archi', 'pendolarismo-nodi', 'pendolarismo-palermo'], chiave: p => p.codice ?? null, colonne: ['nome', 'codice', 'entrata', 'uscita', 'saldo'], fonte: pendolarismo, approssimata: false, esporta: true, colore: '#ff4400' },
   { id: 'popolazione', nome: t('tabella.layer.popolazione'), strati: ['pop-hit'], visibili: ['pop-fill'], chiave: p => p.SEZ21_ID, colonne: ['SEZ21_ID', 'Circoscrizione', 'Quartiere', 'UPL', 'POP21', 'Pop_2022', 'FAM21', 'ABI21', 'EDI21', 'Area'], fonte: istat, approssimata: true, esporta: true, colore: '#1c7ed6' },

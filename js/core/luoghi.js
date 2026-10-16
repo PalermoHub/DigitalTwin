@@ -34,6 +34,9 @@ export const FONTI = [
   // progetti PNRR a Palermo: per titolo, indirizzo o soggetto attuatore; il CUP si cerca come un numero di linea
   { file: 'pnrr/pnrr.geojson', facoltativa: true, strato: 'pnrr', zoom: 18, numero: p => p.cup, nota: p => [tr('luoghi.pnrr'), p.missione].filter(Boolean).join(' · '),
     campi: p => [p.titolo, p.indirizzo, p.attuatore] },
+  // opere pubbliche a Palermo (BDAP-MOP): per titolo, indirizzo o titolare; il CUP si cerca come un numero di linea
+  { file: 'opere/opere.geojson', facoltativa: true, strato: 'opere', zoom: 18, numero: p => p.cup, nota: p => [tr('luoghi.opere'), p.fase].filter(Boolean).join(' · '),
+    campi: p => [p.titolo, p.indirizzo, p.titolare] },
 ];
 
 // centro (punto, o centro del riquadro per poligoni e linee) di una geometria GeoJSON

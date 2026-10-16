@@ -137,3 +137,14 @@ test('progetti PNRR: un punto per CUP, chiave dal CUP, importi e posizione tra l
   assert.ok(['cup', 'titolo', 'missione', 'stato', 'pnrr', 'precisione'].every(c => s.colonne.includes(c)));
   assert.equal(s.approssimata, false);
 });
+
+test('opere pubbliche: un punto per CUP, chiave dal CUP, titolare, fase e costi tra le colonne', () => {
+  const s = sorgentePer('opere');
+  assert.deepEqual(s.strati, ['opere-hit']);
+  assert.deepEqual(s.visibili, ['opere-punti']);
+  assert.equal(s.chiave({ cup: 'D76E18000090001' }), 'D76E18000090001');
+  assert.equal(s.chiave({}), null);
+  assert.ok(['cup', 'titolo', 'titolare', 'stato', 'fase', 'settore', 'costo_previsto', 'precisione'].every(c => s.colonne.includes(c)));
+  assert.equal(s.collegamenti.cup('X1'), 'https://opencup.gov.it/portale/progetto/-/cup/X1');
+  assert.equal(s.approssimata, false);
+});
