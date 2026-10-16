@@ -1,4 +1,5 @@
 import { urlDati } from '../core/config.js';
+import { quotaIcone } from '../core/quota-icone.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
@@ -211,6 +212,7 @@ export default {
   sezioniFisse: true, // il titolo non viaggia con lo strato nel riordino
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
+    quotaIcone(map, SRC);
     map.addSource(SRC_HIT, { type: 'geojson', data: urlDati('pnrr/pnrr.geojson') });
     fetch(urlDati('pnrr/sintesi.json')).then(r => r.json()).then(d => { sintesi = d; riempiSoggetti(legenda?.querySelector('.pnrr-soggetti')); if (copertura) copertura.textContent = testoCopertura(sintesi); }).catch(() => { sintesi = null; });
     fetch(urlDati('pnrr/soggetti.json')).then(r => r.json()).then(d => { elenchi = d.soggetti; }).catch(() => { elenchi = null; });
@@ -219,7 +221,7 @@ export default {
     mappa = map;
     map.addLayer({
       id: PUNTI, type: 'symbol', source: SRC, layout: {
-        visibility: 'none', 'icon-image': ['get', 'icona'], 'icon-allow-overlap': true, 'icon-ignore-placement': true,
+        visibility: 'none', 'icon-image': ['get', 'icona'], 'icon-offset': ['get', 'off'], 'icon-allow-overlap': true, 'icon-ignore-placement': true,
         'symbol-sort-key': ['-', 0, ['get', 'n']], // i luoghi con più progetti sotto, quelli piccoli sopra
       },
     });

@@ -3,7 +3,7 @@ import { creaNavigatore, creaGuida } from './strati-3d-navigatore.js';
 // Navigatore della vista 3D della mappa: lo stesso di «Strati in 3D» (bussola, joystick, zoom, inclinazione, centra, guida)
 // ma pilota MapLibre. Compare in basso a sinistra, accanto al pannello, solo quando la vista è 3D (evento `vista3d`).
 
-export const PITCH_MAX = 85;
+export const PITCH_MAX = 65;
 const VEL = { sposta: 600, gira: 60, inclina: 45, zoom: 1.5 }; // px/s, gradi/s, gradi/s, livelli/s con l'asse a fondo corsa
 const PITCH_3D = 55;
 

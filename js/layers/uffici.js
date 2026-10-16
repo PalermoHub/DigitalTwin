@@ -1,4 +1,5 @@
 import { urlDati } from '../core/config.js';
+import { quotaIcone } from '../core/quota-icone.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { voceFiltro } from '../core/legenda.js';
@@ -128,13 +129,14 @@ export default {
   sezioniFisse: true, // il titolo non viaggia con lo strato nel riordino
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
+    quotaIcone(map, SRC);
     map.addSource(SRC_HIT, { type: 'geojson', data: urlDati('uffici/sedi.geojson') });
   },
   aggiungiLayer(map) {
     mappa = map;
     map.addLayer({
       id: PUNTI, type: 'symbol', source: SRC, layout: {
-        visibility: 'none', 'icon-image': ['get', 'icona'], 'icon-allow-overlap': true, 'icon-ignore-placement': true,
+        visibility: 'none', 'icon-image': ['get', 'icona'], 'icon-offset': ['get', 'off'], 'icon-allow-overlap': true, 'icon-ignore-placement': true,
         'symbol-sort-key': ['-', 0, ['get', 'n']], // le sedi grandi sotto, le piccole sopra
       },
     });
