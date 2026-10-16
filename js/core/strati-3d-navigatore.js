@@ -151,23 +151,23 @@ export function creaNavigatore({ assi, gira, nord, centra, guida, gesto }) {
 }
 
 // La guida ai comandi: una scheda con mouse, tastiera e tocco, che si apre la prima volta e dal pulsante «?».
-export function creaGuida(chiudi) {
+export function creaGuida(chiudi, prefisso = 'strati3d.guida') {
   const radice = el('div', 'strati3d-guida');
   radice.setAttribute('role', 'dialog');
-  radice.setAttribute('aria-label', t('strati3d.guida.titolo'));
+  radice.setAttribute('aria-label', t(`${prefisso}.titolo`));
   radice.hidden = true;
   const h = el('h3');
-  h.textContent = t('strati3d.guida.titolo');
+  h.textContent = t(`${prefisso}.titolo`);
   const griglia = el('div', 'strati3d-guida-griglia');
   for (const [sezione, n] of [['mouse', 4], ['tastiera', 4], ['tocco', 3]]) {
     const s = el('section');
     const t3 = el('h4');
-    t3.textContent = t(`strati3d.guida.${sezione}`);
+    t3.textContent = t(`${prefisso}.${sezione}`);
     const ul = el('ul');
     for (let i = 1; i <= n; i++) {
       const li = el('li');
       // le parti tra [quadre] sono tasti o gesti: si disegnano come tasti
-      const testo = t(`strati3d.guida.${sezione}.${i}`);
+      const testo = t(`${prefisso}.${sezione}.${i}`);
       for (const [j, pezzo] of testo.split(/\[([^\]]+)\]/).entries()) {
         if (!pezzo) continue;
         const k = el(j % 2 ? 'kbd' : 'span');
@@ -181,7 +181,7 @@ export function creaGuida(chiudi) {
   }
   const ok = el('button', 'strati3d-guida-ok');
   ok.type = 'button';
-  ok.textContent = t('strati3d.guida.chiudi');
+  ok.textContent = t(`${prefisso}.chiudi`);
   ok.addEventListener('click', chiudi);
   radice.append(h, griglia, ok);
   return radice;

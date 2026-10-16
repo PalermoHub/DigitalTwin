@@ -1717,7 +1717,6 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
 .maplibregl-ctrl-bottom-right .logo-pahub { display: block; margin: 0 10px 20px 0; line-height: 0; }
 .logo-pahub img { display: block; width: 110px; height: auto; }
 @media (min-width: 721px) { .maplibregl-ctrl-bottom-right .logo-pahub { margin-right: 68px; } }
-#bussola-ago { transition: transform .1s linear; }
 #barra-strumenti button[hidden] { display: none; }
 
 /* Street View: finestra flottante, spostabile e ridimensionabile */
@@ -1960,6 +1959,16 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .strati3d-nav-colonna button.premuto { background: rgba(245, 166, 35, .25); border-color: var(--accent); color: var(--accent); }
 .strati3d-nav-centra, .strati3d-nav-guida { color: var(--accent) !important; }
 /* guida ai comandi */
+/* navigatore della vista 3D della mappa: in basso a sinistra, accanto al pannello (--sx); la legenda gli sale sopra */
+.strati3d-nav.mappa-nav { position: fixed; z-index: var(--z-mappa-ui); left: calc(var(--sx, 0px) + 12px); bottom: calc(var(--footer-h, 36px) + 12px); }
+.strati3d-nav.mappa-nav[hidden] { display: none; }
+body.nav3d #legende-box { bottom: calc(var(--footer-h, 36px) + 146px); }
+.strati3d-guida.mappa-guida { position: fixed; z-index: var(--z-mappa-ui); max-height: calc(100% - 80px); }
+@media (max-width: 720px) {
+  .strati3d-nav.mappa-nav { left: 8px; bottom: calc(var(--tab-h, 60px) + var(--footer-h, 36px) + 8px); flex-direction: row; padding: 6px; border-radius: 44px 14px 14px 44px; }
+  .strati3d-nav.mappa-nav .strati3d-bussola { width: 84px; height: 84px; }
+  body.nav3d #legende-box { bottom: calc(var(--tab-h, 60px) + var(--footer-h, 36px) + 116px); }
+}
 .strati3d-guida { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3; width: min(720px, calc(100% - 32px)); max-height: calc(100% - 140px); overflow: auto;
   padding: 18px 22px; border-radius: var(--r-md); background: rgba(16, 20, 29, .96); border: 1px solid rgba(255, 255, 255, .16); box-shadow: 0 20px 60px rgba(0, 0, 0, .6); }
 .strati3d-guida[hidden] { display: none; }

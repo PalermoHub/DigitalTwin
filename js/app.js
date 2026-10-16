@@ -16,6 +16,7 @@ import { collegaTooltipRemoto } from './rndt/tooltip-remoto.js';
 import { migraFileLocali } from './aggiungi/migrazione.js';
 import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
 import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
+import { collegaNavigatoreMappa } from './core/mappa-navigatore.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaTabella } from './core/tabella/index.js';
 import { collegaCursorePunti } from './core/cursore-punti.js';
@@ -230,7 +231,7 @@ map.once('style.load', async () => {
   map.on('move', () => { if (!puntatore) aggiornaCoord(); });
   map.on('zoom', aggiornaCoord);
   aggiornaCoord();
-  // scala metrica in basso a destra (segue il pannello via CSS); bussola nella barra strumenti, solo in vista 3D
+  // scala metrica in basso a destra (segue il pannello via CSS)
   map.addControl(new maplibregl.ScaleControl({ unit: 'metric', maxWidth: 120 }), 'bottom-right');
   // logo PA Hub sopra la scala (aggiunto dopo: MapLibre lo impila più in alto), si sposta con lei
   map.addControl({
@@ -246,11 +247,7 @@ map.once('style.load', async () => {
     },
     onRemove() { this._el.remove(); },
   }, 'bottom-right');
-  const btnBussola = document.getElementById('btn-bussola');
-  const ago = document.getElementById('bussola-ago');
-  map.on('rotate', () => { ago.style.transform = `rotate(${-map.getBearing()}deg)`; });
-  btnBussola.addEventListener('click', () => map.easeTo({ bearing: 0, duration: 300 }));
-  document.addEventListener('vista3d', e => { btnBussola.hidden = !e.detail; });
+  collegaNavigatoreMappa(map);
   collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })(), undefined, undefined, () => {
     const scheda = document.getElementById('scheda');
     if (scheda.hidden) return false;
