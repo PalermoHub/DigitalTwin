@@ -9,6 +9,7 @@ import { csv, geojson, nomeFile } from './esporta.js';
 import { attiva, leggiEsterni, leggiVista, caricaIntera, haIntera, righeIn, evidenziaRighe, cancellaEvidenza, vaiA } from './mappa.js';
 import { collegaStrumenti } from './strumenti.js';
 import { svgTabella } from './icone.js';
+import { collegamento } from '../url-sicuro.js';
 
 const CHIAVE_ALTEZZA = 'dt-tabella-altezza';
 const CHIAVE_COLONNE = id => `dt-tabella-colonne-${id}`;
@@ -418,7 +419,14 @@ export function collegaTabella(map, { pulsante: bottone }) {
       const primo = tr.insertCell();
       primo.className = 'tabella-casella';
       primo.append(casella);
-      for (const c of visibili) tr.insertCell().textContent = cella(r.proprieta[c.campo]);
+      for (const c of visibili) {
+        const td = tr.insertCell(), testo = cella(r.proprieta[c.campo]), url = testo && s.sorgente.collegamenti?.[c.campo]?.(testo);
+        if (!url) { td.textContent = testo; continue; }
+        const a = el('a', null, testo); // colonna con collegamento (es. CUP → OpenCUP)
+        collegamento(a, url);
+        a.addEventListener('dblclick', e => e.stopPropagation()); // il doppio clic sul link non sposta la mappa
+        td.append(a);
+      }
       tr.addEventListener('focusin', () => {
         if (rigaAttiva === r.chiave) return;
         const prec = rigaPer(rigaAttiva);
