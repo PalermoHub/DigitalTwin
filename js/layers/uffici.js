@@ -10,7 +10,7 @@ import { PR, iconaFette } from './marker-fette.js';
 import { tl } from '../core/i18n.js';
 
 // Sedi degli uffici comunali (dati/uffici/sedi.geojson), tematizzate per area. Ogni sede è un'icona disegnata su canvas:
-// cerchio pieno se ospita una sola area, anello a fette colorate (una per area) se ne ospita più d'una; al centro il numero degli uffici.
+// cerchio pieno se ospita una sola area, anello a fette colorate (una per area) se ne ospita più d'una; al centro l'icona dell'edificio (la dimensione cresce con il numero degli uffici).
 // Il popup è breve; l'elenco completo (responsabili, contatti, link) sta nella scheda a destra, anche a strato spento.
 const SRC = 'uffici';
 const SRC_HIT = 'uffici-hit-src';
@@ -64,7 +64,7 @@ function aggiorna() {
     const nome = `uffici-sede-${id}`;
     if (mappa.hasImage(nome)) mappa.removeImage(nome);
     if (!lista.length) continue;
-    mappa.addImage(nome, iconaFette(lista), { pixelRatio: PR });
+    mappa.addImage(nome, iconaFette(lista, 'uffici'), { pixelRatio: PR });
     features.push({ type: 'Feature', geometry: geometrie.get(id), properties: { id, icona: nome, n: lista.reduce((s, f) => s + f.n, 0) } });
   }
   mappa.getSource(SRC)?.setData({ type: 'FeatureCollection', features });

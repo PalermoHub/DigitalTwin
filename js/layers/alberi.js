@@ -3,11 +3,11 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { voceAlbero, modelloPopupAlbero } from './scheda-alberi.js';
 import { tl, t } from '../core/i18n.js';
-import { registraForme, layerForme, stileForma, simboloForma } from '../core/forme.js';
+import { registraGlifo, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 
 const COLORE = '#2f7d32';
 const SRC = 'alberi';
-const FORMA = 'triangolo'; // ogni layer ha la sua forma (vedi core/forme.js)
+const ICONA = 'albero'; // in mappa è la sagoma dell'icona (vedi core/icone-mappa.js)
 const PUNTI = 'alberi-punti';
 const HIT = 'alberi-hit-punti'; // punti trasparenti, sempre presenti: la scheda mostra l'albero anche a strato spento
 
@@ -41,7 +41,7 @@ function collegaPopup(map) {
     popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
       .setLngLat(e.lngLat).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
   });
-  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'albero', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileForma(FORMA, COLORE)]), modello: p => modelloPopupAlbero(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'albero', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, COLORE)]), modello: p => modelloPopupAlbero(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }
@@ -50,7 +50,7 @@ function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti legenda-alberi lg-alberi');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Alberi monumentali'));
-  legenda.append(voceStrato(simboloForma(FORMA, COLORE), 'Albero monumentale (MASAF)', 'alberi'));
+  legenda.append(voceStrato(simboloGlifo(ICONA, COLORE), 'Albero monumentale (MASAF)', 'alberi'));
   document.getElementById('legende').append(legenda);
 }
 
@@ -64,8 +64,8 @@ export default {
     map.addSource(SRC, { type: 'geojson', data: urlDati('alberi_monumentali/alberi.geojson') });
   },
   aggiungiLayer(map) {
-    registraForme(map, [FORMA]);
-    map.addLayer(layerForme({ id: PUNTI, source: SRC, forma: FORMA, colore: COLORE, layout: { visibility: 'none' } }));
+    registraGlifo(map, ICONA);
+    map.addLayer(layerGlifo({ id: PUNTI, source: SRC, icona: ICONA, colore: COLORE, layout: { visibility: 'none' } }));
     map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
     collegaPopup(map);
   },
