@@ -3,6 +3,7 @@ import { voceFiltro } from './legenda.js';
 import { registraTooltip } from './tooltip.js';
 import { svgIcona } from './icone.js';
 import { t, tl } from './i18n.js';
+import { registraGlifo, simboloGlifo, registraBadge } from './icone-mappa.js';
 
 // Evidenziazione sulla mappa delle aree da cui vengono i dati della scheda del luogo.
 // Ogni layer "hit" ha un'etichetta (mostrata nella scheda) e un colore (usato sulla mappa).
@@ -37,6 +38,18 @@ export const FONTI = {
   'griglia-hit': { etichetta: t('evidenza.griglia'), colore: '#5c940d' },
 };
 
+// Icona (vedi core/icone.js) dei layer a punti: in mappa la selezione disegna la sagoma dell'icona al posto del cerchio.
+// I layer senza icona qui (es. civici) restano cerchi.
+const ICONE_PUNTI = {
+  'monumenti-hit-punti': 'monumento', 'alberi-hit-punti': 'albero', 'fontanelle-hit-punti': 'fontanella',
+  'scuole-hit-punti': 'scuola', 'seggi-hit-punti': 'seggio', 'distributori-hit': 'distributori', 'opere-hit': 'cantiere',
+  'colonnine-hit': 'colonnine', 'uffici-hit': 'uffici', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
+  'distributori-vicini': 'distributori', 'trasporto-vicine': 'trasporto', // evidenze delle voci della scheda
+};
+const DISCHI = new Set(['trasporto-hit-fermate', 'trasporto-hit-stazioni', 'trasporto-hit-fermate-vicini', 'trasporto-hit-stazioni-vicini']); // punti con il disco di contrasto
+const ICONE_EXTRA = ['tram']; // icone che una singola feature può scegliere con `properties.icona` (fermate di tram)
+const iconaDi = (id, geometria) => (geometria.type === 'Point' ? ICONE_PUNTI[id] ?? ICONE_PUNTI[id.replace(/-vicini$/, '')] ?? '' : '');
+
 // Attributo che identifica la feature (mostrato nel tooltip accanto al nome del layer); undefined se non ce n'è uno.
 const pulito = v => (v == null ? '' : String(v).replace(/^'|'$/g, '').trim());
 const unisciTesti = (...parti) => parti.map(pulito).filter(Boolean).join(' — ') || undefined;
@@ -63,7 +76,8 @@ const ATTRIBUTI = {
 export const attributoDi = (id, proprieta = {}) => (ATTRIBUTI[id]?.(proprieta) ?? pulito(proprieta.attributo)) || undefined;
 
 const SORGENTE = 'scheda-evidenza';
-const STRATI = ['scheda-evidenza-fill', 'scheda-evidenza-line', 'scheda-evidenza-punti'];
+const SU = [0, -15]; // px di cui salgono le fermate sopra al punto
+const STRATI = ['scheda-evidenza-fill', 'scheda-evidenza-line', 'scheda-evidenza-punti', 'scheda-evidenza-icone', 'scheda-evidenza-icone-su', 'scheda-evidenza-badge'];
 
 const uguali = (a, b) => JSON.stringify(a.properties) === JSON.stringify(b.properties);
 
@@ -97,7 +111,7 @@ export function collezione(scelte) {
   return {
     type: 'FeatureCollection',
     features: scelte.flatMap(s => s.features.map(f => ({
-      type: 'Feature', geometry: f.geometry, properties: { colore: s.colore, etichetta: s.etichetta, attributo: attributoDi(s.id, f.properties) ?? '' },
+      type: 'Feature', geometry: f.geometry, properties: { colore: s.colore, etichetta: s.etichetta, icona: f.properties?.icona ?? iconaDi(s.id, f.geometry), disco: f.properties?.disco ?? DISCHI.has(s.id), sposta: f.properties?.sposta ?? DISCHI.has(s.id), attributo: attributoDi(s.id, f.properties) ?? '' },
     }))),
   };
 }
@@ -121,11 +135,13 @@ function tooltipSelezione(map, punto) {
   if (!viste.size) return null;
   const contenuto = document.createElement('div');
   contenuto.className = 'legenda';
-  for (const { etichetta, colore, attributo } of viste.values()) {
+  for (const { etichetta, colore, icona, attributo } of viste.values()) {
     const riga = document.createElement('div');
-    const simbolo = document.createElement('i');
-    simbolo.className = 'selezione-simbolo';
-    simbolo.style.setProperty('--colore', colore);
+    const simbolo = icona ? simboloGlifo(icona, colore) : document.createElement('i');
+    if (!icona) {
+      simbolo.className = 'selezione-simbolo';
+      simbolo.style.setProperty('--colore', colore);
+    }
     const testo = document.createElement('span');
     testo.className = 'selezione-testo';
     const nome = document.createElement('span');
@@ -151,15 +167,30 @@ function assicuraStrati(map) {
     paint: { 'fill-color': colore, 'fill-opacity': 0.2 } });
   map.addLayer({ id: STRATI[1], type: 'line', source: SORGENTE, filter: ['!=', ['geometry-type'], 'Point'],
     paint: { 'line-color': colore, 'line-width': 3 } });
-  map.addLayer({ id: STRATI[2], type: 'circle', source: SORGENTE, filter: ['==', ['geometry-type'], 'Point'],
+  map.addLayer({ id: STRATI[2], type: 'circle', source: SORGENTE, filter: ['all', ['==', ['geometry-type'], 'Point'], ['==', ['get', 'icona'], '']],
     paint: { 'circle-color': colore, 'circle-opacity': 0.35, 'circle-radius': 9, 'circle-stroke-color': colore, 'circle-stroke-width': 3 } });
+  for (const icona of new Set([...Object.values(ICONE_PUNTI), ...ICONE_EXTRA])) registraGlifo(map, icona);
+  // Niente icone sovrapposte: dove due si toccano ne resta una (le fermate vicine hanno la precedenza, sono nello strato più alto).
+  // Le icone dei punti sulle linee (fermate) stanno sopra al punto, così il tracciato resta visibile.
+  const base = { 'icon-allow-overlap': false, 'icon-padding': 1 };
+  const glifi = (id, filtro, paint = {}) => map.addLayer({ id, type: 'symbol', source: SORGENTE,
+    filter: ['all', ['==', ['geometry-type'], 'Point'], ['!=', ['get', 'icona'], ''], ['!=', ['get', 'disco'], true], filtro],
+    layout: { 'icon-image': ['concat', 'glifo-', ['get', 'icona']], 'icon-size': 1.5, ...base },
+    paint: { 'icon-color': colore, 'icon-halo-color': '#fff', 'icon-halo-width': 2, ...paint } });
+  glifi(STRATI[3], ['!=', ['get', 'sposta'], true]);
+  glifi(STRATI[4], ['==', ['get', 'sposta'], true], { 'icon-translate': SU });
+  // le fermate vicine sono un disco del colore della fonte con l'icona bianca: si distinguono dalle fermate di un percorso
+  map.addLayer({ id: STRATI[5], type: 'symbol', source: SORGENTE,
+    filter: ['all', ['==', ['geometry-type'], 'Point'], ['==', ['get', 'disco'], true]],
+    layout: { 'icon-image': ['concat', 'badge-', ['get', 'icona'], '-', ['get', 'colore']], 'icon-size': 0.8, ...base },
+    paint: { 'icon-translate': SU } });
 }
 
 // Voci della legenda «Selezione in mappa»: una per etichetta (es. Edificio, Fermata vicina) con il colore col quale è disegnata;
-// `punto` = la voce è un punto (si disegna un cerchio), altrimenti un'area.
+// `punto` = la voce è un punto (cerchio, o la sagoma di `icona` se il layer ne ha una), altrimenti un'area.
 export function vociLegenda(scelte) {
   const viste = new Map();
-  for (const s of scelte) if (!viste.has(s.etichetta)) viste.set(s.etichetta, { colore: s.colore, punto: s.features[0]?.geometry.type === 'Point' });
+  for (const s of scelte) if (!viste.has(s.etichetta)) viste.set(s.etichetta, { colore: s.colore, punto: s.features[0]?.geometry.type === 'Point', icona: iconaDi(s.id, s.features[0]?.geometry ?? {}) });
   return [...viste].map(([etichetta, v]) => ({ etichetta, ...v }));
 }
 
@@ -203,9 +234,11 @@ function aggiornaLegenda(map, scelte) {
   const gruppo = document.createElement('div');
   gruppo.className = 'selezione-voci';
   for (const v of voci) {
-    const simbolo = document.createElement('i');
-    simbolo.className = `selezione-simbolo${v.punto ? ' selezione-simbolo--punto' : ''}`;
-    simbolo.style.setProperty('--colore', v.colore);
+    const simbolo = v.icona ? simboloGlifo(v.icona, v.colore) : document.createElement('i');
+    if (!v.icona) {
+      simbolo.className = `selezione-simbolo${v.punto ? ' selezione-simbolo--punto' : ''}`;
+      simbolo.style.setProperty('--colore', v.colore);
+    }
     gruppo.append(voceFiltro(simbolo, v.etichetta, acceso => {
       if (acceso) accese.add(v.etichetta); else accese.delete(v.etichetta);
       map.getSource(SORGENTE)?.setData(collezione(scelteAccese(scelte, accese)));
@@ -218,6 +251,8 @@ function aggiornaLegenda(map, scelte) {
 export function evidenzia(map, scelte) {
   aggiornaLegenda(map, scelte);
   assicuraStrati(map);
+  const dischi = collezione(scelte).features.filter(f => f.properties.disco && f.properties.icona);
+  for (const icona of new Set(dischi.map(f => f.properties.icona))) registraBadge(map, icona, dischi.filter(f => f.properties.icona === icona).map(f => f.properties.colore));
   map.getSource(SORGENTE).setData(collezione(scelte));
   // sempre sopra agli strati aggiunti dopo (es. riaccensioni dei layer dei dati)
   for (const id of STRATI) map.moveLayer(id);

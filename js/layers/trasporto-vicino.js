@@ -24,6 +24,9 @@ export function fermateVicine(punto, fermate, info, raggio) {
   return trovate.sort((a, b) => a.distanza - b.distanza);
 }
 
+// Icona della fermata sulla mappa: treno (ferrovia, metro), tram, altrimenti bus.
+const iconaFermata = f => (f.stato || f.linee.some(l => l.tipo === 'ferrovia') ? 'treno' : f.linee.some(l => l.tipo === 'tram') ? 'tram' : 'trasporto');
+
 export const metri = d => `${Math.round(d / 10) * 10} m`;
 
 // Voce della scheda con al massimo `max` fermate (le più vicine). `costruisci(fermate)` disegna l'elenco cliccabile.
@@ -36,6 +39,6 @@ export function voceTrasportoVicino(fermate, raggio, costruisci, max = 8) {
     chiave: 'trasportovicino', peso: 8, titolo: 'Trasporto pubblico vicino', icona: 'bus', gruppi: [], sempre: true,
     dinamico: () => costruisci(mostrate),
     nota: t('trasporto.vicino.nota', { raggio, altre: altre > 0 ? t('trasporto.vicino.altre', { n: altre }) : '' }),
-    evidenza: [{ id: 'trasporto-vicine', etichetta: 'Fermata vicina', colore: '#364fc7', features: mostrate.map(f => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [f.lon, f.lat] }, properties: { attributo: f.nome } })) }],
+    evidenza: [{ id: 'trasporto-vicine', etichetta: 'Fermata vicina', colore: '#364fc7', features: mostrate.map(f => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [f.lon, f.lat] }, properties: { attributo: f.nome, icona: iconaFermata(f), disco: true, sposta: true } })) }],
   };
 }

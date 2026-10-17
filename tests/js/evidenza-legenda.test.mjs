@@ -1,14 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { vociLegenda, scelteAccese, attributoDi } from '../../js/core/evidenza.js';
+import { vociLegenda, collezione, scelteAccese, attributoDi } from '../../js/core/evidenza.js';
 
 test('vociLegenda: una voce per etichetta, senza doppioni', () => {
   const voci = vociLegenda([
-    { etichetta: 'Edificio', colore: '#e8590c', features: [{ geometry: { type: 'Polygon' } }] },
-    { etichetta: 'Fermata vicina', colore: '#364fc7', features: [{ geometry: { type: 'Point' } }] },
-    { etichetta: 'Fermata vicina', colore: '#364fc7', features: [{ geometry: { type: 'Point' } }] },
+    { id: 'edifici-hit', etichetta: 'Edificio', colore: '#e8590c', features: [{ geometry: { type: 'Polygon' } }] },
+    { id: 'trasporto-hit-fermate-vicini', etichetta: 'Fermata vicina', colore: '#364fc7', features: [{ geometry: { type: 'Point' } }] },
+    { id: 'trasporto-hit-fermate-vicini', etichetta: 'Fermata vicina', colore: '#364fc7', features: [{ geometry: { type: 'Point' } }] },
   ]);
-  assert.deepEqual(voci, [{ etichetta: 'Edificio', colore: '#e8590c', punto: false }, { etichetta: 'Fermata vicina', colore: '#364fc7', punto: true }]);
+  assert.deepEqual(voci, [{ etichetta: 'Edificio', colore: '#e8590c', punto: false, icona: '' }, { etichetta: 'Fermata vicina', colore: '#364fc7', punto: true, icona: 'trasporto' }]);
 });
 
 test('vociLegenda: nessuna selezione, nessuna voce', () => assert.deepEqual(vociLegenda([]), []));
@@ -24,4 +24,15 @@ test('attributoDi: zona PRG, fermata e valore esplicito', () => {
   assert.equal(attributoDi('trasporto-vicine', { attributo: 'Politeama' }), 'Politeama');
   assert.equal(attributoDi('edifici-hit', {}), undefined);
   assert.equal(attributoDi('monumenti-hit-poli', { nome: 'Teatro Massimo' }), 'Teatro Massimo');
+});
+
+test('collezione: i punti dei layer con icona la portano, gli altri restano cerchi', () => {
+  const punto = { type: 'Point', coordinates: [13, 38] };
+  const c = collezione([
+    { id: 'distributori-hit', etichetta: 'Distributore', colore: '#f2b705', features: [{ geometry: punto, properties: {} }] },
+    { id: 'civici-hit', etichetta: 'Civico', colore: '#d6336c', features: [{ geometry: punto, properties: {} }] },
+    { id: 'edifici-hit', etichetta: 'Edificio', colore: '#e8590c', features: [{ geometry: { type: 'Polygon', coordinates: [] }, properties: {} }] },
+  ]);
+  assert.deepEqual(c.features.map(f => f.properties.icona), ['distributori', '', '']);
+  assert.equal(collezione([{ id: 'distributori-vicini', etichetta: 'D', colore: '#f2b705', features: [{ geometry: punto, properties: {} }] }]).features[0].properties.icona, 'distributori');
 });
