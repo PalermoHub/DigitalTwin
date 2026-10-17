@@ -4,6 +4,7 @@ import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { modelloPopupDistributore, vociDistributori, distributoriVicini, CARBURANTI } from './scheda-distributori.js';
 import { tl } from '../core/i18n.js';
+import { raggioVicini } from '../core/raggio-vicini.js';
 import { registraBadge, layerBadge, espressioneBadge, stileBadge, simboloBadge } from '../core/icone-mappa.js';
 
 // Distributori di carburante di Palermo (dati/distributori/distributori.geojson, rigenerato ogni giorno da un workflow dai CSV del MIMIT:
@@ -19,7 +20,6 @@ const MARCHI = [
   ['Pompe Bianche', '#868e96'], ['EOS', '#7048e8'], ['Tamoil', '#2f9e44'], [ALTRE, '#343a40'],
 ];
 
-const RAGGIO_VICINO = 400; // metri: la scheda mostra anche i distributori nei dintorni del punto cliccato
 const MAX_VICINI = 5;
 const dettagli = new Map(); // id -> proprietà complete (l'elenco dei prezzi, annidato, non sopravvive alla mappa)
 const coordinate = new Map(); // id -> [lon, lat]
@@ -148,11 +148,11 @@ export default {
   },
   scheda: {
     layers: [HIT],
-    // i distributori sotto il clic e quelli entro RAGGIO_VICINO, anche a strato spento: una sezione unica con una card ciascuno
+    // i distributori sotto il clic e quelli entro il raggio regolabile dalla legenda, anche a strato spento: una sezione unica con una card ciascuno
     voci(trovati, lngLat) {
       const cliccati = new Set(trovati.map(f => f.properties.id));
       const punto = lngLat ? [lngLat.lng, lngLat.lat] : null;
-      const vicini = punto ? distributoriVicini(punto, dettagli, coordinate, RAGGIO_VICINO, MAX_VICINI, cliccati) : [];
+      const vicini = punto ? distributoriVicini(punto, dettagli, coordinate, raggioVicini(), MAX_VICINI, cliccati) : [];
       const visti = new Set(vicini.map(x => x.p.id));
       const elenco = vicini.map(({ p, distanza }) => ({ p, distanza, coordinate: coordinate.get(p.id) }));
       // senza posizione (o con i dati non ancora caricati) restano almeno quelli sotto il clic

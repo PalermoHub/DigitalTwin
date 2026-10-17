@@ -8,6 +8,8 @@ import { featureVicine } from './scheda-util.js';
 import { el, icona, sincronizzaStrato, acceseDaScheda, spegniStratiDaScheda, creaInterruttoreStrato, disegnaSezione } from './scheda-disegno.js';
 import { ICONA_INGRANAGGIO, ICONA_X, creaPannelloPreferenze } from './scheda-pannello-preferenze.js';
 import { t as tr, tl } from './i18n.js';
+import { mostraCerchio, nascondiCerchio } from './cerchio-raggio.js';
+import { raggioVicini, cerchioVisibile, EVENTO_RAGGIO } from './raggio-vicini.js';
 
 const R = 4; // tolleranza in pixel attorno al clic
 
@@ -389,7 +391,15 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && !contenitore.hidden) contenitore.querySelector('.scheda-x')?.click();
   });
+  // cambiando il raggio dei vicini la scheda aperta si rifà sullo stesso punto (senza ripetere il clic a mano)
+  let ultimoClic = null;
+  let attesaRaggio = null;
+  document.addEventListener(EVENTO_RAGGIO, () => {
+    clearTimeout(attesaRaggio);
+    attesaRaggio = setTimeout(() => { if (ultimoClic && !contenitore.hidden) map.fire('click', { point: map.project(ultimoClic), lngLat: ultimoClic }); }, 120);
+  });
   map.on('click', async e => {
+    ultimoClic = e.lngLat;
     // i dati degli strati puntuali si scaricano in secondo piano: un clic arrivato prima li attende
     if (window.dt && window.dt.differitiPronti === false) await window.dt.differiti();
     const voci = [];
@@ -409,7 +419,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
       if (esatti.length && e.originalEvent) tabIniziale ??= m.scheda.tabAlClic?.(map) ?? null;
       trovatiTutti.push(...esatti);
       // `scheda.vicini` ({ raggio, max }): il layer mostra anche i suoi punti nei dintorni del clic, a strato acceso o spento
-      const vicini = m.scheda.vicini ? featureVicine(map, lngLat, layers, m.scheda.vicini, esatti) : [];
+      const vicini = m.scheda.vicini ? featureVicine(map, lngLat, layers, { ...m.scheda.vicini, raggio: raggioVicini() }, esatti) : [];
       viciniTutti.push(...vicini);
       voci.push(...m.scheda.voci(esatti.concat(vicini), lngLat));
     }
@@ -420,7 +430,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     const interrogabili = rndt ? rndt.layerAlPunto(lngLat) : [];
     if (interrogabili.length) voci.push(rndt.segnaposto()); // la scheda si apre subito: le risposte dei servizi arrivano dopo
     const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);
-    const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); adattaVista(); };
+    const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); nascondiCerchio(map); adattaVista(); };
     const dati = unisci(voci);
     if (!dati.sezioni.length) { // clic su un punto vuoto
       chiudiScheda();
@@ -434,6 +444,8 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     const base = soloCliccato(sceltePerLayer(trovatiTutti, lngLat));
     for (const m of conScheda) m.scheda.suEvidenza?.(base); // chi ridisegna l'evidenza dopo il clic (es. percorso di una linea) tiene anche questa
     const scelte = [...base, ...extra];
+    if (cerchioVisibile() && conScheda.some(m => m.scheda.vicini)) mostraCerchio(map, lngLat, raggioVicini()); // il cerchio dei punti vicini, sotto all'evidenza
+    else nascondiCerchio(map);
     evidenzia(map, scelte);
     const scheda = mostra(contenitore, lngLat, dati, chiudiScheda, adattaVista, pref, tabIniziale);
     if (risposte) {

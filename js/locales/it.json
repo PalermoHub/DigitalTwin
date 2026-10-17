@@ -1496,6 +1496,8 @@
   "legenda.esterna.nonDisponibile": "Legenda non disponibile",
   "legenda.esterna.caricamento": "Caricamento legenda…",
   "legenda.esterna.vettoriale": "Colore del layer",
+  "legenda.raggio.etichetta": "Raggio intorno al clic: {m} m",
+  "legenda.raggio.cerchio": "Mostra il cerchio in mappa",
   "legenda.pannello.suMappa": "Legende sulla mappa",
   "legenda.pannello.titolo": "Legenda",
   "legenda.esterna.file": "File caricato",

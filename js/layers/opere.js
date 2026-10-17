@@ -259,7 +259,7 @@ export default {
   }],
   pannello: creaLegenda,
   scheda: {
-    vicini: { raggio: 300, max: 5 }, // anche i punti nei dintorni del clic (vedi docs/NUOVO_LAYER.md)
+    vicini: { max: 5 }, // anche i punti nei dintorni del clic (raggio: regolabile dalla legenda, core/raggio-vicini.js) (vedi docs/NUOVO_LAYER.md)
     layers: [HIT],
     // nella tab Opere: le opere cliccate e, sempre, la sintesi con i grafici di tutte le opere di Palermo
     voci(trovati) {

@@ -12,6 +12,7 @@ import { giornoIniziale, oggiISO, colorePerTesto, uniscimOrari } from './traspor
 import { t as tr, tl } from '../core/i18n.js';
 import { creaStrati, stratoLinea } from './trasporto-strati.js';
 import { immagineStazione, urlStazione } from './trasporto-logo.js';
+import { raggioVicini } from '../core/raggio-vicini.js';
 
 // Linee bus/tram e fermate AMAT (GTFS) e linee e stazioni della ferrovia urbana (GTFS Trenitalia, file ferrovia-*): stesso schema,
 // stesse mappe in memoria (id con prefisso: stazioni «f…», rotte «ferrovia-…»). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
@@ -20,7 +21,6 @@ import { immagineStazione, urlStazione } from './trasporto-logo.js';
 const COLORE_FERMATA = '#364fc7';
 const ZOOM_MIN = 13;
 const ZOOM_FERMATA = 17.5;
-const RAGGIO_VICINO = 300; // m, in linea d'aria
 const IMMAGINE_STAZIONE = 'stazione-metro';
 const ZOOM_STAZIONE = 11; // le stazioni sono poche e distanti: si vedono da più lontano delle fermate
 const L = {
@@ -316,8 +316,9 @@ export default {
       // in ogni punto della mappa: le linee con una fermata nei dintorni, anche senza aver colpito fermate o tracciati
       riferimento = lngLat ? { lngLat, evidenza: [], base: [] } : null;
       if (lngLat && fermate.size) {
-        const vicine = fermateVicine([lngLat.lng, lngLat.lat], fermate.values(), n => perNumero.get(n), RAGGIO_VICINO);
-        const vicino = voceTrasportoVicino(vicine, RAGGIO_VICINO, mostrate => elencoFermateVicine(mostrate, vaiAFermata));
+        const raggio = raggioVicini(); // m, in linea d'aria: lo stesso di tutti i layer, regolabile dalla legenda
+        const vicine = fermateVicine([lngLat.lng, lngLat.lat], fermate.values(), n => perNumero.get(n), raggio);
+        const vicino = voceTrasportoVicino(vicine, raggio, mostrate => elencoFermateVicine(mostrate, vaiAFermata));
         if (vicino) { voci.push(vicino); riferimento.evidenza = vicino.evidenza; }
       }
       return voci;

@@ -253,7 +253,7 @@ export default {
   }],
   pannello: creaLegenda,
   scheda: {
-    vicini: { raggio: 300, max: 5 }, // anche i punti nei dintorni del clic (vedi docs/NUOVO_LAYER.md)
+    vicini: { max: 5 }, // anche i punti nei dintorni del clic (raggio: regolabile dalla legenda, core/raggio-vicini.js) (vedi docs/NUOVO_LAYER.md)
     layers: [HIT_POLI, HIT_PUNTI],
     voci(trovati) {
       const visti = new Set();

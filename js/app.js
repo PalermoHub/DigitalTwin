@@ -60,12 +60,14 @@ import { collegaFiltroLinea } from './layers/trasporto-filtro.js';
 import terreno from './layers/terreno.js';
 import base from './layers/base.js';
 import { t } from './core/i18n.js';
+import { creaRegolatoreRaggio } from './core/raggio-vicini.js';
 
 // telefono: barra a quattro tab (Mappa, Strati, Aggiungi, Info) e foglio degli strati; la legenda si può ridurre
 let tornaAllaMappa = () => {}; // si completa quando i pannelli laterali esistono
 const tab = collegaTabMobile(document, { barraTitolo: document.querySelector('#barra-strati .barra-titolo'), suMappa: () => tornaAllaMappa() });
 document.getElementById('corpo').append(tab.barra);
 document.getElementById('chiudi-strati').addEventListener('click', () => tab.imposta(null));
+document.getElementById('legende-box').append(creaRegolatoreRaggio(localStorage));
 const riduciLegenda = document.getElementById('legende-riduci');
 riduciLegenda.addEventListener('click', () => {
   const ridotta = document.getElementById('legende-box').classList.toggle('ridotta');

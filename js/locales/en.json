@@ -1496,6 +1496,8 @@
   "legenda.esterna.nonDisponibile": "Legend not available",
   "legenda.esterna.caricamento": "Loading legend…",
   "legenda.esterna.vettoriale": "Layer colour",
+  "legenda.raggio.etichetta": "Radius around the click: {m} m",
+  "legenda.raggio.cerchio": "Show the circle on the map",
   "legenda.pannello.suMappa": "Legends on the map",
   "legenda.pannello.titolo": "Legend",
   "legenda.esterna.file": "Uploaded file",
