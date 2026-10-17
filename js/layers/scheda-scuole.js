@@ -49,7 +49,7 @@ export function voceScuola(p) {
 
 export function voceSeggio(p) {
   return {
-    chiave: p.id, peso: 5, strato: 'seggi', luogo: chiaveLuogo(p.nome), titolo: p.nome, icona: 'seggio', badge: p.tipo,
+    chiave: p.id, peso: 5, strato: 'seggi', luogo: chiaveLuogo(p.nome), titolo: p.nome, icona: 'voto', badge: p.tipo,
     gruppi: [{ titolo: 'Sede elettorale', righe: righeSeggio(p) }],
   };
 }

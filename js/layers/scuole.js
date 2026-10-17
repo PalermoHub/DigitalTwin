@@ -13,7 +13,7 @@ const TIPI_SCUOLA = [['Asilo nido', '#f08c00'], ['Plesso scolastico', '#1971c2']
 const SEGGI_COLORE = '#0c8599';
 // In mappa ogni punto ha l'icona del tema (scuola, seggio) nel colore del tipo (vedi core/icone-mappa.js).
 const ICONA_SCUOLE = 'scuola';
-const ICONA_SEGGI = 'seggio';
+const ICONA_SEGGI = 'voto';
 const ALTRO = '#555';
 const iconaDi = k => (k === 'seggi' ? ICONA_SEGGI : ICONA_SCUOLE);
 const immagineDi = k => (k === 'seggi' ? idBadge(ICONA_SEGGI, SEGGI_COLORE) : espressioneBadge(ICONA_SCUOLE, 'tipo', TIPI_SCUOLA, ALTRO));

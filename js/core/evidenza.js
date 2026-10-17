@@ -42,7 +42,7 @@ export const FONTI = {
 // I layer senza icona qui (es. civici) restano cerchi.
 const ICONE_PUNTI = {
   'monumenti-hit-punti': 'monumento', 'alberi-hit-punti': 'albero', 'fontanelle-hit-punti': 'fontanella',
-  'scuole-hit-punti': 'scuola', 'seggi-hit-punti': 'seggio', 'distributori-hit': 'distributori', 'opere-hit': 'cantiere',
+  'scuole-hit-punti': 'scuola', 'seggi-hit-punti': 'voto', 'distributori-hit': 'distributori', 'opere-hit': 'cantiere',
   'colonnine-hit': 'colonnine', 'uffici-hit': 'uffici', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
   'distributori-vicini': 'distributori', 'trasporto-vicine': 'trasporto', // evidenze delle voci della scheda
 };
