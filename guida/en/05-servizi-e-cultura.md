@@ -76,7 +76,7 @@ The «Charging points» layer (Roadside services group) shows about 250 charging
 
 ## Fuel stations and prices
 
-Keywords: fuel stations, petrol, diesel, LPG, methane, prices, brand, fuel, Osservaprezzi, MIMIT.
+Keywords: fuel stations, petrol stations, gas stations, filling stations, petrol, gasoline, unleaded, diesel, LPG, methane, CNG, white pumps, independent stations, prices, brand, fuel, Osservaprezzi, MIMIT.
 
 Typical questions: Where is petrol cheapest? Which stations sell methane?
 
