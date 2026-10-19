@@ -55,6 +55,7 @@
   "trasporto-bus",
   "trasporto-tram",
   "trasporto-metro",
+  "trasporto-stazioni",
   "trasporto-fermate"
  ],
  "04-trasporti-e-sicurezza#3": [
@@ -151,6 +152,7 @@
  ],
  "24-scheda-fermate-e-linee.md": [
   "trasporto-fermate",
+  "trasporto-stazioni",
   "trasporto-bus"
  ],
  "25-scheda-trend-popolazione.md": [
