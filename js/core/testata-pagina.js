@@ -74,3 +74,38 @@ export async function avviaTestata() {
     mostraCima();
   }
 }
+
+// Barra a pillole sotto la testata (come `home-indice`): una voce per fascia, evidenzia quella in vista.
+// `voci` = [{ id, testo }]: gli id sono quelli delle fasce della pagina.
+export function costruisciIndice(voci) {
+  const radice = document.documentElement;
+  const riduci = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const indice = el('nav', { id: 'home-indice', className: 'home-indice home-indice--attivo' });
+  indice.setAttribute('aria-label', tr('home.indice.aria'));
+  const link = voci.map(({ id, testo }) => {
+    const a = el('a', { href: `#${id}`, textContent: testo });
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.getElementById(id).scrollIntoView({ behavior: riduci ? 'auto' : 'smooth' });
+      history.replaceState(null, '', `#${id}`);
+    });
+    indice.append(a);
+    return a;
+  });
+  document.getElementById('corpo').prepend(indice);
+  const header = document.getElementById('app-header');
+  const misura = () => {
+    radice.style.setProperty('--home-header', `${header.offsetHeight}px`);
+    radice.style.setProperty('--home-sticky', `${header.offsetHeight + indice.offsetHeight}px`);
+  };
+  new ResizeObserver(misura).observe(header);
+  misura();
+  // una fascia è «corrente» quando ha superato il 40% alto dello schermo
+  const evidenzia = () => {
+    const passate = voci.filter(({ id }) => document.getElementById(id).getBoundingClientRect().top < innerHeight * .4);
+    const attiva = passate.at(-1)?.id;
+    link.forEach((a, i) => { if (voci[i].id === attiva) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  };
+  window.addEventListener('scroll', evidenzia, { passive: true });
+  evidenzia();
+}

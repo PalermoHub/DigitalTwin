@@ -191,3 +191,7 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .pagina-info .home-perche h2 + .info-blocco h3 { margin-top: 0; }
 .pagina-info .home-perche h2 + .info-blocco, .pagina-info .home-perche h2 + p { margin-top: 0; }
 .pagina-info .home-perche:last-of-type { padding-bottom: 120px; }
+.pagina-info .home-indice--attivo { display: flex; }
+.pagina-info .guida-figura { max-width: 860px; }
+.pagina-info .guida-media { max-width: 860px; margin: 24px 0 0; }
+.pagina-info .fascia-in > .guida-passo { margin: 0 0 32px; }
