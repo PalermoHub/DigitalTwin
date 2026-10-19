@@ -175,6 +175,17 @@ export const PASSI = [
     scena: { strati: [], centro: CENTRO, zoom: 13, rail: 'btn-gruppo-filtri', ricerca: { testo: 'Maqueda' } },
   },
   {
+    id: 'chat-bot',
+    gruppo: 'funzioni',
+    titolo: 'Il Chat bot e i pulsanti dei filtri',
+    statico: true,
+    paragrafi: [
+      'Il pulsante con il fumetto, nella barra degli strumenti in alto a destra, o il tab «Chat bot» della barra di destra aprono il Chat bot: un assistente che risponde alle domande sull\'app, sui suoi layer e sulle sue funzioni. Si scrive la domanda nel campo in basso e si preme «Invia»; all\'apertura il Chat bot propone anche alcune domande da toccare. Le risposte non vengono da un servizio esterno: sono ricavate dalla guida del sito, in italiano, e sopra ogni risposta c\'è il titolo della voce da cui arrivano. «Leggi tutto» espande una risposta lunga; se non trova nulla il Chat bot lo dice e propone domande vicine; il cestino pulisce la conversazione.',
+      'Sotto la risposta compaiono dei pulsanti che permettono di agire senza cercare nei menu. Un pulsante con il nome di un layer, come «Colonnine di ricarica», lo accende o lo spegne. Quando il layer ha dei filtri compaiono i pulsanti dei filtri, divisi per gruppo (per le colonnine: «Stato» con «Disponibile», «In ricarica» e «Non attiva»; «Corrente» con «Corrente alternata (AC, lenta)» e «Corrente continua (DC, veloce)»): un clic lascia in mappa soltanto quella voce, «Mostra tutte» toglie ogni filtro. Scegliendo voci di gruppi diversi restano solo gli elementi che le rispettano tutte; la riga «In mappa» riassume i filtri attivi e la legenda in mappa si aggiorna di conseguenza. Altri pulsanti aprono la scheda di un luogo trovato, un tab dei pannelli o la voce della guida collegata.',
+    ],
+    immagine: { file: 'img/guida/passi/chat-bot.webp', alt: 'A sinistra la mappa con lo strato Colonnine di ricarica acceso e solo le colonnine disponibili in evidenza; a destra il pannello del Chat bot con la risposta sulle colonnine, il pulsante del layer e i pulsanti dei filtri «Stato» e «Corrente», con «Disponibile» premuto e la riga «In mappa: Stato: Disponibile».', didascalia: 'Il Chat bot risponde sulle colonnine di ricarica: il filtro «Disponibile» lascia in mappa solo quelle libere.' },
+  },
+  {
     id: 'strumenti',
     gruppo: 'funzioni',
     titolo: 'Stampare la mappa',
