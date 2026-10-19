@@ -32,7 +32,7 @@ export function creaConversazione({ carica = caricaIndice, cercaOggetti = async 
       const oggetti = await cercaOggetti(domanda).catch(() => []);
       if (!trovate.length) { aggiungi(oggetti.length ? { tipo: 'luoghi', oggetti } : { tipo: 'nonLoSo', vicine }); return; }
       const { breve, c_e_altro: cEAltro } = anteprima(trovate[0].testo);
-      aggiungi({ tipo: 'risposta', voce: trovate[0], breve, cEAltro, espansa: false, oggetti });
+      aggiungi({ tipo: 'risposta', voce: trovate[0], breve, cEAltro, espansa: false, oggetti, domanda });
     },
     commuta(id) {
       const m = messaggi.find(x => x.id === id);

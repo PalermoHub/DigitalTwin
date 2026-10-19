@@ -4,7 +4,7 @@ import { statoStrato, commutaStrato } from '../../js/core/chat-bot-strati.js';
 
 function docFinto(caselle) {
   const mappa = new Map(Object.entries(caselle).map(([id, acceso]) => {
-    const c = { checked: acceso, eventi: [], closest: () => ({ innerText: `Etichetta ${id}\n` }), dispatchEvent(e) { this.eventi.push(e.type); } };
+    const c = { checked: acceso, dataset: {}, eventi: [], closest: () => ({ innerText: `Etichetta ${id}\n` }), dispatchEvent(e) { this.eventi.push(e.type); } };
     return [`strato-${id}`, c];
   }));
   return { getElementById: id => mappa.get(id) ?? null, mappa };
@@ -28,4 +28,11 @@ test('commutaStrato: accende, poi spegne, lanciando «change» ogni volta', () =
 });
 test('commutaStrato: layer inesistente -> null, nessun errore', () => {
   assert.equal(commutaStrato(docFinto({}), 'xx'), null);
+});
+test('commutaStrato: da acceso marca la casella per la legenda sulla mappa, da spento toglie il marcatore', () => {
+  const d = docFinto({ bus: false });
+  commutaStrato(d, 'bus');
+  assert.equal(d.mappa.get('strato-bus').dataset.legendaMappa, '1');
+  commutaStrato(d, 'bus');
+  assert.equal(d.mappa.get('strato-bus').dataset.legendaMappa, undefined);
 });

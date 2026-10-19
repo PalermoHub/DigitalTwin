@@ -4,7 +4,8 @@ import { t, tn, tl } from './i18n.js';
 import { svgIcona } from './icone.js';
 import { creaConversazione } from './chat-bot-conversazione.js';
 import { blocchiTesto } from './chat-bot-ricerca.js';
-import { statoStrato, commutaStrato } from './chat-bot-strati.js';
+import { statoStrato, commutaStrato, accendiConLegenda } from './chat-bot-strati.js';
+import { filtriDelloStrato, vociNominate, vocePremuta } from './filtri-chat.js';
 import { tabPannello, apriPannello } from './chat-bot-pannelli.js';
 import { suntoRicordato } from './chat-bot-sunto.js';
 import { vociGuide } from './ricerca-guide.js';
@@ -87,6 +88,59 @@ function pulsantiPannelli(pannelli) {
     azioni.append(b);
   }
   return azioni;
+}
+
+// Per i layer con filtri (stato, corrente…): un pulsante per ogni voce, così chi non conosce la legenda vede cosa può scegliere.
+// Le voci nominate nella domanda vengono per prime e in evidenza. Il pulsante accende il layer (legenda sulla mappa) e lascia in mappa solo quella voce.
+function pulsantiFiltri(ids, domanda) {
+  const box = el('div', 'cb-filtri');
+  for (const id of ids ?? []) {
+    const d = filtriDelloStrato(id);
+    if (!d) continue;
+    const nominate = vociNominate(d, domanda);
+    box.append(el('p', 'cb-nota', t(nominate.length ? 'chatbot.filtri.consigliati' : 'chatbot.filtri.scegli')));
+    const stato = Object.assign(el('p', 'cb-filtri-stato'), { role: 'status' });
+    stato.dataset.strato = id;
+    if (d.gruppi.length > 1) box.append(el('p', 'cb-nota', t('chatbot.filtri.sommano')));
+    box.append(stato);
+    for (const g of d.gruppi) {
+      const azioni = el('div', 'cb-azioni');
+      if (g.titolo && d.gruppi.length > 1) azioni.append(el('span', 'cb-nota', `${tl(g.titolo)}:`));
+      const voci = [...g.voci].sort((a, b) => nominate.includes(`${g.tipo}:${b.chiave}`) - nominate.includes(`${g.tipo}:${a.chiave}`));
+      for (const v of voci) {
+        const b = Object.assign(el('button', 'cb-filtro', tl(v.nome)), { type: 'button' });
+        b.dataset.strato = id; b.dataset.tipo = g.tipo; b.dataset.chiave = v.chiave;
+        if (nominate.includes(`${g.tipo}:${v.chiave}`)) b.classList.add('cb-filtro-consigliato');
+        b.title = b.ariaLabel = t('chatbot.filtri.solo', { nome: tl(v.nome) });
+        b.addEventListener('click', () => { accendiConLegenda(document, id); d.solo(g.tipo, v.chiave); aggiornaFiltri(); });
+        azioni.append(b);
+      }
+      box.append(azioni);
+    }
+    const tutte = Object.assign(el('button', 'cb-filtro cb-filtro-tutte', t('chatbot.filtri.tutte')), { type: 'button' });
+    tutte.addEventListener('click', () => { d.tutte(); aggiornaFiltri(); });
+    const riga = el('div', 'cb-azioni');
+    riga.append(tutte);
+    box.append(riga);
+  }
+  return box.childElementCount ? box : null;
+}
+
+// Pulsanti premuti e riga «In mappa»: seguono lo stato reale dei filtri del layer, anche quando cambia dalla legenda o dal pannello.
+function aggiornaFiltri() {
+  for (const b of document.querySelectorAll('.cb-filtro[data-chiave]')) {
+    const d = filtriDelloStrato(b.dataset.strato);
+    if (d) b.setAttribute('aria-pressed', String(vocePremuta(d, b.dataset.tipo, b.dataset.chiave)));
+  }
+  for (const riga of document.querySelectorAll('.cb-filtri-stato')) {
+    const d = filtriDelloStrato(riga.dataset.strato);
+    if (!d) continue;
+    const accese = d.accese();
+    const scelti = d.gruppi.map(g => ({ g, voci: g.voci.filter(v => accese.has(`${g.tipo}:${v.chiave}`)) })).filter(({ g, voci }) => voci.length < g.voci.length);
+    riga.textContent = scelti.length
+      ? t('chatbot.filtri.inMappa', { elenco: scelti.map(({ g, voci }) => `${g.titolo && d.gruppi.length > 1 ? `${tl(g.titolo)}: ` : ''}${voci.map(v => tl(v.nome)).join(', ') || t('chatbot.filtri.nessuna')}`).join(' · ') })
+      : t('chatbot.filtri.tutto');
+  }
 }
 
 const tronca = (testo, n) => (testo.length > n ? `${testo.slice(0, n - 1).trimEnd()}…` : testo);
@@ -182,6 +236,8 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
           azioni.append(b);
         }
         if (azioni.childElementCount) box.append(azioni);
+        const filtri = pulsantiFiltri(m.voce.strati, m.domanda);
+        if (filtri) box.append(filtri);
         if (m.oggetti?.length) box.append(pulsantiOggetti(m.oggetti));
         if (m.voce.pannelli?.length) box.append(pulsantiPannelli(m.voce.pannelli));
         if (m.voce.guide?.length) box.append(pulsantiGuide(m.voce.guide));
@@ -202,6 +258,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
       log.append(box);
     }
     aggiornaLayer();
+    aggiornaFiltri();
     log.scrollTop = log.scrollHeight;
   }
 
@@ -215,7 +272,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
       b.title = b.ariaLabel = suggerimento;
     }
   }
-  document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) aggiornaLayer(); });
+  document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) aggiornaLayer(); aggiornaFiltri(); }); // anche i clic sulla legenda o sul pannello
 
   const conv = creaConversazione({ carica, cercaOggetti, suCambio: disegna });
   form.addEventListener('submit', e => {

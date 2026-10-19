@@ -21,6 +21,9 @@ export function raccogliLegende(moduli) {
 // Primo strato del modulo che è acceso: sotto di lui sta la legenda (null se nessuno).
 export const stratoDellaLegenda = (strati, acceso) => strati.find(acceso) ?? null;
 
+// Strato acceso dal Chat bot: la sua legenda sta sulla mappa (marcatore sulla casella, tolto quando lo strato si spegne).
+export const stratoSuMappa = id => Boolean(id && globalThis.document?.getElementById(`strato-${id}`)?.dataset.legendaMappa);
+
 export const legendaAperta = voci => voci <= SOGLIA_VOCI;
 
 const contaVoci = nodo => nodo.querySelectorAll('label, li, tr, .legenda-esterna-classe, .sicurezza-sezione > *').length;
@@ -58,7 +61,8 @@ export function collegaLegendePannello({ legende, contenitore, layer, occhio, st
     if (!case_.has(nodo)) case_.set(nodo, nodo.parentElement ?? contenitore);
     const casa = case_.get(nodo);
     const d = aperti.get(nodo);
-    const strato = suMappa ? null : stratoDellaLegenda(voce.strati, acceso);
+    const primo = stratoDellaLegenda(voce.strati, acceso);
+    const strato = suMappa || stratoSuMappa(primo) ? null : primo;
     const etichetta = strato && document.getElementById(`strato-${strato}`)?.closest('label');
     const riga = (etichetta?.parentElement?.classList.contains('rndt-gruppo-riga') ? etichetta.parentElement : etichetta)?.nextElementSibling; // nel gruppo RNDT la riga è un contenitore con il pulsante «Rimuovi»
     if (!riga) { // sulla mappa: il nodo torna dov'era, fuori dall'involucro
@@ -76,6 +80,7 @@ export function collegaLegendePannello({ legende, contenitore, layer, occhio, st
   // Le parti marcate `data-legenda-strato` (anche quelle create dopo, come le legende dei layer di servizi esterni) hanno lo strato
   // nel marcatore; quelle dichiarate dai moduli lo hanno nell'elenco.
   function aggiorna() {
+    for (const c of document.querySelectorAll('input[data-legenda-mappa]')) if (!c.checked) delete c.dataset.legendaMappa; // spento dal pannello
     const fatti = new Set();
     const vai = (nodo, voce) => { if (!fatti.has(nodo)) { fatti.add(nodo); noti.set(nodo, voce); riposa(nodo, voce); } };
     for (const voce of legende) {

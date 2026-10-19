@@ -6,6 +6,7 @@ import { modelloPopupColonnina, vociColonnine } from './scheda-colonnine.js';
 import { graficiColonnine } from './colonnine-grafici.js';
 import { applicaSnapshot, scaricaSnapshot } from './colonnine-live.js';
 import { tl } from '../core/i18n.js';
+import { registraFiltriChat } from '../core/filtri-chat.js';
 import { registraBadge, layerBadge, espressioneBadge, stileBadge, simboloBadge } from '../core/icone-mappa.js';
 
 // Colonnine di ricarica di Palermo (dati/colonnine/colonnine.geojson, rigenerato ogni ora da un workflow dalla serie storica
@@ -66,6 +67,32 @@ function impostaFiltro(tipo, chiave, acceso, origine) {
   if (c) for (const [dove, casella] of Object.entries(c)) if (dove !== origine && casella) casella.checked = acceso;
   applicaFiltri();
 }
+
+// Dal Chat bot: una sola voce accesa per il filtro, oppure tutte (le caselle di pannello e legenda seguono).
+const TUTTE = { stato: STATI.map(([s]) => s), corrente: CORRENTI.map(([c]) => c) };
+function soloFiltro(tipo, chiave) {
+  for (const k of TUTTE[tipo]) impostaFiltro(tipo, k, k === chiave, null);
+}
+function tuttiFiltri() {
+  for (const [tipo, chiavi] of Object.entries(TUTTE)) for (const k of chiavi) impostaFiltro(tipo, k, true, null);
+}
+
+registraFiltriChat('colonnine', {
+  gruppi: [
+    { tipo: 'stato', titolo: 'Stato', voci: [
+      { chiave: 'Disponibile', nome: 'Disponibile', sinonimi: ['disponibili', 'libera', 'libere', 'libero', 'liberi', 'funzionanti', 'utilizzabili'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+      { chiave: 'In ricarica', nome: 'In ricarica', sinonimi: ['occupata', 'occupate', 'occupato', 'occupati', 'utilizzata', 'utilizzate', 'in uso', 'usate', 'in carica'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+      { chiave: 'Non attiva', nome: 'Non attiva', sinonimi: ['non attive', 'non attivo', 'non attivi', 'spenta', 'spente', 'guasta', 'guaste', 'fuori servizio', 'non funzionanti', 'inattive'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+    ] },
+    { tipo: 'corrente', titolo: 'Corrente', voci: [
+      { chiave: 'AC', nome: 'Corrente alternata (AC, lenta)', sinonimi: ['ac', 'lenta', 'lente', 'alternata'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+      { chiave: 'DC', nome: 'Corrente continua (DC, veloce)', sinonimi: ['dc', 'veloce', 'veloci', 'rapida', 'rapide', 'continua', 'fast'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+    ] },
+  ],
+  accese: () => new Set(Object.entries(accesi).flatMap(([tipo, insieme]) => [...insieme].map(k => `${tipo}:${k}`))),
+  solo: soloFiltro,
+  tutte: tuttiFiltri,
+});
 
 function pannelloFiltri(gruppo, tipo, titolo, voci) {
   const blocco = el('div', 'colonnine-filtri');
