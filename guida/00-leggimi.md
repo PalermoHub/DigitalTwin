@@ -65,6 +65,7 @@ Parti dinamiche e comandi della scheda:
 | `49-catalogo-rndt.md` | Catalogo RNDT, gruppo RNDT, interrogazione dei layer |
 | `50-geoimage.md` | Geoimage: caricare, GCP, allineare, swipe, spotlight, esportare |
 | `51-pagine-privacy-lingua-e-offline.md` | Menu e pagine informative, invito, privacy e consenso, lingua, offline, piè di pagina |
+| `52-scheda-layer-rndt-barra-sinistra.md` | Gestire i layer RNDT nel pannello di sinistra: tab RNDT, occhio, opacità, rimuovi, ordine, note, contatore |
 
 Per riprendere il lavoro: `RIPRESA.md`.
 

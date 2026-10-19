@@ -47,7 +47,7 @@ Catasto, zonizzazione e vincoli hanno **valore solo informativo** e non sostitui
 
 Parole chiave: sigla, significato, cos'è, glossario, acronimo.
 
-Domande tipiche: Cosa vuol dire UPL? Cos'è l'OMI? Cosa sono PAI, PEBA, RNDT, GTFS?
+Domande tipiche: Cosa vuol dire UPL? Cos'è l'OMI? Cosa sono PAI, PEBA, GTFS?
 
 - **UPL**: Unità di primo livello, suddivisione del Comune più fine del quartiere.
 - **PRG**: Piano regolatore generale (qui la variante del 2004). **ZTO**: la sigla delle zone della zonizzazione del PRG (campo «ZTO»). **PPE**: Piano Particolareggiato Esecutivo del centro storico.

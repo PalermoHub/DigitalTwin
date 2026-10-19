@@ -2,6 +2,7 @@
 
 I layer da accendere per ogni sezione stanno in guida/collegamenti.json (chiave: id della sezione o nome del file).
 Le pagine di guida dell'app da aprire («scheda:sezione», es. «guida:tema-interfaccia») stanno in guida/rinvii.json, con le stesse chiavi.
+I tab da aprire («sinistra:<id>» barra degli strati, «destra:<id>» barra dei pannelli) stanno in guida/pannelli.json, con le stesse chiavi.
 
 Uso: python3 scripts/guida_indice.py   (da rilanciare quando la guida cambia)
 """
@@ -29,6 +30,10 @@ def costruisci_indice(cartella):
     percorso_rinvii = Path(cartella) / 'rinvii.json'
     if percorso_rinvii.exists():
         rinvii = json.loads(percorso_rinvii.read_text(encoding='utf-8'))
+    pannelli = {}
+    percorso_pannelli = Path(cartella) / 'pannelli.json'
+    if percorso_pannelli.exists():
+        pannelli = json.loads(percorso_pannelli.read_text(encoding='utf-8'))
     voci = []
     for percorso in sorted(Path(cartella).glob('*.md')):
         if percorso.name in ESCLUSI:
@@ -55,6 +60,7 @@ def costruisci_indice(cartella):
                 'testo': re.sub(r'\n{3,}', '\n\n', corpo).strip(),
                 'strati': collegamenti.get(id_voce, collegamenti.get(percorso.name, [])),
                 'guide': rinvii.get(id_voce, rinvii.get(percorso.name, [])),
+                'pannelli': pannelli.get(id_voce, pannelli.get(percorso.name, [])),
             })
     return voci
 

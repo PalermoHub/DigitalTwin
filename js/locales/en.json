@@ -2004,6 +2004,8 @@
   "chatbot.disattiva": "Deactivate: {nome}",
   "chatbot.apriScheda": "Open the card: {nome}",
   "chatbot.apriGuida": "Open the guide: {titolo}",
+  "chatbot.apriPannello.sinistra": "Open the «{nome}» tab on the left",
+  "chatbot.apriPannello.destra": "Open the «{nome}» tab on the right",
   "chatbot.luoghi": "I find no explanation in the guide, but on the map there is:",
   "app.rail.tema": "Theme",
   "tui.titolo": "Interface theme",

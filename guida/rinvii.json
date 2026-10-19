@@ -23,6 +23,7 @@
  "47-mappe-di-base-e-storiche.md": ["guida:mappe-storiche"],
  "48-i-miei-layer.md": ["guida:miei-layer"],
  "49-catalogo-rndt.md": ["plugin:rndt-catalogo", "plugin:rndt-info"],
+ "52-scheda-layer-rndt-barra-sinistra.md": ["plugin:rndt-catalogo", "plugin:rndt-info"],
  "50-geoimage.md": ["geoimage:cos-e", "geoimage:georeferenziare"],
  "51-pagine-privacy-lingua-e-offline.md": ["guida:telefono"]
 }

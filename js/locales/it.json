@@ -2004,6 +2004,8 @@
   "chatbot.disattiva": "Disattiva: {nome}",
   "chatbot.apriScheda": "Apri la scheda: {nome}",
   "chatbot.apriGuida": "Apri la guida: {titolo}",
+  "chatbot.apriPannello.sinistra": "Apri il tab «{nome}» a sinistra",
+  "chatbot.apriPannello.destra": "Apri il tab «{nome}» a destra",
   "chatbot.luoghi": "Non trovo una spiegazione nella guida, ma sulla mappa c'è:",
   "app.rail.tema": "Tema",
   "tui.titolo": "Tema dell'interfaccia",

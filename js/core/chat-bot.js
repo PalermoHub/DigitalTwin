@@ -5,6 +5,7 @@ import { svgIcona } from './icone.js';
 import { creaConversazione } from './chat-bot-conversazione.js';
 import { blocchiTesto } from './chat-bot-ricerca.js';
 import { statoStrato, commutaStrato } from './chat-bot-strati.js';
+import { tabPannello, apriPannello } from './chat-bot-pannelli.js';
 import { suntoRicordato } from './chat-bot-sunto.js';
 import { vociGuide } from './ricerca-guide.js';
 
@@ -68,6 +69,20 @@ function pulsantiGuide(guide) {
     const b = Object.assign(el('button', 'cb-guida', t('chatbot.apriGuida', { titolo: nome })), { type: 'button' });
     b.title = b.ariaLabel = b.textContent;
     b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('guida:apri', { detail: { scheda, sezione: sezione && `guida-${scheda === 'geoimage' ? 'geoimage-' : ''}${sezione}` } })));
+    azioni.append(b);
+  }
+  return azioni;
+}
+
+// un pulsante per ogni tab di pannello collegato alla sezione (barra degli strati a sinistra, pannelli a destra)
+function pulsantiPannelli(pannelli) {
+  const azioni = el('div', 'cb-azioni');
+  for (const voce of pannelli ?? []) {
+    const tab = tabPannello(document, voce);
+    if (!tab) continue; // il tab non c'è in questa versione dell'app
+    const b = Object.assign(el('button', 'cb-guida', t(`chatbot.apriPannello.${tab.lato}`, { nome: tab.nome })), { type: 'button' });
+    b.title = b.ariaLabel = b.textContent;
+    b.addEventListener('click', () => apriPannello(document, voce));
     azioni.append(b);
   }
   return azioni;
@@ -167,6 +182,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
         }
         if (azioni.childElementCount) box.append(azioni);
         if (m.oggetti?.length) box.append(pulsantiOggetti(m.oggetti));
+        if (m.voce.pannelli?.length) box.append(pulsantiPannelli(m.voce.pannelli));
         if (m.voce.guide?.length) box.append(pulsantiGuide(m.voce.guide));
         if (m.cEAltro) {
           const b = Object.assign(el('button', 'cb-altro', m.espansa ? t('chatbot.mostraMeno') : t('chatbot.leggiTutto')), { type: 'button' });

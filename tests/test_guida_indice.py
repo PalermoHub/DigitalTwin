@@ -98,3 +98,11 @@ def test_collegamenti_reali_puntano_a_sezioni_o_file_esistenti():
     chiavi = json.loads((cartella_reale / 'collegamenti.json').read_text(encoding='utf-8'))
     esistenti = {v['id'] for v in costruisci_indice(cartella_reale)} | {p.name for p in cartella_reale.glob('*.md')}
     assert [k for k in chiavi if k not in esistenti] == []
+
+
+def test_pannelli_da_aprire_dall_indice_reale():
+    radice = Path(__file__).resolve().parent.parent
+    voci = {v['id']: v for v in costruisci_indice(radice / 'guida')}
+    assert voci['49-catalogo-rndt#1']['pannelli'] == ['sinistra:rndt', 'destra:rndt']
+    assert voci['52-scheda-layer-rndt-barra-sinistra#1']['pannelli'] == ['sinistra:rndt', 'destra:rndt']
+    assert voci['02-territorio-e-urbanistica#1']['pannelli'] == []
