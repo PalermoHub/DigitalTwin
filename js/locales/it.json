@@ -2209,6 +2209,7 @@
   "home.menu.home": "Home",
   "home.menu.home.tip": "Tutti gli strati della mappa, da scegliere e aggiungere",
   "home.descrizione": "Tutti gli strati della mappa di Palermo, dal catasto al trasporto pubblico: scegline uno e la mappa si apre già con quello acceso.",
+  "about.descrizione": "La comunità OpenDataSicilia, che promuove i dati aperti in Sicilia, e gli strumenti usati per costruire il Digital Twin di Palermo.",
   "home.h1": "Palermo in una mappa",
   "home.intro": "Catasto, piano regolatore, popolazione, edifici, trasporto pubblico e tanti altri dati aperti di Palermo, su una sola mappa. Qui sotto trovi tutto quello che si può accendere: scegli uno strato e la mappa si apre già con quello in vista.",
   "home.hero.titolo": "Palermo Digital Twin",

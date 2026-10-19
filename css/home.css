@@ -181,3 +181,13 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .home-scelte { display: contents; }
 .home-azzera { padding: 6px 8px; border: 0; background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-sm); text-decoration: underline; cursor: pointer; }
 .card-nuovo { position: absolute; top: 10px; left: 10px; z-index: 1; padding: 3px 10px; border-radius: 999px; background: #1e8e3e; color: #fff; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }
+
+/* pagine di testo a fasce (about.html): le schede del modale Info diventano fasce, senza riquadro */
+.pagina-info .home-intro { padding-bottom: 32px; }
+.pagina-info .fascia-in > .info-blocco { margin: 0 0 24px; padding: 0; background: none; border: 0; border-radius: 0; }
+.pagina-info .fascia-in > .info-blocco h3 { margin: 24px 0 10px; font-size: 1.25rem; }
+.pagina-info .home-perche ul { margin: 0 0 12px; padding-left: 20px; max-width: 70ch; line-height: 1.6; color: var(--text-muted); }
+.pagina-info .home-perche a { color: var(--accent-strong); font-weight: 600; text-underline-offset: 2px; }
+.pagina-info .home-perche h2 + .info-blocco h3 { margin-top: 0; }
+.pagina-info .home-perche h2 + .info-blocco, .pagina-info .home-perche h2 + p { margin-top: 0; }
+.pagina-info .home-perche:last-of-type { padding-bottom: 120px; }

@@ -2209,6 +2209,7 @@
   "home.menu.home": "Home",
   "home.menu.home.tip": "All the map layers, to choose and add",
   "home.descrizione": "Every layer of the Palermo map, from the cadastre to public transport: pick one and the map opens with it already on.",
+  "about.descrizione": "The OpenDataSicilia community, which promotes open data in Sicily, and the tools used to build the Palermo Digital Twin.",
   "home.h1": "Palermo on a map",
   "home.intro": "Cadastre, zoning plan, population, buildings, public transport and many other open data of Palermo, on a single map. Below you will find everything you can switch on: pick a layer and the map opens with it already in view.",
   "home.hero.titolo": "Palermo Digital Twin",
