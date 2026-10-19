@@ -2105,3 +2105,6 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .cb-altro { margin-top: 8px; padding: 4px 10px; }
 .cb-form { flex: none; display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--border); background: var(--surface); }
 .cb-campo { flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
+.cb-azioni { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.cb-layer { padding: 6px 10px; border: 1px solid var(--accent); border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent-strong); font: inherit; cursor: pointer; }
+.cb-layer:disabled { opacity: .6; cursor: default; border-color: var(--border); background: var(--surface); }

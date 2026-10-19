@@ -4,6 +4,7 @@ import { t } from './i18n.js';
 import { svgIcona } from './icone.js';
 import { creaConversazione } from './chat-bot-conversazione.js';
 import { blocchiTesto } from './chat-bot-ricerca.js';
+import { statoStrato, accendiStrato } from './chat-bot-strati.js';
 
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
@@ -76,6 +77,15 @@ export function creaChatBot(pannello, { carica } = {}) {
       } else if (m.tipo === 'risposta') {
         box.append(el('p', 'cb-nota', t('chatbot.da', { titolo: m.voce.titolo })));
         box.append(disegnaTesto(m.espansa ? m.voce.testo : m.breve));
+        const azioni = el('div', 'cb-azioni');
+        for (const id of m.voce.strati ?? []) {
+          const st = statoStrato(document, id);
+          if (!st) continue; // il layer non c'è in questa versione dell'app
+          const b = Object.assign(el('button', 'cb-layer', t(st.acceso ? 'chatbot.acceso' : 'chatbot.accendi', { nome: st.nome })), { type: 'button', disabled: st.acceso });
+          b.addEventListener('click', () => { if (accendiStrato(document, id)) disegna(); });
+          azioni.append(b);
+        }
+        if (azioni.childElementCount) box.append(azioni);
         if (m.cEAltro) {
           const b = Object.assign(el('button', 'cb-altro', m.espansa ? t('chatbot.mostraMeno') : t('chatbot.leggiTutto')), { type: 'button' });
           b.setAttribute('aria-expanded', String(m.espansa));

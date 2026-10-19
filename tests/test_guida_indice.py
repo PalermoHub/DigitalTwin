@@ -79,3 +79,22 @@ def test_indice_reale_serializzabile():
     voci = costruisci_indice(cartella_reale)
     assert len(voci) >= 150
     json.dumps(voci, ensure_ascii=False)
+
+
+def test_strati_dalla_sezione_poi_dal_file_poi_vuoti(tmp_path):
+    cartella(tmp_path)
+    (tmp_path / 'collegamenti.json').write_text(json.dumps({'08-x#2': ['bus'], '08-x.md': ['catasto', 'prg']}), encoding='utf-8')
+    voci = costruisci_indice(tmp_path)
+    assert voci[0]['strati'] == ['catasto', 'prg']   # nessuna riga per la sezione: vale quella del file
+    assert voci[1]['strati'] == ['bus']              # la sezione ha la sua riga
+
+
+def test_senza_collegamenti_strati_vuoti(tmp_path):
+    assert all(v['strati'] == [] for v in costruisci_indice(cartella(tmp_path)))
+
+
+def test_collegamenti_reali_puntano_a_sezioni_o_file_esistenti():
+    cartella_reale = Path(__file__).resolve().parent.parent / 'guida'
+    chiavi = json.loads((cartella_reale / 'collegamenti.json').read_text(encoding='utf-8'))
+    esistenti = {v['id'] for v in costruisci_indice(cartella_reale)} | {p.name for p in cartella_reale.glob('*.md')}
+    assert [k for k in chiavi if k not in esistenti] == []

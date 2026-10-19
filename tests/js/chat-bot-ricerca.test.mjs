@@ -76,3 +76,16 @@ test('blocchiTesto: un elenco subito dopo una riga diventa un blocco a sé', () 
 test('blocchiTesto: righe consecutive di testo restano un solo paragrafo; i titoli # perdono il cancelletto', () => {
   assert.deepEqual(blocchiTesto('### Titolo\nriga a\nriga b'), [{ tipo: 'p', righe: ['Titolo', 'riga a', 'riga b'] }]);
 });
+
+test('rispondi: le parole si confrontano dall\'inizio, non come pezzi di altre parole («bus» non è «abusi»)', () => {
+  const v = [
+    { id: 'x#1', file: 'x.md', titolo: 'Abusi edilizi e condono', parole: 'abusi, sanatoria', domande: ['Cosa sono gli abusi?'], testo: 'Testo sugli abusi.' },
+    { id: 'x#2', file: 'x.md', titolo: 'Linee degli autobus', parole: 'bus, autobus, linee', domande: ['Dove passa il bus?'], testo: 'Le linee.' },
+  ];
+  assert.deepEqual(rispondi(v, 'bus').trovate.map(x => x.id), ['x#2']);
+});
+test('rispondi: «bus» sull\'indice reale non porta alla sezione sulle domande senza risposta', () => {
+  const reali = JSON.parse(readFileSync(new URL('../../guida/indice.json', import.meta.url), 'utf8'));
+  const r = rispondi(reali, 'bus');
+  assert.ok(r.trovate.length === 1 && !/non risponde/.test(r.trovate[0].titolo), r.trovate[0]?.titolo);
+});

@@ -1,0 +1,194 @@
+{
+ "02-territorio-e-urbanistica#1": [
+  "catasto"
+ ],
+ "02-territorio-e-urbanistica#2": [
+  "prg"
+ ],
+ "02-territorio-e-urbanistica#3": [
+  "vincoli"
+ ],
+ "02-territorio-e-urbanistica#4": [
+  "omi"
+ ],
+ "02-territorio-e-urbanistica#5": [
+  "civici"
+ ],
+ "02-territorio-e-urbanistica#6": [
+  "immobili"
+ ],
+ "02-territorio-e-urbanistica#7": [
+  "geo_rischio",
+  "idraulica_rischio",
+  "coste_rischio"
+ ],
+ "02-territorio-e-urbanistica#8": [
+  "incendi"
+ ],
+ "02-territorio-e-urbanistica#9": [
+  "isole-calore"
+ ],
+ "02-territorio-e-urbanistica#10": [
+  "rilievo3d",
+  "elevazione"
+ ],
+ "02-territorio-e-urbanistica#11": [
+  "circoscrizioni",
+  "quartieri",
+  "upl"
+ ],
+ "03-edifici-e-popolazione#1": [
+  "edificato",
+  "edifici3d"
+ ],
+ "03-edifici-e-popolazione#2": [
+  "coropletico",
+  "sezioni"
+ ],
+ "03-edifici-e-popolazione#3": [
+  "trend-popolazione"
+ ],
+ "03-edifici-e-popolazione#4": [
+  "pendolarismo"
+ ],
+ "04-trasporti-e-sicurezza#1": [
+  "trasporto-bus",
+  "trasporto-tram",
+  "trasporto-metro",
+  "trasporto-fermate"
+ ],
+ "04-trasporti-e-sicurezza#3": [
+  "sicurezza-incidenti",
+  "sicurezza-hotspot"
+ ],
+ "05-servizi-e-cultura#1": [
+  "monumenti"
+ ],
+ "05-servizi-e-cultura#2": [
+  "alberi"
+ ],
+ "05-servizi-e-cultura#3": [
+  "fontanelle"
+ ],
+ "05-servizi-e-cultura#4": [
+  "scuole"
+ ],
+ "05-servizi-e-cultura#5": [
+  "seggi"
+ ],
+ "05-servizi-e-cultura#6": [
+  "uffici"
+ ],
+ "05-servizi-e-cultura#7": [
+  "colonnine"
+ ],
+ "05-servizi-e-cultura#8": [
+  "distributori"
+ ],
+ "06-progetti-e-patrimonio#1": [
+  "pnrr"
+ ],
+ "06-progetti-e-patrimonio#2": [
+  "opere"
+ ],
+ "06-progetti-e-patrimonio#3": [
+  "mef-immobili"
+ ],
+ "06-progetti-e-patrimonio#4": [
+  "peba"
+ ],
+ "06-progetti-e-patrimonio#5": [
+  "crociferi3d"
+ ],
+ "09-scheda-sicurezza-stradale.md": [
+  "sicurezza-incidenti",
+  "sicurezza-hotspot"
+ ],
+ "10-scheda-mef-immobili.md": [
+  "mef-immobili"
+ ],
+ "11-scheda-peba.md": [
+  "peba"
+ ],
+ "12-scheda-opere-pubbliche.md": [
+  "opere"
+ ],
+ "13-scheda-pnrr.md": [
+  "pnrr"
+ ],
+ "14-scheda-alberi-monumentali.md": [
+  "alberi"
+ ],
+ "15-scheda-fontanelle.md": [
+  "fontanelle"
+ ],
+ "16-scheda-isola-di-calore.md": [
+  "isole-calore"
+ ],
+ "17-scheda-colonnine-di-ricarica.md": [
+  "colonnine"
+ ],
+ "18-scheda-quotazioni-omi.md": [
+  "omi"
+ ],
+ "19-scheda-vincoli-pai.md": [
+  "geo_rischio",
+  "idraulica_rischio",
+  "coste_rischio"
+ ],
+ "20-scheda-incendi.md": [
+  "incendi"
+ ],
+ "21-scheda-distributori.md": [
+  "distributori"
+ ],
+ "22-scheda-scuole-e-sedi-elettorali.md": [
+  "scuole",
+  "seggi"
+ ],
+ "23-scheda-uffici-comunali.md": [
+  "uffici"
+ ],
+ "24-scheda-fermate-e-linee.md": [
+  "trasporto-fermate",
+  "trasporto-bus"
+ ],
+ "25-scheda-trend-popolazione.md": [
+  "trend-popolazione"
+ ],
+ "26-scheda-pendolarismo.md": [
+  "pendolarismo"
+ ],
+ "27-scheda-monumenti.md": [
+  "monumenti"
+ ],
+ "28-scheda-indirizzo.md": [
+  "civici"
+ ],
+ "29-scheda-edificio.md": [
+  "edificato"
+ ],
+ "30-scheda-particella-catastale.md": [
+  "catasto"
+ ],
+ "31-scheda-zonizzazione-e-vincoli-prg.md": [
+  "prg",
+  "vincoli"
+ ],
+ "32-scheda-immobile-comunale.md": [
+  "immobili"
+ ],
+ "33-scheda-distretto-idrico-e-trasporto-vicino.md": [
+  "amap-distretti",
+  "trasporto-fermate"
+ ],
+ "34-orari-e-percorsi-del-trasporto.md": [
+  "trasporto-bus",
+  "trasporto-tram"
+ ],
+ "36-grafici-colonnine-isole-calore-peba.md": [
+  "colonnine",
+  "isole-calore",
+  "peba"
+ ]
+}

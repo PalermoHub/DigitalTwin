@@ -40,7 +40,8 @@ Il tab e l'icona «Chat bot» sono nell'app: pannello destro (`#chatbot-pannello
 - **Indice**: `guida/indice.json`, generato da `python3 scripts/guida_indice.py` (170 voci, una per sezione `##`). **Va rigenerato e committato ogni volta che i file di `guida/` cambiano.**
 - Codice: `js/core/chat-bot-ricerca.js` (punteggio, anteprima, `blocchiTesto`), `chat-bot-conversazione.js` (stato, senza DOM), `chat-bot.js` (DOM). Testi in `js/locales/*.json` (`chatbot.*`). Documento di progetto e piano: `docs/superpowers/specs/2026-10-19-chat-bot-design.md`, `docs/superpowers/plans/2026-10-19-chat-bot.md` (ignorati da git).
 - Test: `tests/js/chat-bot*.test.mjs`, `tests/test_guida_indice.py`. Il test sull'indice reale richiede che ≥97% delle «Domande tipiche» trovi la propria sezione: scrivere le domande con parole della sezione.
-- Non fatto: link «Apri il layer» (la guida non dice a quale layer si riferisce ogni sezione); risposte solo in italiano.
+- **Pulsanti «Accendi: …»**: ogni risposta mostra i layer collegati alla sezione. Il collegamento sta in `guida/collegamenti.json` (chiave = id sezione, es. `04-trasporti-e-sicurezza#1`, oppure nome del file; id dei layer = quelli di `input#strato-<id>`). Un nuovo layer o una nuova sezione: aggiungere la riga, poi rigenerare l'indice. Test: `tests/test_guida_indice.py`, `tests/js/chat-bot-strati.test.mjs`.
+- Non fatto: risposte solo in italiano; «aprire la guida» = «Leggi tutto» (nessun rinvio alle guide passo-passo dell'app).
 - Opzione futura: Cloudflare Workers AI dietro il Worker esistente, con ripiego sulla ricerca.
 
 ## Promemoria tecnico

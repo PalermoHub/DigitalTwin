@@ -10,14 +10,14 @@ const PAROLE_VUOTE = new Set(['VIA', 'VIE', 'COME', 'COSA', 'DOVE', 'QUANDO', 'P
 const NUMERO_INIZIALI = 4;
 
 const radice = p => (p.length >= 5 ? p.slice(0, -1) : p); // «colori» trova «colore»
-const contiene = (campo, parola) => campo.includes(radice(parola));
+const contiene = (campo, parola) => { const r = radice(parola); return campo.some(w => w.startsWith(r)); }; // dall'inizio di una parola: «bus» non è in «abusi»
 
 function campiNormalizzati(v) {
   return v.__n ??= {
-    domande: normalizza(v.domande.join(' ')),
-    parole: normalizza(v.parole),
-    titolo: normalizza(v.titolo),
-    testo: normalizza(v.testo),
+    domande: normalizza(v.domande.join(' ')).split(' '),
+    parole: normalizza(v.parole).split(' '),
+    titolo: normalizza(v.titolo).split(' '),
+    testo: normalizza(v.testo).split(' '),
   };
 }
 
