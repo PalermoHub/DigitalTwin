@@ -67,3 +67,7 @@ for f in sorted(glob.glob('[0-9][0-9]-*.md')):
 E
 grep -o '`[0-9][0-9]-[a-z0-9-]*\.md`' [0-9][0-9]-*.md | sed 's/.*`\(.*\)`/\1/' | sort -u | while read f; do [ -f "$f" ] || echo "RINVIO INESISTENTE: $f"; done
 ```
+
+## Guida in inglese (2026-10-19)
+
+Ogni file italiano `guida/NN-*.md` ha la controparte in `guida/en/` (stesso nome, stesse sezioni `##` nello stesso ordine, marcatori `Keywords:` / `Typical questions:`). `python3 scripts/guida_indice.py` genera `guida/indice.json` e `guida/indice.en.json`; Talia carica quello della lingua dell'app e ripiega sull'italiano. Termini e nomi dei controlli: `guida/glossario-en.md` (ortografia di `js/locales/en.json`, inglese britannico). I test `tests/js/guida-en-parita.test.mjs` controllano parità e copertura: **ogni modifica o file nuovo in `guida/` va ripetuto in `guida/en/`**, poi si rigenerano gli indici. I video restano solo in italiano.

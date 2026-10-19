@@ -13,9 +13,12 @@ import re
 import sys
 from pathlib import Path
 
-ESCLUSI = {'00-leggimi.md', 'RIPRESA.md'}
-RE_PAROLE = re.compile(r'^Parole chiave:\s*(.+)$', re.M)
-RE_DOMANDE = re.compile(r'^Domande tipiche:\s*(.+)$', re.M)
+ESCLUSI = {'00-leggimi.md', 'RIPRESA.md', 'glossario-en.md'}
+# Indicatori delle righe di metadati, per lingua.
+MARCATORI = {
+    'it': (re.compile(r'^Parole chiave:\s*(.+)$', re.M), re.compile(r'^Domande tipiche:\s*(.+)$', re.M)),
+    'en': (re.compile(r'^Keywords:\s*(.+)$', re.M), re.compile(r'^Typical questions:\s*(.+)$', re.M)),
+}
 RE_SEPARATORE = re.compile(r'^---\s*$', re.M)
 
 
@@ -23,7 +26,9 @@ def _domande(riga):
     return [d.strip() for d in re.findall(r'[^?]+\?', riga) if d.strip()]
 
 
-def costruisci_indice(cartella):
+def _voci(sorgente, cartella, lingua):
+    """Voci dei file «.md» di `sorgente`; strati/guide/pannelli/percorsi si leggono sempre da `cartella`."""
+    re_parole, re_domande = MARCATORI[lingua]
     collegamenti = {}
     percorso_coll = Path(cartella) / 'collegamenti.json'
     if percorso_coll.exists():
@@ -41,7 +46,7 @@ def costruisci_indice(cartella):
     if percorso_pannelli.exists():
         pannelli = json.loads(percorso_pannelli.read_text(encoding='utf-8'))
     voci = []
-    for percorso in sorted(Path(cartella).glob('*.md')):
+    for percorso in sorted(Path(sorgente).glob('*.md')):
         if percorso.name in ESCLUSI:
             continue
         sezioni = re.split(r'\n(?=## )', percorso.read_text(encoding='utf-8'))
@@ -49,12 +54,12 @@ def costruisci_indice(cartella):
         for sezione in sezioni:
             if not sezione.startswith('## '):
                 continue
-            parole, domande = RE_PAROLE.search(sezione), RE_DOMANDE.search(sezione)
+            parole, domande = re_parole.search(sezione), re_domande.search(sezione)
             if not parole or not domande:
                 continue
             n += 1
             titolo, _, corpo = sezione.partition('\n')
-            corpo = RE_DOMANDE.sub('', RE_PAROLE.sub('', corpo))
+            corpo = re_domande.sub('', re_parole.sub('', corpo))
             corpo = RE_SEPARATORE.sub('', corpo)
             id_voce = f'{percorso.stem}#{n}'
             voci.append({
@@ -72,12 +77,26 @@ def costruisci_indice(cartella):
     return voci
 
 
+def costruisci_indice(cartella, lingua='it'):
+    """Indice della guida. Con `lingua='en'` le voci vengono da `cartella/en/`, con gli stessi id
+    dell'italiano; dove manca la controparte inglese (file o sezione) resta la voce italiana."""
+    italiano = _voci(cartella, cartella, 'it')
+    if lingua == 'it':
+        return italiano
+    inglese = {}
+    cartella_en = Path(cartella) / lingua
+    if cartella_en.is_dir():
+        inglese = {v['id']: v for v in _voci(cartella_en, cartella, lingua)}
+    return [inglese.get(v['id'], v) for v in italiano]
+
+
 def main():
     radice = Path(__file__).resolve().parent.parent
-    voci = costruisci_indice(radice / 'guida')
-    destinazione = radice / 'guida' / 'indice.json'
-    destinazione.write_text(json.dumps(voci, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
-    print(f'{len(voci)} voci in {destinazione} ({destinazione.stat().st_size // 1024} KB)')
+    for lingua, nome in (('it', 'indice.json'), ('en', 'indice.en.json')):
+        voci = costruisci_indice(radice / 'guida', lingua)
+        destinazione = radice / 'guida' / nome
+        destinazione.write_text(json.dumps(voci, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+        print(f'{len(voci)} voci in {destinazione} ({destinazione.stat().st_size // 1024} KB)')
     return 0
 
 

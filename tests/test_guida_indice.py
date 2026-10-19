@@ -114,3 +114,67 @@ def test_pulsanti_dei_percorsi_solo_sulla_sezione_dei_percorsi():
     con_percorsi = [i for i, v in voci.items() if v['percorsi']]
     assert con_percorsi == ['01-uso-della-mappa#4']
     assert voci['01-uso-della-mappa#4']['titolo'].startswith('Percorsi guidati')
+
+
+FILE_EN = """# Sheet X
+
+## First section
+
+Keywords: one, two.
+
+Typical questions: What is A? Where is B?
+
+Body of the first.
+
+---
+
+## Second section
+
+Keywords: three.
+
+Typical questions: Why C?
+
+Body of the second.
+"""
+
+
+def cartella_en(tmp_path, file_en=FILE_EN):
+    cartella(tmp_path)
+    (tmp_path / 'collegamenti.json').write_text(json.dumps({'08-x#1': ['strato-a']}), encoding='utf-8')
+    if file_en is not None:
+        (tmp_path / 'en').mkdir()
+        (tmp_path / 'en' / '08-x.md').write_text(file_en, encoding='utf-8')
+    return tmp_path
+
+
+def test_indice_en_usa_gli_stessi_id_e_collegamenti(tmp_path):
+    c = cartella_en(tmp_path)
+    en, it = costruisci_indice(c, 'en'), costruisci_indice(c)
+    assert [v['id'] for v in en] == [v['id'] for v in it]
+    assert en[0]['titolo'] == 'First section'
+    assert en[0]['strati'] == it[0]['strati'] == ['strato-a']
+
+
+def test_indice_en_legge_keywords_e_typical_questions(tmp_path):
+    voce = costruisci_indice(cartella_en(tmp_path), 'en')[0]
+    assert voce['parole'] == 'one, two.'
+    assert voce['domande'] == ['What is A?', 'Where is B?']
+    assert 'Keywords:' not in voce['testo'] and 'Typical questions:' not in voce['testo']
+
+
+def test_indice_en_sezione_mancante_cade_sull_italiano(tmp_path):
+    uno = FILE_EN.split('---')[0].strip() + '\n'
+    voci = costruisci_indice(cartella_en(tmp_path, uno), 'en')
+    assert [v['id'] for v in voci] == ['08-x#1', '08-x#2']
+    assert voci[0]['titolo'] == 'First section'
+    assert voci[1]['titolo'] == 'Seconda sezione'
+
+
+def test_indice_en_file_mancante_cade_sull_italiano(tmp_path):
+    voci = costruisci_indice(cartella_en(tmp_path, None), 'en')
+    assert [v['titolo'] for v in voci] == ['Prima sezione', 'Seconda sezione']
+
+
+def test_indice_it_ignora_la_cartella_en(tmp_path):
+    voci = costruisci_indice(cartella_en(tmp_path))
+    assert [v['titolo'] for v in voci] == ['Prima sezione', 'Seconda sezione']

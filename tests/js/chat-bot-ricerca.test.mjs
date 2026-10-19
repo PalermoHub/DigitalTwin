@@ -89,3 +89,48 @@ test('rispondi: «bus» sull\'indice reale non porta alla sezione sulle domande 
   const r = rispondi(reali, 'bus');
   assert.ok(r.trovate.length === 1 && !/non risponde/.test(r.trovate[0].titolo), r.trovate[0]?.titolo);
 });
+
+const vociEn = [
+  { id: 'a#1', file: 'a.md', titolo: 'Changing the colors of a layer', parole: 'colors, palette, fill, layer', domande: ['How do I change the colors of a layer?'], testo: 'Open the Colors panel of the layer.' },
+  { id: 'a#2', file: 'a.md', titolo: 'Printing the map', parole: 'print, format, A4', domande: ['How do I print the map?'], testo: 'The print button opens the options.' },
+];
+const finto = (risposte) => { const url = []; const f = async (u) => { url.push(u); return risposte[url.length - 1] ?? risposte.at(-1); }; return { f, url }; };
+
+test('caricaIndice: in inglese scarica indice.en.json', async () => {
+  const { f, url } = finto([{ ok: true, json: async () => vociEn }]);
+  assert.deepEqual(await caricaIndice(f, null, 'en'), vociEn);
+  assert.deepEqual(url, ['guida/indice.en.json']);
+});
+test('caricaIndice: in italiano scarica indice.json', async () => {
+  const { f, url } = finto([{ ok: true, json: async () => voci }]);
+  assert.deepEqual(await caricaIndice(f, null, 'it'), voci);
+  assert.deepEqual(url, ['guida/indice.json']);
+});
+test('caricaIndice: indice inglese non disponibile → ripiega sull\'italiano', async () => {
+  const { f, url } = finto([{ ok: false, status: 404 }, { ok: true, json: async () => voci }]);
+  assert.deepEqual(await caricaIndice(f, null, 'en'), voci);
+  assert.deepEqual(url, ['guida/indice.en.json', 'guida/indice.json']);
+});
+test('caricaIndice: indice inglese che lancia → ripiega sull\'italiano', async () => {
+  let n = 0;
+  const f = async () => { if (n++ === 0) throw new Error('offline'); return { ok: true, json: async () => voci }; };
+  assert.deepEqual(await caricaIndice(f, null, 'en'), voci);
+});
+test('caricaIndice: falliscono entrambi → errore', async () => {
+  const { f, url } = finto([{ ok: false, status: 404 }, { ok: false, status: 500 }]);
+  await assert.rejects(caricaIndice(f, null, 'en'), /500/);
+  assert.equal(url.length, 2);
+});
+test('caricaIndice: con url esplicito nessun ripiego', async () => {
+  const { f, url } = finto([{ ok: false, status: 404 }, { ok: true, json: async () => voci }]);
+  await assert.rejects(caricaIndice(f, 'x/y.json', 'en'), /404/);
+  assert.deepEqual(url, ['x/y.json']);
+});
+test('rispondi: «what is the pendulum» non risponde per le sole parole vuote', () => {
+  assert.deepEqual(rispondi(vociEn, 'what is the pendulum').trovate, []);
+  assert.deepEqual(rispondi(vociEn, 'where can you show this about that').trovate, []);
+});
+test('rispondi: «layers» trova la voce che dice «layer»', () => {
+  assert.equal(rispondi(vociEn, 'layers').trovate[0].id, 'a#1');
+  assert.equal(rispondi(vociEn, 'change the colors').trovate[0].id, 'a#1');
+});

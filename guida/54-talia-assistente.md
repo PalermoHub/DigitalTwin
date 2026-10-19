@@ -6,7 +6,7 @@ Parole chiave: Talia, chat bot, assistente, chatbot, come ti chiami, nome, chi s
 
 Domande tipiche: Come ti chiami? Chi è Talia? Cos'è il Chat bot? Con chi sto parlando?
 
-**Talia** è l'assistente dell'app: risponde alle domande sull'app, sui suoi layer e sulle sue funzioni. Il nome è «Talia», in siciliano «talìa» significa «guarda». Le risposte non vengono da un servizio esterno: sono ricavate dalla guida del sito, in italiano, e sopra ogni risposta c'è il titolo della voce da cui arrivano.
+**Talia** è l'assistente dell'app: risponde alle domande sull'app, sui suoi layer e sulle sue funzioni. Il nome è «Talia», in siciliano «talìa» significa «guarda». Le risposte non vengono da un servizio esterno: sono ricavate dalla guida del sito, nella lingua dell'app, e sopra ogni risposta c'è il titolo della voce da cui arrivano.
 
 ---
 

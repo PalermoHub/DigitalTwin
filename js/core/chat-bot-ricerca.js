@@ -1,4 +1,5 @@
 import { normalizza } from './indirizzi.js';
+import { lingua as linguaApp } from './i18n.js';
 
 // Ricerca del Chat bot nell'indice della guida (guida/indice.json, generato da scripts/guida_indice.py).
 // Una voce = una sezione «##»: { id, file, titolo, parole, domande[], testo }. Nessun testo è generato: si mostra quello della guida.
@@ -6,7 +7,7 @@ export const SOGLIA = 3; // punteggio medio per parola sotto cui si risponde «n
 const PESI = { domande: 8, parole: 6, titolo: 5, testo: 1 };
 const MIN_PAROLA = 3;
 const MIN_PAROLA_TESTO = 4; // nel testo le parole corte farebbero rumore
-const PAROLE_VUOTE = new Set(['VIA', 'VIE', 'COME', 'COSA', 'DOVE', 'QUANDO', 'PERCHE', 'CHE', 'CON', 'PER', 'DELLA', 'DELLE', 'DELLO', 'DEGLI', 'DEI', 'UNA', 'UNO', 'THE', 'AND', 'FOR', 'HOW', 'WITH', 'WHAT', 'POSSO', 'FACCIO', 'SONO', 'DEL', 'NEL', 'NELLA', 'NELLE', 'QUAL', 'QUALE', 'QUALI', 'CHI']); // i18n-ok: parole vuote della ricerca
+const PAROLE_VUOTE = new Set(['VIA', 'VIE', 'COME', 'COSA', 'DOVE', 'QUANDO', 'PERCHE', 'CHE', 'CON', 'PER', 'DELLA', 'DELLE', 'DELLO', 'DEGLI', 'DEI', 'UNA', 'UNO', 'THE', 'AND', 'FOR', 'HOW', 'WITH', 'WHAT', 'POSSO', 'FACCIO', 'SONO', 'DEL', 'NEL', 'NELLA', 'NELLE', 'QUAL', 'QUALE', 'QUALI', 'CHI', 'WHERE', 'WHEN', 'WHY', 'WHO', 'WHICH', 'CAN', 'COULD', 'SHOULD', 'DOES', 'DOING', 'YOU', 'YOUR', 'ARE', 'THIS', 'THAT', 'FROM', 'INTO', 'ABOUT', 'SHOW', 'TELL']); // i18n-ok: parole vuote della ricerca
 const NUMERO_INIZIALI = 4;
 
 const radice = p => (p.length >= 5 ? p.slice(0, -1) : p); // «colori» trova «colore»
@@ -77,8 +78,19 @@ export function blocchiTesto(testo) {
   return blocchi.filter(Boolean);
 }
 
-export async function caricaIndice(fetcher = (...a) => fetch(...a), url = 'guida/indice.json') {
+const INDICE_IT = 'guida/indice.json';
+const INDICE_EN = 'guida/indice.en.json';
+
+async function scarica(fetcher, url) {
   const r = await fetcher(url);
   if (!r.ok) throw new Error(`Indice della guida non disponibile (${r.status})`); // i18n-ok: la schermata mostra chatbot.errore
   return r.json();
+}
+
+// Carica l'indice nella lingua dell'app. In inglese, se l'indice inglese non c'è (o non si scarica) si ripiega sull'italiano.
+// Con un `url` esplicito si scarica solo quello.
+export async function caricaIndice(fetcher = (...a) => fetch(...a), url = null, lingua = linguaApp()) {
+  if (url) return scarica(fetcher, url);
+  if (lingua !== 'en') return scarica(fetcher, INDICE_IT);
+  try { return await scarica(fetcher, INDICE_EN); } catch { return scarica(fetcher, INDICE_IT); }
 }
