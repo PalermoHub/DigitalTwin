@@ -97,6 +97,8 @@
   "app.catalogo.errore": "Catalogo dati non disponibile: uso le copie locali dei dati",
   "app.fonti.errore": "Fonti non disponibili: catalogo dati assente",
   "app.geoimage.errore": "Geoimage non disponibile: {msg}",
+  "app.tabella.errore": "Tabella non disponibile: {msg}",
+  "app.pagine.errore": "Pagina non disponibile: {msg}",
   "app.legenda.apri": "▸ Legenda",
   "app.link.ignorati": "Alcuni elementi del link non esistono più: {elenco}",
   "app.link.invalido": "Il link condiviso non è valido: si apre la mappa predefinita",

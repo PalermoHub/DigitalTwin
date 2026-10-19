@@ -97,6 +97,8 @@
   "app.catalogo.errore": "Data catalogue unavailable: using the local copies of the data",
   "app.fonti.errore": "Sources unavailable: data catalogue missing",
   "app.geoimage.errore": "Geoimage unavailable: {msg}",
+  "app.tabella.errore": "Table unavailable: {msg}",
+  "app.pagine.errore": "Page unavailable: {msg}",
   "app.legenda.apri": "▸ Legend",
   "app.link.ignorati": "Some items in the link no longer exist: {elenco}",
   "app.link.invalido": "The shared link is not valid: opening the default map",

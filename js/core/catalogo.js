@@ -1,14 +1,8 @@
 import { svgIcona } from './icone.js';
 import { collegaIngrandimento } from './ingrandisci.js';
-import { schedaGuida, indiceLaterale } from './guida.js';
-import { schedaGeoimage } from '../geoimage/guida.js';
 import { t as tr } from './i18n.js';
 import { el, traduciAlbero } from './pagina-info.js';
-import { schedaComunita } from './scheda-about.js';
 import { schedaFonti } from './scheda-fonti.js';
-import { schedaPrivacy } from './scheda-privacy.js';
-import { schedaDigitalTwin } from './scheda-digitaltwin.js';
-import { schedaPluginCompleta } from './scheda-plugin.js';
 
 export { caricaCatalogo } from './scheda-fonti.js';
 
@@ -16,7 +10,7 @@ export { caricaCatalogo } from './scheda-fonti.js';
 // Avvolge una pagina di blocchi in un contenitore con l'indice laterale (un voce per ogni blocco con titolo h3).
 // Un h2.guida-gruppo è anche intestazione di gruppo nell'indice; un {gruppo} semplice (non un nodo) è un'intestazione solo dell'indice,
 // per un gruppo che nella pagina sarebbe una ripetizione del titolo.
-function paginaConIndice(nodi) {
+function paginaConIndice(nodi, indiceLaterale) {
   const radice = el('div');
   const voci = [];
   for (const n of nodi) {
@@ -33,17 +27,26 @@ function paginaConIndice(nodi) {
 // la stessa voce premuta di nuovo, o Esc, la chiude.
 export function commutaCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   if (dialog.open && dialog.dataset.tab === tab) return dialog.close();
-  apriCrediti(dialog, catalogo, moduli, tab);
+  return apriCrediti(dialog, catalogo, moduli, tab);
 }
 
-export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
+// Le sei pagine (circa 150 KB di moduli, con i testi delle guide) si caricano alla prima apertura del foglio.
+let paginePronte = null;
+const caricaPagine = () => paginePronte ??= Promise.all([
+  import('./guida.js'), import('../geoimage/guida.js'), import('./scheda-about.js'),
+  import('./scheda-privacy.js'), import('./scheda-digitaltwin.js'), import('./scheda-plugin.js'),
+]).catch(e => { paginePronte = null; throw e; });
+
+export async function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   if (dialog.open && dialog.vaiA) return dialog.vaiA(tab);
+  const [{ schedaGuida, indiceLaterale }, { schedaGeoimage }, { schedaComunita }, { schedaPrivacy }, { schedaDigitalTwin }, { schedaPluginCompleta }] = await caricaPagine();
+  if (dialog.open && dialog.vaiA) return dialog.vaiA(tab); // un secondo clic ha già aperto il foglio mentre i moduli arrivavano
   const guida = schedaGuida();
   const schede = [
-    ['digitaltwin', 'Digital Twin', [paginaConIndice(schedaDigitalTwin())]],
+    ['digitaltwin', 'Digital Twin', [paginaConIndice(schedaDigitalTwin(), indiceLaterale)]],
     ['guida', 'Guida', [guida]],
     ['geoimage', 'Guida Geoimage', [schedaGeoimage()]],
-    ['plugin', 'Plugin RNDT', [paginaConIndice(schedaPluginCompleta())]],
+    ['plugin', 'Plugin RNDT', [paginaConIndice(schedaPluginCompleta(), indiceLaterale)]],
     ['fonti', 'Fonti e note', schedaFonti(catalogo)],
     ['privacy', 'Privacy', schedaPrivacy()],
     ['about', 'About', schedaComunita()],

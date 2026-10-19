@@ -20,7 +20,6 @@ import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
 import { collegaRicerca, collegaRicercaParticella, cercaOggetti } from './core/ricerca.js';
 import { collegaNavigatoreMappa } from './core/mappa-navigatore.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
-import { collegaTabella } from './core/tabella/index.js';
 import { collegaCursorePunti } from './core/cursore-punti.js';
 import { collegaStampa } from './core/stampa.js';
 import { collegaStrati3d } from './core/strati-3d.js';
@@ -58,7 +57,6 @@ import sicurezza, { STRATI_INCIDENTI, legendaSicurezza } from './layers/sicurezz
 import { collegaFiltroIncidenti } from './layers/sicurezza-filtro.js';
 import { collegaRicercaTerritorio } from './layers/ricerca-territorio.js';
 import { collegaRicercaIncidenti } from './layers/sicurezza-ricerca.js';
-import { collegaRicercaGuide } from './core/ricerca-guide.js';
 import { collegaFiltroLinea } from './layers/trasporto-filtro.js';
 import terreno from './layers/terreno.js';
 import base from './layers/base.js';
@@ -89,6 +87,17 @@ const condivisionePromessa = preparaCondivisione(window); // un link condiviso p
 // Partono in secondo piano poco dopo (o alla prima accensione, o al primo clic sulla mappa, se arriva prima): vedi core/differiti.js.
 // Il trasporto resta fuori perché il filtro Linea ha bisogno dei suoi dati subito.
 const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine', 'distributori']);
+
+// La ricerca nelle guide (circa 60 KB di testi) si carica alla prima ricerca: i suggerimenti delle altre fonti non aspettano.
+const collegaRicercaGuide = (apri, altra) => {
+  let guide = null;
+  return {
+    async suggerisci(testo) {
+      guide ??= import('./core/ricerca-guide.js').then(m => m.collegaRicercaGuide(apri, altra));
+      return (await guide).suggerisci(testo);
+    },
+  };
+};
 
 // la mappa (hash: true) riscrive subito l'hash con la vista: la scheda richiesta dall'indirizzo (#guida, #fonti…) va letta prima
 const SCHEDA_INDIRIZZO = location.hash.slice(1);
@@ -232,7 +241,14 @@ map.once('style.load', async () => {
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
   collegaChipBarra(document.getElementById('strati-chip'), document.getElementById('barra-strumenti')); // i chip scendono sotto la barra se la toccano
-  window.dt.tabella = collegaTabella(map, { pulsante: document.getElementById('btn-tabella') });
+  // La Tabella (circa 80 KB di moduli) si carica al primo clic sul suo pulsante, che poi la comanda da sé.
+  const pulsanteTabella = document.getElementById('btn-tabella');
+  let tabellaPronta = null;
+  const caricaTabella = () => tabellaPronta ??= import('./core/tabella/index.js')
+    .then(({ collegaTabella }) => (window.dt.tabella = collegaTabella(map, { pulsante: pulsanteTabella })))
+    .catch(e => { tabellaPronta = null; segnala(t('app.tabella.errore', { msg: e.message })); });
+  window.dt.tabella = { apri: () => caricaTabella().then(tabella => tabella?.apri()) };
+  pulsanteTabella.addEventListener('click', () => { if (!tabellaPronta) window.dt.tabella.apri(); }, { capture: true });
   // su mobile la barra strumenti non c'è: la tabella si apre dal foglio Strati (riguarda i layer accesi)
   const btnTabella = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-tabella-m', className: 'btn-pannello-mobile', title: t('html.btn.tabella') });
   btnTabella.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg><span class="et">${t('tab.tabella')}</span>`;
@@ -307,7 +323,7 @@ map.once('style.load', async () => {
   document.addEventListener('click', e => chiudiTendine(e.target.closest('.menu-tendina')));
   const commuta = tab => {
     if (tab === 'mappa') return foglio.open && foglio.close();
-    if (catalogo) commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], tab);
+    if (catalogo) Promise.resolve(commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], tab)).catch(e => segnala(t('app.pagine.errore', { msg: e.message })));
     else segnala(t('app.fonti.errore'));
   };
   const segnaVoci = tab => menu.querySelectorAll('button').forEach(b => {
@@ -352,7 +368,10 @@ map.once('style.load', async () => {
   }
   try { collegaCestoAllaMappa(document, window.sessionStorage); } catch { /* storage non disponibile */ }
   window.dt.pronto = true;
-  setTimeout(() => (window.requestIdleCallback ?? (f => f()))(() => caricaDifferiti()), 3000);
+  setTimeout(() => (window.requestIdleCallback ?? (f => f()))(() => {
+    caricaDifferiti();
+    import('./core/ricerca-guide.js').catch(() => {}); // a riposo: la prima ricerca nelle guide non aspetta la rete
+  }), 3000);
 });
 
 // Service worker (sw.js): visite ripetute immediate e interfaccia anche senza rete. Si registra solo in HTTPS (produzione) o con ?sw per provarlo:
