@@ -39,6 +39,11 @@ export const FONTI = [
     campi: p => [p.titolo, p.indirizzo, p.titolare] },
 ];
 
+// Nomi con cui un luogo è noto, oltre a quello del dato (chiave: nome del dato). Chi scrive il nome breve lo trova per primo.
+export const ALIAS = {
+  'Teatro Massimo Vittorio Emanuele': ['Teatro Massimo'],
+};
+
 // centro (punto, o centro del riquadro per poligoni e linee) di una geometria GeoJSON
 function centro(g) {
   if (g?.type === 'Point') return g.coordinates;
@@ -58,7 +63,7 @@ export function preparaLuoghi(fonti) {
       etichetta: nome, nota: nota(p), strato: typeof strato === 'function' ? strato(p) : strato, zoom, numero: numero ? normalizza(String(numero(p))) : '', ordine, lon: p.lon, lat: p.lat,
       // «247*, 248» → numeri; le sezioni stanno nelle sedi di seggio e nelle scuole che le ospitano
       sezioni: (sezioni?.(p) ?? '').split(',').map(x => x.replace(/\D/g, '')).filter(Boolean),
-      norm: normalizza(nome ?? ''), extra: normalizza(altri.filter(Boolean).join(' ')), extraOrig: altri.filter(Boolean).join(' '),
+      alias: (ALIAS[nome] ?? []).map(normalizza), norm: normalizza(nome ?? ''), extra: normalizza(altri.filter(Boolean).join(' ')), extraOrig: altri.filter(Boolean).join(' '),
     };
   })).filter(v => v.norm && Number.isFinite(v.lon) && Number.isFinite(v.lat));
 }
@@ -84,12 +89,13 @@ export function cercaLuoghi(voci, testo, max = 6) {
   if (q.length < 3) return linee;
   const perTesto = voci
     .map(v => {
-      const nome = token.every(t => v.norm.includes(t));
+      const esatto = v.alias.includes(q);
+      const nome = esatto || token.every(t => v.norm.includes(t));
       const altrove = !nome && token.every(t => (v.norm + ' ' + v.extra).includes(t));
-      return (nome || altrove) ? { v, prefisso: nome && v.norm.startsWith(q), nome } : null;
+      return (nome || altrove) ? { v, esatto, prefisso: nome && v.norm.startsWith(q), nome } : null;
     })
     .filter(Boolean)
-    .sort((a, b) => b.prefisso - a.prefisso || b.nome - a.nome || a.v.norm.length - b.v.norm.length || a.v.ordine - b.v.ordine)
+    .sort((a, b) => b.esatto - a.esatto || b.prefisso - a.prefisso || b.nome - a.nome || a.v.norm.length - b.v.norm.length || a.v.ordine - b.v.ordine)
     .slice(0, max)
     .map(({ v, prefisso }) => risultato(v, prefisso));
   // la corrispondenza esatta con un numero o codice (linea, scheda PEBA) precede il resto

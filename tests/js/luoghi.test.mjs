@@ -205,3 +205,11 @@ test('PEBA: le aree verdi con lo stesso nome si distinguono per l\'indirizzo', (
   assert.equal(new Set(r.map(x => x.etichetta)).size, 2);
   assert.ok(r.every(x => /Via (Roma|Dante)/.test(x.etichetta)));
 });
+
+test('un luogo si trova anche col nome breve con cui è noto, e viene prima di un nome simile', () => {
+  const v = preparaLuoghi([{ strato: 'monumenti', nota: () => 'Teatri', campi: p => [p.nome], features: [
+    { geometry: { type: 'Point', coordinates: [13.35, 38.11] }, properties: { nome: 'Teatro al Massimo' } },
+    { geometry: { type: 'Point', coordinates: [13.357, 38.12] }, properties: { nome: 'Teatro Massimo Vittorio Emanuele' } },
+  ] }]);
+  assert.equal(cercaLuoghi(v, 'Teatro Massimo')[0].etichetta, 'Teatro Massimo Vittorio Emanuele');
+});
