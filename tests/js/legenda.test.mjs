@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { dopoClic, dopoClicMultiplo } from '../../js/core/legenda.js';
+import { dopoClic, dopoClicMultiplo, vociCambiate } from '../../js/core/legenda.js';
 
 test('dopoClic: dal tutto acceso il clic seleziona solo la voce cliccata', () => {
   assert.deepEqual(dopoClic([true, true, true], 1), [false, true, false]);
@@ -38,4 +38,13 @@ test('dopoClicMultiplo: una fascia (più zone) segue la stessa regola', () => {
   assert.equal(s.size, 4);
   s = dopoClicMultiplo(new Set(['B1', 'C1']), tutte, ['B1', 'B2']); // fascia anche solo in parte accesa: si spegne
   assert.deepEqual([...s], ['C1']);
+});
+
+test('vociCambiate: il clic su una voce spenta notifica sia la voce accesa che quella spenta', () => {
+  // prima: solo la 0 accesa; clic sulla 1 -> solo la 1. La casella cliccata è già invertita dal browser, ma il layer non ne sa nulla.
+  assert.deepEqual(vociCambiate([true, false, false], [false, true, false]), [0, 1]);
+});
+
+test('vociCambiate: nessuna differenza, nessuna notifica', () => {
+  assert.deepEqual(vociCambiate([true, false], [true, false]), []);
 });

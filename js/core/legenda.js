@@ -8,6 +8,10 @@ export function dopoClic(stati, k) {
   return stati.map((_, i) => (soloQuesta ? true : i === k));
 }
 
+// Indici delle voci il cui stato è cambiato tra `prima` e `dopo`: sono quelle di cui il layer va avvisato. Si confronta con lo stato di prima,
+// non con la casella: quella cliccata il browser l'ha già invertita, e il layer non ne sa nulla.
+export const vociCambiate = (prima, dopo) => prima.flatMap((p, i) => (p !== dopo[i] ? [i] : []));
+
 // Filtro a selezione multipla (per le legende con tante voci, come le zone OMI): con tutto acceso il clic su `voci` (una voce, o le voci
 // di una fascia) lascia accese solo quelle; poi ogni clic le aggiunge se erano spente o le toglie se erano accese. Se non resta nulla
 // si torna a tutto acceso: il secondo clic sull'unica voce selezionata rimostra tutto. Restituisce il nuovo insieme di voci accese.
@@ -37,11 +41,8 @@ export function voceFiltro(simbolo, testo, suCambio, attiva = true, esclusivo = 
     const k = gruppo.indexOf(riga);
     const prima = gruppo.map((r, i) => (i === k ? !casella.checked : r._filtro.casella.checked));
     const dopo = dopoClic(prima, k);
-    gruppo.forEach((r, i) => {
-      const cambiato = r._filtro.casella.checked !== dopo[i];
-      r._filtro.casella.checked = dopo[i];
-      if (cambiato) r._filtro.suCambio(dopo[i]);
-    });
+    gruppo.forEach((r, i) => { r._filtro.casella.checked = dopo[i]; });
+    for (const i of vociCambiate(prima, dopo)) gruppo[i]._filtro.suCambio(dopo[i]);
   });
   riga.append(casella, simbolo, tl(testo));
   return riga;

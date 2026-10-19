@@ -1,7 +1,8 @@
 // Parole che l'utente può scrivere nel Chat bot al posto del nome di una voce di legenda, per i layer i cui filtri si leggono
-// dalla legenda (core/filtri-chat.js, daLegenda): { <id strato>: { titoli: [titolo di ogni gruppo], sinonimi: { <nome voce>: [parole] } } }.
+// dalla legenda (core/filtri-chat.js, daLegenda): { <id strato>: { titoli: [titolo di ogni gruppo], sinonimi: { <nome voce>: [parole] }, colora: <selettore dei pulsanti «Colora per», uno per gruppo> } }.
 // Il nome della voce (senza il conteggio fra parentesi) e le sue parti separate da « · » sono già riconosciuti.
 export const SINONIMI = {
+  peba: { colora: '.peba-modo button' }, // premere una voce di un gruppo colora la mappa per quel gruppo
   distributori: {
     titoli: ['Marchio', 'Carburante'], // i18n-ok
     sinonimi: {

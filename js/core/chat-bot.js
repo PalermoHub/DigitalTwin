@@ -112,7 +112,7 @@ function pulsantiFiltri(ids, domanda) {
         b.dataset.strato = id; b.dataset.tipo = g.tipo; b.dataset.chiave = v.chiave;
         if (nominate.includes(`${g.tipo}:${v.chiave}`)) b.classList.add('cb-filtro-consigliato');
         b.title = b.ariaLabel = t('chatbot.filtri.solo', { nome: tl(v.nome) });
-        b.addEventListener('click', () => { accendiConLegenda(document, id); d.solo(g.tipo, v.chiave); aggiornaFiltri(); });
+        b.addEventListener('click', () => { accendiConLegenda(document, id); d.solo(g.tipo, v.chiave); d.colora?.(g.tipo); aggiornaFiltri(); });
         azioni.append(b);
       }
       box.append(azioni);

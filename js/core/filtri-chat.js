@@ -73,6 +73,11 @@ export function daLegenda(doc, idStrato) {
       const soloQuesta = r && gruppo.every(x => x._filtro.casella.checked === (x === r));
       if (r && !soloQuesta) r._filtro.casella.click();
     },
+    // Layer con più colorazioni (PEBA: per accessibilità o per gruppo): la mappa si colora per il gruppo della voce premuta.
+    colora(tipo) {
+      const pulsante = extra.colora && legenda.querySelectorAll(extra.colora)[Number(tipo.slice(1))];
+      if (pulsante && pulsante.getAttribute('aria-pressed') !== 'true') pulsante.click();
+    },
     tutte() {
       for (const righe of gruppiLegenda(legenda)) {
         const accese = righe.filter(r => r._filtro.casella.checked);
