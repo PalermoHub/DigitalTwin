@@ -55,7 +55,11 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .card-piede { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 16px 14px; margin-top: auto; }
 .card-retro .card-piede { padding: 10px 0 0; }
 .card-gira { padding: 4px 0; border: 0; background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-sm); font-style: italic; cursor: pointer; }
-.card-retro dl { margin: 12px 0 0; overflow-y: auto; }
+.card-retro dl { margin: 12px 0 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .45) transparent; }
+.card-retro dl::-webkit-scrollbar { width: 8px; background: transparent; }
+.card-retro dl::-webkit-scrollbar-track, .card-retro dl::-webkit-scrollbar-corner { background: transparent; }
+.card-retro dl::-webkit-scrollbar-button { display: none; }
+.card-retro dl::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .45); border-radius: 4px; }
 .card-retro dt { margin-top: 10px; font-weight: 700; }
 .card-retro dd { margin: 2px 0 0; color: rgba(255, 255, 255, .85); line-height: 1.4; }
 .card-risorse { margin: 0; padding-left: 18px; }
