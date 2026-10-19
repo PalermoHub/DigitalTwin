@@ -78,11 +78,12 @@ function pulsantiGuide(guide) {
 function pulsantiPannelli(pannelli) {
   const azioni = el('div', 'cb-azioni');
   for (const voce of pannelli ?? []) {
-    const tab = tabPannello(document, voce);
+    const mobile = !!window.matchMedia?.('(max-width: 720px)').matches;
+    const tab = tabPannello(document, voce, mobile);
     if (!tab) continue; // il tab non c'è in questa versione dell'app
     const b = Object.assign(el('button', 'cb-guida', t(`chatbot.apriPannello.${tab.lato}`, { nome: tab.nome })), { type: 'button' });
     b.title = b.ariaLabel = b.textContent;
-    b.addEventListener('click', () => apriPannello(document, voce));
+    b.addEventListener('click', () => apriPannello(document, voce, window.matchMedia?.('(max-width: 720px)').matches));
     azioni.append(b);
   }
   return azioni;

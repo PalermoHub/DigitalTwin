@@ -2006,6 +2006,7 @@
   "chatbot.apriGuida": "Apri la guida: {titolo}",
   "chatbot.apriPannello.sinistra": "Apri il tab «{nome}» a sinistra",
   "chatbot.apriPannello.destra": "Apri il tab «{nome}» a destra",
+  "chatbot.apriPannello.mobile": "Apri «{nome}»",
   "chatbot.luoghi": "Non trovo una spiegazione nella guida, ma sulla mappa c'è:",
   "app.rail.tema": "Tema",
   "tui.titolo": "Tema dell'interfaccia",

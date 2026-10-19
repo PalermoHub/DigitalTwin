@@ -25,3 +25,18 @@ test('apriPannello: clicca il tab chiuso, non quello già aperto', () => {
 test('apriPannello: tab assente -> false', () => {
   assert.equal(apriPannello(docFinto({}), 'sinistra:rndt'), false);
 });
+
+test('telefono: i tab di sinistra non ci sono, quelli di destra si aprono dal pulsante del foglio «Aggiungi»', () => {
+  const d = docFinto({ [SX]: { 'aria-expanded': 'false' }, [DX]: { 'aria-label': 'RNDT', 'aria-pressed': 'false' }, '#btn-rndt-m': {} });
+  assert.equal(tabPannello(d, 'sinistra:rndt', true), null);
+  assert.deepEqual(tabPannello(d, 'destra:rndt', true), { lato: 'mobile', nome: 'RNDT' });
+  assert.equal(apriPannello(d, 'sinistra:rndt', true), false);
+  assert.equal(apriPannello(d, 'destra:rndt', true), true);
+  assert.equal(d.mappa.get('#btn-rndt-m').clic, 1);
+  assert.equal(d.mappa.get(DX).clic, 0);
+});
+test('telefono: pannello già aperto (tab di destra premuto) -> nessun clic', () => {
+  const d = docFinto({ [DX]: { 'aria-pressed': 'true' }, '#btn-rndt-m': {} });
+  apriPannello(d, 'destra:rndt', true);
+  assert.equal(d.mappa.get('#btn-rndt-m').clic, 0);
+});
