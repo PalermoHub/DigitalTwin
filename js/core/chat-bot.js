@@ -1,12 +1,13 @@
 // Pannello «Chat bot»: disegna la conversazione di chat-bot-conversazione.js. Il testo delle risposte viene dalla guida:
 // si inserisce solo come nodi di testo (mai innerHTML), con il solo grassetto **...** e gli elenchi «- ».
-import { t, tn, tl } from './i18n.js';
+import { t, tn, tl, lingua } from './i18n.js';
 import { svgIcona } from './icone.js';
 import { creaConversazione } from './chat-bot-conversazione.js';
 import { blocchiTesto } from './chat-bot-ricerca.js';
 import { statoStrato, commutaStrato, accendiConLegenda } from './chat-bot-strati.js';
 import { filtriDelloStrato, vociNominate, vocePremuta } from './filtri-chat.js';
 import { tabPannello, apriPannello } from './chat-bot-pannelli.js';
+import { statoPercorso, commutaPercorso, portaAllaVista } from './chat-bot-percorsi.js';
 import { suntoRicordato } from './chat-bot-sunto.js';
 import { vociGuide } from './ricerca-guide.js';
 
@@ -70,6 +71,22 @@ function pulsantiGuide(guide) {
     const b = Object.assign(el('button', 'cb-guida', t('chatbot.apriGuida', { titolo: nome })), { type: 'button' });
     b.title = b.ariaLabel = b.textContent;
     b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('guida:apri', { detail: { scheda, sezione: sezione && `guida-${scheda === 'geoimage' ? 'geoimage-' : ''}${sezione}` } })));
+    azioni.append(b);
+  }
+  return azioni;
+}
+
+// Un pulsante per ogni percorso guidato della home: acceso quando tutti i suoi strati lo sono (si aggiorna in aggiornaLayer)
+let percorsiHome;
+const caricaPercorsi = () => percorsiHome ??= fetch(new URL('./home-percorsi.json', import.meta.url)).then(r => r.json()).catch(() => []);
+async function pulsantiPercorsi() {
+  const azioni = el('div', 'cb-azioni');
+  azioni.append(el('span', 'cb-nota', t('chatbot.percorsi')));
+  for (const p of await caricaPercorsi()) {
+    if (!statoPercorso(document, p.strati).presenti.length) continue; // nessuno strato del percorso in questa versione dell'app
+    const b = Object.assign(el('button', 'cb-percorso', (p[lingua()] ?? p.it).titolo), { type: 'button' });
+    b.dataset.percorso = p.id;
+    b.addEventListener('click', () => { if (commutaPercorso(document, p.strati)) portaAllaVista(window.dt?.map, p.vista); });
     azioni.append(b);
   }
   return azioni;
@@ -239,6 +256,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
         const filtri = pulsantiFiltri(m.voce.strati, m.domanda);
         if (filtri) box.append(filtri);
         if (m.oggetti?.length) box.append(pulsantiOggetti(m.oggetti));
+        if (m.voce.percorsi) { const posto = el('div'); box.append(posto); pulsantiPercorsi().then(a => { if (a.childElementCount > 1) { posto.append(a); aggiornaPercorsi(); } }); }
         if (m.voce.pannelli?.length) box.append(pulsantiPannelli(m.voce.pannelli));
         if (m.voce.guide?.length) box.append(pulsantiGuide(m.voce.guide));
         if (m.cEAltro) {
@@ -272,7 +290,17 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
       b.title = b.ariaLabel = suggerimento;
     }
   }
-  document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) aggiornaLayer(); aggiornaFiltri(); }); // anche i clic sulla legenda o sul pannello
+  async function aggiornaPercorsi() {
+    const percorsi = await caricaPercorsi();
+    for (const b of log.querySelectorAll('.cb-percorso')) {
+      const p = percorsi.find(x => x.id === b.dataset.percorso);
+      if (!p) continue;
+      const acceso = statoPercorso(document, p.strati).acceso;
+      b.setAttribute('aria-pressed', String(acceso));
+      b.title = b.ariaLabel = t(acceso ? 'chatbot.percorso.spegni' : 'chatbot.percorso.accendi', { nome: b.textContent });
+    }
+  }
+  document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) { aggiornaLayer(); aggiornaPercorsi(); } aggiornaFiltri(); }); // anche i clic sulla legenda o sul pannello
 
   const conv = creaConversazione({ carica, cercaOggetti, suCambio: disegna });
   form.addEventListener('submit', e => {

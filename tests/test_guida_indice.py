@@ -106,3 +106,11 @@ def test_pannelli_da_aprire_dall_indice_reale():
     assert voci['49-catalogo-rndt#1']['pannelli'] == ['sinistra:rndt', 'destra:rndt']
     assert voci['52-scheda-layer-rndt-barra-sinistra#1']['pannelli'] == ['sinistra:rndt', 'destra:rndt']
     assert voci['02-territorio-e-urbanistica#1']['pannelli'] == []
+
+
+def test_pulsanti_dei_percorsi_solo_sulla_sezione_dei_percorsi():
+    radice = Path(__file__).resolve().parent.parent
+    voci = {v['id']: v for v in costruisci_indice(radice / 'guida')}
+    con_percorsi = [i for i, v in voci.items() if v['percorsi']]
+    assert con_percorsi == ['01-uso-della-mappa#4']
+    assert voci['01-uso-della-mappa#4']['titolo'].startswith('Percorsi guidati')

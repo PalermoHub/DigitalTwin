@@ -62,24 +62,22 @@ Parole chiave: percorsi guidati, percorso, tema, temi pronti, pagina iniziale, h
 
 Domande tipiche: Cosa sono i percorsi guidati? Come apro la mappa con gli strati giusti già accesi? Quali percorsi ci sono? Dove trovo i percorsi guidati?
 
-I percorsi guidati stanno nella pagina iniziale del sito, nella sezione «Cosa puoi accendere», sotto il titolo «Percorsi guidati». Ogni percorso è una scheda con un titolo, una frase che dice di cosa parla, l'elenco degli strati che comprende e il pulsante «Apri la mappa». Il pulsante apre la mappa con quegli strati già accesi, con le legende già attive sulla mappa e, per il percorso «Urbanistica», già centrata sulla zona indicata dal percorso (zoom 16). Gli altri percorsi lasciano la mappa nella vista di partenza. Una volta aperta la mappa, gli strati si possono spegnere, accendere e cambiare come sempre (vedi `45-barra-strati-legende-e-ordine.md`).
+I percorsi guidati stanno nella pagina iniziale del sito, nella sezione «Cosa puoi accendere», sotto il titolo «Percorsi guidati». Anche dal Chat bot si può attivare un percorso: sotto la risposta ci sono i pulsanti dei percorsi, e un clic accende gli strati del percorso (un secondo clic li spegne). Ogni percorso è una scheda con un titolo, una frase che dice di cosa parla, l'elenco degli strati che comprende e il pulsante «Apri la mappa». Il pulsante apre la mappa con quegli strati già accesi, con le legende già attive sulla mappa e, per il percorso «Urbanistica», già centrata sulla zona indicata dal percorso (zoom 16). Gli altri percorsi lasciano la mappa nella vista di partenza. Una volta aperta la mappa, gli strati si possono spegnere, accendere e cambiare come sempre (vedi `45-barra-strati-legende-e-ordine.md`).
 
 I percorsi disponibili sono dieci:
 
-| Percorso | Strati accesi |
-|---|---|
-| Rischi e clima | geo_pericolosita, idraulica_pericolosita, coste_pericolosita, incendi, isole-calore |
-| Scuole e quartieri | scuole, seggi, quartieri, coropletico |
-| Mobilità | trasporto-metro, trasporto-bus, trasporto-fermate, colonnine, distributori |
-| Città in trasformazione | pnrr, opere, trend-popolazione |
-| Patrimonio e verde | monumenti, alberi, fontanelle, crociferi3d |
-| Urbanistica | prg, vincoli, catasto, omi, civici |
-| Sicurezza stradale | sicurezza-hotspot, sicurezza-pericolose, sicurezza-archi, sicurezza-incidenti |
-| Chi si sposta | pendolarismo, coropletico, trasporto-metro, trasporto-fermate |
-| Città accessibile | peba, uffici, trasporto-fermate, scuole |
-| Immobili pubblici | mef-immobili, immobili, uffici, catasto |
+- **Rischi e clima**: Pericolosità geomorfologica, Pericolosità idraulica, Pericolosità erosione costiera, Incendi, Isole di calore
+- **Scuole e quartieri**: Scuole e asili comunali, Sezioni elettorali (sedi), Quartieri, Popolazione per sezione
+- **Mobilità**: Linea metro, Linee bus, Fermate, Colonnine di ricarica, Distributori di carburante
+- **Città in trasformazione**: Progetti PNRR, Opere pubbliche, Trend della popolazione 2011-2023
+- **Patrimonio e verde**: Monumenti, Alberi monumentali, Fontanelle pubbliche, Ex Noviziato dei Crociferi in 3D
+- **Urbanistica**: PRG 2004: zonizzazione e PPE, PRG 2004: vincoli, Catasto: particelle, Zone OMI 2025, Numeri civici
+- **Sicurezza stradale**: Hotspot degli incidenti, Le 20 strade più pericolose, Incidenti per km sulle strade, Incidenti
+- **Chi si sposta**: Pendolarismo da e verso Palermo 2021, Popolazione per sezione, Linea metro, Fermate
+- **Città accessibile**: Barriere architettoniche, Uffici comunali (sedi), Fermate, Scuole e asili comunali
+- **Immobili pubblici**: Immobili dichiarati al MEF, Immobili comunali, Uffici comunali (sedi), Catasto: particelle
 
-Nella scheda del percorso gli strati compaiono con il nome che hanno nel catalogo, non con questi identificativi. Il testo del percorso è disponibile in italiano e in inglese, secondo la lingua scelta.
+Il testo del percorso è disponibile in italiano e in inglese, secondo la lingua scelta.
 
 I percorsi servono per chi non sa da dove cominciare. Chi vuole scegliere gli strati uno per uno usa invece il «Catalogo degli strati», più in basso nella stessa pagina: lì ogni strato ha il pulsante «Aggiungi alla mappa» e la barra degli strati scelti apre la mappa con quelli selezionati.
 

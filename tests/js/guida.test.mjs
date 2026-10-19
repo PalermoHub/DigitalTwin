@@ -6,7 +6,7 @@ import { PASSI as SOLO_GUIDA, PASSI_RNDT } from '../../js/core/guida-contenuti.j
 const PASSI = [...SOLO_GUIDA, ...PASSI_RNDT]; // i test di contenuto valgono per entrambi
 
 test('i passi nell\'ordine previsto', () => {
-  assert.deepEqual(SOLO_GUIDA.map(p => p.id), ['cos-e', 'telefono', 'dati', 'strati', 'ordine-layer', 'mappe-storiche', 'miei-layer', 'colori', 'tema-interfaccia', 'clic', 'tutto-in-un-punto', 'scheda', 'filtri', 'chat-bot', 'strumenti', 'tabella-dati', 'street-view', 'monumenti', 'uffici', 'pai', 'incendi', 'isole-calore', 'trasporto-strip', 'avvertenze']);
+  assert.deepEqual(SOLO_GUIDA.map(p => p.id), ['cos-e', 'telefono', 'percorsi-guidati', 'dati', 'strati', 'ordine-layer', 'mappe-storiche', 'miei-layer', 'colori', 'tema-interfaccia', 'clic', 'tutto-in-un-punto', 'scheda', 'filtri', 'chat-bot', 'strumenti', 'tabella-dati', 'street-view', 'monumenti', 'uffici', 'pai', 'incendi', 'isole-calore', 'trasporto-strip', 'avvertenze']);
   assert.deepEqual(PASSI_RNDT.map(p => p.id), ['rndt-catalogo', 'rndt-gruppo', 'rndt-info']);
 });
 
@@ -59,7 +59,7 @@ test('i passi RNDT sono statici (immagine fatta a mano, fuori da video e screens
   }
 });
 
-test('le immagini dei passi statici esistono (si rigenerano con scripts/guida_screenshot_rndt.py, guida_screenshot_novita.py e guida_screenshot_telefono.py)', () => {
+test('le immagini dei passi statici esistono (si rigenerano con scripts/guida_screenshot_rndt.py, guida_screenshot_novita.py, guida_screenshot_telefono.py e guida_screenshot_percorsi.py)', () => {
   for (const p of PASSI.filter(p => p.statico)) {
     assert.ok(existsSync(new URL(`../../${p.immagine.file}`, import.meta.url)), `manca ${p.immagine.file}`);
   }

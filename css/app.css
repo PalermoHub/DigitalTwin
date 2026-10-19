@@ -2105,11 +2105,11 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .cb-form { flex: none; display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--border); background: var(--surface); }
 .cb-campo { flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
 .cb-azioni { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.cb-oggetto, .cb-layer, .cb-guida, .cb-filtro { padding: 6px 10px; border: 1px solid var(--accent); border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent-strong); font: inherit; cursor: pointer; }
+.cb-oggetto, .cb-layer, .cb-guida, .cb-filtro, .cb-percorso { padding: 6px 10px; border: 1px solid var(--accent); border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent-strong); font: inherit; cursor: pointer; }
 .cb-filtri { margin-top: 10px; }
 .cb-filtro-consigliato { font-weight: 600; box-shadow: 0 0 0 2px var(--accent-soft); }
 .cb-filtri-stato { margin: 6px 0 0; font-weight: 600; color: var(--accent-strong); }
 .cb-filtro-tutte { background: var(--surface); }
-.cb-layer[aria-pressed="true"], .cb-filtro[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.cb-layer[aria-pressed="true"], .cb-filtro[aria-pressed="true"], .cb-percorso[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
 .cb-pulisci { flex: none; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--text-muted); cursor: pointer; }
 .cb-pulisci:hover { background: var(--surface-hover); color: var(--text); }
