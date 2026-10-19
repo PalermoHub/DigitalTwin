@@ -84,7 +84,7 @@ const catalogoPromessa = caricaCatalogo().catch(() => null);
 const condivisionePromessa = preparaCondivisione(window); // un link condiviso porta le preferenze del mittente: va letto prima dei pannelli
 
 // Gli strati puntuali nascono spenti, ma la scheda li interroga anche da spenti: i loro dati (GeoJSON) non bloccano l'avvio.
-// Partono in secondo piano poco dopo (o alla prima accensione, o al primo clic sulla mappa, se arriva prima): vedi core/differiti.js.
+// Partono in secondo piano alla prima interazione o dopo 30 s (o alla prima accensione, o al primo clic sulla mappa, se arriva prima): vedi core/differiti.js.
 // Il trasporto resta fuori perché il filtro Linea ha bisogno dei suoi dati subito.
 const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine', 'distributori', 'mef-immobili', 'pnrr', 'opere', 'pendolarismo', 'trend-popolazione']);
 
@@ -368,10 +368,19 @@ map.once('style.load', async () => {
   }
   try { collegaCestoAllaMappa(document, window.sessionStorage); } catch { /* storage non disponibile */ }
   window.dt.pronto = true;
-  setTimeout(() => (window.requestIdleCallback ?? (f => f()))(() => {
-    caricaDifferiti();
-    import('./core/ricerca-guide.js').catch(() => {}); // a riposo: la prima ricerca nelle guide non aspetta la rete
-  }), 3000);
+  // I dati differiti (alcuni MB) partono alla prima interazione, o dopo 30 s: chi guarda soltanto la mappa non li scarica.
+  // Un clic sulla mappa arrivato prima li attende comunque (core/scheda.js).
+  const primaInterazione = new AbortController();
+  const avviaDifferiti = () => {
+    if (primaInterazione.signal.aborted) return;
+    primaInterazione.abort();
+    (window.requestIdleCallback ?? (f => f()))(() => {
+      caricaDifferiti();
+      import('./core/ricerca-guide.js').catch(() => {}); // la prima ricerca nelle guide non aspetta la rete
+    });
+  };
+  for (const evento of ['pointerdown', 'wheel', 'keydown', 'touchstart']) window.addEventListener(evento, avviaDifferiti, { capture: true, passive: true, signal: primaInterazione.signal });
+  setTimeout(avviaDifferiti, 30000);
 });
 
 // Service worker (sw.js): visite ripetute immediate e interfaccia anche senza rete. Si registra solo in HTTPS (produzione) o con ?sw per provarlo:
