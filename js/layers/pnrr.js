@@ -214,8 +214,6 @@ export default {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
     quotaIcone(map, SRC);
     map.addSource(SRC_HIT, { type: 'geojson', data: urlDati('pnrr/pnrr.geojson') });
-    fetch(urlDati('pnrr/sintesi.json')).then(r => r.json()).then(d => { sintesi = d; riempiSoggetti(legenda?.querySelector('.pnrr-soggetti')); if (copertura) copertura.textContent = testoCopertura(sintesi); }).catch(() => { sintesi = null; });
-    fetch(urlDati('pnrr/soggetti.json')).then(r => r.json()).then(d => { elenchi = d.soggetti; }).catch(() => { elenchi = null; });
   },
   aggiungiLayer(map) {
     mappa = map;
@@ -242,6 +240,9 @@ export default {
     });
   },
   async avvia() {
+    // sintesi e elenchi per la legenda e la scheda: arrivano con i dati del layer, non all'avvio
+    fetch(urlDati('pnrr/sintesi.json')).then(r => r.json()).then(d => { sintesi = d; riempiSoggetti(legenda?.querySelector('.pnrr-soggetti')); if (copertura) copertura.textContent = testoCopertura(sintesi); }).catch(() => { sintesi = null; });
+    fetch(urlDati('pnrr/soggetti.json')).then(r => r.json()).then(d => { elenchi = d.soggetti; }).catch(() => { elenchi = null; });
     const dati = await (await fetch(urlDati('pnrr/pnrr.geojson'))).json();
     progetti = progettiDa(dati.features);
     riempiSoggetti(legenda?.querySelector('.pnrr-soggetti'));

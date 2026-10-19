@@ -214,8 +214,6 @@ export default {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
     quotaIcone(map, SRC);
     map.addSource(SRC_HIT, { type: 'geojson', data: urlDati('opere/opere.geojson') });
-    fetch(urlDati('opere/sintesi.json')).then(r => r.json()).then(d => { sintesi = d; riempiTitolari(legenda?.querySelector('.pnrr-soggetti')); if (copertura) copertura.textContent = testoCopertura(sintesi); }).catch(() => { sintesi = null; });
-    fetch(urlDati('opere/elenco.json')).then(r => r.json()).then(d => { elenchi = d.titolari; }).catch(() => { elenchi = null; });
   },
   aggiungiLayer(map) {
     mappa = map;
@@ -242,6 +240,9 @@ export default {
     });
   },
   async avvia() {
+    // sintesi e elenchi per la legenda e la scheda: arrivano con i dati del layer, non all'avvio
+    fetch(urlDati('opere/sintesi.json')).then(r => r.json()).then(d => { sintesi = d; riempiTitolari(legenda?.querySelector('.pnrr-soggetti')); if (copertura) copertura.textContent = testoCopertura(sintesi); }).catch(() => { sintesi = null; });
+    fetch(urlDati('opere/elenco.json')).then(r => r.json()).then(d => { elenchi = d.titolari; }).catch(() => { elenchi = null; });
     const dati = await (await fetch(urlDati('opere/opere.geojson'))).json();
     opere = opereDa(dati.features);
     riempiTitolari(legenda?.querySelector('.pnrr-soggetti'));

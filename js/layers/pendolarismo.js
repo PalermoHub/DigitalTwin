@@ -67,7 +67,9 @@ export default {
   gruppo: 'popolazione',
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: urlDati('pendolarismo/pendolarismo.geojson') });
-    fetch(urlDati('pendolarismo/pendolarismo.geojson')).then(r => r.json())
+  },
+  async avvia() { // le proprietà dei nodi per la scheda arrivano con i dati del layer, non all'avvio
+    await fetch(urlDati('pendolarismo/pendolarismo.geojson')).then(r => r.json())
       .then(d => { nodi = d.features.map(f => f.properties).filter(p => p.tipo !== 'arco'); })
       .catch(() => { nodi = []; });
   },

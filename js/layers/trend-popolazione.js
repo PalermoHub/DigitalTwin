@@ -107,6 +107,7 @@ export default {
     map.addSource(SRC, { type: 'geojson', data: urlDati('trend/trend.geojson') });
     map.addSource(SRC_GRAFICI, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   },
+  avvia(map) { caricaDati(map); }, // i dati del trend (grafici, etichette) arrivano con il layer, non all'avvio
   aggiungiLayer(map) {
     mappa = map;
     const nascosto = { visibility: 'none' };
@@ -141,7 +142,6 @@ export default {
     });
     map.addLayer({ id: 'trend-grafico-nome', ...testo('bottom', -5, 'nome', { 'text-color': '#2b2b2b' }) });
     map.addLayer({ id: 'trend-grafico-valore', ...testo('top', 5, 'variazione', { 'text-color': colore }) });
-    caricaDati(map);
     applicaFiltri();
     // trasparente e sempre presente: la scheda del luogo mostra il trend anche a strato spento
     // copre tutti i livelli: un clic restituisce UPL, quartiere e circoscrizione del punto
