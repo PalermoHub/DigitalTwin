@@ -12,6 +12,11 @@ export function creaConversazione({ carica = caricaIndice, suCambio = () => {} }
   const leggi = async () => indice ??= await carica();
 
   return Object.assign(stato, {
+    async pulisci() { // ricomincia: l'indice resta in memoria, non si riscarica
+      messaggi.length = 0;
+      stato.suggerite = [];
+      await stato.avvia();
+    },
     async avvia() {
       aggiungi({ tipo: 'presentazione' });
       try { stato.suggerite = domandeIniziali(await leggi()); suCambio(); } catch { /* l'errore si mostra alla prima domanda */ }

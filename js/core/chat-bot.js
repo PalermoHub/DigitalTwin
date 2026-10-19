@@ -39,6 +39,9 @@ function disegnaTesto(testo) {
 export function creaChatBot(pannello, { carica } = {}) {
   const testata = el('header', 'gi-testata');
   testata.append(el('h2', null, t('chatbot.titolo')));
+  const pulisci = Object.assign(el('button', 'cb-pulisci'), { type: 'button', title: t('chatbot.pulisci'), ariaLabel: t('chatbot.pulisci') });
+  pulisci.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v5M14 11v5"/></svg>';
+  pulisci.addEventListener('click', () => { conv.pulisci(); campo.focus(); });
   const x = Object.assign(el('button', 'pannello-chiudi'), { type: 'button', title: t('chatbot.chiudi'), ariaLabel: t('chatbot.chiudi') });
   x.innerHTML = svgIcona('chiudi', 18);
   x.addEventListener('click', () => { pannello.hidden = true; });
@@ -52,7 +55,7 @@ export function creaChatBot(pannello, { carica } = {}) {
   const campo = Object.assign(el('input', 'cb-campo'), { type: 'text', autocomplete: 'off', placeholder: t('chatbot.segnaposto') });
   campo.setAttribute('aria-label', t('chatbot.campo'));
   const invia = Object.assign(el('button', 'gi-btn', t('chatbot.invia')), { type: 'submit' });
-  form.append(campo, invia);
+  form.append(campo, invia, pulisci);
 
   const chiedi = testo => { conv.chiedi(testo); };
   const domande = (titolo, elenco) => {

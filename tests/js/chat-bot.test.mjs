@@ -72,3 +72,20 @@ test('suCambio è chiamato a ogni cambiamento', async () => {
   await c.chiedi('colori');
   assert.ok(n >= 2);
 });
+
+test('pulisci: azzera la conversazione e rimette la presentazione con le domande suggerite', async () => {
+  const c = creaConversazione({ carica });
+  await c.avvia();
+  await c.chiedi('colori');
+  assert.ok(c.messaggi.length > 1);
+  await c.pulisci();
+  assert.deepEqual(c.messaggi.map(m => m.tipo), ['presentazione']);
+  assert.deepEqual(c.suggerite, ['Come cambio i colori?', 'Come stampo la mappa?']);
+});
+test('pulisci: dopo aver pulito si può chiedere di nuovo', async () => {
+  const c = creaConversazione({ carica });
+  await c.avvia();
+  await c.pulisci();
+  await c.chiedi('stampa');
+  assert.equal(c.messaggi.at(-1).tipo, 'risposta');
+});

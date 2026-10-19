@@ -2108,3 +2108,5 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .cb-azioni { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .cb-layer { padding: 6px 10px; border: 1px solid var(--accent); border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent-strong); font: inherit; cursor: pointer; }
 .cb-layer[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.cb-pulisci { flex: none; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--text-muted); cursor: pointer; }
+.cb-pulisci:hover { background: var(--surface-hover); color: var(--text); }

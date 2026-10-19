@@ -1987,6 +1987,7 @@
   "html.chatbot.aria": "Chat bot",
   "chatbot.titolo": "Chat bot",
   "chatbot.chiudi": "Close the Chat bot",
+  "chatbot.pulisci": "Clear the chat",
   "chatbot.presentazione": "Hi, I am the Chat bot: I answer questions about the app, its layers and its features. Answers come from the site guide, in Italian.",
   "chatbot.suggerite": "Try asking:",
   "chatbot.campo": "Write a question",
