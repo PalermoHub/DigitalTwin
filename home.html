@@ -52,24 +52,14 @@
 </nav>
 </header>
 <main id="corpo" class="home">
-<section class="home-intro">
-  <h1 data-i18n="pres.perche.h">Perché una nuova mappa, se c'è già PalermoHub?</h1>
-  <p data-i18n-html="pres.perche.p1">Domanda legittima, e ce la siamo fatta anche da soli. 😁 <a href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)">PalermoHub</a> esiste da anni e raccoglie centinaia di mappe su Palermo, sulla Sicilia e anche qualcuna nazionale. Che bisogno c'era di costruire altro?</p>
-  <p data-i18n-html="pres.perche.p2">La risposta breve: <a href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)"><strong>PalermoHub</strong></a> e <strong>Palermo Digital Twin</strong> non fanno lo stesso mestiere.</p>
-  <h3 data-i18n="pres.perche.hub.h">PalermoHub è una biblioteca</h3>
-  <p data-i18n-html="pres.perche.hub.p1">Ogni mappa è un lavoro a sé, con il suo tema, la sua fonte, il suo autore, il suo anno.</p>
-  <p data-i18n-html="pres.perche.hub.p2">Funziona benissimo quando la domanda è: <em>«Esiste una mappa su questo tema?»</em></p>
-  <p data-i18n-html="pres.perche.hub.p4">Il limite è strutturale: <strong>ogni mappa vive da sola</strong>. Per sapere cosa succede in un punto preciso della città (che particella catastale è, che zona del PRG, se ci sono vincoli idrogeologici, quanto fa caldo d'estate) bisogna aprire più mappe, in più schede, e confrontare i risultati a mano.</p>
+<section class="fascia  home-intro">
+<div class="fascia-in">
+  <h1 data-i18n="home.hero.titolo">Palermo Digital Twin</h1>
+  <p data-i18n="home.hero.sotto">Una sola mappa di Palermo con tanti strati da accendere e spegnere. Un clic su un punto e si apre la scheda del luogo, con tutti i dati per quell'indirizzo.</p>
   <div class="azioni">
-  <a class="perche-bottone" href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)" data-i18n="pres.perche.hub.apri">Vai a PalermoHub</a>
+    <a class="perche-bottone" href="index.html" data-i18n="home.cesto.apri">Apri la mappa</a>
+    <a class="perche-presentazione" href="#titolo-strati" data-i18n="home.hero.strati">Scopri gli strati</a>
   </div>
-  <h3 data-i18n="pres.perche.dt.h">Palermo Digital Twin è un tavolo di lavoro</h3>
-  <p data-i18n-html="pres.perche.dt.p1">Parte dalla domanda opposta: <em>«Cosa c'è qui?»</em></p>
-  <p data-i18n-html="pres.perche.dt.p2">Una sola mappa, tanti strati che si accendono e si spengono: catasto, piano regolatore, popolazione, edifici, rilievo, trasporto pubblico, isole di calore, rischio idrogeologico, monumenti, mappe storiche, uffici comunali e altro ancora. Un clic su un punto e si apre la <strong>scheda del luogo</strong>, che riunisce tutti i dati per quell'indirizzo.</p>
-  <p data-i18n-html="pres.perche.dt.p3">Ma non serve solo a guardare, serve a <strong>lavorare</strong>. Studenti, professionisti e tecnici possono portare sulla mappa i propri dati e usarli insieme agli strati già presenti, come in QGIS: basta collegare una fonte o trascinare un file, senza installare nulla.</p>
-  <p data-i18n-html="pres.perche.dt.p4">E il tavolo di lavoro si serve dagli scaffali della biblioteca: <strong>tutti i dati del Digital Twin provengono da <a href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)">PalermoHub</a>.</strong></p>
-  <p><a class="perche-presentazione" href="presentazione.html" data-i18n-title="html.menu.presentazione.tip" title="Presentazione del progetto" data-i18n="home.presentazione">Leggi la presentazione del progetto</a></p>
-</section>
 
 <section class="home-slider" id="home-slider" data-i18n-aria="home.slider.aria" aria-label="In evidenza" aria-roledescription="carousel">
   <div class="slide-pista" id="slide-pista"></div>
@@ -77,8 +67,11 @@
   <button type="button" class="slide-freccia slide-succ" id="slide-succ" data-i18n-aria="home.slider.succ" aria-label="Diapositiva successiva">›</button>
   <div class="slide-punti" id="slide-punti" role="group" data-i18n-aria="home.slider.punti" aria-label="Scegli la diapositiva"></div>
 </section>
+</div>
+</section>
 
-<section class="home-strati" aria-labelledby="titolo-strati">
+<section class="fascia fascia--alt home-strati" aria-labelledby="titolo-strati">
+<div class="fascia-in">
   <h2 id="titolo-strati" data-i18n="home.strati.titolo">Cosa puoi accendere</h2>
   <div class="home-filtri" id="home-filtri-riga">
     <label class="home-cerca"><span class="solo-lettori" data-i18n="home.cerca.etichetta">Cerca uno strato</span>
@@ -89,6 +82,29 @@
   <p class="home-argomento-desc" id="home-argomento-desc" hidden></p>
   <div id="home-elenco"></div>
   <p class="home-vuoto" id="home-vuoto" hidden data-i18n="home.vuoto">Nessuno strato corrisponde alla ricerca.</p>
+</div>
+</section>
+<section class="fascia home-perche" aria-labelledby="titolo-perche">
+<div class="fascia-in">
+  <h2 id="titolo-perche" data-i18n="pres.perche.h">Perché una nuova mappa, se c'è già PalermoHub?</h2>
+  <p data-i18n-html="pres.perche.p1">Domanda legittima, e ce la siamo fatta anche da soli. 😁 <a href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)">PalermoHub</a> esiste da anni e raccoglie centinaia di mappe su Palermo, sulla Sicilia e anche qualcuna nazionale. Che bisogno c'era di costruire altro?</p>
+  <p data-i18n-html="pres.perche.p2">La risposta breve: <a href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)"><strong>PalermoHub</strong></a> e <strong>Palermo Digital Twin</strong> non fanno lo stesso mestiere.</p>
+  <h3 data-i18n="pres.perche.hub.h">PalermoHub è una biblioteca</h3>
+  <p data-i18n-html="pres.perche.hub.p1">Ogni mappa è un lavoro a sé, con il suo tema, la sua fonte, il suo autore, il suo anno.</p>
+  <p data-i18n-html="pres.perche.hub.p2">Funziona benissimo quando la domanda è: <em>«Esiste una mappa su questo tema?»</em></p>
+  <p data-i18n-html="pres.perche.hub.p4">Il limite è strutturale: <strong>ogni mappa vive da sola</strong>. Per sapere cosa succede in un punto preciso della città (che particella catastale è, che zona del PRG, se ci sono vincoli idrogeologici, quanto fa caldo d'estate) bisogna aprire più mappe, in più schede, e confrontare i risultati a mano.</p>
+  <div class="azioni"><a class="perche-bottone" href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)" data-i18n="pres.perche.hub.apri">Vai a PalermoHub</a></div>
+</div>
+</section>
+<section class="fascia fascia--alt home-perche home-perche--dt" aria-labelledby="titolo-perche-dt">
+<div class="fascia-in">
+  <h3 id="titolo-perche-dt" data-i18n="pres.perche.dt.h">Palermo Digital Twin è un tavolo di lavoro</h3>
+  <p data-i18n-html="pres.perche.dt.p1">Parte dalla domanda opposta: <em>«Cosa c'è qui?»</em></p>
+  <p data-i18n-html="pres.perche.dt.p2">Una sola mappa, tanti strati che si accendono e si spengono: catasto, piano regolatore, popolazione, edifici, rilievo, trasporto pubblico, isole di calore, rischio idrogeologico, monumenti, mappe storiche, uffici comunali e altro ancora. Un clic su un punto e si apre la <strong>scheda del luogo</strong>, che riunisce tutti i dati per quell'indirizzo.</p>
+  <p data-i18n-html="pres.perche.dt.p3">Ma non serve solo a guardare, serve a <strong>lavorare</strong>. Studenti, professionisti e tecnici possono portare sulla mappa i propri dati e usarli insieme agli strati già presenti, come in QGIS: basta collegare una fonte o trascinare un file, senza installare nulla.</p>
+  <p data-i18n-html="pres.perche.dt.p4">E il tavolo di lavoro si serve dagli scaffali della biblioteca: <strong>tutti i dati del Digital Twin provengono da <a href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)">PalermoHub</a>.</strong></p>
+  <p><a class="perche-presentazione" href="presentazione.html" data-i18n-title="html.menu.presentazione.tip" title="Presentazione del progetto" data-i18n="home.presentazione">Leggi la presentazione del progetto</a></p>
+</div>
 </section>
 </main>
 <button type="button" class="in-cima" id="home-cima" hidden data-i18n-aria="catalogo.inCima" data-i18n-title="catalogo.inCima" aria-label="Torna in cima" title="Torna in cima"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V5M5.5 11.5 12 5l6.5 6.5"/></svg></button>

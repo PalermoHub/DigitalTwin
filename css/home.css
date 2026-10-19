@@ -6,13 +6,22 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .pagina-home #app-footer { position: sticky; bottom: 0; z-index: var(--z-header); }
 .solo-lettori { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-.home { width: min(1120px, 100%); box-sizing: border-box; margin: 0 auto; padding: 24px 16px 40px; }
+.home { width: 100%; box-sizing: border-box; padding: 0; }
+.fascia { padding: 56px 16px; }
+.fascia--alt { background: var(--surface-alt); }
+.fascia-in { width: min(1120px, 100%); margin: 0 auto; }
+.home-perche p { margin: 0 0 12px; max-width: 70ch; line-height: 1.6; color: var(--text-muted); }
+.home-perche h3 { margin: 24px 0 10px; font-size: 1.25rem; }
+.home-perche h2 + p, .home-perche h2 { margin-top: 0; }
+.home-perche .azioni { margin-top: 16px; }
+.home-perche--dt { padding-bottom: 120px; }
+.home-perche--dt h3 { margin-top: 0; }
 .home h1 { margin: 0 0 8px; font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.15; }
 .home h2 { margin: 0 0 12px; font-size: 1.35rem; }
 .home-intro p { margin: 0; max-width: 70ch; font-size: var(--fs-md); line-height: 1.55; color: var(--text-muted); }
 
 /* slider */
-.home-slider { position: relative; margin: 24px 0 36px; border-radius: var(--r-md); overflow: hidden; background: var(--surface-alt); border: 1px solid var(--border-ui); box-shadow: var(--ombra); }
+.home-slider { position: relative; margin: 32px 0 0; border-radius: var(--r-md); overflow: hidden; background: var(--surface-alt); border: 1px solid var(--border-ui); box-shadow: var(--ombra); }
 .slide-pista { display: flex; transition: transform .5s ease; }
 .slide { position: relative; flex: 0 0 100%; min-width: 0; aspect-ratio: 16 / 7; background: #20252b; }
 .slide img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -116,3 +125,9 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .perche-bottone { display: inline-block; box-sizing: border-box; padding: 9px 16px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-weight: 700; text-decoration: none; }
 .perche-bottone:hover { filter: brightness(1.06); }
 .home-intro a.perche-bottone { color: var(--accent-ink); text-decoration: none; }
+
+/* in fondo: perché una nuova mappa (due colonne) */
+.perche-colonne { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.perche-colonne h3 { margin: 0 0 6px; font-size: var(--fs-md); }
+.perche-colonne p { margin: 0 0 10px; color: var(--text-muted); line-height: 1.55; }
+.home-intro .azioni { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
