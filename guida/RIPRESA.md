@@ -8,7 +8,7 @@ Costruire in `guida/` una base di conoscenza **dettagliata e fedele all'app** de
 
 ## Stato al 2026-10-19: contenuti completi e Chat bot attivo
 
-La cartella contiene **54 file** (`00`–`53` e questo), circa 34.000 parole, **non committati**. Elenco e contenuto di ogni file: `00-leggimi.md`.
+La cartella contiene **55 file** (`00`–`54` e questo), circa 34.000 parole, **non committati**. Elenco e contenuto di ogni file: `00-leggimi.md`.
 
 - `00-leggimi.md`: indice.
 - `01`: panoramica breve (cos'è, schermata, tabella «Dove trovo cosa», tab della scheda, icone) con rinvii.
@@ -36,7 +36,7 @@ Controlli già fatti (rilanciabili con lo script in fondo): ogni sezione `##` ha
 
 ## Chat bot (fatto il 2026-10-19)
 
-Il tab e l'icona «Chat bot» sono nell'app: pannello destro (`#chatbot-pannello`), pulsante `#btn-chatbot` nella barra strumenti, `#btn-chatbot-m` nel foglio Aggiungi su telefono. Ricerca nel browser, nessuna API.
+Il Chat bot si chiama **Talia** dal 2026-10-19 (tab, titolo, testi IT/EN, guida `54`). Il tab e l'icona «Talia» sono nell'app: pannello destro (`#chatbot-pannello`), pulsante `#btn-chatbot` nella barra strumenti, `#btn-chatbot-m` nel foglio Aggiungi su telefono. Ricerca nel browser, nessuna API.
 - **Indice**: `guida/indice.json`, generato da `python3 scripts/guida_indice.py` (170 voci, una per sezione `##`). **Va rigenerato e committato ogni volta che i file di `guida/` cambiano.**
 - Codice: `js/core/chat-bot-ricerca.js` (punteggio, anteprima, `blocchiTesto`), `chat-bot-conversazione.js` (stato, senza DOM), `chat-bot.js` (DOM). Testi in `js/locales/*.json` (`chatbot.*`). Documento di progetto e piano: `docs/superpowers/specs/2026-10-19-chat-bot-design.md`, `docs/superpowers/plans/2026-10-19-chat-bot.md` (ignorati da git).
 - Test: `tests/js/chat-bot*.test.mjs`, `tests/test_guida_indice.py`. Il test sull'indice reale richiede che ≥97% delle «Domande tipiche» trovi la propria sezione: scrivere le domande con parole della sezione.
