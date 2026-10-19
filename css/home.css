@@ -206,3 +206,6 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 }
 /* pagine di testo: gli elenchi (Fonti e note) usano tutta la larghezza della fascia */
 .pagina-info .home-perche ul { max-width: none; }
+/* paragrafi delle pagine di testo: più larghi di 70 caratteri; nella Guida seguono la larghezza della figura */
+.pagina-info .home-perche p { max-width: 100ch; }
+.pagina-guida .home-perche p, .pagina-guida .guida-evidenza { max-width: none; }
