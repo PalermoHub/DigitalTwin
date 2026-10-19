@@ -5,9 +5,19 @@ import { CHIAVE as CHIAVE_TEMI } from './tema.js';
 import { CHIAVE_STORAGE as CHIAVE_SCHEDA } from './scheda-preferenze.js';
 import { CHIAVE as CHIAVE_ORDINE } from './riordino.js';
 import { CHIAVE_INVITO } from './invito.js';
+import { PARAMETRO } from './condivisione-codec.js';
+import { svuotaCesto } from './cesto-home.js';
 import { t } from './i18n.js';
 
 export const CHIAVI_PERSONALIZZAZIONI = [CHIAVE_TEMI, CHIAVE_SCHEDA, CHIAVE_ORDINE, CHIAVE_INVITO];
+
+// Dopo il ripristino la pagina riparte senza lo stato del link (?v=…): è da lì che arrivano gli strati scelti nella home.
+function ricaricaSenzaLink() {
+  const u = new URL(location.href);
+  u.searchParams.delete(PARAMETRO);
+  u.hash = '';
+  location.replace(u);
+}
 
 // Restituisce quante chiavi erano presenti. Lo storage può mancare o rifiutare l'operazione.
 export function ripristinaPersonalizzazioni(storage) {
@@ -23,11 +33,12 @@ export function ripristinaPersonalizzazioni(storage) {
 
 // `deseleziona` (se c'è) torna true quando ha tolto una selezione in mappa: il clic finisce lì, come con Esc;
 // solo a mappa già libera parte il ripristino vero, con la conferma.
-export function collegaRipristino(bottone, storage, ricarica = () => location.reload(), conferma = testo => window.confirm(testo), deseleziona = () => false) {
+export function collegaRipristino(bottone, storage, ricarica = ricaricaSenzaLink, conferma = testo => window.confirm(testo), deseleziona = () => false) {
   bottone?.addEventListener('click', () => {
     if (deseleziona()) return;
     if (!conferma(t('ripristino.conferma'))) return;
     ripristinaPersonalizzazioni(storage);
+    try { svuotaCesto(window.sessionStorage); } catch { /* storage non disponibile */ }
     ricarica();
   });
 }

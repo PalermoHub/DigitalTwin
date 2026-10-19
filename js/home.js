@@ -2,6 +2,7 @@
 import { caricaDizionari, applicaDom, creaInterruttoreLingua, lingua, t as tr } from './core/i18n.js';
 import { codifica, costruisciLink, PARAMETRO } from './core/condivisione-codec.js';
 import { svgIcona } from './core/icone.js';
+import { leggiCesto, salvaCesto } from './core/cesto-home.js';
 
 await caricaDizionari();
 applicaDom(document);
@@ -79,13 +80,12 @@ async function linkMappa(strati) {
 }
 
 // ---- strati scelti ("aggiunti alla mappa"): restano in sessionStorage finché non si apre la mappa ----
-const CHIAVE_CESTO = 'dt-home-strati';
-const cesto = new Set();
-try { for (const id of JSON.parse(sessionStorage.getItem(CHIAVE_CESTO)) ?? []) if (typeof id === 'string') cesto.add(id); } catch { /* storage non disponibile o illeggibile */ }
+const archivioCesto = (() => { try { return window.sessionStorage; } catch { return null; } })();
+const cesto = new Set(leggiCesto(archivioCesto));
 const bottoniStrato = []; // { bottone, strati } da tenere allineati al cesto
 
 function aggiornaCesto() {
-  try { sessionStorage.setItem(CHIAVE_CESTO, JSON.stringify([...cesto])); } catch { /* storage non disponibile */ }
+  salvaCesto(archivioCesto, cesto);
   for (const { bottone, strati } of bottoniStrato) {
     const dentro = strati.length > 0 && strati.every(id => cesto.has(id));
     bottone.setAttribute('aria-pressed', String(dentro));
@@ -272,3 +272,11 @@ const mostraCima = () => { cima.hidden = window.scrollY < 400; };
 window.addEventListener('scroll', mostraCima, { passive: true });
 cima.addEventListener('click', () => window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
 mostraCima();
+
+// tornando indietro dalla mappa (pagina dalla cache del browser) il cesto va riletto: la mappa può averlo cambiato
+window.addEventListener('pageshow', e => {
+  if (!e.persisted) return;
+  cesto.clear();
+  for (const id of leggiCesto(archivioCesto)) cesto.add(id);
+  aggiornaCesto();
+});

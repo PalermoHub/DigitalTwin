@@ -106,5 +106,6 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .home-intro p + p { margin-top: 10px; }
 .home-intro a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .home-intro .azioni { margin: 8px 0 0; }
-.perche-bottone { display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 999px; background: var(--accento, var(--focus)); color: var(--accento-inchiostro, #fff); font-weight: 700; text-decoration: none; }
-.home-intro a.perche-bottone { color: var(--accento-inchiostro, #fff); text-decoration: none; }
+.perche-bottone { display: inline-block; box-sizing: border-box; padding: 9px 16px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-weight: 700; text-decoration: none; }
+.perche-bottone:hover { filter: brightness(1.06); }
+.home-intro a.perche-bottone { color: var(--accent-ink); text-decoration: none; }

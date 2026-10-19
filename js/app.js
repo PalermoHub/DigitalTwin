@@ -27,6 +27,7 @@ import { collegaChipBarra } from './core/chip-barra.js';
 import { collegaZone } from './core/zone.js';
 import { collegaRipristino } from './core/ripristino.js';
 import { preparaCondivisione, collegaCondivisione } from './core/condivisione.js';
+import { collegaCestoAllaMappa } from './core/cesto-home.js';
 import { creaDifferiti } from './core/differiti.js';
 import { collegaTabMobile } from './core/tab-mobile.js';
 import { traduciModuli } from './core/traduci-moduli.js';
@@ -347,6 +348,7 @@ map.once('style.load', async () => {
     const ignorati = window.dt.condivisione.applica(condivisione.stato);
     if (ignorati.length) segnala(t('app.link.ignorati', { elenco: ignorati.join(', ') }));
   }
+  try { collegaCestoAllaMappa(document, window.sessionStorage); } catch { /* storage non disponibile */ }
   window.dt.pronto = true;
   setTimeout(() => (window.requestIdleCallback ?? (f => f()))(() => caricaDifferiti()), 3000);
 });
