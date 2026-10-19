@@ -1,6 +1,7 @@
 """Genera guida/indice.json: una voce per ogni sezione «##» dei file di guida/, per il Chat bot.
 
 I layer da accendere per ogni sezione stanno in guida/collegamenti.json (chiave: id della sezione o nome del file).
+Le pagine di guida dell'app da aprire («scheda:sezione», es. «guida:tema-interfaccia») stanno in guida/rinvii.json, con le stesse chiavi.
 
 Uso: python3 scripts/guida_indice.py   (da rilanciare quando la guida cambia)
 """
@@ -24,6 +25,10 @@ def costruisci_indice(cartella):
     percorso_coll = Path(cartella) / 'collegamenti.json'
     if percorso_coll.exists():
         collegamenti = json.loads(percorso_coll.read_text(encoding='utf-8'))
+    rinvii = {}
+    percorso_rinvii = Path(cartella) / 'rinvii.json'
+    if percorso_rinvii.exists():
+        rinvii = json.loads(percorso_rinvii.read_text(encoding='utf-8'))
     voci = []
     for percorso in sorted(Path(cartella).glob('*.md')):
         if percorso.name in ESCLUSI:
@@ -49,6 +54,7 @@ def costruisci_indice(cartella):
                 'domande': _domande(domande.group(1)),
                 'testo': re.sub(r'\n{3,}', '\n\n', corpo).strip(),
                 'strati': collegamenti.get(id_voce, collegamenti.get(percorso.name, [])),
+                'guide': rinvii.get(id_voce, rinvii.get(percorso.name, [])),
             })
     return voci
 

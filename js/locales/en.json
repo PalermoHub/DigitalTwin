@@ -2003,6 +2003,7 @@
   "chatbot.accendi": "Activate: {nome}",
   "chatbot.disattiva": "Deactivate: {nome}",
   "chatbot.apriScheda": "Open the card: {nome}",
+  "chatbot.apriGuida": "Open the guide: {titolo}",
   "chatbot.luoghi": "I find no explanation in the guide, but on the map there is:",
   "app.rail.tema": "Theme",
   "tui.titolo": "Interface theme",

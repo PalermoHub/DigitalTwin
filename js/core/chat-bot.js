@@ -6,6 +6,7 @@ import { creaConversazione } from './chat-bot-conversazione.js';
 import { blocchiTesto } from './chat-bot-ricerca.js';
 import { statoStrato, commutaStrato } from './chat-bot-strati.js';
 import { suntoRicordato } from './chat-bot-sunto.js';
+import { vociGuide } from './ricerca-guide.js';
 
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
@@ -46,6 +47,27 @@ function pulsantiOggetti(oggetti) {
     const b = Object.assign(el('button', 'cb-oggetto', t('chatbot.apriScheda', { nome: o.nota ? `${o.etichetta} (${o.nota})` : o.etichetta })), { type: 'button' });
     b.title = b.ariaLabel = b.textContent;
     b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('scheda:apri-luogo', { detail: o })));
+    azioni.append(b);
+  }
+  return azioni;
+}
+
+// un pulsante per ogni pagina di guida dell'app che spiega la funzione («scheda:sezione», senza sezione per le pagine intere)
+let titoliGuide;
+function titoloGuida(scheda, sezione) {
+  titoliGuide ??= new Map(vociGuide().map(v => [`${v.scheda}:${v.sezione}`, v.titolo]));
+  const titolo = titoliGuide.get(`${scheda}:guida-${scheda === 'geoimage' ? 'geoimage-' : ''}${sezione}`);
+  return titolo ? tl(titolo) : t(`html.menu.${scheda}`);
+}
+
+function pulsantiGuide(guide) {
+  const azioni = el('div', 'cb-azioni');
+  for (const g of guide ?? []) {
+    const [scheda, sezione] = g.split(':');
+    const nome = titoloGuida(scheda, sezione);
+    const b = Object.assign(el('button', 'cb-guida', t('chatbot.apriGuida', { titolo: nome })), { type: 'button' });
+    b.title = b.ariaLabel = b.textContent;
+    b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('guida:apri', { detail: { scheda, sezione: sezione && `guida-${scheda === 'geoimage' ? 'geoimage-' : ''}${sezione}` } })));
     azioni.append(b);
   }
   return azioni;
@@ -145,6 +167,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
         }
         if (azioni.childElementCount) box.append(azioni);
         if (m.oggetti?.length) box.append(pulsantiOggetti(m.oggetti));
+        if (m.voce.guide?.length) box.append(pulsantiGuide(m.voce.guide));
         if (m.cEAltro) {
           const b = Object.assign(el('button', 'cb-altro', m.espansa ? t('chatbot.mostraMeno') : t('chatbot.leggiTutto')), { type: 'button' });
           b.setAttribute('aria-expanded', String(m.espansa));

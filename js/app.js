@@ -221,8 +221,9 @@ map.once('style.load', async () => {
   const apriGuida = (scheda, sezione) => {
     const foglio = document.getElementById('crediti');
     if (!(foglio.open && foglio.dataset.tab === scheda)) document.querySelector(`#menu-info button[data-scheda="${scheda}"]`)?.click();
-    document.getElementById(sezione)?.scrollIntoView({ block: 'start' });
+    if (sezione) document.getElementById(sezione)?.scrollIntoView({ block: 'start' });
   };
+  document.addEventListener('guida:apri', e => apriGuida(e.detail.scheda, e.detail.sezione)); // dal Chat bot
   collegaRicerca(map, document.getElementById('cerca'),
     document.getElementById('cerca-testo'), document.getElementById('cerca-risultati'), vaiParticella, zone,
     collegaRicercaGuide(apriGuida, collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti))));
