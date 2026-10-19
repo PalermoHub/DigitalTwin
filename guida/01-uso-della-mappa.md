@@ -43,6 +43,7 @@ Domande tipiche: Come faccio a...? Quale funzione devo usare per...? Dove è spi
 | Orari, fermate, linee | `34-orari-e-percorsi-del-trasporto.md`, `24-scheda-fermate-e-linee.md`, `04-trasporti-e-sicurezza.md` |
 | Aggiungere i propri file e servizi | `48-i-miei-layer.md` |
 | Aggiungere dati dal catalogo nazionale | `49-catalogo-rndt.md` |
+| Guardare i video che spiegano l'app (mappa, catalogo RNDT, Geoimage) | `53-video-della-guida.md` |
 | Sovrapporre e georeferenziare una mappa storica | `50-geoimage.md` |
 | Cambiare colori e testo dell'interfaccia; colorare uno strato | `38-tema-dell-interfaccia.md` |
 | Vedere i dati in tabella ed esportarli | `40-tabella-dei-dati-ed-esportazione.md` |

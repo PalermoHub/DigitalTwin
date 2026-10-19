@@ -8,7 +8,7 @@ Costruire in `guida/` una base di conoscenza **dettagliata e fedele all'app** de
 
 ## Stato al 2026-10-19: contenuti completi e Chat bot attivo
 
-La cartella contiene **53 file** (`00`–`51` e questo), circa 34.000 parole, **non committati**. Elenco e contenuto di ogni file: `00-leggimi.md`.
+La cartella contiene **54 file** (`00`–`53` e questo), circa 34.000 parole, **non committati**. Elenco e contenuto di ogni file: `00-leggimi.md`.
 
 - `00-leggimi.md`: indice.
 - `01`: panoramica breve (cos'è, schermata, tabella «Dove trovo cosa», tab della scheda, icone) con rinvii.
