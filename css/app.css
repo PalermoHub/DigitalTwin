@@ -361,14 +361,6 @@ dialog li { margin: 4px 0; }
 }
 .guida-indice { margin: 0 0 14px; padding: 16px 18px; background: var(--surface-alt); border: 1px solid var(--border-ui); border-radius: var(--r-md); }
 .guida-indice ol { margin: 0; padding-left: 20px; font-size: var(--fs-md); line-height: 1.7; columns: 2 280px; }
-.argomenti-griglia { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: stretch; }
-.argomenti-griglia > .argomento { display: flex; flex-direction: column; margin: 0; }
-.argomento-mostra { align-self: flex-start; margin-top: auto; }
-@media (max-width: 640px) { .argomenti-griglia { grid-template-columns: 1fr; } }
-.argomento ul { margin-bottom: 12px; color: var(--text-muted); }
-.argomento-mostra { padding: 6px 14px; border: 1px solid var(--accent); border-radius: var(--r-pill); background: var(--accent); color: var(--accent-ink); font: inherit; font-weight: 700; cursor: pointer; }
-.argomento-mostra:hover:not(:disabled) { filter: brightness(.96); }
-.argomento-mostra:disabled { opacity: .45; cursor: default; }
 .info-sezione h2.pagina-sezione + .info-blocco { margin-top: 14px; }
 .guida-media { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 14px; }
 .guida-video { position: relative; display: block; min-width: 0; padding: 0; border: 1px solid var(--border); border-radius: var(--r-sm); overflow: hidden; background: linear-gradient(135deg, #0e141f, #24405f); cursor: pointer; aspect-ratio: 16 / 9; }
@@ -1525,7 +1517,7 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
   #menu-info { left: auto; right: 8px; top: calc(100% + 4px); width: 260px; max-height: 75dvh; overflow-y: auto; padding: 10px 0; text-align: right; border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
   #menu-info button, #menu-info a { text-align: right; border-left-width: 0; border-right: 3px solid transparent; }
   #menu-info button[aria-current="page"] { border-left-color: transparent; border-right-color: var(--accent); }
-  #menu-info #link-home { order: -1; } #menu-info [data-scheda="mappa"] { order: 0; } #menu-info [data-scheda="digitaltwin"] { order: 1; } #menu-info [data-scheda="argomenti"] { order: 2; } #menu-info #menu-guide { order: 3; }
+  #menu-info #link-home { order: -1; } #menu-info [data-scheda="mappa"] { order: 0; } #menu-info [data-scheda="digitaltwin"] { order: 1; } #menu-info #menu-guide { order: 3; }
   #menu-info [data-scheda="fonti"] { order: 4; } #menu-info #menu-altro { order: 5; }
 }
 #app-logo img { display: block; height: 44px; width: auto; }

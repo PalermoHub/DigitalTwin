@@ -238,6 +238,7 @@ async function costruisciElenco() {
   const campo = document.getElementById('home-cerca');
   const conteggio = document.getElementById('home-conteggio');
   const vuoto = document.getElementById('home-vuoto');
+  const descBox = document.getElementById('home-argomento-desc');
   const visibiliIds = [];
   const tutti = bottoneAggiungi(visibiliIds, tr('home.aggiungi.tutti'), 'argomento-tutti');
   tutti.dataset.tutti = '1';
@@ -252,6 +253,9 @@ async function costruisciElenco() {
       if (si) visibiliIds.push(li.dataset.strato);
     }
     for (const b of chip) b.setAttribute('aria-pressed', String(b.dataset.argomento === argomento));
+    const desc = argomenti.find(a => a.id === argomento)?.descrizione ?? '';
+    descBox.textContent = desc;
+    descBox.hidden = !desc;
     vuoto.hidden = visibiliIds.length > 0;
     tutti.hidden = visibiliIds.length === 0 || visibiliIds.length === totale;
     conteggio.textContent = visibiliIds.length === totale ? '' : tr(visibiliIds.length === 1 ? 'home.conteggio.uno' : 'home.conteggio.altri', { n: visibiliIds.length });

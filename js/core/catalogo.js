@@ -1,6 +1,5 @@
 import { urlDati } from './config.js';
 import { svgIcona } from './icone.js';
-import { schedaArgomenti } from './argomenti.js';
 import { collegaIngrandimento } from './ingrandisci.js';
 import { schedaGuida, passiRndt, indiceLaterale } from './guida.js';
 import { schedaGeoimage } from '../geoimage/guida.js';
@@ -325,11 +324,9 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
     voce('Ex Noviziato dei Crociferi in 3D: piante DWG, sezione e prospetti del Comune di Palermo, Settore Centro Storico; piante georeferenziate sulle unità volumetriche CTC e messe in quota piano per piano, elaborazione PalermoHub'),
     voce('Indicatori statistici comunali di Palermo (popolazione, censimento, imprese, ambiente e altro): AGID Cruscotto Italia, dati.gov.it', [['AGID Cruscotto Italia', 'https://cruscotto-italia.dati.gov.it/comune.html?istat=082053']], 'CC BY 4.0'),
   ]);
-  const argomenti = schedaArgomenti(moduli, document, () => dialog.close());
   const guida = schedaGuida();
   const schede = [
     ['digitaltwin', 'Digital Twin', [paginaConIndice(schedaDigitalTwin())]],
-    ['argomenti', 'Argomenti', [argomenti.elemento]],
     ['guida', 'Guida', [guida]],
     ['geoimage', 'Guida Geoimage', [schedaGeoimage()]],
     ['plugin', 'Plugin RNDT', [paginaConIndice([...schedaPlugin(), el('h2', 'Casi d\'uso', { className: 'guida-gruppo' }), ...passiRndt()])]],
@@ -345,13 +342,11 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
     p.append(...contenuto);
     return p;
   });
-  const aggiorna = () => argomenti.sincronizza();
   const vaiA = id => {
     const i = Math.max(0, schede.findIndex(([k]) => k === id));
     pannelli.forEach((p, k) => { p.hidden = k !== i; });
     dialog.dataset.tab = schede[i][0];
     dialog.dispatchEvent(new CustomEvent('scheda', { detail: schede[i][0] }));
-    aggiorna();
     corpo.scrollTop = 0;
   };
 
@@ -378,10 +373,6 @@ export function apriCrediti(dialog, catalogo, moduli = [], tab = 'fonti') {
   dialog.replaceChildren(corpo, chiudi, inCima);
   collegaIngrandimento(corpo);
   dialog.vaiA = vaiA;
-  // le caselle del pannello possono cambiare a foglio aperto (il foglio non è modale)
-  const ctl = new AbortController();
-  document.getElementById('pannello')?.addEventListener('change', aggiorna, { signal: ctl.signal });
-  dialog.addEventListener('close', () => ctl.abort(), { once: true });
   if (!dialog.open) {
     // chi chiude il foglio torna dove era (il menu in testata): il focus non si perde nel nulla
     const apertoDa = document.activeElement;

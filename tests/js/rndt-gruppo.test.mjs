@@ -1,7 +1,6 @@
 // tests/js/rndt-gruppo.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { elencoArgomenti } from '../../js/core/argomenti.js';
 import { righeGruppo, creaGruppoRndt, statoBottone, idDaFocalizzare } from '../../js/rndt/gruppo.js';
 
 const l = (id, nome, extra = {}) => ({ id, nome, visibile: true, indisponibile: false, errore: false, salvato: true, ...extra });
@@ -33,16 +32,6 @@ test('la nota dice perché un layer è particolare', () => {
 
 test('senza layer l’elenco è vuoto', () => {
   assert.deepEqual(righeGruppo([]), []);
-});
-
-test('nella tab Argomenti il gruppo RNDT compare coi layer, in ordine alfabetico, solo dopo il collegamento all’host', () => {
-  const gruppo = creaGruppoRndt();
-  assert.deepEqual(elencoArgomenti([gruppo.modulo]), []); // senza layer non è un argomento
-  const host = { elenco: () => [l('b', 'Zone'), l('a', 'Boschi')], suCambio() {} };
-  gruppo.collega(host, () => {});
-  const [argomento] = elencoArgomenti([gruppo.modulo]);
-  assert.equal(argomento.titolo, 'RNDT');
-  assert.deepEqual(argomento.strati.map(s => s.id), ['a', 'b']);
 });
 
 test('il pallino del gruppo segue i layer accesi, anche quando non ce ne sono più', () => {

@@ -74,6 +74,7 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .cesto-apri { padding: 9px 16px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-weight: 700; text-decoration: none; white-space: nowrap; }
 
 .home-argomenti { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
+.home-argomento-desc { margin: -8px 0 20px; color: var(--text-muted); max-width: 70ch; }
 .filtro-chip { padding: 6px 14px; border: 1px solid var(--border-ui); border-radius: 999px; background: var(--surface); color: var(--text); font: inherit; font-size: var(--fs-sm); font-weight: 600; cursor: pointer; }
 .filtro-chip:hover { background: var(--surface-hover); }
 .filtro-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
