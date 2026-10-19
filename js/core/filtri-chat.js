@@ -1,5 +1,6 @@
 import { normalizza } from './indirizzi.js';
 import { SINONIMI } from './filtri-sinonimi.js';
+import { tl } from './i18n.js';
 // Filtri dei layer che il Chat bot può proporre come pulsanti («Mostra solo: Disponibile»). Ogni layer con filtri in legenda li registra:
 //   registraFiltriChat('colonnine', { gruppi: [{ tipo, titolo, voci: [{ chiave, nome, sinonimi }] }], accese(), solo(tipo, chiave), tutte() })
 // `accese` dà le voci in mappa come «tipo:chiave»; `solo` lascia in mappa soltanto quella voce, `tutte` toglie ogni filtro. Le voci si leggono dal layer, non dalla guida:
@@ -16,7 +17,8 @@ export function vociNominate(descrittore, domanda) {
   const trovate = [];
   for (const g of descrittore?.gruppi ?? []) {
     for (const v of g.voci) {
-      const parole = [...(v.nome ?? '').split(' · '), v.nome, ...(v.sinonimi ?? [])].map(normalizza).filter(Boolean);
+      const nomi = [v.nome, tl(v.nome)]; // il nome italiano e quello nella lingua della pagina
+      const parole = [...nomi.flatMap(n => (n ?? '').split(' · ')), ...nomi, ...(v.sinonimi ?? [])].map(normalizza).filter(Boolean);
       if (parole.some(p => testo.includes(` ${p} `))) trovate.push(`${g.tipo}:${v.chiave}`);
     }
   }
@@ -49,6 +51,9 @@ const titoloPrecedente = riga => {
   return prima?.matches?.('em, h3') ? prima.textContent.trim() : '';
 };
 
+// Sinonimi di una voce di legenda: le chiavi di SINONIMI sono i nomi italiani, ma la legenda può essere già tradotta («Petrol» per «Benzina»).
+const sinonimiDi = (extra, nome) => extra.sinonimi?.[nome] ?? extra.sinonimi?.[Object.keys(extra.sinonimi ?? {}).find(k => tl(k) === nome)] ?? [];
+
 export function daLegenda(doc, idStrato) {
   const legenda = doc?.querySelector?.(`.lg-${idStrato}`);
   if (!legenda || !gruppiLegenda(legenda).length) return null;
@@ -62,7 +67,7 @@ export function daLegenda(doc, idStrato) {
         voci: righe.map(r => {
           const chiave = testoRiga(r);
           const nome = senzaConteggio(chiave);
-          return { chiave, nome: chiave, sinonimi: [nome, ...(extra.sinonimi?.[nome] ?? [])] };
+          return { chiave, nome: chiave, sinonimi: [nome, ...sinonimiDi(extra, nome)] };
         }),
       }));
     },

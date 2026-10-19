@@ -80,13 +80,13 @@ function tuttiFiltri() {
 registraFiltriChat('colonnine', {
   gruppi: [
     { tipo: 'stato', titolo: 'Stato', voci: [
-      { chiave: 'Disponibile', nome: 'Disponibile', sinonimi: ['disponibili', 'libera', 'libere', 'libero', 'liberi', 'funzionanti', 'utilizzabili'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
-      { chiave: 'In ricarica', nome: 'In ricarica', sinonimi: ['occupata', 'occupate', 'occupato', 'occupati', 'utilizzata', 'utilizzate', 'in uso', 'usate', 'in carica'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
-      { chiave: 'Non attiva', nome: 'Non attiva', sinonimi: ['non attive', 'non attivo', 'non attivi', 'spenta', 'spente', 'guasta', 'guaste', 'fuori servizio', 'non funzionanti', 'inattive'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+      { chiave: 'Disponibile', nome: 'Disponibile', sinonimi: ['disponibili', 'libera', 'libere', 'libero', 'liberi', 'funzionanti', 'utilizzabili', 'available', 'free', 'working'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+      { chiave: 'In ricarica', nome: 'In ricarica', sinonimi: ['occupata', 'occupate', 'occupato', 'occupati', 'utilizzata', 'utilizzate', 'in uso', 'usate', 'in carica', 'charging', 'in use', 'occupied', 'busy'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+      { chiave: 'Non attiva', nome: 'Non attiva', sinonimi: ['non attive', 'non attivo', 'non attivi', 'spenta', 'spente', 'guasta', 'guaste', 'fuori servizio', 'non funzionanti', 'inattive', 'inactive', 'out of service', 'broken', 'not working'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
     ] },
     { tipo: 'corrente', titolo: 'Corrente', voci: [
-      { chiave: 'AC', nome: 'Corrente alternata (AC, lenta)', sinonimi: ['ac', 'lenta', 'lente', 'alternata'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
-      { chiave: 'DC', nome: 'Corrente continua (DC, veloce)', sinonimi: ['dc', 'veloce', 'veloci', 'rapida', 'rapide', 'continua', 'fast'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+      { chiave: 'AC', nome: 'Corrente alternata (AC, lenta)', sinonimi: ['ac', 'lenta', 'lente', 'alternata', 'alternating', 'slow'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
+      { chiave: 'DC', nome: 'Corrente continua (DC, veloce)', sinonimi: ['dc', 'veloce', 'veloci', 'rapida', 'rapide', 'continua', 'fast', 'direct current', 'rapid'] }, // i18n-ok: parole che l'utente può scrivere nel Chat bot
     ] },
   ],
   accese: () => new Set(Object.entries(accesi).flatMap(([tipo, insieme]) => [...insieme].map(k => `${tipo}:${k}`))),
