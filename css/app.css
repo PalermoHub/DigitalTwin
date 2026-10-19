@@ -2107,4 +2107,4 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .cb-campo { flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
 .cb-azioni { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .cb-layer { padding: 6px 10px; border: 1px solid var(--accent); border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent-strong); font: inherit; cursor: pointer; }
-.cb-layer:disabled { opacity: .6; cursor: default; border-color: var(--border); background: var(--surface); }
+.cb-layer[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }

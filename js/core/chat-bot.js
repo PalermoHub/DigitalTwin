@@ -4,7 +4,7 @@ import { t } from './i18n.js';
 import { svgIcona } from './icone.js';
 import { creaConversazione } from './chat-bot-conversazione.js';
 import { blocchiTesto } from './chat-bot-ricerca.js';
-import { statoStrato, accendiStrato } from './chat-bot-strati.js';
+import { statoStrato, commutaStrato } from './chat-bot-strati.js';
 
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
@@ -81,9 +81,9 @@ export function creaChatBot(pannello, { carica } = {}) {
         for (const id of m.voce.strati ?? []) {
           const st = statoStrato(document, id);
           if (!st) continue; // il layer non c'è in questa versione dell'app
-          const suggerimento = t(st.acceso ? 'chatbot.acceso' : 'chatbot.accendi', { nome: st.nome }); // tooltip e nome accessibile; sul pulsante resta il nome del layer
-          const b = Object.assign(el('button', 'cb-layer', st.nome), { type: 'button', disabled: st.acceso, title: suggerimento, ariaLabel: suggerimento });
-          b.addEventListener('click', () => { if (accendiStrato(document, id)) disegna(); });
+          const b = Object.assign(el('button', 'cb-layer', st.nome), { type: 'button' });
+          b.dataset.strato = id;
+          b.addEventListener('click', () => commutaStrato(document, id));
           azioni.append(b);
         }
         if (azioni.childElementCount) box.append(azioni);
@@ -101,8 +101,21 @@ export function creaChatBot(pannello, { carica } = {}) {
       }
       log.append(box);
     }
+    aggiornaLayer();
     log.scrollTop = log.scrollHeight;
   }
+
+  // I pulsanti dei layer sono interruttori: seguono la casella del layer, anche se cambia dal pannello degli strati.
+  function aggiornaLayer() {
+    for (const b of log.querySelectorAll('.cb-layer')) {
+      const st = statoStrato(document, b.dataset.strato);
+      if (!st) continue;
+      const suggerimento = t(st.acceso ? 'chatbot.disattiva' : 'chatbot.accendi', { nome: st.nome }); // tooltip e nome accessibile
+      b.setAttribute('aria-pressed', String(st.acceso));
+      b.title = b.ariaLabel = suggerimento;
+    }
+  }
+  document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) aggiornaLayer(); });
 
   const conv = creaConversazione({ carica, suCambio: disegna });
   form.addEventListener('submit', e => {

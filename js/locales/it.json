@@ -2000,7 +2000,7 @@
   "chatbot.errore": "Non riesco a leggere la guida in questo momento. Controlla la connessione e riprova.",
   "chatbot.riprova": "Riprova",
   "chatbot.accendi": "Attiva: {nome}",
-  "chatbot.acceso": "Già attivo: {nome}",
+  "chatbot.disattiva": "Disattiva: {nome}",
   "app.rail.tema": "Tema",
   "tui.titolo": "Tema dell'interfaccia",
   "tui.chiudi": "Chiudi il pannello Tema",

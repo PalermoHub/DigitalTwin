@@ -2000,7 +2000,7 @@
   "chatbot.errore": "I cannot read the guide right now. Check your connection and try again.",
   "chatbot.riprova": "Try again",
   "chatbot.accendi": "Activate: {nome}",
-  "chatbot.acceso": "Already on: {nome}",
+  "chatbot.disattiva": "Deactivate: {nome}",
   "app.rail.tema": "Theme",
   "tui.titolo": "Interface theme",
   "tui.chiudi": "Close the Theme panel",

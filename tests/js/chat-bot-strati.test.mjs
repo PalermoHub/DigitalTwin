@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { statoStrato, accendiStrato } from '../../js/core/chat-bot-strati.js';
+import { statoStrato, commutaStrato } from '../../js/core/chat-bot-strati.js';
 
 function docFinto(caselle) {
   const mappa = new Map(Object.entries(caselle).map(([id, acceso]) => {
@@ -18,15 +18,14 @@ test('statoStrato: nome dall\'etichetta e stato acceso', () => {
 test('statoStrato: layer inesistente -> null', () => {
   assert.equal(statoStrato(docFinto({}), 'bus'), null);
 });
-test('accendiStrato: spunta la casella e lancia «change»', () => {
+test('commutaStrato: accende, poi spegne, lanciando «change» ogni volta', () => {
   const d = docFinto({ bus: false });
-  assert.equal(accendiStrato(d, 'bus'), true);
+  assert.equal(commutaStrato(d, 'bus'), true);
   assert.equal(d.mappa.get('strato-bus').checked, true);
-  assert.deepEqual(d.mappa.get('strato-bus').eventi, ['change']);
+  assert.equal(commutaStrato(d, 'bus'), false);
+  assert.equal(d.mappa.get('strato-bus').checked, false);
+  assert.deepEqual(d.mappa.get('strato-bus').eventi, ['change', 'change']);
 });
-test('accendiStrato: già acceso o inesistente -> false, nessun evento', () => {
-  const d = docFinto({ bus: true });
-  assert.equal(accendiStrato(d, 'bus'), false);
-  assert.deepEqual(d.mappa.get('strato-bus').eventi, []);
-  assert.equal(accendiStrato(d, 'xx'), false);
+test('commutaStrato: layer inesistente -> null, nessun errore', () => {
+  assert.equal(commutaStrato(docFinto({}), 'xx'), null);
 });
