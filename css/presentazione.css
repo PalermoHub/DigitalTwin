@@ -44,6 +44,9 @@ img { max-width: 100%; height: auto; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--fuoco); outline-offset: 3px; border-radius: 6px; }
 
+/* posizione esplicita nella griglia del body (app.css): un elemento in più nel body non deve spingere il contenuto in una riga a altezza 0 */
+#contenuto { grid-area: 2 / 1; min-width: 0; }
+
 .salta { position: absolute; left: 16px; top: -64px; z-index: 100; padding: 10px 16px; background: var(--accento); color: var(--accento-inchiostro); font-weight: 700; border-radius: 999px; }
 .salta:focus { top: 12px; }
 
