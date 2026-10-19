@@ -81,7 +81,8 @@ export function creaChatBot(pannello, { carica } = {}) {
         for (const id of m.voce.strati ?? []) {
           const st = statoStrato(document, id);
           if (!st) continue; // il layer non c'è in questa versione dell'app
-          const b = Object.assign(el('button', 'cb-layer', t(st.acceso ? 'chatbot.acceso' : 'chatbot.accendi', { nome: st.nome })), { type: 'button', disabled: st.acceso });
+          const suggerimento = t(st.acceso ? 'chatbot.acceso' : 'chatbot.accendi', { nome: st.nome }); // tooltip e nome accessibile; sul pulsante resta il nome del layer
+          const b = Object.assign(el('button', 'cb-layer', st.nome), { type: 'button', disabled: st.acceso, title: suggerimento, ariaLabel: suggerimento });
           b.addEventListener('click', () => { if (accendiStrato(document, id)) disegna(); });
           azioni.append(b);
         }
