@@ -2277,6 +2277,8 @@
   "home.ordina.az": "Nome",
   "home.ordina.data": "Data",
   "home.nuovo": "Nuovo",
+  "home.card.aggiornato": "Aggiornato il {data}",
+  "home.card.aggiunto": "Aggiunto il {data}",
   "home.retro.aggiunto": "Aggiunto alla mappa",
   "home.retro.aggiornati": "Dati aggiornati nella mappa",
   "home.filtro.enti": "Filtra per ente ({n})",

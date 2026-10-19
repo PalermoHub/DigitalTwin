@@ -243,12 +243,15 @@ function costruisciCard(s, a) {
   const li = el('li', { className: 'strato-card' });
   const interno = el('div', { className: 'card-interno' });
   const chip = [a.titolo, s.sezione].filter(Boolean);
+  // sul fronte: ultimo aggiornamento dei dati, o la data di aggiunta se non sono mai stati aggiornati
+  const dataCard = a.aggiornati ? tr('home.card.aggiornato', { data: formatoData(a.aggiornati) }) : a.data ? tr('home.card.aggiunto', { data: formatoData(a.data) }) : '';
   const fronte = el('div', { className: 'card-faccia card-fronte' },
     ...(isNuovo(a.data) ? [el('span', { className: 'card-nuovo', textContent: tr('home.nuovo') })] : []),
     el('img', { className: 'card-img', src: `img/home/strati/${s.id}.webp`, alt: '', title: s.etichetta, width: 640, height: 360, loading: 'lazy' }),
     el('div', { className: 'card-corpo' },
       el('h4', { textContent: s.etichetta }),
       el('p', { className: 'card-testo', textContent: s.nota || a.descrizione }),
+      ...(dataCard ? [el('p', { className: 'card-data', textContent: dataCard })] : []),
       el('div', { className: 'card-chip' }, ...chip.map(c => el('span', { textContent: c })))));
   const dettagli = el('button', { type: 'button', className: 'card-gira', textContent: `↻ ${tr('home.dettagli')}` });
   fronte.append(el('div', { className: 'card-piede' }, dettagli, bottoneAggiungi([s.id], s.etichetta)));

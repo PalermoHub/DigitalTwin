@@ -2277,6 +2277,8 @@
   "home.ordina.az": "Alphabetical",
   "home.ordina.data": "Most recent",
   "home.nuovo": "New",
+  "home.card.aggiornato": "Updated {data}",
+  "home.card.aggiunto": "Added {data}",
   "home.retro.aggiunto": "Added to the map",
   "home.retro.aggiornati": "Data updated in the map",
   "home.filtro.enti": "Filter by body ({n})",
