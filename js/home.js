@@ -224,13 +224,17 @@ async function costruisciElenco() {
   const ul = el('ul', { className: 'home-card-elenco' }, ...card);
   elenco.append(ul);
 
-  // filtro per argomento: un pulsante «Tutti» e uno per argomento
+  // filtro per argomento: «Tutti» azzera, ogni argomento si accende/spegne e se ne possono scegliere più d'uno
   const filtroBox = document.getElementById('home-argomenti');
-  let argomento = '';
+  const scelti = new Set();
   const chip = [{ id: '', titolo: tr('home.filtro.tutti') }, ...argomenti].map(a => {
     const b = el('button', { type: 'button', className: 'filtro-chip', textContent: a.titolo });
     b.dataset.argomento = a.id;
-    b.addEventListener('click', () => { argomento = a.id; filtra(); });
+    b.addEventListener('click', () => {
+      if (!a.id) scelti.clear();
+      else if (!scelti.delete(a.id)) scelti.add(a.id);
+      filtra();
+    });
     return b;
   });
   filtroBox.append(...chip);
@@ -248,12 +252,12 @@ async function costruisciElenco() {
     const q = normalizza(campo.value.trim());
     visibiliIds.length = 0;
     for (const li of card) {
-      const si = (!argomento || li.dataset.argomento === argomento) && (!q || li.dataset.testo.includes(q));
+      const si = (!scelti.size || scelti.has(li.dataset.argomento)) && (!q || li.dataset.testo.includes(q));
       li.hidden = !si;
       if (si) visibiliIds.push(li.dataset.strato);
     }
-    for (const b of chip) b.setAttribute('aria-pressed', String(b.dataset.argomento === argomento));
-    const desc = argomenti.find(a => a.id === argomento)?.descrizione ?? '';
+    for (const b of chip) b.setAttribute('aria-pressed', String(b.dataset.argomento ? scelti.has(b.dataset.argomento) : !scelti.size));
+    const desc = argomenti.filter(a => scelti.has(a.id)).map(a => a.descrizione).filter(Boolean).join(' ');
     descBox.textContent = desc;
     descBox.hidden = !desc;
     vuoto.hidden = visibiliIds.length > 0;
