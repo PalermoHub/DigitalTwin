@@ -163,3 +163,7 @@ test('intervalli: oltre il limite si tolgono le copie più vecchie, mai la voce 
   await intervalliPoiRete(intervallo(URL_PM, 'bytes=8-11'), opzioni);
   assert.equal(rete.chiamate, prima + 1, 'con l\'ETag cambiato anche le vecchie sono scartate: l\'ETag non era stato eliminato');
 });
+
+test('strategia: l\'indice della guida del Chat bot è un file statico (anche offline dopo il primo uso)', () => {
+  assert.equal(strategia(r('guida/indice.json'), ORIGINE), 'statico');
+});

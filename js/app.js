@@ -158,11 +158,24 @@ map.once('style.load', async () => {
     },
     chiudi() { pannelloTema.hidden = true; },
   };
+  // Chat bot: il pannello si costruisce al primo clic sul suo tab o sulla sua icona
+  const pannelloChat = document.getElementById('chatbot-pannello');
+  const chatBot = {
+    async apri() {
+      if (!pannelloChat.childElementCount) {
+        const { creaChatBot } = await import('./core/chat-bot.js');
+        creaChatBot(pannelloChat);
+      }
+      pannelloChat.hidden = false;
+    },
+    chiudi() { pannelloChat.hidden = true; },
+  };
   const rail = collegaRail(document.getElementById('rail-pannelli'), [
     { id: 'scheda', etichetta: t('app.rail.scheda'), pannello: document.getElementById('scheda') },
     { id: 'rndt', etichetta: 'RNDT', pannello: document.getElementById('rndt-pannello'), apri: rndt.apri, chiudi: rndt.chiudi },
     { id: 'geoimage', etichetta: t('app.rail.geoimage'), pannello: pannelloGeo, apri: geoimage.apri, chiudi: geoimage.chiudi },
     { id: 'tema', etichetta: t('app.rail.tema'), pannello: pannelloTema, apri: temaUi.apri, chiudi: temaUi.chiudi },
+    { id: 'chatbot', etichetta: t('app.rail.chatbot'), pannello: pannelloChat, apri: chatBot.apri, chiudi: chatBot.chiudi },
   ]);
   // su mobile la barra laterale non c'è: Geoimage si apre dal pannello Strati
   const btnGeo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-geoimage-m', className: 'btn-pannello-mobile', title: t('html.geoimage.aria') });
@@ -171,13 +184,20 @@ map.once('style.load', async () => {
   const btnTema = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-tema-ui-m', className: 'btn-pannello-mobile', title: t('html.temaUi.aria') });
   btnTema.innerHTML = `${ICONE_RAIL.tema}<span class="et">${t('app.rail.tema')}</span>`;
   btnTema.addEventListener('click', () => { tab.imposta(null); rail.commuta('tema'); });
+  const btnChat = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-chatbot-m', className: 'btn-pannello-mobile', title: t('html.chatbot.aria') });
+  btnChat.innerHTML = `${ICONE_RAIL.chatbot}<span class="et">${t('app.rail.chatbot')}</span>`;
+  btnChat.addEventListener('click', () => { tab.imposta(null); rail.commuta('chatbot'); });
   // il catalogo RNDT sta tra i riquadri di «Aggiungi»; l'elenco dei layer RNDT aggiunti è in cima al suo pannello
   const btnCatalogo = Object.assign(document.createElement('button'), { type: 'button', id: 'btn-rndt-m', className: 'btn-pannello-mobile', title: t('html.btn.rndt') });
   btnCatalogo.innerHTML = `${ICONE_RAIL.rndt}<span class="et">${t('html.btn.rndt.aria')}</span>`;
   btnCatalogo.addEventListener('click', () => { tab.imposta(null); rail.commuta('rndt'); });
-  document.getElementById('barra-gruppi').append(btnCatalogo, btnGeo, btnTema);
+  document.getElementById('barra-gruppi').append(btnCatalogo, btnGeo, btnTema, btnChat);
   document.getElementById('btn-rndt').addEventListener('click', () => rail.commuta('rndt'));
-  tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); document.getElementById('crediti').open && document.getElementById('crediti').close(); };
+  const btnChatBarra = document.getElementById('btn-chatbot');
+  btnChatBarra.addEventListener('click', () => rail.commuta('chatbot'));
+  new MutationObserver(() => btnChatBarra.setAttribute('aria-pressed', String(!pannelloChat.hidden && !pannelloChat.classList.contains('collassato'))))
+    .observe(pannelloChat, { attributes: true, attributeFilter: ['hidden', 'class'] });
+  tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); rail.chiudi('chatbot'); document.getElementById('crediti').open && document.getElementById('crediti').close(); };
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
   geoimage.ripristina(); // e la mappa storica di Geoimage, se c'era
