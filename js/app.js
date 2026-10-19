@@ -86,7 +86,7 @@ const condivisionePromessa = preparaCondivisione(window); // un link condiviso p
 // Gli strati puntuali nascono spenti, ma la scheda li interroga anche da spenti: i loro dati (GeoJSON) non bloccano l'avvio.
 // Partono in secondo piano poco dopo (o alla prima accensione, o al primo clic sulla mappa, se arriva prima): vedi core/differiti.js.
 // Il trasporto resta fuori perché il filtro Linea ha bisogno dei suoi dati subito.
-const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine', 'distributori']);
+const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine', 'distributori', 'mef-immobili', 'pnrr', 'opere']);
 
 // La ricerca nelle guide (circa 60 KB di testi) si carica alla prima ricerca: i suggerimenti delle altre fonti non aspettano.
 const collegaRicercaGuide = (apri, altra) => {
