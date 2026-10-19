@@ -8,11 +8,9 @@ Domande tipiche: Ci sono dei video che spiegano l'app? Dove trovo i video tutori
 
 Ci sono **tre video**, intitolati «Palermo Digital Twin: ...»:
 
-| Video | Titolo | Link |
-|---|---|---|
-| 1 | «Come usare la mappa con i dati aperti di Palermo» | https://youtu.be/H8oNAYFxHeQ |
-| 2 | «Il catalogo nazionale RNDT in mappa (plugin openrndt-geolibre)» | https://youtu.be/uP7hDqpVDNw |
-| 3 | «Geoimage, la mappa storica sulla Palermo di oggi» | https://youtu.be/CADYohEEGhM |
+- **Video 1**, «Come usare la mappa con i dati aperti di Palermo»: https://youtu.be/H8oNAYFxHeQ
+- **Video 2**, «Il catalogo nazionale RNDT in mappa (plugin openrndt-geolibre)»: https://youtu.be/uP7hDqpVDNw
+- **Video 3**, «Geoimage, la mappa storica sulla Palermo di oggi»: https://youtu.be/CADYohEEGhM
 
 Nell'app i nomi brevi sono «Come usare la mappa», «Il catalogo RNDT in mappa» e «Geoimage, la mappa storica». La pagina di presentazione li descrive così: «Tre video: la mappa, il plugin RNDT e Geoimage, passo dopo passo.»
 

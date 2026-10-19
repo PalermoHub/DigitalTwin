@@ -1,5 +1,5 @@
 // Pannello «Chat bot»: disegna la conversazione di chat-bot-conversazione.js. Il testo delle risposte viene dalla guida:
-// si inserisce solo come nodi di testo (mai innerHTML), con il solo grassetto **...** e gli elenchi «- ».
+// si inserisce solo come nodi di testo (mai innerHTML), con il solo grassetto **...**, gli indirizzi https:// e gli elenchi «- ».
 import { t, tn, tl, lingua } from './i18n.js';
 import { svgIcona } from './icone.js';
 import { creaConversazione } from './chat-bot-conversazione.js';
@@ -18,10 +18,19 @@ const el = (tag, classe, testo) => {
   return e;
 };
 
+// Le sole parti con formato: il grassetto **...** e gli indirizzi https:// (un collegamento che si apre in una nuova scheda).
 function inLinea(genitore, testo) {
   testo.split(/(\*\*[^*]+\*\*)/).forEach(parte => {
     if (/^\*\*[^*]+\*\*$/.test(parte)) genitore.append(el('strong', null, parte.slice(2, -2)));
-    else if (parte) genitore.append(document.createTextNode(parte));
+    else parte.split(/(https:\/\/[^\s)»]+)/).forEach(pezzo => {
+      if (/^https:\/\//.test(pezzo)) {
+        const a = el('a', null, pezzo);
+        a.href = pezzo;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        genitore.append(a);
+      } else if (pezzo) genitore.append(document.createTextNode(pezzo));
+    });
   });
 }
 
