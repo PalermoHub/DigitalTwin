@@ -114,6 +114,68 @@ function bottoneAggiungi(strati, etichetta, classe = 'strato-aggiungi') {
 
 document.getElementById('home-cesto-svuota').addEventListener('click', () => { cesto.clear(); aggiornaCesto(); });
 
+// ---- indice delle sezioni: barra fissa sotto l'intestazione, evidenzia la sezione in vista ----
+const SEZIONI = ['in-evidenza', 'numeri', 'strati', 'perche', 'tavolo'];
+const riduci = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function costruisciIndice() {
+  const indice = document.getElementById('home-indice');
+  const voci = SEZIONI.map(id => {
+    const a = el('a', { href: `#${id}`, textContent: tr(`home.indice.${id === 'in-evidenza' ? 'evidenza' : id}`) });
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.getElementById(id).scrollIntoView({ behavior: riduci ? 'auto' : 'smooth' });
+      history.replaceState(null, '', `#${id}`);
+    });
+    indice.append(a);
+    return a;
+  });
+  // il CSS usa l'altezza reale di intestazione e indice per l'aggancio dei titoli
+  const header = document.getElementById('app-header');
+  const misura = () => {
+    radice.style.setProperty('--home-header', `${header.offsetHeight}px`);
+    radice.style.setProperty('--home-sticky', `${header.offsetHeight + indice.offsetHeight}px`);
+  };
+  new ResizeObserver(misura).observe(header);
+  misura();
+  const visibili = new Map();
+  const evidenzia = () => {
+    const attiva = SEZIONI.filter(id => visibili.get(id)).at(-1) ?? SEZIONI[0];
+    voci.forEach((a, i) => { if (SEZIONI[i] === attiva) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  };
+  // una sezione è «corrente» quando ha superato la fascia alta dello schermo
+  const osserva = new IntersectionObserver(voce => {
+    for (const v of voce) visibili.set(v.target.id, v.boundingClientRect.top < innerHeight * .4);
+    evidenzia();
+  }, { rootMargin: '0px 0px -60% 0px', threshold: [0, 1] });
+  for (const id of SEZIONI) osserva.observe(document.getElementById(id));
+  window.addEventListener('scroll', () => {
+    for (const id of SEZIONI) visibili.set(id, document.getElementById(id).getBoundingClientRect().top < innerHeight * .4);
+    evidenzia();
+  }, { passive: true });
+  evidenzia();
+}
+
+// ---- numeri: conteggi ricavati dall'elenco stesso, ogni tessera porta alla sezione giusta ----
+function costruisciNumeri(argomenti, tutte) {
+  const distinti = valori => new Set(valori.filter(Boolean)).size;
+  const dati = [
+    ['strati', tutte.length, '#strati'],
+    ['argomenti', argomenti.length, '#home-argomenti'],
+    ['fonti', distinti(argomenti.flatMap(a => a.enti ?? [])), 'index.html#fonti'],
+  ];
+  const nf = new Intl.NumberFormat(lingua());
+  document.getElementById('home-numeri').append(...dati.map(([chiave, n, dest]) => {
+    const a = el('a', { href: dest, className: 'numero' },
+      el('strong', { textContent: nf.format(n) }), el('span', { textContent: tr(`home.numeri.${chiave}`) }));
+    // le tessere che puntano a un'altra pagina (il tab «Fonti e note» della mappa) seguono il link
+    if (dest.startsWith('#')) a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(dest).scrollIntoView({ behavior: riduci ? 'auto' : 'smooth' });
+    });
+    return el('li', {}, a);
+  }));
+}
+
 // ---- slider ----
 // le ultime cinque novità: quando si aggiunge uno strato nuovo, entra qui al posto del più vecchio
 const SLIDE = [
@@ -215,13 +277,16 @@ async function costruisciElenco() {
   }
   // un solo elenco di card, in ordine alfabetico; gli argomenti servono da filtro
   const tutte = argomenti.flatMap(a => a.strati.map(s => ({ s, a }))).sort((x, y) => x.s.etichetta.localeCompare(y.s.etichetta, lingua(), { sensitivity: 'base' }));
-  const card = tutte.map(({ s, a }) => {
+  const card = tutte.map(({ s, a }, i) => {
     const li = costruisciCard(s, a);
+    li.dataset.ordine = i;
+    li.dataset.data = a.data ?? '';
     li.dataset.testo = normalizza(`${s.etichetta} ${a.titolo} ${s.sezione ?? ''}`);
     li.dataset.argomento = a.id;
     li.dataset.strato = s.id;
     return li;
   });
+  costruisciNumeri(argomenti, tutte);
   const ul = el('ul', { className: 'home-card-elenco' }, ...card);
   elenco.append(ul);
 
@@ -229,7 +294,8 @@ async function costruisciElenco() {
   const filtroBox = document.getElementById('home-argomenti');
   const scelti = new Set();
   const chip = [{ id: '', titolo: tr('home.filtro.tutti') }, ...argomenti].map(a => {
-    const b = el('button', { type: 'button', className: 'filtro-chip', textContent: a.titolo });
+    const n = a.id ? a.strati.length : card.length;
+    const b = el('button', { type: 'button', className: 'filtro-chip', textContent: tr('home.filtro.conta', { titolo: a.titolo, n }) });
     b.dataset.argomento = a.id;
     b.addEventListener('click', () => {
       if (!a.id) scelti.clear();
@@ -239,6 +305,30 @@ async function costruisciElenco() {
     return b;
   });
   filtroBox.append(...chip);
+
+  // ordine delle card: per nome o per data, crescente o decrescente; a parità resta l'ordine alfabetico
+  const ordinaBox = document.getElementById('home-ordina');
+  const criteri = {
+    az: { confronta: (x, y) => x.dataset.ordine - y.dataset.ordine, verso: 1 },
+    data: { confronta: (x, y) => x.dataset.data.localeCompare(y.dataset.data) || x.dataset.ordine - y.dataset.ordine, verso: -1 },
+  };
+  let criterio = 'data';
+  let verso = criteri.data.verso;
+  const bottoniOrdine = Object.keys(criteri).map(chiave => {
+    const b = el('button', { type: 'button', className: 'filtro-chip', textContent: tr(`home.ordina.${chiave}`) });
+    b.dataset.criterio = chiave;
+    b.addEventListener('click', () => { criterio = chiave; verso = criteri[chiave].verso; ordina(); });
+    return b;
+  });
+  const bottoneVerso = el('button', { type: 'button', className: 'filtro-chip' });
+  bottoneVerso.addEventListener('click', () => { verso = -verso; ordina(); });
+  function ordina() {
+    ul.append(...[...card].sort((x, y) => verso * criteri[criterio].confronta(x, y)));
+    bottoniOrdine.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.criterio === criterio)));
+    bottoneVerso.textContent = tr(verso > 0 ? 'home.ordina.cresc' : 'home.ordina.decresc');
+  }
+  ordinaBox.append(...bottoniOrdine, bottoneVerso);
+  ordina();
 
   const campo = document.getElementById('home-cerca');
   const conteggio = document.getElementById('home-conteggio');
@@ -270,6 +360,7 @@ async function costruisciElenco() {
   filtra();
 }
 
+costruisciIndice();
 costruisciSlider();
 await costruisciElenco();
 aggiornaCesto();
@@ -278,7 +369,7 @@ aggiornaCesto();
 const cima = document.getElementById('home-cima');
 const mostraCima = () => { cima.hidden = window.scrollY < 400; };
 window.addEventListener('scroll', mostraCima, { passive: true });
-cima.addEventListener('click', () => window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+cima.addEventListener('click', () => window.scrollTo({ top: 0, behavior: riduci ? 'auto' : 'smooth' }));
 mostraCima();
 
 // tornando indietro dalla mappa (pagina dalla cache del browser) il cesto va riletto: la mappa può averlo cambiato

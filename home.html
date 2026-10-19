@@ -58,7 +58,8 @@
 </nav>
 </header>
 <main id="corpo" class="home">
-<section class="fascia  home-intro">
+<nav id="home-indice" class="home-indice" data-i18n-aria="home.indice.aria" aria-label="Sezioni della pagina"></nav>
+<section class="fascia  home-intro" id="in-evidenza">
 <div class="fascia-in">
   <h1 data-i18n="home.hero.titolo">Palermo Digital Twin</h1>
   <p data-i18n="home.hero.sotto">Una sola mappa di Palermo con tanti strati da accendere e spegnere. Un clic su un punto e si apre la scheda del luogo, con tutti i dati per quell'indirizzo.</p>
@@ -76,12 +77,20 @@
 </div>
 </section>
 
-<section class="fascia fascia--alt home-strati" aria-labelledby="titolo-strati">
+<section class="fascia home-numeri" id="numeri" aria-labelledby="titolo-numeri">
+<div class="fascia-in">
+  <h2 id="titolo-numeri" data-i18n="home.numeri.titolo">Il Digital Twin in numeri</h2>
+  <ul class="home-numeri-elenco" id="home-numeri"></ul>
+</div>
+</section>
+
+<section class="fascia fascia--alt home-strati" id="strati" aria-labelledby="titolo-strati">
 <div class="fascia-in">
   <h2 id="titolo-strati" data-i18n="home.strati.titolo">Cosa puoi accendere</h2>
   <div class="home-filtri" id="home-filtri-riga">
     <label class="home-cerca"><span class="solo-lettori" data-i18n="home.cerca.etichetta">Cerca uno strato</span>
       <input type="search" id="home-cerca" autocomplete="off" data-i18n-placeholder="home.cerca.segnaposto" placeholder="Cerca uno strato o un argomento…"></label>
+    <div class="home-ordina" role="group" data-i18n-aria="home.ordina.aria" aria-label="Ordina le schede"><span class="home-ordina-etichetta" data-i18n="home.ordina.etichetta">Ordina per</span><span id="home-ordina" class="home-ordina-voci"></span></div>
     <p class="home-conteggio" id="home-conteggio" role="status" aria-live="polite"></p>
   </div>
   <div class="home-argomenti" id="home-argomenti" role="group" data-i18n-aria="home.filtro.aria" aria-label="Filtra per argomento"></div>
@@ -90,7 +99,7 @@
   <p class="home-vuoto" id="home-vuoto" hidden data-i18n="home.vuoto">Nessuno strato corrisponde alla ricerca.</p>
 </div>
 </section>
-<section class="fascia home-perche" aria-labelledby="titolo-perche">
+<section class="fascia home-perche" id="perche" aria-labelledby="titolo-perche">
 <div class="fascia-in">
   <h2 id="titolo-perche" data-i18n="pres.perche.h">Perché una nuova mappa, se c'è già PalermoHub?</h2>
   <p data-i18n-html="pres.perche.p1">Domanda legittima, e ce la siamo fatta anche da soli. 😁 <a href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)">PalermoHub</a> esiste da anni e raccoglie centinaia di mappe su Palermo, sulla Sicilia e anche qualcuna nazionale. Che bisogno c'era di costruire altro?</p>
@@ -102,7 +111,7 @@
   <div class="azioni"><a class="perche-bottone" href="https://palermohub.opendatasicilia.it/" target="_blank" rel="noopener" data-i18n-title="pres.perche.hub.tip" title="Apri PalermoHub, il catalogo delle mappe di Palermo e della Sicilia (si apre in una nuova scheda)" data-i18n="pres.perche.hub.apri">Vai a PalermoHub</a></div>
 </div>
 </section>
-<section class="fascia fascia--alt home-perche home-perche--dt" aria-labelledby="titolo-perche-dt">
+<section class="fascia fascia--alt home-perche home-perche--dt" id="tavolo" aria-labelledby="titolo-perche-dt">
 <div class="fascia-in">
   <h3 id="titolo-perche-dt" data-i18n="pres.perche.dt.h">Palermo Digital Twin è un tavolo di lavoro</h3>
   <p data-i18n-html="pres.perche.dt.p1">Parte dalla domanda opposta: <em>«Cosa c'è qui?»</em></p>

@@ -11,6 +11,11 @@
     }
    ],
    "fonte": "ISTAT, Censimento permanente della popolazione e delle abitazioni 2021 (stime campionarie, sezioni di censimento); tendenza: aggiornamento 2023 da AGID Cruscotto Italia (dati.gov.it). Licenza CC BY 4.0.",
+   "enti": [
+    "ISTAT",
+    "AGID"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "AGID Cruscotto Italia",
@@ -37,6 +42,10 @@
     }
    ],
    "fonte": "Ministero dell'agricoltura, della sovranità alimentare e delle foreste (MASAF), Elenco degli alberi monumentali d'Italia. Licenza CC BY 4.0.",
+   "enti": [
+    "MASAF"
+   ],
+   "data": "2026-10-04",
    "link": [
     [
      "Elenco degli alberi monumentali d'Italia, MASAF",
@@ -75,6 +84,12 @@
     }
    ],
    "fonte": "ISTAT e Comune di Palermo, circoscrizioni, quartieri e UPL (2021); ISTAT, sezioni di censimento 2021; distretti idrici: AMAP S.p.A. Licenza CC BY 4.0.",
+   "enti": [
+    "ISTAT",
+    "Comune di Palermo",
+    "AMAP"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "ISTAT, Basi territoriali e variabili censuarie",
@@ -101,6 +116,10 @@
     }
    ],
    "fonte": "MIMIT, Osservaprezzi carburanti: impianti e prezzi, dati aperti aggiornati ogni giorno. Licenza IODL 2.0.",
+   "enti": [
+    "MIMIT"
+   ],
+   "data": "2026-10-15",
    "link": [
     [
      "Open data carburanti del MIMIT",
@@ -127,6 +146,10 @@
     }
    ],
    "fonte": "Comune di Palermo, unità volumetriche CTC (2026); popolazione per edificio: stima DigitalTwin Palermo. Licenza CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Open data del Comune di Palermo",
@@ -144,7 +167,11 @@
      "etichetta": "Ex Noviziato dei Crociferi in 3D (in sviluppo)"
     }
    ],
-   "fonte": "Comune di Palermo, Settore Centro Storico: piante DWG, sezione e prospetti; piante georeferenziate sulle unità volumetriche CTC e messe in quota piano per piano, elaborazione PalermoHub."
+   "fonte": "Comune di Palermo, Settore Centro Storico: piante DWG, sezione e prospetti; piante georeferenziate sulle unità volumetriche CTC e messe in quota piano per piano, elaborazione PalermoHub.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-12"
   },
   {
    "id": "fontanelle",
@@ -157,6 +184,11 @@
     }
    ],
    "fonte": "AMAP S.p.A., fontanelle pubbliche di Palermo; elaborazione PalermoHub / OpenDataSicilia; dataset sul portale open data del Comune e Progetto Fontanelle (onData). Licenza CC BY 4.0.",
+   "enti": [
+    "AMAP",
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-04",
    "link": [
     [
      "Dataset sul portale open data del Comune",
@@ -183,6 +215,11 @@
     }
    ],
    "fonte": "Ministero dell'economia e delle finanze, Dipartimento del Tesoro, Censimento degli immobili pubblici (beni dei comuni dichiarati dagli enti, ultimo anno pubblicato); poligoni degli edifici: Comune di Palermo, unità volumetriche CTC. Licenza CC BY 4.0.",
+   "enti": [
+    "MEF",
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-10",
    "link": [
     [
      "Open data del censimento degli immobili pubblici",
@@ -201,6 +238,11 @@
     }
    ],
    "fonte": "Comune di Palermo e Sistema Informativo Forestale (SIF) della Regione Siciliana, catasto dei soprassuoli percorsi dal fuoco. Licenza CC BY 3.0 IT.",
+   "enti": [
+    "Comune di Palermo",
+    "Regione Siciliana"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "SIF Regione Siciliana",
@@ -219,6 +261,10 @@
     }
    ],
    "fonte": "Temperatura superficiale da satellite Landsat (USGS), elaborazione PalermoHub / OpenDataSicilia, 2019–2025 (dati su Zenodo). Licenza CC BY 4.0.",
+   "enti": [
+    "USGS"
+   ],
+   "data": "2026-10-06",
    "link": [
     [
      "USGS Landsat",
@@ -245,6 +291,10 @@
     }
    ],
    "fonte": "Portale del Turismo del Comune di Palermo (testi, foto e link) e «Mappa monumentale di Palermo e dell'Agro Palermitano» di Marcello Petrucci (posizioni, testi e foto). Licenza CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Mappa monumentale di Palermo, M. Petrucci",
@@ -263,6 +313,12 @@
     }
    ],
    "fonte": "Open BDAP, Ragioneria generale dello Stato, Monitoraggio Opere Pubbliche (MOP); opere localizzate a Palermo posizionate dagli indirizzi con i numeri civici ANNCSU; elaborazione DigitalTwin Palermo. Licenza CC BY.",
+   "enti": [
+    "RGS",
+    "Agenzia delle Entrate",
+    "ISTAT"
+   ],
+   "data": "2026-10-16",
    "link": [
     [
      "Progetti Opere Pubbliche MOP, Open BDAP",
@@ -292,7 +348,11 @@
      "etichetta": "Barriere architettoniche"
     }
    ],
-   "fonte": "Comune di Palermo, Piano di Eliminazione delle Barriere Architettoniche (PEBA): schede e foto dei sopralluoghi."
+   "fonte": "Comune di Palermo, Piano di Eliminazione delle Barriere Architettoniche (PEBA): schede e foto dei sopralluoghi.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-11"
   },
   {
    "id": "pendolarismo",
@@ -305,6 +365,10 @@
     }
    ],
    "fonte": "ISTAT, Censimento permanente della popolazione e delle abitazioni 2021, matrice di pendolarismo per lavoro tra comuni (31 dicembre 2021); elaborazione PalermoHub. Licenza CC BY 4.0.",
+   "enti": [
+    "ISTAT"
+   ],
+   "data": "2026-10-11",
    "link": [
     [
      "ISTAT, Matrice di pendolarismo (Esplora dati)",
@@ -327,6 +391,12 @@
     }
    ],
    "fonte": "Italia Domani, Struttura di missione PNRR e Sogei, catalogo open data; progetti posizionati con ANNCSU e Indice delle Pubbliche Amministrazioni (AgID); elaborazione DigitalTwin Palermo. Licenza CC BY 4.0.",
+   "enti": [
+    "Struttura di missione PNRR",
+    "Sogei",
+    "AGID"
+   ],
+   "data": "2026-10-15",
    "link": [
     [
      "Catalogo open data di Italia Domani",
@@ -365,6 +435,10 @@
     }
    ],
    "fonte": "HR-DTM-5m, IRPI-CNR (Panza et al., 2026), elaborazione PalermoHub. Licenza CC BY 4.0.",
+   "enti": [
+    "CNR-IRPI"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Dati su Zenodo",
@@ -399,6 +473,11 @@
     }
    ],
    "fonte": "Comune di Palermo, dati aperti (2017); anagrafe edilizia scolastica MIUR. Licenza CC BY 4.0 (scuole MIUR: IODL 2.0).",
+   "enti": [
+    "Comune di Palermo",
+    "MIUR"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Anagrafe edilizia scolastica, MIUR",
@@ -421,6 +500,10 @@
     }
    ],
    "fonte": "GSE, Piattaforma Unica Nazionale (PUN); serie storica PalermoHub / evcharginglogsicilia, stato aggiornato in continuo; rete di ricarica onData. Licenza CC BY 4.0.",
+   "enti": [
+    "GSE"
+   ],
+   "data": "2026-10-04",
    "link": [
     [
      "Piattaforma Unica Nazionale",
@@ -459,6 +542,11 @@
     }
    ],
    "fonte": "Comune di Palermo (Polizia Municipale), incidenti 2015–2023; rete stradale © OpenStreetMap contributors (ODbL 1.0); elaborazione PalermoHub / OpenDataSicilia. Licenza CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo",
+    "OpenStreetMap"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Sinistri 2022, open data del Comune",
@@ -507,6 +595,12 @@
     }
    ],
    "fonte": "Particelle catastali: S.I.T.R. Regione Siciliana e Agenzia delle Entrate (2026); PRG 2004 e vincoli: Comune di Palermo, rielaborazione OpenDataSicilia; numeri civici: Comune di Palermo / ANNCSU (2026); zone OMI: Agenzia delle Entrate (2025-S2); immobili comunali: Comune di Palermo (2024). Licenza CC BY 4.0.",
+   "enti": [
+    "Regione Siciliana",
+    "Agenzia delle Entrate",
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "SITR Regione Siciliana",
@@ -562,6 +656,12 @@
     }
    ],
    "fonte": "AMAT Palermo S.p.A., feed GTFS valido dal 25/08/2026 al 31/10/2026 (progetto OpenAMAT); ferrovia urbana: Trenitalia S.p.A. / CCISS MMTIS, NeTEx convertiti in GTFS da Clément Desouche, valido dal 26/09/2026 al 12/12/2026; alcune stazioni da © contributori OpenStreetMap (ODbL). Licenza CC BY 4.0.",
+   "enti": [
+    "AMAT",
+    "Trenitalia",
+    "OpenStreetMap"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Progetto OpenAMAT",
@@ -588,6 +688,10 @@
     }
    ],
    "fonte": "ISTAT, Censimento 2011 (dati e basi territoriali delle sezioni) e Censimento permanente 2021 e 2023; elaborazione DigitalTwin Palermo, con popolazione 2011 ripartita sulle aree attuali per sovrapposizione dei confini. Licenza CC BY 4.0.",
+   "enti": [
+    "ISTAT"
+   ],
+   "data": "2026-10-15",
    "link": [
     [
      "ISTAT, Basi territoriali e variabili censuarie",
@@ -610,6 +714,10 @@
     }
    ],
    "fonte": "Comune di Palermo, sito istituzionale, comune.palermo.it/amministrazione/uffici. Licenza CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Uffici del Comune di Palermo",
@@ -674,6 +782,10 @@
     }
    ],
    "fonte": "Regione Siciliana, Piano di Assetto Idrogeologico (PAI), bacini 039-040, SITR; dati aggiornati al 12/05/2026.",
+   "enti": [
+    "Regione Siciliana"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "PAI, SITR Regione Siciliana",
@@ -714,6 +826,12 @@
     }
    ],
    "fonte": "ISTAT and Comune di Palermo, districts, neighbourhoods and UPLs (2021); ISTAT, 2021 census sections; water districts: AMAP S.p.A. Licence CC BY 4.0.",
+   "enti": [
+    "ISTAT",
+    "Comune di Palermo",
+    "AMAP"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "ISTAT, Basi territoriali e variabili censuarie",
@@ -744,6 +862,10 @@
     }
    ],
    "fonte": "Comune di Palermo, CTC volumetric units (2026); population per building: DigitalTwin Palermo estimate. Licence CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Open data del Comune di Palermo",
@@ -762,6 +884,10 @@
     }
    ],
    "fonte": "ISTAT, Permanent Population and Housing Census 2021, commuting matrix for work between municipalities (31 December 2021); PalermoHub processing. Licence CC BY 4.0.",
+   "enti": [
+    "ISTAT"
+   ],
+   "data": "2026-10-11",
    "link": [
     [
      "ISTAT, Matrice di pendolarismo (Esplora dati)",
@@ -784,6 +910,11 @@
     }
    ],
    "fonte": "AMAP S.p.A., public drinking fountains of Palermo; PalermoHub / OpenDataSicilia processing; dataset on the Comune open data portal and Fontanelle project (onData). Licence CC BY 4.0.",
+   "enti": [
+    "AMAP",
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-04",
    "link": [
     [
      "Dataset sul portale open data del Comune",
@@ -810,6 +941,11 @@
     }
    ],
    "fonte": "Comune di Palermo and Sicilian Region Forestry Information System (SIF), register of land swept by fire. Licence CC BY 3.0 IT.",
+   "enti": [
+    "Comune di Palermo",
+    "Regione Siciliana"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "SIF Regione Siciliana",
@@ -827,7 +963,11 @@
      "etichetta": "Former Noviziato dei Crociferi in 3D (in development)"
     }
    ],
-   "fonte": "Comune di Palermo, Historic Centre Department: DWG plans, section and elevations; plans georeferenced on the CTC volumetric units and raised floor by floor, PalermoHub processing."
+   "fonte": "Comune di Palermo, Historic Centre Department: DWG plans, section and elevations; plans georeferenced on the CTC volumetric units and raised floor by floor, PalermoHub processing.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-12"
   },
   {
    "id": "distributori",
@@ -840,6 +980,10 @@
     }
    ],
    "fonte": "MIMIT, fuel price observatory (Osservaprezzi carburanti): stations and prices, open data updated daily. Licence IODL 2.0.",
+   "enti": [
+    "MIMIT"
+   ],
+   "data": "2026-10-15",
    "link": [
     [
      "Open data carburanti del MIMIT",
@@ -862,6 +1006,10 @@
     }
    ],
    "fonte": "Surface temperature from Landsat satellite (USGS), PalermoHub / OpenDataSicilia processing, 2019–2025 (data on Zenodo). Licence CC BY 4.0.",
+   "enti": [
+    "USGS"
+   ],
+   "data": "2026-10-06",
    "link": [
     [
      "USGS Landsat",
@@ -888,6 +1036,11 @@
     }
    ],
    "fonte": "ISTAT, Permanent Population and Housing Census 2021 (sample estimates, census sections); trend: 2023 update from AGID Cruscotto Italia (dati.gov.it). Licence CC BY 4.0.",
+   "enti": [
+    "ISTAT",
+    "AGID"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "AGID Cruscotto Italia",
@@ -914,6 +1067,10 @@
     }
    ],
    "fonte": "Ministry of Agriculture, Food Sovereignty and Forests (MASAF), Register of Italy's monumental trees. Licence CC BY 4.0.",
+   "enti": [
+    "MASAF"
+   ],
+   "data": "2026-10-04",
    "link": [
     [
      "Elenco degli alberi monumentali d'Italia, MASAF",
@@ -936,6 +1093,10 @@
     }
    ],
    "fonte": "Comune di Palermo Tourism Portal (texts, photos and links) and Marcello Petrucci's «Monumental map of Palermo and the Agro Palermitano» (locations, texts and photos). Licence CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Mappa monumentale di Palermo, M. Petrucci",
@@ -954,6 +1115,10 @@
     }
    ],
    "fonte": "Comune di Palermo, institutional website, comune.palermo.it/amministrazione/uffici. Licence CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Uffici del Comune di Palermo",
@@ -972,6 +1137,12 @@
     }
    ],
    "fonte": "Italia Domani, PNRR Mission Unit and Sogei, open data catalogue; projects placed using ANNCSU and the Public Administrations Index (AgID); DigitalTwin Palermo processing. Licence CC BY 4.0.",
+   "enti": [
+    "Struttura di missione PNRR",
+    "Sogei",
+    "AGID"
+   ],
+   "data": "2026-10-15",
    "link": [
     [
      "Catalogo open data di Italia Domani",
@@ -1052,6 +1223,10 @@
     }
    ],
    "fonte": "Sicilian Region, Hydrogeological Asset Plan (PAI), basins 039-040, SITR; data updated to 12/05/2026.",
+   "enti": [
+    "Regione Siciliana"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "PAI, SITR Regione Siciliana",
@@ -1073,7 +1248,11 @@
      "etichetta": "Architectural barriers"
     }
    ],
-   "fonte": "Comune di Palermo, Architectural Barriers Removal Plan (PEBA): survey sheets and photos."
+   "fonte": "Comune di Palermo, Architectural Barriers Removal Plan (PEBA): survey sheets and photos.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-11"
   },
   {
    "id": "trend-popolazione",
@@ -1086,6 +1265,10 @@
     }
    ],
    "fonte": "ISTAT, 2011 Census (data and territorial bases of census sections) and Permanent Census 2021 and 2023; DigitalTwin Palermo processing, with 2011 population allocated to current areas by boundary overlap. Licence CC BY 4.0.",
+   "enti": [
+    "ISTAT"
+   ],
+   "data": "2026-10-15",
    "link": [
     [
      "ISTAT, Basi territoriali e variabili censuarie",
@@ -1108,6 +1291,11 @@
     }
    ],
    "fonte": "Ministry of Economy and Finance, Treasury Department, Census of public properties (municipal assets declared by the bodies, latest published year); building polygons: Comune di Palermo, CTC volumetric units. Licence CC BY 4.0.",
+   "enti": [
+    "MEF",
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-10",
    "link": [
     [
      "Open data del censimento degli immobili pubblici",
@@ -1147,6 +1335,12 @@
     }
    ],
    "fonte": "AMAT Palermo S.p.A., GTFS feed valid from 25/08/2026 to 31/10/2026 (OpenAMAT project); urban rail: Trenitalia S.p.A. / CCISS MMTIS, NeTEx converted to GTFS by Clément Desouche, valid from 26/09/2026 to 12/12/2026; some stations from © OpenStreetMap contributors (ODbL). Licence CC BY 4.0.",
+   "enti": [
+    "AMAT",
+    "Trenitalia",
+    "OpenStreetMap"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Progetto OpenAMAT",
@@ -1173,6 +1367,12 @@
     }
    ],
    "fonte": "Open BDAP, State General Accounting Department, Public Works Monitoring (MOP); works in Palermo placed from addresses using ANNCSU house numbers; DigitalTwin Palermo processing. Licence CC BY.",
+   "enti": [
+    "RGS",
+    "Agenzia delle Entrate",
+    "ISTAT"
+   ],
+   "data": "2026-10-16",
    "link": [
     [
      "Progetti Opere Pubbliche MOP, Open BDAP",
@@ -1215,6 +1415,11 @@
     }
    ],
    "fonte": "Comune di Palermo (Municipal Police), accidents 2015–2023; road network © OpenStreetMap contributors (ODbL 1.0); PalermoHub / OpenDataSicilia processing. Licence CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo",
+    "OpenStreetMap"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Sinistri 2022, open data del Comune",
@@ -1241,6 +1446,10 @@
     }
    ],
    "fonte": "GSE, National Single Platform (PUN); PalermoHub / evcharginglogsicilia time series, status continuously updated; onData charging network. Licence CC BY 4.0.",
+   "enti": [
+    "GSE"
+   ],
+   "data": "2026-10-04",
    "link": [
     [
      "Piattaforma Unica Nazionale",
@@ -1271,6 +1480,11 @@
     }
    ],
    "fonte": "Comune di Palermo, open data (2017); MIUR school buildings register. Licence CC BY 4.0 (MIUR schools: IODL 2.0).",
+   "enti": [
+    "Comune di Palermo",
+    "MIUR"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Anagrafe edilizia scolastica, MIUR",
@@ -1297,6 +1511,10 @@
     }
    ],
    "fonte": "HR-DTM-5m, IRPI-CNR (Panza et al., 2026), PalermoHub processing. Licence CC BY 4.0.",
+   "enti": [
+    "CNR-IRPI"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "Dati su Zenodo",
@@ -1349,6 +1567,12 @@
     }
    ],
    "fonte": "Cadastral parcels: S.I.T.R. Sicilian Region and Revenue Agency (2026); 2004 PRG and constraints: Comune di Palermo, OpenDataSicilia reprocessing; house numbers: Comune di Palermo / ANNCSU (2026); OMI zones: Revenue Agency (2025-H2); municipal properties: Comune di Palermo (2024). Licence CC BY 4.0.",
+   "enti": [
+    "Regione Siciliana",
+    "Agenzia delle Entrate",
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-03",
    "link": [
     [
      "SITR Regione Siciliana",
