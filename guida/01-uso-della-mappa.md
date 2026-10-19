@@ -34,6 +34,7 @@ Domande tipiche: Come faccio a...? Quale funzione devo usare per...? Dove è spi
 
 | Per... | Vedi |
 |---|---|
+| Aprire la mappa con un tema già pronto | sezione «Percorsi guidati» in questo file |
 | Accendere layer, legende, opacità, ordine, zoom, uso da smartphone | `45-barra-strati-legende-e-ordine.md` |
 | Cercare indirizzi, civici, luoghi, particelle, incidenti, incendi; filtrare per zona, linea, incidenti | `44-ricerca-e-filtri.md` |
 | Cambiare la mappa di sfondo; mappe storiche del 1580–1993 | `47-mappe-di-base-e-storiche.md` |
@@ -52,6 +53,35 @@ Domande tipiche: Come faccio a...? Quale funzione devo usare per...? Dove è spi
 | Privacy, lingua, uso offline, pagine del menu | `51-pagine-privacy-lingua-e-offline.md` |
 | Cosa mostra ogni layer | `02`–`06` (per tema) e le schede `08`–`33` |
 | Fonti, licenze, sigle | `07-fonti-avvertenze-glossario.md` |
+
+---
+
+## Percorsi guidati: un tema già pronto
+
+Parole chiave: percorsi guidati, percorso, tema, temi pronti, pagina iniziale, home, «Apri la mappa», strati già accesi, scorciatoia.
+
+Domande tipiche: Cosa sono i percorsi guidati? Come apro la mappa con gli strati giusti già accesi? Quali percorsi ci sono? Dove trovo i percorsi guidati?
+
+I percorsi guidati stanno nella pagina iniziale del sito, nella sezione «Cosa puoi accendere», sotto il titolo «Percorsi guidati». Ogni percorso è una scheda con un titolo, una frase che dice di cosa parla, l'elenco degli strati che comprende e il pulsante «Apri la mappa». Il pulsante apre la mappa con quegli strati già accesi, con le legende già attive sulla mappa e, per il percorso «Urbanistica», già centrata sulla zona indicata dal percorso (zoom 16). Gli altri percorsi lasciano la mappa nella vista di partenza. Una volta aperta la mappa, gli strati si possono spegnere, accendere e cambiare come sempre (vedi `45-barra-strati-legende-e-ordine.md`).
+
+I percorsi disponibili sono dieci:
+
+| Percorso | Strati accesi |
+|---|---|
+| Rischi e clima | geo_pericolosita, idraulica_pericolosita, coste_pericolosita, incendi, isole-calore |
+| Scuole e quartieri | scuole, seggi, quartieri, coropletico |
+| Mobilità | trasporto-metro, trasporto-bus, trasporto-fermate, colonnine, distributori |
+| Città in trasformazione | pnrr, opere, trend-popolazione |
+| Patrimonio e verde | monumenti, alberi, fontanelle, crociferi3d |
+| Urbanistica | prg, vincoli, catasto, omi, civici |
+| Sicurezza stradale | sicurezza-hotspot, sicurezza-pericolose, sicurezza-archi, sicurezza-incidenti |
+| Chi si sposta | pendolarismo, coropletico, trasporto-metro, trasporto-fermate |
+| Città accessibile | peba, uffici, trasporto-fermate, scuole |
+| Immobili pubblici | mef-immobili, immobili, uffici, catasto |
+
+Nella scheda del percorso gli strati compaiono con il nome che hanno nel catalogo, non con questi identificativi. Il testo del percorso è disponibile in italiano e in inglese, secondo la lingua scelta.
+
+I percorsi servono per chi non sa da dove cominciare. Chi vuole scegliere gli strati uno per uno usa invece il «Catalogo degli strati», più in basso nella stessa pagina: lì ogni strato ha il pulsante «Aggiungi alla mappa» e la barra degli strati scelti apre la mappa con quelli selezionati.
 
 ---
 
