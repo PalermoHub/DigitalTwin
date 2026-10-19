@@ -32,3 +32,13 @@ export function blocco(titolo, ...contenuto) {
 export function link(testo, href) {
   return el('a', testo, { href, target: '_blank', rel: 'noopener' });
 }
+
+export function elenco(voci) {
+  const ul = document.createElement('ul');
+  for (const t of voci) {
+    const li = document.createElement('li');
+    li.append(...[t].flat()); // una voce è una stringa o un elenco di stringhe e nodi (per i link)
+    ul.append(li);
+  }
+  return ul;
+}
