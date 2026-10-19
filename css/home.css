@@ -191,7 +191,18 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .pagina-info .home-perche h2 + .info-blocco h3 { margin-top: 0; }
 .pagina-info .home-perche h2 + .info-blocco, .pagina-info .home-perche h2 + p { margin-top: 0; }
 .pagina-info .home-perche:last-of-type { padding-bottom: 120px; }
-.pagina-info .home-indice--attivo { display: flex; }
 .pagina-info .guida-figura { max-width: 860px; }
 .pagina-info .guida-media { max-width: 860px; margin: 24px 0 0; }
-.pagina-info .fascia-in > .guida-passo { margin: 0 0 32px; }
+/* Guida a fasce: un passo per fascia, indice del modale fisso a destra sugli schermi larghi */
+.pagina-info .guida-passo.info-blocco { margin: 0; padding: 0; background: none; border: 0; border-radius: 0; scroll-margin-top: 80px; }
+.pagina-info .guida-passo h2 { margin: 0 0 12px; }
+.pagina-info .guida-kicker { margin: 0 0 6px; font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent-strong); }
+.pagina-info .home-intro .guida-indice { margin: 24px 0 0; max-width: 860px; }
+@media (min-width: 1000px) {
+  .pagina-guida .fascia-in { box-sizing: border-box; padding-right: 280px; }
+  .pagina-guida .guida-indice { position: fixed; z-index: calc(var(--z-header) - 1); top: calc(var(--home-header, 64px) + 20px); right: max(16px, calc(50% - 560px)); width: 250px; max-width: none; margin: 0; max-height: calc(100dvh - var(--home-header, 64px) - 20px - 120px); overflow-y: auto; }
+  .pagina-guida .guida-indice ol { columns: 1; font-size: .9375rem; line-height: 1.5; }
+  .pagina-guida .guida-indice li { margin: 4px 0; }
+}
+/* pagine di testo: gli elenchi (Fonti e note) usano tutta la larghezza della fascia */
+.pagina-info .home-perche ul { max-width: none; }

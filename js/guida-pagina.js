@@ -1,6 +1,6 @@
 // Pagina Guida (guida.html): gli stessi passi del tab «Guida» del modale Info, a fasce come la home.
 import { caricaDizionari, applicaDom, t as tr } from './core/i18n.js';
-import { avviaTestata, costruisciIndice } from './core/testata-pagina.js';
+import { avviaTestata } from './core/testata-pagina.js';
 import { schedaGuida } from './core/guida.js';
 import { PASSI } from './core/guida-contenuti.js';
 import { collegaIngrandimento } from './core/ingrandisci.js';
@@ -22,36 +22,34 @@ const fascia = (id, classe = '') => {
   return { f, dentro };
 };
 
-// Titolo, introduzione e video aprono la pagina; ogni gruppo di passi è una fascia con i passi come h3.
-// Il passo senza gruppo (Disclaimer) ha la sua fascia. L'indice laterale del modale qui non serve: c'è la barra a pillole.
-const SENZA_GRUPPO = new Set(PASSI.filter(p => !p.gruppo).map(p => `guida-${p.id}`));
+// Titolo, introduzione e video aprono la pagina; ogni passo è una fascia con il suo titolo h2 e, sopra, il gruppo.
+// L'indice del modale resta com'è: su schermi larghi sta fisso a destra, su quelli stretti sotto l'introduzione.
 const corpo = document.getElementById('corpo');
+corpo.classList.add('pagina-guida');
 const intro = fascia('guida', 'home-intro');
-const pillole = [];
+const passi = [];
 let gruppo = null;
-for (const n of [...schedaGuida().children]) {
+const nodi = [...schedaGuida().children];
+for (const n of nodi) {
   if (n.tagName === 'H2' && !n.className) { const h1 = document.createElement('h1'); h1.textContent = n.textContent; intro.dentro.append(h1); }
-  else if (n.className === 'pagina-intro' || n.className === 'guida-media') intro.dentro.append(n);
-  else if (n.className === 'guida-indice') continue;
-  else if (n.className === 'guida-gruppo') {
-    const id = PASSI.find(p => tr(`guida.gruppo.${p.gruppo}`) === n.textContent)?.gruppo;
-    gruppo = fascia(id);
-    n.removeAttribute('class');
-    gruppo.dentro.append(n);
-    corpo.append(gruppo.f);
-    pillole.push({ id, testo: n.textContent });
-  } else if (SENZA_GRUPPO.has(n.id)) {
-    const f = fascia(n.id);
+  else if (n.className === 'pagina-intro' || n.className === 'guida-indice' || n.className === 'guida-media') intro.dentro.append(n);
+  else if (n.className === 'guida-gruppo') gruppo = n.textContent;
+  else {
+    const f = fascia(null);
+    const h3 = n.querySelector('h3');
     const h2 = document.createElement('h2');
-    h2.textContent = n.querySelector('h3').textContent;
-    n.querySelector('h3').replaceWith(h2);
-    f.dentro.append(...n.childNodes);
-    corpo.append(f.f);
-    pillole.push({ id: n.id, testo: h2.textContent });
-    gruppo = null;
-  } else gruppo.dentro.append(n);
+    h2.textContent = h3.textContent;
+    h3.replaceWith(h2);
+    if (gruppo && PASSI.find(p => `guida-${p.id}` === n.id)?.gruppo) { // il disclaimer, senza gruppo, non ha l'etichetta
+      const k = document.createElement('p');
+      k.className = 'guida-kicker';
+      k.textContent = gruppo;
+      f.dentro.append(k);
+    }
+    f.dentro.append(n);
+    passi.push(f.f);
+  }
 }
-corpo.prepend(intro.f);
+corpo.append(intro.f, ...passi);
 traduciAlbero(corpo); // i passi sono scritti in italiano: in inglese si traducono con le voci lbl.* dei dizionari
 collegaIngrandimento(corpo);
-costruisciIndice(pillole);
