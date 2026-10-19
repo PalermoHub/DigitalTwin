@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://palermohub.github.io/DigitalTwin/sitemap.xml
+Sitemap: https://palermodigitaltwin.opendatasicilia.it/sitemap.xml
