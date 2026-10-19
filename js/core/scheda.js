@@ -335,6 +335,8 @@ function stralcioConCerchio(map, punto) {
 
 const DISCLAIMER_STAMPA = tr('scheda.disclaimer');
 
+let richiestaLuogo = 0;
+
 export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   const rndt = opzioni.rndt;
   // stampa: tutte le schede aperte e visibili; dopo, si torna alla scheda attiva
@@ -380,9 +382,18 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     const casella = strato && document.getElementById(`strato-${strato}`);
     if (casella && !casella.checked && !casella.disabled) { casella.checked = true; casella.dispatchEvent(new Event('change')); }
     const lngLat = new maplibregl.LngLat(lon, lat);
-    const clic = () => map.fire('click', { point: map.project(lngLat), lngLat });
-    map.once('moveend', () => { if (map.loaded() && !map.isMoving()) setTimeout(clic, 300); else map.once('idle', () => setTimeout(clic, 300)); });
+    const mio = ++richiestaLuogo; // una richiesta più recente annulla quella in corso
+    let fatto = false;
+    const clic = () => {
+      if (fatto || mio !== richiestaLuogo) return;
+      fatto = true;
+      map.fire('click', { point: map.project(lngLat), lngLat });
+    };
+    // il clic parte a mappa ferma e con lo strato disegnato (idle); se la mappa era già lì, moveend può non scattare: c'è un tempo massimo
+    const attendi = () => { if (map.isMoving()) map.once('moveend', attendi); else if (map.loaded()) setTimeout(clic, 150); else map.once('idle', () => setTimeout(clic, 150)); };
     map.flyTo({ center: lngLat, zoom: Math.max(zoom ?? 18, ZOOM_SCHEDA), duration: 600 });
+    setTimeout(attendi, 700);
+    setTimeout(clic, 4000);
   });
   // link condiviso: riapre la scheda nel punto indicato, dopo il primo caricamento dei dati
   const condiviso = new URLSearchParams(location.search).get('scheda');
