@@ -63,7 +63,7 @@
     var x = TESTI[lingua()];
     banner.setAttribute('aria-label', x.aria);
     banner.innerHTML = '<p>' + x.corpo
-      + '<a href="' + (document.querySelector('#menu-info') ? '#privacy' : 'index.html#privacy') + '">' + x.privacy + '</a>.</p>'
+      + '<a href="' + (document.getElementById('crediti') ? '#privacy' : 'privacy.html') + '">' + x.privacy + '</a>.</p>'
       + '<div><button type="button" data-v="no">' + x.no + '</button><button type="button" data-v="si">' + x.si + '</button></div>';
     banner.addEventListener('click', function (e) { var v = e.target.dataset && e.target.dataset.v; if (v) scegli(v); });
     document.head.appendChild(css);
