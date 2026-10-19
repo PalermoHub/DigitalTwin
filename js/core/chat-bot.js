@@ -1,10 +1,11 @@
 // Pannello «Chat bot»: disegna la conversazione di chat-bot-conversazione.js. Il testo delle risposte viene dalla guida:
 // si inserisce solo come nodi di testo (mai innerHTML), con il solo grassetto **...** e gli elenchi «- ».
-import { t } from './i18n.js';
+import { t, tn, tl } from './i18n.js';
 import { svgIcona } from './icone.js';
 import { creaConversazione } from './chat-bot-conversazione.js';
 import { blocchiTesto } from './chat-bot-ricerca.js';
 import { statoStrato, commutaStrato } from './chat-bot-strati.js';
+import { suntoRicordato } from './chat-bot-sunto.js';
 
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
@@ -36,6 +37,39 @@ function disegnaTesto(testo) {
   return radice;
 }
 
+const vaiAllaScheda = dettaglio => document.dispatchEvent(new CustomEvent('scheda:vai', { detail: dettaglio }));
+
+const tronca = (testo, n) => (testo.length > n ? `${testo.slice(0, n - 1).trimEnd()}…` : testo);
+
+// «Cosa c'è qui»: i dati principali della scheda aperta sulla mappa, un blocco per tab, con i pulsanti per aprirla.
+function disegnaSunto(riquadro) {
+  const sunto = suntoRicordato();
+  riquadro.hidden = !sunto.length;
+  const corpo = [];
+  for (const { tab, voci, altre } of sunto) {
+    const nomeTab = t(`scheda.tab.${tab}`);
+    const testa = el('div', 'cb-sunto-tab');
+    testa.append(el('strong', null, nomeTab));
+    const apri = Object.assign(el('button', 'cb-sunto-apri', t('chatbot.sunto.apri')), { type: 'button', title: t('chatbot.sunto.apriTab', { tab: nomeTab }) });
+    apri.setAttribute('aria-label', apri.title);
+    apri.addEventListener('click', () => vaiAllaScheda({ tab }));
+    testa.append(apri);
+    const ul = el('ul', 'cb-sunto-voci');
+    for (const v of voci) {
+      const li = el('li');
+      const nome = Object.assign(el('button', 'cb-sunto-voce', tronca(tl(v.titolo), 48)), { type: 'button' });
+      nome.addEventListener('click', () => vaiAllaScheda({ tab, chiave: v.chiave }));
+      const dati = [...v.badges.map(tl), ...v.dati.map(d => `${tl(d.etichetta)} ${tl(d.valore)}`), ...(v.conteggio ? [tn('chatbot.sunto.elementi', v.conteggio)] : [])];
+      li.append(nome);
+      if (dati.length) li.append(document.createTextNode(`: ${tronca(dati.join(' · '), 110)}`));
+      ul.append(li);
+    }
+    if (altre.length) ul.append(el('li', 'cb-nota', t('chatbot.sunto.altre', { elenco: tronca(altre.slice(0, 3).map(tl).join(', '), 90) + (altre.length > 3 ? ` +${altre.length - 3}` : '') })));
+    corpo.push(testa, ul);
+  }
+  riquadro.replaceChildren(el('summary', null, t('chatbot.sunto.titolo')), ...corpo);
+}
+
 export function creaChatBot(pannello, { carica } = {}) {
   const testata = el('header', 'gi-testata');
   testata.append(el('h2', null, t('chatbot.titolo')));
@@ -46,6 +80,14 @@ export function creaChatBot(pannello, { carica } = {}) {
   x.innerHTML = svgIcona('chiudi', 18);
   x.addEventListener('click', () => { pannello.hidden = true; });
   testata.append(x);
+
+  // la scheda del luogo cliccato: si riscrive a ogni clic sulla mappa e sparisce quando la scheda si chiude
+  const riquadroSunto = el('details', 'cb-sunto');
+  riquadroSunto.open = true;
+  const aggiornaSunto = () => disegnaSunto(riquadroSunto);
+  document.addEventListener('scheda:sunto', aggiornaSunto);
+  document.addEventListener('scheda:chiusa', aggiornaSunto);
+  aggiornaSunto();
 
   const log = el('div', 'cb-log');
   log.setAttribute('role', 'log');
@@ -127,7 +169,7 @@ export function creaChatBot(pannello, { carica } = {}) {
     campo.value = '';
     chiedi(testo);
   });
-  pannello.replaceChildren(testata, log, form);
+  pannello.replaceChildren(testata, riquadroSunto, log, form);
   conv.avvia();
   campo.focus();
 }

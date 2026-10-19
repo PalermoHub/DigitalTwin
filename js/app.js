@@ -6,6 +6,7 @@ import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaRail, ICONE_RAIL } from './core/rail.js';
 import { creaPannelloInterfaccia } from './core/pannello-interfaccia.js';
 import { collegaScheda } from './core/scheda.js';
+import { collegaSunto } from './core/chat-bot-sunto.js';
 import { collegaTooltipScheda } from './core/tooltip-scheda.js';
 import { collegaRndt, creaInterrogazione } from './rndt/index.js';
 import { creaGruppo, creaGruppoRndt, OPZIONI_MIEI } from './rndt/gruppo.js';
@@ -158,6 +159,7 @@ map.once('style.load', async () => {
     },
     chiudi() { pannelloTema.hidden = true; },
   };
+  collegaSunto(); // il riassunto della scheda si ricorda anche prima che il Chat bot sia aperto
   // Chat bot: il pannello si costruisce al primo clic sul suo tab o sulla sua icona
   const pannelloChat = document.getElementById('chatbot-pannello');
   const chatBot = {
@@ -197,6 +199,7 @@ map.once('style.load', async () => {
   btnChatBarra.addEventListener('click', () => rail.commuta('chatbot'));
   new MutationObserver(() => btnChatBarra.setAttribute('aria-pressed', String(!pannelloChat.hidden && !pannelloChat.classList.contains('collassato'))))
     .observe(pannelloChat, { attributes: true, attributeFilter: ['hidden', 'class'] });
+  document.addEventListener('scheda:vai', () => rail.mostra('scheda')); // dal Chat bot: la scheda torna in primo piano
   tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); rail.chiudi('chatbot'); document.getElementById('crediti').open && document.getElementById('crediti').close(); };
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri

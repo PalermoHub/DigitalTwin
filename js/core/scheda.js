@@ -1,4 +1,4 @@
-import { unisci, sezioniConRitardo, testoContesto, titoloScheda, NOTA_LEGALE, MANCANTE } from './scheda-modello.js';
+import { unisci, sezioniConRitardo, testoContesto, titoloScheda, tabScheda, NOTA_LEGALE, MANCANTE } from './scheda-modello.js';
 import { applicaPreferenze, registraVisti, leggiPreferenze, salvaPreferenze } from './scheda-preferenze.js';
 import { svgIcona } from './icone.js';
 import { segnala } from './pannello.js';
@@ -39,9 +39,6 @@ function copiaTesto(testo) {
   t.remove();
   return Promise.resolve();
 }
-
-// Il tab di una sezione della scheda, dal suo peso (e per alcune dalla chiave)
-const tabScheda = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : p >= 94 && p <= 96 ? 'pnrr' : p >= 97 && p <= 99 ? 'opere' : 'luogo');
 
 function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabIniziale = null) {
   const { contesto, sezioni, legale } = dati;
@@ -203,6 +200,8 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
     if (presenti.length < 2) sezioni.forEach(sz => { sz.hidden = false; });
     else mostraTab(presenti.some(([id]) => id === attiva) ? attiva : presenti[0][0]);
     requestAnimationFrame(frecce);
+    // il Chat bot riassume la scheda: gli arriva il modello con le sezioni visibili
+    document.dispatchEvent(new CustomEvent('scheda:sunto', { detail: { sezioni: visibili.sezioni } }));
   };
   const pannelloPref = creaPannelloPreferenze(pref, aggiorna);
   const personalizza = el('button', 'scheda-personalizza');
@@ -365,6 +364,15 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     map.triggerRepaint();
     setTimeout(stampa, 1500);
   });
+  // il Chat bot porta alla scheda: tab e, se indicata, sezione (aperta e portata in vista)
+  document.addEventListener('scheda:vai', e => {
+    const { tab, chiave } = e.detail ?? {};
+    contenitore.querySelector(`.scheda-indice [data-tab="${CSS.escape(String(tab))}"]`)?.click();
+    const sez = [...contenitore.querySelectorAll('.scheda-sez')].find(x => x.dataset.chiave === chiave && !x.hidden);
+    if (!sez) return;
+    sez.open = true;
+    sez.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
   // link condiviso: riapre la scheda nel punto indicato, dopo il primo caricamento dei dati
   const condiviso = new URLSearchParams(location.search).get('scheda');
   if (condiviso) {
@@ -430,7 +438,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     const interrogabili = rndt ? rndt.layerAlPunto(lngLat) : [];
     if (interrogabili.length) voci.push(rndt.segnaposto()); // la scheda si apre subito: le risposte dei servizi arrivano dopo
     const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);
-    const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); nascondiCerchio(map); adattaVista(); };
+    const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); document.dispatchEvent(new CustomEvent('scheda:chiusa')); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); nascondiCerchio(map); adattaVista(); };
     const dati = unisci(voci);
     if (!dati.sezioni.length) { // clic su un punto vuoto
       chiudiScheda();

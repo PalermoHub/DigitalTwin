@@ -75,6 +75,11 @@ export function collegaRail(rail, voci) {
       else if (v.chiudi) v.chiudi();
       else bottoni.get(id).click();
     },
+    // porta in primo piano un pannello aperto ma ripiegato (non crea quelli assenti)
+    mostra(id) {
+      const v = voci.find(o => o.id === id);
+      if (v && !v.pannello.hidden && v.pannello.classList.contains('collassato')) bottoni.get(id).click();
+    },
     // chiude un pannello solo se è aperto (sul telefono il tab «Mappa» riporta alla mappa)
     chiudi(id) {
       const v = voci.find(o => o.id === id);
