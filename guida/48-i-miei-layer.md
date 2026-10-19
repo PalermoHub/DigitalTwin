@@ -71,4 +71,6 @@ Nel ramo Servizi ci sono gruppi di servizi già pronti: un clic li mette in mapp
 - **Comune di Palermo - Carte storiche**: carte storiche, rilievi e ortofoto del Comune (Sispi), per esempio SAS 1981 (centro storico, carta dei tetti), Ortofoto del centro storico 2000, Carta tecnica comunale 1989-91, SAS 1973 (piano quotato).
 - **Regione Siciliana - Beni culturali**: servizi dei beni culturali (SITR) messi in mappa come **dati interrogabili** sull'area di Palermo, per esempio Beni isolati, Beni paesaggistici (D.Lgs. 42/04), Parchi archeologici (2016), Siti archeologici.
 
+- **ISPRA - Carte geologiche**: carta geologica 1:50.000 (raster) e dati del rilevamento 1:25.000 del Servizio Geologico d'Italia (CARG): unità geologiche, depositi quaternari, limiti, elementi tettonici e strutturali, giaciture, risorse e prospezioni (cave, sorgenti, pozzi, sondaggi), messi in mappa come WMS sotto i dati. La geomorfologia 1:25.000 non è inclusa: il servizio non risulta più attivo.
+
 Sono anche già caricati, come esempio, alcuni servizi XYZ, i WMS del Comune di Palermo (Sispi) e gli ArcGIS REST del SITR della Regione Siciliana.

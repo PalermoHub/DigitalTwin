@@ -8,6 +8,7 @@ import { ORTOFOTO } from './ortofoto.js';
 import { WMS_CARTE_STORICHE } from './wms-pronti.js';
 import { XYZ_PRONTI } from './xyz-pronti.js';
 import { BENI_CULTURALI } from './beniculturali.js';
+import { WMS_ISPRA } from './ispra.js';
 import { t as tr, tn, tl } from '../core/i18n.js';
 
 const SVG = d => `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="${d}"/></svg>`;
@@ -281,6 +282,8 @@ export function creaAlbero({ controllo, carica, caricaDaUrl, avvisa }) {
           gruppi: [{ metti: 'aggiungi.ortofoto.metti', aggiungi: o => controllo.aggiungiOrtofoto(o) }] }),
         creaElencoPronto({ titolo: 'aggiungi.beniCulturali', nota: 'aggiungi.beniCulturali.nota', voci: BENI_CULTURALI,
           gruppi: [{ metti: 'aggiungi.beniCulturali.metti', aggiungi: o => controllo.aggiungiBeneCulturaleDati(o) }] }),
+        creaElencoPronto({ titolo: 'aggiungi.ispra', nota: 'aggiungi.ispra.nota', voci: WMS_ISPRA,
+          gruppi: [{ metti: 'aggiungi.ispra.metti', aggiungi: o => controllo.aggiungiWmsPronto(o) }] }),
       );
     }
     ramo.figli.append(modulo, elenco);
