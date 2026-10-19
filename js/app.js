@@ -16,7 +16,7 @@ import { collegaTooltipLayerEsterni } from './rndt/tooltip.js';
 import { collegaTooltipRemoto } from './rndt/tooltip-remoto.js';
 import { migraFileLocali } from './aggiungi/migrazione.js';
 import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
-import { collegaRicerca, collegaRicercaParticella } from './core/ricerca.js';
+import { collegaRicerca, collegaRicercaParticella, cercaOggetti } from './core/ricerca.js';
 import { collegaNavigatoreMappa } from './core/mappa-navigatore.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaTabella } from './core/tabella/index.js';
@@ -166,7 +166,7 @@ map.once('style.load', async () => {
     async apri() {
       if (!pannelloChat.childElementCount) {
         const { creaChatBot } = await import('./core/chat-bot.js');
-        creaChatBot(pannelloChat);
+        creaChatBot(pannelloChat, { cercaOggetti });
       }
       pannelloChat.hidden = false;
     },

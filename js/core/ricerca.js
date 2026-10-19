@@ -56,6 +56,9 @@ function luoghi() {
   return promessaLuoghi;
 }
 
+// i luoghi cercati per nome, come nella barra: li usa anche il Chat bot
+export async function cercaOggetti(testo) { return cercaLuoghi(await luoghi(), testo, 3); }
+
 // «12/345», «f 12 p 345», «foglio 12 particella 345» → { foglio, numero }; altrimenti null
 export function leggiParticella(testo) {
   const m = testo.trim().match(/^(?:f(?:oglio)?\.?\s*)?(\d+)\s*(?:\/|-|p(?:art(?:icella)?)?\.?)\s*(\d+)$/i);

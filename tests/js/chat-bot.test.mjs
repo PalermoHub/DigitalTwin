@@ -89,3 +89,25 @@ test('pulisci: dopo aver pulito si può chiedere di nuovo', async () => {
   await c.chiedi('stampa');
   assert.equal(c.messaggi.at(-1).tipo, 'risposta');
 });
+
+test('chiedi: gli oggetti trovati per nome si aggiungono alla risposta, o la sostituiscono se la guida non sa', async () => {
+  const luogo = { etichetta: 'Teatro Massimo', nota: 'Teatri', strato: 'monumenti', lon: 13.35, lat: 38.12 };
+  const c = creaConversazione({ carica, cercaOggetti: async testo => (/massimo/.test(testo) ? [luogo] : []) });
+  await c.avvia();
+  await c.chiedi('tavolozza colori massimo');
+  assert.deepEqual(c.messaggi.at(-1).oggetti, [luogo]);
+  await c.chiedi('teatro massimo');
+  const m = c.messaggi.at(-1);
+  assert.equal(m.tipo, 'luoghi');
+  assert.deepEqual(m.oggetti, [luogo]);
+  await c.chiedi('zzz');
+  assert.equal(c.messaggi.at(-1).tipo, 'nonLoSo');
+});
+
+test('chiedi: se la ricerca degli oggetti fallisce la risposta resta', async () => {
+  const c = creaConversazione({ carica, cercaOggetti: async () => { throw new Error('rete'); } });
+  await c.avvia();
+  await c.chiedi('tavolozza colori');
+  assert.equal(c.messaggi.at(-1).tipo, 'risposta');
+  assert.deepEqual(c.messaggi.at(-1).oggetti, []);
+});

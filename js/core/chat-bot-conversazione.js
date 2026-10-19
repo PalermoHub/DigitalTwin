@@ -1,8 +1,9 @@
 import { rispondi, domandeIniziali, anteprima, caricaIndice } from './chat-bot-ricerca.js';
 
 // Stato della conversazione del Chat bot, senza DOM: l'interfaccia (chat-bot.js) lo disegna e chiama chiedi()/commuta().
-// Messaggi: presentazione | utente | risposta { voce, breve, cEAltro, espansa } | nonLoSo { vicine } | errore.
-export function creaConversazione({ carica = caricaIndice, suCambio = () => {} } = {}) {
+// Messaggi: presentazione | utente | risposta { voce, breve, cEAltro, espansa, oggetti } | luoghi { oggetti } | nonLoSo { vicine } | errore.
+// `cercaOggetti(testo)` trova per nome i luoghi della mappa (come la barra di ricerca): ognuno ha il suo pulsante per aprirne la scheda.
+export function creaConversazione({ carica = caricaIndice, cercaOggetti = async () => [], suCambio = () => {} } = {}) {
   const messaggi = [];
   let indice = null;
   let n = 0;
@@ -28,9 +29,10 @@ export function creaConversazione({ carica = caricaIndice, suCambio = () => {} }
       let voci;
       try { voci = await leggi(); } catch { aggiungi({ tipo: 'errore' }); return; }
       const { trovate, vicine } = rispondi(voci, domanda);
-      if (!trovate.length) { aggiungi({ tipo: 'nonLoSo', vicine }); return; }
+      const oggetti = await cercaOggetti(domanda).catch(() => []);
+      if (!trovate.length) { aggiungi(oggetti.length ? { tipo: 'luoghi', oggetti } : { tipo: 'nonLoSo', vicine }); return; }
       const { breve, c_e_altro: cEAltro } = anteprima(trovate[0].testo);
-      aggiungi({ tipo: 'risposta', voce: trovate[0], breve, cEAltro, espansa: false });
+      aggiungi({ tipo: 'risposta', voce: trovate[0], breve, cEAltro, espansa: false, oggetti });
     },
     commuta(id) {
       const m = messaggi.find(x => x.id === id);

@@ -373,6 +373,17 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     sez.open = true;
     sez.scrollIntoView({ block: 'start', behavior: 'smooth' });
   });
+  // il Chat bot apre la scheda di un oggetto trovato per nome: strato acceso, mappa sul punto, poi il clic che apre la scheda
+  document.addEventListener('scheda:apri-luogo', e => {
+    const { lon, lat, strato, zoom } = e.detail ?? {};
+    if (!Number.isFinite(lon) || !Number.isFinite(lat)) return;
+    const casella = strato && document.getElementById(`strato-${strato}`);
+    if (casella && !casella.checked && !casella.disabled) { casella.checked = true; casella.dispatchEvent(new Event('change')); }
+    const lngLat = new maplibregl.LngLat(lon, lat);
+    const clic = () => map.fire('click', { point: map.project(lngLat), lngLat });
+    map.once('moveend', () => { if (map.loaded() && !map.isMoving()) setTimeout(clic, 300); else map.once('idle', () => setTimeout(clic, 300)); });
+    map.flyTo({ center: lngLat, zoom: Math.max(zoom ?? 18, ZOOM_SCHEDA), duration: 600 });
+  });
   // link condiviso: riapre la scheda nel punto indicato, dopo il primo caricamento dei dati
   const condiviso = new URLSearchParams(location.search).get('scheda');
   if (condiviso) {

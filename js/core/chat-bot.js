@@ -39,6 +39,18 @@ function disegnaTesto(testo) {
 
 const vaiAllaScheda = dettaglio => document.dispatchEvent(new CustomEvent('scheda:vai', { detail: dettaglio }));
 
+// un pulsante per ogni oggetto trovato: accende il suo strato, porta la mappa sul punto e apre la scheda
+function pulsantiOggetti(oggetti) {
+  const azioni = el('div', 'cb-azioni');
+  for (const o of oggetti ?? []) {
+    const b = Object.assign(el('button', 'cb-oggetto', t('chatbot.apriScheda', { nome: o.etichetta })), { type: 'button' });
+    b.title = b.ariaLabel = o.nota ? `${o.etichetta} — ${o.nota}` : o.etichetta;
+    b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('scheda:apri-luogo', { detail: o })));
+    azioni.append(b);
+  }
+  return azioni;
+}
+
 const tronca = (testo, n) => (testo.length > n ? `${testo.slice(0, n - 1).trimEnd()}…` : testo);
 
 // «Cosa c'è qui»: i dati principali della scheda aperta sulla mappa, un blocco per tab, con i pulsanti per aprirla.
@@ -70,7 +82,7 @@ function disegnaSunto(riquadro) {
   riquadro.replaceChildren(el('summary', null, t('chatbot.sunto.titolo')), ...corpo);
 }
 
-export function creaChatBot(pannello, { carica } = {}) {
+export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
   const testata = el('header', 'gi-testata');
   testata.append(el('h2', null, t('chatbot.titolo')));
   const pulisci = Object.assign(el('button', 'cb-pulisci'), { type: 'button', title: t('chatbot.pulisci'), ariaLabel: t('chatbot.pulisci') });
@@ -132,12 +144,15 @@ export function creaChatBot(pannello, { carica } = {}) {
           azioni.append(b);
         }
         if (azioni.childElementCount) box.append(azioni);
+        if (m.oggetti?.length) box.append(pulsantiOggetti(m.oggetti));
         if (m.cEAltro) {
           const b = Object.assign(el('button', 'cb-altro', m.espansa ? t('chatbot.mostraMeno') : t('chatbot.leggiTutto')), { type: 'button' });
           b.setAttribute('aria-expanded', String(m.espansa));
           b.addEventListener('click', () => conv.commuta(m.id));
           box.append(b);
         }
+      } else if (m.tipo === 'luoghi') {
+        box.append(el('p', null, t('chatbot.luoghi')), pulsantiOggetti(m.oggetti));
       } else if (m.tipo === 'nonLoSo') {
         box.append(el('p', null, t('chatbot.nonLoSo')));
         if (m.vicine.length) box.append(domande(t('chatbot.vicine'), m.vicine));
@@ -162,7 +177,7 @@ export function creaChatBot(pannello, { carica } = {}) {
   }
   document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) aggiornaLayer(); });
 
-  const conv = creaConversazione({ carica, suCambio: disegna });
+  const conv = creaConversazione({ carica, cercaOggetti, suCambio: disegna });
   form.addEventListener('submit', e => {
     e.preventDefault();
     const testo = campo.value;

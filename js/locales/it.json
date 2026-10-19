@@ -2002,6 +2002,8 @@
   "chatbot.riprova": "Riprova",
   "chatbot.accendi": "Attiva: {nome}",
   "chatbot.disattiva": "Disattiva: {nome}",
+  "chatbot.apriScheda": "Apri la scheda: {nome}",
+  "chatbot.luoghi": "Non trovo una spiegazione nella guida, ma sulla mappa c'è:",
   "app.rail.tema": "Tema",
   "tui.titolo": "Tema dell'interfaccia",
   "tui.chiudi": "Chiudi il pannello Tema",
