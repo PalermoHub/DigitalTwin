@@ -22,6 +22,12 @@ PALETTE = ["#e6194b", "#3cb44b", "#4363d8", "#f58231", "#911eb4", "#00a6a6", "#d
 BBOX = (13.20, 38.03, 13.50, 38.25)  # lon/lat comune di Palermo (largo)
 
 
+# Il geocoder della pagina «luogo» a volte colloca la sede sulla strada: coordinate corrette a mano, per indirizzo.
+CORREZIONI_SEDI = {
+    "Via Foro Umberto I n. 14": (13.3728558, 38.1166407),  # Ex Noviziato dei Crociferi (era sul Foro Italico, 13.3741244,38.1168027)
+}
+
+
 def coord_luogo(url):
     t = get(url)
     m = re.search(r"L\.marker\(\[\s*(3[0-9]\.\d+)\s*,\s*(1[0-9]\.\d+)", t)
@@ -69,6 +75,8 @@ def main():
     def scheda(x, livello):
         sede = x["sedi"][0] if x["sedi"] else None
         c = cc.get(sede["url"]) if sede else None
+        if sede and sede["indirizzo"].split(",")[0] in CORREZIONI_SEDI:
+            c = CORREZIONI_SEDI[sede["indirizzo"].split(",")[0]]
         if c and not (BBOX[0] <= c[0] <= BBOX[2] and BBOX[1] <= c[1] <= BBOX[3]):
             c = None
         return {
