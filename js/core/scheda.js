@@ -388,6 +388,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
       if (fatto || mio !== richiestaLuogo) return;
       fatto = true;
       map.fire('click', { point: map.project(lngLat), lngLat });
+      document.dispatchEvent(new CustomEvent('scheda:mostra')); // il pannello della scheda torna davanti agli altri (Chat bot compreso)
     };
     // il clic parte a mappa ferma e con lo strato disegnato (idle); se la mappa era già lì, moveend può non scattare: c'è un tempo massimo
     const attendi = () => { if (map.isMoving()) map.once('moveend', attendi); else if (map.loaded()) setTimeout(clic, 150); else map.once('idle', () => setTimeout(clic, 150)); };

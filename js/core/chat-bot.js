@@ -43,8 +43,8 @@ const vaiAllaScheda = dettaglio => document.dispatchEvent(new CustomEvent('sched
 function pulsantiOggetti(oggetti) {
   const azioni = el('div', 'cb-azioni');
   for (const o of oggetti ?? []) {
-    const b = Object.assign(el('button', 'cb-oggetto', t('chatbot.apriScheda', { nome: o.etichetta })), { type: 'button' });
-    b.title = b.ariaLabel = o.nota ? `${o.etichetta} — ${o.nota}` : o.etichetta;
+    const b = Object.assign(el('button', 'cb-oggetto', t('chatbot.apriScheda', { nome: o.nota ? `${o.etichetta} (${o.nota})` : o.etichetta })), { type: 'button' });
+    b.title = b.ariaLabel = b.textContent;
     b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('scheda:apri-luogo', { detail: o })));
     azioni.append(b);
   }

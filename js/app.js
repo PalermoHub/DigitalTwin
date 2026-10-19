@@ -199,6 +199,7 @@ map.once('style.load', async () => {
   btnChatBarra.addEventListener('click', () => rail.commuta('chatbot'));
   new MutationObserver(() => btnChatBarra.setAttribute('aria-pressed', String(!pannelloChat.hidden && !pannelloChat.classList.contains('collassato'))))
     .observe(pannelloChat, { attributes: true, attributeFilter: ['hidden', 'class'] });
+  document.addEventListener('scheda:mostra', () => rail.mostra('scheda'));
   document.addEventListener('scheda:vai', () => rail.mostra('scheda')); // dal Chat bot: la scheda torna in primo piano
   tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); rail.chiudi('chatbot'); document.getElementById('crediti').open && document.getElementById('crediti').close(); };
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
