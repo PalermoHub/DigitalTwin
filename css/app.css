@@ -1473,7 +1473,7 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #menu-info button, #menu-info a { display: block; box-sizing: border-box; text-decoration: none; padding: 10px 12px; border: 0; border-bottom: 3px solid transparent; border-radius: var(--r-sm) var(--r-sm) 0 0; background: none; color: var(--text-muted); font: inherit; font-weight: 600; white-space: nowrap; cursor: pointer; }
 #menu-info button:hover, #menu-info a:hover { background: var(--surface-hover); color: var(--text); }
 #menu-info button[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
-/* «Guide»: le tre guide in una tendina sotto la voce (sotto i 1180 px il menu le elenca già sotto il titolo «Guide») */
+/* «Guida generale» e «About» sono voci vere; la freccia accanto apre le altre (Plugin RNDT e Geoimage; Presentazione e Privacy) */
 .menu-tendina { position: relative; }
 .menu-tendina-toggle::after { content: " ▾"; font-size: .75em; }
 .menu-tendina-toggle[aria-expanded="true"], .menu-tendina-toggle.attiva { color: var(--text); }
@@ -1481,7 +1481,7 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 .menu-tendina-lista { display: none; position: absolute; top: 100%; left: 0; white-space: nowrap; z-index: calc(var(--z-header) + 1); min-width: 100%; padding: 6px 0; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra); }
 .menu-tendina.aperta .menu-tendina-lista { display: block; }
 #menu-altro .menu-tendina-lista { left: auto; right: 0; }
-.menu-diviso { display: flex; align-items: center; } /* «About» è una voce vera; la freccia accanto apre le altre due */
+.menu-diviso { display: flex; align-items: center; }
 #menu-info .menu-diviso .menu-tendina-toggle { padding-left: 4px; padding-right: 8px; }
 .menu-diviso .menu-tendina-toggle::after { content: "▾"; }
 @media (min-width: 1181px) {
@@ -1495,7 +1495,7 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
   #menu-info .menu-tendina-lista :is(button, a) { width: 100%; padding-right: 32px; font-weight: 500; }
   #menu-altro .menu-tendina-lista { right: auto; }
   .menu-diviso { flex-wrap: wrap; }
-  #menu-info .menu-diviso > [data-scheda="about"] { flex: 1; width: auto; }
+  #menu-info .menu-diviso > [data-scheda] { flex: 1; width: auto; }
   #menu-info .menu-diviso .menu-tendina-toggle { width: 48px; min-height: 48px; padding: 0; text-align: center; }
   #menu-info .menu-diviso .menu-tendina-lista { flex-basis: 100%; }
 }
