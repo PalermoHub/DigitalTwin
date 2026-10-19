@@ -40,3 +40,10 @@ test('costruisciLink mantiene parametri e hash e sostituisce v', () => {
   assert.equal(l.searchParams.get('scheda'), '38.1,13.3');
   assert.equal(l.hash, '#13/38.1/13.3');
 });
+
+test('m: legende sulla mappa si conserva solo se vale 1', async () => {
+  const { testo } = await codifica({ a: ['pnrr'], m: 1 });
+  assert.equal((await decodifica(testo)).m, 1);
+  const { testo: altro } = await codifica({ a: ['pnrr'], m: 'si' });
+  assert.equal((await decodifica(altro)).m, undefined);
+});

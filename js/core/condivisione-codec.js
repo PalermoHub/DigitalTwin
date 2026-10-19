@@ -57,6 +57,7 @@ function pulisci(o) {
   }
   if (stringa(o.b, 40)) r.b = o.b;
   if (o.t === 0 || o.t === 1) r.t = o.t;
+  if (o.m === 1) r.m = 1; // le legende degli strati accesi stanno sulla mappa (link dei percorsi guidati della home)
   if (o.z && typeof o.z === 'object') {
     const z = Object.fromEntries(['circ', 'quart', 'upl'].filter(k => stringa(o.z[k], 200) && o.z[k]).map(k => [k, o.z[k]]));
     if (Object.keys(z).length) r.z = z;

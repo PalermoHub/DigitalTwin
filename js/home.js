@@ -70,9 +70,9 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') sincronizzaT
 
 // Link alla mappa: lo stato condiviso con i soli strati voluti (senza vista, la mappa resta dov'è di default).
 const MAPPA = new URL('index.html', location.href).href;
-async function linkMappa(strati) {
+async function linkMappa(strati, legendeSuMappa = false, vista = null) {
   try {
-    const { testo } = await codifica({ a: strati });
+    const { testo } = await codifica({ a: strati, ...(legendeSuMappa && { m: 1 }), ...(vista && { c: vista }) });
     return costruisciLink(MAPPA, testo);
   } catch {
     return MAPPA;
@@ -233,12 +233,18 @@ function costruisciSlider() {
 }
 
 // ---- elenco degli strati ----
+const NUOVO_GIORNI = 7; // una scheda è «Nuova» per una settimana dopo l'aggiunta alla mappa
+const GIORNO = 86400000;
+const isNuovo = data => !!data && Date.now() - new Date(data).getTime() <= NUOVO_GIORNI * GIORNO;
+const formatoData = data => new Date(data).toLocaleDateString(lingua(), { day: 'numeric', month: 'long', year: 'numeric' });
+
 // Card a due facce: davanti immagine, titolo, descrizione e pulsante; dietro i dettagli. Si gira col clic sulla card.
 function costruisciCard(s, a) {
   const li = el('li', { className: 'strato-card' });
   const interno = el('div', { className: 'card-interno' });
   const chip = [a.titolo, s.sezione].filter(Boolean);
   const fronte = el('div', { className: 'card-faccia card-fronte' },
+    ...(isNuovo(a.data) ? [el('span', { className: 'card-nuovo', textContent: tr('home.nuovo') })] : []),
     el('img', { className: 'card-img', src: `img/home/strati/${s.id}.webp`, alt: '', title: s.etichetta, width: 640, height: 360, loading: 'lazy' }),
     el('div', { className: 'card-corpo' },
       el('h4', { textContent: s.etichetta }),
@@ -250,7 +256,7 @@ function costruisciCard(s, a) {
   const riga = (k, v) => (v ? [el('dt', { textContent: tr(k) }), el('dd', { textContent: v })] : []);
   const retro = el('div', { className: 'card-faccia card-retro' },
     el('h4', { textContent: s.etichetta }),
-    el('dl', {}, ...riga('home.retro.argomento', a.titolo), ...riga('home.retro.ambito', s.sezione), ...riga('home.retro.fonte', a.fonte), ...(a.link?.length ? [el('dt', { textContent: tr('home.retro.risorse') }), el('dd', {}, el('ul', { className: 'card-risorse' }, ...a.link.map(([testo, href]) => el('li', {}, el('a', { href, textContent: testo, target: '_blank', rel: 'noopener' })))))] : []), ...riga('home.retro.nota', s.nota)),
+    el('dl', {}, ...riga('home.retro.argomento', a.titolo), ...riga('home.retro.ambito', s.sezione), ...riga('home.retro.fonte', a.fonte), ...riga('home.retro.aggiunto', a.data && formatoData(a.data)), ...riga('home.retro.aggiornati', a.aggiornati && formatoData(a.aggiornati)), ...(a.link?.length ? [el('dt', { textContent: tr('home.retro.risorse') }), el('dd', {}, el('ul', { className: 'card-risorse' }, ...a.link.map(([testo, href]) => el('li', {}, el('a', { href, textContent: testo, target: '_blank', rel: 'noopener' })))))] : []), ...riga('home.retro.nota', s.nota)),
     el('div', { className: 'card-piede' },
       bottoneAggiungi([s.id], s.etichetta)));
   interno.append(fronte, retro);
@@ -283,6 +289,7 @@ async function costruisciElenco() {
     li.dataset.data = a.data ?? '';
     li.dataset.testo = normalizza(`${s.etichetta} ${a.titolo} ${s.sezione ?? ''}`);
     li.dataset.argomento = a.id;
+    li.dataset.enti = (a.enti ?? []).join('|');
     li.dataset.strato = s.id;
     return li;
   });
@@ -298,13 +305,26 @@ async function costruisciElenco() {
     const b = el('button', { type: 'button', className: 'filtro-chip', textContent: tr('home.filtro.conta', { titolo: a.titolo, n }) });
     b.dataset.argomento = a.id;
     b.addEventListener('click', () => {
-      if (!a.id) scelti.clear();
+      if (!a.id) { scelti.clear(); entiScelti.clear(); }
       else if (!scelti.delete(a.id)) scelti.add(a.id);
       filtra();
     });
     return b;
   });
   filtroBox.append(...chip);
+
+  // filtro per ente: più enti = strati di uno qualsiasi; si combina con quello per argomento
+  const entiScelti = new Set();
+  const conteEnti = new Map();
+  for (const a of argomenti) for (const e of a.enti ?? []) conteEnti.set(e, (conteEnti.get(e) ?? 0) + a.strati.length);
+  const chipEnti = [...conteEnti].sort(([x], [y]) => x.localeCompare(y, lingua(), { sensitivity: 'base' })).map(([ente, n]) => {
+    const b = el('button', { type: 'button', className: 'filtro-chip', textContent: tr('home.filtro.conta', { titolo: ente, n }) });
+    b.dataset.ente = ente;
+    b.addEventListener('click', () => { if (!entiScelti.delete(ente)) entiScelti.add(ente); filtra(); });
+    return b;
+  });
+  document.getElementById('home-enti').append(...chipEnti);
+  document.getElementById('home-enti-titolo').textContent = tr('home.filtro.enti', { n: chipEnti.length });
 
   // ordine delle card: per nome o per data, crescente o decrescente; a parità resta l'ordine alfabetico
   const ordinaBox = document.getElementById('home-ordina');
@@ -343,11 +363,13 @@ async function costruisciElenco() {
     const q = normalizza(campo.value.trim());
     visibiliIds.length = 0;
     for (const li of card) {
-      const si = (!scelti.size || scelti.has(li.dataset.argomento)) && (!q || li.dataset.testo.includes(q));
+      const si = (!scelti.size || scelti.has(li.dataset.argomento)) && (!entiScelti.size || li.dataset.enti.split('|').some(e => entiScelti.has(e))) && (!q || li.dataset.testo.includes(q));
       li.hidden = !si;
       if (si) visibiliIds.push(li.dataset.strato);
     }
+    for (const b of chipEnti) b.setAttribute('aria-pressed', String(entiScelti.has(b.dataset.ente)));
     for (const b of chip) b.setAttribute('aria-pressed', String(b.dataset.argomento ? scelti.has(b.dataset.argomento) : !scelti.size));
+    document.getElementById('home-enti').closest('details').classList.toggle('con-scelte', entiScelti.size > 0);
     const desc = argomenti.filter(a => scelti.has(a.id)).map(a => a.descrizione).filter(Boolean).join(' ');
     descBox.textContent = desc;
     descBox.hidden = !desc;
@@ -360,8 +382,33 @@ async function costruisciElenco() {
   filtra();
 }
 
+async function costruisciPercorsi() {
+  const box = document.getElementById('home-percorsi');
+  let percorsi;
+  let argomenti;
+  try {
+    percorsi = await (await fetch(new URL('./core/home-percorsi.json', import.meta.url))).json();
+    argomenti = (await (await fetch(new URL('./core/home-strati.json', import.meta.url))).json())[lingua()];
+  } catch {
+    box.closest('.home-percorsi-fascia').hidden = true;
+    return;
+  }
+  const nomi = new Map(argomenti.flatMap(a => a.strati.map(s => [s.id, s.etichetta])));
+  for (const p of percorsi) {
+    const testi = p[lingua()] ?? p.it;
+    const apri = el('a', { className: 'percorso-apri', href: MAPPA, textContent: tr('home.percorsi.apri') });
+    linkMappa(p.strati, true, p.vista).then(href => { apri.href = href; });
+    box.append(el('li', { className: 'percorso' },
+      el('h4', { textContent: testi.titolo }),
+      el('p', { textContent: testi.testo }),
+      el('p', { className: 'percorso-strati', textContent: p.strati.map(id => nomi.get(id) ?? id).join(' · ') }),
+      apri));
+  }
+}
+
 costruisciIndice();
 costruisciSlider();
+await costruisciPercorsi();
 await costruisciElenco();
 aggiornaCesto();
 

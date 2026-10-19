@@ -87,6 +87,11 @@
 <section class="fascia fascia--alt home-strati" id="strati" aria-labelledby="titolo-strati">
 <div class="fascia-in">
   <h2 id="titolo-strati" data-i18n="home.strati.titolo">Cosa puoi accendere</h2>
+  <div class="home-percorsi-fascia">
+    <h3 data-i18n="home.percorsi.titolo">Percorsi guidati</h3>
+    <p class="home-percorsi-intro" data-i18n="home.percorsi.intro">Un tema, già pronto: apri la mappa con gli strati giusti accesi.</p>
+    <ul class="home-percorsi" id="home-percorsi"></ul>
+  </div>
   <div class="home-filtri" id="home-filtri-riga">
     <label class="home-cerca"><span class="solo-lettori" data-i18n="home.cerca.etichetta">Cerca uno strato</span>
       <input type="search" id="home-cerca" autocomplete="off" data-i18n-placeholder="home.cerca.segnaposto" placeholder="Cerca uno strato o un argomento…"></label>
@@ -94,6 +99,7 @@
     <p class="home-conteggio" id="home-conteggio" role="status" aria-live="polite"></p>
   </div>
   <div class="home-argomenti" id="home-argomenti" role="group" data-i18n-aria="home.filtro.aria" aria-label="Filtra per argomento"></div>
+  <details class="home-enti"><summary id="home-enti-titolo">Filtra per ente</summary><div class="home-argomenti" id="home-enti" role="group" data-i18n-aria="home.filtro.entiAria" aria-label="Filtra per ente"></div></details>
   <p class="home-argomento-desc" id="home-argomento-desc" hidden></p>
   <div id="home-elenco"></div>
   <p class="home-vuoto" id="home-vuoto" hidden data-i18n="home.vuoto">Nessuno strato corrisponde alla ricerca.</p>

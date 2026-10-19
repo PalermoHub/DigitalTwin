@@ -1,6 +1,7 @@
 {
  "alberi": {
   "data": "2026-10-04",
+  "aggiornati": "2026-10-07",
   "enti": [
    "MASAF"
   ],
@@ -33,6 +34,7 @@
  },
  "colonnine": {
   "data": "2026-10-04",
+  "aggiornati": "2026-10-19",
   "enti": [
    "GSE"
   ],
@@ -73,6 +75,7 @@
  },
  "confini": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-07",
   "enti": [
    "ISTAT",
    "Comune di Palermo",
@@ -115,6 +118,7 @@
  },
  "crociferi": {
   "data": "2026-10-12",
+  "aggiornati": "2026-10-12",
   "enti": [
    "Comune di Palermo"
   ],
@@ -125,6 +129,7 @@
  },
  "distributori": {
   "data": "2026-10-15",
+  "aggiornati": "2026-10-16",
   "enti": [
    "MIMIT"
   ],
@@ -181,6 +186,7 @@
  },
  "fontanelle": {
   "data": "2026-10-04",
+  "aggiornati": "2026-10-07",
   "enti": [
    "AMAP",
    "Comune di Palermo"
@@ -222,6 +228,7 @@
  },
  "incendi": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-03",
   "enti": [
    "Comune di Palermo",
    "Regione Siciliana"
@@ -247,6 +254,7 @@
  },
  "isole-calore": {
   "data": "2026-10-06",
+  "aggiornati": "2026-10-06",
   "enti": [
    "USGS"
   ],
@@ -287,6 +295,7 @@
  },
  "mef-immobili": {
   "data": "2026-10-10",
+  "aggiornati": "2026-10-10",
   "enti": [
    "MEF",
    "Comune di Palermo"
@@ -312,6 +321,7 @@
  },
  "monumenti": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-16",
   "enti": [
    "Comune di Palermo"
   ],
@@ -336,6 +346,7 @@
  },
  "opere": {
   "data": "2026-10-16",
+  "aggiornati": "2026-10-16",
   "enti": [
    "RGS",
    "Agenzia delle Entrate",
@@ -386,6 +397,7 @@
  },
  "pai": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-03",
   "enti": [
    "Regione Siciliana"
   ],
@@ -418,6 +430,7 @@
  },
  "peba": {
   "data": "2026-10-11",
+  "aggiornati": "2026-10-11",
   "enti": [
    "Comune di Palermo"
   ],
@@ -428,6 +441,7 @@
  },
  "pendolarismo": {
   "data": "2026-10-11",
+  "aggiornati": "2026-10-11",
   "enti": [
    "ISTAT"
   ],
@@ -460,6 +474,7 @@
  },
  "pnrr": {
   "data": "2026-10-15",
+  "aggiornati": "2026-10-15",
   "enti": [
    "Struttura di missione PNRR",
    "Sogei",
@@ -518,6 +533,7 @@
  },
  "popolazione": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-07",
   "enti": [
    "ISTAT",
    "AGID"
@@ -559,6 +575,7 @@
  },
  "scuole": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-07",
   "enti": [
    "Comune di Palermo",
    "MIUR"
@@ -592,6 +609,7 @@
  },
  "sicurezza": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-07",
   "enti": [
    "Comune di Palermo",
    "OpenStreetMap"
@@ -681,6 +699,7 @@
  },
  "territorio": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-16",
   "enti": [
    "Regione Siciliana",
    "Agenzia delle Entrate",
@@ -739,6 +758,7 @@
  },
  "trasporto": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-07",
   "enti": [
    "AMAT",
    "Trenitalia",
@@ -781,6 +801,7 @@
  },
  "trend-popolazione": {
   "data": "2026-10-15",
+  "aggiornati": "2026-10-15",
   "enti": [
    "ISTAT"
   ],
@@ -813,6 +834,7 @@
  },
  "uffici": {
   "data": "2026-10-03",
+  "aggiornati": "2026-10-19",
   "enti": [
    "Comune di Palermo"
   ],

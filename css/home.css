@@ -151,3 +151,19 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .numero strong { font-size: clamp(1.8rem, 4vw, 2.4rem); line-height: 1; color: var(--accent-strong); font-variant-numeric: tabular-nums; }
 .numero span { color: var(--text-muted); font-size: var(--fs-md); }
 @media (prefers-reduced-motion: reduce) { .numero { transition: none; } }
+
+/* percorsi guidati, filtro per ente, badge «Nuovo» */
+.home-percorsi-fascia { margin-bottom: 28px; }
+.home-percorsi-fascia h3 { margin: 0 0 4px; }
+.home-percorsi-intro { margin: 0 0 14px; color: var(--text-muted); }
+.home-percorsi { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.percorso { display: flex; flex-direction: column; gap: 6px; padding: 16px; border: 1px solid var(--border-ui); border-radius: var(--r-md, 12px); background: var(--surface); }
+.percorso h4 { margin: 0; }
+.percorso p { margin: 0; }
+.percorso-strati { color: var(--text-muted); font-size: var(--fs-xs); }
+.percorso-apri { margin-top: auto; align-self: flex-start; padding: 6px 14px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: var(--fs-sm); font-weight: 700; text-decoration: none; }
+.percorso-apri:hover { filter: brightness(.95); }
+.home-enti { margin: 0 0 12px; }
+.home-enti summary { cursor: pointer; width: fit-content; margin-bottom: 8px; color: var(--text-muted); font-size: var(--fs-sm); font-weight: 600; }
+.home-enti.con-scelte summary { color: var(--text); }
+.card-nuovo { position: absolute; top: 10px; left: 10px; z-index: 1; padding: 3px 10px; border-radius: 999px; background: #1e8e3e; color: #fff; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }

@@ -16,6 +16,7 @@
     "AGID"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "AGID Cruscotto Italia",
@@ -46,6 +47,7 @@
     "MASAF"
    ],
    "data": "2026-10-04",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Elenco degli alberi monumentali d'Italia, MASAF",
@@ -90,6 +92,7 @@
     "AMAP"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "ISTAT, Basi territoriali e variabili censuarie",
@@ -120,6 +123,7 @@
     "MIMIT"
    ],
    "data": "2026-10-15",
+   "aggiornati": "2026-10-16",
    "link": [
     [
      "Open data carburanti del MIMIT",
@@ -171,7 +175,8 @@
    "enti": [
     "Comune di Palermo"
    ],
-   "data": "2026-10-12"
+   "data": "2026-10-12",
+   "aggiornati": "2026-10-12"
   },
   {
    "id": "fontanelle",
@@ -189,6 +194,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-04",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Dataset sul portale open data del Comune",
@@ -220,6 +226,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-10",
+   "aggiornati": "2026-10-10",
    "link": [
     [
      "Open data del censimento degli immobili pubblici",
@@ -243,6 +250,7 @@
     "Regione Siciliana"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-03",
    "link": [
     [
      "SIF Regione Siciliana",
@@ -265,6 +273,7 @@
     "USGS"
    ],
    "data": "2026-10-06",
+   "aggiornati": "2026-10-06",
    "link": [
     [
      "USGS Landsat",
@@ -295,6 +304,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-16",
    "link": [
     [
      "Mappa monumentale di Palermo, M. Petrucci",
@@ -319,6 +329,7 @@
     "ISTAT"
    ],
    "data": "2026-10-16",
+   "aggiornati": "2026-10-16",
    "link": [
     [
      "Progetti Opere Pubbliche MOP, Open BDAP",
@@ -352,7 +363,8 @@
    "enti": [
     "Comune di Palermo"
    ],
-   "data": "2026-10-11"
+   "data": "2026-10-11",
+   "aggiornati": "2026-10-11"
   },
   {
    "id": "pendolarismo",
@@ -369,6 +381,7 @@
     "ISTAT"
    ],
    "data": "2026-10-11",
+   "aggiornati": "2026-10-11",
    "link": [
     [
      "ISTAT, Matrice di pendolarismo (Esplora dati)",
@@ -397,6 +410,7 @@
     "AGID"
    ],
    "data": "2026-10-15",
+   "aggiornati": "2026-10-15",
    "link": [
     [
      "Catalogo open data di Italia Domani",
@@ -478,6 +492,7 @@
     "MIUR"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Anagrafe edilizia scolastica, MIUR",
@@ -504,6 +519,7 @@
     "GSE"
    ],
    "data": "2026-10-04",
+   "aggiornati": "2026-10-19",
    "link": [
     [
      "Piattaforma Unica Nazionale",
@@ -547,6 +563,7 @@
     "OpenStreetMap"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Sinistri 2022, open data del Comune",
@@ -601,6 +618,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-16",
    "link": [
     [
      "SITR Regione Siciliana",
@@ -662,6 +680,7 @@
     "OpenStreetMap"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Progetto OpenAMAT",
@@ -692,6 +711,7 @@
     "ISTAT"
    ],
    "data": "2026-10-15",
+   "aggiornati": "2026-10-15",
    "link": [
     [
      "ISTAT, Basi territoriali e variabili censuarie",
@@ -718,6 +738,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-19",
    "link": [
     [
      "Uffici del Comune di Palermo",
@@ -786,6 +807,7 @@
     "Regione Siciliana"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-03",
    "link": [
     [
      "PAI, SITR Regione Siciliana",
@@ -832,6 +854,7 @@
     "AMAP"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "ISTAT, Basi territoriali e variabili censuarie",
@@ -888,6 +911,7 @@
     "ISTAT"
    ],
    "data": "2026-10-11",
+   "aggiornati": "2026-10-11",
    "link": [
     [
      "ISTAT, Matrice di pendolarismo (Esplora dati)",
@@ -915,6 +939,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-04",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Dataset sul portale open data del Comune",
@@ -946,6 +971,7 @@
     "Regione Siciliana"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-03",
    "link": [
     [
      "SIF Regione Siciliana",
@@ -967,7 +993,8 @@
    "enti": [
     "Comune di Palermo"
    ],
-   "data": "2026-10-12"
+   "data": "2026-10-12",
+   "aggiornati": "2026-10-12"
   },
   {
    "id": "distributori",
@@ -984,6 +1011,7 @@
     "MIMIT"
    ],
    "data": "2026-10-15",
+   "aggiornati": "2026-10-16",
    "link": [
     [
      "Open data carburanti del MIMIT",
@@ -1010,6 +1038,7 @@
     "USGS"
    ],
    "data": "2026-10-06",
+   "aggiornati": "2026-10-06",
    "link": [
     [
      "USGS Landsat",
@@ -1041,6 +1070,7 @@
     "AGID"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "AGID Cruscotto Italia",
@@ -1071,6 +1101,7 @@
     "MASAF"
    ],
    "data": "2026-10-04",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Elenco degli alberi monumentali d'Italia, MASAF",
@@ -1097,6 +1128,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-16",
    "link": [
     [
      "Mappa monumentale di Palermo, M. Petrucci",
@@ -1119,6 +1151,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-19",
    "link": [
     [
      "Uffici del Comune di Palermo",
@@ -1143,6 +1176,7 @@
     "AGID"
    ],
    "data": "2026-10-15",
+   "aggiornati": "2026-10-15",
    "link": [
     [
      "Catalogo open data di Italia Domani",
@@ -1227,6 +1261,7 @@
     "Regione Siciliana"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-03",
    "link": [
     [
      "PAI, SITR Regione Siciliana",
@@ -1252,7 +1287,8 @@
    "enti": [
     "Comune di Palermo"
    ],
-   "data": "2026-10-11"
+   "data": "2026-10-11",
+   "aggiornati": "2026-10-11"
   },
   {
    "id": "trend-popolazione",
@@ -1269,6 +1305,7 @@
     "ISTAT"
    ],
    "data": "2026-10-15",
+   "aggiornati": "2026-10-15",
    "link": [
     [
      "ISTAT, Basi territoriali e variabili censuarie",
@@ -1296,6 +1333,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-10",
+   "aggiornati": "2026-10-10",
    "link": [
     [
      "Open data del censimento degli immobili pubblici",
@@ -1341,6 +1379,7 @@
     "OpenStreetMap"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Progetto OpenAMAT",
@@ -1373,6 +1412,7 @@
     "ISTAT"
    ],
    "data": "2026-10-16",
+   "aggiornati": "2026-10-16",
    "link": [
     [
      "Progetti Opere Pubbliche MOP, Open BDAP",
@@ -1420,6 +1460,7 @@
     "OpenStreetMap"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Sinistri 2022, open data del Comune",
@@ -1450,6 +1491,7 @@
     "GSE"
    ],
    "data": "2026-10-04",
+   "aggiornati": "2026-10-19",
    "link": [
     [
      "Piattaforma Unica Nazionale",
@@ -1485,6 +1527,7 @@
     "MIUR"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-07",
    "link": [
     [
      "Anagrafe edilizia scolastica, MIUR",
@@ -1573,6 +1616,7 @@
     "Comune di Palermo"
    ],
    "data": "2026-10-03",
+   "aggiornati": "2026-10-16",
    "link": [
     [
      "SITR Regione Siciliana",

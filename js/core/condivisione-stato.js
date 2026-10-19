@@ -75,6 +75,7 @@ export function applica(stato, doc, map) {
     for (const id of accesi) if (!doc.getElementById(`strato-${id}`) && !ESTERNO.test(id)) ignorati.push(tr('condividi.ignorato.strato', { id }));
     for (const x of doc.querySelectorAll('input[id^="strato-"]')) {
       const voluto = accesi.has(x.id.slice(7));
+      if (stato.m && voluto) x.dataset.legendaMappa = '1'; // prima del cambio: la legenda nasce già sulla mappa
       if (x.checked !== voluto && !x.disabled) { x.checked = voluto; evento(x, 'change'); }
     }
   }

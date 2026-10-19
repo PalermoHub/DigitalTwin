@@ -53,10 +53,13 @@ function espressione(rampa) {
 }
 
 // Ogni voce è un filtro: spegnerla rende trasparenti le sezioni di quella classe.
-function disegnaLegenda(map, rampa, anno) {
+function disegnaLegenda(map, { etichetta, unita, rampa }, anno) {
   if (!legenda) return;
   nascoste.clear();
   const voci = [{ value: 'senza dato', color: EDIFICATO_NEUTRAL }, ...densityLegendStops(rampa, false)];
+  const titolo = document.createElement('em');
+  titolo.className = 'peba-legenda-titolo';
+  titolo.textContent = `${etichetta}${unita ? ` (${unita})` : ''} · ${anno}`;
   const righe = voci.map(({ value, color }, k) => {
     const chip = document.createElement('i');
     chip.style.background = color;
@@ -72,7 +75,7 @@ function disegnaLegenda(map, rampa, anno) {
     nota.textContent = tl('Censimento permanente 2023: stime campionarie');
     righe.push(nota);
   }
-  legenda.replaceChildren(...righe);
+  legenda.replaceChildren(titolo, ...righe);
 }
 
 // Applica anno e indicatore richiesti. Lo stato cambia solo se il caricamento riesce: se il
@@ -94,7 +97,7 @@ async function applica(map, { anno, indicatore }) {
   nascoste.clear(); // nuovo indicatore o anno: la legenda riparte con tutte le classi accese
   map.setPaintProperty('pop-fill', 'fill-color', espressione(ind.rampa));
   stato = { ...stato, anno, indicatore, nValori, anniDisponibili: Object.keys(indici).map(Number).sort() };
-  disegnaLegenda(map, ind.rampa, anno);
+  disegnaLegenda(map, ind, anno);
 }
 
 export default {

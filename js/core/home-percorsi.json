@@ -1,0 +1,181 @@
+[
+ {
+  "id": "rischio",
+  "strati": [
+   "geo_pericolosita",
+   "idraulica_pericolosita",
+   "coste_pericolosita",
+   "incendi",
+   "isole-calore"
+  ],
+  "it": {
+   "titolo": "Rischi e clima",
+   "testo": "Frane, alluvioni, erosione costiera, incendi e isole di calore: dove la città è più esposta."
+  },
+  "en": {
+   "titolo": "Risks and climate",
+   "testo": "Landslides, floods, coastal erosion, fires and heat islands: where the city is most exposed."
+  }
+ },
+ {
+  "id": "scuole",
+  "strati": [
+   "scuole",
+   "seggi",
+   "quartieri",
+   "coropletico"
+  ],
+  "it": {
+   "titolo": "Scuole e quartieri",
+   "testo": "Scuole, sezioni elettorali e popolazione per sezione, sui confini dei quartieri."
+  },
+  "en": {
+   "titolo": "Schools and neighbourhoods",
+   "testo": "Schools, polling stations and population by census section, over neighbourhood boundaries."
+  }
+ },
+ {
+  "id": "mobilita",
+  "strati": [
+   "trasporto-metro",
+   "trasporto-bus",
+   "trasporto-fermate",
+   "colonnine",
+   "distributori"
+  ],
+  "it": {
+   "titolo": "Mobilità",
+   "testo": "Metro, autobus e fermate, con colonnine di ricarica e distributori di carburante."
+  },
+  "en": {
+   "titolo": "Mobility",
+   "testo": "Metro, buses and stops, with charging points and fuel stations."
+  }
+ },
+ {
+  "id": "trasformazione",
+  "strati": [
+   "pnrr",
+   "opere",
+   "trend-popolazione"
+  ],
+  "it": {
+   "titolo": "Città in trasformazione",
+   "testo": "Progetti PNRR, opere pubbliche e come cambia la popolazione dal 2011."
+  },
+  "en": {
+   "titolo": "A city in transformation",
+   "testo": "PNRR projects, public works and how the population has changed since 2011."
+  }
+ },
+ {
+  "id": "patrimonio",
+  "strati": [
+   "monumenti",
+   "alberi",
+   "fontanelle",
+   "crociferi3d"
+  ],
+  "it": {
+   "titolo": "Patrimonio e verde",
+   "testo": "Monumenti, alberi monumentali e fontanelle, fino ai Crociferi in 3D."
+  },
+  "en": {
+   "titolo": "Heritage and greenery",
+   "testo": "Monuments, monumental trees and fountains, up to the Crociferi in 3D."
+  }
+ },
+ {
+  "id": "urbanistica",
+  "strati": [
+   "prg",
+   "vincoli",
+   "catasto",
+   "omi",
+   "civici"
+  ],
+  "it": {
+   "titolo": "Urbanistica",
+   "testo": "Piano regolatore, vincoli, particelle catastali, zone OMI e numeri civici, per leggere un lotto."
+  },
+  "en": {
+   "titolo": "Urban planning",
+   "testo": "Zoning plan, constraints, cadastral parcels, OMI zones and street numbers, to read a plot."
+  },
+  "vista": [
+   13.3613,
+   38.1157,
+   16,
+   0,
+   0
+  ]
+ },
+ {
+  "id": "sicurezza",
+  "strati": [
+   "sicurezza-hotspot",
+   "sicurezza-pericolose",
+   "sicurezza-archi",
+   "sicurezza-incidenti"
+  ],
+  "it": {
+   "titolo": "Sicurezza stradale",
+   "testo": "Dove avvengono gli incidenti: hotspot, strade più pericolose e incidenti per km."
+  },
+  "en": {
+   "titolo": "Road safety",
+   "testo": "Where crashes happen: hotspots, the most dangerous streets and crashes per km."
+  }
+ },
+ {
+  "id": "pendolari",
+  "strati": [
+   "pendolarismo",
+   "coropletico",
+   "trasporto-metro",
+   "trasporto-fermate"
+  ],
+  "it": {
+   "titolo": "Chi si sposta",
+   "testo": "Pendolarismo da e verso Palermo, popolazione per sezione e rete del trasporto pubblico."
+  },
+  "en": {
+   "titolo": "Who commutes",
+   "testo": "Commuting to and from Palermo, population by census section and the public transport network."
+  }
+ },
+ {
+  "id": "accessibilita",
+  "strati": [
+   "peba",
+   "uffici",
+   "trasporto-fermate",
+   "scuole"
+  ],
+  "it": {
+   "titolo": "Città accessibile",
+   "testo": "Barriere architettoniche, uffici comunali, fermate e scuole: dove l'accesso è più difficile."
+  },
+  "en": {
+   "titolo": "An accessible city",
+   "testo": "Architectural barriers, municipal offices, stops and schools: where access is hardest."
+  }
+ },
+ {
+  "id": "immobili",
+  "strati": [
+   "mef-immobili",
+   "immobili",
+   "uffici",
+   "catasto"
+  ],
+  "it": {
+   "titolo": "Immobili pubblici",
+   "testo": "Immobili dichiarati al MEF, immobili comunali, uffici e particelle catastali."
+  },
+  "en": {
+   "titolo": "Public property",
+   "testo": "Properties declared to the MEF, municipal properties, offices and cadastral parcels."
+  }
+ }
+]
