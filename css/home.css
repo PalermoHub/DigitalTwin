@@ -40,8 +40,8 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .argomento-tutti.aggiunto { background: var(--positivo); border-color: var(--positivo); color: var(--bianco); }
 
 /* card a due facce: il clic la gira (come su PalermoHub) */
-.strato-card { perspective: 1200px; height: 400px; cursor: pointer; }
-.card-interno { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .6s; }
+.strato-card { perspective: 1000px; height: 400px; cursor: pointer; }
+.card-interno { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.4, .2, .2, 1); will-change: transform; }
 .strato-card.girata .card-interno { transform: rotateY(180deg); }
 .card-faccia { position: absolute; inset: 0; display: flex; flex-direction: column; box-sizing: border-box; overflow: hidden; border: 1px solid var(--border-ui); border-radius: 16px; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: var(--ombra-tooltip); }
 .card-fronte { background: var(--surface); }
@@ -93,7 +93,7 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
   .slide-freccia { display: none; }
   .slide-punti { left: 0; right: 0; bottom: 6px; justify-content: center; }
 }
-@media (prefers-reduced-motion: reduce) { .slide-pista, .card-interno { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .slide-pista { transition: none; } .strato-card .card-interno { transition: transform .8s cubic-bezier(.4, .2, .2, 1) !important; } }
 
 #menu-info a[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
 /* telefono: come nell'app, tab in basso e menù a comparsa (le regole sono in app.css); qui lo spazio per i tab */
