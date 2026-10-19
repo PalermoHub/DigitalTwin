@@ -187,9 +187,8 @@ function costruisciCard(s, a) {
   const riga = (k, v) => (v ? [el('dt', { textContent: tr(k) }), el('dd', { textContent: v })] : []);
   const retro = el('div', { className: 'card-faccia card-retro' },
     el('h4', { textContent: s.etichetta }),
-    el('dl', {}, ...riga('home.retro.argomento', a.titolo), ...riga('home.retro.ambito', s.sezione), ...riga('home.retro.descrizione', a.descrizione), ...riga('home.retro.nota', s.nota)),
+    el('dl', {}, ...riga('home.retro.argomento', a.titolo), ...riga('home.retro.ambito', s.sezione), ...riga('home.retro.fonte', a.fonte), ...(a.link?.length ? [el('dt', { textContent: tr('home.retro.risorse') }), el('dd', {}, el('ul', { className: 'card-risorse' }, ...a.link.map(([testo, href]) => el('li', {}, el('a', { href, textContent: testo, target: '_blank', rel: 'noopener' })))))] : []), ...riga('home.retro.nota', s.nota)),
     el('div', { className: 'card-piede' },
-      el('a', { className: 'card-fonti', href: 'index.html#fonti', textContent: tr('home.retro.fonti') }),
       bottoneAggiungi([s.id], s.etichetta)));
   interno.append(fronte, retro);
   li.append(interno);

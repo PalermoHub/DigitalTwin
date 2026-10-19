@@ -58,7 +58,9 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .card-retro dl { margin: 12px 0 0; overflow-y: auto; }
 .card-retro dt { margin-top: 10px; font-weight: 700; }
 .card-retro dd { margin: 2px 0 0; color: rgba(255, 255, 255, .85); line-height: 1.4; }
-.card-fonti { color: #fff; font-size: var(--fs-sm); text-underline-offset: 2px; }
+.card-risorse { margin: 0; padding-left: 18px; }
+.card-risorse li { margin-top: 2px; }
+.card-risorse a { color: #fff; text-underline-offset: 2px; overflow-wrap: anywhere; }
 
 /* strati scelti: barra fissa in basso */
 .home-cesto { position: fixed; left: 50%; bottom: 52px; translate: -50% 0; z-index: 20; display: flex; align-items: center; gap: 12px; max-width: calc(100% - 24px); padding: 10px 14px; border-radius: 999px; background: var(--invito-bg-hover); color: #fff; box-shadow: var(--ombra); }
