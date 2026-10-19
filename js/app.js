@@ -335,6 +335,8 @@ map.once('style.load', async () => {
   document.getElementById('app-logo').addEventListener('click', e => { if (foglio.open) { e.preventDefault(); foglio.close(); } });
   const iniziale = SCHEDA_INDIRIZZO;
   if (menu.querySelector(`[data-scheda="${iniziale}"]`) && iniziale !== 'mappa') commuta(iniziale);
+  // dalla home sul telefono: #strati e #aggiungi aprono il foglio corrispondente (su schermi larghi il tab non c'è e non succede nulla)
+  if ((iniziale === 'strati' || iniziale === 'aggiungi') && matchMedia('(max-width: 720px)').matches) tab.imposta(iniziale);
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if (foglio.open) foglio.close();

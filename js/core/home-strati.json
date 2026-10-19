@@ -1,0 +1,792 @@
+{
+ "it": [
+  {
+   "id": "popolazione",
+   "titolo": "Abitanti",
+   "descrizione": "Popolazione residente per sezione di censimento, dal censimento permanente (stime campionarie).",
+   "strati": [
+    {
+     "id": "coropletico",
+     "etichetta": "Popolazione per sezione"
+    }
+   ]
+  },
+  {
+   "id": "alberi",
+   "titolo": "Alberi monumentali",
+   "descrizione": "Alberi monumentali di Palermo dell'elenco del MASAF, con specie, dimensioni e criteri di monumentalità.",
+   "strati": [
+    {
+     "id": "alberi",
+     "etichetta": "Alberi monumentali (MASAF)"
+    }
+   ]
+  },
+  {
+   "id": "confini",
+   "titolo": "Confini amministrativi",
+   "descrizione": "Circoscrizioni, quartieri, UPL e sezioni di censimento.",
+   "strati": [
+    {
+     "id": "circoscrizioni",
+     "etichetta": "Circoscrizioni"
+    },
+    {
+     "id": "amap-distretti",
+     "etichetta": "Distretti idrici AMAP"
+    },
+    {
+     "id": "quartieri",
+     "etichetta": "Quartieri"
+    },
+    {
+     "id": "sezioni",
+     "etichetta": "Sezioni di censimento (da zoom 13)"
+    },
+    {
+     "id": "upl",
+     "etichetta": "UPL (unità di primo livello)"
+    }
+   ]
+  },
+  {
+   "id": "distributori",
+   "titolo": "Distributori di carburante",
+   "descrizione": "Distributori di carburante di Palermo, con bandiera e prezzi comunicati dai gestori (benzina, gasolio, GPL, metano).",
+   "strati": [
+    {
+     "id": "distributori",
+     "etichetta": "Distributori di carburante"
+    }
+   ]
+  },
+  {
+   "id": "edifici",
+   "titolo": "Edifici",
+   "descrizione": "Impronte degli edifici, anche in 3D, con stima della popolazione per edificio.",
+   "strati": [
+    {
+     "id": "edificato",
+     "etichetta": "Edificato (da zoom 12)"
+    },
+    {
+     "id": "edifici3d",
+     "etichetta": "Edifici 3D (da zoom 12)"
+    }
+   ]
+  },
+  {
+   "id": "crociferi",
+   "titolo": "Ex Noviziato dei Crociferi in 3D",
+   "descrizione": "Le piante dell'ex Noviziato dei Crociferi messe in quota piano per piano: esploso dei livelli, vista in pianta con i numeri delle stanze e prospetti sulle facciate.",
+   "strati": [
+    {
+     "id": "crociferi3d",
+     "etichetta": "Ex Noviziato dei Crociferi in 3D (in sviluppo)"
+    }
+   ]
+  },
+  {
+   "id": "fontanelle",
+   "titolo": "Fontanelle",
+   "descrizione": "Fontanelle pubbliche di Palermo, con indirizzo e link agli approfondimenti su PalermoHub.",
+   "strati": [
+    {
+     "id": "fontanelle",
+     "etichetta": "Fontanelle pubbliche"
+    }
+   ]
+  },
+  {
+   "id": "mef-immobili",
+   "titolo": "Immobili dichiarati al MEF",
+   "descrizione": "Beni immobili del Comune di Palermo dichiarati al censimento del Ministero dell’economia e delle finanze, agganciati agli edifici in base alla posizione.",
+   "strati": [
+    {
+     "id": "mef-immobili",
+     "etichetta": "Immobili dichiarati al MEF"
+    }
+   ]
+  },
+  {
+   "id": "incendi",
+   "titolo": "Incendi",
+   "descrizione": "Aree percorse dal fuoco nel Comune di Palermo dal 2007, anno per anno, dal Censimento Incendi della Regione Siciliana.",
+   "strati": [
+    {
+     "id": "incendi",
+     "etichetta": "Incendi (da zoom 12)"
+    }
+   ]
+  },
+  {
+   "id": "isole-calore",
+   "titolo": "Isole di calore",
+   "descrizione": "Temperatura superficiale estiva 2025 per sezione censuaria, da satellite Landsat, con metodi di classificazione a scelta e l'andamento dal 2019 al 2025. Link allo studio completo.",
+   "strati": [
+    {
+     "id": "isole-calore",
+     "etichetta": "Isole di calore (da zoom 10)"
+    }
+   ]
+  },
+  {
+   "id": "monumenti",
+   "titolo": "Monumenti",
+   "descrizione": "Monumenti e luoghi di interesse storico-culturale, con foto e scheda del Portale del Turismo.",
+   "strati": [
+    {
+     "id": "monumenti",
+     "etichetta": "Monumenti (Portale del Turismo)"
+    }
+   ]
+  },
+  {
+   "id": "opere",
+   "titolo": "Opere pubbliche a Palermo",
+   "descrizione": "Opere pubbliche localizzate nella sola città di Palermo (open data BDAP-MOP della Ragioneria generale dello Stato): titolare (Comune, Città Metropolitana, ANAS, IACP, aziende sanitarie…), settore, fase dei lavori, costi e finanziamenti dichiarati. Sulla mappa solo le opere che hanno un indirizzo trovato, raggruppate (circa la metà): le altre si consultano nella scheda, tab Opere, e nell’elenco completo in CSV.",
+   "strati": [
+    {
+     "id": "opere",
+     "etichetta": "Opere pubbliche"
+    }
+   ]
+  },
+  {
+   "id": "peba",
+   "titolo": "PEBA – Barriere architettoniche",
+   "descrizione": "Piano di Eliminazione delle Barriere Architettoniche del Comune di Palermo: sedi, scuole, asili, aree verdi, percorsi e siti UNESCO con livello di accessibilità, criticità riscontrate, foto del sopralluogo e scheda PDF.",
+   "strati": [
+    {
+     "id": "peba",
+     "etichetta": "Barriere architettoniche"
+    }
+   ]
+  },
+  {
+   "id": "pendolarismo",
+   "titolo": "Pendolarismo da e verso Palermo 2021",
+   "descrizione": "Spostamenti casa-lavoro tra Palermo e gli altri comuni (ISTAT, Censimento 2021): chi esce, chi entra e quanti vivono e lavorano in città, con classifiche dei comuni collegati.",
+   "strati": [
+    {
+     "id": "pendolarismo",
+     "etichetta": "Pendolarismo da e verso Palermo 2021"
+    }
+   ]
+  },
+  {
+   "id": "pnrr",
+   "titolo": "PNRR – Progetti a Palermo",
+   "descrizione": "Progetti del Piano nazionale di ripresa e resilienza localizzati nella sola città di Palermo (open data di Italia Domani): missione, stato di avanzamento, importi e soggetto attuatore. Sulla mappa solo i progetti che hanno un luogo, raggruppati (circa la metà): gli altri si consultano nella scheda, tab PNRR, e nell’elenco completo in CSV.",
+   "strati": [
+    {
+     "id": "pnrr",
+     "etichetta": "Progetti PNRR"
+    }
+   ]
+  },
+  {
+   "id": "terreno",
+   "titolo": "Rilievo",
+   "descrizione": "Modello digitale del terreno di Palermo: ombreggiatura 3D ed elevazione colorata.",
+   "strati": [
+    {
+     "id": "elevazione",
+     "etichetta": "Elevazione (raster colorato)"
+    },
+    {
+     "id": "rilievo3d",
+     "etichetta": "Rilievo 3D con ombreggiatura"
+    }
+   ]
+  },
+  {
+   "id": "scuole",
+   "titolo": "Scuole e sezioni elettorali",
+   "descrizione": "Scuole e asili comunali e sedi delle sezioni elettorali.",
+   "strati": [
+    {
+     "id": "scuole",
+     "etichetta": "Scuole e asili comunali"
+    },
+    {
+     "id": "seggi",
+     "etichetta": "Sezioni elettorali (sedi)"
+    }
+   ]
+  },
+  {
+   "id": "colonnine",
+   "titolo": "Servizi su strada",
+   "descrizione": "Colonnine di ricarica per veicoli elettrici di Palermo, con stato dal vivo, potenza e operatore.",
+   "strati": [
+    {
+     "id": "colonnine",
+     "etichetta": "Colonnine di ricarica"
+    }
+   ]
+  },
+  {
+   "id": "sicurezza",
+   "titolo": "Sicurezza stradale",
+   "descrizione": "Incidenti 2015–2023: incidenti per km, strade più pericolose, hotspot e singoli eventi.",
+   "strati": [
+    {
+     "id": "sicurezza-hotspot",
+     "etichetta": "Hotspot degli incidenti"
+    },
+    {
+     "id": "sicurezza-incidenti",
+     "etichetta": "Incidenti (da zoom 14)"
+    },
+    {
+     "id": "sicurezza-archi",
+     "etichetta": "Incidenti per km sulle strade"
+    },
+    {
+     "id": "sicurezza-pericolose",
+     "etichetta": "Le 20 strade più pericolose"
+    }
+   ]
+  },
+  {
+   "id": "territorio",
+   "titolo": "Territorio, catasto e urbanistica",
+   "descrizione": "Particelle catastali, zonizzazione e vincoli del PRG 2004, zone OMI, immobili comunali e numeri civici.",
+   "strati": [
+    {
+     "id": "catasto",
+     "etichetta": "Catasto: particelle (da zoom 12)"
+    },
+    {
+     "id": "immobili",
+     "etichetta": "Immobili comunali",
+     "nota": "I layer sono il risultato di una georeferenziazione automatica e hanno carattere puramente dimostrativo",
+     "sezione": "Immobili comunali"
+    },
+    {
+     "id": "civici",
+     "etichetta": "Numeri civici (da zoom 14)"
+    },
+    {
+     "id": "vincoli",
+     "etichetta": "PRG 2004: vincoli"
+    },
+    {
+     "id": "prg",
+     "etichetta": "PRG 2004: zonizzazione e PPE"
+    },
+    {
+     "id": "omi",
+     "etichetta": "Zone OMI 2025"
+    }
+   ]
+  },
+  {
+   "id": "trasporto",
+   "titolo": "Trasporto pubblico",
+   "descrizione": "Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.",
+   "strati": [
+    {
+     "id": "trasporto-fermate",
+     "etichetta": "Fermate",
+     "sezione": "AMAT"
+    },
+    {
+     "id": "trasporto-metro",
+     "etichetta": "Linea metro",
+     "sezione": "RFI"
+    },
+    {
+     "id": "trasporto-bus",
+     "etichetta": "Linee bus",
+     "sezione": "AMAT"
+    },
+    {
+     "id": "trasporto-tram",
+     "etichetta": "Linee tram",
+     "sezione": "AMAT"
+    },
+    {
+     "id": "trasporto-stazioni",
+     "etichetta": "Stazioni metro",
+     "sezione": "RFI"
+    }
+   ]
+  },
+  {
+   "id": "trend-popolazione",
+   "titolo": "Trend della popolazione 2011-2023",
+   "descrizione": "Come cambia la popolazione di UPL, quartieri e circoscrizioni tra i censimenti 2011, 2021 e 2023 (ISTAT), con uno scenario di tendenza al 2030 e al 2035.",
+   "strati": [
+    {
+     "id": "trend-popolazione",
+     "etichetta": "Trend della popolazione 2011-2023"
+    }
+   ]
+  },
+  {
+   "id": "uffici",
+   "titolo": "Uffici comunali",
+   "descrizione": "Sedi degli uffici del Comune di Palermo, con responsabili e contatti.",
+   "strati": [
+    {
+     "id": "uffici",
+     "etichetta": "Uffici comunali (sedi)"
+    }
+   ]
+  },
+  {
+   "id": "pai",
+   "titolo": "Vincoli PAI",
+   "descrizione": "Piano di Assetto Idrogeologico della Regione Siciliana nel Comune di Palermo: pericolosità e rischio idraulico e geomorfologico, dissesti, siti di attenzione ed erosione costiera, con la simbologia del server.",
+   "strati": [
+    {
+     "id": "dissesti_attivita",
+     "etichetta": "Dissesti per attività",
+     "sezione": "Geomorfologia"
+    },
+    {
+     "id": "dissesti_tipologia",
+     "etichetta": "Dissesti per tipologia",
+     "sezione": "Geomorfologia"
+    },
+    {
+     "id": "coste_pericolosita",
+     "etichetta": "Pericolosità erosione costiera",
+     "sezione": "Coste"
+    },
+    {
+     "id": "geo_pericolosita",
+     "etichetta": "Pericolosità geomorfologica",
+     "sezione": "Geomorfologia"
+    },
+    {
+     "id": "idraulica_pericolosita",
+     "etichetta": "Pericolosità idraulica",
+     "sezione": "Idraulica"
+    },
+    {
+     "id": "coste_rischio",
+     "etichetta": "Rischio erosione costiera",
+     "sezione": "Coste"
+    },
+    {
+     "id": "geo_rischio",
+     "etichetta": "Rischio geomorfologico",
+     "sezione": "Geomorfologia"
+    },
+    {
+     "id": "idraulica_rischio",
+     "etichetta": "Rischio idraulico",
+     "sezione": "Idraulica"
+    },
+    {
+     "id": "geo_siti",
+     "etichetta": "Siti di attenzione geomorfologica",
+     "sezione": "Geomorfologia"
+    },
+    {
+     "id": "idraulica_siti",
+     "etichetta": "Siti di attenzione idraulica",
+     "sezione": "Idraulica"
+    }
+   ]
+  }
+ ],
+ "en": [
+  {
+   "id": "confini",
+   "titolo": "Administrative boundaries",
+   "descrizione": "Districts, neighbourhoods, UPLs and census sections.",
+   "strati": [
+    {
+     "id": "amap-distretti",
+     "etichetta": "AMAP water districts"
+    },
+    {
+     "id": "sezioni",
+     "etichetta": "Census sections (from zoom 13)"
+    },
+    {
+     "id": "circoscrizioni",
+     "etichetta": "Districts"
+    },
+    {
+     "id": "quartieri",
+     "etichetta": "Neighbourhoods"
+    },
+    {
+     "id": "upl",
+     "etichetta": "UPL (first-level unit)"
+    }
+   ]
+  },
+  {
+   "id": "edifici",
+   "titolo": "Buildings",
+   "descrizione": "Building footprints, also in 3D, with an estimate of the population per building.",
+   "strati": [
+    {
+     "id": "edifici3d",
+     "etichetta": "3D buildings (from zoom 12)"
+    },
+    {
+     "id": "edificato",
+     "etichetta": "Built-up area (from zoom 12)"
+    }
+   ]
+  },
+  {
+   "id": "pendolarismo",
+   "titolo": "Commuting to and from Palermo 2021",
+   "descrizione": "Home-to-work trips between Palermo and other municipalities (ISTAT, 2021 Census): who leaves, who arrives and how many live and work in the city, with rankings of the linked municipalities.",
+   "strati": [
+    {
+     "id": "pendolarismo",
+     "etichetta": "Commuting to and from Palermo 2021"
+    }
+   ]
+  },
+  {
+   "id": "fontanelle",
+   "titolo": "Drinking fountains",
+   "descrizione": "Public drinking fountains of Palermo, with address and links to further reading on PalermoHub.",
+   "strati": [
+    {
+     "id": "fontanelle",
+     "etichetta": "Public drinking fountains"
+    }
+   ]
+  },
+  {
+   "id": "incendi",
+   "titolo": "Fires",
+   "descrizione": "Areas burnt in the municipality of Palermo since 2007, year by year, from the Sicilian Region fire census.",
+   "strati": [
+    {
+     "id": "incendi",
+     "etichetta": "Fires (from zoom 12)"
+    }
+   ]
+  },
+  {
+   "id": "crociferi",
+   "titolo": "Former Noviziato dei Crociferi in 3D",
+   "descrizione": "Floor plans of the former Noviziato dei Crociferi placed at their heights floor by floor: exploded levels, plan view with room numbers and elevation drawings on the façades.",
+   "strati": [
+    {
+     "id": "crociferi3d",
+     "etichetta": "Former Noviziato dei Crociferi in 3D (in development)"
+    }
+   ]
+  },
+  {
+   "id": "distributori",
+   "titolo": "Fuel stations",
+   "descrizione": "Fuel stations in Palermo, with brand and prices reported by operators (petrol, diesel, LPG, methane).",
+   "strati": [
+    {
+     "id": "distributori",
+     "etichetta": "Fuel stations"
+    }
+   ]
+  },
+  {
+   "id": "isole-calore",
+   "titolo": "Heat islands",
+   "descrizione": "Summer land surface temperature 2025 by census section, from the Landsat satellite, with a choice of classification methods and the trend from 2019 to 2025. Link to the full study.",
+   "strati": [
+    {
+     "id": "isole-calore",
+     "etichetta": "Heat islands (from zoom 10)"
+    }
+   ]
+  },
+  {
+   "id": "popolazione",
+   "titolo": "Inhabitants",
+   "descrizione": "Resident population by census section, from the permanent census (sample estimates).",
+   "strati": [
+    {
+     "id": "coropletico",
+     "etichetta": "Population by section"
+    }
+   ]
+  },
+  {
+   "id": "alberi",
+   "titolo": "Monumental trees",
+   "descrizione": "Monumental trees of Palermo from the MASAF list, with species, size and monumentality criteria.",
+   "strati": [
+    {
+     "id": "alberi",
+     "etichetta": "Monumental trees (MASAF)"
+    }
+   ]
+  },
+  {
+   "id": "monumenti",
+   "titolo": "Monuments",
+   "descrizione": "Monuments and places of historical and cultural interest, with photos and the Tourism Portal profile.",
+   "strati": [
+    {
+     "id": "monumenti",
+     "etichetta": "Monuments (Tourism Portal)"
+    }
+   ]
+  },
+  {
+   "id": "uffici",
+   "titolo": "Municipal offices",
+   "descrizione": "Sites of the offices of the Municipality of Palermo, with managers and contacts.",
+   "strati": [
+    {
+     "id": "uffici",
+     "etichetta": "Municipal offices (sites)"
+    }
+   ]
+  },
+  {
+   "id": "pnrr",
+   "titolo": "NRRP – Projects in Palermo",
+   "descrizione": "Projects of the National Recovery and Resilience Plan (NRRP) located only in the city of Palermo (Italia Domani open data): mission, progress status, amounts and implementing body. The map shows only the projects that have a place, grouped (about half): the others can be browsed in the sheet, NRRP tab, and in the full CSV list.",
+   "strati": [
+    {
+     "id": "pnrr",
+     "etichetta": "NRRP projects"
+    }
+   ]
+  },
+  {
+   "id": "pai",
+   "titolo": "PAI constraints",
+   "descrizione": "Hydrogeological Assessment Plan of the Sicilian Region in the municipality of Palermo: hydraulic and geomorphological hazard and risk, landslides, sites of attention and coastal erosion, with the server’s symbology.",
+   "strati": [
+    {
+     "id": "coste_pericolosita",
+     "etichetta": "Coastal erosion hazard",
+     "sezione": "Coasts"
+    },
+    {
+     "id": "coste_rischio",
+     "etichetta": "Coastal erosion risk",
+     "sezione": "Coasts"
+    },
+    {
+     "id": "geo_pericolosita",
+     "etichetta": "Geomorphological hazard",
+     "sezione": "Geomorphology"
+    },
+    {
+     "id": "geo_rischio",
+     "etichetta": "Geomorphological risk",
+     "sezione": "Geomorphology"
+    },
+    {
+     "id": "geo_siti",
+     "etichetta": "Geomorphological sites of attention",
+     "sezione": "Geomorphology"
+    },
+    {
+     "id": "idraulica_pericolosita",
+     "etichetta": "Hydraulic hazard",
+     "sezione": "Hydraulics"
+    },
+    {
+     "id": "idraulica_rischio",
+     "etichetta": "Hydraulic risk",
+     "sezione": "Hydraulics"
+    },
+    {
+     "id": "idraulica_siti",
+     "etichetta": "Hydraulic sites of attention",
+     "sezione": "Hydraulics"
+    },
+    {
+     "id": "dissesti_attivita",
+     "etichetta": "Landslides by activity",
+     "sezione": "Geomorphology"
+    },
+    {
+     "id": "dissesti_tipologia",
+     "etichetta": "Landslides by type",
+     "sezione": "Geomorphology"
+    }
+   ]
+  },
+  {
+   "id": "peba",
+   "titolo": "PEBA – Architectural barriers",
+   "descrizione": "Palermo's Plan for the Elimination of Architectural Barriers: offices, schools, nurseries, green areas, routes and UNESCO sites, with accessibility level, issues found, survey photos and the original PDF sheet.",
+   "strati": [
+    {
+     "id": "peba",
+     "etichetta": "Architectural barriers"
+    }
+   ]
+  },
+  {
+   "id": "trend-popolazione",
+   "titolo": "Population trend 2011-2023",
+   "descrizione": "How the population of UPLs, neighbourhoods and districts changes between the 2011, 2021 and 2023 censuses (ISTAT), with a trend scenario for 2030 and 2035.",
+   "strati": [
+    {
+     "id": "trend-popolazione",
+     "etichetta": "Population trend 2011-2023"
+    }
+   ]
+  },
+  {
+   "id": "mef-immobili",
+   "titolo": "Properties declared to the MEF",
+   "descrizione": "Real estate of the Municipality of Palermo declared to the census of the Ministry of Economy and Finance, linked to buildings by location.",
+   "strati": [
+    {
+     "id": "mef-immobili",
+     "etichetta": "Properties declared to the MEF"
+    }
+   ]
+  },
+  {
+   "id": "trasporto",
+   "titolo": "Public transport",
+   "descrizione": "Bus and tram lines and AMAT stops, metro lines and stations (RFI), with timetables from the GTFS feeds.",
+   "strati": [
+    {
+     "id": "trasporto-bus",
+     "etichetta": "Bus lines",
+     "sezione": "AMAT"
+    },
+    {
+     "id": "trasporto-metro",
+     "etichetta": "Metro line",
+     "sezione": "RFI"
+    },
+    {
+     "id": "trasporto-stazioni",
+     "etichetta": "Metro stations",
+     "sezione": "RFI"
+    },
+    {
+     "id": "trasporto-fermate",
+     "etichetta": "Stops",
+     "sezione": "AMAT"
+    },
+    {
+     "id": "trasporto-tram",
+     "etichetta": "Tram lines",
+     "sezione": "AMAT"
+    }
+   ]
+  },
+  {
+   "id": "opere",
+   "titolo": "Public works in Palermo",
+   "descrizione": "Public works located in the city of Palermo only (BDAP-MOP open data of the State General Accounting Department): owner (Municipality, Metropolitan City, ANAS, IACP, health authorities…), sector, works phase, declared costs and funding. Only works with an address found are on the map, grouped (about half): the others are in the side panel, Works tab, and in the full CSV list.",
+   "strati": [
+    {
+     "id": "opere",
+     "etichetta": "Public works"
+    }
+   ]
+  },
+  {
+   "id": "sicurezza",
+   "titolo": "Road safety",
+   "descrizione": "Accidents 2015–2023: accidents per km, most dangerous streets, hotspots and individual events.",
+   "strati": [
+    {
+     "id": "sicurezza-hotspot",
+     "etichetta": "Accident hotspots"
+    },
+    {
+     "id": "sicurezza-incidenti",
+     "etichetta": "Accidents (from zoom 14)"
+    },
+    {
+     "id": "sicurezza-archi",
+     "etichetta": "Accidents per km on roads"
+    },
+    {
+     "id": "sicurezza-pericolose",
+     "etichetta": "The 20 most dangerous streets"
+    }
+   ]
+  },
+  {
+   "id": "colonnine",
+   "titolo": "Roadside services",
+   "descrizione": "Electric vehicle charging points in Palermo, with live status, power and operator.",
+   "strati": [
+    {
+     "id": "colonnine",
+     "etichetta": "Charging points"
+    }
+   ]
+  },
+  {
+   "id": "scuole",
+   "titolo": "Schools and polling sections",
+   "descrizione": "Municipal schools and nurseries and polling section sites.",
+   "strati": [
+    {
+     "id": "scuole",
+     "etichetta": "Municipal schools and nurseries"
+    },
+    {
+     "id": "seggi",
+     "etichetta": "Polling sections (sites)"
+    }
+   ]
+  },
+  {
+   "id": "terreno",
+   "titolo": "Terrain",
+   "descrizione": "Digital terrain model of Palermo: 3D hillshade and coloured elevation.",
+   "strati": [
+    {
+     "id": "rilievo3d",
+     "etichetta": "3D terrain with hillshade"
+    },
+    {
+     "id": "elevazione",
+     "etichetta": "Elevation (coloured raster)"
+    }
+   ]
+  },
+  {
+   "id": "territorio",
+   "titolo": "Territory, cadastre and planning",
+   "descrizione": "Cadastral parcels, zoning and constraints of the 2004 zoning plan, OMI zones, municipal properties and street numbers.",
+   "strati": [
+    {
+     "id": "catasto",
+     "etichetta": "Cadastre: parcels (from zoom 12)"
+    },
+    {
+     "id": "immobili",
+     "etichetta": "Municipal properties",
+     "nota": "The layers are the result of automatic georeferencing and are for demonstration purposes only",
+     "sezione": "Municipal properties"
+    },
+    {
+     "id": "omi",
+     "etichetta": "OMI zones 2025"
+    },
+    {
+     "id": "civici",
+     "etichetta": "Street numbers (from zoom 14)"
+    },
+    {
+     "id": "vincoli",
+     "etichetta": "Zoning plan 2004: constraints"
+    },
+    {
+     "id": "prg",
+     "etichetta": "Zoning plan 2004: zoning and PPE"
+    }
+   ]
+  }
+ ]
+}

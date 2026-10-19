@@ -1,0 +1,110 @@
+/* Pagina iniziale (home.html): usa header, footer e token di app.css; qui solo il corpo e il fatto che la pagina scorre. */
+html, body.pagina-home { height: auto; min-height: 100%; overflow: visible; overscroll-behavior: auto; }
+body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
+.pagina-home #corpo { position: static; overflow: visible; contain: none; }
+.pagina-home #app-header { position: sticky; top: 0; }
+.pagina-home #app-footer { position: sticky; bottom: 0; z-index: var(--z-header); }
+.solo-lettori { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.home { width: min(1120px, 100%); box-sizing: border-box; margin: 0 auto; padding: 24px 16px 40px; }
+.home h1 { margin: 0 0 8px; font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.15; }
+.home h2 { margin: 0 0 12px; font-size: 1.35rem; }
+.home-intro p { margin: 0; max-width: 70ch; font-size: var(--fs-md); line-height: 1.55; color: var(--text-muted); }
+
+/* slider */
+.home-slider { position: relative; margin: 24px 0 36px; border-radius: var(--r-md); overflow: hidden; background: var(--surface-alt); border: 1px solid var(--border-ui); box-shadow: var(--ombra); }
+.slide-pista { display: flex; transition: transform .5s ease; }
+.slide { position: relative; flex: 0 0 100%; min-width: 0; aspect-ratio: 16 / 7; background: #20252b; }
+.slide img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.slide-testo { position: absolute; left: 0; right: 0; bottom: 0; padding: 48px 56px 40px; color: var(--bianco); background: linear-gradient(to top, rgba(8, 12, 18, .82), rgba(8, 12, 18, 0)); }
+.slide-testo h3 { margin: 0 0 4px; font-size: clamp(1.1rem, 2.6vw, 1.6rem); }
+.slide-testo p { margin: 0 0 12px; max-width: 60ch; font-size: var(--fs-md); line-height: 1.45; }
+.slide-vai, .strato-aggiungi { display: inline-block; box-sizing: border-box; padding: 9px 16px; border: 0; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font: inherit; font-weight: 700; cursor: pointer; }
+.slide-vai:hover, .strato-aggiungi:hover { filter: brightness(1.06); }
+.slide-vai.aggiunto, .strato-aggiungi.aggiunto { background: var(--positivo); color: var(--bianco); }
+.slide-freccia { position: absolute; top: 50%; translate: 0 -50%; width: 44px; height: 44px; padding: 0 0 4px; border: 0; border-radius: 50%; background: rgba(8, 12, 18, .55); color: var(--bianco); font-size: 1.8rem; line-height: 1; cursor: pointer; }
+.slide-freccia:hover { background: rgba(8, 12, 18, .8); }
+.slide-prec { left: 8px; } .slide-succ { right: 8px; }
+.slide-punti { position: absolute; right: 16px; bottom: 12px; display: flex; gap: 2px; }
+.slide-punti button { width: 28px; height: 28px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+.slide-punti button::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, .5); }
+.slide-punti button[aria-current="true"]::before { background: var(--accent); }
+
+/* ricerca e card */
+.home-filtri { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 20px; }
+.home-cerca { flex: 1 1 280px; max-width: 460px; }
+.home-cerca input { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface); color: var(--text); font: inherit; }
+.home-conteggio { margin: 0; color: var(--text-muted); }
+.home-card-elenco { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin: 0; padding: 0; list-style: none; }
+.argomento-tutti { margin: 0; padding: 6px 14px; border: 1px solid var(--accent-strong); border-radius: 999px; background: none; color: var(--accent-strong); font: inherit; font-size: var(--fs-sm); font-weight: 700; cursor: pointer; }
+.argomento-tutti.aggiunto { background: var(--positivo); border-color: var(--positivo); color: var(--bianco); }
+
+/* card a due facce: il clic la gira (come su PalermoHub) */
+.strato-card { perspective: 1200px; height: 400px; cursor: pointer; }
+.card-interno { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .6s; }
+.strato-card.girata .card-interno { transform: rotateY(180deg); }
+.card-faccia { position: absolute; inset: 0; display: flex; flex-direction: column; box-sizing: border-box; overflow: hidden; border: 1px solid var(--border-ui); border-radius: 16px; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: var(--ombra-tooltip); }
+.card-fronte { background: var(--surface); }
+.card-retro { transform: rotateY(180deg); padding: 18px; background: var(--invito-bg-hover); color: #fff; border-color: transparent; }
+.card-img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: var(--surface-hover); flex: none; }
+.card-corpo { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 14px 16px 0; overflow: hidden; }
+.card-corpo h4, .card-retro h4 { margin: 0; font-size: var(--fs-md); line-height: 1.3; }
+.card-testo { margin: 0; color: var(--text-muted); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-chip { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-bottom: 8px; }
+.card-chip span { padding: 3px 10px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: var(--fs-xs); font-weight: 700; }
+.card-piede { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 16px 14px; margin-top: auto; }
+.card-retro .card-piede { padding: 10px 0 0; }
+.card-gira { padding: 4px 0; border: 0; background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-sm); font-style: italic; cursor: pointer; }
+.card-retro dl { margin: 12px 0 0; overflow-y: auto; }
+.card-retro dt { margin-top: 10px; font-weight: 700; }
+.card-retro dd { margin: 2px 0 0; color: rgba(255, 255, 255, .85); line-height: 1.4; }
+.card-fonti { color: #fff; font-size: var(--fs-sm); text-underline-offset: 2px; }
+
+/* strati scelti: barra fissa in basso */
+.home-cesto { position: fixed; left: 50%; bottom: 52px; translate: -50% 0; z-index: 20; display: flex; align-items: center; gap: 12px; max-width: calc(100% - 24px); padding: 10px 14px; border-radius: 999px; background: var(--invito-bg-hover); color: #fff; box-shadow: var(--ombra); }
+.home-cesto[hidden] { display: none; }
+.home-cesto p { margin: 0 4px; font-weight: 600; }
+.cesto-svuota { padding: 8px 10px; border: 0; background: none; color: #fff; font: inherit; text-decoration: underline; cursor: pointer; }
+.cesto-apri { padding: 9px 16px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-weight: 700; text-decoration: none; white-space: nowrap; }
+
+.home-argomenti { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
+.filtro-chip { padding: 6px 14px; border: 1px solid var(--border-ui); border-radius: 999px; background: var(--surface); color: var(--text); font: inherit; font-size: var(--fs-sm); font-weight: 600; cursor: pointer; }
+.filtro-chip:hover { background: var(--surface-hover); }
+.filtro-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+/* «torna in cima»: tondo, bianco con anello ambra a riposo, ambra pieno al passaggio del mouse (come in presentazione e nelle guide) */
+.in-cima { position: fixed; right: 24px; bottom: 52px; z-index: 20; width: 48px; height: 48px; padding: 0; display: grid; place-items: center; border: 2px solid var(--accent); border-radius: 50%; background: var(--surface); color: var(--text); box-shadow: var(--ombra); cursor: pointer; transition: background .15s, color .15s, transform .15s; }
+.in-cima[hidden] { display: none; }
+.in-cima svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.in-cima:hover, .in-cima:focus-visible { background: var(--accent); color: #fff; transform: translateY(-2px); }
+.argomento-tutti[hidden] { display: none; }
+.home-vuoto { color: var(--text-muted); }
+.strato-card:focus-within, .home :focus-visible, .pagina-home .slide-freccia:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+@media (max-width: 720px) {
+  .slide { aspect-ratio: 4 / 3; }
+  .slide-testo { padding: 32px 16px 44px; }
+  .slide-testo p { display: none; }
+  .slide-freccia { display: none; }
+  .slide-punti { left: 0; right: 0; bottom: 6px; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) { .slide-pista, .card-interno { transition: none; } }
+
+#menu-info a[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
+/* telefono: come nell'app, tab in basso e menù a comparsa (le regole sono in app.css); qui lo spazio per i tab */
+@media (max-width: 720px) {
+  body.pagina-home { padding-bottom: var(--tab-h); }
+  .pagina-home #app-footer { bottom: var(--tab-h); }
+  .pagina-home .home-cesto { bottom: calc(var(--tab-h) + 52px); }
+  .pagina-home .in-cima { bottom: calc(var(--tab-h) + 52px); }
+  .pagina-home #menu-info a[aria-current="page"] { border-left-color: transparent; border-right-color: var(--accent); background: none; }
+  .pagina-home #menu-info [data-scheda="mappa"] { display: none; }
+}
+
+/* testo di apertura: «Perché una nuova mappa, se c'è già PalermoHub?» */
+.home-intro p { max-width: none; }
+.home-intro h3 { margin: 22px 0 6px; font-size: 1.15rem; }
+.home-intro p + p { margin-top: 10px; }
+.home-intro a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.home-intro .azioni { margin: 8px 0 0; }
+.perche-bottone { display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 999px; background: var(--accento, var(--focus)); color: var(--accento-inchiostro, #fff); font-weight: 700; text-decoration: none; }
+.home-intro a.perche-bottone { color: var(--accento-inchiostro, #fff); text-decoration: none; }

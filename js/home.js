@@ -1,0 +1,274 @@
+// Pagina iniziale (home.html): slider «in evidenza» e card degli strati, ciascuna con il link che apre la mappa con lo strato acceso.
+import { caricaDizionari, applicaDom, creaInterruttoreLingua, lingua, t as tr } from './core/i18n.js';
+import { codifica, costruisciLink, PARAMETRO } from './core/condivisione-codec.js';
+import { svgIcona } from './core/icone.js';
+
+await caricaDizionari();
+applicaDom(document);
+// le etichette dei tab si risolvono quando il modulo si carica: va importato dopo i dizionari
+const { TAB } = await import('./core/tab-mobile.js');
+document.getElementById('switch-tema').after(creaInterruttoreLingua(document));
+
+const el = (tag, props = {}, ...figli) => { const e = Object.assign(document.createElement(tag), props); e.append(...figli); return e; };
+const normalizza = s => s.toLocaleLowerCase(lingua()).normalize('NFD').replace(/\p{Diacritic}/gu, '');
+
+// Tema scuro e menu: gli stessi gesti dell'app, senza la mappa.
+const radice = document.documentElement;
+const interruttoreTema = document.getElementById('switch-tema');
+const mostraTema = () => interruttoreTema.setAttribute('aria-checked', String(radice.dataset.tema === 'scuro'));
+mostraTema();
+interruttoreTema.addEventListener('click', () => {
+  const scuro = radice.dataset.tema !== 'scuro';
+  if (scuro) radice.dataset.tema = 'scuro'; else delete radice.dataset.tema;
+  try { localStorage.setItem('dt-tema', scuro ? 'scuro' : 'chiaro'); } catch { /* storage non disponibile */ }
+  mostraTema();
+});
+const menu = document.getElementById('menu-info');
+const tendine = [...menu.querySelectorAll('.menu-tendina')];
+const chiudiTendine = salvo => tendine.forEach(t => {
+  if (t === salvo) return;
+  t.classList.remove('aperta');
+  t.querySelector('.menu-tendina-toggle').setAttribute('aria-expanded', 'false');
+});
+const chiudiMenu = () => { document.body.classList.remove('info-aperto'); chiudiTendine(); };
+tendine.forEach(t => t.querySelector('.menu-tendina-toggle').addEventListener('click', () => {
+  chiudiTendine(t); // una sola tendina aperta alla volta
+  t.querySelector('.menu-tendina-toggle').setAttribute('aria-expanded', String(t.classList.toggle('aperta')));
+}));
+document.addEventListener('click', e => chiudiTendine(e.target.closest('.menu-tendina')));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') chiudiMenu(); });
+
+// Telefono: la stessa barra a tab dell'app (Mappa, Strati, Aggiungi, Menu); il CSS la mostra solo fino a 720 px.
+// Mappa, Strati e Aggiungi aprono l'app (con il foglio giusto), Menu apre lo stesso menù a comparsa.
+const barraTab = el('nav', { id: 'barra-tab' });
+barraTab.setAttribute('aria-label', tr('tab.sezioni'));
+const DESTINAZIONE = { mappa: 'index.html', strati: 'index.html#strati', aggiungi: 'index.html#aggiungi' };
+for (const t of TAB) {
+  const b = el('button', { type: 'button', innerHTML: `${svgIcona(t.icona, 22)}<span></span>` });
+  b.querySelector('span').textContent = t.etichetta;
+  b.dataset.tab = t.id;
+  b.setAttribute('aria-pressed', 'false');
+  b.addEventListener('click', () => {
+    if (t.id === 'info') {
+      const aperto = document.body.classList.toggle('info-aperto');
+      b.setAttribute('aria-pressed', String(aperto));
+      if (!aperto) chiudiTendine();
+    } else {
+      location.href = DESTINAZIONE[t.id];
+    }
+  });
+  barraTab.append(b);
+}
+document.body.append(barraTab);
+const tabMenu = barraTab.querySelector('[data-tab="info"]');
+const sincronizzaTabMenu = () => tabMenu.setAttribute('aria-pressed', String(document.body.classList.contains('info-aperto')));
+document.addEventListener('pointerdown', e => {
+  if (document.body.classList.contains('info-aperto') && !e.target.closest('#menu-info, #barra-tab')) { chiudiMenu(); sincronizzaTabMenu(); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') sincronizzaTabMenu(); });
+
+// Link alla mappa: lo stato condiviso con i soli strati voluti (senza vista, la mappa resta dov'è di default).
+const MAPPA = new URL('index.html', location.href).href;
+async function linkMappa(strati) {
+  try {
+    const { testo } = await codifica({ a: strati });
+    return costruisciLink(MAPPA, testo);
+  } catch {
+    return MAPPA;
+  }
+}
+
+// ---- strati scelti ("aggiunti alla mappa"): restano in sessionStorage finché non si apre la mappa ----
+const CHIAVE_CESTO = 'dt-home-strati';
+const cesto = new Set();
+try { for (const id of JSON.parse(sessionStorage.getItem(CHIAVE_CESTO)) ?? []) if (typeof id === 'string') cesto.add(id); } catch { /* storage non disponibile o illeggibile */ }
+const bottoniStrato = []; // { bottone, strati } da tenere allineati al cesto
+
+function aggiornaCesto() {
+  try { sessionStorage.setItem(CHIAVE_CESTO, JSON.stringify([...cesto])); } catch { /* storage non disponibile */ }
+  for (const { bottone, strati } of bottoniStrato) {
+    const dentro = strati.length > 0 && strati.every(id => cesto.has(id));
+    bottone.setAttribute('aria-pressed', String(dentro));
+    bottone.classList.toggle('aggiunto', dentro);
+    bottone.textContent = dentro ? tr('home.aggiunto') : tr(bottone.dataset.tutti ? 'home.aggiungi.tutti' : 'home.aggiungi');
+  }
+  const barra = document.getElementById('home-cesto');
+  barra.hidden = cesto.size === 0;
+  document.getElementById('home-cesto-conta').textContent = tr(cesto.size === 1 ? 'home.cesto.uno' : 'home.cesto.altri', { n: cesto.size });
+  linkMappa([...cesto]).then(href => { document.getElementById('home-cesto-apri').href = href; });
+}
+
+// Pulsante che mette (o toglie) gli strati dal cesto; `etichetta` dà il nome accessibile.
+function bottoneAggiungi(strati, etichetta, classe = 'strato-aggiungi') {
+  const bottone = el('button', { type: 'button', className: classe });
+  bottone.setAttribute('aria-label', `${etichetta}`);
+  bottone.addEventListener('click', e => {
+    e.stopPropagation();
+    if (strati.every(id => cesto.has(id))) for (const id of strati) cesto.delete(id);
+    else for (const id of strati) cesto.add(id);
+    aggiornaCesto();
+  });
+  bottoniStrato.push({ bottone, strati });
+  return bottone;
+}
+
+document.getElementById('home-cesto-svuota').addEventListener('click', () => { cesto.clear(); aggiornaCesto(); });
+
+// ---- slider ----
+const SLIDE = [
+  { id: 'urbanistica', img: 'img/home/urbanistica.webp', strati: ['catasto', 'prg'] },
+  { id: 'edifici', img: 'img/home/edifici.webp', strati: ['edifici3d'] },
+  { id: 'popolazione', img: 'img/home/popolazione.webp', strati: ['coropletico'] },
+  { id: 'trasporto', img: 'img/home/trasporto.webp', strati: ['trasporto-metro', 'trasporto-fermate'] },
+  { id: 'calore', img: 'img/home/calore.webp', strati: ['isole-calore'] },
+];
+
+function costruisciSlider() {
+  const pista = document.getElementById('slide-pista');
+  const punti = document.getElementById('slide-punti');
+  const diapositive = SLIDE.map((s, i) => {
+    const vai = bottoneAggiungi(s.strati, tr(`home.slide.${s.id}.titolo`), 'slide-vai');
+    const slide = el('div', { className: 'slide', role: 'group' },
+      el('img', { src: s.img, alt: tr(`home.slide.${s.id}.alt`), width: 1600, height: 700, loading: i === 0 ? 'eager' : 'lazy' }),
+      el('div', { className: 'slide-testo' }, el('h3', { textContent: tr(`home.slide.${s.id}.titolo`) }), el('p', { textContent: tr(`home.slide.${s.id}.testo`) }), vai));
+    slide.setAttribute('aria-roledescription', 'slide');
+    slide.setAttribute('aria-label', `${i + 1} / ${SLIDE.length}`);
+    return slide;
+  });
+  pista.append(...diapositive);
+  const bottoni = SLIDE.map((s, i) => {
+    const b = el('button', { type: 'button' });
+    b.setAttribute('aria-label', tr('home.slider.vai', { n: i + 1 }));
+    b.addEventListener('click', () => vaiA(i, true));
+    return b;
+  });
+  punti.append(...bottoni);
+
+  let corrente = 0;
+  let timer = null;
+  const vaiA = (i, manuale = false) => {
+    corrente = (i + SLIDE.length) % SLIDE.length;
+    pista.style.transform = `translateX(${-100 * corrente}%)`;
+    diapositive.forEach((d, k) => { d.inert = k !== corrente; });
+    bottoni.forEach((b, k) => { if (k === corrente) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+    if (manuale) ferma();
+  };
+  const ferma = () => { clearInterval(timer); timer = null; };
+  const avvia = () => {
+    if (timer || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    timer = setInterval(() => vaiA(corrente + 1), 6000);
+  };
+  document.getElementById('slide-prec').addEventListener('click', () => vaiA(corrente - 1, true));
+  document.getElementById('slide-succ').addEventListener('click', () => vaiA(corrente + 1, true));
+  const box = document.getElementById('home-slider');
+  box.addEventListener('mouseenter', ferma);
+  box.addEventListener('focusin', ferma);
+  box.addEventListener('mouseleave', avvia);
+  document.addEventListener('visibilitychange', () => (document.hidden ? ferma() : avvia()));
+  vaiA(0);
+  avvia();
+}
+
+// ---- elenco degli strati ----
+// Card a due facce: davanti immagine, titolo, descrizione e pulsante; dietro i dettagli. Si gira col clic sulla card.
+function costruisciCard(s, a) {
+  const li = el('li', { className: 'strato-card' });
+  const interno = el('div', { className: 'card-interno' });
+  const chip = [a.titolo, s.sezione].filter(Boolean);
+  const fronte = el('div', { className: 'card-faccia card-fronte' },
+    el('img', { className: 'card-img', src: `img/home/strati/${s.id}.webp`, alt: '', width: 640, height: 360, loading: 'lazy' }),
+    el('div', { className: 'card-corpo' },
+      el('h4', { textContent: s.etichetta }),
+      el('p', { className: 'card-testo', textContent: s.nota || a.descrizione }),
+      el('div', { className: 'card-chip' }, ...chip.map(c => el('span', { textContent: c })))));
+  const dettagli = el('button', { type: 'button', className: 'card-gira', textContent: `↻ ${tr('home.dettagli')}` });
+  fronte.append(el('div', { className: 'card-piede' }, dettagli, bottoneAggiungi([s.id], s.etichetta)));
+
+  const riga = (k, v) => (v ? [el('dt', { textContent: tr(k) }), el('dd', { textContent: v })] : []);
+  const retro = el('div', { className: 'card-faccia card-retro' },
+    el('h4', { textContent: s.etichetta }),
+    el('dl', {}, ...riga('home.retro.argomento', a.titolo), ...riga('home.retro.ambito', s.sezione), ...riga('home.retro.descrizione', a.descrizione), ...riga('home.retro.nota', s.nota)),
+    el('div', { className: 'card-piede' },
+      el('a', { className: 'card-fonti', href: 'index.html#fonti', textContent: tr('home.retro.fonti') }),
+      bottoneAggiungi([s.id], s.etichetta)));
+  interno.append(fronte, retro);
+  li.append(interno);
+
+  const gira = girata => {
+    li.classList.toggle('girata', girata);
+    fronte.inert = girata;
+    retro.inert = !girata;
+  };
+  gira(false);
+  li.addEventListener('click', e => { if (!e.target.closest('a')) gira(!li.classList.contains('girata')); });
+  return li;
+}
+
+async function costruisciElenco() {
+  const elenco = document.getElementById('home-elenco');
+  let argomenti;
+  try {
+    argomenti = (await (await fetch(new URL('./core/home-strati.json', import.meta.url))).json())[lingua()];
+  } catch {
+    elenco.textContent = tr('home.errore');
+    return;
+  }
+  // un solo elenco di card, in ordine alfabetico; gli argomenti servono da filtro
+  const tutte = argomenti.flatMap(a => a.strati.map(s => ({ s, a }))).sort((x, y) => x.s.etichetta.localeCompare(y.s.etichetta, lingua(), { sensitivity: 'base' }));
+  const card = tutte.map(({ s, a }) => {
+    const li = costruisciCard(s, a);
+    li.dataset.testo = normalizza(`${s.etichetta} ${a.titolo} ${s.sezione ?? ''}`);
+    li.dataset.argomento = a.id;
+    li.dataset.strato = s.id;
+    return li;
+  });
+  const ul = el('ul', { className: 'home-card-elenco' }, ...card);
+  elenco.append(ul);
+
+  // filtro per argomento: un pulsante «Tutti» e uno per argomento
+  const filtroBox = document.getElementById('home-argomenti');
+  let argomento = '';
+  const chip = [{ id: '', titolo: tr('home.filtro.tutti') }, ...argomenti].map(a => {
+    const b = el('button', { type: 'button', className: 'filtro-chip', textContent: a.titolo });
+    b.dataset.argomento = a.id;
+    b.addEventListener('click', () => { argomento = a.id; filtra(); });
+    return b;
+  });
+  filtroBox.append(...chip);
+
+  const campo = document.getElementById('home-cerca');
+  const conteggio = document.getElementById('home-conteggio');
+  const vuoto = document.getElementById('home-vuoto');
+  const visibiliIds = [];
+  const tutti = bottoneAggiungi(visibiliIds, tr('home.aggiungi.tutti'), 'argomento-tutti');
+  tutti.dataset.tutti = '1';
+  document.getElementById('home-filtri-riga').append(tutti);
+  const totale = card.length;
+  function filtra() {
+    const q = normalizza(campo.value.trim());
+    visibiliIds.length = 0;
+    for (const li of card) {
+      const si = (!argomento || li.dataset.argomento === argomento) && (!q || li.dataset.testo.includes(q));
+      li.hidden = !si;
+      if (si) visibiliIds.push(li.dataset.strato);
+    }
+    for (const b of chip) b.setAttribute('aria-pressed', String(b.dataset.argomento === argomento));
+    vuoto.hidden = visibiliIds.length > 0;
+    tutti.hidden = visibiliIds.length === 0 || visibiliIds.length === totale;
+    conteggio.textContent = visibiliIds.length === totale ? '' : tr(visibiliIds.length === 1 ? 'home.conteggio.uno' : 'home.conteggio.altri', { n: visibiliIds.length });
+    aggiornaCesto();
+  }
+  campo.addEventListener('input', filtra);
+  filtra();
+}
+
+costruisciSlider();
+await costruisciElenco();
+aggiornaCesto();
+
+// ---- porta in cima ----
+const cima = document.getElementById('home-cima');
+const mostraCima = () => { cima.hidden = window.scrollY < 400; };
+window.addEventListener('scroll', mostraCima, { passive: true });
+cima.addEventListener('click', () => window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+mostraCima();
