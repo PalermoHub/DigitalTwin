@@ -115,7 +115,7 @@ function bottoneAggiungi(strati, etichetta, classe = 'strato-aggiungi') {
 document.getElementById('home-cesto-svuota').addEventListener('click', () => { cesto.clear(); aggiornaCesto(); });
 
 // ---- indice delle sezioni: barra fissa sotto l'intestazione, evidenzia la sezione in vista ----
-const SEZIONI = ['in-evidenza', 'numeri', 'strati', 'perche', 'tavolo'];
+const SEZIONI = ['in-evidenza', 'numeri', 'strati', 'catalogo', 'perche', 'tavolo'];
 const riduci = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function costruisciIndice() {
   const indice = document.getElementById('home-indice');
@@ -159,7 +159,7 @@ function costruisciIndice() {
 function costruisciNumeri(argomenti, tutte) {
   const distinti = valori => new Set(valori.filter(Boolean)).size;
   const dati = [
-    ['strati', tutte.length, '#strati'],
+    ['strati', tutte.length, '#catalogo'],
     ['argomenti', argomenti.length, '#home-argomenti'],
     ['fonti', distinti(argomenti.flatMap(a => a.enti ?? [])), 'index.html#fonti'],
   ];
@@ -297,34 +297,70 @@ async function costruisciElenco() {
   const ul = el('ul', { className: 'home-card-elenco' }, ...card);
   elenco.append(ul);
 
-  // filtro per argomento: «Tutti» azzera, ogni argomento si accende/spegne e se ne possono scegliere più d'uno
-  const filtroBox = document.getElementById('home-argomenti');
+  // filtri a menu a tendina (argomento, ente) a scalare: più voci = strati di una qualsiasi, ogni menu offre solo le voci compatibili con l'altro e con la ricerca
   const scelti = new Set();
-  const chip = [{ id: '', titolo: tr('home.filtro.tutti') }, ...argomenti].map(a => {
-    const n = a.id ? a.strati.length : card.length;
-    const b = el('button', { type: 'button', className: 'filtro-chip', textContent: tr('home.filtro.conta', { titolo: a.titolo, n }) });
-    b.dataset.argomento = a.id;
-    b.addEventListener('click', () => {
-      if (!a.id) { scelti.clear(); entiScelti.clear(); }
-      else if (!scelti.delete(a.id)) scelti.add(a.id);
-      filtra();
-    });
-    return b;
-  });
-  filtroBox.append(...chip);
-
-  // filtro per ente: più enti = strati di uno qualsiasi; si combina con quello per argomento
   const entiScelti = new Set();
-  const conteEnti = new Map();
-  for (const a of argomenti) for (const e of a.enti ?? []) conteEnti.set(e, (conteEnti.get(e) ?? 0) + a.strati.length);
-  const chipEnti = [...conteEnti].sort(([x], [y]) => x.localeCompare(y, lingua(), { sensitivity: 'base' })).map(([ente, n]) => {
-    const b = el('button', { type: 'button', className: 'filtro-chip', textContent: tr('home.filtro.conta', { titolo: ente, n }) });
-    b.dataset.ente = ente;
-    b.addEventListener('click', () => { if (!entiScelti.delete(ente)) entiScelti.add(ente); filtra(); });
-    return b;
+  const conteEnti = new Set(argomenti.flatMap(a => a.enti ?? []));
+  const menu = [
+    { id: 'argomenti', chiave: 'home.menu.argomenti', set: scelti, voci: argomenti.map(a => ({ id: a.id, nome: a.titolo })) },
+    // gli enti sono dichiarati per argomento, non per strato: niente conteggio, sarebbe sovrastimato
+    { id: 'enti', chiave: 'home.menu.enti', set: entiScelti, voci: [...conteEnti].sort((x, y) => x.localeCompare(y, lingua(), { sensitivity: 'base' })).map(e => ({ id: e, nome: e })) },
+  ].map(m => {
+    const det = document.getElementById(`home-menu-${m.id}`);
+    const caselle = m.voci.map(v => {
+      const input = el('input', { type: 'checkbox', value: v.id });
+      input.addEventListener('change', () => { input.checked ? m.set.add(v.id) : m.set.delete(v.id); filtra(); });
+      const testo = el('span', { textContent: v.nome });
+      return { v, input, testo, label: el('label', { className: 'home-menu-voce' }, input, testo) };
+    });
+    det.querySelector('.home-menu-pannello').append(...caselle.map(c => c.label));
+    det.addEventListener('toggle', () => { if (det.open) for (const d of document.querySelectorAll('.home-menu[open]')) if (d !== det) d.open = false; });
+    return { ...m, det, caselle, titolo: det.querySelector('summary') };
   });
-  document.getElementById('home-enti').append(...chipEnti);
-  document.getElementById('home-enti-titolo').textContent = tr('home.filtro.enti', { n: chipEnti.length });
+  // si chiude con Esc o cliccando fuori
+  document.addEventListener('click', e => { for (const d of document.querySelectorAll('.home-menu[open]')) if (!d.contains(e.target)) d.open = false; });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') for (const d of document.querySelectorAll('.home-menu[open]')) { d.open = false; d.querySelector('summary').focus(); } });
+  const scelteBox = document.getElementById('home-scelte');
+  // voci ancora selezionabili: argomenti con strati per la ricerca e con un ente scelto; enti degli argomenti scelti. Le scelte non più compatibili cadono
+  function disponibili(q) {
+    const strati = new Map(argomenti.map(a => [a.id, 0]));
+    for (const li of card) if (!q || li.dataset.testo.includes(q)) strati.set(li.dataset.argomento, strati.get(li.dataset.argomento) + 1);
+    let arg, enti;
+    do {
+      arg = argomenti.filter(a => strati.get(a.id) && (!entiScelti.size || (a.enti ?? []).some(e => entiScelti.has(e))));
+      enti = new Set(argomenti.filter(a => strati.get(a.id) && (!scelti.size || scelti.has(a.id))).flatMap(a => a.enti ?? []));
+      const cadute = [...scelti].filter(id => !arg.some(a => a.id === id)).length + [...entiScelti].filter(e => !enti.has(e)).length;
+      for (const id of [...scelti]) if (!arg.some(a => a.id === id)) scelti.delete(id);
+      for (const e of [...entiScelti]) if (!enti.has(e)) entiScelti.delete(e);
+      if (!cadute) break;
+    } while (true);
+    return { strati, arg: new Set(arg.map(a => a.id)), enti };
+  }
+  function aggiornaMenu(disp) {
+    scelteBox.replaceChildren();
+    for (const m of menu) {
+      const ammesse = m.id === 'argomenti' ? disp.arg : disp.enti;
+      for (const { v, label, testo } of m.caselle) {
+        label.hidden = !ammesse.has(v.id);
+        if (m.id === 'argomenti') testo.textContent = `${v.nome} (${disp.strati.get(v.id)})`;
+      }
+      m.titolo.textContent = tr(m.chiave) + (m.set.size ? ` (${m.set.size})` : '');
+      m.det.classList.toggle('con-scelte', m.set.size > 0);
+      for (const { v, input } of m.caselle) {
+        input.checked = m.set.has(v.id);
+        if (!input.checked) continue;
+        const b = el('button', { type: 'button', className: 'filtro-chip', textContent: `${v.nome} ×`, title: tr('home.menu.togli', { voce: v.nome }) });
+        b.setAttribute('aria-label', tr('home.menu.togli', { voce: v.nome }));
+        b.addEventListener('click', () => { m.set.delete(v.id); filtra(); });
+        scelteBox.append(b);
+      }
+    }
+    if (scelteBox.children.length) {
+      const azzera = el('button', { type: 'button', className: 'home-azzera', textContent: tr('home.menu.azzera') });
+      azzera.addEventListener('click', () => { scelti.clear(); entiScelti.clear(); filtra(); });
+      scelteBox.append(azzera);
+    }
+  }
 
   // ordine delle card: per nome o per data, crescente o decrescente; a parità resta l'ordine alfabetico
   const ordinaBox = document.getElementById('home-ordina');
@@ -361,15 +397,14 @@ async function costruisciElenco() {
   const totale = card.length;
   function filtra() {
     const q = normalizza(campo.value.trim());
+    const disp = disponibili(q);
     visibiliIds.length = 0;
     for (const li of card) {
       const si = (!scelti.size || scelti.has(li.dataset.argomento)) && (!entiScelti.size || li.dataset.enti.split('|').some(e => entiScelti.has(e))) && (!q || li.dataset.testo.includes(q));
       li.hidden = !si;
       if (si) visibiliIds.push(li.dataset.strato);
     }
-    for (const b of chipEnti) b.setAttribute('aria-pressed', String(entiScelti.has(b.dataset.ente)));
-    for (const b of chip) b.setAttribute('aria-pressed', String(b.dataset.argomento ? scelti.has(b.dataset.argomento) : !scelti.size));
-    document.getElementById('home-enti').closest('details').classList.toggle('con-scelte', entiScelti.size > 0);
+    aggiornaMenu(disp);
     const desc = argomenti.filter(a => scelti.has(a.id)).map(a => a.descrizione).filter(Boolean).join(' ');
     descBox.textContent = desc;
     descBox.hidden = !desc;

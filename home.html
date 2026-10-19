@@ -92,14 +92,25 @@
     <p class="home-percorsi-intro" data-i18n="home.percorsi.intro">Un tema, già pronto: apri la mappa con gli strati giusti accesi.</p>
     <ul class="home-percorsi" id="home-percorsi"></ul>
   </div>
+</div>
+</section>
+
+<section class="fascia fascia--catalogo" id="catalogo" aria-labelledby="titolo-catalogo">
+<div class="fascia-in">
+  <h2 id="titolo-catalogo" data-i18n="home.catalogo.titolo">Catalogo degli strati</h2>
+  <p class="home-catalogo-intro" data-i18n="home.catalogo.intro">Tutti gli strati disponibili: cerca, filtra per argomento o per ente e aggiungi alla mappa quelli che ti servono.</p>
   <div class="home-filtri" id="home-filtri-riga">
     <label class="home-cerca"><span class="solo-lettori" data-i18n="home.cerca.etichetta">Cerca uno strato</span>
       <input type="search" id="home-cerca" autocomplete="off" data-i18n-placeholder="home.cerca.segnaposto" placeholder="Cerca uno strato o un argomento…"></label>
     <div class="home-ordina" role="group" data-i18n-aria="home.ordina.aria" aria-label="Ordina le schede"><span class="home-ordina-etichetta" data-i18n="home.ordina.etichetta">Ordina per</span><span id="home-ordina" class="home-ordina-voci"></span></div>
     <p class="home-conteggio" id="home-conteggio" role="status" aria-live="polite"></p>
   </div>
-  <div class="home-argomenti" id="home-argomenti" role="group" data-i18n-aria="home.filtro.aria" aria-label="Filtra per argomento"></div>
-  <details class="home-enti"><summary id="home-enti-titolo">Filtra per ente</summary><div class="home-argomenti" id="home-enti" role="group" data-i18n-aria="home.filtro.entiAria" aria-label="Filtra per ente"></div></details>
+  <div class="home-menu-riga" id="home-argomenti" role="group" data-i18n-aria="home.filtro.aria" aria-label="Filtra per argomento">
+    <span class="home-ordina-etichetta" data-i18n="home.menu.filtra">Filtra per</span>
+    <details class="home-menu" id="home-menu-argomenti"><summary id="home-menu-argomenti-titolo">Argomento</summary><div class="home-menu-pannello" role="group" data-i18n-aria="home.filtro.aria" aria-label="Filtra per argomento"></div></details>
+    <details class="home-menu" id="home-menu-enti"><summary id="home-menu-enti-titolo">Ente</summary><div class="home-menu-pannello" role="group" data-i18n-aria="home.filtro.entiAria" aria-label="Filtra per ente"></div></details>
+    <span class="home-scelte" id="home-scelte"></span>
+  </div>
   <p class="home-argomento-desc" id="home-argomento-desc" hidden></p>
   <div id="home-elenco"></div>
   <p class="home-vuoto" id="home-vuoto" hidden data-i18n="home.vuoto">Nessuno strato corrisponde alla ricerca.</p>
