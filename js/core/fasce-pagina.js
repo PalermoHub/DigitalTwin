@@ -30,8 +30,9 @@ export function impaginaFasce(nodi, corpo, { indice = false, etichette = false }
       k.textContent = etichetta;
       f.dentro.append(k);
     }
-    f.dentro.append(...n.childNodes);
+    f.dentro.append(n); // la scheda resta nella fascia: le regole di `.info-blocco` (figure alla larghezza della colonna) valgono ancora
     f.f.id = n.id || `fascia-${conta}`;
+    n.removeAttribute('id'); // l'indirizzo è quello della fascia
     corpo.append(f.f);
     voci.push({ titolo: h2.textContent, fascia: f.f });
   };
