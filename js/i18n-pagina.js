@@ -1,6 +1,7 @@
-// Entry per le pagine statiche (presentazione.html): dizionari, traduzione del DOM, switch di lingua nella testata.
-import { caricaDizionari, applicaDom, creaInterruttoreLingua } from './core/i18n.js';
+// Entry per le pagine statiche (presentazione.html): dizionari, traduzione del DOM, testata con menu del sito.
+import { caricaDizionari, applicaDom } from './core/i18n.js';
+import { avviaTestata } from './core/testata-pagina.js';
 
 await caricaDizionari();
 applicaDom(document);
-document.querySelector('.testata .contenitore')?.append(creaInterruttoreLingua(document));
+await avviaTestata();

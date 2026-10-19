@@ -1,7 +1,8 @@
-// Testata delle pagine a fasce (home.html, about.html…): switch di lingua e di tema, menu a tendine, barra a tab del telefono.
+// Testata delle pagine a fasce (home.html, about.html, presentazione.html…): switch di lingua e di tema, menu a tendine, barra a tab del telefono.
 // Va chiamata dopo caricaDizionari() e applicaDom().
 import { creaInterruttoreLingua, t as tr } from './i18n.js';
 import { svgIcona } from './icone.js';
+import { creaMenuSito } from './menu-sito.js';
 
 const el = (tag, props = {}, ...figli) => { const e = Object.assign(document.createElement(tag), props); e.append(...figli); return e; };
 
@@ -20,7 +21,7 @@ export async function avviaTestata() {
     try { localStorage.setItem('dt-tema', scuro ? 'scuro' : 'chiaro'); } catch { /* storage non disponibile */ }
     mostraTema();
   });
-  const menu = document.getElementById('menu-info');
+  const menu = creaMenuSito(); // le voci stanno in menu-sito.js, uguali per tutte le pagine
   const tendine = [...menu.querySelectorAll('.menu-tendina')];
   const chiudiTendine = salvo => tendine.forEach(t => {
     if (t === salvo) return;
