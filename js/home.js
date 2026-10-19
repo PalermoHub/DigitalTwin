@@ -176,7 +176,7 @@ function costruisciCard(s, a) {
   const interno = el('div', { className: 'card-interno' });
   const chip = [a.titolo, s.sezione].filter(Boolean);
   const fronte = el('div', { className: 'card-faccia card-fronte' },
-    el('img', { className: 'card-img', src: `img/home/strati/${s.id}.webp`, alt: '', width: 640, height: 360, loading: 'lazy' }),
+    el('img', { className: 'card-img', src: `img/home/strati/${s.id}.webp`, alt: '', title: s.etichetta, width: 640, height: 360, loading: 'lazy' }),
     el('div', { className: 'card-corpo' },
       el('h4', { textContent: s.etichetta }),
       el('p', { className: 'card-testo', textContent: s.nota || a.descrizione }),
