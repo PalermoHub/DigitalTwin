@@ -2,16 +2,18 @@
 
 ## Il menu in alto e le pagine informative
 
-Parole chiave: menu, pagine, Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e note, Privacy, About, Presentazione, indice della pagina.
+Parole chiave: menu, pagine, Home, Mappa, Digital Twin, Argomenti, Guida, Guida Geoimage, Plugin RNDT, Fonti e note, Privacy, About, Presentazione, indice della pagina.
 
 Domande tipiche: Cosa c'è nel menu in alto? Come chiudo una pagina? Dove trovo le fonti e le note?
 
-Il menu è accanto al logo, con i gruppi **Mappa**, **Guide**, **Informazioni** e **Altro** (da smartphone sta nel tab «Menu»). Le pagine sono otto: **Digital Twin**, **Argomenti**, **Guida**, **Guida Geoimage**, **Plugin RNDT**, **Fonti e note**, **Privacy**, **About**; in più c'è il collegamento alla **Presentazione** del progetto.
+Il menu è accanto al logo ed è lo stesso in tutte le pagine del sito (da smartphone sta nel tab «Menu»). Ha le voci **Home**, **Mappa**, **Digital Twin**, **Guida generale** (con, nella tendina accanto, **Plugin RNDT** e **Guida Geoimage**), **Fonti e note** e **About** (con, nella tendina accanto, **Presentazione** e **Privacy**). La voce della pagina in cui ci si trova è evidenziata.
 
-Ogni pagina si apre a **tutta larghezza**, non è modale (la mappa sta sotto), e ha un **indice laterale** («Indice della pagina», «Indice della guida»). Premendo di nuovo la stessa voce del menu, o con **Esc**, la pagina si chiude.
+**Home** (`home.html`) è la pagina dove si scelgono e si aggiungono gli strati della mappa; qui c'è il filtro per **argomento**. **Mappa** riporta alla mappa.
+
+Digital Twin, Guida, Plugin RNDT, Guida Geoimage, Fonti e note, About e Privacy sono **pagine a sé** (`digitaltwin.html`, `guida.html`, `plugin.html`, `geoimage.html`, `fonti.html`, `about.html`, `privacy.html`), a **tutta larghezza**, divise in fasce, e molte hanno un **indice laterale** («Indice della pagina», «Indice della guida»). Per tornare alla mappa si sceglie **Mappa** nel menu. Dalla mappa, le stesse voci aprono invece i fogli informativi sopra la mappa, che si chiudono premendo di nuovo la voce o con **Esc**.
 
 - **Digital Twin**: «La città a strati: catasto, popolazione, edifici, trasporti, sicurezza e molto altro.» Sezioni: «Cos'è per noi un Digital Twin, in parole semplici», «Come è organizzato», «Le fonti», «Come si utilizza», «A cosa serve».
-- **Argomenti**: «Di cosa parla il Digital Twin, argomento per argomento.» Un riquadro per ogni argomento, con la descrizione e l'elenco degli strati e il pulsante **«Mostra in mappa»** che accende gli strati dell'argomento e chiude la pagina (spento se gli strati non sono ancora disponibili).
+- **Argomenti**: «Di cosa parla il Digital Twin, argomento per argomento.» Un riquadro per ogni argomento, con la descrizione e l'elenco degli strati e il pulsante **«Mostra in mappa»** che accende gli strati dell'argomento e chiude la pagina (spento se gli strati non sono ancora disponibili). Non è più una voce del menu: gli argomenti si scelgono dal filtro della Home.
 - **Guida**: «Come usare la mappa, passo dopo passo.» Ha due gruppi, **Funzioni** e **Casi d'uso**, passi con immagini e video (il video «Palermo Digital Twin: come usare la mappa con i dati aperti di Palermo»).
 - **Guida Geoimage**: «Come sovrapporre una mappa storica alla cartografia e georeferenziarla.» (vedi `50-geoimage.md`)
 - **Plugin RNDT**: spiega il catalogo RNDT e dà il merito a Andrea Borruso (vedi `49-catalogo-rndt.md`), con casi d'uso.

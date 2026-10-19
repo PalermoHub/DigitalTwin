@@ -2,7 +2,7 @@
 // Va chiamata dopo caricaDizionari() e applicaDom().
 import { creaInterruttoreLingua, t as tr } from './i18n.js';
 import { svgIcona } from './icone.js';
-import { creaMenuSito } from './menu-sito.js';
+import { creaMenuSito, duplicaPrincipale } from './menu-sito.js';
 
 const el = (tag, props = {}, ...figli) => { const e = Object.assign(document.createElement(tag), props); e.append(...figli); return e; };
 
@@ -23,6 +23,7 @@ export async function avviaTestata() {
   });
   const menu = creaMenuSito(); // le voci stanno in menu-sito.js, uguali per tutte le pagine
   const tendine = [...menu.querySelectorAll('.menu-tendina')];
+  tendine.forEach(duplicaPrincipale);
   const chiudiTendine = salvo => tendine.forEach(t => {
     if (t === salvo) return;
     t.classList.remove('aperta');

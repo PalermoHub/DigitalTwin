@@ -2,16 +2,18 @@
 
 ## The top menu and the information pages
 
-Keywords: menu, pages, Digital Twin, Topics, Guide, Geoimage guide, RNDT plugin, Sources and notes, Privacy, About, Presentation, page index, information pages.
+Keywords: menu, pages, Home, Map, Digital Twin, Topics, Guide, Geoimage guide, RNDT plugin, Sources and notes, Privacy, About, Presentation, page index, information pages.
 
 Typical questions: What is in the top menu? How do I close a page? Where do I find the sources and the notes?
 
-The menu is next to the logo, with the groups **Map**, **Guides**, **Information** and **More** (on a smartphone it is in the «Menu» tab). There are eight pages: **Digital Twin**, **Topics**, **Guide**, **Geoimage guide**, **RNDT plugin**, **Sources and notes**, **Privacy**, **About**; in addition there is the link to the project's **Presentation**.
+The menu is next to the logo and is the same on every page of the site (on a smartphone it is in the «Menu» tab). Its entries are **Home**, **Map**, **Digital Twin**, **General guide** (with **RNDT plugin** and **Geoimage guide** in the drop-down next to it), **Sources and notes** and **About** (with **Presentation** and **Privacy** in the drop-down next to it). The entry of the page you are on is highlighted.
 
-Each page opens at **full width**, is not modal (the map stays underneath), and has a **side index** («Page index», «Guide index»). Pressing the same menu entry again, or **Esc**, closes the page.
+**Home** (`home.html`) is the page where you choose and add the map's layers; the **topic** filter is here. **Map** takes you back to the map.
+
+Digital Twin, Guide, RNDT plugin, Geoimage guide, Sources and notes, About and Privacy are **separate pages** (`digitaltwin.html`, `guida.html`, `plugin.html`, `geoimage.html`, `fonti.html`, `about.html`, `privacy.html`), at **full width**, split into bands, and many have a **side index** («Page index», «Guide index»). To go back to the map, choose **Map** in the menu. From the map, the same entries instead open the information sheets above the map, which close by pressing the entry again or with **Esc**.
 
 - **Digital Twin**: «The city in layers: cadastre, population, buildings, transport, safety and much more.» Sections: «What a Digital Twin means to us, in plain words», «How it is organised», «The sources», «How to use it», «What it is for».
-- **Topics**: «What the Digital Twin is about, topic by topic.» A box for each topic, with the description and the list of the layers and the **«Show on the map»** button that switches on the topic's layers and closes the page (off if the layers are not yet available).
+- **Topics**: «What the Digital Twin is about, topic by topic.» A box for each topic, with the description and the list of the layers and the **«Show on the map»** button that switches on the topic's layers and closes the page (off if the layers are not yet available). It is no longer a menu entry: topics are chosen from the Home filter.
 - **Guide**: «How to use the map, step by step.» It has two groups, **Features** and **Use cases**, steps with images and video (the video «Palermo Digital Twin: how to use the map with Palermo's open data»).
 - **Geoimage guide**: «How to overlay a historical map on the cartography and georeference it.» (see `50-geoimage.md`)
 - **RNDT plugin**: explains the RNDT catalogue and gives the credit to Andrea Borruso (see `49-catalogo-rndt.md`), with use cases.

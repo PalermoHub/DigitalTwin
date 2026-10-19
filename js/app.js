@@ -1,4 +1,5 @@
 import { creaMappa } from './core/mappa.js';
+import { duplicaPrincipale } from './core/menu-sito.js';
 import { impostaCatalogo } from './core/config.js';
 import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js';
 import { collegaInvito } from './core/invito.js';
@@ -293,6 +294,7 @@ map.once('style.load', async () => {
   const menu = document.getElementById('menu-info');
   const toggle = document.getElementById('menu-info-toggle');
   const tendine = [...menu.querySelectorAll('.menu-tendina')];
+  tendine.forEach(duplicaPrincipale);
   const chiudiTendine = salvo => tendine.forEach(t => {
     if (t === salvo) return;
     t.classList.remove('aperta'); t.querySelector('.menu-tendina-toggle').setAttribute('aria-expanded', 'false');

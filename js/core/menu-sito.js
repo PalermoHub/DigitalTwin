@@ -36,3 +36,11 @@ export function creaMenuSito(menu = document.getElementById('menu-info'), pagina
   menu.querySelector(`a[href="${pagina}"]`)?.setAttribute('aria-current', 'page');
   return menu;
 }
+
+// Fino a 1180 px tutta la riga di una tendina apre la lista: la voce principale vi compare come prima sottovoce (copia nascosta su desktop).
+export function duplicaPrincipale(tendina) {
+  const copia = tendina.firstElementChild.cloneNode(true);
+  copia.removeAttribute('id');
+  copia.classList.add('menu-solo-stretto');
+  tendina.querySelector('.menu-tendina-lista').prepend(copia);
+}
