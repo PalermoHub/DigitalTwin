@@ -115,12 +115,13 @@ function bottoneAggiungi(strati, etichetta, classe = 'strato-aggiungi') {
 document.getElementById('home-cesto-svuota').addEventListener('click', () => { cesto.clear(); aggiornaCesto(); });
 
 // ---- slider ----
+// le ultime cinque novità: quando si aggiunge uno strato nuovo, entra qui al posto del più vecchio
 const SLIDE = [
-  { id: 'urbanistica', img: 'img/home/urbanistica.webp', strati: ['catasto', 'prg'] },
-  { id: 'edifici', img: 'img/home/edifici.webp', strati: ['edifici3d'] },
-  { id: 'popolazione', img: 'img/home/popolazione.webp', strati: ['coropletico'] },
-  { id: 'trasporto', img: 'img/home/trasporto.webp', strati: ['trasporto-metro', 'trasporto-fermate'] },
-  { id: 'calore', img: 'img/home/calore.webp', strati: ['isole-calore'] },
+  { id: 'opere', img: 'img/home/strati/opere.webp', strati: ['opere'] },
+  { id: 'distributori', img: 'img/home/strati/distributori.webp', strati: ['distributori'] },
+  { id: 'trend-popolazione', img: 'img/home/strati/trend-popolazione.webp', strati: ['trend-popolazione'] },
+  { id: 'pnrr', img: 'img/home/strati/pnrr.webp', strati: ['pnrr'] },
+  { id: 'pendolarismo', img: 'img/home/strati/pendolarismo.webp', strati: ['pendolarismo'] },
 ];
 
 function costruisciSlider() {

@@ -25,9 +25,9 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .slide-pista { display: flex; transition: transform .5s ease; }
 .slide { position: relative; flex: 0 0 100%; min-width: 0; aspect-ratio: 16 / 7; background: #20252b; }
 .slide img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.slide-testo { position: absolute; left: 0; right: 0; bottom: 0; padding: 48px 56px 40px; color: var(--bianco); background: linear-gradient(to top, rgba(8, 12, 18, .82), rgba(8, 12, 18, 0)); }
+.slide-testo { position: absolute; left: 0; right: 0; bottom: 0; padding: 72px 56px 40px; color: var(--bianco); background: linear-gradient(to top, rgba(8, 12, 18, .92) 0%, rgba(8, 12, 18, .85) 55%, rgba(8, 12, 18, 0)); text-shadow: 0 1px 3px rgba(0, 0, 0, .7); }
 .slide-testo h3 { margin: 0 0 4px; font-size: clamp(1.1rem, 2.6vw, 1.6rem); }
-.slide-testo p { margin: 0 0 12px; max-width: 60ch; font-size: var(--fs-md); line-height: 1.45; }
+.slide-testo p { margin: 0 0 12px; font-weight: 500; max-width: 60ch; font-size: var(--fs-md); line-height: 1.45; }
 .slide-vai, .strato-aggiungi { display: inline-block; box-sizing: border-box; padding: 9px 16px; border: 0; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font: inherit; font-weight: 700; cursor: pointer; }
 .slide-vai:hover, .strato-aggiungi:hover { filter: brightness(1.06); }
 .slide-vai.aggiunto, .strato-aggiungi.aggiunto { background: var(--positivo); color: var(--bianco); }
