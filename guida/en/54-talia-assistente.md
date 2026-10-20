@@ -45,3 +45,11 @@ Keywords: search, find, offices, monuments, PNRR, public works, district, circos
 Typical questions: Can Talia search for an office or a monument? How do I find a district or a circoscrizione? How do I search for a cadastral parcel with Talia? Does Talia find fires or PAI constraints?
 
 Talia searches by name for schools, polling stations, monuments, trees, fountains, stops and lines, stations, charging points, fuel stations, offices, properties, PEBA cards, PNRR projects and public works (the CUP is typed like a line number): each result has a button that opens its card. It can also take the map to a district, a circoscrizione or a UPL, to fires (also for one year, for example «fires 2023») and to PAI constraints («landslides», «PAI»), and to a cadastral parcel written as «sheet 12 parcel 345» or «12/345»: here the button, «Go to: …», moves the map and applies the filter without opening a card. It does not search buildings (3D), heat islands or ISPRA geology by name: for those, ask for the layer and Talia offers to switch it on.
+
+## Questions Talia answers from the data
+
+Keywords: closest, near me, how many, how many residents, most populous, what am I looking at, layers on, location, Talia data.
+
+Typical questions: What is the closest charging point to me? How many drinking fountains are there? Which district is the most populous? How many residents does Zisa have? What am I looking at on the map? Which layers are on?
+
+Some questions Talia answers from the app's data, without going through the guide. «The closest charging point to me» (it also works for fuel stations, stops, fountains, schools, offices, monuments, trees and polling stations) reads your position, once the browser has your consent, and offers the three closest points with their distance: a button takes the map to the point and opens its card. «How many drinking fountains are there?» gives the total in the data. «Most populous district» and «how many residents does Zisa have» use the residents ranking of the latest year available (also for UPLs and circoscrizioni). «What am I looking at?» lists the layers that are on, each with a button to switch it off. Counts for a single zone («how many schools in Zisa») do not exist yet: Talia then answers from the guide.

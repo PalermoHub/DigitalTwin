@@ -2,9 +2,10 @@ import { rispondi, domandeIniziali, anteprima, caricaIndice } from './chat-bot-r
 
 // Stato della conversazione del Chat bot, senza DOM: l'interfaccia (chat-bot.js) lo disegna e chiama chiedi()/commuta().
 // Messaggi: presentazione | utente | risposta { voce, breve, cEAltro, espansa, oggetti } | luoghi { oggetti } | indirizzo { oggetti } | nonLoSo { vicine } | errore.
+// `azioni(testo)` risponde con i dati dell'app (layer accesi, punto più vicino, conteggi, popolazione) o null: messaggio `azione { testo, oggetti, strati }`.
 // `cercaOggetti(testo)` trova per nome i luoghi della mappa e gli indirizzi (come la barra di ricerca): ognuno ha il suo pulsante per aprirne la scheda.
 // Un indirizzo (`indirizzo: true`) trovato da solo si apre subito con `apri(oggetto)`: la scheda racconta cosa c'è nei dintorni.
-export function creaConversazione({ carica = caricaIndice, cercaOggetti = async () => [], apri = () => {}, suCambio = () => {} } = {}) {
+export function creaConversazione({ carica = caricaIndice, cercaOggetti = async () => [], azioni = async () => null, apri = () => {}, suCambio = () => {} } = {}) {
   const messaggi = [];
   let indice = null;
   let n = 0;
@@ -27,6 +28,8 @@ export function creaConversazione({ carica = caricaIndice, cercaOggetti = async 
       const domanda = (testo ?? '').trim();
       if (!domanda) return;
       aggiungi({ tipo: 'utente', testo: domanda });
+      const fatta = await azioni(domanda).catch(() => null);
+      if (fatta) { aggiungi({ tipo: 'azione', ...fatta }); return; }
       let voci;
       try { voci = await leggi(); } catch { aggiungi({ tipo: 'errore' }); return; }
       const { trovate, vicine } = rispondi(voci, domanda);

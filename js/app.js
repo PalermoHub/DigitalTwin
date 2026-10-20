@@ -1,6 +1,6 @@
 import { creaMappa } from './core/mappa.js';
 import { duplicaPrincipale } from './core/menu-sito.js';
-import { impostaCatalogo } from './core/config.js';
+import { impostaCatalogo, urlDati } from './core/config.js';
 import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js';
 import { collegaInvito } from './core/invito.js';
 import { collegaInstallazione } from './core/installa.js';
@@ -19,7 +19,8 @@ import { collegaTooltipLayerEsterni } from './rndt/tooltip.js';
 import { collegaTooltipRemoto } from './rndt/tooltip-remoto.js';
 import { migraFileLocali } from './aggiungi/migrazione.js';
 import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
-import { collegaRicerca, collegaRicercaParticella, cercaOggetti } from './core/ricerca.js';
+import { collegaRicerca, collegaRicercaParticella, cercaOggetti, luoghiPreparati } from './core/ricerca.js';
+import { creaAzioni, posizioneBrowser, stratiAccesi } from './core/chat-bot-azioni.js';
 import { creaRicercaMappa } from './core/ricerca-mappa.js';
 import { collegaNavigatoreMappa } from './core/mappa-navigatore.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
@@ -192,7 +193,12 @@ map.once('style.load', async () => {
       if (!pannelloChat.childElementCount) {
         const { creaChatBot } = await import('./core/chat-bot.js');
         // le ricerche che usano la mappa (zone, incendi, PAI, particelle) si collegano più sotto: qui si legge il valore al momento della domanda
-        creaChatBot(pannelloChat, { cercaOggetti: async testo => [...await cercaOggetti(testo), ...(await ricercaMappa?.(testo) ?? [])].slice(0, 4) });
+        let classifica = null; // il file si scarica alla prima domanda che lo usa
+        const azioni = creaAzioni({
+          voci: luoghiPreparati, posizione: posizioneBrowser, attivi: () => stratiAccesi(document),
+          classifica: () => (classifica ??= fetch(urlDati('popolazione/classifica.json')).then(r => { if (!r.ok) throw new Error('classifica'); return r.json(); }).catch(err => { classifica = null; throw err; })),
+        });
+        creaChatBot(pannelloChat, { azioni, cercaOggetti: async testo => [...await cercaOggetti(testo), ...(await ricercaMappa?.(testo) ?? [])].slice(0, 4) });
       }
       pannelloChat.hidden = false;
     },

@@ -202,7 +202,7 @@ function disegnaSunto(riquadro) {
   riquadro.replaceChildren(el('summary', null, t('chatbot.sunto.titolo')), ...corpo);
 }
 
-export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
+export function creaChatBot(pannello, { carica, cercaOggetti, azioni } = {}) {
   const testata = el('header', 'gi-testata');
   testata.append(el('h2', null, t('chatbot.titolo')));
   const pulisci = Object.assign(el('button', 'cb-pulisci'), { type: 'button', title: t('chatbot.pulisci'), ariaLabel: t('chatbot.pulisci') });
@@ -276,6 +276,21 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
           b.addEventListener('click', () => conv.commuta(m.id));
           box.append(b);
         }
+      } else if (m.tipo === 'azione') {
+        box.append(el('p', null, m.testo));
+        if (m.strati?.length) {
+          const az = el('div', 'cb-azioni');
+          for (const id of m.strati) {
+            const st = statoStrato(document, id);
+            if (!st) continue;
+            const b = Object.assign(el('button', 'cb-layer', st.nome), { type: 'button' });
+            b.dataset.strato = id;
+            b.addEventListener('click', () => commutaStrato(document, id));
+            az.append(b);
+          }
+          box.append(az);
+        }
+        if (m.oggetti?.length) box.append(pulsantiOggetti(m.oggetti));
       } else if (m.tipo === 'luoghi') {
         box.append(el('p', null, t('chatbot.luoghi')), pulsantiOggetti(m.oggetti));
       } else if (m.tipo === 'indirizzo') {
@@ -318,7 +333,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
   }
   document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) { aggiornaLayer(); aggiornaPercorsi(); } aggiornaFiltri(); }); // anche i clic sulla legenda o sul pannello
 
-  const conv = creaConversazione({ carica, cercaOggetti, apri: o => document.dispatchEvent(new CustomEvent('scheda:apri-luogo', { detail: o })), suCambio: disegna });
+  const conv = creaConversazione({ carica, cercaOggetti, azioni, apri: o => document.dispatchEvent(new CustomEvent('scheda:apri-luogo', { detail: o })), suCambio: disegna });
   form.addEventListener('submit', e => {
     e.preventDefault();
     const testo = campo.value;

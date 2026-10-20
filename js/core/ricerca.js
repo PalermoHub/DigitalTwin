@@ -56,6 +56,9 @@ function luoghi() {
   return promessaLuoghi;
 }
 
+// i luoghi preparati (per le azioni di Talia: punto più vicino, conteggi)
+export const luoghiPreparati = luoghi;
+
 // i luoghi cercati per nome e gli indirizzi (via + civico), come nella barra: li usa anche il Chat bot.
 // Ogni voce ha lon/lat: aprendola, la scheda mostra anche quello che c'è nei dintorni.
 export async function cercaOggetti(testo) {
