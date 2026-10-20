@@ -2111,13 +2111,6 @@ a.scheda-badge-tinta { text-decoration: none; }
 a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: color-mix(in srgb, var(--tinta) 26%, transparent); }
 
 /* Chat bot: pannello a destra con la conversazione */
-.cb-sunto { flex: none; max-height: 40%; overflow-y: auto; padding: 8px 14px; border-bottom: 1px solid var(--border); background: var(--surface); font-size: var(--fs-md, 14px); line-height: 1.4; }
-.cb-sunto > summary { cursor: pointer; font-weight: 600; color: var(--text); }
-.cb-sunto-tab { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; color: var(--text); }
-.cb-sunto-apri { padding: 2px 10px; border: 1px solid var(--accent); border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent-strong); font: inherit; font-size: var(--fs-sm, 12px); cursor: pointer; }
-.cb-sunto-voci { margin: 4px 0 0; padding-left: 18px; color: var(--text); }
-.cb-sunto-voci li { margin-bottom: 3px; overflow-wrap: anywhere; }
-.cb-sunto-voce { padding: 0; border: 0; background: none; color: var(--accent-strong); font: inherit; font-weight: 600; text-align: left; text-decoration: underline; cursor: pointer; }
 .cb-log { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 14px; }
 .cb-msg { max-width: 92%; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: var(--fs-md, 14px); line-height: 1.45; overflow-wrap: anywhere; }
 .cb-utente { align-self: flex-end; background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
@@ -2125,6 +2118,13 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .cb-msg p { margin: 0 0 8px; }
 .cb-msg p:last-child, .cb-msg ul:last-child { margin-bottom: 0; }
 .cb-msg ul { margin: 0 0 8px; padding-left: 20px; }
+.cb-sunto { flex: none; max-height: 40%; overflow-y: auto; padding: 8px 14px; border-bottom: 1px solid var(--border); background: var(--surface); font-size: var(--fs-md, 14px); line-height: 1.4; }
+.cb-sunto > summary { cursor: pointer; font-weight: 600; color: var(--text); }
+.cb-sunto-tab { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; color: var(--text); }
+.cb-sunto-apri { padding: 2px 10px; border: 1px solid var(--accent); border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent-strong); font: inherit; font-size: var(--fs-sm, 12px); cursor: pointer; }
+.cb-sunto-voci { margin: 4px 0 0; padding-left: 18px; color: var(--text); }
+.cb-sunto-voci li { margin-bottom: 3px; overflow-wrap: anywhere; }
+.cb-sunto-voce { padding: 0; border: 0; background: none; color: var(--accent-strong); font: inherit; font-weight: 600; text-align: left; text-decoration: underline; cursor: pointer; }
 .cb-nota { color: var(--text-muted); font-size: var(--fs-sm, 12px); }
 .cb-domande { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .cb-domanda, .cb-altro { text-align: left; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--accent-strong); font: inherit; cursor: pointer; }
@@ -2149,3 +2149,19 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 #app-footer { view-transition-name: piede; }
 ::view-transition-group(root) { animation-duration: .15s; }
 @media (prefers-reduced-motion: reduce) { ::view-transition-group(*) { animation: none; } }
+
+/* Talia: «Come chiedere» (punto interrogativo nella testata) */
+.pannello-aiuto { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); color: var(--accent-strong); font: inherit; font-weight: 700; cursor: pointer; }
+.pannello-aiuto:hover, .pannello-aiuto[aria-expanded='true'] { border-color: var(--accent); background: var(--accent-soft); }
+.cb-aiuto { padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--surface); max-height: 45%; overflow-y: auto; }
+.cb-aiuto h3 { margin: 0 0 4px; font-size: var(--fs-md, 14px); }
+.cb-aiuto h4 { margin: 10px 0 4px; font-size: var(--fs-sm, 12px); text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); }
+.cb-aiuto .cb-azioni { display: flex; flex-wrap: wrap; gap: 6px; }
+.cb-aiuto[hidden] { display: none; }
+
+/* Talia racconta il luogo (messaggio dalla scheda) */
+.cb-parole-tab { margin: 10px 0 4px; font-size: var(--fs-sm, 12px); text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); }
+.cb-parole { margin: 0 0 6px; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+.cb-parole-regola { font: inherit; font-size: var(--fs-sm, 12px); color: var(--accent-strong); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+.cb-parole-spiega { display: block; margin-top: 2px; color: var(--text-muted); font-family: var(--mono, ui-monospace, monospace); }
+.scheda-talia { color: var(--accent-strong); }

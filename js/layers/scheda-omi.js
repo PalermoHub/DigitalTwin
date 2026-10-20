@@ -1,6 +1,6 @@
 // Voci «Quotazioni OMI» della scheda: una per zona, con le tipologie in fisarmonica. Logica e
 // formati di buildOMIPopup (pmtiles/js/catasto_script.js). Il tile ha una feature per tipologia.
-import { t, localeIntl } from '../core/i18n.js';
+import { t, tl, localeIntl } from '../core/i18n.js';
 import { STILE_OMI } from './stile-omi.js';
 
 const pulisci = s => String(s ?? '').replace(/^'|'$/g, '').trim();
@@ -60,12 +60,16 @@ function voceZona(features) {
     });
   }
 
+  // valori per le frasi di Talia (core/scheda-parole.js): la tipologia prevalente della zona, o la prima
+  const prev = features.find(p => p.Cod_tip_prev && String(p.Cod_tip) === String(p.Cod_tip_prev)) ?? p0;
+  const grezzi = { zona: String(zona0(p0)), fascia: fasciaDescr || fascia, cMin: numero(prev.Compr_min), cMax: numero(prev.Compr_max), lMin: numero(prev.Loc_min), lMax: numero(prev.Loc_max), sup: SUPERFICIE[prev.Sup_NL_compr] ? tl(SUPERFICIE[prev.Sup_NL_compr]) : '' };
   const zona = zona0(p0);
   const codice = p0.Cod_tip_prev || '';
   const semestre = p0.Anno_Semestre ? `OMI ${p0.Anno_Semestre.replace(' / ', ' S')}` : 'OMI 2025 S2';
   return {
     chiave: `omi-${zona}`,
     peso: 60,
+    grezzi,
     maxRighe: 4, // nel tooltip: zona, fascia, descrizione e microzona
     strato: 'omi',
     titolo: 'Quotazioni OMI',

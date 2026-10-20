@@ -36,7 +36,7 @@ Keywords: address, street, house number, what is nearby, surroundings, near me, 
 
 Typical questions: Can Talia search for a street and house number? What is near via Libertà 12? How do I see what is around an address?
 
-Type a street with its house number (for example «via Libertà 12») or the name of a street («piazza Politeama») in Talia's field. Talia offers a button for each address found: tapping it moves the map to the point and opens the card, with the place's data and the points of the layers that lie nearby, within the radius of the neighbours. The summary of the card then appears at the top of Talia. If the house number does not exist, Talia suggests the street and says so.
+Type a street with its house number (for example «via Libertà 12») or the name of a street («piazza Politeama») in Talia's field. Talia offers a button for each address found: tapping it moves the map to the point and opens the card, with the place's data and the points of the layers that lie nearby, within the radius of the neighbours. The summary of the card then appears at the top of Talia; to have the card described in plain words, tap Talia's icon in the card. If the house number does not exist, Talia suggests the street and says so.
 
 ## Searching for places, zones, fires and parcels
 
@@ -53,3 +53,11 @@ Keywords: filter, above, below, amount, closest, near me, how many, how many res
 Typical questions: What is the closest charging point to me? How many drinking fountains are there? Which district is the most populous? How many residents does Zisa have? What am I looking at on the map? Which layers are on?
 
 Some questions Talia answers from the app's data, without going through the guide. «The closest charging point to me» (it also works for fuel stations, stops, fountains, schools, offices, monuments, trees and polling stations) reads your position, once the browser has your consent, and offers the three closest points with their distance: a button takes the map to the point and opens its card. «How many drinking fountains are there?» gives the total in the data. «Most populous district» and «how many residents does Zisa have» use the residents ranking of the latest year available (also for UPLs and circoscrizioni). «What am I looking at?» lists the layers that are on, each with a button to switch it off. Some questions apply a filter to the map: «PNRR above 1 million», «works below 500 thousand euro», «fatal crashes 2022». Talia switches the layer on, filters it and shows a «Remove the filter» button (for PNRR and works the filter also appears in the layer's legend); for crashes year and severity apply, as in the Filters panel. Counts for a single zone («how many schools in Zisa») do not exist yet: Talia then answers from the guide.
+
+## Having Talia describe a place
+
+Keywords: plain words, describe, explain the card, Talia icon, terrain, OMI market, population, how to ask, examples, question mark.
+
+Typical questions: How do I get Talia to explain a card? What does the Talia icon in the card do? How do I know what I can ask Talia? Where are the example questions?
+
+In a place's card, next to copy and print, there is Talia's icon: tap it and Talia opens and describes the place in plain sentences, one part for each tab (Market, Population, Terrain). The sentences are computed from the card's numbers with stated rules, without artificial intelligence: «how it works» shows the number and the threshold that produced the sentence, and «values without a sentence» lists those close to normal, where there is nothing to say. OMI quotations are for a zone, not the price of a property. In Talia's header the question mark «?» opens «What you can ask me»: examples by type (finding a place, near you, numbers, filters, understanding the app) that you try with a tap.

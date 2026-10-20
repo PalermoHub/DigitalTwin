@@ -55,6 +55,7 @@ export function voceTerreno(p) {
     ...(ha(p.quota) ? { badge: `${fmt(p.quota, 0)} m s.l.m.` } : {}),
     collassabile: true,
     aperta: true,
+    grezzi: p, // valori per le frasi di Talia (core/scheda-parole.js)
     gruppi,
     nota: 'Punto della griglia DTM più vicino (passo 50 m).',
     link: { testo: 'Analisi morfologica interattiva', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/palermo_dtm5m.html' },

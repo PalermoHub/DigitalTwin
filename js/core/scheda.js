@@ -10,6 +10,8 @@ import { ICONA_INGRANAGGIO, ICONA_X, creaPannelloPreferenze } from './scheda-pan
 import { t as tr, tl } from './i18n.js';
 import { mostraCerchio, nascondiCerchio } from './cerchio-raggio.js';
 import { raggioVicini, cerchioVisibile, EVENTO_RAGGIO } from './raggio-vicini.js';
+import { ICONE_RAIL } from './rail.js';
+import { paroleScheda } from './scheda-parole.js';
 
 const R = 4; // tolleranza in pixel attorno al clic
 
@@ -238,7 +240,9 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
     setTimeout(() => { b.innerHTML = ICONA_COPIA; b.title = tr('scheda.copia'); annuncio.textContent = ''; }, 1600);
   });
   const stampa = azione('scheda-stampa', tr('scheda.stampa'), ICONA_STAMPA, () => document.dispatchEvent(new CustomEvent('scheda:stampa')));
-  azioni.append(copia, stampa, personalizza, x);
+  // Talia racconta il luogo in frasi semplici: il pannello di Talia si apre da app.js
+  const talia = azione('scheda-talia', tr('parole.apri'), ICONE_RAIL.chatbot, () => document.dispatchEvent(new CustomEvent('talia:racconta', { detail: { luogo: titoloTesto, blocchi: paroleScheda(corrente.sezioni) } })));
+  azioni.append(talia, copia, stampa, personalizza, x);
   const testata = el('header', 'scheda-intestazione');
   const riga = el('div', 'scheda-testata');
   riga.append(titolo, azioni);

@@ -90,3 +90,14 @@ test('il filtro viene applicato e si può togliere dal messaggio', async () => {
   const i = await azioni({ filtra: () => () => {} })('incidenti mortali 2022');
   assert.match(i.testo, /anno 2022.*Mortale|anno 2022.*mortali/i);
 });
+
+test('«Come chiedere»: ogni esempio proposto è riconosciuto da Talia', async () => {
+  const { vociAiuto, esempioCasuale } = await import('../../js/core/chat-bot-aiuto.js');
+  const { t } = await import('../../js/core/i18n.js');
+  const voci = vociAiuto(t);
+  assert.ok(voci.every(g => g.titolo && g.esempi.every(Boolean)));
+  const dellAzione = ['vicino', 'numeri', 'filtri'].flatMap(id => voci.find(g => g.id === id).esempi);
+  const mancanti = dellAzione.filter(e => !riconosci(e));
+  assert.deepEqual(mancanti, [], 'esempi che le azioni non riconoscono');
+  assert.ok(esempioCasuale(voci, () => 0) === voci[0].esempi[0]);
+});

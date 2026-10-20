@@ -9,7 +9,6 @@ import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaRail, ICONE_RAIL } from './core/rail.js';
 import { creaPannelloInterfaccia } from './core/pannello-interfaccia.js';
 import { collegaScheda } from './core/scheda.js';
-import { collegaSunto } from './core/chat-bot-sunto.js';
 import { collegaTooltipScheda } from './core/tooltip-scheda.js';
 import { collegaRndt, creaInterrogazione } from './rndt/index.js';
 import { creaGruppo, creaGruppoRndt, OPZIONI_MIEI } from './rndt/gruppo.js';
@@ -20,6 +19,7 @@ import { collegaTooltipRemoto } from './rndt/tooltip-remoto.js';
 import { migraFileLocali } from './aggiungi/migrazione.js';
 import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
 import { collegaRicerca, collegaRicercaParticella, cercaOggetti, luoghiPreparati } from './core/ricerca.js';
+import { collegaSunto } from './core/chat-bot-sunto.js';
 import { creaAzioni, posizioneBrowser, stratiAccesi } from './core/chat-bot-azioni.js';
 import { EVENTO_IMPORTO } from './core/filtri-parole.js';
 import { creaRicercaMappa } from './core/ricerca-mappa.js';
@@ -234,6 +234,12 @@ map.once('style.load', async () => {
   new MutationObserver(() => btnChatBarra.setAttribute('aria-pressed', String(!pannelloChat.hidden && !pannelloChat.classList.contains('collassato'))))
     .observe(pannelloChat, { attributes: true, attributeFilter: ['hidden', 'class'] });
   document.addEventListener('scheda:mostra', () => rail.mostra('scheda'));
+  // dalla scheda: Talia si apre (creata al primo uso) e racconta il luogo
+  document.addEventListener('talia:racconta', async e => {
+    await chatBot.apri();
+    rail.mostra('chatbot');
+    document.dispatchEvent(new CustomEvent('talia:racconta-pronto', { detail: e.detail }));
+  });
   document.addEventListener('scheda:vai', () => rail.mostra('scheda')); // dal Chat bot: la scheda torna in primo piano
   tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); rail.chiudi('chatbot'); document.getElementById('crediti').open && document.getElementById('crediti').close(); };
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra

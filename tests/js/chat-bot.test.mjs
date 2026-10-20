@@ -127,3 +127,20 @@ test('chiedi: un solo indirizzo trovato si apre da solo; più indirizzi aspettan
   assert.equal(c.messaggi.at(-1).tipo, 'indirizzo');
   assert.equal(aperti.length, 1);
 });
+
+test('la presentazione con le domande suggerite sparisce alla prima domanda e torna con pulisci', async () => {
+  const c = creaConversazione({ carica });
+  await c.avvia();
+  assert.equal(c.messaggi.some(m => m.tipo === 'presentazione'), true);
+  await c.chiedi('stampa');
+  assert.equal(c.messaggi.some(m => m.tipo === 'presentazione'), false);
+  await c.pulisci();
+  assert.equal(c.messaggi.some(m => m.tipo === 'presentazione'), true);
+});
+
+test('anche il racconto della scheda fa sparire la presentazione', async () => {
+  const c = creaConversazione({ carica });
+  await c.avvia();
+  c.racconta({ luogo: 'Via Roma', blocchi: [] });
+  assert.deepEqual(c.messaggi.map(m => m.tipo), ['scheda']);
+});

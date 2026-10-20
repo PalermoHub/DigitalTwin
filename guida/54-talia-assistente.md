@@ -36,7 +36,7 @@ Parole chiave: indirizzo, via, civico, numero civico, cosa c'è vicino, nei dint
 
 Domande tipiche: Talia può cercare una via e un civico? Cosa c'è vicino a via Libertà 12? Come vedo cosa c'è intorno a un indirizzo?
 
-Si scrive nel campo di Talia una via con il civico (per esempio «via Libertà 12») o il nome di una via («piazza Politeama»). Talia propone un pulsante per ogni indirizzo trovato: toccandolo la mappa va sul punto e si apre la scheda, con i dati del luogo e i punti dei layer che stanno nei dintorni, entro il raggio dei vicini. Il riepilogo della scheda compare poi nella parte alta di Talia. Se il civico non esiste, Talia propone la via e lo dice.
+Si scrive nel campo di Talia una via con il civico (per esempio «via Libertà 12») o il nome di una via («piazza Politeama»). Talia propone un pulsante per ogni indirizzo trovato: toccandolo la mappa va sul punto e si apre la scheda, con i dati del luogo e i punti dei layer che stanno nei dintorni, entro il raggio dei vicini. Il riepilogo della scheda compare poi nella parte alta di Talia; per farti raccontare la scheda in parole semplici tocca l'icona di Talia nella scheda. Se il civico non esiste, Talia propone la via e lo dice.
 
 ## Cercare luoghi, zone, incendi e particelle
 
@@ -53,3 +53,11 @@ Parole chiave: filtro, sopra, sotto, importo, più vicino, vicino a me, quante, 
 Domande tipiche: Qual è la colonnina più vicina a me? Quante fontanelle ci sono? Qual è il quartiere più popoloso? Quanti abitanti ha la Zisa? Cosa vedo ora sulla mappa? Quali layer sono accesi?
 
 Alcune domande Talia le risolve con i dati dell'app, senza passare dalla guida. «La colonnina più vicina a me» (vale anche per distributori, fermate, fontanelle, scuole, uffici, monumenti, alberi e sedi elettorali) legge la tua posizione, dopo il consenso del browser, e propone i tre punti più vicini con la distanza: un pulsante porta la mappa sul punto e apre la scheda. «Quante fontanelle ci sono?» dà il totale nei dati. «Quartiere più popoloso» e «quanti abitanti ha la Zisa» usano la classifica dei residenti dell'ultimo anno disponibile (anche per UPL e circoscrizioni). «Cosa vedo ora?» elenca i layer accesi, ognuno con un pulsante per spegnerlo. Alcune domande applicano un filtro alla mappa: «PNRR sopra 1 milione», «opere sotto 500 mila euro», «incidenti mortali 2022». Talia accende il layer, filtra e mostra il pulsante «Togli il filtro» (per PNRR e opere il filtro compare anche nella legenda del layer); per gli incidenti valgono anno e gravità, come nel pannello Filtri. I conteggi per singola zona («quante scuole alla Zisa») non ci sono ancora: in quel caso Talia risponde dalla guida.
+
+## Farsi raccontare un luogo da Talia
+
+Parole chiave: parole semplici, racconta, spiega la scheda, icona di Talia, terreno, mercato OMI, popolazione, come chiedere, esempi, punto interrogativo.
+
+Domande tipiche: Come faccio a farmi spiegare una scheda da Talia? Cosa significa l'icona di Talia nella scheda? Come so cosa posso chiedere a Talia? Dove trovo gli esempi di domande?
+
+Nella scheda di un luogo, accanto a copia e stampa, c'è l'icona di Talia: toccandola Talia si apre e racconta il luogo in frasi semplici, una parte per ogni tab (Mercato, Popolazione, Terreno). Le frasi sono calcolate dai numeri della scheda con regole dichiarate, senza intelligenza artificiale: «come nasce» mostra il numero e la soglia che hanno fatto uscire la frase, e «dati senza frase» elenca quelli vicini al normale, per cui non c'è niente da dire. Le quotazioni OMI sono di zona, non il prezzo di un immobile. Nella testata di Talia il punto interrogativo «?» apre «Cosa puoi chiedermi»: esempi per tipo (trovare un posto, vicino a te, numeri, filtri, capire l'app) che si provano con un tocco.

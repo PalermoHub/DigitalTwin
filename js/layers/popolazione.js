@@ -14,6 +14,15 @@ const fmt = v => v.toLocaleString(localeIntl(), { maximumFractionDigits: 1 });
 
 const promesse = {};
 const indici = {};
+
+// Mediana di un indicatore su tutte le sezioni di un anno (per le frasi di Talia): si calcola una volta sola per anno e indicatore.
+const mediane = {};
+function medianaIndicatore(anno, chiave) {
+  const k = `${anno}:${chiave}`;
+  if (k in mediane) return mediane[k];
+  const valori = [...(indici[anno]?.values() ?? [])].map(r => INDICATORI[chiave].calcola(r)).filter(v => v != null && Number.isFinite(v)).sort((x, y) => x - y);
+  return (mediane[k] = valori.length ? valori[Math.floor(valori.length / 2)] : null);
+}
 let stato = { anno: 2021, indicatore: 'densita', nValori: 0, anniDisponibili: [] };
 let sequenza = 0;
 let legenda = null;
@@ -171,6 +180,12 @@ export default {
         chiave: 'sezione',
         peso: 70,
         strato: 'coropletico',
+        // valori per le frasi di Talia (core/scheda-parole.js), con la mediana delle sezioni di Palermo
+        grezzi: dellAnno ? {
+          residenti: dellAnno.P1 != null ? Number(dellAnno.P1) : null,
+          densita: INDICATORI.densita.calcola(dellAnno), vecchiaia: INDICATORI.vecchiaia.calcola(dellAnno),
+          mediane: { densita: medianaIndicatore(stato.anno, 'densita'), vecchiaia: medianaIndicatore(stato.anno, 'vecchiaia') },
+        } : null,
         titolo: 'Sezione di censimento',
         icona: 'persone',
         // circoscrizione, quartiere e UPL vanno nell'intestazione della scheda, una volta sola

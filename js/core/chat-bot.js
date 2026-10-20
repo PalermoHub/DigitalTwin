@@ -10,6 +10,7 @@ import { tabPannello, apriPannello } from './chat-bot-pannelli.js';
 import { statoPercorso, commutaPercorso, portaAllaVista } from './chat-bot-percorsi.js';
 import { suntoRicordato } from './chat-bot-sunto.js';
 import { vociGuide } from './ricerca-guide.js';
+import { vociAiuto, esempioCasuale } from './chat-bot-aiuto.js';
 
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
@@ -171,6 +172,7 @@ function aggiornaFiltri() {
   }
 }
 
+
 const tronca = (testo, n) => (testo.length > n ? `${testo.slice(0, n - 1).trimEnd()}…` : testo);
 
 // «Cosa c'è qui»: i dati principali della scheda aperta sulla mappa, un blocco per tab, con i pulsanti per aprirla.
@@ -211,14 +213,40 @@ export function creaChatBot(pannello, { carica, cercaOggetti, azioni } = {}) {
   const x = Object.assign(el('button', 'pannello-chiudi'), { type: 'button', title: t('chatbot.chiudi'), ariaLabel: t('chatbot.chiudi') });
   x.innerHTML = svgIcona('chiudi', 18);
   x.addEventListener('click', () => { pannello.hidden = true; });
-  testata.append(x);
+  // «Come chiedere»: esempi toccabili, raggruppati per tipo; si apre dal punto interrogativo nella testata
+  const aiutoBtn = Object.assign(el('button', 'pannello-aiuto', '?'), { type: 'button', title: t('chatbot.aiuto.bottone'), ariaLabel: t('chatbot.aiuto.bottone') });
+  aiutoBtn.setAttribute('aria-expanded', 'false');
+  aiutoBtn.setAttribute('aria-controls', 'cb-aiuto');
+  const aiuto = el('div', 'cb-aiuto');
+  aiuto.id = 'cb-aiuto';
+  aiuto.hidden = true;
+  const gruppiAiuto = vociAiuto(t);
+  aiuto.append(el('h3', null, t('chatbot.aiuto.titolo')), el('p', 'cb-nota', t('chatbot.aiuto.nota')));
+  for (const g of gruppiAiuto) {
+    aiuto.append(el('h4', null, g.titolo));
+    const lista = el('div', 'cb-azioni');
+    for (const e of g.esempi) {
+      const b = Object.assign(el('button', 'cb-domanda', e), { type: 'button' });
+      b.addEventListener('click', () => { apriAiuto(false); chiedi(e); });
+      lista.append(b);
+    }
+    aiuto.append(lista);
+  }
+  function apriAiuto(apri) {
+    aiuto.hidden = !apri;
+    aiutoBtn.setAttribute('aria-expanded', String(apri));
+  }
+  aiutoBtn.addEventListener('click', () => apriAiuto(aiuto.hidden));
+  testata.append(aiutoBtn, x);
 
   // la scheda del luogo cliccato: si riscrive a ogni clic sulla mappa e sparisce quando la scheda si chiude
   const riquadroSunto = el('details', 'cb-sunto');
   riquadroSunto.open = true;
   const aggiornaSunto = () => disegnaSunto(riquadroSunto);
-  document.addEventListener('scheda:sunto', aggiornaSunto);
-  document.addEventListener('scheda:chiusa', aggiornaSunto);
+  // con una scheda aperta la presentazione non serve: scompare, e torna a scheda chiusa se la conversazione non è iniziata
+  const siAggiorna = () => { aggiornaSunto(); disegna(); };
+  document.addEventListener('scheda:sunto', siAggiorna);
+  document.addEventListener('scheda:chiusa', siAggiorna);
   aggiornaSunto();
 
   const log = el('div', 'cb-log');
@@ -226,7 +254,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti, azioni } = {}) {
   log.setAttribute('aria-live', 'polite');
 
   const form = el('form', 'cb-form');
-  const campo = Object.assign(el('input', 'cb-campo'), { type: 'text', autocomplete: 'off', placeholder: t('chatbot.segnaposto') });
+  const campo = Object.assign(el('input', 'cb-campo'), { type: 'text', autocomplete: 'off', placeholder: `${t('chatbot.segnaposto')} ${t('chatbot.aiuto.prova', { esempio: esempioCasuale(vociAiuto(t)) })}` });
   campo.setAttribute('aria-label', t('chatbot.campo'));
   const invia = Object.assign(el('button', 'gi-btn', t('chatbot.invia')), { type: 'submit' });
   form.append(campo, invia, pulisci);
@@ -246,6 +274,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti, azioni } = {}) {
   function disegna() {
     log.replaceChildren();
     for (const m of conv.messaggi) {
+      if (m.tipo === 'presentazione' && suntoRicordato().length) continue; // c'è già una scheda aperta: niente benvenuto né domande suggerite
       if (m.tipo === 'utente') { log.append(el('div', 'cb-msg cb-utente', m.testo)); continue; }
       const box = el('div', 'cb-msg cb-bot');
       if (m.tipo === 'presentazione') {
@@ -296,6 +325,37 @@ export function creaChatBot(pannello, { carica, cercaOggetti, azioni } = {}) {
           togli.addEventListener('click', () => { m.annulla(); togli.disabled = true; });
           box.append(togli);
         }
+      } else if (m.tipo === 'scheda') {
+        box.append(el('p', null, m.luogo === t('scheda.titoloGenerico') ? t('parole.introGenerico') : t('parole.intro', { luogo: m.luogo }))); // un luogo senza nome non va tra virgolette
+        if (!m.blocchi.length) box.append(el('p', 'cb-nota', t('parole.nulla')));
+        for (const b of m.blocchi) {
+          box.append(el('h4', 'cb-parole-tab', t(`scheda.tab.${b.tab}`)));
+          const ul = el('ul', 'cb-parole');
+          for (const f of b.frasi) {
+            const li = el('li');
+            li.append(el('span', null, f.testo));
+            const come = Object.assign(el('button', 'cb-parole-regola', t('parole.comeNasce')), { type: 'button' });
+            come.setAttribute('aria-expanded', 'false');
+            come.addEventListener('click', () => {
+              const aperta = li.querySelector('.cb-parole-spiega');
+              if (aperta) { aperta.remove(); come.setAttribute('aria-expanded', 'false'); return; }
+              li.append(el('small', 'cb-parole-spiega', f.regola));
+              come.setAttribute('aria-expanded', 'true');
+            });
+            li.append(' ', come);
+            ul.append(li);
+          }
+          box.append(ul);
+          if (b.saltate.length) {
+            const d = el('details', 'cb-nota');
+            d.append(el('summary', null, tn('parole.senzaFrase', b.saltate.length)));
+            const sl = el('ul');
+            for (const x of b.saltate) sl.append(el('li', null, x));
+            d.append(sl);
+            box.append(d);
+          }
+        }
+        box.append(el('p', 'cb-nota', t('parole.chiedi')));
       } else if (m.tipo === 'luoghi') {
         box.append(el('p', null, t('chatbot.luoghi')), pulsantiOggetti(m.oggetti));
       } else if (m.tipo === 'indirizzo') {
@@ -339,13 +399,15 @@ export function creaChatBot(pannello, { carica, cercaOggetti, azioni } = {}) {
   document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) { aggiornaLayer(); aggiornaPercorsi(); } aggiornaFiltri(); }); // anche i clic sulla legenda o sul pannello
 
   const conv = creaConversazione({ carica, cercaOggetti, azioni, apri: o => document.dispatchEvent(new CustomEvent('scheda:apri-luogo', { detail: o })), suCambio: disegna });
+  // dalla scheda: l'app apre Talia e ci manda il racconto del luogo
+  document.addEventListener('talia:racconta-pronto', e => conv.racconta(e.detail));
   form.addEventListener('submit', e => {
     e.preventDefault();
     const testo = campo.value;
     campo.value = '';
     chiedi(testo);
   });
-  pannello.replaceChildren(testata, riquadroSunto, log, form);
+  pannello.replaceChildren(testata, aiuto, riquadroSunto, log, form);
   conv.avvia();
   campo.focus();
 }
