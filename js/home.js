@@ -30,14 +30,16 @@ const archivioCesto = (() => { try { return window.sessionStorage; } catch { ret
 const cesto = new Set(leggiCesto(archivioCesto));
 const bottoniStrato = []; // { bottone, strati } da tenere allineati al cesto
 
+function aggiornaBottone(bottone, strati) {
+  const dentro = strati.length > 0 && strati.every(id => cesto.has(id));
+  bottone.setAttribute('aria-pressed', String(dentro));
+  bottone.classList.toggle('aggiunto', dentro);
+  bottone.textContent = dentro ? tr('home.aggiunto') : tr(bottone.dataset.tutti ? 'home.aggiungi.tutti' : 'home.aggiungi');
+}
+
 function aggiornaCesto() {
   salvaCesto(archivioCesto, cesto);
-  for (const { bottone, strati } of bottoniStrato) {
-    const dentro = strati.length > 0 && strati.every(id => cesto.has(id));
-    bottone.setAttribute('aria-pressed', String(dentro));
-    bottone.classList.toggle('aggiunto', dentro);
-    bottone.textContent = dentro ? tr('home.aggiunto') : tr(bottone.dataset.tutti ? 'home.aggiungi.tutti' : 'home.aggiungi');
-  }
+  for (const { bottone, strati } of bottoniStrato) aggiornaBottone(bottone, strati);
   const barra = document.getElementById('home-cesto');
   barra.hidden = cesto.size === 0;
   document.getElementById('home-cesto-conta').textContent = tr(cesto.size === 1 ? 'home.cesto.uno' : 'home.cesto.altri', { n: cesto.size });
@@ -55,6 +57,7 @@ function bottoneAggiungi(strati, etichetta, classe = 'strato-aggiungi') {
     aggiornaCesto();
   });
   bottoniStrato.push({ bottone, strati });
+  aggiornaBottone(bottone, strati); // l'etichetta c'è subito: se arrivasse dopo, il pulsante farebbe crescere la diapositiva (CLS)
   return bottone;
 }
 
