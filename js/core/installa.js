@@ -11,10 +11,11 @@ export function collegaInstallazione(doc, win, archivio, { ritardo = RITARDO_INS
   const app = win.matchMedia?.('(display-mode: standalone), (display-mode: fullscreen)').matches || win.navigator?.standalone === true;
   const telefono = win.matchMedia?.('(max-width: 720px) and (pointer: coarse)').matches;
   if (spento || app || !telefono) return null;
-  let proposta = null;
+  let proposta = win.dtInstalla ?? null; // l'evento può arrivare prima di questo modulo: lo cattura un piccolo script in mappa.html
   win.addEventListener('beforeinstallprompt', e => { e.preventDefault(); proposta = e; });
   const ios = /iPhone|iPad|iPod/.test(win.navigator?.userAgent ?? '');
   adesso(() => {
+    proposta = win.dtInstalla ?? proposta;
     const radice = doc.createElement('div');
     radice.className = 'invito-installa';
     radice.setAttribute('role', 'dialog');
