@@ -2036,6 +2036,7 @@
   "chatbot.filtri.tutte": "Show all",
   "chatbot.disattiva": "Deactivate: {nome}",
   "chatbot.apriScheda": "Open the card: {nome}",
+  "chatbot.vaiA": "Go to: {nome}",
   "chatbot.apriGuida": "Open the guide: {titolo}",
   "chatbot.apriPannello.sinistra": "Open the «{nome}» tab on the left",
   "chatbot.apriPannello.destra": "Open the «{nome}» tab on the right",

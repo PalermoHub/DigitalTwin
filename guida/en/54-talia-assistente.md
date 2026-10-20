@@ -37,3 +37,11 @@ Keywords: address, street, house number, what is nearby, surroundings, near me, 
 Typical questions: Can Talia search for a street and house number? What is near via Libertà 12? How do I see what is around an address?
 
 Type a street with its house number (for example «via Libertà 12») or the name of a street («piazza Politeama») in Talia's field. Talia offers a button for each address found: tapping it moves the map to the point and opens the card, with the place's data and the points of the layers that lie nearby, within the radius of the neighbours. The summary of the card then appears at the top of Talia. If the house number does not exist, Talia suggests the street and says so.
+
+## Searching for places, zones, fires and parcels
+
+Keywords: search, find, offices, monuments, PNRR, public works, district, circoscrizione, UPL, fires, PAI, landslides, parcel, sheet, cadastre, Talia search.
+
+Typical questions: Can Talia search for an office or a monument? How do I find a district or a circoscrizione? How do I search for a cadastral parcel with Talia? Does Talia find fires or PAI constraints?
+
+Talia searches by name for schools, polling stations, monuments, trees, fountains, stops and lines, stations, charging points, fuel stations, offices, properties, PEBA cards, PNRR projects and public works (the CUP is typed like a line number): each result has a button that opens its card. It can also take the map to a district, a circoscrizione or a UPL, to fires (also for one year, for example «fires 2023») and to PAI constraints («landslides», «PAI»), and to a cadastral parcel written as «sheet 12 parcel 345» or «12/345»: here the button, «Go to: …», moves the map and applies the filter without opening a card. It does not search buildings (3D), heat islands or ISPRA geology by name: for those, ask for the layer and Talia offers to switch it on.

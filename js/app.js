@@ -20,6 +20,7 @@ import { collegaTooltipRemoto } from './rndt/tooltip-remoto.js';
 import { migraFileLocali } from './aggiungi/migrazione.js';
 import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
 import { collegaRicerca, collegaRicercaParticella, cercaOggetti } from './core/ricerca.js';
+import { creaRicercaMappa } from './core/ricerca-mappa.js';
 import { collegaNavigatoreMappa } from './core/mappa-navigatore.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
 import { collegaCursorePunti } from './core/cursore-punti.js';
@@ -68,6 +69,7 @@ import { creaRegolatoreRaggio } from './core/raggio-vicini.js';
 
 // telefono: barra a quattro tab (Mappa, Strati, Aggiungi, Info) e foglio degli strati; la legenda si può ridurre
 let tornaAllaMappa = () => {}; // si completa quando i pannelli laterali esistono
+let ricercaMappa = null; // ricerche che usano la mappa, per il Chat bot (vedi creaRicercaMappa)
 const tab = collegaTabMobile(document, { barraTitolo: document.querySelector('#barra-strati .barra-titolo'), suMappa: () => tornaAllaMappa() });
 document.getElementById('corpo').append(tab.barra);
 document.getElementById('chiudi-strati').addEventListener('click', () => tab.imposta(null));
@@ -189,7 +191,8 @@ map.once('style.load', async () => {
     async apri() {
       if (!pannelloChat.childElementCount) {
         const { creaChatBot } = await import('./core/chat-bot.js');
-        creaChatBot(pannelloChat, { cercaOggetti });
+        // le ricerche che usano la mappa (zone, incendi, PAI, particelle) si collegano più sotto: qui si legge il valore al momento della domanda
+        creaChatBot(pannelloChat, { cercaOggetti: async testo => [...await cercaOggetti(testo), ...(await ricercaMappa?.(testo) ?? [])].slice(0, 4) });
       }
       pannelloChat.hidden = false;
     },
@@ -247,9 +250,11 @@ map.once('style.load', async () => {
     if (sezione) document.getElementById(sezione)?.scrollIntoView({ block: 'start' });
   };
   document.addEventListener('guida:apri', e => apriGuida(e.detail.scheda, e.detail.sezione)); // dal Chat bot
+  const ricercaTerritorio = collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti));
+  ricercaMappa = creaRicercaMappa({ zone, territorio: ricercaTerritorio, vaiParticella });
   collegaRicerca(map, document.getElementById('cerca'),
     document.getElementById('cerca-testo'), document.getElementById('cerca-risultati'), vaiParticella, zone,
-    collegaRicercaGuide(apriGuida, collegaRicercaTerritorio(map, collegaRicercaIncidenti(map, filtroIncidenti))));
+    collegaRicercaGuide(apriGuida, ricercaTerritorio));
   collegaPannelloFiltri(document.getElementById('cerca-filtri'), document.getElementById('cerca-particella-esito'));
   collegaStrumenti(map);
   collegaChipBarra(document.getElementById('strati-chip'), document.getElementById('barra-strumenti')); // i chip scendono sotto la barra se la toccano

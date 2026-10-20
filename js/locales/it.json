@@ -2036,6 +2036,7 @@
   "chatbot.filtri.tutte": "Mostra tutte",
   "chatbot.disattiva": "Disattiva: {nome}",
   "chatbot.apriScheda": "Apri la scheda: {nome}",
+  "chatbot.vaiA": "Vai a: {nome}",
   "chatbot.apriGuida": "Apri la guida: {titolo}",
   "chatbot.apriPannello.sinistra": "Apri il tab «{nome}» a sinistra",
   "chatbot.apriPannello.destra": "Apri il tab «{nome}» a destra",

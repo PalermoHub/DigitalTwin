@@ -37,3 +37,11 @@ Parole chiave: indirizzo, via, civico, numero civico, cosa c'è vicino, nei dint
 Domande tipiche: Talia può cercare una via e un civico? Cosa c'è vicino a via Libertà 12? Come vedo cosa c'è intorno a un indirizzo?
 
 Si scrive nel campo di Talia una via con il civico (per esempio «via Libertà 12») o il nome di una via («piazza Politeama»). Talia propone un pulsante per ogni indirizzo trovato: toccandolo la mappa va sul punto e si apre la scheda, con i dati del luogo e i punti dei layer che stanno nei dintorni, entro il raggio dei vicini. Il riepilogo della scheda compare poi nella parte alta di Talia. Se il civico non esiste, Talia propone la via e lo dice.
+
+## Cercare luoghi, zone, incendi e particelle
+
+Parole chiave: cercare, trovare, uffici, monumenti, PNRR, opere pubbliche, quartiere, circoscrizione, UPL, incendi, PAI, frane, particella, foglio, catasto, Talia cerca.
+
+Domande tipiche: Talia può cercare un ufficio o un monumento? Come trovo un quartiere o una circoscrizione? Come cerco una particella catastale con Talia? Talia trova gli incendi o i vincoli PAI?
+
+Talia cerca per nome scuole, sezioni elettorali, monumenti, alberi, fontanelle, fermate e linee, stazioni, colonnine, distributori, uffici, immobili, schede PEBA, progetti PNRR e opere pubbliche (il CUP si scrive come un numero di linea): ogni risultato ha un pulsante che apre la scheda. Sa anche portare la mappa su un quartiere, una circoscrizione o una UPL, sugli incendi (anche di un anno, per esempio «incendi 2023») e sui vincoli PAI («frane», «PAI»), e su una particella catastale scritta come «foglio 12 particella 345» o «12/345»: qui il pulsante, «Vai a: …», sposta la mappa e applica il filtro, senza aprire una scheda. Non cerca per nome gli edifici 3D, le isole di calore e la geologia ISPRA: per questi basta chiedere il layer e Talia propone di accenderlo.
