@@ -1,4 +1,4 @@
-// Testata delle pagine a fasce (home.html, about.html, presentazione.html…): switch di lingua e di tema, menu a tendine, barra a tab del telefono.
+// Testata delle pagine a fasce (index.html, about.html, presentazione.html…): switch di lingua e di tema, menu a tendine, barra a tab del telefono.
 // Va chiamata dopo caricaDizionari() e applicaDom().
 import { creaInterruttoreLingua, t as tr } from './i18n.js';
 import { svgIcona } from './icone.js';
@@ -41,7 +41,7 @@ export async function avviaTestata() {
   // Mappa, Strati e Aggiungi aprono l'app (con il foglio giusto), Menu apre lo stesso menù a comparsa.
   const barraTab = el('nav', { id: 'barra-tab' });
   barraTab.setAttribute('aria-label', tr('tab.sezioni'));
-  const DESTINAZIONE = { mappa: 'index.html', strati: 'index.html#strati', aggiungi: 'index.html#aggiungi' };
+  const DESTINAZIONE = { mappa: 'mappa.html', strati: 'mappa.html#strati', aggiungi: 'mappa.html#aggiungi' };
   for (const t of TAB) {
     const b = el('button', { type: 'button', innerHTML: `${svgIcona(t.icona, 22)}<span></span>` });
     b.querySelector('span').textContent = t.etichetta;
@@ -66,7 +66,7 @@ export async function avviaTestata() {
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') sincronizzaTabMenu(); });
 
-  // pulsante «torna in cima»: compare dopo 400 px di scorrimento (home.html, about.html)
+  // pulsante «torna in cima»: compare dopo 400 px di scorrimento (index.html, about.html)
   const cima = document.getElementById('home-cima');
   if (cima) {
     const riduci = matchMedia('(prefers-reduced-motion: reduce)').matches;

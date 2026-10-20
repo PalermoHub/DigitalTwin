@@ -8,7 +8,7 @@ Typical questions: What is in the top menu? How do I close a page? Where do I fi
 
 The menu is next to the logo and is the same on every page of the site (on a smartphone it is in the «Menu» tab). Its entries are **Home**, **Map**, **Digital Twin**, **General guide** (with **RNDT plugin** and **Geoimage guide** in the drop-down next to it), **Sources and notes** and **About** (with **Presentation** and **Privacy** in the drop-down next to it). The entry of the page you are on is highlighted.
 
-**Home** (`home.html`) is the page where you choose and add the map's layers; the **topic** filter is here. **Map** takes you back to the map.
+**Home** (`index.html`) is the page where you choose and add the map's layers; the **topic** filter is here. **Map** takes you back to the map.
 
 Digital Twin, Guide, RNDT plugin, Geoimage guide, Sources and notes, About and Privacy are **separate pages** (`digitaltwin.html`, `guida.html`, `plugin.html`, `geoimage.html`, `fonti.html`, `about.html`, `privacy.html`), at **full width**, split into bands, and many have a **side index** («Page index», «Guide index»). To go back to the map, choose **Map** in the menu. From the map, the same entries instead open the information sheets above the map, which close by pressing the entry again or with **Esc**.
 

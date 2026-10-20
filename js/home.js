@@ -1,9 +1,10 @@
-// Pagina iniziale (home.html): slider «in evidenza» e card degli strati, ciascuna con il link che apre la mappa con lo strato acceso.
+// Pagina iniziale (index.html): slider «in evidenza» e card degli strati, ciascuna con il link che apre la mappa con lo strato acceso.
 import { caricaDizionari, applicaDom, lingua, t as tr } from './core/i18n.js';
 import { avviaTestata } from './core/testata-pagina.js';
 import { codifica, costruisciLink, PARAMETRO } from './core/condivisione-codec.js';
 import { svgIcona } from './core/icone.js';
 import { leggiCesto, salvaCesto } from './core/cesto-home.js';
+import { precaricaMappaARiposo } from './core/precarica-mappa.js';
 
 await caricaDizionari();
 applicaDom(document);
@@ -14,7 +15,7 @@ const normalizza = s => s.toLocaleLowerCase(lingua()).normalize('NFD').replace(/
 
 const radice = document.documentElement;
 // Link alla mappa: lo stato condiviso con i soli strati voluti (senza vista, la mappa resta dov'è di default).
-const MAPPA = new URL('index.html', location.href).href;
+const MAPPA = new URL('mappa.html', location.href).href;
 async function linkMappa(strati, legendeSuMappa = false, vista = null) {
   try {
     const { testo } = await codifica({ a: strati, ...(legendeSuMappa && { m: 1 }), ...(vista && { c: vista }) });
@@ -106,7 +107,7 @@ function costruisciNumeri(argomenti, tutte) {
   const dati = [
     ['strati', tutte.length, '#catalogo'],
     ['argomenti', argomenti.length, '#home-argomenti'],
-    ['fonti', distinti(argomenti.flatMap(a => a.enti ?? [])), 'index.html#fonti'],
+    ['fonti', distinti(argomenti.flatMap(a => a.enti ?? [])), 'mappa.html#fonti'],
   ];
   const nf = new Intl.NumberFormat(lingua());
   document.getElementById('home-numeri').append(...dati.map(([chiave, n, dest]) => {
@@ -402,3 +403,6 @@ window.addEventListener('pageshow', e => {
   for (const id of leggiCesto(archivioCesto)) cesto.add(id);
   aggiornaCesto();
 });
+
+// a pagina caricata e ferma, i file leggeri della mappa vanno in cache: il clic su «Apri la mappa» è più rapido
+precaricaMappaARiposo(window, lingua());

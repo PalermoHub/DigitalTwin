@@ -1,5 +1,5 @@
 // Consenso a Google Analytics (GDPR + ePrivacy): lo script di Google si carica solo dopo «Accetta».
-// Script classico, condiviso da index.html e presentazione.html. La scelta sta in localStorage ('dt-consenso').
+// Script classico, condiviso da mappa.html e presentazione.html. La scelta sta in localStorage ('dt-consenso').
 (function () {
   var ID = 'G-JFYEGEZ41L', CHIAVE = 'dt-consenso', banner = null;
   // Testi del banner nelle due lingue: questo script non passa da avvio.js, quindi non usa i dizionari. La lingua si sceglie come

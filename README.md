@@ -17,7 +17,7 @@ Nessun backend, nessun bundler.
 
 ```bash
 python3 scripts/serve.py 8000     # server con HTTP Range (necessario ai PMTiles)
-# poi aprire http://127.0.0.1:8000/index.html
+# poi aprire http://127.0.0.1:8000/mappa.html
 ```
 
 Serve la rete: base cartografica (OpenFreeMap), tile PRG/terreno e PMTiles sono letti dai link pubblicati.

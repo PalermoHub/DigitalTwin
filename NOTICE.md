@@ -2,7 +2,7 @@
 
 | Cosa | Licenza |
 |---|---|
-| Codice (`js/`, `scripts/`, `tests/`, `css/`, `index.html`, workflow) | [EUPL-1.2](LICENSE) |
+| Codice (`js/`, `scripts/`, `tests/`, `css/`, `index.html`, `mappa.html`, workflow) | [EUPL-1.2](LICENSE) |
 | Dati e documentazione prodotti da questo progetto (`dati/catalogo.json`, `dati/uffici/`, `dati/incedi/`) | [CC BY 4.0](LICENSE-DATA.md) |
 
 ## Dati di terzi

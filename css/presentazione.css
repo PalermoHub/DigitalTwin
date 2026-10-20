@@ -138,7 +138,7 @@ a { color: inherit; }
 .in-cima:focus-visible { outline: 3px solid var(--fuoco); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .in-cima { transition: none; } .in-cima:hover { transform: none; } }
 
-/* piede identico a quello dell'app (index.html) */
+/* piede identico a quello dell'app (mappa.html) */
 .piede { position: sticky; bottom: 0; z-index: 20; background: var(--sfondo); box-sizing: border-box; min-height: 36px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--bordo); font-size: .9286rem; line-height: 1.4; color: var(--testo-tenue); }
 .piede-avviso { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .piede-avviso strong { color: var(--testo); }

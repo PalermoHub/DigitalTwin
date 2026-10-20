@@ -8,7 +8,7 @@
 //    10 minuti come impone GitHub Pages (max-age=600);
 //  - tutto il resto (altri siti, POST, file interi pesanti): non si tocca.
 // Per rilasciare una versione nuova basta cambiare VERSIONE: le cache vecchie si cancellano all'attivazione.
-const VERSIONE = 'dt-v278';
+const VERSIONE = 'dt-v281';
 const STATICA = `${VERSIONE}-statica`;
 const DATI = `${VERSIONE}-dati`;
 const INTERVALLI = `${VERSIONE}-intervalli`;
@@ -19,7 +19,7 @@ const VALIDITA_INTERVALLI = 24 * 3600 * 1000; // dopo questo tempo si richiede a
 const MAX_INTERVALLI = 1500;                  // voci conservate: oltre, si tolgono le più vecchie
 
 const PRECACHE = [
-  './', 'index.html', 'manifest.webmanifest', 'css/app.css', 'css/vendor/maplibre-gl.css',
+  './', 'index.html', 'mappa.html', 'manifest.webmanifest', 'css/app.css', 'css/vendor/maplibre-gl.css',
   'js/vendor/maplibre-gl.js', 'js/vendor/pmtiles.js', 'js/app.js', 'js/avvio.js', 'js/i18n-pagina.js', 'js/core/i18n.js', 'js/locales/it.json', 'js/locales/en.json',
   'img/logo-palermo-digital-twin.svg', 'img/logo-palermo-digital-twin-scuro.svg', 'img/favicon.png', 'img/icona-192.png',
 ];
@@ -142,7 +142,7 @@ if (typeof self !== 'undefined' && self.addEventListener) {
   self.addEventListener('fetch', evento => {
     const tipo = strategia(evento.request, self.location.origin);
     if (tipo === 'ignora') return;
-    if (tipo === 'pagina') evento.respondWith(reteProma(evento.request, STATICA, 'index.html'));
+    if (tipo === 'pagina') evento.respondWith(reteProma(evento.request, STATICA, 'mappa.html'));
     else if (tipo === 'dati') evento.respondWith(reteProma(evento.request, DATI));
     else if (tipo === 'intervalli') evento.respondWith(intervalliPoiRete(evento.request, { evento }));
     else evento.respondWith(copiaPoiRete(evento.request, evento));

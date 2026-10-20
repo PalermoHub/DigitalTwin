@@ -8,7 +8,7 @@ Domande tipiche: Cosa c'è nel menu in alto? Come chiudo una pagina? Dove trovo 
 
 Il menu è accanto al logo ed è lo stesso in tutte le pagine del sito (da smartphone sta nel tab «Menu»). Ha le voci **Home**, **Mappa**, **Digital Twin**, **Guida generale** (con, nella tendina accanto, **Plugin RNDT** e **Guida Geoimage**), **Fonti e note** e **About** (con, nella tendina accanto, **Presentazione** e **Privacy**). La voce della pagina in cui ci si trova è evidenziata.
 
-**Home** (`home.html`) è la pagina dove si scelgono e si aggiungono gli strati della mappa; qui c'è il filtro per **argomento**. **Mappa** riporta alla mappa.
+**Home** (`index.html`) è la pagina dove si scelgono e si aggiungono gli strati della mappa; qui c'è il filtro per **argomento**. **Mappa** riporta alla mappa.
 
 Digital Twin, Guida, Plugin RNDT, Guida Geoimage, Fonti e note, About e Privacy sono **pagine a sé** (`digitaltwin.html`, `guida.html`, `plugin.html`, `geoimage.html`, `fonti.html`, `about.html`, `privacy.html`), a **tutta larghezza**, divise in fasce, e molte hanno un **indice laterale** («Indice della pagina», «Indice della guida»). Per tornare alla mappa si sceglie **Mappa** nel menu. Dalla mappa, le stesse voci aprono invece i fogli informativi sopra la mappa, che si chiudono premendo di nuovo la voce o con **Esc**.
 

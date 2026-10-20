@@ -1,4 +1,4 @@
-/* Pagina iniziale (home.html): usa header, footer e token di app.css; qui solo il corpo e il fatto che la pagina scorre. */
+/* Pagina iniziale (index.html): usa header, footer e token di app.css; qui solo il corpo e il fatto che la pagina scorre. */
 html, body.pagina-home { height: auto; min-height: 100%; overflow: visible; overscroll-behavior: auto; }
 body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .pagina-home #corpo { position: static; overflow: visible; contain: none; }

@@ -1,5 +1,5 @@
 // Menu del sito, definito qui una volta sola e usato da tutte le pagine statiche (home, About, Guida, Fonti, Privacy, Plugin, Geoimage, Digital Twin, Presentazione).
-// La mappa (index.html) ha le stesse voci come pulsanti, pilotati da js/app.js.
+// La mappa (mappa.html) ha le stesse voci come pulsanti, pilotati da js/app.js.
 import { applicaDom, t } from './i18n.js';
 
 // Nessun testo italiano qui: etichette e suggerimenti vengono dai dizionari (chiave e chiave + «.tip»).
@@ -19,14 +19,14 @@ const tendina = (id, chiaveAria, principale, voci) => `
 export const menuHtml = () => `
   <p class="menu-gruppo" data-gruppo="guide" data-i18n="html.menu.gruppo.guide">${t('html.menu.gruppo.guide')}</p>
   <p class="menu-gruppo" data-gruppo="info" data-i18n="html.menu.info">${t('html.menu.info')}</p>
-  ${voce('home.html', 'home.menu.home', 'id="link-home" ')}
-  ${scheda('index.html', 'mappa')}
+  ${voce('index.html', 'home.menu.home', 'id="link-home" ')}
+  ${scheda('mappa.html', 'mappa')}
   ${scheda('digitaltwin.html', 'digitaltwin')}${tendina('menu-guide', 'html.menu.gruppo.altreguide',
     scheda('guida.html', 'guida'), [scheda('plugin.html', 'plugin'), scheda('geoimage.html', 'geoimage')])}
   ${scheda('fonti.html', 'fonti')}${tendina('menu-altro', 'html.menu.gruppo.altro',
     scheda('about.html', 'about'), [voce('presentazione.html', 'html.menu.presentazione', 'id="link-presentazione" '), scheda('privacy.html', 'privacy')])}`;
 
-// pagina corrente dall'URL: «/DigitalTwin/guida.html» → «guida.html»; la radice del sito è la mappa
+// pagina corrente dall'URL: «/DigitalTwin/guida.html» → «guida.html»; la radice del sito è la home
 export const paginaCorrente = (percorso = location.pathname) => percorso.split('/').pop() || 'index.html';
 
 // Riempie <nav id="menu-info"> e segna la voce della pagina in cui siamo (aria-current="page").

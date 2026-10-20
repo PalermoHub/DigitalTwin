@@ -2,32 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://palermodigitaltwin.opendatasicilia.it/</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
   <url>
-    <loc>https://palermodigitaltwin.opendatasicilia.it/home.html</loc>
+    <loc>https://palermodigitaltwin.opendatasicilia.it/mappa.html</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
   <url>
     <loc>https://palermodigitaltwin.opendatasicilia.it/presentazione.html</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
   <url>
     <loc>https://palermodigitaltwin.opendatasicilia.it/about.html</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
   <url>
     <loc>https://palermodigitaltwin.opendatasicilia.it/guida.html</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
   <url>
     <loc>https://palermodigitaltwin.opendatasicilia.it/fonti.html</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
   <url>
     <loc>https://palermodigitaltwin.opendatasicilia.it/privacy.html</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
   <url>
     <loc>https://palermodigitaltwin.opendatasicilia.it/digitaltwin.html</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
   <url>
     <loc>https://palermodigitaltwin.opendatasicilia.it/plugin.html</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
   <url>
     <loc>https://palermodigitaltwin.opendatasicilia.it/geoimage.html</loc>
+    <lastmod>2026-10-20</lastmod>
   </url>
 </urlset>
