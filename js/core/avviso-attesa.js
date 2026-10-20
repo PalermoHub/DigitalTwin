@@ -30,3 +30,15 @@ export function creaAvvisoAttesa(contenitore, testo, { ritardo = 400, creaNodo =
     },
   };
 }
+
+// Promessa che si risolve quando la mappa ha finito di caricare dati e tile (evento `idle`), o dopo `attesaMax`.
+// Il primo controllo precede l'avviso: se non c'è niente da attendere l'`idle` potrebbe non arrivare più.
+export function mappaFerma(map, { attesaMax = 20000, primoControllo = 300 } = {}) {
+  return new Promise(ok => {
+    let t1, t2;
+    const fine = () => { clearTimeout(t1); clearTimeout(t2); map.off('idle', fine); ok(); };
+    t1 = setTimeout(() => { if (map.loaded()) fine(); }, primoControllo);
+    t2 = setTimeout(fine, attesaMax);
+    map.on('idle', fine);
+  });
+}

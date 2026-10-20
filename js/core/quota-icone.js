@@ -19,12 +19,28 @@ function dentro(anelli, x, y) {
   return dentroAlPoligono;
 }
 
+// Poligoni e riquadro di ogni edificio, calcolati una volta sola per feature: il riquadro scarta quasi tutti gli edifici
+// senza percorrere i loro vertici (migliaia di punti per migliaia di edifici bloccavano la pagina per secondi).
+const sagome = new WeakMap();
+function sagoma(f) {
+  let s = sagome.get(f);
+  if (!s) {
+    const g = f.geometry;
+    const poli = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : [];
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const p of poli) for (const a of p) for (const [x, y] of a) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    s = { poli, x0, y0, x1, y1 };
+    sagome.set(f, s);
+  }
+  return s;
+}
+
 // Altezza (m) dell'edificio che contiene il punto, o undefined se il tile non è caricato o il punto è fuori sagoma.
 export function altezzaInPunto(poligoni, lng, lat) {
   let max;
   for (const f of poligoni) {
-    const g = f.geometry;
-    const poli = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : [];
+    const { poli, x0, y0, x1, y1 } = sagoma(f);
+    if (lng < x0 || lng > x1 || lat < y0 || lat > y1) continue;
     if (poli.some(p => dentro(p, lng, lat))) max = Math.max(max ?? 0, Number(f.properties?.altezza) || 0);
   }
   return max;
@@ -45,8 +61,10 @@ export function quotaIcone(map, idSorgente, dimensione = 1) {
   const chiave = c => c[0].toFixed(6) + ',' + c[1].toFixed(6);
 
   const risolvi = () => {
-    if (!dati?.features || !map.getSource(SORGENTE_EDIFICI)) return;
-    const mancanti = dati.features.filter(f => f.geometry?.type === 'Point' && !quote.has(chiave(f.geometry.coordinates)));
+    // Senza inclinazione l'altezza non sposta nulla (sin 0 = 0): niente da cercare finché la vista è piatta.
+    if (!dati?.features || map.getPitch() < 1 || !map.getSource(SORGENTE_EDIFICI)) return;
+    const vista = map.getBounds();
+    const mancanti = dati.features.filter(f => f.geometry?.type === 'Point' && vista.contains(f.geometry.coordinates) && !quote.has(chiave(f.geometry.coordinates)));
     if (!mancanti.length) return;
     const poligoni = map.querySourceFeatures(SORGENTE_EDIFICI, { sourceLayer: STRATO_EDIFICI });
     for (const f of mancanti) {

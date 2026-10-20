@@ -29,7 +29,7 @@ import { collegaRipristino } from './core/ripristino.js';
 import { preparaCondivisione, collegaCondivisione } from './core/condivisione.js';
 import { collegaCestoAllaMappa } from './core/cesto-home.js';
 import { creaDifferiti } from './core/differiti.js';
-import { creaAvvisoAttesa } from './core/avviso-attesa.js';
+import { creaAvvisoAttesa, mappaFerma } from './core/avviso-attesa.js';
 import { collegaTabMobile } from './core/tab-mobile.js';
 import { traduciModuli } from './core/traduci-moduli.js';
 import confini from './layers/confini.js';
@@ -105,6 +105,10 @@ const SCHEDA_INDIRIZZO = location.hash.slice(1);
 const map = creaMappa('mappa', () => segnala(t('app.basemap.errore')));
 // Se i dati in ritardo servono subito (strato acceso, clic sulla mappa) e non sono ancora arrivati, un avviso lo dice.
 const attesaDati = creaAvvisoAttesa(document.getElementById('avvisi'), t('avviso.attesaCaricamento'));
+// Qualunque strato acceso che tarda a comparire (dati o tile pesanti) mostra lo stesso avviso, finché la mappa non è ferma.
+document.addEventListener('change', e => {
+  if (e.target.matches?.('input[id^="strato-"]:checked')) attesaDati.durante(mappaFerma(map));
+});
 const differiti = creaDifferiti(map, { segnala, suAttesa: p => attesaDati.durante(p) });
 const caricaDifferiti = () => differiti.tutti().then(() => { window.dt.differitiPronti = true; });
 window.dt = {
