@@ -2,6 +2,7 @@
 // Il pannello che la usa sta in pannello-attributo.js; l'applicazione alla mappa in tema.js.
 import { RAMPE_CRAMERI, RAMPE_DIVERGENTI } from './rampe-crameri.js';
 import { t } from './i18n.js';
+import { nomeCampo, unitaCampo, vociCategorie } from './etichette-campi.js';
 
 const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 const MAX_CATEGORIE = 200;
@@ -70,11 +71,11 @@ export function calcolaSoglie(numeri, classi, metodo = 'quantili') {
   return soglie;
 }
 
-// Etichette delle classi: «< a», «a – b», «≥ z».
-export function etichetteClassi(soglie) {
+// Etichette delle classi: «< a», «a – b», «≥ z»; con `unita` (es. « m») dopo l'ultimo numero di ogni etichetta.
+export function etichetteClassi(soglie, unita = '') {
   const f = x => String(x);
   if (!soglie.length) return [];
-  return [`< ${f(soglie[0])}`, ...soglie.slice(1).map((s, i) => `${f(soglie[i])} – ${f(s)}`), `≥ ${f(soglie.at(-1))}`];
+  return [`< ${f(soglie[0])}${unita}`, ...soglie.slice(1).map((s, i) => `${f(soglie[i])} – ${f(s)}${unita}`), `≥ ${f(soglie.at(-1))}${unita}`];
 }
 
 // Espressione del colore, o null se l'attributo non è valido.
@@ -116,11 +117,11 @@ export function legendaAttributo(a, max = 12) {
   const att = validaAttributo(a);
   if (!att) return null;
   if (att.tipo === 'categorie') {
-    const tutte = Object.entries(att.colori);
-    const voci = tutte.slice(0, max).map(([testo, colore]) => ({ colore, testo }));
+    const tutte = vociCategorie(att.campo, att.colori);
+    const voci = tutte.slice(0, max);
     if (tutte.length > max) voci.push({ colore: null, testo: `… altre ${tutte.length - max}` });
-    return { titolo: att.campo, voci };
+    return { titolo: nomeCampo(att.campo), voci };
   }
   const colori = coloriRampa(att.rampa, att.soglie.length + 1, att.inverti);
-  return { titolo: att.campo, voci: etichetteClassi(att.soglie).map((testo, i) => ({ colore: colori[i], testo })) };
+  return { titolo: nomeCampo(att.campo), voci: etichetteClassi(att.soglie, unitaCampo(att.campo)).map((testo, i) => ({ colore: colori[i], testo })) };
 }

@@ -149,7 +149,7 @@
      "etichetta": "Edifici 3D (da zoom 12)"
     }
    ],
-   "fonte": "Comune di Palermo, unità volumetriche CTC (2026); popolazione per edificio: stima DigitalTwin Palermo. Licenza CC BY 4.0.",
+   "fonte": "Poligoni 3D (2026): Overture Maps Foundation, Global Building Atlas (DLR / TU München) e OpenBuildingMap (Awesome GEE Community Catalog), uniti con geoprocessing; Comune di Palermo, unità volumetriche CTC (2006); popolazione per edificio: stima DigitalTwin Palermo. Licenza CC BY 4.0.",
    "enti": [
     "Comune di Palermo"
    ],
@@ -158,6 +158,18 @@
     [
      "Open data del Comune di Palermo",
      "https://opendata.comune.palermo.it/index.php"
+    ],
+    [
+     "Overture Maps Foundation",
+     "https://overturemaps.org/"
+    ],
+    [
+     "Global Building Atlas, DLR / TU München",
+     "https://tubvsig-so2sat-vm1.srv.mwn.de/"
+    ],
+    [
+     "OpenBuildingMap, Awesome GEE Community Catalog",
+     "https://gee-community-catalog.org/projects/obm/"
     ]
    ]
   },
@@ -884,7 +896,7 @@
      "etichetta": "Built-up area (from zoom 12)"
     }
    ],
-   "fonte": "Comune di Palermo, CTC volumetric units (2026); population per building: DigitalTwin Palermo estimate. Licence CC BY 4.0.",
+   "fonte": "3D polygons (2026): Overture Maps Foundation, Global Building Atlas (DLR / TU München) and OpenBuildingMap (Awesome GEE Community Catalog), merged with geoprocessing; Comune di Palermo, CTC volumetric units (2006); population per building: DigitalTwin Palermo estimate. Licence CC BY 4.0.",
    "enti": [
     "Comune di Palermo"
    ],
@@ -893,6 +905,18 @@
     [
      "Open data del Comune di Palermo",
      "https://opendata.comune.palermo.it/index.php"
+    ],
+    [
+     "Overture Maps Foundation",
+     "https://overturemaps.org/"
+    ],
+    [
+     "Global Building Atlas, DLR / TU München",
+     "https://tubvsig-so2sat-vm1.srv.mwn.de/"
+    ],
+    [
+     "OpenBuildingMap, Awesome GEE Community Catalog",
+     "https://gee-community-catalog.org/projects/obm/"
     ]
    ]
   },

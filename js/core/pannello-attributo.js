@@ -2,6 +2,7 @@
 // per categorie o in classi numeriche. Il risultato ({campo, tipo, ...}) lo salva e applica pannello-tema.js.
 import { rilevaAttributi, calcolaSoglie, etichetteClassi, coloriRampa, RAMPE, GRUPPI_RAMPE, TAVOLOZZA } from './tema-attributo.js';
 import { comeEsadecimale } from './tema.js';
+import { nomeCampo, nomeValore, coloreValore, unitaCampo } from './etichette-campi.js';
 import { t as tr, tl } from './i18n.js';
 
 function selezione(testo, nome, opzioni) {
@@ -109,7 +110,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
     campi = rilevaAttributi(feature);
     const corrente = leggi()?.campo ?? attivo();
     const nomi = new Set([...campi.keys(), ...(corrente ? [corrente] : [])]);
-    campo.select.replaceChildren(new Option(tr('attributo.nessuno'), ''), ...[...nomi].sort((a, b) => a.localeCompare(b)).map(n => new Option(tl(n), n)));
+    campo.select.replaceChildren(new Option(tr('attributo.nessuno'), ''), ...[...nomi].sort((a, b) => a.localeCompare(b)).map(n => new Option(nomeCampo(tl(n)), n)));
     campo.select.value = corrente && nomi.has(corrente) ? corrente : '';
     msg.textContent = campi.size ? '' : tr('attributo.nessunaFeature');
   };
@@ -124,7 +125,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
         const riga = document.createElement('label');
         riga.className = 'tema-riga';
         const t = document.createElement('span');
-        t.textContent = valore;
+        t.textContent = nomeValore(a.campo, valore);
         const i = document.createElement('input');
         i.type = 'color';
         i.value = comeEsadecimale(colore);
@@ -141,7 +142,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
       return;
     }
     const colori = coloriRampa(a.rampa, a.soglie.length + 1, a.inverti);
-    etichetteClassi(a.soglie).forEach((et, i) => {
+    etichetteClassi(a.soglie, unitaCampo(a.campo)).forEach((et, i) => {
       const riga = document.createElement('div');
       riga.className = 'tema-riga tema-classe';
       const t = document.createElement('span');
@@ -173,7 +174,7 @@ export function creaSezioneAttributo({ map, layers, leggi, cambia }) {
       const tutti = [...new Set([...Object.keys(vecchi), ...valori])];
       if (tutti.length > 200) msg.textContent = tr('attributo.troppi');
       else if (tutti.length) {
-        nuovo = { campo: nome, tipo: 'categorie', colori: Object.fromEntries(tutti.map((v, i) => [v, vecchi[v] ?? TAVOLOZZA[i % TAVOLOZZA.length]])) };
+        nuovo = { campo: nome, tipo: 'categorie', colori: Object.fromEntries(tutti.map((v, i) => [v, vecchi[v] ?? coloreValore(nome, v) ?? TAVOLOZZA[i % TAVOLOZZA.length]])) };
       } else msg.textContent = tr('attributo.nessunValore');
     }
     if (nuovo) msg.textContent = '';
