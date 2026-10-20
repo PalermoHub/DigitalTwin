@@ -3,6 +3,7 @@
 import { fette } from './uffici-fette.js';
 import { SETTORI, accorcia, coloreSettore, nomeSettore, nomeSoggetto, titoloOpera } from './scheda-opere.js';
 import { righe } from '../core/scheda-util.js';
+import { ammessoImporto } from '../core/filtri-parole.js';
 import { t, tl, tn } from '../core/i18n.js';
 
 export const chiaveLuogo = ([lon, lat]) => `${Number(lon).toFixed(5)},${Number(lat).toFixed(5)}`;
@@ -10,13 +11,14 @@ export const chiaveLuogo = ([lon, lat]) => `${Number(lon).toFixed(5)},${Number(l
 // Proprietà utili del GeoJSON delle opere (una feature per CUP, già con la posizione).
 export const opereDa = features => features.filter(f => f.geometry?.type === 'Point').map(f => ({
   cup: f.properties.cup, settore: f.properties.settore ?? null, titolare: f.properties.titolare ?? null, stato: f.properties.stato ?? null,
-  fase: f.properties.fase ?? null, precisione: f.properties.precisione ?? null, titolo: f.properties.titolo ?? null,
+  importo: f.properties.costo_previsto ?? null, fase: f.properties.fase ?? null, precisione: f.properties.precisione ?? null, titolo: f.properties.titolo ?? null,
   indirizzo: f.properties.indirizzo ?? null, coordinates: f.geometry.coordinates,
 }));
 
 // filtri = { settori: Set | null (tutti), chiuse: boolean, titolare: string | null (tutti) }
-export function ammessa(p, { settori = null, chiuse = true, titolare = null } = {}) {
+export function ammessa(p, { settori = null, chiuse = true, titolare = null, importo = null } = {}) {
   if (settori && !settori.has(p.settore)) return false;
+  if (!ammessoImporto(p.importo, importo ?? {})) return false;
   if (!chiuse && p.stato === 'CHIUSO') return false;
   return !titolare || p.titolare === titolare;
 }

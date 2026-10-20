@@ -4,6 +4,7 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { t, tl, tn } from '../core/i18n.js';
+import { EVENTO_IMPORTO, descriviImporto, espressioneImporto } from '../core/filtri-parole.js';
 import { SETTORI, coloreSettore, nomeSettore, nomeSoggetto, titoloOpera, voceScheda, voceSintesi, voceTendina } from './scheda-opere.js';
 import { contenutoDinamico, contenutoTendina, testoCopertura } from './scheda-opere-dom.js';
 import { conteggiTitolari, elencoLuogo, firma, modelloTooltipLuogo, opereDa, raggruppa } from './opere-luoghi.js';
@@ -40,6 +41,25 @@ let menu = null; // <select> degli altri titolari
 let avviso = null; // nota «nessuna opera in mappa»
 let copertura = null; // avviso «sulla mappa X opere su Y»
 
+let importo = { min: null, max: null }; // filtro per importo, dal Chat bot (core/filtri-parole.js)
+let notaImporto = null; // riga «Filtro attivo» nella legenda
+function mostraImporto() {
+  const testo = descriviImporto(importo);
+  notaImporto.hidden = !testo;
+  notaImporto.replaceChildren();
+  if (!testo) return;
+  const togli = Object.assign(document.createElement('button'), { type: 'button', textContent: t('filtroImporto.togli') });
+  togli.addEventListener('click', () => document.dispatchEvent(new CustomEvent(EVENTO_IMPORTO, { detail: { strato: 'opere', min: null, max: null } })));
+  notaImporto.append(t('filtroImporto.legenda', { testo }), ' ', togli);
+}
+// l'ascolto parte con il modulo: il filtro vale anche se i dati del layer arrivano dopo
+globalThis.document?.addEventListener(EVENTO_IMPORTO, e => {
+  if (e.detail?.strato !== 'opere') return;
+  importo = { min: e.detail.min ?? null, max: e.detail.max ?? null };
+  if (notaImporto) mostraImporto();
+  programma();
+});
+
 const el = (tag, classe, testo) => {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
@@ -47,7 +67,7 @@ const el = (tag, classe, testo) => {
   return e;
 };
 
-const filtri = () => ({ settori: accesi.size >= SETTORI.length ? null : accesi, chiuse, titolare: titolareSel });
+const filtri = () => ({ settori: accesi.size >= SETTORI.length ? null : accesi, chiuse, titolare: titolareSel, importo });
 
 // Espressione MapLibre degli stessi filtri, per lo strato «hit» (la scheda mostra solo le opere non escluse).
 function filtroHit() {
@@ -55,6 +75,7 @@ function filtroHit() {
     filtroInsieme(['get', 'settore'], accesi, SETTORI.length),
     !chiuse && ['!=', ['get', 'stato'], 'CHIUSO'],
     titolareSel && ['==', ['get', 'titolare'], titolareSel],
+    espressioneImporto('costo_previsto', importo),
   ].filter(Boolean);
   return f.length ? ['all', ...f] : null;
 }
@@ -146,7 +167,12 @@ function creaLegenda() {
   legenda.hidden = true;
   copertura = el('p', 'pnrr-copertura');
   copertura.textContent = testoCopertura(sintesi);   // i numeri arrivano con la sintesi: prima, il testo senza numeri
-  legenda.append(el('strong', null, 'Opere pubbliche a Palermo'), copertura, el('p', 'uffici-nota', 'Anello: più settori nello stesso luogo; il numero indica le opere'));
+  // la nota sta in un contenitore: un figlio diretto `hidden` farebbe sparire l'intera legenda dal pannello (css/app.css)
+  notaImporto = el('p', 'scheda-nota');
+  const boxImporto = el('div');
+  boxImporto.append(notaImporto);
+  mostraImporto();
+  legenda.append(el('strong', null, 'Opere pubbliche a Palermo'), copertura, boxImporto, el('p', 'uffici-nota', 'Anello: più settori nello stesso luogo; il numero indica le opere'));
   for (const [codice, nome, col] of SETTORI) {
     const simbolo = el('i', 'monumenti-pallino');
     simbolo.style.background = col;

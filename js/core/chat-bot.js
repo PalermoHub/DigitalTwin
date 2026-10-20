@@ -291,6 +291,11 @@ export function creaChatBot(pannello, { carica, cercaOggetti, azioni } = {}) {
           box.append(az);
         }
         if (m.oggetti?.length) box.append(pulsantiOggetti(m.oggetti));
+        if (m.annulla) {
+          const togli = Object.assign(el('button', 'cb-filtro cb-filtro-tutte', t('chatbot.azione.togliFiltro')), { type: 'button' });
+          togli.addEventListener('click', () => { m.annulla(); togli.disabled = true; });
+          box.append(togli);
+        }
       } else if (m.tipo === 'luoghi') {
         box.append(el('p', null, t('chatbot.luoghi')), pulsantiOggetti(m.oggetti));
       } else if (m.tipo === 'indirizzo') {

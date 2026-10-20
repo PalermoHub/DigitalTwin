@@ -4,18 +4,20 @@ import { fette } from './uffici-fette.js';
 import { SEMBRA_CODICE, coloreMissione, nomeSoggetto, titoloProgetto } from './scheda-pnrr.js';
 import { righe } from '../core/scheda-util.js';
 import { t, tn } from '../core/i18n.js';
+import { ammessoImporto } from '../core/filtri-parole.js';
 
 export const chiaveLuogo = ([lon, lat]) => `${Number(lon).toFixed(5)},${Number(lat).toFixed(5)}`;
 
 // Proprietà utili del GeoJSON dei progetti (una feature per CUP, già con la posizione).
 export const progettiDa = features => features.filter(f => f.geometry?.type === 'Point').map(f => ({
   cup: f.properties.cup, missione: f.properties.missione ?? '?', attuatore: f.properties.attuatore ?? null, precisione: f.properties.precisione ?? null,
-  titolo: f.properties.titolo ?? null, descrizione: String(f.properties.sintesi ?? '').split('*')[0].trim() || null, submisura_nome: f.properties.submisura_nome ?? null, indirizzo: f.properties.indirizzo ?? null, coordinates: f.geometry.coordinates,
+  importo: f.properties.pnrr ?? null, titolo: f.properties.titolo ?? null, descrizione: String(f.properties.sintesi ?? '').split('*')[0].trim() || null, submisura_nome: f.properties.submisura_nome ?? null, indirizzo: f.properties.indirizzo ?? null, coordinates: f.geometry.coordinates,
 }));
 
-// filtri = { missioni: Set | null (tutte), conSede: boolean, attuatore: string | null (tutti) }
-export function ammesso(p, { missioni = null, conSede = true, attuatore = null } = {}) {
+// filtri = { missioni: Set | null (tutte), conSede: boolean, attuatore: string | null (tutti), importo: { min, max } }
+export function ammesso(p, { missioni = null, conSede = true, attuatore = null, importo = null } = {}) {
   if (missioni && !missioni.has(p.missione)) return false;
+  if (!ammessoImporto(p.importo, importo ?? {})) return false;
   if (!conSede && p.precisione === 'sede') return false;
   return !attuatore || p.attuatore === attuatore;
 }

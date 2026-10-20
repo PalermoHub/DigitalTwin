@@ -1,10 +1,12 @@
 import { normalizza } from './indirizzi.js';
-import { t, localeIntl } from './i18n.js';
+import { t, tl, localeIntl } from './i18n.js';
+import { leggiFiltro, descriviImporto } from './filtri-parole.js';
 
 // Azioni di Talia che non vengono dalla guida: rispondono con i dati dell'app (luoghi già caricati per la ricerca e classifica della popolazione).
 // Le frasi valgono in italiano e in inglese.
 //   «cosa vedo ora?»          → i layer accesi, con un pulsante per spegnerli
 //   «la colonnina più vicina» → i 3 punti più vicini alla posizione di chi scrive
+//   «PNRR sopra 1 milione», «incidenti mortali 2022» → applica il filtro alla mappa, con un pulsante per toglierlo
 //   «quante fontanelle ci sono?» → il totale nei dati
 //   «quartiere più popoloso», «abitanti della Zisa» → classifica dei residenti
 // Le frasi si riconoscono su testo normalizzato (maiuscolo, senza accenti); chi non le riconosce passa alla ricerca nella guida.
@@ -32,6 +34,8 @@ const LIVELLI = [['quartieri', /QUARTIER|DISTRICT/], ['upl', /UPL/], ['circoscri
 export function riconosci(testo) {
   const q = normalizza(testo);
   if (ATTIVI.test(q)) return { tipo: 'attivi' };
+  const filtro = leggiFiltro(testo);
+  if (filtro) return { tipo: 'filtro', filtro };
   const cat = CATEGORIE.find(c => c.parole.test(q));
   if (cat && VICINO.test(q)) return { tipo: 'vicino', categoria: cat };
   if (cat && CONTEGGIO.test(q)) return { tipo: 'conteggio', categoria: cat, q };
@@ -40,6 +44,8 @@ export function riconosci(testo) {
   return null;
 }
 
+const CHIAVE_FILTRO = { pnrr: 'Pnrr', opere: 'Opere', incidenti: 'Incidenti' };
+const GRAVITA_NOME = { M: 'mortali', R: 'con prognosi riservata', F: 'con feriti', C: 'solo danni a cose' }; // i18n-ok: chiavi di tl(), le stesse dei chip dei chip degli incidenti (layers/sicurezza-filtro.js)
 const nomeCategoria = c => t(`chatbot.cat.${c.id}`);
 const numero = n => Math.round(n).toLocaleString(localeIntl());
 
@@ -66,8 +72,9 @@ function zonaCitata(classifica, anno, q) {
   return migliore;
 }
 
+// `filtra(filtro)`: applica il filtro alla mappa e dà la funzione che lo toglie;
 // `voci()`: luoghi preparati (preparaLuoghi); `classifica()`: dati/popolazione/classifica.json; `posizione()`: { lat, lon } o rifiuta; `attivi()`: [{ id, nome }]
-export function creaAzioni({ voci, classifica, posizione, attivi }) {
+export function creaAzioni({ voci, classifica, posizione, attivi, filtra = () => null }) {
   const ultimoAnno = c => Object.keys(c).sort().at(-1);
 
   return async function azione(testo) {
@@ -77,6 +84,16 @@ export function creaAzioni({ voci, classifica, posizione, attivi }) {
     if (a.tipo === 'attivi') {
       const elenco = attivi();
       return elenco.length ? { testo: t('chatbot.azione.attivi', { n: elenco.length }), strati: elenco.map(x => x.id) } : { testo: t('chatbot.azione.nessunAttivo') };
+    }
+
+    if (a.tipo === 'filtro') {
+      const f = a.filtro;
+      const testoFiltro = f.strato === 'incidenti'
+        ? [f.anno && t('chatbot.azione.filtroAnno', { anno: f.anno }), f.gravita && tl(GRAVITA_NOME[f.gravita])].filter(Boolean).join(', ')
+        : descriviImporto(f);
+      const annulla = filtra(f);
+      if (!annulla) return null;
+      return { testo: t(`chatbot.azione.filtro${CHIAVE_FILTRO[f.strato]}`, { testo: testoFiltro }), annulla };
     }
 
     if (a.tipo === 'vicino') {

@@ -21,6 +21,7 @@ import { migraFileLocali } from './aggiungi/migrazione.js';
 import { CHIAVE as CHIAVE_GEOIMAGE } from './geoimage/archivio.js';
 import { collegaRicerca, collegaRicercaParticella, cercaOggetti, luoghiPreparati } from './core/ricerca.js';
 import { creaAzioni, posizioneBrowser, stratiAccesi } from './core/chat-bot-azioni.js';
+import { EVENTO_IMPORTO } from './core/filtri-parole.js';
 import { creaRicercaMappa } from './core/ricerca-mappa.js';
 import { collegaNavigatoreMappa } from './core/mappa-navigatore.js';
 import { collegaStrumenti, collegaPannelloFiltri } from './core/strumenti.js';
@@ -70,6 +71,7 @@ import { creaRegolatoreRaggio } from './core/raggio-vicini.js';
 
 // telefono: barra a quattro tab (Mappa, Strati, Aggiungi, Info) e foglio degli strati; la legenda si può ridurre
 let tornaAllaMappa = () => {}; // si completa quando i pannelli laterali esistono
+let filtraDaTalia = () => null; // applica i filtri a parole del Chat bot (vedi più sotto)
 let ricercaMappa = null; // ricerche che usano la mappa, per il Chat bot (vedi creaRicercaMappa)
 const tab = collegaTabMobile(document, { barraTitolo: document.querySelector('#barra-strati .barra-titolo'), suMappa: () => tornaAllaMappa() });
 document.getElementById('corpo').append(tab.barra);
@@ -195,7 +197,7 @@ map.once('style.load', async () => {
         // le ricerche che usano la mappa (zone, incendi, PAI, particelle) si collegano più sotto: qui si legge il valore al momento della domanda
         let classifica = null; // il file si scarica alla prima domanda che lo usa
         const azioni = creaAzioni({
-          voci: luoghiPreparati, posizione: posizioneBrowser, attivi: () => stratiAccesi(document),
+          voci: luoghiPreparati, posizione: posizioneBrowser, attivi: () => stratiAccesi(document), filtra: filtraDaTalia,
           classifica: () => (classifica ??= fetch(urlDati('popolazione/classifica.json')).then(r => { if (!r.ok) throw new Error('classifica'); return r.json(); }).catch(err => { classifica = null; throw err; })),
         });
         creaChatBot(pannelloChat, { azioni, cercaOggetti: async testo => [...await cercaOggetti(testo), ...(await ricercaMappa?.(testo) ?? [])].slice(0, 4) });
@@ -248,6 +250,20 @@ map.once('style.load', async () => {
     annoSelect: document.getElementById('sicurezza-anno'), gravitaSelect: document.getElementById('sicurezza-gravita'),
     chips: document.getElementById('filtri-incidenti-chips'), layers: STRATI_INCIDENTI, strato: 'sicurezza-incidenti',
   });
+  // filtri scritti a parole nel Chat bot: importo per PNRR e opere, anno e gravità per gli incidenti; restituiscono la funzione che li toglie
+  filtraDaTalia = f => {
+    const accendi = id => {
+      const casella = document.getElementById(`strato-${id}`);
+      if (casella && !casella.checked && !casella.disabled) { casella.checked = true; casella.dispatchEvent(new Event('change', { bubbles: true })); }
+    };
+    if (f.strato === 'incidenti') {
+      filtroIncidenti.imposta({ anno: f.anno ? String(f.anno) : '', gravita: f.gravita ?? '' });
+      return () => filtroIncidenti.imposta({ anno: '', gravita: '' });
+    }
+    accendi(f.strato);
+    document.dispatchEvent(new CustomEvent(EVENTO_IMPORTO, { detail: { strato: f.strato, min: f.min, max: f.max } }));
+    return () => document.dispatchEvent(new CustomEvent(EVENTO_IMPORTO, { detail: { strato: f.strato, min: null, max: null } }));
+  };
   legendaSicurezza.suTipologie = tipologie => filtroIncidenti.imposta({ tipologie }); // la legenda degli incidenti filtra per gravità
   // gli argomenti delle tre guide: la pagina si apre (la stessa già aperta resta) e scorre alla sezione
   const apriGuida = (scheda, sezione) => {
