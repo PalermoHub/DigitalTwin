@@ -71,6 +71,15 @@ export function vieConCivico(voci, testo) {
   return m && m[1] ? vieCorrispondenti(voci, m[1]) : [];
 }
 
+const TOPONIMI = /^(VIA|VIALE|PIAZZA|PIAZZALE|CORSO|LARGO|VICOLO|SALITA|STRADA|LUNGOMARE|CORTILE)\s/; // i18n-ok: toponimi delle vie
+
+// Il Chat bot cerca un indirizzo solo se il testo ne ha l'aspetto: nome + civico in coda, o un nome di via con il toponimo.
+export function sembraIndirizzo(testo) {
+  const norm = normalizza(testo);
+  if (!norm || /^\d+$/.test(norm)) return false;
+  return /^.+\s\d+\s?[A-Z]?$/.test(norm) || TOPONIMI.test(norm);
+}
+
 export function cerca(voci, testo, max = 8) {
   const norm = normalizza(testo);
   if (!norm || /^\d+$/.test(norm)) return [];

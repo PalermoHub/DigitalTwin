@@ -27,3 +27,13 @@ Parole chiave: pulsanti sotto la risposta, accendere un layer, filtri, scheda, p
 Domande tipiche: Talia può accendere un layer? Cosa sono i pulsanti sotto la risposta? Può aprire la scheda di un luogo?
 
 Sotto la risposta compaiono dei pulsanti che permettono di agire senza cercare nei menu: accendere o spegnere un layer, scegliere un filtro, aprire la scheda di un luogo trovato, aprire un tab dei pannelli, attivare un percorso guidato o aprire la voce della guida collegata. Dettagli sui filtri in `01-uso-della-mappa.md` e in `44-ricerca-e-filtri.md`.
+
+---
+
+## Cercare un indirizzo e vedere cosa c'è vicino
+
+Parole chiave: indirizzo, via, civico, numero civico, cosa c'è vicino, nei dintorni, vicino a me, Talia indirizzo.
+
+Domande tipiche: Talia può cercare una via e un civico? Cosa c'è vicino a via Libertà 12? Come vedo cosa c'è intorno a un indirizzo?
+
+Si scrive nel campo di Talia una via con il civico (per esempio «via Libertà 12») o il nome di una via («piazza Politeama»). Talia propone un pulsante per ogni indirizzo trovato: toccandolo la mappa va sul punto e si apre la scheda, con i dati del luogo e i punti dei layer che stanno nei dintorni, entro il raggio dei vicini. Il riepilogo della scheda compare poi nella parte alta di Talia. Se il civico non esiste, Talia propone la via e lo dice.

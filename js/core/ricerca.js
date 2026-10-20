@@ -1,6 +1,6 @@
 import { urlDati } from './config.js';
 import { decodificaCivici, chiaveSezione } from './compatto.js';
-import { preparaIndiceVie, vieConCivico, cerca } from './indirizzi.js';
+import { preparaIndiceVie, vieConCivico, cerca, sembraIndirizzo } from './indirizzi.js';
 import { FONTI, preparaLuoghi, cercaLuoghi } from './luoghi.js';
 import { segnala } from './pannello.js';
 import { t } from './i18n.js';
@@ -56,8 +56,14 @@ function luoghi() {
   return promessaLuoghi;
 }
 
-// i luoghi cercati per nome, come nella barra: li usa anche il Chat bot
-export async function cercaOggetti(testo) { return cercaLuoghi(await luoghi(), testo, 3); }
+// i luoghi cercati per nome e gli indirizzi (via + civico), come nella barra: li usa anche il Chat bot.
+// Ogni voce ha lon/lat: aprendola, la scheda mostra anche quello che c'è nei dintorni.
+export async function cercaOggetti(testo) {
+  const trovati = cercaLuoghi(await luoghi(), testo, 3);
+  if (!sembraIndirizzo(testo)) return trovati;
+  const indirizzi = cerca(await conCivici(await indice(), testo), testo, 3);
+  return [...indirizzi, ...trovati].slice(0, 3);
+}
 
 // «12/345», «f 12 p 345», «foglio 12 particella 345» → { foglio, numero }; altrimenti null
 export function leggiParticella(testo) {

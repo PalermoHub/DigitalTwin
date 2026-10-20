@@ -27,3 +27,13 @@ Keywords: buttons below the answer, switch on a layer, filters, card, guided pat
 Typical questions: Can Talia switch on a layer? What are the buttons below the answer? Can it open the card of a place?
 
 Below the answer there are buttons that let you act without searching through the menus: switch a layer on or off, choose a filter, open the card of a place that was found, open a tab of the panels, start a guided path or open the linked entry of the guide. Details on the filters in `01-uso-della-mappa.md` and in `44-ricerca-e-filtri.md`.
+
+---
+
+## Searching for an address and seeing what is nearby
+
+Keywords: address, street, house number, what is nearby, surroundings, near me, Talia address.
+
+Typical questions: Can Talia search for a street and house number? What is near via Libertà 12? How do I see what is around an address?
+
+Type a street with its house number (for example «via Libertà 12») or the name of a street («piazza Politeama») in Talia's field. Talia offers a button for each address found: tapping it moves the map to the point and opens the card, with the place's data and the points of the layers that lie nearby, within the radius of the neighbours. The summary of the card then appears at the top of Talia. If the house number does not exist, Talia suggests the street and says so.

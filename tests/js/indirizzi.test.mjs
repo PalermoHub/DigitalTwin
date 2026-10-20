@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizza, preparaIndice, cerca } from '../../js/core/indirizzi.js';
+import { normalizza, preparaIndice, cerca, sembraIndirizzo } from '../../js/core/indirizzi.js';
 
 const voci = preparaIndice({
   'VIA MAQUEDA': { '1': [13.36, 38.11], '100': [13.361, 38.112] },
@@ -118,4 +118,13 @@ test('indice leggero: la sola via usa il primo punto, il civico richiede i civic
   assert.deepEqual(vieConCivico(voci, '12'), []);
   voci[0].civici = { 12: [13.361, 38.111] }; // arrivati dal file della sezione
   assert.deepEqual(cerca(voci, 'via roma 12'), [{ etichetta: 'VIA ROMA 12', lon: 13.361, lat: 38.111 }]);
+});
+
+test('sembraIndirizzo: via + civico, o nome che inizia con un toponimo', () => {
+  assert.equal(sembraIndirizzo('via Libertà 12'), true);
+  assert.equal(sembraIndirizzo('Libertà 12/A'), true);
+  assert.equal(sembraIndirizzo('piazza Politeama'), true);
+  assert.equal(sembraIndirizzo('come attivo le scuole'), false);
+  assert.equal(sembraIndirizzo('12'), false);
+  assert.equal(sembraIndirizzo(''), false);
 });
