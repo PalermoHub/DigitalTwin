@@ -28,7 +28,22 @@ test('validaTema scarta i campi non validi', () => {
 
 test('partiStrato: salta i layer di sola selezione (opacità 0) e quelli assenti', () => {
   const map = finta({ f: { type: 'fill', paint: { 'fill-opacity': 0.5 } }, hit: { type: 'fill', paint: { 'fill-opacity': 0 } }, l: { type: 'line' }, c: { type: 'circle' } });
-  assert.deepEqual(partiStrato(map, ['f', 'hit', 'l', 'c', 'x']), { riempimenti: ['f'], punti: ['c'], uniformi: ['f', 'c'], categorie: [], linee: ['l'], lineeColore: ['l'] });
+  assert.deepEqual(partiStrato(map, ['f', 'hit', 'l', 'c', 'x']), { riempimenti: ['f'], punti: ['c'], uniformi: ['f', 'c'], categorie: [], linee: ['l'], lineeColore: ['l'], volumi: [] });
+});
+
+test('partiStrato: i volumi 3D (fill-extrusion) sono una parte a sé', () => {
+  const map = finta({ v: { type: 'fill-extrusion', paint: { 'fill-extrusion-color': '#ddd' } } });
+  assert.deepEqual(partiStrato(map, ['v']), { riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [], volumi: ['v'] });
+});
+
+test('applicaTema: il colore per attributo dei volumi 3D passa da edifici-3d come base sotto i layer', () => {
+  const map = finta({ 'edifici-3d': { type: 'fill-extrusion', paint: { 'fill-extrusion-color': '#ddd' } } });
+  const parti = partiStrato(map, ['edifici-3d']);
+  const attributo = { campo: 'altezza', tipo: 'graduata', rampa: 'Blu', soglie: [6, 12] };
+  applicaTema(map, parti, { attributo }, new Map());
+  assert.deepEqual(map.paint['edifici-3d|fill-extrusion-color'], espressioneAttributo(attributo));
+  applicaTema(map, parti, null, new Map());
+  assert.notDeepEqual(map.paint['edifici-3d|fill-extrusion-color'], espressioneAttributo(attributo)); // ripristinato il neutro
 });
 
 test('applicaTema colora e ripristina l\'originale', () => {

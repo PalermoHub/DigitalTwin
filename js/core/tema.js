@@ -1,6 +1,7 @@
 // Colore uniforme di poligoni, punti e linee per strato: parte pura (validazione, applicazione alla mappa, salvataggio e file JSON).
 // Il pannello che lo usa sta in pannello-tema.js.
 import { validaAttributo, espressioneAttributo } from './tema-attributo.js';
+import { impostaBaseEdifici3d } from './colori-3d.js';
 import { t as tr } from './i18n.js';
 
 export const CHIAVE = 'dt-temi-strati';
@@ -81,12 +82,14 @@ export function proprietaColore(map, id) {
 //   non si sovrascrivono con un colore solo, per non perdere la tematizzazione;
 // - categorie: layer con colore per categoria, ciascuno col suo `match`, per colorare ogni categoria;
 // - linee: tutte le linee, per lo spessore;
-// - lineeColore: le linee con un colore semplice, su cui vale «Bordo» (colore della linea).
+// - lineeColore: le linee con un colore semplice, su cui vale «Bordo» (colore della linea);
+// - volumi: volumi 3D (fill-extrusion), colorati solo per attributo (il loro colore lo condividono coi layer: vedi colori-3d.js).
 export function partiStrato(map, ids) {
-  const p = { riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [] };
+  const p = { riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [], volumi: [] };
   for (const id of ids) {
     const l = map.getLayer(id);
     const tipo = tipoLayer(l);
+    if (tipo === 'fill-extrusion') { p.volumi.push(id); continue; }
     const prop = tipo && PROPRIETA_COLORE[tipo];
     if (!prop) continue;
     if (map.getPaintProperty(id, PROPRIETA_OPACITA[tipo]) === 0) continue;
@@ -122,6 +125,7 @@ export function applicaTema(map, parti, tema, originali) {
     ...(sole ? parti.linee.map(id => [id, 'line-color']) : []),
   ];
   for (const [id, prop] of perAttributo) imposta(id, prop, espr ?? undefined);
+  if (parti.volumi?.length) impostaBaseEdifici3d(map, espr);
   const inAttributo = new Set(espr ? perAttributo.map(([id, prop]) => `${id}|${prop}`) : []);
   for (const id of parti.uniformi) if (!inAttributo.has(`${id}|${proprietaColore(map, id)}`)) imposta(id, proprietaColore(map, id), tema?.riempimento);
   for (const id of parti.riempimenti) imposta(id, 'fill-outline-color', tema?.bordo);

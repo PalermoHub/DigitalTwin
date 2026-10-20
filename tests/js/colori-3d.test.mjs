@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { espressioneColori, coloraEdifici3d } from '../../js/core/colori-3d.js';
+import { espressioneColori, coloraEdifici3d, impostaBaseEdifici3d } from '../../js/core/colori-3d.js';
 import { EDIFICATO_NEUTRAL } from '../../js/core/palette.js';
 
 const finta = () => {
@@ -47,4 +47,17 @@ test('volumi3dAcceso: vero solo se edifici-3d esiste ed è visibile', () => {
   assert.equal(volumi3dAcceso({ getLayer: () => null }), false);
   assert.equal(volumi3dAcceso({ getLayer: () => ({}), getLayoutProperty: () => 'none' }), false);
   assert.equal(volumi3dAcceso({ getLayer: () => ({}), getLayoutProperty: () => 'visible' }), true);
+});
+
+test('la base del tema sta sotto i layer: i fid colorati restano, gli altri prendono il tema', () => {
+  const map = finta();
+  const base = ['case', true, '#111', '#222'];
+  impostaBaseEdifici3d(map, base);
+  assert.deepEqual(map.paint['edifici-3d.fill-extrusion-color'], base);
+  coloraEdifici3d(map, 'prova3', new Map([[5, '#abcdef']]));
+  assert.deepEqual(map.paint['edifici-3d.fill-extrusion-color'], ['match', ['id'], [5], '#abcdef', base]);
+  impostaBaseEdifici3d(map, null);
+  assert.deepEqual(map.paint['edifici-3d.fill-extrusion-color'], ['match', ['id'], [5], '#abcdef', EDIFICATO_NEUTRAL]);
+  coloraEdifici3d(map, 'prova3', null);
+  assert.equal(map.paint['edifici-3d.fill-extrusion-color'], EDIFICATO_NEUTRAL);
 });

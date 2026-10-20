@@ -4,8 +4,9 @@ import { EDIFICATO_NEUTRAL } from './palette.js';
 // registra {fid → colore}. fid è l'id del tile edificato (stesso valore di edificato.gpkg), si legge con ['id'].
 const LAYER = 'edifici-3d';
 const registro = new Map(); // chiave del layer -> Map(fid -> colore); l'ultimo registrato vince sui fid in comune
+let base = EDIFICATO_NEUTRAL; // colore degli edifici non colorati dai layer: il neutro, o il tema per attributo del pannello Colori
 
-export function espressioneColori(reg, base = EDIFICATO_NEUTRAL) {
+export function espressioneColori(reg, sotto = EDIFICATO_NEUTRAL) {
   const finale = new Map();
   for (const perFid of reg.values()) for (const [fid, colore] of perFid) finale.set(fid, colore);
   const perColore = new Map();
@@ -13,15 +14,23 @@ export function espressioneColori(reg, base = EDIFICATO_NEUTRAL) {
     if (!perColore.has(colore)) perColore.set(colore, []);
     perColore.get(colore).push(fid);
   }
-  if (!perColore.size) return base;
-  return ['match', ['id'], ...[...perColore].flatMap(([colore, fids]) => [fids, colore]), base];
+  if (!perColore.size) return sotto;
+  return ['match', ['id'], ...[...perColore].flatMap(([colore, fids]) => [fids, colore]), sotto];
 }
 
 // perFid vuoto o nullo: il layer non colora più nulla (spento, categorie tutte spente).
 export function coloraEdifici3d(map, chiave, perFid) {
   if (perFid?.size) registro.set(chiave, perFid);
   else registro.delete(chiave);
-  if (map.getLayer(LAYER)) map.setPaintProperty(LAYER, 'fill-extrusion-color', espressioneColori(registro));
+  ridisegna(map);
+}
+
+const ridisegna = map => { if (map.getLayer(LAYER)) map.setPaintProperty(LAYER, 'fill-extrusion-color', espressioneColori(registro, base)); };
+
+// Colore di fondo degli edifici (tema per attributo): sta sotto i layer, che lo coprono sui propri edifici. Nullo = neutro.
+export function impostaBaseEdifici3d(map, espressione) {
+  base = espressione ?? EDIFICATO_NEUTRAL;
+  ridisegna(map);
 }
 
 export const volumi3dAcceso = map => Boolean(map.getLayer(LAYER)) && map.getLayoutProperty(LAYER, 'visibility') === 'visible';

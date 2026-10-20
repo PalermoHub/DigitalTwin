@@ -6,8 +6,8 @@ import { legendaAttributo } from './tema-attributo.js';
 import { partiStrato, proprietaColore, proprietaBordoPunto, applicaTema, validaTema, comeEsadecimale, leggiTemi, salvaTemi, esportaTemi, importaTemi } from './tema.js';
 import { t as tr } from './i18n.js';
 
-const partiVuote = () => ({ riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [] });
-const haParti = p => p.riempimenti.length + p.punti.length + p.linee.length > 0;
+const partiVuote = () => ({ riempimenti: [], punti: [], uniformi: [], categorie: [], linee: [], lineeColore: [], volumi: [] });
+const haParti = p => p.riempimenti.length + p.punti.length + p.linee.length + p.volumi.length > 0;
 
 const registro = new Map(); // id strato → { ricarica(): rilegge il tema salvato e lo applica }
 
@@ -94,7 +94,7 @@ export function creaPannelloTema(map, strato, stato) {
   const costruisciAttributo = () => sezioneAttributo ??= (() => {
     const sezione = creaSezioneAttributo({
       map,
-      layers: () => [...parti.riempimenti, ...parti.punti, ...parti.linee],
+      layers: () => [...parti.riempimenti, ...parti.punti, ...parti.linee, ...parti.volumi],
       leggi: () => tema?.attributo ?? null,
       cambia: a => {
         const nuovo = { ...(tema ?? {}) };
