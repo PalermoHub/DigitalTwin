@@ -2,14 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { collegaInstallazione, CHIAVE_INSTALLA } from '../../js/core/installa.js';
 
-function scenario({ dati = {}, telefono = true, app = false, ua = 'Android' } = {}) {
+function scenario({ dati = {}, telefono = true, app = false, ua = 'Android', search = '' } = {}) {
   const figli = [];
   const crea = () => ({ figli: [], ascolti: {}, addEventListener(t, f) { this.ascolti[t] = f; }, setAttribute() {}, append(...f) { this.figli.push(...f); }, remove() { const i = figli.indexOf(this); if (i >= 0) figli.splice(i, 1); } });
   const doc = { createElement: crea, body: { append: e => figli.push(e) } };
   const ascolti = {};
   const win = {
     matchMedia: q => ({ matches: q.includes('display-mode') ? app : telefono }),
-    navigator: { userAgent: ua }, addEventListener: (t, f) => { ascolti[t] = f; },
+    navigator: { userAgent: ua }, location: { search }, addEventListener: (t, f) => { ascolti[t] = f; },
   };
   const archivio = { getItem: k => dati[k] ?? null, setItem: (k, v) => { dati[k] = v; } };
   const timer = {};
@@ -60,4 +60,11 @@ test('«Non ora» lo spegne per sempre', () => {
 test('non compare su desktop né se il sito è già installato', () => {
   assert.equal(collegaInstallazione(...(({ doc, win, archivio, opz }) => [doc, win, archivio, opz])(scenario({ telefono: false }))), null);
   assert.equal(collegaInstallazione(...(({ doc, win, archivio, opz }) => [doc, win, archivio, opz])(scenario({ app: true }))), null);
+});
+
+test('con ?installa=1 compare anche se spento, installato o su desktop', () => {
+  const s = scenario({ telefono: false, app: true, dati: { [CHIAVE_INSTALLA]: '1' }, search: '?installa=1' });
+  assert.ok(collegaInstallazione(s.doc, s.win, s.archivio, s.opz));
+  s.timer.f();
+  assert.equal(s.figli.length, 1);
 });

@@ -1,6 +1,6 @@
 // Invito a installare il sito come app, solo da telefono: da app il browser non mostra le sue barre e la mappa guadagna spazio.
 // Su Chrome/Edge Android usa il prompt nativo (beforeinstallprompt); su iPhone e dove il prompt non arriva spiega i passi a mano.
-// Non compare se il sito è già aperto come app; «Non ora» lo spegne per sempre.
+// Non compare se il sito è già aperto come app; «Non ora» lo spegne per sempre. Con ?installa=1 compare sempre (per provarlo).
 import { t } from './i18n.js';
 export const CHIAVE_INSTALLA = 'dt.installa.no';
 export const RITARDO_INSTALLA = 12000; // dopo l'invito a toccare la mappa, per non sovrapporli
@@ -9,12 +9,14 @@ export function collegaInstallazione(doc, win, archivio, { ritardo = RITARDO_INS
   let spento = false;
   try { spento = archivio?.getItem(CHIAVE_INSTALLA) === '1'; } catch { /* storage bloccato: l'invito si mostra */ }
   const app = win.matchMedia?.('(display-mode: standalone), (display-mode: fullscreen)').matches || win.navigator?.standalone === true;
-  const telefono = win.matchMedia?.('(max-width: 720px) and (pointer: coarse)').matches;
-  if (spento || app || !telefono) return null;
+  const telefono = win.matchMedia?.('(max-width: 720px), (pointer: coarse)').matches; // anche con «sito desktop» attivo sul telefono
+  const forzato = /[?&]installa=1(&|$)/.test(win.location?.search ?? ''); // prova: mostra l'invito comunque
+  if (!forzato && (spento || app || !telefono)) return null;
   let proposta = win.dtInstalla ?? null; // l'evento può arrivare prima di questo modulo: lo cattura un piccolo script in mappa.html
   win.addEventListener('beforeinstallprompt', e => { e.preventDefault(); proposta = e; });
   const ios = /iPhone|iPad|iPod/.test(win.navigator?.userAgent ?? '');
   adesso(() => {
+    if (doc.querySelector?.('.invito-installa')) return;
     proposta = win.dtInstalla ?? proposta;
     const radice = doc.createElement('div');
     radice.className = 'invito-installa';
