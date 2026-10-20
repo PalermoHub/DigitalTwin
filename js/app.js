@@ -29,6 +29,7 @@ import { collegaRipristino } from './core/ripristino.js';
 import { preparaCondivisione, collegaCondivisione } from './core/condivisione.js';
 import { collegaCestoAllaMappa } from './core/cesto-home.js';
 import { creaDifferiti } from './core/differiti.js';
+import { creaAvvisoAttesa } from './core/avviso-attesa.js';
 import { collegaTabMobile } from './core/tab-mobile.js';
 import { traduciModuli } from './core/traduci-moduli.js';
 import confini from './layers/confini.js';
@@ -102,9 +103,14 @@ const collegaRicercaGuide = (apri, altra) => {
 // la mappa (hash: true) riscrive subito l'hash con la vista: la scheda richiesta dall'indirizzo (#guida, #fonti…) va letta prima
 const SCHEDA_INDIRIZZO = location.hash.slice(1);
 const map = creaMappa('mappa', () => segnala(t('app.basemap.errore')));
-const differiti = creaDifferiti(map, { segnala });
+// Se i dati in ritardo servono subito (strato acceso, clic sulla mappa) e non sono ancora arrivati, un avviso lo dice.
+const attesaDati = creaAvvisoAttesa(document.getElementById('avvisi'), t('avviso.attesaCaricamento'));
+const differiti = creaDifferiti(map, { segnala, suAttesa: p => attesaDati.durante(p) });
 const caricaDifferiti = () => differiti.tutti().then(() => { window.dt.differitiPronti = true; });
-window.dt = { map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false, differitiPronti: false, differiti: caricaDifferiti };
+window.dt = {
+  map, moduli: Object.fromEntries(MODULI.map(m => [m.id, m])), pronto: false, differitiPronti: false,
+  differiti: () => window.dt.differitiPronti ? Promise.resolve() : attesaDati.durante(caricaDifferiti()), // chiesto dalla scheda e dai test
+};
 
 // Un errore su una sorgente disattiva solo gli strati che la usano e li nomina nell'avviso
 // (con l'etichetta del pannello, non con l'id tecnico).

@@ -39,7 +39,7 @@ function attendiSorgenti(map, ids, attesaMax = ATTESA_MAX) {
   });
 }
 
-export function creaDifferiti(map, { segnala = () => {}, attesaMax = ATTESA_MAX } = {}) {
+export function creaDifferiti(map, { segnala = () => {}, attesaMax = ATTESA_MAX, suAttesa = () => {} } = {}) {
   const carica = new Map(); // id modulo → funzione che scarica i dati (una sola volta)
   const sorgenti = [];
   let promessa = null;
@@ -49,16 +49,15 @@ export function creaDifferiti(map, { segnala = () => {}, attesaMax = ATTESA_MAX 
     const urls = new Map();
     modulo.aggiungiSorgenti(mappaConSorgentiVuote(map, urls));
     sorgenti.push(...urls.keys());
-    let fatto = false;
-    carica.set(modulo.id, () => {
-      if (fatto) return;
-      fatto = true;
+    let caricamento = null;
+    carica.set(modulo.id, () => caricamento ??= (() => {
       for (const [id, url] of urls) map.getSource(id)?.setData(url);
       Promise.resolve(modulo.avvia?.(map)).catch(e => segnala(tr('avviso.stratoNonCaricato.dettaglio', { nome: e?.message ?? e })));
-    });
+      return attendiSorgenti(map, [...urls.keys()], attesaMax);
+    })());
     for (const strato of modulo.strati) {
       const suCambio = strato.suCambio;
-      strato.suCambio = function (attivo, mp) { if (attivo) carica.get(modulo.id)(); return suCambio?.call(this, attivo, mp); };
+      strato.suCambio = function (attivo, mp) { if (attivo) suAttesa(carica.get(modulo.id)()); return suCambio?.call(this, attivo, mp); };
     }
   }
 

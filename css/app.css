@@ -183,6 +183,9 @@ select { width: 100%; margin: 2px 0 6px; }
 #avvisi div span { flex: 1; padding: 2px 0; }
 #avvisi button { flex: none; width: 24px; height: 24px; padding: 0; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; background: none; color: var(--text-muted); }
 #avvisi button:hover { background: var(--overlay-hover); color: var(--text); }
+#avvisi .avviso-attesa { align-items: center; padding: 6px 10px; }
+#avvisi .avviso-attesa::before { content: ''; flex: none; width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--text-muted); border-radius: 50%; animation: giro-attesa .8s linear infinite; }
+@keyframes giro-attesa { to { transform: rotate(360deg); } }
 
 /* tooltip sulla mappa: uno solo (core/tooltip.js), con una sezione per fonte (trasporto, sicurezza, confini) */
 .mappa-tooltip .maplibregl-popup-content {

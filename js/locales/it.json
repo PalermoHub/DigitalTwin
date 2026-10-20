@@ -123,6 +123,7 @@
   "attributo.troppi": "Troppi valori distinti (oltre 200): scegli un altro campo o la graduata.",
   "avviso.chiudi": "Chiudi l'avviso",
   "avviso.stratiNonCaricati": "{n} strati non caricati: dati non raggiungibili",
+  "avviso.attesaCaricamento": "Caricamento dei dati in corso, attendere…",
   "avviso.stratoNonCaricato": "Strato non caricato",
   "avviso.stratoNonCaricato.dettaglio": "Strato non caricato: {nome}",
   "base.atlante.apri": "Apri l'Atlante storico di Palermo",
