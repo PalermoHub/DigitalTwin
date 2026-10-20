@@ -6,6 +6,10 @@ import { t, tl } from '../core/i18n.js';
 
 // Basi raster (tile XYZ): una sorgente e un layer 'base-<id>' per ciascuna, generati da questa tabella.
 const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services';
+// Token pubblico Mapbox (pk.): per sua natura visibile nel client, è già limitato agli URL del sito dal pannello Mapbox.
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiZ2J2aXRyYW5vIiwiYSI6ImNtdmdoY2YzZzAxeTkyeXF1NnBhczZvZWQifQ.EAOHORsNWVO6xD7SJm0NLw';
+// Tile Mapbox da 512 px (un quarto delle richieste di quelle da 256), a doppia densità sugli schermi retina.
+const RETINA = (globalThis.devicePixelRatio ?? 1) >= 2 ? '@2x' : '';
 const RASTER = {
   osm: { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', max: 19, attr: '© OpenStreetMap contributors' },
   'osm-fr': { url: 'https://a.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', max: 20, attr: '© OpenStreetMap contributors, tiles OSM France' },
@@ -21,6 +25,8 @@ const RASTER = {
   opentopo: { url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png', max: 17, attr: '© OpenStreetMap contributors, SRTM | © OpenTopoMap (CC-BY-SA)' },
   'esri-topo': { url: `${ESRI}/World_Topo_Map/MapServer/tile/{z}/{y}/{x}`, max: 19, attr: '© Esri' },
   'ctr-1989': { url: 'https://palermohub.github.io/PRG2004/CSG/{z}/{x}/{y}.png', max: 18, min: 13, attr: '© Carta Tecnica Comunale CSG 2k 1989/91' },
+  'mapbox-chiaro': { url: `https://api.mapbox.com/styles/v1/gbvitrano/cjlbh2rbg5fxr2so5fzjudqvi/tiles/512/{z}/{x}/{y}${RETINA}?access_token=${MAPBOX_TOKEN}`, tile: 512, max: 22, attr: '© Mapbox © OpenStreetMap contributors' },
+  'mapbox-scuro': { url: `https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/512/{z}/{x}/{y}${RETINA}?access_token=${MAPBOX_TOKEN}`, tile: 512, max: 22, attr: '© Mapbox © OpenStreetMap contributors' },
   ctr: { url: 'https://siciliahub.github.io/Tiles/ctr_pa_2k/{z}/{x}/{y}.png', max: 19, min: 12, attr: '© Carta Tecnica Comunale 2k 2007/09' },
   'ctr-2012': { url: 'https://siciliahub.github.io/Tiles/ctr_pa_10k/{z}/{x}/{y}.png', max: 18, min: 13, attr: '© Carta Tecnica Regionale 10k 2012/13' },
 };
@@ -61,6 +67,8 @@ const GRUPPI = [
     { id: 'positron', etichetta: 'Mappa chiara', titolo: 'Mappa chiara (OpenFreeMap)' },
     { id: 'ofm-dark', etichetta: 'Scura', titolo: 'Mappa scura (OpenFreeMap)' },
     { id: 'ofm-bright', etichetta: 'Luminosa', titolo: 'Mappa luminosa (OpenFreeMap Bright)' },
+    { id: 'mapbox-chiaro', etichetta: 'Mapbox', titolo: 'Mappa chiara (Mapbox, stile personale)' },
+    { id: 'mapbox-scuro', etichetta: 'Mapbox scura', titolo: 'Mappa scura (Mapbox Dark)' },
     { id: 'osm', etichetta: 'OpenStreetMap', titolo: 'OpenStreetMap standard' },
     { id: 'osm-fr', etichetta: 'OSM Francia', titolo: 'OpenStreetMap Francia' },
     { id: 'osm-hot', etichetta: 'OSM Umanitaria', titolo: 'OpenStreetMap Humanitarian' },
@@ -94,8 +102,8 @@ const GRUPPI = [
 const miniatura = id => new URL(`img/basi/${id}.jpg`, document.baseURI).href; // assoluto: la variabile CSS si risolve rispetto a css/
 
 let idPositron = [];
-// Base di partenza: Esri grigio chiaro o scuro, secondo il tema all'avvio (lo stile OpenFreeMap serve solo per font e sprite).
-const INIZIALE = document.documentElement.dataset.tema === 'scuro' ? 'esri-scura' : 'grigio';
+// Base di partenza: Mapbox chiara o scura, secondo il tema all'avvio (lo stile OpenFreeMap serve solo per font e sprite).
+const INIZIALE = document.documentElement.dataset.tema === 'scuro' ? 'mapbox-scuro' : 'mapbox-chiaro';
 let baseCorrente = INIZIALE;
 const stiliVettoriali = {}; // id -> promessa del JSON dello stile, scaricato una volta sola
 
@@ -132,7 +140,7 @@ export default {
   aggiungiSorgenti(map) {
     for (const [id, r] of Object.entries(RASTER)) {
       map.addSource(`${id}-r`, {
-        type: 'raster', tiles: [r.url], tileSize: 256, minzoom: r.min ?? 0, maxzoom: r.max, attribution: r.attr,
+        type: 'raster', tiles: [r.url], tileSize: r.tile ?? 256, minzoom: r.min ?? 0, maxzoom: r.max, attribution: r.attr,
       });
     }
   },
@@ -221,10 +229,10 @@ export default {
     if (icona) icona.replaceWith(Object.assign(document.createElement('span'), { className: 'base-mini' }));
     bottone?.style.setProperty('--miniatura', `url(${miniatura(INIZIALE)})`);
     // il tema scuro porta con sé la mappa scura, quello chiaro la mappa chiara; una base scelta a mano (satellite, storiche…) non si tocca
-    const COPPIE = { grigio: 'esri-scura', 'esri-scura': 'grigio', positron: 'ofm-dark', 'ofm-dark': 'positron' };
+    const COPPIE = { grigio: 'esri-scura', 'esri-scura': 'grigio', positron: 'ofm-dark', 'ofm-dark': 'positron', 'mapbox-chiaro': 'mapbox-scuro', 'mapbox-scuro': 'mapbox-chiaro' };
     const perTema = scuro => {
       if (!COPPIE[baseCorrente]) return;
-      const eScura = baseCorrente === 'esri-scura' || baseCorrente === 'ofm-dark';
+      const eScura = ['esri-scura', 'ofm-dark', 'mapbox-scuro'].includes(baseCorrente);
       const voluta = eScura === scuro ? baseCorrente : COPPIE[baseCorrente];
       const radio = document.getElementById(`base-${voluta}`);
       if (!radio || radio.checked) return;

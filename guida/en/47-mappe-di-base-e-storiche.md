@@ -8,7 +8,7 @@ Typical questions: How do I change the background map? How do I see the satellit
 
 The **Basemap** tab (left-hand bar) chooses the map that lies under the layers. **Only one base is visible at a time**; at the start it is «Light map». Each base has a thumbnail and a name; under the list there is the hint «Select the cartography to use as the base.» The bases are divided into groups, as in the selector of the Historical Atlas:
 
-- **Street maps**: Light map (OpenFreeMap), Dark (OpenFreeMap), Bright (OpenFreeMap Bright), OpenStreetMap (standard), OSM France, OSM Humanitarian, Esri Streets (World Street Map), Google (streets), Esri Dark (Dark Gray Canvas).
+- **Street maps**: (default: Mapbox light or dark, per theme) Light map (OpenFreeMap), Dark (OpenFreeMap), Bright (OpenFreeMap Bright), Mapbox (custom style) and Mapbox dark (standard Dark style; they swap with the theme), OpenStreetMap (standard), OSM France, OSM Humanitarian, Esri Streets (World Street Map), Google (streets), Esri Dark (Dark Gray Canvas).
 - **Aerial imagery**: Satellite (Google), Esri (World Imagery), Hybrid (Google satellite with streets and names).
 - **Topographic**: Terrain (Google, relief), OpenTopo (contour lines), Esri Topo (World Topographic Map).
 - **Historical maps**: see below.
