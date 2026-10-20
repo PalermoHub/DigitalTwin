@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizza, preparaIndice, cerca, sembraIndirizzo } from '../../js/core/indirizzi.js';
+import { normalizza, preparaIndice, cerca, sembraIndirizzo, estraiIndirizzo } from '../../js/core/indirizzi.js';
 
 const voci = preparaIndice({
   'VIA MAQUEDA': { '1': [13.36, 38.11], '100': [13.361, 38.112] },
@@ -127,4 +127,15 @@ test('sembraIndirizzo: via + civico, o nome che inizia con un toponimo', () => {
   assert.equal(sembraIndirizzo('come attivo le scuole'), false);
   assert.equal(sembraIndirizzo('12'), false);
   assert.equal(sembraIndirizzo(''), false);
+});
+
+test("estraiIndirizzo: l'indirizzo dentro una frase", () => {
+  assert.equal(estraiIndirizzo("dimmi cosa c'è in via dante 50"), 'VIA DANTE 50');
+  assert.equal(estraiIndirizzo('cosa c\'è in piazza Politeama?'), 'PIAZZA POLITEAMA');
+  assert.equal(estraiIndirizzo('cosa si trova in via Libertà 12/A e dintorni'), 'VIA LIBERTA 12 A');
+  assert.equal(estraiIndirizzo('cosa c\'è in via dante 50 e dintorni'), 'VIA DANTE 50');
+  assert.equal(estraiIndirizzo("cosa c'è a dante 50"), 'DANTE 50');
+  assert.equal(estraiIndirizzo("che c'è vicino a Santa Rosalia 12"), 'SANTA ROSALIA 12');
+  assert.equal(estraiIndirizzo('Libertà 12'), 'LIBERTA 12');
+  assert.equal(estraiIndirizzo('come attivo le scuole'), null);
 });

@@ -276,6 +276,11 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
         }
       } else if (m.tipo === 'luoghi') {
         box.append(el('p', null, t('chatbot.luoghi')), pulsantiOggetti(m.oggetti));
+      } else if (m.tipo === 'indirizzo') {
+        const uno = m.oggetti.length === 1;
+        box.append(el('p', null, uno ? t('chatbot.indirizzo.uno', { nome: m.oggetti[0].etichetta }) : t('chatbot.indirizzo.piu')));
+        if (uno && m.oggetti[0].nota) box.append(el('p', 'cb-nota', m.oggetti[0].nota));
+        box.append(pulsantiOggetti(m.oggetti));
       } else if (m.tipo === 'nonLoSo') {
         box.append(el('p', null, t('chatbot.nonLoSo')));
         if (m.vicine.length) box.append(domande(t('chatbot.vicine'), m.vicine));
@@ -311,7 +316,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti } = {}) {
   }
   document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) { aggiornaLayer(); aggiornaPercorsi(); } aggiornaFiltri(); }); // anche i clic sulla legenda o sul pannello
 
-  const conv = creaConversazione({ carica, cercaOggetti, suCambio: disegna });
+  const conv = creaConversazione({ carica, cercaOggetti, apri: o => document.dispatchEvent(new CustomEvent('scheda:apri-luogo', { detail: o })), suCambio: disegna });
   form.addEventListener('submit', e => {
     e.preventDefault();
     const testo = campo.value;

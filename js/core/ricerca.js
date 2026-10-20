@@ -1,6 +1,6 @@
 import { urlDati } from './config.js';
 import { decodificaCivici, chiaveSezione } from './compatto.js';
-import { preparaIndiceVie, vieConCivico, cerca, sembraIndirizzo } from './indirizzi.js';
+import { preparaIndiceVie, vieConCivico, cerca, estraiIndirizzo } from './indirizzi.js';
 import { FONTI, preparaLuoghi, cercaLuoghi } from './luoghi.js';
 import { segnala } from './pannello.js';
 import { t } from './i18n.js';
@@ -60,8 +60,9 @@ function luoghi() {
 // Ogni voce ha lon/lat: aprendola, la scheda mostra anche quello che c'è nei dintorni.
 export async function cercaOggetti(testo) {
   const trovati = cercaLuoghi(await luoghi(), testo, 3);
-  if (!sembraIndirizzo(testo)) return trovati;
-  const indirizzi = cerca(await conCivici(await indice(), testo), testo, 3);
+  const indirizzo = estraiIndirizzo(testo);
+  if (!indirizzo) return trovati;
+  const indirizzi = cerca(await conCivici(await indice(), indirizzo), indirizzo, 3).map(r => ({ ...r, indirizzo: true }));
   return [...indirizzi, ...trovati].slice(0, 3);
 }
 

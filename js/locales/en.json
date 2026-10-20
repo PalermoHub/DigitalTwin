@@ -2040,6 +2040,8 @@
   "chatbot.apriPannello.sinistra": "Open the «{nome}» tab on the left",
   "chatbot.apriPannello.destra": "Open the «{nome}» tab on the right",
   "chatbot.apriPannello.mobile": "Open «{nome}»",
+  "chatbot.indirizzo.uno": "I found {nome}. I opened the card: at the top, in «What's here», you see what is on the spot and nearby.",
+  "chatbot.indirizzo.piu": "I found several addresses. Pick the right one to see what is on the spot and nearby:",
   "chatbot.luoghi": "I find no explanation in the guide, but on the map there is:",
   "app.rail.tema": "Theme",
   "tui.titolo": "Interface theme",

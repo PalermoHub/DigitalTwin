@@ -2040,6 +2040,8 @@
   "chatbot.apriPannello.sinistra": "Apri il tab «{nome}» a sinistra",
   "chatbot.apriPannello.destra": "Apri il tab «{nome}» a destra",
   "chatbot.apriPannello.mobile": "Apri «{nome}»",
+  "chatbot.indirizzo.uno": "Ho trovato {nome}. Ho aperto la scheda: in alto, in «Cosa c'è qui», vedi cosa c'è sul posto e nei dintorni.",
+  "chatbot.indirizzo.piu": "Ho trovato più indirizzi. Scegli quello giusto per vedere cosa c'è sul posto e nei dintorni:",
   "chatbot.luoghi": "Non trovo una spiegazione nella guida, ma sulla mappa c'è:",
   "app.rail.tema": "Tema",
   "tui.titolo": "Tema dell'interfaccia",

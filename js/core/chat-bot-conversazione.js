@@ -1,9 +1,10 @@
 import { rispondi, domandeIniziali, anteprima, caricaIndice } from './chat-bot-ricerca.js';
 
 // Stato della conversazione del Chat bot, senza DOM: l'interfaccia (chat-bot.js) lo disegna e chiama chiedi()/commuta().
-// Messaggi: presentazione | utente | risposta { voce, breve, cEAltro, espansa, oggetti } | luoghi { oggetti } | nonLoSo { vicine } | errore.
-// `cercaOggetti(testo)` trova per nome i luoghi della mappa (come la barra di ricerca): ognuno ha il suo pulsante per aprirne la scheda.
-export function creaConversazione({ carica = caricaIndice, cercaOggetti = async () => [], suCambio = () => {} } = {}) {
+// Messaggi: presentazione | utente | risposta { voce, breve, cEAltro, espansa, oggetti } | luoghi { oggetti } | indirizzo { oggetti } | nonLoSo { vicine } | errore.
+// `cercaOggetti(testo)` trova per nome i luoghi della mappa e gli indirizzi (come la barra di ricerca): ognuno ha il suo pulsante per aprirne la scheda.
+// Un indirizzo (`indirizzo: true`) trovato da solo si apre subito con `apri(oggetto)`: la scheda racconta cosa c'è nei dintorni.
+export function creaConversazione({ carica = caricaIndice, cercaOggetti = async () => [], apri = () => {}, suCambio = () => {} } = {}) {
   const messaggi = [];
   let indice = null;
   let n = 0;
@@ -30,6 +31,12 @@ export function creaConversazione({ carica = caricaIndice, cercaOggetti = async 
       try { voci = await leggi(); } catch { aggiungi({ tipo: 'errore' }); return; }
       const { trovate, vicine } = rispondi(voci, domanda);
       const oggetti = await cercaOggetti(domanda).catch(() => []);
+      const indirizzi = oggetti.filter(o => o.indirizzo);
+      if (!trovate.length && indirizzi.length) {
+        aggiungi({ tipo: 'indirizzo', oggetti: indirizzi });
+        if (indirizzi.length === 1) apri(indirizzi[0]);
+        return;
+      }
       if (!trovate.length) { aggiungi(oggetti.length ? { tipo: 'luoghi', oggetti } : { tipo: 'nonLoSo', vicine }); return; }
       const { breve, c_e_altro: cEAltro } = anteprima(trovate[0].testo);
       aggiungi({ tipo: 'risposta', voce: trovate[0], breve, cEAltro, espansa: false, oggetti, domanda });

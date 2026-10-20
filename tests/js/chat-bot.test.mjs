@@ -111,3 +111,19 @@ test('chiedi: se la ricerca degli oggetti fallisce la risposta resta', async () 
   assert.equal(c.messaggi.at(-1).tipo, 'risposta');
   assert.deepEqual(c.messaggi.at(-1).oggetti, []);
 });
+
+test('chiedi: un solo indirizzo trovato si apre da solo; più indirizzi aspettano la scelta', async () => {
+  const via = { etichetta: 'VIA ORETO 150', indirizzo: true, lon: 13.37, lat: 38.1 };
+  const aperti = [];
+  let trovati = [via];
+  const c = creaConversazione({ carica, cercaOggetti: async () => trovati, apri: o => aperti.push(o) });
+  await c.avvia();
+  await c.chiedi('via oreto 150');
+  assert.equal(c.messaggi.at(-1).tipo, 'indirizzo');
+  assert.deepEqual(c.messaggi.at(-1).oggetti, [via]);
+  assert.deepEqual(aperti, [via]);
+  trovati = [via, { ...via, etichetta: 'VIA ORETO 150A' }];
+  await c.chiedi('via oreto 150');
+  assert.equal(c.messaggi.at(-1).tipo, 'indirizzo');
+  assert.equal(aperti.length, 1);
+});

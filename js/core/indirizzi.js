@@ -71,14 +71,27 @@ export function vieConCivico(voci, testo) {
   return m && m[1] ? vieCorrispondenti(voci, m[1]) : [];
 }
 
-const TOPONIMI = /^(VIA|VIALE|PIAZZA|PIAZZALE|CORSO|LARGO|VICOLO|SALITA|STRADA|LUNGOMARE|CORTILE)\s/; // i18n-ok: toponimi delle vie
+const TOPONIMI = 'VIA|VIALE|PIAZZA|PIAZZALE|CORSO|LARGO|VICOLO|SALITA|STRADA|LUNGOMARE|CORTILE'; // i18n-ok: toponimi delle vie
+// dal toponimo al civico (con lettera solo se attaccata: «12A», «12/A»), o fino alla fine se il civico manca
+const CON_CIVICO = new RegExp(`\\b(?:${TOPONIMI})\\s.*?\\d+(?:\\s?\\/\\s?[A-Za-z]|[A-Za-z])?(?![\\w\\u00C0-\\u00FF])`, 'i');
+const SENZA_CIVICO = new RegExp(`\\b(?:${TOPONIMI})\\s.*$`, 'i');
 
-// Il Chat bot cerca un indirizzo solo se il testo ne ha l'aspetto: nome + civico in coda, o un nome di via con il toponimo.
-export function sembraIndirizzo(testo) {
+// L'indirizzo dentro una frase («dimmi cosa c'è in via Dante 50» → «VIA DANTE 50»), o null se il testo non ne ha l'aspetto:
+// serve il toponimo, oppure il testo intero è «nome + civico».
+const PREPOSIZIONI = /\s(?:IN|A|SU|PRESSO|VICINO A|INTORNO A|ATTORNO A|NEI PRESSI DI)\s(.+\s\d+\s?[A-Z]?)$/;
+
+export function estraiIndirizzo(testo) {
   const norm = normalizza(testo);
-  if (!norm || /^\d+$/.test(norm)) return false;
-  return /^.+\s\d+\s?[A-Z]?$/.test(norm) || TOPONIMI.test(norm);
+  if (!norm || /^\d+$/.test(norm)) return null;
+  const m = testo.match(CON_CIVICO) ?? testo.match(SENZA_CIVICO);
+  if (m) return normalizza(m[0]);
+  if (!/^.+\s\d+\s?[A-Z]?$/.test(norm)) return null;
+  // senza toponimo: «cosa c'è a dante 50», «che c'è vicino a dante 50» → il nome comincia dopo la preposizione
+  const dopo = norm.match(PREPOSIZIONI);
+  return dopo ? dopo[1] : norm;
 }
+
+export const sembraIndirizzo = testo => estraiIndirizzo(testo) !== null;
 
 export function cerca(voci, testo, max = 8) {
   const norm = normalizza(testo);
