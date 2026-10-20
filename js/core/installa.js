@@ -1,6 +1,6 @@
 // Invito a installare il sito come app, solo da telefono: da app il browser non mostra le sue barre e la mappa guadagna spazio.
 // Su Chrome/Edge Android usa il prompt nativo (beforeinstallprompt); su iPhone e dove il prompt non arriva spiega i passi a mano.
-// Non compare se il sito è già aperto come app; «Non ora» lo spegne per sempre. Con ?installa=1 compare sempre (per provarlo).
+// Non compare se il sito è già aperto come app; «Non ora» o l'installazione riuscita lo spengono per sempre. Con ?installa=1 compare sempre (per provarlo).
 import { t } from './i18n.js';
 export const CHIAVE_INSTALLA = 'dt.installa.no';
 export const RITARDO_INSTALLA = 12000; // dopo l'invito a toccare la mappa, per non sovrapporli
@@ -40,12 +40,15 @@ export function collegaInstallazione(doc, win, archivio, { ritardo = RITARDO_INS
     radice.append(testo, ...(proposta ? [] : [passi]), azioni);
     doc.body.append(radice);
     const chiudi = () => radice.remove();
-    installa.addEventListener('click', async () => { chiudi(); proposta.prompt(); await proposta.userChoice?.catch(() => {}); });
-    no.addEventListener('click', () => {
+    const ricorda = () => { try { archivio?.setItem(CHIAVE_INSTALLA, '1'); } catch { /* si ripresenta al prossimo avvio */ } };
+    installa.addEventListener('click', async () => {
       chiudi();
-      try { archivio?.setItem(CHIAVE_INSTALLA, '1'); } catch { /* si ripresenta al prossimo avvio */ }
+      proposta.prompt();
+      const scelta = await proposta.userChoice?.catch(() => null);
+      if (scelta?.outcome === 'accepted') ricorda(); // se annulla, l'invito può tornare
     });
-    win.addEventListener('appinstalled', chiudi);
+    no.addEventListener('click', () => { chiudi(); ricorda(); });
+    win.addEventListener('appinstalled', () => { chiudi(); ricorda(); });
   }, ritardo);
   return true;
 }

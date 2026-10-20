@@ -35,16 +35,18 @@ test('su iPhone spiega Condividi → Aggiungi alla schermata Home', () => {
   assert.match(s.figli[0].figli[1].textContent, /Condividi/);
 });
 
-test('con il prompt nativo mostra «Installa» e lo lancia', () => {
+test('con il prompt nativo mostra «Installa» e lo lancia', async () => {
   const s = scenario();
   collegaInstallazione(s.doc, s.win, s.archivio, s.opz);
   let lanciato = false;
-  s.ascolti.beforeinstallprompt({ preventDefault() {}, prompt() { lanciato = true; }, userChoice: Promise.resolve() });
+  s.ascolti.beforeinstallprompt({ preventDefault() {}, prompt() { lanciato = true; }, userChoice: Promise.resolve({ outcome: 'accepted' }) });
   s.timer.f();
   assert.equal(bottoni(s).length, 2);
   bottoni(s)[0].ascolti.click();
   assert.equal(lanciato, true);
   assert.equal(s.figli.length, 0);
+  await new Promise(r => setImmediate(r));
+  assert.equal(s.dati[CHIAVE_INSTALLA], '1'); // installata: non si ripropone
 });
 
 test('«Non ora» lo spegne per sempre', () => {
