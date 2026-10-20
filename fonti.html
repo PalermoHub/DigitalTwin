@@ -23,6 +23,9 @@
 <link rel="icon" type="image/png" href="img/favicon.png">
 <script>try{if(localStorage.getItem('dt-tema')==='scuro')document.documentElement.dataset.tema='scuro'}catch(e){}</script>
 <script>try{var u=JSON.parse(localStorage.getItem('dt-tema-ui'));if(u&&(u.versione===1||u.versione===2)&&u.vars){var r=document.documentElement;for(var k in u.vars)r.style.setProperty(k,u.vars[k]);if(u.scuro===true)r.dataset.tema='scuro';else if(u.scuro===false)delete r.dataset.tema}}catch(e){}</script>
+<link rel="preload" href="css/fonts/montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/montserrat-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/home.css">
 <script src="js/consenso.js"></script>
@@ -41,6 +44,7 @@
 <p class="piede-avviso" data-i18n-html="html.piede.avviso">Catasto, PRG e vincoli sono dati informativi, <strong>senza valore legale</strong>.</p>
 <a id="logo-ods" href="https://opendatasicilia.it/" title="Open Data Sicilia" target="_blank" rel="noopener"><img src="img/opendatasicilia.png" alt="Open Data Sicilia" width="21" height="24"></a>
 </footer>
+<script src="js/testata-rapida.js"></script>
 
 <script type="module" src="js/fonti.js"></script>
 </body>

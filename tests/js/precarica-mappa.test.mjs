@@ -46,3 +46,21 @@ test('precaricaMappaARiposo: aspetta load se la pagina non è completa', () => {
   f.ascoltatori.load();
   assert.ok(f.link.length > 5);
 });
+
+test('precaricaMappa: dove il browser lo supporta, prepara anche la mappa in prerender', () => {
+  const f = finestraFinta({ effectiveType: '4g' });
+  f.HTMLScriptElement = { supports: t => t === 'speculationrules' };
+  precaricaMappa(f, 'it');
+  const regole = f.link.find(l => l.type === 'speculationrules');
+  assert.deepEqual(JSON.parse(regole.textContent).prerender[0].urls, ['mappa.html']);
+});
+
+test('precaricaMappa: senza supporto o con rete lenta niente prerender', () => {
+  const senza = finestraFinta({ effectiveType: '4g' });
+  precaricaMappa(senza, 'it');
+  assert.ok(!senza.link.some(l => l.type === 'speculationrules'));
+  const lenta = finestraFinta({ saveData: true });
+  lenta.HTMLScriptElement = { supports: () => true };
+  precaricaMappa(lenta, 'it');
+  assert.equal(lenta.link.length, 0);
+});

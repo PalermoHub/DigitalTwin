@@ -19,6 +19,13 @@ export function precaricaMappa(finestra, lingua) {
   const risorse = risorseMappa(lingua);
   const doc = finestra.document;
   for (const r of risorse) doc.head.append(Object.assign(doc.createElement('link'), r));
+  // Chrome: la mappa si prepara a pagina nascosta e al clic compare già avviata (altrove resta la cache calda).
+  if (finestra.HTMLScriptElement?.supports?.('speculationrules')) {
+    doc.head.append(Object.assign(doc.createElement('script'), {
+      type: 'speculationrules',
+      textContent: JSON.stringify({ prerender: [{ urls: ['mappa.html'], eagerness: 'moderate' }] }),
+    }));
+  }
   return risorse.length;
 }
 

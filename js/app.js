@@ -241,7 +241,7 @@ map.once('style.load', async () => {
   // gli argomenti delle tre guide: la pagina si apre (la stessa già aperta resta) e scorre alla sezione
   const apriGuida = (scheda, sezione) => {
     const foglio = document.getElementById('crediti');
-    if (!(foglio.open && foglio.dataset.tab === scheda)) document.querySelector(`#menu-info button[data-scheda="${scheda}"]`)?.click();
+    if (!(foglio.open && foglio.dataset.tab === scheda)) commuta(scheda);
     if (sezione) document.getElementById(sezione)?.scrollIntoView({ block: 'start' });
   };
   document.addEventListener('guida:apri', e => apriGuida(e.detail.scheda, e.detail.sezione)); // dal Chat bot
@@ -336,7 +336,7 @@ map.once('style.load', async () => {
     if (catalogo) Promise.resolve(commutaCrediti(foglio, catalogo, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], tab)).catch(e => segnala(t('app.pagine.errore', { msg: e.message })));
     else segnala(t('app.fonti.errore'));
   };
-  const segnaVoci = tab => menu.querySelectorAll('button').forEach(b => {
+  const segnaVoci = tab => menu.querySelectorAll('button,[href][data-scheda]').forEach(b => {
     if (b.dataset.scheda === (tab ?? 'mappa')) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
   const segna = tab => { segnaVoci(tab); tendine.forEach(t => t.querySelector('.menu-tendina-toggle').classList.toggle('attiva', !!t.querySelector('[aria-current="page"]'))); };

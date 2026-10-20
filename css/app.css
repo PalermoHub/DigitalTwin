@@ -2126,3 +2126,11 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .cb-layer[aria-pressed="true"], .cb-filtro[aria-pressed="true"], .cb-percorso[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
 .cb-pulisci { flex: none; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--text-muted); cursor: pointer; }
 .cb-pulisci:hover { background: var(--surface-hover); color: var(--text); }
+
+/* Cambio pagina senza sfarfallio: il browser (Chrome/Edge) tiene a schermo la pagina vecchia finché la nuova non è pronta;
+   testata e piede, uguali ovunque, restano fermi e cambia solo il contenuto in dissolvenza veloce. */
+@view-transition { navigation: auto; }
+#app-header { view-transition-name: testata; }
+#app-footer { view-transition-name: piede; }
+::view-transition-group(root) { animation-duration: .15s; }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*) { animation: none; } }

@@ -1,6 +1,7 @@
 // Menu del sito, definito qui una volta sola e usato da tutte le pagine statiche (home, About, Guida, Fonti, Privacy, Plugin, Geoimage, Digital Twin, Presentazione).
 // La mappa (mappa.html) ha le stesse voci come pulsanti, pilotati da js/app.js.
-import { applicaDom, t } from './i18n.js';
+import { applicaDom, t, lingua } from './i18n.js';
+import { precaricaMappaARiposo } from './precarica-mappa.js';
 
 // Nessun testo italiano qui: etichette e suggerimenti vengono dai dizionari (chiave e chiave + «.tip»).
 const voce = (href, chiave, extra = '') =>
@@ -34,6 +35,7 @@ export function creaMenuSito(menu = document.getElementById('menu-info'), pagina
   menu.innerHTML = menuHtml();
   applicaDom(menu);
   menu.querySelector(`a[href="${pagina}"]`)?.setAttribute('aria-current', 'page');
+  if (pagina !== 'index.html' && typeof window !== 'undefined') precaricaMappaARiposo(window, lingua()); // la home lo fa da sé
   return menu;
 }
 
