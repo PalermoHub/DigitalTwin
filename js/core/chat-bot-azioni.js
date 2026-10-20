@@ -2,6 +2,7 @@ import { normalizza } from './indirizzi.js';
 import { t, localeIntl } from './i18n.js';
 
 // Azioni di Talia che non vengono dalla guida: rispondono con i dati dell'app (luoghi già caricati per la ricerca e classifica della popolazione).
+// Le frasi valgono in italiano e in inglese.
 //   «cosa vedo ora?»          → i layer accesi, con un pulsante per spegnerli
 //   «la colonnina più vicina» → i 3 punti più vicini alla posizione di chi scrive
 //   «quante fontanelle ci sono?» → il totale nei dati
@@ -10,23 +11,23 @@ import { t, localeIntl } from './i18n.js';
 
 // categoria → strati dei luoghi (vedi FONTI in luoghi.js) e chiavi per riconoscerla
 const CATEGORIE = [
-  { id: 'colonnine', strati: ['colonnine'], parole: /\b(COLONNIN\w*|RICARICA)\b/ },
-  { id: 'distributori', strati: ['distributori'], parole: /\b(DISTRIBUTOR\w*|BENZINAI\w*|CARBURANT\w*)\b/ },
-  { id: 'fermate', strati: ['trasporto-fermate'], parole: /\b(FERMAT\w*)\b/ },
-  { id: 'fontanelle', strati: ['fontanelle'], parole: /\b(FONTANELL\w*)\b/ },
-  { id: 'scuole', strati: ['scuole'], parole: /\b(SCUOL\w*|ASIL\w*)\b/ },
-  { id: 'uffici', strati: ['uffici'], parole: /\b(UFFICI\w*)\b/ },
+  { id: 'colonnine', strati: ['colonnine'], parole: /\b(COLONNIN\w*|RICARICA|CHARGING|CHARGERS?)\b/ },
+  { id: 'distributori', strati: ['distributori'], parole: /\b(DISTRIBUTOR\w*|BENZINAI\w*|CARBURANT\w*|FUEL|PETROL|GAS STATIONS?)\b/ },
+  { id: 'fermate', strati: ['trasporto-fermate'], parole: /\b(FERMAT\w*|STOPS?)\b/ },
+  { id: 'fontanelle', strati: ['fontanelle'], parole: /\b(FONTANELL\w*|FOUNTAINS?)\b/ },
+  { id: 'scuole', strati: ['scuole'], parole: /\b(SCUOL\w*|ASIL\w*|SCHOOLS?|NURSER(Y|IES))\b/ },
+  { id: 'uffici', strati: ['uffici'], parole: /\b(UFFICI\w*|OFFICES?)\b/ },
   { id: 'monumenti', strati: ['monumenti'], parole: /\b(MONUMENT\w*)\b/ },
-  { id: 'alberi', strati: ['alberi'], parole: /\b(ALBER\w*)\b/ },
-  { id: 'seggi', strati: ['seggi'], parole: /\b(SEGGI\w*|SEDI ELETTORAL\w*)\b/ },
+  { id: 'alberi', strati: ['alberi'], parole: /\b(ALBER\w*|TREES?)\b/ },
+  { id: 'seggi', strati: ['seggi'], parole: /\b(SEGGI\w*|SEDI ELETTORAL\w*|POLLING)\b/ },
 ];
 
-const VICINO = /\b(PIU VICIN\w*|VICIN\w* A ME|QUI VICINO|QUI INTORNO|INTORNO A ME|ATTORNO A ME|DA QUI)\b/;
-const ATTIVI = /\b(COSA VEDO|LAYER ACCESI|STRATI ACCESI|LAYER ATTIVI|STRATI ATTIVI|COSA E ACCESO|COSA HO ACCESO|COSA STO VEDENDO)\b/;
-const CONTEGGIO = /\b(QUANT[EIO]\b)/;
-const POPOLOSO = /\b(PIU POPOLOS\w*|PIU ABITAT\w*|PIU GRAND\w* PER (ABITANTI|RESIDENTI))\b/;
-const ABITANTI = /\b(ABITANTI|RESIDENTI|POPOLAZIONE)\b/;
-const LIVELLI = [['quartieri', 'QUARTIER'], ['upl', 'UPL'], ['circoscrizioni', 'CIRCOSCRIZION']];
+const VICINO = /\b(PIU VICIN\w*|VICIN\w* A ME|QUI VICINO|QUI INTORNO|INTORNO A ME|ATTORNO A ME|DA QUI|CLOSEST|NEAREST|NEAR ME|NEARBY|AROUND ME|CLOSE TO ME|NEAR HERE)\b/;
+const ATTIVI = /\b(COSA VEDO|LAYER ACCESI|STRATI ACCESI|LAYER ATTIVI|STRATI ATTIVI|COSA E ACCESO|COSA HO ACCESO|COSA STO VEDENDO|WHAT AM I LOOKING AT|WHAT CAN I SEE|WHICH LAYERS ARE (ON|ACTIVE)|ACTIVE LAYERS|LAYERS ARE (ON|ACTIVE))\b/;
+const CONTEGGIO = /\b(QUANT[EIO]\b|HOW MANY\b)/;
+const POPOLOSO = /\b(PIU POPOLOS\w*|MOST POPULOUS|LARGEST POPULATION|PIU ABITAT\w*|PIU GRAND\w* PER (ABITANTI|RESIDENTI))\b/;
+const ABITANTI = /\b(ABITANTI|RESIDENTI|POPOLAZIONE|RESIDENTS|INHABITANTS|POPULATION)\b/;
+const LIVELLI = [['quartieri', /QUARTIER|DISTRICT/], ['upl', /UPL/], ['circoscrizioni', /CIRCOSCRIZION/]];
 
 export function riconosci(testo) {
   const q = normalizza(testo);
@@ -34,7 +35,7 @@ export function riconosci(testo) {
   const cat = CATEGORIE.find(c => c.parole.test(q));
   if (cat && VICINO.test(q)) return { tipo: 'vicino', categoria: cat };
   if (cat && CONTEGGIO.test(q)) return { tipo: 'conteggio', categoria: cat, q };
-  if (POPOLOSO.test(q)) return { tipo: 'popolosi', livello: (LIVELLI.find(([, p]) => q.includes(p)) ?? LIVELLI[0])[0] };
+  if (POPOLOSO.test(q)) return { tipo: 'popolosi', livello: (LIVELLI.find(([, p]) => p.test(q)) ?? LIVELLI[0])[0] };
   if (ABITANTI.test(q)) return { tipo: 'abitanti', q };
   return null;
 }

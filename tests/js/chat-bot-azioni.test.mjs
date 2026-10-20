@@ -49,3 +49,13 @@ test('i layer accesi', async () => {
 });
 
 test('distanza in metri', () => assert.ok(Math.abs(distanza({ lat: 38, lon: 13 }, { lat: 38.01, lon: 13 }) - 1112) < 5));
+
+test('le stesse frasi in inglese', async () => {
+  assert.equal(riconosci('what am I looking at?').tipo, 'attivi');
+  assert.equal(riconosci('which layers are on').tipo, 'attivi');
+  assert.equal(riconosci('closest charging point to me').tipo, 'vicino');
+  assert.equal(riconosci('how many drinking fountains are there?').tipo, 'conteggio');
+  assert.equal(riconosci('most populous district').livello, 'quartieri');
+  assert.equal(riconosci('where can I find charging points?'), null);
+  assert.match((await azioni()('how many residents does Zisa have?')).testo, /Zisa.*32\.704/);
+});
