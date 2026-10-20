@@ -149,7 +149,9 @@ html { font-size: calc(var(--scala-testo, 1) * .875rem); }
 /* la pagina non scorre né rimbalza mai (su iPad e Surface un trascinamento o uno zoom del browser porterebbe fuori vista barra e ricerca) */
 html, body { overflow: hidden; overscroll-behavior: none; }
 #barra-strumenti, #area-ricerca, #legende, #pannello { touch-action: manipulation; } /* niente zoom con doppio tocco sull'interfaccia */
-#mappa { position: absolute; inset: 0; }
+/* colore di terra di positron: finché stile e tile non arrivano dalla rete la mappa non resta bianca */
+#mappa { position: absolute; inset: 0; background: #f2f3f0; }
+:root[data-tema="scuro"] #mappa { background: var(--surface); }
 button { cursor: pointer; }
 label { display: block; padding: 2px 0; }
 select { width: 100%; margin: 2px 0 6px; }

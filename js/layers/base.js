@@ -94,7 +94,9 @@ const GRUPPI = [
 const miniatura = id => new URL(`img/basi/${id}.jpg`, document.baseURI).href; // assoluto: la variabile CSS si risolve rispetto a css/
 
 let idPositron = [];
-let baseCorrente = 'positron';
+// Base di partenza: Esri grigio chiaro o scuro, secondo il tema all'avvio (lo stile OpenFreeMap serve solo per font e sprite).
+const INIZIALE = document.documentElement.dataset.tema === 'scuro' ? 'esri-scura' : 'grigio';
+let baseCorrente = INIZIALE;
 const stiliVettoriali = {}; // id -> promessa del JSON dello stile, scaricato una volta sola
 
 function scegli(map, base) {
@@ -141,6 +143,7 @@ export default {
     const nascosto = { visibility: 'none' };
     map.addLayer({ id: 'base-bianco', type: 'background', layout: nascosto, paint: { 'background-color': '#ffffff' } }, sotto);
     for (const id of Object.keys(RASTER)) map.addLayer({ id: `base-${id}`, type: 'raster', source: `${id}-r`, layout: nascosto }, sotto);
+    scegli(map, baseCorrente); // nasconde Positron e mostra la base di partenza
     for (const [id, url] of Object.entries(VETTORIALI)) {
       stiliVettoriali[id] ??= fetch(url).then(r => r.json());
       stiliVettoriali[id].then(stile => {
@@ -189,7 +192,7 @@ export default {
         r.type = 'radio';
         r.name = 'base';
         r.id = `base-${b.id}`;
-        r.checked = b.id === 'positron';
+        r.checked = b.id === INIZIALE;
         r.setAttribute('aria-label', tl(b.titolo));
         const cerchio = document.createElement('span');
         cerchio.className = 'base-cerchio';
@@ -216,15 +219,18 @@ export default {
     }
     // l'icona della barra mostra la base in uso, come nell'atlante
     if (icona) icona.replaceWith(Object.assign(document.createElement('span'), { className: 'base-mini' }));
-    bottone?.style.setProperty('--miniatura', `url(${miniatura('positron')})`);
+    bottone?.style.setProperty('--miniatura', `url(${miniatura(INIZIALE)})`);
     // il tema scuro porta con sé la mappa scura, quello chiaro la mappa chiara; una base scelta a mano (satellite, storiche…) non si tocca
+    const COPPIE = { grigio: 'esri-scura', 'esri-scura': 'grigio', positron: 'ofm-dark', 'ofm-dark': 'positron' };
     const perTema = scuro => {
-      if (baseCorrente !== 'positron' && baseCorrente !== 'ofm-dark') return;
-      const radio = document.getElementById(scuro ? 'base-ofm-dark' : 'base-positron');
+      if (!COPPIE[baseCorrente]) return;
+      const eScura = baseCorrente === 'esri-scura' || baseCorrente === 'ofm-dark';
+      const voluta = eScura === scuro ? baseCorrente : COPPIE[baseCorrente];
+      const radio = document.getElementById(`base-${voluta}`);
       if (!radio || radio.checked) return;
       radio.checked = true;
       if (map.getLayer('base-bianco')) radio.dispatchEvent(new Event('change'));
-      else { baseCorrente = scuro ? 'ofm-dark' : 'positron'; bottone?.style.setProperty('--miniatura', `url(${miniatura(baseCorrente)})`); }
+      else { baseCorrente = voluta; bottone?.style.setProperty('--miniatura', `url(${miniatura(baseCorrente)})`); }
     };
     document.addEventListener('tema', e => perTema(e.detail));
     if (document.documentElement.dataset.tema === 'scuro') perTema(true);
