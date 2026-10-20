@@ -1392,6 +1392,19 @@ label.strato.trascinato .strato-btn--trascina, .rndt-gruppo-riga.trascinato .str
   .invito-clic img { display: none; } /* a 390 px il testo dello schema sarebbe illeggibile: sta nella Guida */
 }
 
+/* invito a installare l'app: solo telefono, sopra la barra dei tab */
+.invito-installa {
+  position: fixed; z-index: var(--z-header); left: 12px; right: 12px; bottom: calc(var(--tab-h, 60px) + var(--footer-h, 36px) + 8px);
+  display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border: 2px solid var(--bianco); border-radius: var(--r-md);
+  background: var(--invito-bg-hover); color: var(--bianco); font-size: var(--fs-sm); box-shadow: var(--ombra);
+}
+.invito-installa p { margin: 0; }
+.invito-installa div { display: flex; gap: 8px; justify-content: flex-end; }
+.invito-installa button { cursor: pointer; padding: 6px 16px; border: 2px solid var(--bianco); border-radius: var(--r-pill); font: inherit; font-weight: 600; }
+.invito-installa-si { background: var(--accent-strong); color: var(--accent-strong-ink); }
+.invito-installa-no { background: transparent; color: var(--bianco); }
+body:has(#dt-consenso) .invito-installa { display: none; } /* prima la scelta sui cookie */
+
 /* Isole di calore: legenda con metodo e numero di classi, grafico 2019–2025 */
 .legenda-isole-calore { max-width: 300px; }
 .legenda-isole-calore .ic-etichetta { display: block; margin: 8px 0 4px; font-size: var(--fs-3xs); text-transform: uppercase; color: var(--text-muted); }

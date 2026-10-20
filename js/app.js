@@ -3,6 +3,7 @@ import { duplicaPrincipale } from './core/menu-sito.js';
 import { impostaCatalogo } from './core/config.js';
 import { costruisciPannello, disattivaStrato, segnala } from './core/pannello.js';
 import { collegaInvito } from './core/invito.js';
+import { collegaInstallazione } from './core/installa.js';
 import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaRail, ICONE_RAIL } from './core/rail.js';
 import { creaPannelloInterfaccia } from './core/pannello-interfaccia.js';
@@ -372,6 +373,7 @@ map.once('style.load', async () => {
     else chiudiMenu();
   });
   collegaInvito(map, document, (() => { try { return window.localStorage; } catch { return null; } })(), { url: location.search });
+  collegaInstallazione(document, window, (() => { try { return window.localStorage; } catch { return null; } })());
   if (condivisione.stato) {
     const ignorati = window.dt.condivisione.applica(condivisione.stato);
     if (ignorati.length) segnala(t('app.link.ignorati', { elenco: ignorati.join(', ') }));
