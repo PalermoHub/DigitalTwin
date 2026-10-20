@@ -242,11 +242,39 @@ export function creaChatBot(pannello, { carica, cercaOggetti, azioni } = {}) {
   // la scheda del luogo cliccato: si riscrive a ogni clic sulla mappa e sparisce quando la scheda si chiude
   const riquadroSunto = el('details', 'cb-sunto');
   riquadroSunto.open = true;
-  const aggiornaSunto = () => disegnaSunto(riquadroSunto);
+  const aggiornaSunto = () => { disegnaSunto(riquadroSunto); divisore.hidden = riquadroSunto.hidden; };
   // con una scheda aperta la presentazione non serve: scompare, e torna a scheda chiusa se la conversazione non è iniziata
   const siAggiorna = () => { aggiornaSunto(); disegna(); };
   document.addEventListener('scheda:sunto', siAggiorna);
   document.addEventListener('scheda:chiusa', siAggiorna);
+
+  // maniglia tra scheda e conversazione: si trascina (o si usano le frecce) per decidere quanto spazio dare a ciascuna; l'altezza si ricorda
+  const divisore = Object.assign(el('div', 'cb-divisore'), { tabIndex: 0, title: t('chatbot.divisore') });
+  divisore.setAttribute('role', 'separator');
+  divisore.setAttribute('aria-orientation', 'horizontal');
+  divisore.setAttribute('aria-label', t('chatbot.divisore'));
+  const CHIAVE_ALTEZZA = 'dt-talia-altezza-scheda';
+  const imposta = px => { riquadroSunto.style.maxHeight = riquadroSunto.style.height = `${Math.max(60, Math.round(px))}px`; };
+  try { const salvata = Number(localStorage.getItem(CHIAVE_ALTEZZA)); if (salvata > 0) imposta(salvata); } catch { /* senza archivio resta l'altezza di default */ }
+  const ricorda = () => { try { localStorage.setItem(CHIAVE_ALTEZZA, String(riquadroSunto.offsetHeight)); } catch { /* idem */ } };
+  const limite = () => Math.max(60, pannello.clientHeight - 180); // alla conversazione restano sempre campo e qualche riga
+  divisore.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    divisore.setPointerCapture?.(e.pointerId);
+    const y0 = e.clientY, h0 = riquadroSunto.offsetHeight;
+    const muovi = ev => imposta(Math.min(limite(), h0 + ev.clientY - y0));
+    const fine = () => { divisore.removeEventListener('pointermove', muovi); divisore.removeEventListener('pointerup', fine); divisore.removeEventListener('pointercancel', fine); ricorda(); };
+    divisore.addEventListener('pointermove', muovi);
+    divisore.addEventListener('pointerup', fine);
+    divisore.addEventListener('pointercancel', fine);
+  });
+  divisore.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+    e.preventDefault();
+    imposta(Math.min(limite(), riquadroSunto.offsetHeight + (e.key === 'ArrowDown' ? 24 : -24)));
+    ricorda();
+  });
+
   aggiornaSunto();
 
   const log = el('div', 'cb-log');
@@ -407,7 +435,7 @@ export function creaChatBot(pannello, { carica, cercaOggetti, azioni } = {}) {
     campo.value = '';
     chiedi(testo);
   });
-  pannello.replaceChildren(testata, aiuto, riquadroSunto, log, form);
+  pannello.replaceChildren(testata, aiuto, riquadroSunto, divisore, log, form);
   conv.avvia();
   campo.focus();
 }

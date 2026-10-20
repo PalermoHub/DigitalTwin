@@ -2011,6 +2011,7 @@
   "html.btn.chatbot": "Talia: ask a question about the app",
   "html.chatbot.aria": "Talia",
   "chatbot.titolo": "Talia",
+  "chatbot.divisore": "Drag to resize the card and the conversation",
   "chatbot.chiudi": "Close Talia",
   "chatbot.pulisci": "Clear the chat",
   "chatbot.presentazione": "Hi, I am Talia: I answer questions about the app, its layers and its features. Answers come from the site guide, in the language of the app. Tap «?» at the top to see what you can ask me.",
