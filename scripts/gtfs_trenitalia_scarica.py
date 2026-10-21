@@ -138,7 +138,7 @@ def main():
         if not a.forza and not da_aggiornare(nuova):
             print(f"Già aggiornato: feed Trenitalia {nuova}")
             return 0
-        risultato = gtfs_trenitalia.costruisci(Path(tmp), nomi, posizioni, in_apertura, ferrovia_osm.carica())
+        risultato = gtfs_trenitalia.costruisci(Path(tmp), nomi, posizioni, in_apertura, ferrovia_osm.carica(), ferrovia_osm.carica_stazioni())
     fermate = risultato[0]
     if a.rapporto:
         vecchie = (_leggi_json(gtfs_trenitalia.OUT / "ferrovia-fermate.geojson"), _leggi_json(gtfs_trenitalia.OUT / "ferrovia-linee.geojson"))

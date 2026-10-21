@@ -10,10 +10,12 @@ Il feed è nazionale e ha una sola rotta per categoria di treno (REG, RV…), se
 dalle corse con almeno due stazioni nel perimetro di Palermo, raggruppate per capolinea (`ferrovia_nomi.json` dà i nomi ufficiali).
 Gli id hanno un prefisso (stazioni `f<codice>`, rotte `ferrovia-<n>`, servizi da 1000) per non collidere con quelli di AMAT,
 perché il viewer tiene i due insiemi nelle stesse mappe.
-Le coordinate di alcune stazioni nel feed sono sbagliate (fino a 1 km: De Gasperi ha quelle di Francia): `ferrovia_posizioni.json`
-le corregge con i nodi stazione di OpenStreetMap (© OpenStreetMap contributors, ODbL), con l'id del nodo come fonte.
+Le coordinate di alcune stazioni nel feed sono sbagliate (fino a 1 km: De Gasperi ha quelle di Francia): la posizione è quella del nodo
+stazione di OpenStreetMap con lo stesso nome (`ferrovia_osm_stazioni.json`, scaricato da `ferrovia_osm.py`); se non c'è, quella del feed.
+`ferrovia_posizioni.json` ha la precedenza e fissa a mano una stazione con il nodo OpenStreetMap (© OpenStreetMap contributors, ODbL), con l'id del nodo come fonte.
 Le stazioni non ancora aperte (Politeama e Porto, dell'Anello) non sono nel feed: `ferrovia_in_apertura.json` le aggiunge come punti con
 `stato: in apertura` (posizione dai nodi OpenStreetMap in costruzione), senza linee né orari. Da togliere dal file quando il feed le include.
+In quel file anche le stazioni esistenti ma non utilizzate (Maredolce, «fantasma») con `"stato": "non utilizzata"`: in mappa sono trasparenti.
 Il feed non ha calendar_dates: i servizi sono definiti da calendar.txt (giorni della settimana tra start_date e end_date).
 Le shapes del feed non si usano: contengono i vertici delle fermate di tutta la corsa, anche fuori ordine (a volte Bagheria in mezzo a una
 tratta urbana). Il tracciato è quindi la sequenza delle stazioni, instradata sulla rete delle tratte tra stazioni consecutive (i servizi
@@ -30,6 +32,7 @@ from pathlib import Path
 
 from compatta_dati import codifica_orari
 from ferrovia_osm import carica as carica_osm
+from ferrovia_osm import carica_stazioni
 from gtfs import data_iso, leggi, minuti, nome
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,6 +43,7 @@ POSIZIONI = Path(__file__).resolve().parent / "ferrovia_posizioni.json"
 IN_APERTURA = Path(__file__).resolve().parent / "ferrovia_in_apertura.json"
 
 BBOX = (13.105, 38.07, 13.50, 38.25)  # lon min, lat min, lon max, lat max: dall'aeroporto (13,110) a Ficarazzi/Roccella; fuori Cinisi e la linea per Trapani
+BBOX_EST = (13.50, 37.97, 13.72, 38.10)  # costa verso Termini Imerese (13,704): Bagheria, Casteldaccia, Altavilla Milicia, Trabia; fuori Cerda e Cefalù
 BASE_SERVIZI = 1000
 COLORE = "#B7282E"
 MIN_CORSE = 3  # un servizio con meno corse è una variante: si aggrega a uno più grande che ne contiene il percorso
@@ -56,13 +60,33 @@ def _nome_stazione(testo):
     return " ".join(p if i == 0 or p not in ARTICOLI else p.lower() for i, p in enumerate(parole))
 
 
+def _parole(testo):
+    """Parole del nome senza punteggiatura né «Palermo»; san/santa/s. sono la stessa parola («S.Flavia» = «Santa Flavia-Solunto»)."""
+    parole = re.findall(r"[a-z]+", testo.lower().replace("à", "a").replace("è", "e").replace("ì", "i").replace("ò", "o").replace("ù", "u"))
+    return {"s" if p in ("san", "santa") else p for p in parole if p not in ("palermo", "di", "del", "delle")}
+
+
+def posizione_osm(nome_feed, lon, lat, stazioni_osm, raggio=2500):
+    """Nodo stazione di OpenStreetMap che corrisponde alla stazione del feed: stesso nome (le parole dell'uno contenute nell'altro) entro `raggio`
+    metri dalle coordinate del feed, il più vicino se più d'uno. None se manca: si tiene la posizione del feed."""
+    mie = _parole(nome_feed)
+    candidati = []
+    for n in stazioni_osm or []:
+        altre = _parole(n["nome"])
+        if mie and altre and (mie <= altre or altre <= mie):
+            d = ((n["lon"] - lon) * 87_800) ** 2 + ((n["lat"] - lat) * 111_320) ** 2
+            if d <= raggio ** 2:
+                candidati.append((d, n))
+    return min(candidati, key=lambda c: c[0])[1] if candidati else None
+
+
 def _chiave_sigla(sigla):
     """Ordine naturale delle sigle: M1, M2, M10 (e non M1, M10, M2)."""
     return [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", sigla)]
 
 
 def dentro(lon, lat):
-    return BBOX[0] <= lon <= BBOX[2] and BBOX[1] <= lat <= BBOX[3]
+    return any(b[0] <= lon <= b[2] and b[1] <= lat <= b[3] for b in (BBOX, BBOX_EST))
 
 
 def servizi_calendar(src):
@@ -149,7 +173,7 @@ def _instrada(seq, archi, pos, osm=None):
     return coord
 
 
-def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None, osm=None):
+def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None, osm=None, stazioni_osm=None):
     nomi = nomi or {}
     in_apertura = in_apertura or {}  # stazioni non ancora aperte (non sono nel feed): solo punti, senza linee né orari
     posizioni = posizioni or {}  # stop_code -> {lon, lat}: correzioni alle coordinate del feed (vedi ferrovia_posizioni.json)
@@ -176,9 +200,11 @@ def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None, osm=None):
     codice = {sid: s["stop_code"] for sid, s in stazioni.items()}
 
     def coord(sid):
-        """[lon, lat] della stazione: la correzione se c'è, altrimenti le coordinate del feed. Il perimetro usa sempre quelle del feed."""
-        c = posizioni.get(stazioni[sid]["stop_code"])
-        return [round(c["lon"], 6), round(c["lat"], 6)] if c else [round(float(stazioni[sid]["stop_lon"]), 6), round(float(stazioni[sid]["stop_lat"]), 6)]
+        """[lon, lat] della stazione: la correzione manuale se c'è, poi il nodo di OpenStreetMap con lo stesso nome, altrimenti le coordinate
+        del feed. Il perimetro usa sempre quelle del feed."""
+        r = stazioni[sid]
+        c = posizioni.get(r["stop_code"]) or posizione_osm(_nome_stazione(r["stop_name"]), float(r["stop_lon"]), float(r["stop_lat"]), stazioni_osm)
+        return [round(c["lon"], 6), round(c["lat"], 6)] if c else [round(float(r["stop_lon"]), 6), round(float(r["stop_lat"]), 6)]
 
     sequenza = {tid: [codice[stop] for stop, _ in s] for tid, s in urbane.items()}
 
@@ -248,7 +274,7 @@ def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None, osm=None):
     for chiave, s in sorted(in_apertura.items()):
         fermate["features"].append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [round(s["lon"], 6), round(s["lat"], 6)]},
                                     "properties": {"id": f"f{chiave}", "nome": s["nome"], "linee": [], "accessibile": s.get("accessibile", ""), "tipo": "ferrovia",
-                                                   "stato": "in apertura", "lon": round(s["lon"], 6), "lat": round(s["lat"], 6)}})
+                                                   "stato": s.get("stato", "in apertura"), "lon": round(s["lon"], 6), "lat": round(s["lat"], 6)}})
 
     per_codice = {codice[sid]: sid for sid in usate}
     punti = {k: coord(sid) for k, sid in per_codice.items()}
@@ -290,7 +316,7 @@ def main(argv=None):
     nomi = json.loads(NOMI.read_text(encoding="utf-8")) if NOMI.exists() else {}
     posizioni = json.loads(POSIZIONI.read_text(encoding="utf-8")) if POSIZIONI.exists() else {}
     in_apertura = json.loads(IN_APERTURA.read_text(encoding="utf-8")) if IN_APERTURA.exists() else {}
-    fermate, linee, orari = risultato = costruisci(Path(argv[0]) if argv else SRC, nomi, posizioni, in_apertura, carica_osm())
+    fermate, linee, orari = risultato = costruisci(Path(argv[0]) if argv else SRC, nomi, posizioni, in_apertura, carica_osm(), carica_stazioni())
     scrivi(risultato)
     print(f"{len(fermate['features'])} stazioni, {len(linee['features'])} tracciati, {len(orari['fermate'])} stazioni con orari")
     for f in linee["features"]:

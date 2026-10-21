@@ -1,12 +1,13 @@
 {
   "830012002-830012133": {
     "numero": "A",
-    "nome": "Linea A – Passante ferroviario (Palermo Centrale ⇄ Aeroporto)",
+    "nome": "Linea A – Passante ferroviario (Aeroporto ⇄ Palermo Centrale, prosegue per Termini Imerese)",
     "fonte": "https://repository.comune.palermo.it/grandi-opere-passante-ferroviario.php ; RFI «Nodo di Palermo – Passante Ferroviario Palermo Centrale/Notarbartolo – Carini»: https://www.rfi.it/it/rete/i-nostri-progetti/I-nostri-progetti-regione-per-regione/sicilia.html ; https://turismo.comune.palermo.it/palermo-welcome-muoversi-a-palermo-mobilita.php?tp=118 ; https://www.metroitalia.info/palermo/trasporti/metropolitana/",
     "assorbe": [
       "830012002-830012134",
       "830012133-830012144",
-      "830012133-830012134"
+      "830012133-830012134",
+      "830012014-830012133"
     ]
   },
   "830012134-830012138": {
@@ -17,11 +18,12 @@
       "830012134-830012137"
     ]
   },
-  "830012002-830012035": {
+  "830012002-830012014": {
     "numero": "C",
-    "nome": "Linea C (Palermo Centrale ⇄ Ficarazzi, verso Termini Imerese)",
+    "nome": "Linea C (Palermo Centrale ⇄ Termini Imerese)",
     "assorbe": [
-      "830012002-830012032"
+      "830012002-830012032",
+      "830012002-830012035"
     ],
     "fonte": "https://turismo.comune.palermo.it/palermo-welcome-muoversi-a-palermo-mobilita.php?tp=118 ; https://www.metroitalia.info/palermo/trasporti/metropolitana/"
   }

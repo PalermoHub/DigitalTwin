@@ -116,7 +116,7 @@ const ctx = {
 };
 
 // Una stazione non ancora aperta non ha orari: la scheda lo dice al posto delle partenze.
-const notaInApertura = () => el('p', 'scheda-nota', tr('trasporto.inAperturaNota'));
+const notaStato = p => () => el('p', 'scheda-nota', tr(p.stato === 'non utilizzata' ? 'trasporto.nonUtilizzataNota' : 'trasporto.inAperturaNota'));
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -145,7 +145,7 @@ function creaLegenda() {
     voce(tratto('trasporto-tratto--tram'), 'Linea tram', L.tram),
     voce(el('i', 'trasporto-pallino'), 'Fermata (da zoom 13)', L.fermate),
     voce(el('i', 'trasporto-tratto trasporto-tratto--binario'), 'Linea metro (RFI)', L.metro),
-    voce(logoStazione(), 'Stazione (RFI, più chiara se in apertura)', L.stazioni),
+    voce(logoStazione(), 'Stazione (RFI, più chiara se in apertura, trasparente se non utilizzata)', L.stazioni),
   );
   document.getElementById('legende').append(legenda);
 }
@@ -252,7 +252,7 @@ export default {
         'text-field': ['step', ['zoom'], '', 13.5, ['get', 'nome']], 'text-font': ['Noto Sans Bold'], 'text-size': 11,
         'text-anchor': 'left', 'text-offset': [1.1, 0], 'text-optional': true,
       },
-      paint: { 'icon-opacity': ['case', ['has', 'stato'], 0.55, 1], 'text-opacity': ['case', ['has', 'stato'], 0.7, 1], 'text-color': '#7f1d18', 'text-halo-color': '#fff', 'text-halo-width': 1.6 },
+      paint: { 'icon-opacity': ['case', ['==', ['get', 'stato'], 'non utilizzata'], 0.2, ['has', 'stato'], 0.55, 1], 'text-opacity': ['case', ['==', ['get', 'stato'], 'non utilizzata'], 0.35, ['has', 'stato'], 0.7, 1], 'text-color': '#7f1d18', 'text-halo-color': '#fff', 'text-halo-width': 1.6 },
     });
     map.addLayer({ id: L.hitMetro, type: 'line', source: 'ferrovia-linee', minzoom: ZOOM_STAZIONE, paint: { 'line-width': 12, 'line-opacity': 0 } });
     map.addLayer({ id: L.hitStazioni, type: 'circle', source: 'ferrovia-fermate', minzoom: ZOOM_STAZIONE, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
@@ -296,7 +296,7 @@ export default {
         visti.add(id);
         if (f.layer.id === L.hitFermate || f.layer.id === L.hitStazioni) {
           const p = fermate.get(id) ?? { ...f.properties, linee: [] };
-          voci.push(voceFermata(p, p.stato ? notaInApertura : orariFermata(id, ctx)));
+          voci.push(voceFermata(p, p.stato ? notaStato(p) : orariFermata(id, ctx)));
           dellaFermata.push(...p.linee);
         } else if (linee.has(id)) sotto.push(linee.get(id));
       }

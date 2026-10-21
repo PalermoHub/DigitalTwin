@@ -12,5 +12,13 @@
     "lat": 38.129118,
     "accessibile": "",
     "fonte": "OpenStreetMap node 10248861761 (construction:railway=station, RFI)"
+  },
+  "osm-4010138939": {
+    "nome": "Palermo Maredolce",
+    "lon": 13.383509,
+    "lat": 38.097819,
+    "accessibile": "",
+    "stato": "non utilizzata",
+    "fonte": "OpenStreetMap node 4010138939 (railway=station, RFI): stazione esistente ma non utilizzata"
   }
 }

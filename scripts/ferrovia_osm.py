@@ -19,13 +19,14 @@ from math import cos, hypot, radians
 from pathlib import Path
 
 CACHE = Path(__file__).resolve().parent / "ferrovia_osm.json"
+CACHE_STAZIONI = Path(__file__).resolve().parent / "ferrovia_osm_stazioni.json"
 CACHE_COSTRUZIONE = Path(__file__).resolve().parent / "ferrovia_osm_costruzione.json"
 FERMATE = Path(__file__).resolve().parents[1] / "dati" / "trasporto" / "ferrovia-fermate.geojson"
 APERTURA = Path(__file__).resolve().parents[1] / "dati" / "trasporto" / "ferrovia-apertura.geojson"
 # tratto dell'Anello non ancora aperto: stazioni in ordine (id nel feed o `osm-…` da ferrovia_in_apertura.json)
 TRATTO_APERTURA = ("f830012138", "fosm-10248861761", "fosm-10248861760", "f830012134")  # Giachery, Porto, Politeama, Notarbartolo
 OVERPASS = "https://overpass-api.de/api/interpreter"
-BBOX = (38.07, 13.105, 38.25, 13.50)  # sud, ovest, nord, est (ordine Overpass); come gtfs_trenitalia.BBOX
+BBOX = (37.97, 13.105, 38.25, 13.72)  # sud, ovest, nord, est (ordine Overpass); rettangolo che racchiude gtfs_trenitalia.BBOX e BBOX_EST
 SERVIZIO = {"yard", "siding", "spur"}
 PESO_SERVIZIO = 4  # un metro di binario di servizio costa come 4 di binario di linea
 SNAP_MAX = 80  # metri: oltre questa distanza una stazione non è sul binario
@@ -33,8 +34,8 @@ MARGINE = 25  # metri: si agganciano anche i vertici di altri binari entro quest
 M_LAT = 111_320.0
 
 
-def scarica(filtro='["railway"="rail"]', tentativi=4):
-    query = f'[out:json][timeout:90];way{filtro}({",".join(map(str, BBOX))});out geom tags;'
+def scarica(filtro='["railway"="rail"]', tentativi=4, tipo="way"):
+    query = f'[out:json][timeout:90];{tipo}{filtro}({",".join(map(str, BBOX))});out geom tags;'
     req = urllib.request.Request(OVERPASS, urllib.parse.urlencode({"data": query}).encode(),
                                  headers={"User-Agent": "DigitalTwinPalermo/1.0 (https://github.com/coseerobe/DigitalTwin)"})
     for n in range(tentativi):
@@ -51,6 +52,17 @@ def costruzione(elementi):
     """Tracciati [[lon, lat], ...] dell'Anello ferroviario in costruzione (railway=construction, name «Anello ferroviario»)."""
     return [[[round(p["lon"], 6), round(p["lat"], 6)] for p in w["geometry"]]
             for w in elementi if w.get("type") == "way" and w.get("tags", {}).get("name") == "Anello ferroviario"]
+
+
+def stazioni(elementi):
+    """Stazioni e fermate (railway=station|halt) come {id, nome, lon, lat}, in ordine di id; senza quelle dismesse."""
+    return sorted(({"id": e["id"], "nome": e["tags"]["name"], "lon": round(e["lon"], 6), "lat": round(e["lat"], 6)}
+                   for e in elementi
+                   if e.get("type") == "node" and e.get("tags", {}).get("name") and not e["tags"].get("disused")), key=lambda x: x["id"])
+
+
+def carica_stazioni(cache=CACHE_STAZIONI):
+    return json.loads(cache.read_text(encoding="utf-8")) if cache.exists() else []
 
 
 def binari(elementi):
@@ -131,6 +143,9 @@ def main():
     tracciati = binari(scarica())
     CACHE.write_text(json.dumps(tracciati, separators=(",", ":")), encoding="utf-8")
     print(f"{len(tracciati)} binari, {sum(map(len, tracciati))} vertici -> {CACHE.name} ({CACHE.stat().st_size // 1024} KB)")
+    nodi = stazioni(scarica('["railway"~"^(station|halt)$"]', tipo="node"))
+    CACHE_STAZIONI.write_text(json.dumps(nodi, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print(f"{len(nodi)} stazioni -> {CACHE_STAZIONI.name}")
     cantiere = costruzione(scarica('["railway"="construction"]'))
     CACHE_COSTRUZIONE.write_text(json.dumps(cantiere, separators=(",", ":")), encoding="utf-8")
     rete = Rete(tracciati + [[1, t] for t in cantiere])
