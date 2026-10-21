@@ -16,11 +16,15 @@ test('le etichette: RFI «Stazioni metro», «Linea metro»; AMAT «Linee bus»,
 
 test('tutti gli strati partono spenti e ognuno governa il proprio layer', () => {
   for (const s of strati) assert.equal(s.attivo, false);
-  for (const s of strati.filter(x => x.id !== 'trasporto-metro')) assert.deepEqual(s.layers, [s.id]);
+  for (const s of strati.filter(x => !['trasporto-metro', 'trasporto-stazioni'].includes(x.id))) assert.deepEqual(s.layers, [s.id]);
 });
 
 test('la linea metro è un binario: un layer nero e uno di trattini bianchi, più il tratto in apertura, accesi insieme', () => {
   assert.deepEqual(strati.find(s => s.id === 'trasporto-metro').layers, ['trasporto-metro', 'trasporto-metro-tratti', 'trasporto-metro-apertura']);
+});
+
+test('le stazioni sono l\'icona e, da lontano, i puntini, accesi insieme', () => {
+  assert.deepEqual(strati.find(s => s.id === 'trasporto-stazioni').layers, ['trasporto-stazioni', 'trasporto-stazioni-punti']);
 });
 
 test('il callback di cambio è passato a ogni strato', () => {

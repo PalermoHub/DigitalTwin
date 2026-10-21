@@ -22,12 +22,13 @@ const COLORE_FERMATA = '#364fc7';
 const ZOOM_MIN = 13;
 const ZOOM_FERMATA = 17.5;
 const IMMAGINE_STAZIONE = 'stazione-metro';
+const ZOOM_PUNTI_STAZIONE = 8; // sotto ZOOM_STAZIONE le stazioni sono piccoli puntini
 const ZOOM_STAZIONE = 11; // le stazioni sono poche e distanti: si vedono da più lontano delle fermate
 const L = {
   bus: 'trasporto-bus', tram: 'trasporto-tram', fermate: 'trasporto-fermate', hitLinee: 'trasporto-hit-linee', hitFermate: 'trasporto-hit-fermate',
-  metro: 'trasporto-metro', metroTratti: 'trasporto-metro-tratti', metroApertura: 'trasporto-metro-apertura', stazioni: 'trasporto-stazioni', hitMetro: 'trasporto-hit-metro', hitStazioni: 'trasporto-hit-stazioni',
+  metro: 'trasporto-metro', metroTratti: 'trasporto-metro-tratti', metroApertura: 'trasporto-metro-apertura', stazioni: 'trasporto-stazioni', stazioniPunti: 'trasporto-stazioni-punti', hitMetro: 'trasporto-hit-metro', hitStazioni: 'trasporto-hit-stazioni',
 };
-const STRATI_TRASPORTO = [L.bus, L.tram, L.fermate, L.metro, L.stazioni];
+const STRATI_TRASPORTO = [L.bus, L.tram, L.fermate, L.metro, L.stazioni, L.stazioniPunti];
 
 
 const fermate = new Map(); // id -> proprietà complete (le feature di MapLibre trasformano gli array in testo)
@@ -254,8 +255,15 @@ export default {
       },
       paint: { 'icon-opacity': ['case', ['==', ['get', 'stato'], 'non utilizzata'], 0.2, ['has', 'stato'], 0.55, 1], 'text-opacity': ['case', ['==', ['get', 'stato'], 'non utilizzata'], 0.35, ['has', 'stato'], 0.7, 1], 'text-color': '#7f1d18', 'text-halo-color': '#fff', 'text-halo-width': 1.6 },
     });
+    map.addLayer({
+      id: L.stazioniPunti, type: 'circle', source: 'ferrovia-fermate', minzoom: ZOOM_PUNTI_STAZIONE, maxzoom: ZOOM_STAZIONE, layout: nascosto,
+      paint: {
+        'circle-color': '#c0261d', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1, 'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 2, 10.99, 3.5],
+        'circle-opacity': ['case', ['==', ['get', 'stato'], 'non utilizzata'], 0.3, ['has', 'stato'], 0.6, 1],
+      },
+    });
     map.addLayer({ id: L.hitMetro, type: 'line', source: 'ferrovia-linee', minzoom: ZOOM_STAZIONE, paint: { 'line-width': 12, 'line-opacity': 0 } });
-    map.addLayer({ id: L.hitStazioni, type: 'circle', source: 'ferrovia-fermate', minzoom: ZOOM_STAZIONE, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
+    map.addLayer({ id: L.hitStazioni, type: 'circle', source: 'ferrovia-fermate', minzoom: ZOOM_PUNTI_STAZIONE, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
     collegaTooltip(map);
   },
   async avvia() {

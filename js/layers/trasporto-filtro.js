@@ -13,6 +13,7 @@ const BASE = {
   'trasporto-metro': null,
   'trasporto-metro-tratti': null,
   'trasporto-stazioni': null,
+  'trasporto-stazioni-punti': null,
   'trasporto-hit-metro': null,
   'trasporto-hit-stazioni': null,
 };
@@ -39,6 +40,7 @@ export function filtriPerLinea(linea) {
     'trasporto-metro': rotta,
     'trasporto-metro-tratti': rotta,
     'trasporto-stazioni': fermate,
+    'trasporto-stazioni-punti': fermate,
     'trasporto-hit-metro': rotta,
     'trasporto-hit-stazioni': fermate,
   };
