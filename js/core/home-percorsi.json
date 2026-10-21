@@ -205,18 +205,23 @@
  {
   "id": "simulazione-3d",
   "strati": [
+   "rilievo3d",
+   "elevazione",
    "edifici3d",
+   "trasporto-tram",
+   "trasporto-metro",
+   "trasporto-stazioni",
    "trasporto-mezzi-treni",
    "trasporto-mezzi-tram",
    "trasporto-mezzi-bus"
   ],
   "it": {
    "titolo": "Mezzi in movimento (3D)",
-   "testo": "Gli stessi mezzi tra gli edifici in 3D, con la mappa inclinata, vicino alla stazione centrale."
+   "testo": "Gli stessi mezzi tra gli edifici in 3D, con rilievo ed elevazione del terreno, linee del tram e della metro e stazioni, a mappa inclinata vicino alla stazione centrale."
   },
   "en": {
    "titolo": "Vehicles on the move (3D)",
-   "testo": "The same vehicles among the 3D buildings, with the map tilted, near the central station."
+   "testo": "The same vehicles among the 3D buildings, with terrain relief and elevation, tram and metro lines and stations, on a tilted map near the central station."
   },
   "vista": [
    13.367,
