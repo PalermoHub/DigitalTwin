@@ -14,6 +14,7 @@ const SIMULAZIONI = [
   'La simulazione dei mezzi in movimento (autobus, tram, treni) mostra posizioni teoriche ricavate dagli orari programmati: non tiene conto di ritardi, traffico o soppressioni, e tra due fermate il mezzo procede a velocità costante. Non è un servizio in tempo reale.',
   'Il percorso dei mezzi segue il tracciato delle linee, che può non coincidere con la strada reale in ogni tratto. Al momento non risultano feed GTFS-Realtime pubblicati per queste linee: se ne fossero disponibili, la simulazione potrebbe passare ai dati in tempo reale.',
   ['La simulazione dei mezzi in movimento è stata ispirata dal lavoro di ', link('Stig Arild Berntzen', 'https://www.linkedin.com/in/stigarildberntzen/'), '.'],
+  ['Il post che presenta la simulazione è disponibile su ', link('LinkedIn', 'https://lnkd.in/p/dhyvcJhK'), '.'],
 ];
 
 const LICENZE = {
