@@ -200,12 +200,22 @@ def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None, osm=None):
                 migliore = max(comuni, key=comuni.get, default=None)
                 ospite = migliore if migliore is not None and comuni[migliore] >= 2 else None
             servizio[tid] = ospite or chiave
-    chiavi = sorted(set(servizio.values()), key=lambda c: (-sum(1 for k in servizio.values() if k == c), sorted(c)))
-    rotta = {c: f"ferrovia-{i}" for i, c in enumerate(chiavi, 1)}
-    rif = {c: list(modale[c]) for c in chiavi}
 
     def firma(c):
         return "-".join(sorted(c))
+
+    # una linea ufficiale può comprendere servizi con altri capolinea (corse che si fermano a metà tratta): `assorbe` li elenca per firma
+    ospiti = {firma(c): c for c in set(servizio.values())}
+    for f_linea, info in nomi.items():
+        linea = ospiti.get(f_linea)
+        for f in info.get("assorbe", []):
+            parziale = ospiti.get(f)
+            if linea is not None and parziale is not None and parziale != linea:
+                servizio = {tid: (linea if c == parziale else c) for tid, c in servizio.items()}
+    assorbenti = {c for c in set(servizio.values()) if nomi.get(firma(c), {}).get("assorbe")}
+    chiavi = sorted(set(servizio.values()), key=lambda c: (-sum(1 for k in servizio.values() if k == c), sorted(c)))
+    rotta = {c: f"ferrovia-{i}" for i, c in enumerate(chiavi, 1)}
+    rif = {c: list(modale[c]) for c in chiavi}
 
     passano = defaultdict(set)  # stazione -> numeri di servizio
     partenze = defaultdict(list)  # (stazione, rotta, direzione, servizio) -> minuti
@@ -247,7 +257,9 @@ def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None, osm=None):
     for (r, d), tids in sorted(per_linea.items(), key=lambda kv: (int(kv[0][0].split("-")[1]), kv[0][1])):
         c = next(k for k, v in rotta.items() if v == r)
         info = nomi.get(firma(c), {})
-        seq = list(Counter(tuple(sequenza[t]) for t in tids).most_common(1)[0][0])
+        frequenti = Counter(tuple(sequenza[t]) for t in tids)
+        # una linea con tratte parziali si disegna dal percorso più lungo; le altre dal più frequente
+        seq = list(max(frequenti, key=lambda q: (len(q), frequenti[q])) if c in assorbenti else frequenti.most_common(1)[0][0])
         coord = _instrada(seq, rete, punti, osm)
         a, b = stazioni[per_codice[seq[0]]], stazioni[per_codice[seq[-1]]]
         da0, a0 = rif[c][0], rif[c][-1]
