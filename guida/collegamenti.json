@@ -192,5 +192,23 @@
   "colonnine",
   "isole-calore",
   "peba"
+ ],
+ "55-scheda-simulazione-mezzi#1": [
+  "trasporto-mezzi-treni",
+  "trasporto-mezzi-tram",
+  "trasporto-mezzi-bus",
+  "trasporto-metro"
+ ],
+ "55-scheda-simulazione-mezzi#2": [
+  "trasporto-mezzi-treni",
+  "trasporto-mezzi-tram",
+  "trasporto-mezzi-bus",
+  "trasporto-metro"
+ ],
+ "55-scheda-simulazione-mezzi#3": [
+  "trasporto-mezzi-treni",
+  "trasporto-mezzi-tram",
+  "trasporto-mezzi-bus",
+  "trasporto-metro"
  ]
 }

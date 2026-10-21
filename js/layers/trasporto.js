@@ -98,6 +98,17 @@ function aggiornaMezzi() {
   mappa.getSource(SORGENTE_NOMI)?.setData(geojsonMezzi(mezzi));
   if (sim.controllo) sim.controllo.querySelector('output').textContent = ora.toTimeString().slice(0, 8);
 }
+// All'apertura da un percorso guidato (vista inclinata, terreno 3D) i numeri dei mezzi non compaiono finché la mappa non si muove:
+// il posizionamento delle etichette avviene prima che terreno e dati siano pronti. Uno spostamento impercettibile della camera lo rifà
+// (a tempo, perché con l'aggiornamento al secondo la mappa non è mai «idle»; due volte, perché i rilievi arrivano dopo i dati).
+function ricalcolaEtichette() {
+  for (const ms of [1500, 5000]) {
+    setTimeout(() => {
+      if (!mappa || mappa.isMoving() || !MEZZI.some(m => casellaMezzi(m)?.checked)) return;
+      mappa.jumpTo({ bearing: mappa.getBearing() + 0.0001 });
+    }, ms);
+  }
+}
 function aggiornaSimulazione() {
   const accesi = MEZZI.filter(m => casellaMezzi(m)?.checked);
   if (!accesi.length) {
@@ -108,6 +119,7 @@ function aggiornaSimulazione() {
   }
   Promise.all([...new Set(accesi.map(m => m.file))].map(caricaCorse)).then(() => {
     aggiornaMezzi();
+    ricalcolaEtichette();
     if (!sim.timer && MEZZI.some(m => casellaMezzi(m)?.checked)) sim.timer = setInterval(() => { if (!document.hidden) aggiornaMezzi(); }, 1000);
   }).catch(err => segnala(err.message));
 }

@@ -112,7 +112,7 @@ def test_pulsanti_dei_percorsi_solo_sulla_sezione_dei_percorsi():
     radice = Path(__file__).resolve().parent.parent
     voci = {v['id']: v for v in costruisci_indice(radice / 'guida')}
     con_percorsi = [i for i, v in voci.items() if v['percorsi']]
-    assert con_percorsi == ['01-uso-della-mappa#4']
+    assert con_percorsi == ['01-uso-della-mappa#4', '55-scheda-simulazione-mezzi#2']
     assert voci['01-uso-della-mappa#4']['titolo'].startswith('Percorsi guidati')
 
 
