@@ -68,8 +68,37 @@ function disegnaRiga(r) {
   return riga;
 }
 
+// Gruppo con `evidenzia` (es. un vincolo del PRG): passando o toccando il gruppo, chi disegna quel layer ne mostra l'area in mappa
+// (evento `scheda:evidenzia-gruppo`, detail = `evidenzia` o null). Il tocco lo tiene fisso, un secondo tocco lo toglie.
+let gruppoFisso = null;
+const evidenziaGruppo = detail => document.dispatchEvent(new CustomEvent('scheda:evidenzia-gruppo', { detail }));
+document.addEventListener('scheda:chiusa', () => { gruppoFisso = null; });
+
+function rendiEvidenziabile(box, g) {
+  box.classList.add('scheda-gruppo--evidenziabile');
+  box.evidenziaDati = g.evidenzia;
+  box.tabIndex = 0;
+  box.setAttribute('aria-pressed', 'false');
+  const mostra = () => evidenziaGruppo(g.evidenzia);
+  const ripristina = () => evidenziaGruppo(gruppoFisso?.isConnected ? gruppoFisso.evidenziaDati : null);
+  const alterna = () => {
+    const fisso = gruppoFisso === box;
+    if (gruppoFisso) gruppoFisso.setAttribute('aria-pressed', 'false');
+    gruppoFisso = fisso ? null : box;
+    box.setAttribute('aria-pressed', String(!fisso));
+    if (fisso) ripristina(); else mostra();
+  };
+  box.addEventListener('mouseenter', mostra);
+  box.addEventListener('mouseleave', ripristina);
+  box.addEventListener('focus', mostra);
+  box.addEventListener('blur', ripristina);
+  box.addEventListener('click', alterna);
+  box.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); alterna(); } });
+}
+
 function disegnaGruppo(g) {
   const box = el('div', 'scheda-gruppo');
+  if (g.evidenzia) rendiEvidenziabile(box, g);
   if (g.titolo) box.append(el('h4', null, tl(g.titolo)));
   const { presenti, mancanti } = separaMancanti(g.righe);
   for (const r of presenti) box.append(disegnaRiga(r));

@@ -33,6 +33,7 @@ function aggiungiGruppo(sezione, gruppo) {
     g = { titolo: gruppo.titolo, righe: [] };
     sezione.gruppi.push(g);
   }
+  if (gruppo.evidenzia) g.evidenzia = gruppo.evidenzia;
   for (const r of gruppo.righe ?? []) {
     // riga `ripiego` (livello 1, 2…): vale solo se la scheda non ha già una riga con la stessa etichetta di
     // livello pari o migliore (0 = riga normale); una riga di livello migliore sostituisce quelle peggiori

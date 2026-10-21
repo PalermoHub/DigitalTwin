@@ -482,6 +482,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     if (cerchioVisibile() && conScheda.some(m => m.scheda.vicini)) mostraCerchio(map, lngLat, raggioVicini()); // il cerchio dei punti vicini, sotto all'evidenza
     else nascondiCerchio(map);
     evidenzia(map, scelte);
+    document.dispatchEvent(new CustomEvent('scheda:evidenzia-gruppo', { detail: null })); // il vincolo scelto nella scheda precedente non vale più
     const scheda = mostra(contenitore, lngLat, dati, chiudiScheda, adattaVista, pref, tabIniziale);
     if (risposte) {
       const punto = contenitore.dataset.punto;

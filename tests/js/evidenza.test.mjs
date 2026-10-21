@@ -43,3 +43,11 @@ test('trasporto: fermata e linea hanno etichetta e colore; la fermata è la cosa
   const s = sceltePerLayer([f('trasporto-hit-linee', { id: 'l' }, linea), f('trasporto-hit-fermate', { id: 'S1' }, punto)], { lng: 0, lat: 0 });
   assert.deepEqual(soloCliccato(s).map(x => x.id), ['trasporto-hit-fermate']);
 });
+
+test('vincoli PRG: ogni gruppo della scheda sa quale vincolo evidenziare', async () => {
+  globalThis.window ??= { matchMedia: () => ({ matches: false }), location: { search: '', hash: '' } };
+  const { default: territorio } = await import('../../js/layers/territorio.js');
+  const trovati = [f('prg-va-hit', { fid: 7, tipo: 'Aree inondazioni', descrizone: 'd' }), f('prg-vl-hit', { fid: 3, TIPO: 'Regie Trazzere' }, { type: 'LineString', coordinates: [[0, 0], [1, 1]] })];
+  const gruppi = territorio.scheda.voci(trovati, { lng: 0, lat: 0 }).find(v => v.chiave === 'vincoli').gruppi;
+  assert.deepEqual(gruppi.map(g => g.evidenzia), [{ layer: 'va', fid: 7, tipo: 'Aree inondazioni' }, { layer: 'vl', fid: 3, tipo: 'Regie Trazzere' }]);
+});

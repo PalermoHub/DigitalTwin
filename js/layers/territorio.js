@@ -112,6 +112,19 @@ const nascosto = { visibility: 'none' };
 // id dei tileset nel catalogo (stesso id del layer), dal più basso al più alto
 const RASTER = ['prg-zto', 'prg-ppe', 'prg-vl', 'prg-va'];
 
+const NESSUNO = ['==', ['get', 'fid'], -1];
+const COLORE_VINCOLO = '#c2255c'; // come «Vincolo PRG» in core/evidenza.js
+
+// Mostra in mappa il vincolo scelto nella scheda ({ layer: 'va'|'vl', fid, tipo }), o nessuno. Senza `fid` si ripiega sul tipo.
+function evidenziaVincolo(map, v) {
+  for (const l of ['va', 'vl']) {
+    if (!map.getLayer(`prg-${l}-sel`)) continue;
+    const chiave = l === 'va' ? 'tipo' : 'TIPO';
+    const filtro = v?.layer !== l ? NESSUNO : v.fid != null ? ['==', ['get', 'fid'], v.fid] : ['==', ['get', chiave], v.tipo ?? ''];
+    for (const id of [`prg-${l}-sel`, `prg-${l}-sel-linea`]) if (map.getLayer(id)) map.setFilter(id, filtro);
+  }
+}
+
 export default {
   id: 'territorio',
   titolo: 'Layer',
@@ -170,6 +183,12 @@ export default {
     map.addLayer({ id: 'prg-zto-hit', type: 'fill', source: 'prg', 'source-layer': 'zto', paint: vuoto });
     map.addLayer({ id: 'prg-ns-hit', type: 'fill', source: 'prg', 'source-layer': 'ns', paint: vuoto });
     map.addLayer({ id: 'prg-cs-hit', type: 'fill', source: 'prg', 'source-layer': 'cs', paint: vuoto });
+    // vincolo scelto nella scheda: disegnato dai tile (non dai frammenti del clic), così l'area è intera e senza tagli
+    map.addLayer({ id: 'prg-va-sel', type: 'fill', source: 'prg', 'source-layer': 'va', filter: NESSUNO, paint: { 'fill-color': COLORE_VINCOLO, 'fill-opacity': 0.7 } });
+    map.addLayer({ id: 'prg-va-sel-linea', type: 'line', source: 'prg', 'source-layer': 'va', filter: NESSUNO, paint: { 'line-color': COLORE_VINCOLO, 'line-width': 4 } });
+    map.addLayer({ id: 'prg-vl-sel', type: 'line', source: 'prg', 'source-layer': 'vl', filter: NESSUNO, paint: { 'line-color': COLORE_VINCOLO, 'line-width': 5 } });
+    document.addEventListener('scheda:evidenzia-gruppo', e => evidenziaVincolo(map, e.detail));
+    document.addEventListener('scheda:chiusa', () => evidenziaVincolo(map, null));
     map.addLayer({ id: 'prg-va-hit', type: 'fill', source: 'prg', 'source-layer': 'va', paint: vuoto });
     map.addLayer({ id: 'prg-vl-hit', type: 'line', source: 'prg', 'source-layer': 'vl', paint: { 'line-width': 12, 'line-opacity': 0 } });
     map.addLayer({
@@ -256,21 +275,21 @@ export default {
 
       // Vincoli: un gruppo per vincolo (areali e lineari)
       const vincoli = [
-        ...tutti(trovati, 'prg-va-hit').map(f => ['Vincolo areale', righe([['Tipo', f.properties.tipo], ['Descrizione', f.properties.descrizone], ['Note', f.properties.note]])]),
-        ...tutti(trovati, 'prg-vl-hit').map(f => ['Vincolo lineare', righe([['Tipo', f.properties.TIPO], ['Descrizione', f.properties.DESCRIZION], ['Note', f.properties.NOTE]])]),
+        ...tutti(trovati, 'prg-va-hit').map(f => ['Vincolo areale', righe([['Tipo', f.properties.tipo], ['Descrizione', f.properties.descrizone], ['Note', f.properties.note]]), { layer: 'va', fid: f.properties.fid, tipo: f.properties.tipo }]),
+        ...tutti(trovati, 'prg-vl-hit').map(f => ['Vincolo lineare', righe([['Tipo', f.properties.TIPO], ['Descrizione', f.properties.DESCRIZION], ['Note', f.properties.NOTE]]), { layer: 'vl', fid: f.properties.fid, tipo: f.properties.TIPO }]),
       ];
       const visti = new Set();
       const gruppi = [];
-      for (const [nome, rr] of vincoli) {
+      for (const [nome, rr, evidenzia] of vincoli) {
         const chiave = nome + JSON.stringify(rr);
         if (visti.has(chiave)) continue; // la stessa feature può arrivare da più tile
         visti.add(chiave);
-        gruppi.push({ nome, righe: rr });
+        gruppi.push({ nome, righe: rr, evidenzia });
       }
       if (gruppi.length) {
         voci.push({
           chiave: 'vincoli', peso: 50, strato: 'vincoli', titolo: 'Vincoli', icona: 'vincolo', legale: true, link: { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' },
-          gruppi: gruppi.map((g, i) => ({ titolo: gruppi.length > 1 ? `${g.nome} ${i + 1}` : g.nome, righe: g.righe })),
+          gruppi: gruppi.map((g, i) => ({ titolo: gruppi.length > 1 ? `${g.nome} ${i + 1}` : g.nome, righe: g.righe, evidenzia: g.evidenzia })),
         });
       }
 
