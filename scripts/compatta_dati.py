@@ -66,6 +66,24 @@ def codifica_orari(orari):
     return {**orari, "fermate": {s: {r: [gruppo(g) for g in gs] for r, gs in rs.items()} for s, rs in orari["fermate"].items()}}
 
 
+def codifica_corse(corse):
+    """Corse della simulazione {r, d, s, f, t} -> percorsi (sequenze di fermate) e profili (differenze tra gli orari) condivisi:
+    ogni corsa diventa [r, d, s, percorso, profilo, primo orario]. Le corse di una linea hanno quasi sempre gli stessi percorsi e profili."""
+    percorsi, profili, indice_p, indice_f, righe = [], [], {}, {}, []
+    for c in corse:
+        assert all(b >= a for a, b in zip(c["t"], c["t"][1:])), "orari non crescenti"
+        p = tuple(c["f"])
+        f = tuple(b - a for a, b in zip(c["t"], c["t"][1:]))
+        if p not in indice_p:
+            indice_p[p] = len(percorsi)
+            percorsi.append(list(p))
+        if f not in indice_f:
+            indice_f[f] = len(profili)
+            profili.append(list(f))
+        righe.append([c["r"], c["d"], c["s"], indice_p[p], indice_f[f], c["t"][0]])
+    return {"percorsi": percorsi, "profili": profili, "corse": righe}
+
+
 SEZIONI_CIVICI = 32
 
 

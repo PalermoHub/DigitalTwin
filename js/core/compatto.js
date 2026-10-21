@@ -20,6 +20,15 @@ export function decodificaOrari(orari) {
   return { ...orari, fermate };
 }
 
+// Corse della simulazione: [r, d, s, percorso, profilo, primo orario] con percorsi e profili condivisi -> { r, d, s, f: fermate, t: orari crescenti }
+export function decodificaCorse(dati) {
+  const corse = dati.corse.map(([r, d, s, p, f, primo]) => {
+    let t = primo;
+    return { r, d, s, f: dati.percorsi[p], t: [primo, ...dati.profili[f].map(x => (t += x))] };
+  });
+  return { validita: dati.validita, servizi: dati.servizi, corse };
+}
+
 // { via: [civici, lon, lat] } (micro-gradi in differenze) -> { via: { civico: [lon, lat] } }
 export function decodificaCivici(indice) {
   const somma = diff => { let acc = 0; return diff.map(x => (acc += x)); };

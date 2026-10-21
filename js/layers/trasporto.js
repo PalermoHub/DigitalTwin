@@ -13,6 +13,9 @@ import { t as tr, tl } from '../core/i18n.js';
 import { creaStrati, stratoLinea } from './trasporto-strati.js';
 import { immagineStazione, urlStazione } from './trasporto-logo.js';
 import { raggioVicini } from '../core/raggio-vicini.js';
+import { mezziAl, volumi, fattoreZoom, geojsonMezzi, preparaRotte } from './trasporto-simulazione.js';
+import { decodificaCorse } from '../core/compatto.js';
+import { MEZZI } from './trasporto-strati.js';
 
 // Linee bus/tram e fermate AMAT (GTFS) e linee e stazioni della ferrovia urbana (GTFS Trenitalia, file ferrovia-*): stesso schema,
 // stesse mappe in memoria (id con prefisso: stazioni «f…», rotte «ferrovia-…»). Strati spenti di default; i layer «hit» trasparenti sono sempre presenti
@@ -28,7 +31,7 @@ const L = {
   bus: 'trasporto-bus', tram: 'trasporto-tram', fermate: 'trasporto-fermate', hitLinee: 'trasporto-hit-linee', hitFermate: 'trasporto-hit-fermate',
   metro: 'trasporto-metro', metroTratti: 'trasporto-metro-tratti', metroApertura: 'trasporto-metro-apertura', stazioni: 'trasporto-stazioni', stazioniPunti: 'trasporto-stazioni-punti', hitMetro: 'trasporto-hit-metro', hitStazioni: 'trasporto-hit-stazioni',
 };
-const STRATI_TRASPORTO = [L.bus, L.tram, L.fermate, L.metro, L.stazioni, L.stazioniPunti];
+const STRATI_TRASPORTO = [L.bus, L.tram, L.fermate, L.metro, L.stazioni, L.stazioniPunti, ...MEZZI.map(m => m.id)];
 
 
 const fermate = new Map(); // id -> proprietà complete (le feature di MapLibre trasformano gli array in testo)
@@ -51,6 +54,68 @@ function caricaOrari() {
   ]).then(([amat, ferrovia]) => uniscimOrari(amat, ferrovia))
     .catch(err => { promessaOrari = null; throw err; }); // un errore non resta in cache: si riprova
   return promessaOrari;
+}
+
+// Simulazione dei mezzi dagli orari programmati (ferrovia-corse.json e corse.json, scaricati alla prima accensione di uno strato dei mezzi): un volume
+// per mezzo in viaggio (parallelepipedo orientato come la marcia, nel colore della linea) e il numero della linea, aggiornati ogni secondo.
+// Sono estrusioni: con la mappa piatta (2D) si vedono come rettangoli, inclinata (3D) come volumi. Da lontano si ingrandiscono (`fattoreZoom`).
+const VELOCITA = [1, 10, 60];
+const sim = { dati: new Map(), caricamento: new Map(), rotte: null, stazioni: null, timer: null, velocita: 1, base: Date.now(), partenza: new Date(), controllo: null };
+const SORGENTE_MEZZI = 'trasporto-mezzi';
+const SORGENTE_NOMI = 'trasporto-mezzi-nomi';
+const casellaMezzi = m => document.getElementById(`strato-${m.id}`);
+function preparaSimulazione() {
+  if (sim.rotte) return;
+  const features = [...linee.values()].map(l => ({ type: 'Feature', properties: l, geometry: geometrie.get(l.id) }));
+  sim.rotte = preparaRotte(features);
+  sim.stazioni = new Map([...fermate.values()].filter(f => f.lon != null).map(f => [f.id, [f.lon, f.lat]]));
+}
+function caricaCorse(file) {
+  if (!sim.caricamento.has(file)) {
+    sim.caricamento.set(file, fetch(urlDati(`trasporto/${file}`)).then(r => {
+      if (!r.ok) throw new Error(tr('err.corseNonRaggiungibili'));
+      return r.json();
+    }).then(dati => { sim.dati.set(file, decodificaCorse(dati)); preparaSimulazione(); })
+      .catch(err => { sim.caricamento.delete(file); throw err; })); // un errore non resta in cache: si riprova
+  }
+  return sim.caricamento.get(file);
+}
+function orologioSimulato() {
+  return new Date(sim.partenza.getTime() + (Date.now() - sim.base) * sim.velocita);
+}
+function aggiornaMezzi() {
+  if (!mappa || !sim.rotte) return;
+  const ora = orologioSimulato();
+  const data = oggiISO(ora);
+  const minuto = ora.getHours() * 60 + ora.getMinutes() + ora.getSeconds() / 60;
+  const mezzi = [];
+  for (const file of new Set(MEZZI.map(m => m.file))) {
+    const tipi = new Set(MEZZI.filter(m => m.file === file && casellaMezzi(m)?.checked).map(m => m.tipo));
+    if (tipi.size && sim.dati.has(file)) mezzi.push(...mezziAl(sim.dati.get(file), [], sim.stazioni, data, minuto, sim.rotte, tipi));
+  }
+  for (const f of mezzi) f.properties.testo = colorePerTesto(f.properties.colore);
+  mappa.getSource(SORGENTE_MEZZI)?.setData(geojsonMezzi(volumi(mezzi, fattoreZoom(mappa.getZoom()), sim.rotte)));
+  mappa.getSource(SORGENTE_NOMI)?.setData(geojsonMezzi(mezzi));
+  if (sim.controllo) sim.controllo.querySelector('output').textContent = ora.toTimeString().slice(0, 8);
+}
+function aggiornaSimulazione() {
+  const accesi = MEZZI.filter(m => casellaMezzi(m)?.checked);
+  if (!accesi.length) {
+    clearInterval(sim.timer);
+    sim.timer = null;
+    aggiornaMezzi(); // svuota la mappa
+    return;
+  }
+  Promise.all([...new Set(accesi.map(m => m.file))].map(caricaCorse)).then(() => {
+    aggiornaMezzi();
+    if (!sim.timer && MEZZI.some(m => casellaMezzi(m)?.checked)) sim.timer = setInterval(() => { if (!document.hidden) aggiornaMezzi(); }, 1000);
+  }).catch(err => segnala(err.message));
+}
+function impostaVelocita(v) {
+  sim.partenza = orologioSimulato();
+  sim.base = Date.now();
+  sim.velocita = v;
+  for (const b of sim.controllo.querySelectorAll('button')) b.setAttribute('aria-pressed', String(Number(b.dataset.velocita) === v));
 }
 
 let mappa = null;
@@ -147,7 +212,19 @@ function creaLegenda() {
     voce(el('i', 'trasporto-pallino'), 'Fermata (da zoom 13)', L.fermate),
     voce(el('i', 'trasporto-tratto trasporto-tratto--binario'), 'Linea metro (RFI)', L.metro),
     voce(logoStazione(), 'Stazione (RFI, più chiara se in apertura, trasparente se non utilizzata)', L.stazioni),
+    ...MEZZI.map(m => voce(el('i', 'trasporto-pallino'), m.legenda, m.id)),
   );
+  sim.controllo = el('div', 'trasporto-simulazione');
+  sim.controllo.append(el('span', null, 'Simulazione'), document.createElement('output'));
+  for (const v of VELOCITA) {
+    const b = el('button', null, `×${v}`);
+    b.type = 'button';
+    b.dataset.velocita = v;
+    b.setAttribute('aria-pressed', String(v === sim.velocita));
+    b.addEventListener('click', () => impostaVelocita(v));
+    sim.controllo.append(b);
+  }
+  legenda.append(sim.controllo);
   document.getElementById('legende').append(legenda);
 }
 function aggiornaLegenda() {
@@ -210,6 +287,8 @@ export default {
     map.addSource('ferrovia-linee', { type: 'geojson', data: urlDati('trasporto/ferrovia-linee.geojson') });
     map.addSource('ferrovia-apertura', { type: 'geojson', data: urlDati('trasporto/ferrovia-apertura.geojson') });
     map.addSource('ferrovia-fermate', { type: 'geojson', data: urlDati('trasporto/ferrovia-fermate.geojson') });
+    map.addSource(SORGENTE_MEZZI, { type: 'geojson', data: geojsonMezzi([]) });
+    map.addSource(SORGENTE_NOMI, { type: 'geojson', data: geojsonMezzi([]) });
   },
   aggiungiLayer(map) {
     mappa = map;
@@ -264,6 +343,23 @@ export default {
     });
     map.addLayer({ id: L.hitMetro, type: 'line', source: 'ferrovia-linee', minzoom: ZOOM_STAZIONE, paint: { 'line-width': 12, 'line-opacity': 0 } });
     map.addLayer({ id: L.hitStazioni, type: 'circle', source: 'ferrovia-fermate', minzoom: ZOOM_PUNTI_STAZIONE, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
+    // mezzi in viaggio: in cima agli altri strati. Volume nel colore della linea; il numero sta sopra (allineato allo schermo: si legge anche inclinando)
+    for (const m of MEZZI) {
+      const filtro = ['==', ['get', 'tipo'], m.tipo];
+      map.addLayer({
+        id: m.id, type: 'fill-extrusion', source: SORGENTE_MEZZI, filter: filtro, layout: nascosto,
+        paint: { 'fill-extrusion-color': ['get', 'colore'], 'fill-extrusion-height': ['get', 'altezza'], 'fill-extrusion-base': 0, 'fill-extrusion-opacity': 0.95 },
+      });
+      map.addLayer({
+        id: `${m.id}-nome`, type: 'symbol', source: SORGENTE_NOMI, filter: filtro, minzoom: 12.5,
+        layout: {
+          ...nascosto, 'text-field': ['get', 'numero'], 'text-font': ['Noto Sans Bold'], 'text-size': 11, 'text-offset': [0, -1.1], 'text-allow-overlap': true,
+          'text-ignore-placement': true, 'text-pitch-alignment': 'viewport', 'text-rotation-alignment': 'viewport', 'symbol-sort-key': ['get', 'bearing'],
+        },
+        paint: { 'text-color': ['get', 'testo'], 'text-halo-color': ['get', 'colore'], 'text-halo-width': 2.5 },
+      });
+    }
+    map.on('zoomend', () => { if (sim.timer) aggiornaMezzi(); });
     collegaTooltip(map);
   },
   async avvia() {
@@ -286,7 +382,7 @@ export default {
   },
   sezioniFisse: true, // AMAT e RFI restano due sezioni: il riordino degli strati non attraversa le intestazioni
   legendaPerStrato: true, // ogni voce della legenda sta sotto il proprio strato (core/legenda-pannello.js)
-  strati: creaStrati(aggiornaLegenda),
+  strati: creaStrati(() => { aggiornaLegenda(); aggiornaSimulazione(); }),
   pannello: creaLegenda,
   // per il filtro Linea del pannello Filtri (valido dopo `avvia`)
   filtro: () => ({ linee: [...linee.values()], limiti: id => limitiRotta.get(id) }),

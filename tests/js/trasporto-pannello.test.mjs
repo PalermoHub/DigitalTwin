@@ -6,17 +6,18 @@ const strati = creaStrati(() => {});
 
 test('gli strati del trasporto sono divisi in RFI e AMAT: RFI sta sopra, come sulla mappa', () => {
   assert.deepEqual([...new Set(strati.map(s => s.sezione))], ['RFI', 'AMAT']);
-  assert.deepEqual(strati.filter(s => s.sezione === 'AMAT').map(s => s.id), ['trasporto-bus', 'trasporto-tram', 'trasporto-fermate']);
-  assert.deepEqual(strati.filter(s => s.sezione === 'RFI').map(s => s.id), ['trasporto-stazioni', 'trasporto-metro']);
+  assert.deepEqual(strati.filter(s => s.sezione === 'AMAT').map(s => s.id), ['trasporto-mezzi-tram', 'trasporto-mezzi-bus', 'trasporto-bus', 'trasporto-tram', 'trasporto-fermate']);
+  assert.deepEqual(strati.filter(s => s.sezione === 'RFI').map(s => s.id), ['trasporto-mezzi-treni', 'trasporto-stazioni', 'trasporto-metro']);
 });
 
 test('le etichette: RFI «Stazioni metro», «Linea metro»; AMAT «Linee bus», «Linee tram», «Fermate»', () => {
-  assert.deepEqual(strati.map(s => s.etichetta), ['Stazioni metro', 'Linea metro', 'Linee bus', 'Linee tram', 'Fermate']);
+  assert.deepEqual(strati.map(s => s.etichetta), ['Treni in movimento (simulazione)', 'Stazioni metro', 'Linea metro', 'Tram in movimento (simulazione)', 'Autobus in movimento (simulazione)', 'Linee bus', 'Linee tram', 'Fermate']);
 });
 
 test('tutti gli strati partono spenti e ognuno governa il proprio layer', () => {
   for (const s of strati) assert.equal(s.attivo, false);
-  for (const s of strati.filter(x => !['trasporto-metro', 'trasporto-stazioni'].includes(x.id))) assert.deepEqual(s.layers, [s.id]);
+  for (const s of strati.filter(x => !['trasporto-metro', 'trasporto-stazioni'].includes(x.id) && !x.id.startsWith('trasporto-mezzi'))) assert.deepEqual(s.layers, [s.id]);
+  for (const s of strati.filter(x => x.id.startsWith('trasporto-mezzi'))) assert.deepEqual(s.layers, [s.id, `${s.id}-nome`]); // volume e numero di linea
 });
 
 test('la linea metro è un binario: un layer nero e uno di trattini bianchi, più il tratto in apertura, accesi insieme', () => {
@@ -30,7 +31,7 @@ test('le stazioni sono l\'icona e, da lontano, i puntini, accesi insieme', () =>
 test('il callback di cambio è passato a ogni strato', () => {
   const chiamate = [];
   for (const s of creaStrati(v => chiamate.push(v))) s.suCambio(true);
-  assert.equal(chiamate.length, 5);
+  assert.equal(chiamate.length, 8);
 });
 
 test('stratoLinea: bus, tram e ferrovia hanno ciascuno il proprio strato', () => {

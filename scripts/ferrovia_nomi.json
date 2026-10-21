@@ -8,7 +8,8 @@
       "830012133-830012144",
       "830012133-830012134",
       "830012014-830012133"
-    ]
+    ],
+    "colore": "#B3392A"
   },
   "830012134-830012138": {
     "numero": "B",
@@ -16,7 +17,8 @@
     "fonte": "https://www.regione.sicilia.it/la-regione-informa/anello-ferroviario-arico-dopo-fermata-liberta-entro-l-estate-anche-porto-politeama ; https://turismo.comune.palermo.it/palermo-welcome-muoversi-a-palermo-mobilita.php?tp=118 ; https://www.metroitalia.info/palermo/trasporti/metropolitana/",
     "assorbe": [
       "830012134-830012137"
-    ]
+    ],
+    "colore": "#2E35EC"
   },
   "830012002-830012014": {
     "numero": "C",
@@ -25,6 +27,7 @@
       "830012002-830012032",
       "830012002-830012035"
     ],
-    "fonte": "https://turismo.comune.palermo.it/palermo-welcome-muoversi-a-palermo-mobilita.php?tp=118 ; https://www.metroitalia.info/palermo/trasporti/metropolitana/"
+    "fonte": "https://turismo.comune.palermo.it/palermo-welcome-muoversi-a-palermo-mobilita.php?tp=118 ; https://www.metroitalia.info/palermo/trasporti/metropolitana/",
+    "colore": "#5AAB48"
   }
 }

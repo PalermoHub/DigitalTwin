@@ -34,7 +34,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f dati/trasporto/fermate.geojson dati/trasporto/linee.geojson dati/trasporto/orari.json dati/trasporto/gtfs_origine.json
+          git add -f dati/trasporto/fermate.geojson dati/trasporto/linee.geojson dati/trasporto/orari.json dati/trasporto/corse.json dati/trasporto/gtfs_origine.json
           if git diff --cached --quiet; then
             echo "Nessuna variazione nei dati."
           else

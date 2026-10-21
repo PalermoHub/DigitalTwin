@@ -53,7 +53,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f dati/trasporto/ferrovia-fermate.geojson dati/trasporto/ferrovia-linee.geojson dati/trasporto/ferrovia-orari.json dati/trasporto/ferrovia_origine.json \
+          git add -f dati/trasporto/ferrovia-fermate.geojson dati/trasporto/ferrovia-linee.geojson dati/trasporto/ferrovia-orari.json dati/trasporto/ferrovia-corse.json dati/trasporto/ferrovia_origine.json \
             dati/trasporto/ferrovia-apertura.geojson scripts/ferrovia_osm.json scripts/ferrovia_osm_costruzione.json scripts/ferrovia_osm_stazioni.json
           if git diff --cached --quiet; then
             echo "Nessuna variazione nei dati."

@@ -30,7 +30,7 @@ from collections import Counter, defaultdict
 from datetime import date, timedelta
 from pathlib import Path
 
-from compatta_dati import codifica_orari
+from compatta_dati import codifica_corse, codifica_orari
 from ferrovia_osm import carica as carica_osm
 from ferrovia_osm import carica_stazioni
 from gtfs import data_iso, leggi, minuti, nome
@@ -299,13 +299,20 @@ def costruisci(src=SRC, nomi=None, posizioni=None, in_apertura=None, osm=None, s
 
     in_uso = {corse[t]["service_id"] for t in urbane}
     orari = {"validita": validita, "servizi": {str(i): attivi[sid] for sid, i in indice.items() if sid in in_uso},
-             "fermate": {stop: dict(per_rotta) for stop, per_rotta in orari_fermate.items()}}
+             "fermate": {stop: dict(per_rotta) for stop, per_rotta in orari_fermate.items()},
+             # corsa per corsa (r rotta, d direzione, s servizio, f stazioni, t minuti di partenza): per la simulazione; `scrivi` li mette in un file a parte
+             "corse": [{"r": rotta[servizio[tid]], "d": _direzione(sequenza[tid], rif[servizio[tid]]), "s": indice[corse[tid]["service_id"]],
+                        "f": [f"f{codice[stop]}" for stop, _ in s], "t": [m for _, m in s]}
+                       for tid, s in sorted(urbane.items(), key=lambda kv: (kv[1][0][1], kv[0]))]}
     return fermate, linee, orari
 
 
 def scrivi(risultato, out=OUT):
     out.mkdir(parents=True, exist_ok=True)
-    for file, dati in zip(("ferrovia-fermate.geojson", "ferrovia-linee.geojson", "ferrovia-orari.json"), risultato):
+    orari = risultato[2]
+    corse = {"validita": orari["validita"], "servizi": orari["servizi"], **codifica_corse(orari["corse"])}
+    senza_corse = {k: v for k, v in orari.items() if k != "corse"}
+    for file, dati in zip(("ferrovia-fermate.geojson", "ferrovia-linee.geojson", "ferrovia-orari.json", "ferrovia-corse.json"), (*risultato[:2], senza_corse, corse)):
         if file == "ferrovia-orari.json":
             dati = codifica_orari(dati)  # compatto: lo decodifica js/core/compatto.js
         (out / file).write_text(json.dumps(dati, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

@@ -15,7 +15,7 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from compatta_dati import codifica_orari
+from compatta_dati import codifica_corse, codifica_orari
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "dati" / "gtfs"
@@ -144,13 +144,19 @@ def costruisci(src=SRC):
     linee = {"type": "FeatureCollection", "features": elementi}
 
     orari = {"validita": validita, "servizi": {str(i): attivi[sid] for sid, i in indice.items()},
-             "fermate": {stop: dict(per_rotta) for stop, per_rotta in orari_fermate.items()}}
+             "fermate": {stop: dict(per_rotta) for stop, per_rotta in orari_fermate.items()},
+             # corsa per corsa (r rotta, d direzione, s servizio, f fermate, t minuti): per la simulazione; `scrivi` li mette in `corse.json`
+             "corse": [{"r": c["route_id"], "d": direzione(c), "s": indice[c["service_id"]], "f": [stop for _, stop, _m in soste[tid]], "t": [m for _, _s, m in soste[tid]]}
+                       for tid, c in sorted(valide.items(), key=lambda kv: (soste[kv[0]][0][2], kv[0])) if c["shape_id"] in tracciati]}
     return fermate, linee, orari
 
 
 def scrivi(risultato, out=OUT):
     out.mkdir(parents=True, exist_ok=True)
-    for file, dati in zip(("fermate.geojson", "linee.geojson", "orari.json"), risultato):
+    orari = risultato[2]
+    corse = {"validita": orari["validita"], "servizi": orari["servizi"], **codifica_corse(orari["corse"])}
+    senza_corse = {k: v for k, v in orari.items() if k != "corse"}
+    for file, dati in zip(("fermate.geojson", "linee.geojson", "orari.json", "corse.json"), (*risultato[:2], senza_corse, corse)):
         if file == "orari.json":
             dati = codifica_orari(dati)  # compatto: lo decodifica js/core/compatto.js
         (out / file).write_text(json.dumps(dati, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
