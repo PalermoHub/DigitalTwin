@@ -660,6 +660,12 @@
    "descrizione": "Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.",
    "strati": [
     {
+     "id": "trasporto-mezzi-bus",
+     "etichetta": "Autobus in movimento (simulazione)",
+     "sezione": "AMAT",
+     "data": "2026-10-21"
+    },
+    {
      "id": "trasporto-fermate",
      "etichetta": "Fermate",
      "sezione": "AMAT"
@@ -683,6 +689,18 @@
      "id": "trasporto-stazioni",
      "etichetta": "Stazioni metro",
      "sezione": "RFI"
+    },
+    {
+     "id": "trasporto-mezzi-tram",
+     "etichetta": "Tram in movimento (simulazione)",
+     "sezione": "AMAT",
+     "data": "2026-10-21"
+    },
+    {
+     "id": "trasporto-mezzi-treni",
+     "etichetta": "Treni in movimento (simulazione)",
+     "sezione": "RFI",
+     "data": "2026-10-21"
     }
    ],
    "fonte": "AMAT Palermo S.p.A., feed GTFS valido dal 25/08/2026 al 31/10/2026 (progetto OpenAMAT); ferrovia urbana: Trenitalia S.p.A. / CCISS MMTIS, NeTEx convertiti in GTFS da Clément Desouche, valido dal 26/09/2026 al 12/12/2026; alcune stazioni da © contributori OpenStreetMap (ODbL). Licenza CC BY 4.0.",
@@ -1376,6 +1394,12 @@
      "sezione": "AMAT"
     },
     {
+     "id": "trasporto-mezzi-bus",
+     "etichetta": "Buses on the move (simulation)",
+     "sezione": "AMAT",
+     "data": "2026-10-21"
+    },
+    {
      "id": "trasporto-metro",
      "etichetta": "Metro line",
      "sezione": "RFI"
@@ -1391,9 +1415,21 @@
      "sezione": "AMAT"
     },
     {
+     "id": "trasporto-mezzi-treni",
+     "etichetta": "Trains on the move (simulation)",
+     "sezione": "RFI",
+     "data": "2026-10-21"
+    },
+    {
      "id": "trasporto-tram",
      "etichetta": "Tram lines",
      "sezione": "AMAT"
+    },
+    {
+     "id": "trasporto-mezzi-tram",
+     "etichetta": "Trams on the move (simulation)",
+     "sezione": "AMAT",
+     "data": "2026-10-21"
     }
    ],
    "fonte": "AMAT Palermo S.p.A., GTFS feed valid from 25/08/2026 to 31/10/2026 (OpenAMAT project); urban rail: Trenitalia S.p.A. / CCISS MMTIS, NeTEx converted to GTFS by Clément Desouche, valid from 26/09/2026 to 12/12/2026; some stations from © OpenStreetMap contributors (ODbL). Licence CC BY 4.0.",

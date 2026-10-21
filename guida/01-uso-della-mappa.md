@@ -63,9 +63,9 @@ Parole chiave: percorsi guidati, percorso, tema, temi pronti, pagina iniziale, h
 
 Domande tipiche: Cosa sono i percorsi guidati? Come apro la mappa con gli strati giusti già accesi? Quali percorsi ci sono? Dove trovo i percorsi guidati?
 
-I percorsi guidati stanno nella pagina iniziale del sito, nella sezione «Cosa puoi accendere», sotto il titolo «Percorsi guidati». Anche da Talia si può attivare un percorso: sotto la risposta ci sono i pulsanti dei percorsi, e un clic accende gli strati del percorso (un secondo clic li spegne). Ogni percorso è una scheda con un titolo, una frase che dice di cosa parla, l'elenco degli strati che comprende e il pulsante «Apri la mappa». Il pulsante apre la mappa con quegli strati già accesi, con le legende già attive sulla mappa e, per il percorso «Urbanistica», già centrata sulla zona indicata dal percorso (zoom 16). Gli altri percorsi lasciano la mappa nella vista di partenza. Una volta aperta la mappa, gli strati si possono spegnere, accendere e cambiare come sempre (vedi `45-barra-strati-legende-e-ordine.md`).
+I percorsi guidati stanno nella pagina iniziale del sito, nella sezione «Cosa puoi accendere», sotto il titolo «Percorsi guidati». Anche da Talia si può attivare un percorso: sotto la risposta ci sono i pulsanti dei percorsi, e un clic accende gli strati del percorso (un secondo clic li spegne). Ogni percorso è una scheda con un titolo, una frase che dice di cosa parla, l'elenco degli strati che comprende e il pulsante «Apri la mappa». Il pulsante apre la mappa con quegli strati già accesi, con le legende già attive sulla mappa e, per i percorsi «Urbanistica», «Mezzi in movimento (2D)» e «Mezzi in movimento (3D)», già centrata sulla zona indicata dal percorso (il 3D la inclina anche, a 60°). Gli altri percorsi lasciano la mappa nella vista di partenza. Una volta aperta la mappa, gli strati si possono spegnere, accendere e cambiare come sempre (vedi `45-barra-strati-legende-e-ordine.md`).
 
-I percorsi disponibili sono dieci:
+I percorsi disponibili sono dodici:
 
 - **Rischi e clima**: Pericolosità geomorfologica, Pericolosità idraulica, Pericolosità erosione costiera, Incendi, Isole di calore
 - **Scuole e quartieri**: Scuole e asili comunali, Sezioni elettorali (sedi), Quartieri, Popolazione per sezione
@@ -77,6 +77,8 @@ I percorsi disponibili sono dieci:
 - **Chi si sposta**: Pendolarismo da e verso Palermo 2021, Popolazione per sezione, Linea metro, Fermate
 - **Città accessibile**: Barriere architettoniche, Uffici comunali (sedi), Fermate, Scuole e asili comunali
 - **Immobili pubblici**: Immobili dichiarati al MEF, Immobili comunali, Uffici comunali (sedi), Catasto: particelle
+- **Mezzi in movimento (2D)**: Treni in movimento (simulazione), Tram in movimento (simulazione), Autobus in movimento (simulazione), Linea metro. Mappa vista dall'alto: i mezzi corrono lungo le linee secondo gli orari (non è il tempo reale)
+- **Mezzi in movimento (3D)**: Edifici 3D, Treni, Tram e Autobus in movimento (simulazione). Mappa inclinata vicino alla stazione centrale, con i mezzi tra gli edifici
 
 Il testo del percorso è disponibile in italiano e in inglese, secondo la lingua scelta.
 

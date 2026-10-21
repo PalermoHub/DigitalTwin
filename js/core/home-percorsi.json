@@ -177,5 +177,53 @@
    "titolo": "Public property",
    "testo": "Properties declared to the MEF, municipal properties, offices and cadastral parcels."
   }
+ },
+ {
+  "id": "simulazione-2d",
+  "strati": [
+   "trasporto-mezzi-treni",
+   "trasporto-mezzi-tram",
+   "trasporto-mezzi-bus",
+   "trasporto-metro"
+  ],
+  "it": {
+   "titolo": "Mezzi in movimento (2D)",
+   "testo": "Treni, tram e autobus che si muovono lungo le linee secondo gli orari, visti dall'alto."
+  },
+  "en": {
+   "titolo": "Vehicles on the move (2D)",
+   "testo": "Trains, trams and buses moving along the lines according to the timetable, seen from above."
+  },
+  "vista": [
+   13.35,
+   38.12,
+   12.6,
+   0,
+   0
+  ]
+ },
+ {
+  "id": "simulazione-3d",
+  "strati": [
+   "edifici3d",
+   "trasporto-mezzi-treni",
+   "trasporto-mezzi-tram",
+   "trasporto-mezzi-bus"
+  ],
+  "it": {
+   "titolo": "Mezzi in movimento (3D)",
+   "testo": "Gli stessi mezzi tra gli edifici in 3D, con la mappa inclinata, vicino alla stazione centrale."
+  },
+  "en": {
+   "titolo": "Vehicles on the move (3D)",
+   "testo": "The same vehicles among the 3D buildings, with the map tilted, near the central station."
+  },
+  "vista": [
+   13.367,
+   38.1105,
+   15.5,
+   -20,
+   60
+  ]
  }
 ]

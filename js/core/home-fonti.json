@@ -783,6 +783,11 @@
  "trasporto": {
   "data": "2026-10-03",
   "aggiornati": "2026-10-07",
+  "strati": {
+   "trasporto-mezzi-treni": "2026-10-21",
+   "trasporto-mezzi-tram": "2026-10-21",
+   "trasporto-mezzi-bus": "2026-10-21"
+  },
   "enti": [
    "AMAT",
    "Trenitalia",

@@ -63,9 +63,9 @@ Keywords: guided paths, path, theme, ready-made themes, home page, home, «Open 
 
 Typical questions: What are the guided paths? How do I open the map with the right layers already switched on? Which paths are there? Where do I find the guided paths?
 
-The guided paths are on the home page of the site, in the «What you can switch on» section, under the title «Guided paths». A path can also be activated from Talia: below the answer there are the buttons of the paths, and one click switches on the layers of the path (a second click switches them off). Each path is a card with a title, a sentence saying what it is about, the list of the layers it includes and the «Open the map» button. The button opens the map with those layers already switched on, with the legends already active on the map and, for the «Urban planning» path, already centred on the area indicated by the path (zoom 16). The other paths leave the map in the starting view. Once the map is open, the layers can be switched off, switched on and changed as usual (see `45-barra-strati-legende-e-ordine.md`).
+The guided paths are on the home page of the site, in the «What you can switch on» section, under the title «Guided paths». A path can also be activated from Talia: below the answer there are the buttons of the paths, and one click switches on the layers of the path (a second click switches them off). Each path is a card with a title, a sentence saying what it is about, the list of the layers it includes and the «Open the map» button. The button opens the map with those layers already switched on, with the legends already active on the map and, for the «Urban planning», «Vehicles on the move (2D)» and «Vehicles on the move (3D)» paths, already centred on the area indicated by the path (the 3D one also tilts it, to 60°). The other paths leave the map in the starting view. Once the map is open, the layers can be switched off, switched on and changed as usual (see `45-barra-strati-legende-e-ordine.md`).
 
-There are ten paths:
+There are twelve paths:
 
 - **Risks and climate**: Geomorphological hazard, Hydraulic hazard, Coastal erosion hazard, Fires, Heat islands
 - **Schools and neighbourhoods**: Municipal schools and nurseries, Polling sections (sites), Neighbourhoods, Population by section
@@ -77,6 +77,8 @@ There are ten paths:
 - **Who commutes**: Commuting to and from Palermo 2021, Population by section, Metro line, Stops
 - **An accessible city**: Architectural barriers, Municipal offices (sites), Stops, Municipal schools and nurseries
 - **Public property**: Properties declared to the MEF, Municipal properties, Municipal offices (sites), Cadastre: parcels
+- **Vehicles on the move (2D)**: Trains on the move (simulation), Trams on the move (simulation), Buses on the move (simulation), Metro line. Map seen from above: the vehicles run along the lines according to the timetable (not real time)
+- **Vehicles on the move (3D)**: 3D buildings, Trains, Trams and Buses on the move (simulation). Tilted map near the central station, with the vehicles among the buildings
 
 The text of the path is available in Italian and in English, according to the language chosen.
 

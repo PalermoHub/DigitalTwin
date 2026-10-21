@@ -126,13 +126,13 @@ function costruisciNumeri(argomenti, tutte) {
 }
 
 // ---- slider ----
-// le ultime cinque novità: quando si aggiunge uno strato nuovo, entra qui al posto del più vecchio
+// le ultime cinque novità, la più recente per prima: quando si aggiunge uno strato nuovo, entra in testa al posto del più vecchio
 const SLIDE = [
+  { id: 'trasporto-mezzi', img: 'img/home/strati/trasporto-mezzi.webp', strati: ['trasporto-mezzi-treni', 'trasporto-mezzi-tram', 'trasporto-mezzi-bus'] },
   { id: 'opere', img: 'img/home/strati/opere.webp', strati: ['opere'] },
   { id: 'distributori', img: 'img/home/strati/distributori.webp', strati: ['distributori'] },
   { id: 'trend-popolazione', img: 'img/home/strati/trend-popolazione.webp', strati: ['trend-popolazione'] },
   { id: 'pnrr', img: 'img/home/strati/pnrr.webp', strati: ['pnrr'] },
-  { id: 'pendolarismo', img: 'img/home/strati/pendolarismo.webp', strati: ['pendolarismo'] },
 ];
 
 function costruisciSlider() {
@@ -193,9 +193,11 @@ function costruisciCard(s, a) {
   const interno = el('div', { className: 'card-interno' });
   const chip = [a.titolo, s.sezione].filter(Boolean);
   // sul fronte: ultimo aggiornamento dei dati, o la data di aggiunta se non sono mai stati aggiornati
-  const dataCard = a.aggiornati ? tr('home.card.aggiornato', { data: formatoData(a.aggiornati) }) : a.data ? tr('home.card.aggiunto', { data: formatoData(a.data) }) : '';
+  // uno strato con data propria (aggiunto dopo gli altri dell'argomento) mostra quella, non l'aggiornamento dei dati dell'argomento
+  const data = s.data ?? a.data;
+  const dataCard = a.aggiornati && !s.data ? tr('home.card.aggiornato', { data: formatoData(a.aggiornati) }) : data ? tr('home.card.aggiunto', { data: formatoData(data) }) : '';
   const fronte = el('div', { className: 'card-faccia card-fronte' },
-    ...(isNuovo(a.data) ? [el('span', { className: 'card-nuovo', textContent: tr('home.nuovo') })] : []),
+    ...(isNuovo(data) ? [el('span', { className: 'card-nuovo', textContent: tr('home.nuovo') })] : []),
     el('img', { className: 'card-img', src: `img/home/strati/${s.id}.webp`, alt: '', title: s.etichetta, width: 640, height: 360, loading: 'lazy' }),
     el('div', { className: 'card-corpo' },
       el('h4', { textContent: s.etichetta }),
@@ -208,7 +210,7 @@ function costruisciCard(s, a) {
   const riga = (k, v) => (v ? [el('dt', { textContent: tr(k) }), el('dd', { textContent: v })] : []);
   const retro = el('div', { className: 'card-faccia card-retro' },
     el('h4', { textContent: s.etichetta }),
-    el('dl', {}, ...riga('home.retro.argomento', a.titolo), ...riga('home.retro.ambito', s.sezione), ...riga('home.retro.fonte', a.fonte), ...riga('home.retro.aggiunto', a.data && formatoData(a.data)), ...riga('home.retro.aggiornati', a.aggiornati && formatoData(a.aggiornati)), ...(a.link?.length ? [el('dt', { textContent: tr('home.retro.risorse') }), el('dd', {}, el('ul', { className: 'card-risorse' }, ...a.link.map(([testo, href]) => el('li', {}, el('a', { href, textContent: testo, target: '_blank', rel: 'noopener' })))))] : []), ...riga('home.retro.nota', s.nota)),
+    el('dl', {}, ...riga('home.retro.argomento', a.titolo), ...riga('home.retro.ambito', s.sezione), ...riga('home.retro.fonte', a.fonte), ...riga('home.retro.aggiunto', data && formatoData(data)), ...riga('home.retro.aggiornati', !s.data && a.aggiornati && formatoData(a.aggiornati)), ...(a.link?.length ? [el('dt', { textContent: tr('home.retro.risorse') }), el('dd', {}, el('ul', { className: 'card-risorse' }, ...a.link.map(([testo, href]) => el('li', {}, el('a', { href, textContent: testo, target: '_blank', rel: 'noopener' })))))] : []), ...riga('home.retro.nota', s.nota)),
     el('div', { className: 'card-piede' },
       bottoneAggiungi([s.id], s.etichetta)));
   interno.append(fronte, retro);
@@ -238,7 +240,7 @@ async function costruisciElenco() {
   const card = tutte.map(({ s, a }, i) => {
     const li = costruisciCard(s, a);
     li.dataset.ordine = i;
-    li.dataset.data = a.data ?? '';
+    li.dataset.data = s.data ?? a.data ?? '';
     li.dataset.testo = normalizza(`${s.etichetta} ${a.titolo} ${s.sezione ?? ''}`);
     li.dataset.argomento = a.id;
     li.dataset.enti = (a.enti ?? []).join('|');
