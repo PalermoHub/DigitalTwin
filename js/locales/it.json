@@ -1566,6 +1566,7 @@
   "scheda.mostraStrato": "Mostra lo strato sulla mappa",
   "scheda.nascondiStrato": "Nascondi lo strato dalla mappa",
   "scheda.nessunDato": "Nessun dato in questo punto.",
+  "scheda.fuoriComune": "Fuori dai confini del Comune di Palermo.",
   "scheda.nessunDatoZoom": "Nessun dato in questo punto: avvicina lo zoom o accendi uno strato.",
   "scheda.nonDisponibili": "Non disponibili: {elenco}",
   "scheda.notaLegale": "Dato informativo, senza valore legale: per usi legali servono visure e certificato di destinazione urbanistica.",

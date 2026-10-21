@@ -2,7 +2,8 @@ import { unisci, sezioniConRitardo, testoContesto, titoloScheda, tabScheda, NOTA
 import { applicaPreferenze, registraVisti, leggiPreferenze, salvaPreferenze } from './scheda-preferenze.js';
 import { svgIcona } from './icone.js';
 import { segnala } from './pannello.js';
-import { ZOOM_SCHEDA } from './config.js';
+import { ZOOM_SCHEDA, urlDati } from './config.js';
+import { anelliDaZone, dentroAnello } from '../rndt/area.js';
 import { sceltePerLayer, soloCliccato, evidenzia, cancellaEvidenza, evidenzaVicine } from './evidenza.js';
 import { featureVicine } from './scheda-util.js';
 import { el, icona, sincronizzaStrato, acceseDaScheda, spegniStratiDaScheda, creaInterruttoreStrato, disegnaSezione } from './scheda-disegno.js';
@@ -433,7 +434,14 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     clearTimeout(attesaRaggio);
     attesaRaggio = setTimeout(() => { if (ultimoClic && !contenitore.hidden) map.fire('click', { point: map.project(ultimoClic), lngLat: ultimoClic }); }, 120);
   });
+  // i clic fuori dai confini del Comune non aprono la scheda; senza il confine (rete assente) si accettano tutti
+  let anelli = [];
+  fetch(urlDati('popolazione/confini_zone.json')).then(r => r.json()).then(z => { anelli = anelliDaZone(z); }).catch(() => {});
   map.on('click', async e => {
+    if (anelli.length && !anelli.some(a => dentroAnello([e.lngLat.lng, e.lngLat.lat], a))) {
+      segnala(tr('scheda.fuoriComune'));
+      return;
+    }
     ultimoClic = e.lngLat;
     // i dati degli strati puntuali si scaricano in secondo piano: un clic arrivato prima li attende
     if (window.dt && window.dt.differitiPronti === false) await window.dt.differiti();

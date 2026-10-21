@@ -1566,6 +1566,7 @@
   "scheda.mostraStrato": "Show the layer on the map",
   "scheda.nascondiStrato": "Hide the layer from the map",
   "scheda.nessunDato": "No data at this point.",
+  "scheda.fuoriComune": "Outside the boundaries of the Municipality of Palermo.",
   "scheda.nessunDatoZoom": "No data at this point: zoom in or turn on a layer.",
   "scheda.nonDisponibili": "Not available: {elenco}",
   "scheda.notaLegale": "Informational data, with no legal value: for legal use, land-registry extracts and a certificate of planning use are required.",
