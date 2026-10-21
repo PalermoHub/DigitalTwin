@@ -10,6 +10,12 @@ const AVVISI = [
   'Le opere pubbliche sono quelle localizzate nella sola città di Palermo, di qualunque titolare (Comune, Città Metropolitana, ANAS, IACP, aziende sanitarie…); sulla mappa compaiono solo quelle con un indirizzo trovato nei numeri civici. Lo stato è quello del CUP (attivo o chiuso), la fase è ricavata dalle date effettive dichiarate; costi e finanziamenti sono quelli dichiarati dai titolari e non vanno sommati.',
 ];
 
+const SIMULAZIONI = [
+  'La simulazione dei mezzi in movimento (autobus, tram, treni) mostra posizioni teoriche ricavate dagli orari programmati: non tiene conto di ritardi, traffico o soppressioni, e tra due fermate il mezzo procede a velocità costante. Non è un servizio in tempo reale.',
+  'Il percorso dei mezzi segue il tracciato delle linee, che può non coincidere con la strada reale in ogni tratto. Al momento non risultano feed GTFS-Realtime pubblicati per queste linee: se ne fossero disponibili, la simulazione potrebbe passare ai dati in tempo reale.',
+  ['La simulazione dei mezzi in movimento è stata ispirata dal lavoro di ', link('Stig Arild Berntzen', 'https://www.linkedin.com/in/stigarildberntzen/'), '.'],
+];
+
 const LICENZE = {
   'CC BY 4.0': 'https://creativecommons.org/licenses/by/4.0/deed.it',
   'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/deed.it',
@@ -85,7 +91,7 @@ export function schedaFonti(catalogo) {
     voce('Ex Noviziato dei Crociferi in 3D: piante DWG, sezione e prospetti del Comune di Palermo, Settore Centro Storico; piante georeferenziate sulle unità volumetriche CTC e messe in quota piano per piano, elaborazione PalermoHub'),
     voce('Indicatori statistici comunali di Palermo (popolazione, censimento, imprese, ambiente e altro): AGID Cruscotto Italia, dati.gov.it', [['AGID Cruscotto Italia', 'https://cruscotto-italia.dati.gov.it/comune.html?istat=082053']], 'CC BY 4.0'),
   ]);
-  return [...titoloPagina('Fonti e note', 'Da dove vengono i dati e cosa tenere presente quando li si usa.'), blocco('Fonti dei dati', fonti), blocco('Da sapere', elenco(AVVISI))];
+  return [...titoloPagina('Fonti e note', 'Da dove vengono i dati e cosa tenere presente quando li si usa.'), blocco('Fonti dei dati', fonti), blocco('Da sapere', elenco(AVVISI)), blocco('Simulazione del movimento dei mezzi di trasporto pubblico', elenco(SIMULAZIONI))];
 }
 
 export async function caricaCatalogo() {
