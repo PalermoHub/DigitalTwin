@@ -2,7 +2,7 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { STATI, COLORE_ALTRO, coloreStato, modelloPopupVolo, voceVolo } from './scheda-voli.js';
-import { contenutoPopupTraffico, ancoraPopupTraffico } from './popup-traffico.js';
+import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico } from './popup-traffico.js';
 import { tl, t } from '../core/i18n.js';
 import { registraGlifo, registraBadge, layerBadge, idBadge, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 import { scegliProxy } from '../rndt/proxy.js';
@@ -160,7 +160,7 @@ export default {
           modello: modelloPopupVolo(p), coordinate: f.geometry.coordinates, chiudi: () => popup.remove(),
         }))
         .addTo(map);
-      popup.getElement().style.setProperty('--traffico-colore', colore);
+      rifinisciPopupTraffico(popup, anchor, colore);
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: ICONA,

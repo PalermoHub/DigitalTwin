@@ -2,7 +2,7 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { CATEGORIE, COLORE_ALTRO, coloreCategoria, modelloPopupNave, voceNave } from './scheda-navi.js';
-import { contenutoPopupTraffico, ancoraPopupTraffico } from './popup-traffico.js';
+import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico } from './popup-traffico.js';
 import { tl, t } from '../core/i18n.js';
 import { registraGlifo, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 import { scegliProxy } from '../rndt/proxy.js';
@@ -145,7 +145,7 @@ export default {
           modello: modelloPopupNave(p), coordinate: f.geometry.coordinates, chiudi: () => popup.remove(),
         }))
         .addTo(map);
-      popup.getElement().style.setProperty('--traffico-colore', colore);
+      rifinisciPopupTraffico(popup, anchor, colore);
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: ICONA,

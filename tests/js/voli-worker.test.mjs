@@ -68,3 +68,14 @@ test('/voli: origine non ammessa 403, metodo 405, OPTIONS 204, fonte giù 502 (e
   assert.equal((await gestisciVoli(rq(), env, giu, cache)).status, 502);
   assert.equal(await cache.match(new Request('https://cache.interno/voli')), undefined);
 });
+
+test('/voli: se adsb.lol non risponde (429) si servono gli ultimi aerei buoni', async () => {
+  const cache = cacheFinta();
+  await gestisciVoli(rq(), env, upstream({ now: 1000, ac: [AEREO] }), cache);
+  const scaduta = { ...cache, match: async k => (k.url.endsWith('/voli') ? undefined : cache.match(k)) }; // la copia da 5 minuti è scaduta, quella lunga no
+  const limitata = async () => new Response('troppe richieste', { status: 429 });
+  const r = await gestisciVoli(rq(), env, limitata, scaduta);
+  assert.equal(r.status, 200);
+  assert.equal(r.headers.get('x-dati'), 'precedenti');
+  assert.equal((await r.json()).features.length, 1);
+});

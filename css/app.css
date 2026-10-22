@@ -398,18 +398,26 @@ dialog li { margin: 4px 0; }
 .monumento-cat { margin: 2px 10px; color: var(--text-muted); font-size: var(--fs-xs); }
 .monumento-desc { margin: 4px 10px; line-height: 1.35; max-height: 72px; overflow-y: auto; }
 .monumento-popup .monumento-foto { max-height: 110px; }
-/* Popup di aerei e navi: scheda a vetro che segue il tema, con linea di richiamo e punto sul mezzo (la linea è il «tip» di MapLibre) */
-.traffico-popup-box { --traffico-linea: 64px; z-index: 5; }
+/* Popup di aerei e navi: scheda a vetro che segue il tema. Il «tip» di MapLibre diventa la linea di richiamo: un tratto verticale lungo
+   dal mezzo (con un punto) e uno orizzontale corto che entra nel bordo della scheda all'altezza dell'intestazione. L'altezza della
+   scheda (--traffico-h) la scrive popup-traffico.js dopo averla misurata. */
+.traffico-popup-box { --traffico-orizz: 28px; --traffico-gancio: 24px; z-index: 5; }
 .traffico-popup-box .maplibregl-popup-content { padding: 0; background: color-mix(in srgb, var(--surface) 94%, transparent); color: var(--text); border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: 0 8px 28px rgba(0, 0, 0, .28); backdrop-filter: blur(8px); overflow: visible; }
-.traffico-popup-box .maplibregl-popup-tip { position: absolute; width: 2px; height: var(--traffico-linea); margin: 0; border: 0; background: var(--traffico-colore, var(--text-muted)); }
-.traffico-popup-box .maplibregl-popup-tip::after { content: ''; position: absolute; left: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--traffico-colore, var(--text-muted)); border: 2px solid var(--surface); box-sizing: border-box; }
-.traffico-popup-box[class*="anchor-bottom"] .maplibregl-popup-tip { top: 100%; }
-.traffico-popup-box[class*="anchor-bottom"] .maplibregl-popup-tip::after { bottom: -5px; }
-.traffico-popup-box[class*="anchor-top"] .maplibregl-popup-tip { bottom: 100%; }
-.traffico-popup-box[class*="anchor-top"] .maplibregl-popup-tip::after { top: -5px; }
-.traffico-popup-box[class$="-left"] .maplibregl-popup-tip { left: 0; }
-.traffico-popup-box[class$="-right"] .maplibregl-popup-tip { right: 0; }
-.traffico-popup-box[class$="-right"] .maplibregl-popup-tip::after { left: auto; right: -4px; }
+.traffico-popup-box .maplibregl-popup-tip { position: absolute; width: 2px; height: calc(var(--traffico-h, 300px) + 3px); margin: 0; border: 0; background: var(--traffico-colore, var(--text-muted)); }
+.traffico-popup-box .maplibregl-popup-tip::before { content: ''; position: absolute; width: var(--traffico-orizz); height: 2px; background: var(--traffico-colore, var(--text-muted)); }
+.traffico-popup-box .maplibregl-popup-tip::after { content: ''; position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--traffico-colore, var(--text-muted)); border: 2px solid var(--surface); box-sizing: border-box; }
+.traffico-popup-box[class*="anchor-top"] .maplibregl-popup-tip { top: var(--traffico-gancio); }
+.traffico-popup-box[class*="anchor-top"] .maplibregl-popup-tip::before { top: 0; }
+.traffico-popup-box[class*="anchor-top"] .maplibregl-popup-tip::after { bottom: -5px; }
+.traffico-popup-box[class*="anchor-bottom"] .maplibregl-popup-tip { bottom: var(--traffico-gancio); }
+.traffico-popup-box[class*="anchor-bottom"] .maplibregl-popup-tip::before { bottom: 0; }
+.traffico-popup-box[class*="anchor-bottom"] .maplibregl-popup-tip::after { top: -5px; }
+.traffico-popup-box[class$="-left"] .maplibregl-popup-tip { left: calc(-1 * var(--traffico-orizz)); }
+.traffico-popup-box[class$="-left"] .maplibregl-popup-tip::before { left: 0; }
+.traffico-popup-box[class$="-left"] .maplibregl-popup-tip::after { left: -4px; }
+.traffico-popup-box[class$="-right"] .maplibregl-popup-tip { right: calc(-1 * var(--traffico-orizz)); }
+.traffico-popup-box[class$="-right"] .maplibregl-popup-tip::before { right: 0; }
+.traffico-popup-box[class$="-right"] .maplibregl-popup-tip::after { right: -4px; }
 .traffico-popup { padding: 10px 14px 12px; font-size: var(--fs-sm); }
 .traffico-testa { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .traffico-marchio { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 5px; background: var(--traffico-colore); color: #fff; }

@@ -41,16 +41,30 @@ export function contenutoPopupTraffico({ sezione, icona, colore, modello, coordi
   return radice;
 }
 
-// Dove mettere la scheda rispetto al mezzo: dal lato (destra o sinistra) e dalla parte (sopra o sotto) con più spazio libero.
-// La linea di richiamo parte dallo spigolo della scheda e scende fino al mezzo (LINEA px).
-const LINEA = 64;
+// Dove mettere la scheda rispetto al mezzo: dal lato (destra o sinistra) con più spazio libero e, se c'è posto, sopra.
+// La scheda sta di lato alla linea di richiamo: il tratto verticale sale dal mezzo, quello orizzontale (ORIZZ px) entra nel bordo della scheda.
+const ORIZZ = 28;
+const BASSO = 27; // distanza tra il mezzo e il bordo vicino della scheda
 const LARGHEZZA = 300;
-const ALTEZZA = 320;
+const ALTEZZA = 320; // stima, finché la scheda non è misurata
 
+const spostamento = (anchor, altezza) => [anchor.endsWith('left') ? ORIZZ : -ORIZZ, anchor.startsWith('top') ? -(altezza + BASSO) : altezza + BASSO];
+
+// «top-…»: la scheda sta sopra il mezzo (ancorata col bordo alto), «bottom-…»: sotto. «…-left»: si apre a destra del mezzo.
 export function ancoraPopupTraffico(punto, contenitore) {
   const destra = contenitore.clientWidth - punto.x;
   const sotto = contenitore.clientHeight - punto.y;
-  const lato = destra >= LARGHEZZA || destra >= punto.x ? 'left' : 'right'; // «left»: la scheda si apre a destra del mezzo
-  const sopra = punto.y >= ALTEZZA + LINEA || punto.y >= sotto; // preferita: scheda sopra il mezzo
-  return { anchor: `${sopra ? 'bottom' : 'top'}-${lato}`, offset: [0, sopra ? -LINEA : LINEA] };
+  const lato = destra >= LARGHEZZA + ORIZZ || destra >= punto.x ? 'left' : 'right';
+  const sopra = punto.y >= ALTEZZA + BASSO || punto.y >= sotto;
+  const anchor = `${sopra ? 'top' : 'bottom'}-${lato}`;
+  return { anchor, offset: spostamento(anchor, ALTEZZA) };
+}
+
+// Dopo addTo: misura la scheda, allunga la linea e porta la scheda a BASSO px dal mezzo.
+export function rifinisciPopupTraffico(popup, anchor, colore) {
+  const radice = popup.getElement();
+  const altezza = radice.querySelector('.maplibregl-popup-content').offsetHeight;
+  radice.style.setProperty('--traffico-colore', colore);
+  radice.style.setProperty('--traffico-h', `${altezza}px`);
+  popup.setOffset(spostamento(anchor, altezza));
 }

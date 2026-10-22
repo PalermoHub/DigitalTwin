@@ -7,6 +7,7 @@
 export const AEROPORTO = [38.1759, 13.0910]; // lat, lon
 export const RAGGIO_NM = 100;
 export const TTL_SECONDI = 300;
+export const TTL_ULTIMO_SECONDI = 3600; // per quanto si tiene l'ultima risposta buona, da servire se adsb.lol non risponde
 const URL_FONTE = `https://api.adsb.lol/v2/point/${AEROPORTO[0]}/${AEROPORTO[1]}/${RAGGIO_NM}`;
 const VICINO_NM = 60; // oltre questa distanza non si deduce arrivo o partenza
 const TERRA_NM = 4;
@@ -72,6 +73,7 @@ export async function gestisciVoli(richiesta, env, fetchFn, cache) {
   if (richiesta.method !== 'GET') return json(405, { errore: 'metodo non ammesso' }, { ...cors, 'cache-control': 'no-store' });
 
   const chiave = new Request('https://cache.interno/voli');
+  const CHIAVE_ULTIMO = new Request('https://cache.interno/voli-ultimo');
   const salvata = await cache?.match(chiave);
   if (salvata) return new Response(salvata.body, { status: 200, headers: { ...Object.fromEntries(salvata.headers), ...cors } });
   try {
@@ -80,8 +82,12 @@ export async function gestisciVoli(richiesta, env, fetchFn, cache) {
     const corpo = JSON.stringify(estrai(await remota.json()));
     const intestazioni = { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_SECONDI}` };
     await cache?.put(chiave, new Response(corpo, { headers: intestazioni }));
+    await cache?.put(CHIAVE_ULTIMO, new Response(corpo, { headers: { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_ULTIMO_SECONDI}` } }));
     return new Response(corpo, { status: 200, headers: { ...intestazioni, ...cors } });
   } catch (e) {
+    // adsb.lol limita le richieste (429) o non risponde: meglio gli ultimi aerei buoni, già vecchi di poco, che nessun dato
+    const ultimo = await cache?.match(CHIAVE_ULTIMO);
+    if (ultimo) return new Response(ultimo.body, { status: 200, headers: { 'content-type': 'application/json', 'cache-control': 'public, max-age=30', 'x-dati': 'precedenti', ...cors } });
     return json(502, { errore: 'adsb.lol non raggiungibile', dettaglio: String(e?.message ?? e).slice(0, 120) }, { ...cors, 'cache-control': 'no-store' });
   }
 }

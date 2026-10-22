@@ -213,5 +213,11 @@
   "trasporto-mezzi-tram",
   "trasporto-mezzi-bus",
   "trasporto-metro"
+ ],
+ "57-traffico-aereo.md": [
+  "voli"
+ ],
+ "58-traffico-navale.md": [
+  "navi"
  ]
 }

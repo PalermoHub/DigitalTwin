@@ -23,3 +23,11 @@ test('le voci sulle funzioni dell\'app hanno almeno una pagina di guida', () => 
   const senza = ['38-tema-dell-interfaccia', '41-street-view', '47-mappe-di-base-e-storiche', '50-geoimage'].filter(f => !indice.some(v => v.file === `${f}.md` && v.guide?.length));
   assert.deepEqual(senza, []);
 });
+
+test('le guide dei layer traffico aereo e navale propongono il pulsante per accendere il layer', () => {
+  for (const [file, strato] of [['57-traffico-aereo', 'voli'], ['58-traffico-navale', 'navi']]) {
+    const voci = indice.filter(v => v.file === `${file}.md`);
+    assert.ok(voci.length > 0, file);
+    for (const v of voci) assert.deepEqual(v.strati, [strato], v.id);
+  }
+});
