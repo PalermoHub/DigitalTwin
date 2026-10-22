@@ -682,6 +682,33 @@
    ]
   },
   {
+   "id": "voli",
+   "titolo": "Traffico aereo",
+   "descrizione": "Aerei in volo attorno all'aeroporto di Palermo, con quota, velocità e stato (in arrivo, in partenza, in transito), aggiornati ogni 5 minuti.",
+   "strati": [
+    {
+     "id": "voli",
+     "etichetta": "Aerei in volo"
+    }
+   ],
+   "fonte": "adsb.lol: posizioni ADS-B raccolte da volontari, aggiornate ogni 5 minuti. Licenza ODbL 1.0.",
+   "enti": [
+    "adsb.lol"
+   ],
+   "data": "2026-10-22",
+   "aggiornati": "2026-10-22",
+   "link": [
+    [
+     "adsb.lol",
+     "https://www.adsb.lol/"
+    ],
+    [
+     "Dati aperti di adsb.lol",
+     "https://github.com/adsblol/api"
+    ]
+   ]
+  },
+  {
    "id": "trasporto",
    "titolo": "Trasporto pubblico",
    "descrizione": "Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.",
@@ -924,6 +951,33 @@
     [
      "Emergenza idrica in Sicilia, OpenDataSicilia",
      "https://opendatasicilia.github.io/emergenza-idrica-sicilia/"
+    ]
+   ]
+  },
+  {
+   "id": "voli",
+   "titolo": "Air traffic",
+   "descrizione": "Aircraft flying around Palermo airport, with altitude, speed and status (arriving, departing, in transit), updated every 5 minutes.",
+   "strati": [
+    {
+     "id": "voli",
+     "etichetta": "Aircraft in flight"
+    }
+   ],
+   "fonte": "adsb.lol: ADS-B positions collected by volunteers, updated every 5 minutes. Licence ODbL 1.0.",
+   "enti": [
+    "adsb.lol"
+   ],
+   "data": "2026-10-22",
+   "aggiornati": "2026-10-22",
+   "link": [
+    [
+     "adsb.lol",
+     "https://www.adsb.lol/"
+    ],
+    [
+     "Dati aperti di adsb.lol",
+     "https://github.com/adsblol/api"
     ]
    ]
   },

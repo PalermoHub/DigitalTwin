@@ -918,5 +918,38 @@
     ]
    ]
   }
+ },
+ "voli": {
+  "data": "2026-10-22",
+  "aggiornati": "2026-10-22",
+  "enti": [
+   "adsb.lol"
+  ],
+  "fonte": {
+   "it": "adsb.lol: posizioni ADS-B raccolte da volontari, aggiornate ogni 5 minuti. Licenza ODbL 1.0.",
+   "en": "adsb.lol: ADS-B positions collected by volunteers, updated every 5 minutes. Licence ODbL 1.0."
+  },
+  "link": {
+   "it": [
+    [
+     "adsb.lol",
+     "https://www.adsb.lol/"
+    ],
+    [
+     "Dati aperti di adsb.lol",
+     "https://github.com/adsblol/api"
+    ]
+   ],
+   "en": [
+    [
+     "adsb.lol",
+     "https://www.adsb.lol/"
+    ],
+    [
+     "Dati aperti di adsb.lol",
+     "https://github.com/adsblol/api"
+    ]
+   ]
+  }
  }
 }
