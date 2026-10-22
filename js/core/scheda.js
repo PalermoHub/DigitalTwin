@@ -444,7 +444,10 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   let anelli = [];
   fetch(urlDati('popolazione/confini_zone.json')).then(r => r.json()).then(z => { anelli = anelliDaZone(z); }).catch(() => {});
   map.on('click', async e => {
-    if (anelli.length && !anelli.some(a => dentroAnello([e.lngLat.lng, e.lngLat.lat], a))) {
+    // Fuori dal Comune si apre la scheda solo dei moduli che lo chiedono (`scheda.apertoFuoriComune(map, e)`, es. l'aeroporto di Punta Raisi e gli aerei in volo)
+    const fuori = anelli.length > 0 && !anelli.some(a => dentroAnello([e.lngLat.lng, e.lngLat.lat], a));
+    const moduliClic = fuori ? conScheda.filter(m => m.scheda.apertoFuoriComune?.(map, e)) : conScheda;
+    if (fuori && !moduliClic.length) {
       segnala(tr('scheda.fuoriComune'));
       return;
     }
@@ -458,10 +461,10 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     // Un oggetto 3D sopra la mappa (es. l'edificio per piani, anche esploso) sta più in alto del terreno: e.lngLat è il punto
     // a terra dietro di lui. Lo strato che lo possiede dice dove sta l'oggetto, e la scheda (luogo, edificio, catasto…) si
     // apre lì; il suo strato si interroga invece al pixel cliccato.
-    const sopra = conScheda.map(m => ({ m, lngLat: m.scheda.puntoAlClic?.(map, e) })).find(x => x.lngLat);
+    const sopra = moduliClic.map(m => ({ m, lngLat: m.scheda.puntoAlClic?.(map, e) })).find(x => x.lngLat);
     const lngLat = sopra?.lngLat ?? e.lngLat;
     const punto = sopra ? map.project(lngLat) : e.point;
-    for (const m of conScheda) {
+    for (const m of moduliClic) {
       const layers = m.scheda.layers.filter(id => map.getLayer(id));
       if (!layers.length) continue;
       const esatti = trovaFeature(map, m === sopra?.m ? e.point : punto, layers);
@@ -479,7 +482,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     // (PRG e vincoli: «Strumenti urbanistici»)
     const daStrato = e.strati?.map(id => voci.find(v => v.strato === id)).find(Boolean);
     if (daStrato) tabIniziale = tabScheda(daStrato.peso, daStrato.chiave);
-    const interrogabili = rndt ? rndt.layerAlPunto(lngLat) : [];
+    const interrogabili = rndt && !fuori ? rndt.layerAlPunto(lngLat) : []; // i servizi RNDT valgono per il Comune
     if (interrogabili.length) voci.push(rndt.segnaposto()); // la scheda si apre subito: le risposte dei servizi arrivano dopo
     const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);
     const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); document.dispatchEvent(new CustomEvent('scheda:chiusa')); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); nascondiCerchio(map); adattaVista(); };

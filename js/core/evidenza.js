@@ -33,6 +33,7 @@ export const FONTI = {
   'piano-triennale-hit-linee': { etichetta: t('evidenza.piano'), colore: '#c2255c' },
   'piano-triennale-hit-punti': { etichetta: t('evidenza.piano'), colore: '#c2255c' },
   'voli-hit': { etichetta: t('evidenza.volo'), colore: '#1971c2' },
+  'voli-aeroporto-hit': { etichetta: t('evidenza.aeroporto'), colore: '#0b3d91' },
   'navi-hit': { etichetta: t('evidenza.nave'), colore: '#7048e8' },
   'colonnine-hit': { etichetta: t('evidenza.colonnina'), colore: '#2b8a3e' },
   'uffici-hit': { etichetta: t('evidenza.uffici'), colore: '#a61e4d' },
@@ -48,7 +49,7 @@ export const FONTI = {
 const ICONE_PUNTI = {
   'monumenti-hit-punti': 'monumento', 'alberi-hit-punti': 'albero', 'fontanelle-hit-punti': 'fontanella',
   'scuole-hit-punti': 'scuola', 'seggi-hit-punti': 'voto', 'distributori-hit': 'distributori', 'opere-hit': 'cantiere', 'piano-triennale-hit-punti': 'piano',
-  'colonnine-hit': 'colonnine', 'voli-hit': 'aereo', 'navi-hit': 'nave', 'uffici-hit': 'uffici', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
+  'colonnine-hit': 'colonnine', 'voli-hit': 'aereo', 'voli-aeroporto-hit': 'aereo', 'navi-hit': 'nave', 'uffici-hit': 'uffici', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
   'distributori-vicini': 'distributori', 'trasporto-vicine': 'trasporto', // evidenze delle voci della scheda
 };
 const DISCHI = new Set(['trasporto-hit-fermate', 'trasporto-hit-stazioni', 'trasporto-hit-fermate-vicini', 'trasporto-hit-stazioni-vicini']); // punti con il disco di contrasto

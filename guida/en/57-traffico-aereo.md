@@ -30,12 +30,25 @@ Typical questions: What does the aircraft popup show? How high is an aircraft? W
 
 Hovering over an aircraft shows the flight and its status. A click opens the popup with: **registration**, **aircraft type**, **altitude** (feet and metres), **speed** (knots and km/h), **heading** in degrees, **vertical speed** and **distance from the airport**. In the place card, if the aircraft is over the municipality, the entry also has the link «Follow the flight on adsb.lol».
 
+## Delays and scheduled flights
+
+Keywords: delay, delayed, cancelled, scheduled time, estimated time, gate, arrivals, departures, flight board, Gesap, red dot, airport icon.
+
+Typical questions: How do I see whether a flight is late? How late is it? What does the red dot on the airport mean? How do I see today's arrivals and departures? Can I click on the airport?
+
+Arrival and departure times come from the website of **Gesap**, the company that runs Palermo airport, and are refreshed **at most every 5 minutes**.
+- **On the aircraft**: if the aircraft's radio callsign matches a scheduled flight number (for example `RYR4342` is flight `FR 04342`), the card and the popup show the **scheduled flight and airline**, the **delay** («On time», «Delayed by 21 min», «Cancelled»), the **origin or destination**, the **scheduled time**, the **estimated time** and the **gate**. If the match is not certain, or the aircraft is not a scheduled flight (private, cargo, military), these data do not appear.
+- **On the airport**: a click on the **airport icon** opens the popup and the card with today's summary (delayed flights, cancelled flights, average delay) and the lists of the **next 8 arrivals and departures**, each with time, city, delay and gate. The airport lies outside the municipal boundary, but the click works anyway. The lists are also available when no aircraft is in view.
+- **The red dot** on the airport icon appears when at least one flight is **cancelled** or delayed by **15 minutes or more** among those not yet completed.
+- A flight with less than 5 minutes between estimated and scheduled time counts as «on time».
+
 ## Things to keep in mind
 
 Keywords: origin, destination, inferred status, military aircraft, coverage, licence, ODbL, limits.
 
 Typical questions: Can I see where a flight is going? Are all aircraft shown? What licence do the data have?
 
-- The source **does not give the origin and destination** of flights: the «arriving» or «departing» status is **inferred** from altitude, distance and vertical speed, so it is indicative.
+- The aircraft source (adsb.lol) **does not give the origin and destination** of flights: the «arriving» or «departing» status is **inferred** from altitude, distance and vertical speed, so it is indicative. The city of origin or destination is known only for the scheduled Palermo flights that Gesap lists; for aircraft in transit on other routes neither origin nor destination is known.
 - Aircraft that do not transmit ADS-B (some military aircraft) do not appear; low-altitude coverage depends on the volunteers' receivers.
-- Source: adsb.lol, a network of volunteer ADS-B receivers, ODbL 1.0 licence.
+- Times and delays come from a page of the Gesap website, not from an official API: if the site changes, the data may be missing for a while.
+- Sources: adsb.lol, a network of volunteer ADS-B receivers, ODbL 1.0 licence; Gesap (aeroportodipalermo.it) for times and delays.

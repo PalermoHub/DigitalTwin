@@ -7,7 +7,9 @@ const AEREO = { hex: '345314', flight: 'VLG6599 ', r: 'EC-MOO', t: 'A321', alt_b
 const ORIGINE = 'https://dt.example';
 const env = { ORIGINI: ORIGINE };
 const rq = (init = {}) => new Request('https://proxy.test/voli', { headers: { origin: ORIGINE }, ...init });
-const upstream = (corpo, n = { chiamate: 0 }) => async () => { n.chiamate++; return new Response(JSON.stringify(corpo), { status: 200 }); };
+// Gesap (volo di linea degli aerei) ha i suoi test in aeroporto-worker.test.mjs: qui risponde sempre di no e non conta come richiesta alla fonte
+const GESAP = /aeroportodipalermo/;
+const upstream = (corpo, n = { chiamate: 0 }) => async url => { if (GESAP.test(url)) return new Response('', { status: 503 }); n.chiamate++; return new Response(JSON.stringify(corpo), { status: 200 }); };
 const cacheFinta = () => { const m = new Map(); return { match: async k => m.get(k.url)?.clone(), put: async (k, r) => { m.set(k.url, r); } }; };
 
 test('proprietà normalizzate', () => {
@@ -98,6 +100,7 @@ test('OpenSky: stati → forma di adsb.lol (piedi, nodi, piedi al minuto, a terr
 test('/voli: se adsb.lol risponde 429 si passa a OpenSky; se cadono entrambe 502 con i due motivi', async () => {
   const chiamate = [];
   const f = async url => {
+    if (GESAP.test(url)) return new Response('', { status: 503 });
     chiamate.push(new URL(url).host);
     return url.includes('adsb.lol') ? new Response('x', { status: 429 }) : new Response(JSON.stringify({ time: 1000, states: [STATO_OPENSKY] }), { status: 200 });
   };

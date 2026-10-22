@@ -691,12 +691,13 @@
      "etichetta": "Aerei in volo"
     }
    ],
-   "fonte": "adsb.lol: posizioni ADS-B raccolte da volontari, aggiornate ogni 5 minuti. Licenza ODbL 1.0.",
+   "fonte": "adsb.lol: posizioni ADS-B raccolte da volontari, aggiornate ogni 5 minuti. Licenza ODbL 1.0. Orari e ritardi dei voli di linea: Gesap, aeroporto di Palermo.",
    "enti": [
-    "adsb.lol"
+    "adsb.lol",
+    "Gesap"
    ],
    "data": "2026-10-22",
-   "aggiornati": "2026-10-22",
+   "aggiornati": "2026-10-23",
    "link": [
     [
      "adsb.lol",
@@ -705,6 +706,10 @@
     [
      "Dati aperti di adsb.lol",
      "https://github.com/adsblol/api"
+    ],
+    [
+     "Voli sul sito di Gesap",
+     "https://www.aeroportodipalermo.it/voli/"
     ]
    ]
   },
@@ -991,12 +996,13 @@
      "etichetta": "Aircraft in flight"
     }
    ],
-   "fonte": "adsb.lol: ADS-B positions collected by volunteers, updated every 5 minutes. Licence ODbL 1.0.",
+   "fonte": "adsb.lol: ADS-B positions collected by volunteers, updated every 5 minutes. Licence ODbL 1.0. Airline flight times and delays: Gesap, Palermo airport.",
    "enti": [
-    "adsb.lol"
+    "adsb.lol",
+    "Gesap"
    ],
    "data": "2026-10-22",
-   "aggiornati": "2026-10-22",
+   "aggiornati": "2026-10-23",
    "link": [
     [
      "adsb.lol",
@@ -1005,6 +1011,10 @@
     [
      "Dati aperti di adsb.lol",
      "https://github.com/adsblol/api"
+    ],
+    [
+     "Voli sul sito di Gesap",
+     "https://www.aeroportodipalermo.it/voli/"
     ]
    ]
   },
@@ -1239,7 +1249,7 @@
   {
    "id": "navi",
    "titolo": "Maritime traffic",
-   "descrizione": "Ships in the Gulf of Palermo from AIS data, with category, destination, speed and heading, updated every few minutes.",
+   "descrizione": "Ships around Sicily from AIS data, with category, destination, speed and heading, updated every few minutes.",
    "strati": [
     {
      "id": "navi",

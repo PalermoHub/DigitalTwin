@@ -921,13 +921,14 @@
  },
  "voli": {
   "data": "2026-10-22",
-  "aggiornati": "2026-10-22",
+  "aggiornati": "2026-10-23",
   "enti": [
-   "adsb.lol"
+   "adsb.lol",
+   "Gesap"
   ],
   "fonte": {
-   "it": "adsb.lol: posizioni ADS-B raccolte da volontari, aggiornate ogni 5 minuti. Licenza ODbL 1.0.",
-   "en": "adsb.lol: ADS-B positions collected by volunteers, updated every 5 minutes. Licence ODbL 1.0."
+   "it": "adsb.lol: posizioni ADS-B raccolte da volontari, aggiornate ogni 5 minuti. Licenza ODbL 1.0. Orari e ritardi dei voli di linea: Gesap, aeroporto di Palermo.",
+   "en": "adsb.lol: ADS-B positions collected by volunteers, updated every 5 minutes. Licence ODbL 1.0. Airline flight times and delays: Gesap, Palermo airport."
   },
   "link": {
    "it": [
@@ -938,6 +939,10 @@
     [
      "Dati aperti di adsb.lol",
      "https://github.com/adsblol/api"
+    ],
+    [
+     "Voli sul sito di Gesap",
+     "https://www.aeroportodipalermo.it/voli/"
     ]
    ],
    "en": [
@@ -948,6 +953,10 @@
     [
      "Dati aperti di adsb.lol",
      "https://github.com/adsblol/api"
+    ],
+    [
+     "Voli sul sito di Gesap",
+     "https://www.aeroportodipalermo.it/voli/"
     ]
    ]
   }

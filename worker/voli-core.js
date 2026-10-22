@@ -2,7 +2,10 @@
 // Aerei attorno all'aeroporto di Palermo (LICJ), da adsb.lol, come GeoJSON. Rotta: /voli
 // adsb.lol limita a 500 richieste al giorno per indirizzo e non ammette il browser (niente CORS): il Worker lo interroga
 // al massimo una volta ogni TTL_SECONDI (cache di Cloudflare, condivisa da tutti gli utenti) e rimette il risultato nei dati del sito.
+// Se il nominativo radio coincide con un volo di linea della pagina di Gesap (aeroporto-core.js), l'aereo porta anche orari e ritardo (campi «linea_»).
 // adsb.lol non dice da dove parte né dove arriva un volo: lo stato è dedotto da quota, distanza dall'aeroporto e velocità verticale.
+
+import { leggiAeroporto, arricchisci } from './aeroporto-core.js';
 
 export const AEROPORTO = [38.1759, 13.0910]; // lat, lon
 export const RAGGIO_NM = 100;
@@ -113,7 +116,10 @@ export async function gestisciVoli(richiesta, env, fetchFn, cache) {
         throw new Error(`${primo.message}; ${secondo.message}`);
       }
     }
-    const corpo = JSON.stringify(estrai(dati));
+    const fc = estrai(dati);
+    // Il volo di linea (ritardo, orari) viene da Gesap: se non risponde gli aerei restano come sono, senza fermare /voli.
+    try { arricchisci(fc, (await leggiAeroporto(fetchFn, cache)).dati); } catch { /* aerei senza volo di linea */ }
+    const corpo = JSON.stringify(fc);
     const intestazioni = { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_SECONDI}` };
     await cache?.put(chiave, new Response(corpo, { headers: intestazioni }));
     await cache?.put(CHIAVE_ULTIMO, new Response(corpo, { headers: { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_ULTIMO_SECONDI}` } }));

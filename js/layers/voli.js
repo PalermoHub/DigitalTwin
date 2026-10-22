@@ -1,7 +1,7 @@
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
-import { STATI, COLORE_ALTRO, coloreStato, modelloPopupVolo, voceVolo } from './scheda-voli.js';
+import { STATI, COLORE_ALTRO, coloreStato, modelloPopupVolo, voceVolo, voceAeroporto, modelloPopupAeroporto, aeroportoInAllerta } from './scheda-voli.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico } from './popup-traffico.js';
 import { tl, t } from '../core/i18n.js';
 import { registraGlifo, registraBadge, layerBadge, idBadge, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
@@ -9,18 +9,25 @@ import { scegliProxy } from '../rndt/proxy.js';
 
 // Aerei in volo attorno a Palermo (100 miglia nautiche da Punta Raisi). I dati non stanno nel repository: li serve il Worker (/voli),
 // che interroga adsb.lol al massimo ogni 5 minuti per tutti gli utenti. Il layer li ricarica ogni 5 minuti finché è acceso.
+// Insieme agli aerei scarica gli arrivi e le partenze di oggi (/aeroporto, da Gesap): servono alla scheda dell'aeroporto e al segnale rosso sull'icona.
 const SRC = 'voli';
 const ICONA = 'aereo'; // in mappa è la sagoma dell'icona, ruotata secondo la rotta (vedi core/icone-mappa.js)
 const PUNTI = 'voli-punti';
 const HIT = 'voli-hit'; // punti trasparenti, sempre presenti: la scheda mostra l'aereo sotto il clic anche a strato spento
 const SRC_AEROPORTO = 'voli-aeroporto';
 const AEROPORTO = 'voli-aeroporto-punto'; // l'aeroporto di Palermo Falcone e Borsellino (PMO), acceso e spento insieme agli aerei
+const HIT_AEROPORTO = 'voli-aeroporto-hit'; // area di clic dell'aeroporto, sempre presente (come HIT per gli aerei)
+const SEGNALE = 'voli-aeroporto-segnale'; // pallino rosso sull'icona: voli cancellati o molto in ritardo
 const COLORE_AEROPORTO = '#0b3d91';
+const COLORE_SEGNALE = '#e03131';
+const COORDINATE_AEROPORTO = [13.0910, 38.1759];
 const INTERVALLO_MS = 5 * 60 * 1000;
 const VUOTO = { type: 'FeatureCollection', features: [] };
 const urlVoli = () => `${scegliProxy(location.search, location.hostname)}/voli`;
+const urlAeroporto = () => `${scegliProxy(location.search, location.hostname)}/aeroporto`;
 
 const dettagli = new Map(); // id -> proprietà complete
+let aeroporto = null; // risposta di /aeroporto (arrivi, partenze, riepilogo); null finché non arriva
 const completo = p => dettagli.get(p.id) ?? p;
 let mappa = null;
 let legenda = null;
@@ -44,19 +51,32 @@ function scriviNota(aggiornato) {
   nota.textContent = ora ? t('voli.aggiornato', { ora, n: dettagli.size }) : t('voli.nonDisponibile');
 }
 
-// Scarica gli aerei dal Worker; se non risponde restano quelli di prima (il Worker o adsb.lol possono essere giù).
+async function scarica(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(String(r.status));
+  return r.json();
+}
+
+const puntoAeroporto = () => ({
+  type: 'Feature', geometry: { type: 'Point', coordinates: COORDINATE_AEROPORTO },
+  properties: { nome: tl('Aeroporto di Palermo (PMO)'), allerta: aeroportoInAllerta(aeroporto) },
+});
+
+// Scarica gli aerei e gli orari dell'aeroporto dal Worker, ciascuno per conto suo; se uno non risponde restano i dati di prima
+// (il Worker, adsb.lol o Gesap possono essere giù).
 async function aggiorna() {
-  try {
-    const r = await fetch(urlVoli());
-    if (!r.ok) throw new Error(String(r.status));
-    const fc = await r.json();
+  const [voli, orari] = await Promise.allSettled([scarica(urlVoli()), scarica(urlAeroporto())]);
+  if (voli.status === 'fulfilled') {
+    const fc = voli.value;
     dettagli.clear();
     for (const f of fc.features) dettagli.set(f.properties.id, f.properties);
     mappa?.getSource(SRC)?.setData(fc);
     ultimo = Date.now();
     scriviNota(fc.aggiornato);
-  } catch {
-    if (!dettagli.size) scriviNota(null);
+  } else if (!dettagli.size) scriviNota(null);
+  if (orari.status === 'fulfilled') {
+    aeroporto = orari.value;
+    mappa?.getSource(SRC_AEROPORTO)?.setData(puntoAeroporto());
   }
 }
 
@@ -123,7 +143,7 @@ export default {
   argomento: { titolo: 'Traffico aereo', descrizione: 'Aerei in volo attorno all\'aeroporto di Palermo, con quota, velocità e stato (in arrivo, in partenza, in transito), aggiornati ogni 5 minuti.' },
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
-    map.addSource(SRC_AEROPORTO, { type: 'geojson', data: { type: 'Feature', geometry: { type: 'Point', coordinates: [13.0910, 38.1759] }, properties: { nome: tl('Aeroporto di Palermo (PMO)') } } });
+    map.addSource(SRC_AEROPORTO, { type: 'geojson', data: puntoAeroporto() });
   },
   aggiungiLayer(map) {
     mappa = map;
@@ -143,21 +163,29 @@ export default {
       },
       paint: { 'text-color': COLORE_AEROPORTO, 'text-halo-color': '#fff', 'text-halo-width': 1.5 },
     }));
+    // pallino rosso in alto a destra dell'icona, acceso dal Worker/dati (`allerta`): c'è almeno un volo cancellato o in ritardo di 15 minuti o più
+    map.addLayer({
+      id: SEGNALE, type: 'circle', source: SRC_AEROPORTO, filter: ['==', ['get', 'allerta'], true],
+      layout: { visibility: 'none' },
+      paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 4.5, 14, 6.5], 'circle-color': COLORE_SEGNALE, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5, 'circle-translate': [11, -11] },
+    });
     map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
+    map.addLayer({ id: HIT_AEROPORTO, type: 'circle', source: SRC_AEROPORTO, paint: { 'circle-radius': 16, 'circle-opacity': 0 } });
     let popup = null;
     map.on('click', e => {
       if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
-      const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] })[0];
+      const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI, AEROPORTO] })[0];
       popup?.remove();
       if (!f) return;
-      const p = completo(f.properties);
+      const scalo = f.layer.id === AEROPORTO;
+      const p = scalo ? null : completo(f.properties);
       const { anchor, offset } = ancoraPopupTraffico(e.point, map.getContainer());
-      const colore = coloreStato(p.stato);
+      const colore = scalo ? (aeroportoInAllerta(aeroporto) ? COLORE_SEGNALE : COLORE_AEROPORTO) : coloreStato(p.stato);
       popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset, closeButton: false })
         .setLngLat(f.geometry.coordinates)
         .setDOMContent(contenutoPopupTraffico({
           sezione: 'Aviazione', icona: 'aereo', colore,
-          modello: modelloPopupVolo(p), coordinate: f.geometry.coordinates, chiudi: () => popup.remove(),
+          modello: scalo ? modelloPopupAeroporto(aeroporto) : modelloPopupVolo(p), coordinate: f.geometry.coordinates, chiudi: () => popup.remove(),
         }))
         .addTo(map);
       rifinisciPopupTraffico(popup, anchor, colore);
@@ -167,8 +195,10 @@ export default {
       campione: p => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, coloreStato(completo(p).stato))]),
       modello: p => modelloPopupVolo(completo(p)),
     }]);
-    map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
-    map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
+    for (const id of [PUNTI, AEROPORTO]) {
+      map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
+    }
     document.addEventListener('visibilitychange', () => {
       if (acceso && !document.hidden && Date.now() - ultimo > INTERVALLO_MS) aggiorna();
       pianifica();
@@ -176,19 +206,29 @@ export default {
   },
   avvia: aggiorna,
   scheda: {
-    layers: [HIT],
+    layers: [HIT, HIT_AEROPORTO],
     voci(trovati) {
       const visti = new Set();
       return trovati.flatMap(f => {
+        if (f.layer.id === HIT_AEROPORTO) {
+          if (visti.has(HIT_AEROPORTO)) return [];
+          visti.add(HIT_AEROPORTO);
+          return [voceAeroporto(aeroporto)];
+        }
         if (visti.has(f.properties.id)) return [];
         visti.add(f.properties.id);
         return [voceVolo(completo(f.properties))];
       });
     },
+    // L'aeroporto di Punta Raisi e gli aerei in volo stanno fuori dal Comune: il clic su di loro apre comunque la scheda (gli aerei solo a strato acceso).
+    apertoFuoriComune(map, e) {
+      const su = layers => map.queryRenderedFeatures(e.point, { layers }).length > 0;
+      return su([HIT_AEROPORTO]) || (map.getLayoutProperty(PUNTI, 'visibility') === 'visible' && su([HIT]));
+    },
   },
   legendaPannello: '.lg-voli', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
-    id: 'voli', etichetta: 'Aerei in volo', layers: [AEROPORTO, PUNTI], attivo: false,
+    id: 'voli', etichetta: 'Aerei in volo', layers: [AEROPORTO, SEGNALE, PUNTI], attivo: false,
     sottovoci: [{ titolo: 'Stato', voci: STATI.map(([s]) => ({ id: `stato:${s}`, etichetta: s })) }],
     suCambio(attivo) {
       acceso = attivo;
