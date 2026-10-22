@@ -100,3 +100,11 @@ test('/navi: GeoJSON dal KV con cache e CORS; origine estranea 403; metodo 405; 
   assert.equal((await gestisciNavi(rq({ method: 'POST' }), { ...env, NAVI: kv }, null)).status, 405);
   assert.equal((await gestisciNavi(rq(), { ...env, NAVI: { get: async () => { throw new Error('x'); } } }, null)).status, 502);
 });
+
+test('nomi e destinazioni: via formule e caratteri di controllo', () => {
+  const m = leggiMessaggio({ ...POS, MetaData: { MMSI: 247123456, ShipName: '=HYPERLINK("http://x")\n' } }, 1);
+  assert.equal(m.dati.nome, 'HYPERLINK("http://x")');
+  const s = leggiMessaggio({ ...STAT, Message: { ShipStaticData: { ...STAT.Message.ShipStaticData, Destination: '+cmd|x', Name: '@SUM(1)' } } }, 1);
+  assert.equal(s.dati.destinazione, 'cmd|x');
+  assert.equal(s.dati.nome, 'SUM(1)');
+});

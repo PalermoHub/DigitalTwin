@@ -26,7 +26,8 @@ export function categoria(tipo) {
 }
 
 const STATI_NAV = { 0: 'In navigazione', 1: 'All\'ancora', 2: 'Non governabile', 3: 'Manovrabilità limitata', 4: 'Limitata dal pescaggio', 5: 'Ormeggiata', 6: 'Incagliata', 7: 'Impegnata nella pesca', 8: 'A vela' };
-const pulito = s => String(s ?? '').replace(/[@\0]+/g, ' ').trim();
+// nomi e destinazioni li scrive chi gestisce il transponder: via i caratteri di controllo e, all'inizio, quelli che un foglio di calcolo leggerebbe come formula
+const pulito = s => String(s ?? '').replace(/[@\0-\x1f]+/g, ' ').trim().replace(/^[=+\-@\s]+/, '').slice(0, 60);
 const num = (v, min, max) => (Number.isFinite(v) && v >= min && v <= max ? v : null);
 
 // Un messaggio AISStream → modifica della nave (o null). Posizioni: PositionReport e StandardClassBPositionReport; dati fissi: ShipStaticData.
@@ -79,23 +80,26 @@ export function geojson(stato, adesso) {
 }
 
 // Ascolta AISStream per `durata` ms e restituisce le modifiche. `apri` apre il WebSocket (in produzione fetch con Upgrade).
-export async function raccogli(chiave, apri, adesso = () => Math.floor(Date.now() / 1000), durata = ASCOLTO_MS) {
+export async function raccogli(chiave, apri, adesso = () => Math.floor(Date.now() / 1000), durata = ASCOLTO_MS, diag = {}) {
   const ws = await apri(URL_STREAM);
   if (!ws) throw new Error('WebSocket non aperto');
   const modifiche = [];
   const fine = new Promise(risolvi => {
-    let totali = 0;
+    diag.messaggi = 0;
+    diag.tipi = {};
     ws.addEventListener('message', ev => {
-      totali++;
+      diag.messaggi++;
       try {
         const testo = typeof ev.data === 'string' ? ev.data : new TextDecoder().decode(ev.data);
-        const m = leggiMessaggio(JSON.parse(testo), adesso());
+        const grezzo = JSON.parse(testo);
+        diag.tipi[grezzo?.MessageType ?? 'altro'] = (diag.tipi[grezzo?.MessageType ?? 'altro'] ?? 0) + 1;
+        const m = leggiMessaggio(grezzo, adesso());
         if (m) modifiche.push(m);
-        else if (totali <= 3) console.log('navi: messaggio non usato', testo.slice(0, 300)); // es. errore di AISStream (chiave, riquadro)
+        else diag.scartato ??= testo.slice(0, 300); // es. errore di AISStream (chiave, riquadro)
       } catch { /* messaggio non valido: si ignora */ }
     });
-    ws.addEventListener('close', ev => { console.log('navi: connessione chiusa', ev?.code, ev?.reason, 'messaggi', totali); risolvi(); });
-    ws.addEventListener('error', ev => { console.log('navi: errore', ev?.message ?? ''); risolvi(); });
+    ws.addEventListener('close', ev => { diag.chiusa = `${ev?.code} ${ev?.reason ?? ''}`.trim(); risolvi(); });
+    ws.addEventListener('error', ev => { diag.errore = String(ev?.message ?? ev?.type ?? 'errore'); risolvi(); });
     setTimeout(risolvi, durata);
   });
   // la sottoscrizione deve arrivare entro 3 secondi dall'apertura
@@ -107,7 +111,9 @@ export async function raccogli(chiave, apri, adesso = () => Math.floor(Date.now(
 
 export async function aggiorna(env, apri, adesso = () => Math.floor(Date.now() / 1000), durata = ASCOLTO_MS) {
   if (!env?.AISSTREAM_KEY || !env?.NAVI) throw new Error('AISSTREAM_KEY o KV NAVI mancanti');
-  const modifiche = await raccogli(env.AISSTREAM_KEY, apri, adesso, durata);
+  const diag = { quando: adesso() };
+  const modifiche = await raccogli(env.AISSTREAM_KEY, apri, adesso, durata, diag);
+  await env.NAVI.put('diag', JSON.stringify(diag)); // riepilogo dell'ultimo ascolto (messaggi, tipi, errori): si legge dal KV
   const stato = unisci(await env.NAVI.get(CHIAVE_KV, 'json'), modifiche, adesso());
   await env.NAVI.put(CHIAVE_KV, JSON.stringify(stato));
   return { ricevuti: modifiche.length, navi: Object.keys(stato).length };
