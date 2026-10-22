@@ -257,6 +257,9 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   contenitore.replaceChildren(maniglia, testata, corpo, piede, disclaimer, annuncio);
   contenitore.dataset.punto = `${lngLat.lng},${lngLat.lat}`; // per lo stralcio di mappa in stampa
   contenitore.hidden = false;
+  const selezionato = indice.querySelector('[aria-selected="true"]'); // a scheda ancora scollegata le linguette non hanno posizione: ora la linguetta attiva si porta in vista
+  if (selezionato) indice.scrollLeft = Math.max(0, selezionato.offsetLeft - 24);
+  frecce();
   corpo.scrollTop = 0;
   adattaVista(lngLat); // la mappa si centra sul punto nella parte rimasta visibile
   return {
@@ -294,6 +297,9 @@ function adattaVistaMappa(map, contenitore, centro) {
 }
 
 // Prima il punto esatto; per i layer senza risultato, un riquadro di ±R pixel.
+// almeno un livello disegnato di uno strato del modulo è visibile
+const stratoAcceso = (map, m) => (m.strati ?? []).some(st => (st.layers ?? []).some(id => map.getLayer(id) && map.getLayoutProperty(id, 'visibility') === 'visible'));
+
 function trovaFeature(map, punto, layers) {
   let trovati = map.queryRenderedFeatures(punto, { layers });
   const mancanti = layers.filter(id => !trovati.some(f => f.layer.id === id));
@@ -464,8 +470,9 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
       const vicini = m.scheda.vicini ? featureVicine(map, lngLat, layers, { ...m.scheda.vicini, raggio: raggioVicini() }, esatti) : [];
       viciniTutti.push(...vicini);
       const vociM = m.scheda.voci(esatti.concat(vicini), lngLat);
-      // clic vero su un elemento: la scheda si apre sul tab dedicato dello strato (`scheda.tabAlClic` lo sceglie o lo esclude)
-      if (esatti.length && e.originalEvent) tabIniziale ??= (m.scheda.tabAlClic ? m.scheda.tabAlClic(map) : tabDedicato(vociM)) ?? null;
+      // clic vero su un elemento di uno strato acceso: la scheda si apre sul tab dedicato (`scheda.tabAlClic` lo sceglie o lo esclude);
+      // gli strati spenti, con i loro livelli trasparenti sempre interrogabili (terreno, edifici…), non rubano il tab
+      if (esatti.length && e.originalEvent) tabIniziale ??= (m.scheda.tabAlClic ? m.scheda.tabAlClic(map) : stratoAcceso(map, m) ? tabDedicato(vociM) : null) ?? null;
       voci.push(...vociM);
     }
     // dalla vista «Strati in 3D» il clic dice quali strati ha toccato: la scheda si apre sul tab del primo che ha dati qui
