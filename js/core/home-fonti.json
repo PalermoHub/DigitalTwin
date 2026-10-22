@@ -951,5 +951,38 @@
     ]
    ]
   }
+ },
+ "navi": {
+  "data": "2026-10-22",
+  "aggiornati": "2026-10-22",
+  "enti": [
+   "AISStream"
+  ],
+  "fonte": {
+   "it": "AISStream: dati AIS terrestri dei transponder delle navi, aggiornati ogni 5 minuti. Condizioni d'uso da verificare.",
+   "en": "AISStream: terrestrial AIS data from ship transponders, updated every 5 minutes. Terms of use to be checked."
+  },
+  "link": {
+   "it": [
+    [
+     "AISStream",
+     "https://aisstream.io/"
+    ],
+    [
+     "Documentazione di AISStream",
+     "https://aisstream.io/documentation"
+    ]
+   ],
+   "en": [
+    [
+     "AISStream",
+     "https://aisstream.io/"
+    ],
+    [
+     "Documentazione di AISStream",
+     "https://aisstream.io/documentation"
+    ]
+   ]
+  }
  }
 }

@@ -709,6 +709,33 @@
    ]
   },
   {
+   "id": "navi",
+   "titolo": "Traffico navale",
+   "descrizione": "Navi nel golfo di Palermo da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.",
+   "strati": [
+    {
+     "id": "navi",
+     "etichetta": "Navi"
+    }
+   ],
+   "fonte": "AISStream: dati AIS terrestri dei transponder delle navi, aggiornati ogni 5 minuti. Condizioni d'uso da verificare.",
+   "enti": [
+    "AISStream"
+   ],
+   "data": "2026-10-22",
+   "aggiornati": "2026-10-22",
+   "link": [
+    [
+     "AISStream",
+     "https://aisstream.io/"
+    ],
+    [
+     "Documentazione di AISStream",
+     "https://aisstream.io/documentation"
+    ]
+   ]
+  },
+  {
    "id": "trasporto",
    "titolo": "Trasporto pubblico",
    "descrizione": "Linee bus e tram e fermate AMAT, linee e stazioni della metro (RFI), con gli orari dai feed GTFS.",
@@ -1206,6 +1233,33 @@
     [
      "ISTAT, Dati per sezioni di censimento",
      "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/"
+    ]
+   ]
+  },
+  {
+   "id": "navi",
+   "titolo": "Maritime traffic",
+   "descrizione": "Ships in the Gulf of Palermo from AIS data, with category, destination, speed and heading, updated every few minutes.",
+   "strati": [
+    {
+     "id": "navi",
+     "etichetta": "Ships"
+    }
+   ],
+   "fonte": "AISStream: terrestrial AIS data from ship transponders, updated every 5 minutes. Terms of use to be checked.",
+   "enti": [
+    "AISStream"
+   ],
+   "data": "2026-10-22",
+   "aggiornati": "2026-10-22",
+   "link": [
+    [
+     "AISStream",
+     "https://aisstream.io/"
+    ],
+    [
+     "Documentazione di AISStream",
+     "https://aisstream.io/documentation"
     ]
    ]
   },
