@@ -4,7 +4,7 @@
 // resta in ascolto qualche secondo e `unisci` mette le posizioni nel KV (una nave per MMSI, scartate dopo SCADENZA_S senza segnali);
 // `gestisciNavi` restituisce il KV come GeoJSON, con cache. Il browser non parla mai con AISStream.
 
-export const RIQUADRO = [[37.85, 12.65], [38.6, 13.9]]; // [lat, lon] sud-ovest e nord-est: il golfo di Palermo e le sue rotte
+export const RIQUADRO = [[35.5, 10.5], [39.5, 16.5]]; // PROVA DIAGNOSTICA, non committare: da ripristinare a [[37.85, 12.65], [38.6, 13.9]]
 export const ASCOLTO_MS = 75000;
 export const SCADENZA_S = 30 * 60;
 export const TTL_SECONDI = 120;
