@@ -125,10 +125,10 @@ export default {
     const colori = ['match', ['get', 'categoria'], ...CATEGORIE.flatMap(([c, col]) => [c, col]), COLORE_ALTRO];
     map.addLayer(layerGlifo({
       id: PUNTI, source: SRC, icona: ICONA, colore: colori,
-      layout: { visibility: 'none', 'icon-rotate': ['coalesce', ['get', 'rotta'], 0], 'icon-rotation-alignment': 'map', 'icon-size': ['interpolate', ['linear'], ['zoom'], 8, 0.9, 14, 1.6] },
+      layout: { visibility: 'none', 'icon-rotate': ['coalesce', ['get', 'rotta'], 0], 'icon-rotation-alignment': 'map', 'icon-size': ['interpolate', ['linear'], ['zoom'], 8, 1.2, 14, 2.1] },
       paint: { 'icon-halo-width': 1.2 },
     }));
-    map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
+    map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 15, 'circle-opacity': 0 } });
     let popup = null;
     map.on('click', e => {
       if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
