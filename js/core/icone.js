@@ -31,6 +31,7 @@ export const ICONE = {
   albero: 'M12 2 6 10h2.5L5 15h4.5L7 19h4v3h2v-3h4l-2.5-4H19l-3.5-5H18L12 2z',
   aereo: 'M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z', // aerei in volo attorno all'aeroporto (naso verso l'alto: ruota con `icon-rotate`)
   nave: 'M12 2c2.2 2.6 3.6 5.4 3.6 8.4V19l-1.6 3h-4l-1.6-3v-8.6C8.4 7.4 9.8 4.6 12 2z', // navi nel golfo (vista dall'alto, prua verso l'alto: ruota con `icon-rotate`)
+  satellite: 'M12 8l4 4-4 4-4-4zM1.5 9.5h5v5h-5zM17.5 9.5h5v5h-5zM6.5 11.2h2v1.6h-2zM15.5 11.2h2v1.6h-2zM11.2 3.5h1.6V8h-1.6zM11.2 16h1.6v4.5h-1.6z', // satelliti e ISS nel cielo di Palermo
   fontanella: 'M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z',
   scuola: 'M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z',
   seggio: 'M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',

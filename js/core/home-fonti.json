@@ -993,5 +993,38 @@
     ]
    ]
   }
+ },
+ "satelliti": {
+  "data": "2026-10-23",
+  "aggiornati": "2026-10-23",
+  "enti": [
+   "CelesTrak"
+  ],
+  "fonte": {
+   "it": "CelesTrak: elementi orbitali dei satelliti, rinnovati ogni 2 ore; le posizioni sono calcolate nel browser (SGP4) ogni secondo.",
+   "en": "CelesTrak: satellite orbital elements, refreshed every 2 hours; positions are computed in the browser (SGP4) every second."
+  },
+  "link": {
+   "it": [
+    [
+     "CelesTrak",
+     "https://celestrak.org/"
+    ],
+    [
+     "Elementi orbitali (GP) di CelesTrak",
+     "https://celestrak.org/NORAD/elements/"
+    ]
+   ],
+   "en": [
+    [
+     "CelesTrak",
+     "https://celestrak.org/"
+    ],
+    [
+     "CelesTrak orbital elements (GP)",
+     "https://celestrak.org/NORAD/elements/"
+    ]
+   ]
+  }
  }
 }

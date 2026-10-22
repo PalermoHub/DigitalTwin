@@ -1,9 +1,10 @@
 // worker/rndt-proxy.js
-// Punto d'ingresso del Worker: Cloudflare accetta come esportazione solo il gestore (e gli eventi). La logica (e i test) sta in proxy-core.js, voli-core.js, aeroporto-core.js e navi-core.js.
+// Punto d'ingresso del Worker: Cloudflare accetta come esportazione solo il gestore (e gli eventi). La logica (e i test) sta in proxy-core.js, voli-core.js, aeroporto-core.js, navi-core.js e satelliti-core.js.
 import { gestisci } from './proxy-core.js';
 import { gestisciVoli } from './voli-core.js';
 import { gestisciAeroporto } from './aeroporto-core.js';
 import { aggiorna, apriWebSocket, gestisciNavi } from './navi-core.js';
+import { gestisciSatelliti } from './satelliti-core.js';
 
 export default {
   fetch(richiesta, env) {
@@ -11,6 +12,7 @@ export default {
     if (percorso === '/voli') return gestisciVoli(richiesta, env, fetch, caches.default);
     if (percorso === '/aeroporto') return gestisciAeroporto(richiesta, env, fetch, caches.default);
     if (percorso === '/navi') return gestisciNavi(richiesta, env, caches.default);
+    if (percorso === '/satelliti') return gestisciSatelliti(richiesta, env, fetch, caches.default);
     return gestisci(richiesta, env, fetch);
   },
   // ogni 5 minuti (crons in wrangler.toml): ascolta AISStream e aggiorna il KV

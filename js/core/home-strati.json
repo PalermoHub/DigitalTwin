@@ -512,6 +512,33 @@
    ]
   },
   {
+   "id": "satelliti",
+   "titolo": "Satelliti e ISS",
+   "descrizione": "Il cielo di Palermo in tempo reale: la Stazione Spaziale Internazionale e i satelliti più luminosi sopra l'orizzonte, con altezza, direzione e prossimo passaggio.",
+   "strati": [
+    {
+     "id": "satelliti",
+     "etichetta": "Satelliti e ISS"
+    }
+   ],
+   "fonte": "CelesTrak: elementi orbitali dei satelliti, rinnovati ogni 2 ore; le posizioni sono calcolate nel browser (SGP4) ogni secondo.",
+   "enti": [
+    "CelesTrak"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2026-10-23",
+   "link": [
+    [
+     "CelesTrak",
+     "https://celestrak.org/"
+    ],
+    [
+     "Elementi orbitali (GP) di CelesTrak",
+     "https://celestrak.org/NORAD/elements/"
+    ]
+   ]
+  },
+  {
    "id": "scuole",
    "titolo": "Scuole e sezioni elettorali",
    "descrizione": "Scuole e asili comunali e sedi delle sezioni elettorali.",
@@ -1709,6 +1736,33 @@
     [
      "Rete di ricarica, onData",
      "https://github.com/ondata/rete_ricarica_veicoli_elettrici"
+    ]
+   ]
+  },
+  {
+   "id": "satelliti",
+   "titolo": "Satellites and ISS",
+   "descrizione": "Palermo's sky in real time: the International Space Station and the brightest satellites above the horizon, with elevation, direction and next pass.",
+   "strati": [
+    {
+     "id": "satelliti",
+     "etichetta": "Satellites and ISS"
+    }
+   ],
+   "fonte": "CelesTrak: satellite orbital elements, refreshed every 2 hours; positions are computed in the browser (SGP4) every second.",
+   "enti": [
+    "CelesTrak"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2026-10-23",
+   "link": [
+    [
+     "CelesTrak",
+     "https://celestrak.org/"
+    ],
+    [
+     "CelesTrak orbital elements (GP)",
+     "https://celestrak.org/NORAD/elements/"
     ]
    ]
   },
