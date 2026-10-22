@@ -34,12 +34,55 @@ function punteggio(v, parole) {
   return somma / parole.length;
 }
 
+// Refusi: una parola che non compare in nessun campo della guida («arei») si sostituisce con quella più vicina (una lettera
+// in più, in meno, diversa o scambiata, stessa iniziale): si prova solo se la ricerca esatta non trova nulla.
+// Tipo di refuso (più basso = più probabile) o null se la distanza è maggiore di uno: 0 lettere scambiate, 1 lettera mancante, 2 lettera in più, 3 lettera diversa.
+const refuso = (a, b) => {
+  if (a === b || Math.abs(a.length - b.length) > 1 || a[0] !== b[0]) return null;
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  const [x, y] = [a.slice(i), b.slice(i)];
+  if (x.length === y.length) {
+    if (x.length > 1 && x[0] === y[1] && x[1] === y[0] && x.slice(2) === y.slice(2)) return 0;
+    return x.slice(1) === y.slice(1) ? 3 : null;
+  }
+  if (x.length < y.length) return y.slice(1) === x ? 1 : null;
+  return x.slice(1) === y ? 2 : null;
+};
+
+const vocabolari = new WeakMap();
+function vocabolario(voci) {
+  if (!vocabolari.has(voci)) {
+    const conta = new Map();
+    for (const v of voci) { const c = campiNormalizzati(v); for (const campo of ['domande', 'parole', 'titolo']) for (const w of c[campo]) if (w.length >= MIN_PAROLA) conta.set(w, (conta.get(w) ?? 0) + 1); }
+    vocabolari.set(voci, conta);
+  }
+  return vocabolari.get(voci);
+}
+
+function correggi(voci, parole) {
+  const noti = vocabolario(voci);
+  const migliore = p => {
+    let scelta = null;
+    for (const [w, n] of noti) {
+      const tipo = refuso(p, w);
+      if (tipo != null && (!scelta || tipo < scelta.tipo || (tipo === scelta.tipo && n > scelta.n))) scelta = { w, tipo, n };
+    }
+    return scelta?.w ?? p;
+  };
+  return parole.map(p => (voci.some(v => { const c = campiNormalizzati(v); return ['domande', 'parole', 'titolo', 'testo'].some(k => contiene(c[k], p)); }) ? p : migliore(p)));
+}
+
 // `trovate`: al massimo il passaggio migliore, se supera la soglia. `vicine`: domande della guida, se non c'è risposta.
 // `candidate`: le migliori `n` voci con un punteggio positivo (serve ai test e alla taratura).
 export function rispondi(voci, domanda, n = 3) {
   const parole = normalizza(domanda ?? '').split(' ').filter(p => p.length >= MIN_PAROLA && !PAROLE_VUOTE.has(p));
   if (!parole.length) return { trovate: [], vicine: [], candidate: [] };
-  const ordinate = voci.map(v => ({ v, p: punteggio(v, parole) })).filter(x => x.p > 0).sort((a, b) => b.p - a.p);
+  let ordinate = voci.map(v => ({ v, p: punteggio(v, parole) })).filter(x => x.p > 0).sort((a, b) => b.p - a.p);
+  if (!ordinate.length) {
+    const corrette = correggi(voci, parole);
+    if (corrette.some((p, i) => p !== parole[i])) ordinate = voci.map(v => ({ v, p: punteggio(v, corrette) })).filter(x => x.p > 0).sort((a, b) => b.p - a.p);
+  }
   const candidate = ordinate.slice(0, n).map(x => x.v);
   if (ordinate.length && ordinate[0].p >= SOGLIA) return { trovate: [ordinate[0].v], vicine: [], candidate };
   const vicine = [...new Set(ordinate.slice(0, 3).flatMap(x => x.v.domande.slice(0, 1)))].slice(0, 3);

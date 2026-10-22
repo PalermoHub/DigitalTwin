@@ -134,3 +134,11 @@ test('rispondi: «layers» trova la voce che dice «layer»', () => {
   assert.equal(rispondi(vociEn, 'layers').trovate[0].id, 'a#1');
   assert.equal(rispondi(vociEn, 'change the colors').trovate[0].id, 'a#1');
 });
+
+test('refusi: una parola che non c\'è nella guida si corregge con quella più vicina, solo se la ricerca esatta non trova nulla', () => {
+  const guida = JSON.parse(readFileSync(new URL('../../guida/indice.json', import.meta.url), 'utf8'));
+  assert.match(rispondi(guida, 'arei').trovate[0]?.id ?? '', /^57-traffico-aereo/); // lettera mancante
+  assert.match(rispondi(guida, 'nvi').trovate[0]?.id ?? '', /^58-traffico-navale/);
+  assert.match(rispondi(guida, 'aeerei').trovate[0]?.id ?? '', /^57-traffico-aereo/); // lettera in più
+  assert.deepEqual(rispondi(guida, 'xqzwv').trovate, []); // nessuna parola vicina: resta «non lo so»
+});
