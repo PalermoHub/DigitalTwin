@@ -1,7 +1,7 @@
 // tests/js/voli-worker.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { estrai, stato, distanzaNm, gestisciVoli, AEROPORTO } from '../../worker/voli-core.js';
+import { estrai, stato, distanzaNm, gestisciVoli, daOpenSky, AEROPORTO } from '../../worker/voli-core.js';
 
 const AEREO = { hex: '345314', flight: 'VLG6599 ', r: 'EC-MOO', t: 'A321', alt_baro: 28675, gs: 409.5, track: 305.36, baro_rate: 1088, lat: 38.5, lon: 12.8 };
 const ORIGINE = 'https://dt.example';
@@ -78,4 +78,35 @@ test('/voli: se adsb.lol non risponde (429) si servono gli ultimi aerei buoni', 
   assert.equal(r.status, 200);
   assert.equal(r.headers.get('x-dati'), 'precedenti');
   assert.equal((await r.json()).features.length, 1);
+});
+
+const STATO_OPENSKY = ['0201c4', 'RAM271  ', 'Morocco', 1792701589, 1792701590, 13.1695, 37.2609, 10972.8, false, 211.64, 302.49, 5.08, null, 11452.86, '6633', false, 0];
+
+test('OpenSky: stati → forma di adsb.lol (piedi, nodi, piedi al minuto, a terra)', () => {
+  const r = estrai(daOpenSky({ time: 1792701590, states: [STATO_OPENSKY, ['a1', 'X ', 'It', 0, 0, 13.1, 38.2, null, true, 0, 0, 0, null, null, '', false, 0], ['b2', '', 'It', 0, 0, null, null, 1, false, 1, 1, 0, null, null, '', false, 0]] }));
+  assert.equal(r.features.length, 2); // il terzo non ha posizione
+  const p = r.features.find(f => f.properties.id === '0201c4').properties;
+  assert.equal(p.volo, 'RAM271');
+  assert.equal(p.quota_ft, 36000);
+  assert.equal(p.velocita_kt, 411);
+  assert.equal(p.rateo_fpm, 1000);
+  assert.equal(r.features.find(f => f.properties.id === 'a1').properties.stato, 'A terra');
+  assert.match(r.fonte, /OpenSky/);
+  assert.throws(() => daOpenSky({}), /OpenSky/);
+});
+
+test('/voli: se adsb.lol risponde 429 si passa a OpenSky; se cadono entrambe 502 con i due motivi', async () => {
+  const chiamate = [];
+  const f = async url => {
+    chiamate.push(new URL(url).host);
+    return url.includes('adsb.lol') ? new Response('x', { status: 429 }) : new Response(JSON.stringify({ time: 1000, states: [STATO_OPENSKY] }), { status: 200 });
+  };
+  const r = await gestisciVoli(rq(), env, f, cacheFinta());
+  assert.equal(r.status, 200);
+  assert.deepEqual(chiamate, ['api.adsb.lol', 'opensky-network.org']);
+  assert.equal((await r.json()).features.length, 1);
+  const giu = async () => new Response('x', { status: 429 });
+  const e = await gestisciVoli(rq(), env, giu, cacheFinta());
+  assert.equal(e.status, 502);
+  assert.match((await e.json()).dettaglio, /adsb\.lol 429; OpenSky 429/);
 });

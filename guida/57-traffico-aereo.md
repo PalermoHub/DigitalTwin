@@ -20,7 +20,7 @@ Parole chiave: aggiornamento, ogni 5 minuti, ricarica, Worker, adsb.lol, ora dei
 
 Domande tipiche: Ogni quanto si aggiornano gli aerei? Perché non si muovono di continuo? Cosa dice la nota in legenda?
 
-I dati non sono salvati nel sito: arrivano da un servizio (Worker) che interroga **adsb.lol** al massimo **ogni 5 minuti** per tutti gli utenti. Con il layer acceso la mappa si ricarica ogni 5 minuti (solo se la scheda del browser è in primo piano). La nota in legenda dice a che ora sono stati letti i dati e quanti aerei sono in vista. Se il servizio non risponde restano gli ultimi aerei letti.
+I dati non sono salvati nel sito: arrivano da un servizio (Worker) che interroga **adsb.lol** al massimo **ogni 5 minuti** per tutti gli utenti. Con il layer acceso la mappa si ricarica ogni 5 minuti (solo se la scheda del browser è in primo piano). La nota in legenda dice a che ora sono stati letti i dati e quanti aerei sono in vista. Se adsb.lol rifiuta le richieste, il servizio ripiega su **OpenSky Network** (stessi aerei, ma senza matricola e modello); se nessuno dei due risponde restano gli ultimi aerei letti.
 
 ## Cosa mostrano popup e scheda
 

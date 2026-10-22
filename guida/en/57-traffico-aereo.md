@@ -20,7 +20,7 @@ Keywords: update, every 5 minutes, refresh, Worker, adsb.lol, time of the data, 
 
 Typical questions: How often are the aircraft updated? Why do they not move continuously? What does the note in the legend say?
 
-The data are not stored in the site: they come from a service (Worker) that queries **adsb.lol** **at most every 5 minutes** for all users. While the layer is on the map reloads every 5 minutes (only when the browser tab is in the foreground). The note in the legend tells the time of the data and how many aircraft are in view. If the service does not answer, the last aircraft read stay on the map.
+The data are not stored in the site: they come from a service (Worker) that queries **adsb.lol** **at most every 5 minutes** for all users. While the layer is on the map reloads every 5 minutes (only when the browser tab is in the foreground). The note in the legend tells the time of the data and how many aircraft are in view. If adsb.lol refuses the requests, the service falls back to **OpenSky Network** (the same aircraft, but without registration and type); if neither answers, the last aircraft read stay on the map.
 
 ## What the popup and the card show
 

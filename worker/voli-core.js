@@ -9,6 +9,14 @@ export const RAGGIO_NM = 100;
 export const TTL_SECONDI = 300;
 export const TTL_ULTIMO_SECONDI = 3600; // per quanto si tiene l'ultima risposta buona, da servire se adsb.lol non risponde
 const URL_FONTE = `https://api.adsb.lol/v2/point/${AEROPORTO[0]}/${AEROPORTO[1]}/${RAGGIO_NM}`;
+// Riserva: OpenSky Network (ADS-B di volontari, senza account 400 richieste al giorno; la cache di 5 minuti ne usa al massimo 288).
+// Dà posizione, quota, velocità e rotta, ma non matricola né modello.
+const GRADI_LAT = RAGGIO_NM / 60;
+const GRADI_LON = GRADI_LAT / Math.cos(AEROPORTO[0] * Math.PI / 180);
+const URL_RISERVA = `https://opensky-network.org/api/states/all?lamin=${(AEROPORTO[0] - GRADI_LAT).toFixed(2)}&lomin=${(AEROPORTO[1] - GRADI_LON).toFixed(2)}&lamax=${(AEROPORTO[0] + GRADI_LAT).toFixed(2)}&lomax=${(AEROPORTO[1] + GRADI_LON).toFixed(2)}`;
+const M_FT = 1 / 0.3048;
+const MS_KT = 1.943844;
+const MS_FPM = 196.85;
 const VICINO_NM = 60; // oltre questa distanza non si deduce arrivo o partenza
 const TERRA_NM = 4;
 const RATEO_FPM = 300; // velocità verticale minima (piedi al minuto) per dire che sale o scende
@@ -49,14 +57,26 @@ function feature(a) {
 }
 
 export function estrai(risposta) {
+  const fonte = risposta?.fonte;
   if (!risposta || !Array.isArray(risposta.ac)) throw new Error('risposta di adsb.lol non valida (manca «ac»)');
   const visti = risposta.ac.filter(a => a?.hex && Number.isFinite(a.lat) && Number.isFinite(a.lon));
   const now = Number(risposta.now);
   return {
     type: 'FeatureCollection', aggiornato: Number.isFinite(now) && now > 0 ? Math.floor(now / 1000) : null,
-    fonte: 'adsb.lol (ADS-B raccolto da volontari) - ODbL 1.0',
+    fonte: fonte ?? 'adsb.lol (ADS-B raccolto da volontari) - ODbL 1.0',
     features: visti.sort((x, y) => (x.hex < y.hex ? -1 : 1)).map(feature),
   };
+}
+
+// Risposta di OpenSky (stati dei velivoli come array) → forma di adsb.lol, così il resto del codice è lo stesso
+export function daOpenSky(risposta) {
+  if (!risposta || !Array.isArray(risposta.states)) throw new Error('risposta di OpenSky non valida (manca «states»)');
+  const ac = risposta.states.filter(a => Array.isArray(a) && Number.isFinite(a[5]) && Number.isFinite(a[6])).map(a => ({
+    hex: a[0], flight: a[1] ?? '', lon: a[5], lat: a[6],
+    alt_baro: a[8] ? 'ground' : numero(a[7], x => x * M_FT), gs: numero(a[9], x => x * MS_KT), track: a[10],
+    baro_rate: numero(a[11], x => x * MS_FPM),
+  }));
+  return { now: Number(risposta.time) * 1000, ac, fonte: 'OpenSky Network (ADS-B raccolto da volontari)' };
 }
 
 const json = (stato, corpo, intestazioni = {}) => new Response(JSON.stringify(corpo), {
@@ -77,9 +97,23 @@ export async function gestisciVoli(richiesta, env, fetchFn, cache) {
   const salvata = await cache?.match(chiave);
   if (salvata) return new Response(salvata.body, { status: 200, headers: { ...Object.fromEntries(salvata.headers), ...cors } });
   try {
-    const remota = await fetchFn(URL_FONTE, { headers: { accept: 'application/json', 'user-agent': 'DigitalTwinPalermo/1.0 (+https://palermodigitaltwin.opendatasicilia.it)' } });
-    if (!remota.ok) throw new Error(`adsb.lol ${remota.status}`);
-    const corpo = JSON.stringify(estrai(await remota.json()));
+    const intestazioniRichiesta = { headers: { accept: 'application/json', 'user-agent': 'DigitalTwinPalermo/1.0 (+https://palermodigitaltwin.opendatasicilia.it)' } };
+    let dati;
+    try {
+      const remota = await fetchFn(URL_FONTE, intestazioniRichiesta);
+      if (!remota.ok) throw new Error(`adsb.lol ${remota.status}`);
+      dati = await remota.json();
+    } catch (primo) {
+      // adsb.lol limita le richieste (429) o non risponde: si prova OpenSky
+      try {
+        const riserva = await fetchFn(URL_RISERVA, intestazioniRichiesta);
+        if (!riserva.ok) throw new Error(`OpenSky ${riserva.status}`);
+        dati = daOpenSky(await riserva.json());
+      } catch (secondo) {
+        throw new Error(`${primo.message}; ${secondo.message}`);
+      }
+    }
+    const corpo = JSON.stringify(estrai(dati));
     const intestazioni = { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_SECONDI}` };
     await cache?.put(chiave, new Response(corpo, { headers: intestazioni }));
     await cache?.put(CHIAVE_ULTIMO, new Response(corpo, { headers: { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_ULTIMO_SECONDI}` } }));
