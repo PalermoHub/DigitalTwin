@@ -8,7 +8,7 @@ const LINEA = { linea_direzione: 'partenza', linea_volo: 'EC 03512', linea_compa
 const volo = (n, extra = {}) => ({ volo: `FR 0${4000 + n}`, citta: 'BOLOGNA', programmato: `0${n}:05`, ritardo_min: 0, cancellato: false, gate: 'A12', stato: '', ...extra });
 const DATI = {
   aggiornato: '2026-10-23T00:15', riepilogo: { voli: 4, ritardati: 2, cancellati: 1, ritardo_medio_min: 25 },
-  partenze: [volo(1), volo(2, { ritardo_min: 30 }), volo(3, { cancellato: true, ritardo_min: null }), volo(4, { stato: 'PARTITO' })],
+  partenze: [volo(1), volo(2, { ritardo_min: 30, stimato: '02:35' }), volo(3, { cancellato: true, ritardo_min: null }), volo(4, { stato: 'PARTITO' }), volo(6, { ritardo_min: 21, stimato: '00:06', stimato_giorno_dopo: true, programmato: '23:45' })],
   arrivi: [volo(5, { gate: '' })],
 };
 
@@ -63,7 +63,11 @@ test('scheda dell\'aeroporto: riepilogo e prossimi voli (senza quelli già concl
   const g = gruppiAeroporto(DATI);
   assert.deepEqual(g.map(x => x.titolo), ['Oggi', 'Prossime partenze', 'Prossimi arrivi']);
   assert.deepEqual(g[0].griglia.map(c => c.valore), ['2', '1', '25 min']);
-  assert.equal(g[1].righe.length, 3); // il volo PARTITO non c'è
+  assert.equal(g[1].righe.length, 4); // il volo PARTITO non c'è
+  assert.equal(g[1].righe[1].etichetta, '02:05 → 02:35 · FR 04002'); // ritardato: programmato → stimato
+  assert.equal(g[1].righe[0].etichetta, '01:05 · FR 04001'); // in orario: solo il programmato
+  assert.equal(g[1].righe[2].etichetta, '03:05 · FR 04003'); // cancellato: nessuno stimato
+  assert.equal(g[1].righe[3].etichetta, '23:45 → 00:06 +1 · FR 04006');
   assert.equal(g[1].righe[1].valore, 'BOLOGNA · In ritardo di 30 min · gate A12');
   assert.equal(g[1].righe[2].valore, 'BOLOGNA · Cancellato · gate A12');
   assert.equal(g[2].righe[0].valore, 'BOLOGNA · In orario');

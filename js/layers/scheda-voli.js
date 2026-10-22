@@ -86,8 +86,11 @@ const gravi = voli => voli.filter(v => v.cancellato || (v.ritardo_min ?? 0) >= S
 // Segnale sull'icona: c'è almeno un volo cancellato o in ritardo di 15 minuti o più, tra quelli non ancora conclusi.
 export const aeroportoInAllerta = dati => !!dati && gravi([...dati.arrivi, ...dati.partenze].filter(v => !CONCLUSO.test(v.stato))).length > 0;
 
+// «00:50 → 01:27 · FR 09599»: se lo stimato differisce dal programmato lo si vede subito («+1» = dopo la mezzanotte)
+const orarioElenco = v => (!v.cancellato && v.stimato && v.stimato !== v.programmato ? `${v.programmato} → ${v.stimato}${v.stimato_giorno_dopo ? ' +1' : ''}` : v.programmato);
+
 const rigaElenco = v => ({
-  etichetta: `${v.programmato} · ${v.volo}`,
+  etichetta: `${orarioElenco(v)} · ${v.volo}`,
   valore: [v.citta, testoRitardo(v.ritardo_min, v.cancellato), v.gate ? `${t('voli.gate')} ${v.gate}` : ''].filter(Boolean).join(' · '),
 });
 
