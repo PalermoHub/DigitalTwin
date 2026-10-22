@@ -5,7 +5,7 @@
 // `gestisciNavi` restituisce il KV come GeoJSON, con cache. Il browser non parla mai con AISStream.
 
 export const RIQUADRO = [[37.85, 12.65], [38.6, 13.9]]; // [lat, lon] sud-ovest e nord-est: il golfo di Palermo e le sue rotte
-export const ASCOLTO_MS = 30000;
+export const ASCOLTO_MS = 75000;
 export const SCADENZA_S = 30 * 60;
 export const TTL_SECONDI = 120;
 const URL_STREAM = 'https://stream.aisstream.io/v0/stream';
