@@ -11,6 +11,7 @@ dati/*/
 !dati/uffici/
 # eccezione: distributori di carburante (piccoli, rigenerati dal workflow «Aggiorna distributori»)
 !dati/distributori/
+!dati/voli/
 # eccezione: incendi (piccoli, rigenerati dal workflow «Aggiorna incendi»)
 !dati/incedi/
 # eccezione: PAI (rigenerato dal workflow «Aggiorna PAI»)

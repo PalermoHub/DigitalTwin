@@ -2951,5 +2951,10 @@
   "evidenza.volo": "Aereo",
   "tabella.layer.voli": "Aerei in volo",
   "lbl.Aereo in volo": "Aereo in volo",
-  "lbl.Aeroporto di Palermo (PMO)": "Aeroporto di Palermo (PMO)"
+  "lbl.Aeroporto di Palermo (PMO)": "Aeroporto di Palermo (PMO)",
+  "home.slide.voli.titolo": "Traffico aereo",
+  "home.slide.voli.testo": "Gli aerei in volo attorno a Palermo, con l'aeroporto di Punta Raisi: quota, velocità e stato, aggiornati ogni 5 minuti.",
+  "home.slide.voli.alt": "La mappa di Palermo con l'aeroporto e gli aerei in volo",
+  "luoghi.aeroporto": "Aeroporto",
+  "tabella.fonte.adsb": "adsb.lol, ADS-B di volontari, ODbL 1.0"
 }
