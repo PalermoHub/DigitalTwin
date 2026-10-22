@@ -2965,7 +2965,7 @@
   "navi.pochiSecondi": "a few seconds ago",
   "navi.minutiFa": "{n} min ago",
   "lbl.Traffico navale": "Maritime traffic",
-  "lbl.Navi nel golfo di Palermo da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.": "Ships in the Gulf of Palermo from AIS data, with category, destination, speed and heading, updated every few minutes.",
+  "lbl.Navi attorno alla Sicilia da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.": "Ships around Sicily from AIS data, with category, destination, speed and heading, updated every few minutes.",
   "lbl.Navi": "Ships",
   "lbl.Aviazione": "Aviation",
   "lbl.Marittimo": "Maritime",
@@ -2984,7 +2984,7 @@
   "lbl.Segui la nave su MarineTraffic": "Follow the ship on MarineTraffic",
   "lbl.Scheda della nave su MarineTraffic": "Ship page on MarineTraffic",
   "lbl.Nave": "Ship",
-  "lbl.Traffico navale nel golfo di Palermo (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 5 minuti e conservati per 30 minuti; condizioni d'uso da verificare": "Maritime traffic in the Gulf of Palermo (ship position, category, destination, speed and heading): AISStream, terrestrial AIS data from ship transponders, listened to by the Worker every 5 minutes and kept for 30 minutes; terms of use to be checked",
+  "lbl.Traffico navale attorno alla Sicilia (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 5 minuti e conservati per 30 minuti; condizioni d'uso da verificare": "Maritime traffic around Sicily (ship position, category, destination, speed and heading): AISStream, terrestrial AIS data from ship transponders, listened to by the Worker every 5 minutes and kept for 30 minutes; terms of use to be checked",
   "lbl.AISStream": "AISStream",
   "lbl.Documentazione di AISStream": "AISStream documentation"
 }

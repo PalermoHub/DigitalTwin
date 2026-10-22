@@ -2965,7 +2965,7 @@
   "navi.pochiSecondi": "pochi secondi fa",
   "navi.minutiFa": "{n} min fa",
   "lbl.Traffico navale": "Traffico navale",
-  "lbl.Navi nel golfo di Palermo da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.": "Navi nel golfo di Palermo da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.",
+  "lbl.Navi attorno alla Sicilia da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.": "Navi attorno alla Sicilia da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.",
   "lbl.Navi": "Navi",
   "lbl.Aviazione": "Aviazione",
   "lbl.Marittimo": "Marittimo",
@@ -2984,7 +2984,7 @@
   "lbl.Segui la nave su MarineTraffic": "Segui la nave su MarineTraffic",
   "lbl.Scheda della nave su MarineTraffic": "Scheda della nave su MarineTraffic",
   "lbl.Nave": "Nave",
-  "lbl.Traffico navale nel golfo di Palermo (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 5 minuti e conservati per 30 minuti; condizioni d'uso da verificare": "Traffico navale nel golfo di Palermo (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 5 minuti e conservati per 30 minuti; condizioni d'uso da verificare",
+  "lbl.Traffico navale attorno alla Sicilia (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 5 minuti e conservati per 30 minuti; condizioni d'uso da verificare": "Traffico navale attorno alla Sicilia (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 5 minuti e conservati per 30 minuti; condizioni d'uso da verificare",
   "lbl.AISStream": "AISStream",
   "lbl.Documentazione di AISStream": "Documentazione di AISStream"
 }

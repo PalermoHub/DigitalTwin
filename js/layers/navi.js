@@ -7,7 +7,7 @@ import { tl, t } from '../core/i18n.js';
 import { registraGlifo, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 import { scegliProxy } from '../rndt/proxy.js';
 
-// Navi nel golfo di Palermo (AIS terrestre). I dati non stanno nel repository: li serve il Worker (/navi), che ogni 5 minuti ascolta
+// Navi attorno alla Sicilia (AIS terrestre). I dati non stanno nel repository: li serve il Worker (/navi), che ogni 5 minuti ascolta
 // AISStream e conserva l'ultima posizione di ogni nave vista negli ultimi 30 minuti. Il layer li ricarica ogni 2 minuti finché è acceso.
 const SRC = 'navi';
 const ICONA = 'nave'; // in mappa è la sagoma dell'icona, ruotata secondo la rotta (vedi core/icone-mappa.js)
@@ -115,7 +115,7 @@ export default {
   titolo: 'Traffico navale',
   gruppo: 'trasporto', // dentro «Trasporti», in una sezione propria
   sezione: 'Traffico navale',
-  argomento: { titolo: 'Traffico navale', descrizione: 'Navi nel golfo di Palermo da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.' },
+  argomento: { titolo: 'Traffico navale', descrizione: 'Navi attorno alla Sicilia da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.' },
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });
   },

@@ -1,7 +1,7 @@
 import { righe } from '../core/scheda-util.js';
 import { t, tl, localeIntl } from '../core/i18n.js';
 
-// Modello puro delle navi nel golfo di Palermo: stesse righe per il popup e per la scheda di destra (tab «Luogo»).
+// Modello puro delle navi attorno alla Sicilia: stesse righe per il popup e per la scheda di destra (tab «Luogo»).
 // I dati arrivano dal Worker (/navi), che ascolta AISStream (AIS terrestre): sono le ultime posizioni ricevute, non una traccia continua.
 
 const FONTE = 'AISStream (AIS terrestre) — dati AIS dei transponder delle navi';

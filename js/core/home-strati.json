@@ -711,7 +711,7 @@
   {
    "id": "navi",
    "titolo": "Traffico navale",
-   "descrizione": "Navi nel golfo di Palermo da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.",
+   "descrizione": "Navi attorno alla Sicilia da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.",
    "strati": [
     {
      "id": "navi",
