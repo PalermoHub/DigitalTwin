@@ -24,6 +24,7 @@ const mef = t('tabella.fonte.mef');
 const peba = t('tabella.fonte.peba');
 const pnrr = t('tabella.fonte.pnrr');
 const opere = t('tabella.fonte.opere');
+const piano = t('tabella.fonte.piano');
 const mimit = t('tabella.fonte.mimit');
 const pendolarismo = t('tabella.fonte.pendolarismo');
 
@@ -71,6 +72,8 @@ export const SORGENTI = [
   { id: 'pnrr', nome: t('tabella.layer.pnrr'), strati: ['pnrr-hit'], visibili: ['pnrr-punti'], chiave: p => p.cup ?? null, collegamenti: { cup: cup => `https://opencup.gov.it/portale/progetto/-/cup/${encodeURIComponent(cup)}` }, colonne: ['cup', 'titolo', 'missione', 'stato', 'attuatore', 'pnrr', 'totale', 'inizio_previsto', 'fine_prevista', 'indirizzo', 'precisione', 'submisura_nome'], fonte: pnrr, approssimata: false, esporta: true, colore: '#7048e8' },
   // opere pubbliche localizzate nella sola città di Palermo (un punto per opera con un indirizzo trovato nei civici)
   { id: 'opere', nome: t('tabella.layer.opere'), strati: ['opere-hit'], visibili: ['opere-punti'], chiave: p => p.cup ?? null, collegamenti: { cup: cup => `https://opencup.gov.it/portale/progetto/-/cup/${encodeURIComponent(cup)}` }, colonne: ['cup', 'titolo', 'titolare', 'stato', 'fase', 'settore', 'tipologia', 'costo_previsto', 'costo_effettivo', 'esec_fine_prev', 'concl_fine_prev', 'indirizzo', 'precisione'], fonte: opere, approssimata: false, esporta: true, colore: '#e8590c' },
+  // Programma triennale dei lavori pubblici 2026-2028: punti, linee e poligoni assegnati a un intervento (la chiave è il codice: un intervento con più geometrie è una riga sola)
+  { id: 'piano-triennale', nome: t('tabella.layer.piano'), strati: ['piano-triennale-hit-punti', 'piano-triennale-hit-linee', 'piano-triennale-hit-poli'], visibili: ['piano-triennale-punti', 'piano-triennale-linee', 'piano-triennale-poli'], chiave: p => p.cod ?? null, collegamenti: { cup: cup => `https://www.opencup.gov.it/portale/progetto/-/cup/${encodeURIComponent(cup)}` }, colonne: ['cod', 'titolo', 'settore_nome', 'annualita', 'importo', 'cup', 'circoscrizione', 'quartiere', 'tipo'], fonte: piano, approssimata: false, esporta: true, colore: '#c2255c' },
   // pendolarismo da/verso Palermo: Palermo (vive e lavora qui) più un punto per comune collegato, con entrata, uscita e saldo
   { id: 'pendolarismo', nome: t('tabella.layer.pendolarismo'), strati: ['pendolarismo-hit'], intera: 'pendolarismo/pendolarismo.geojson', filtro: p => p.tipo !== 'arco', visibili: ['pendolarismo-archi', 'pendolarismo-nodi', 'pendolarismo-palermo'], chiave: p => p.codice ?? null, colonne: ['nome', 'codice', 'entrata', 'uscita', 'saldo'], fonte: pendolarismo, approssimata: false, esporta: true, colore: '#ff4400' },
   { id: 'popolazione', nome: t('tabella.layer.popolazione'), strati: ['pop-hit'], visibili: ['pop-fill'], chiave: p => p.SEZ21_ID, colonne: ['SEZ21_ID', 'Circoscrizione', 'Quartiere', 'UPL', 'POP21', 'Pop_2022', 'FAM21', 'ABI21', 'EDI21', 'Area'], fonte: istat, approssimata: true, esporta: true, colore: '#1c7ed6' },

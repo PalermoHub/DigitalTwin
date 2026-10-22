@@ -65,12 +65,13 @@ Typical questions: What are the guided paths? How do I open the map with the rig
 
 The guided paths are on the home page of the site, in the «What you can switch on» section, under the title «Guided paths». A path can also be activated from Talia: below the answer there are the buttons of the paths, and one click switches on the layers of the path (a second click switches them off). Each path is a card with a title, a sentence saying what it is about, the list of the layers it includes and the «Open the map» button. The button opens the map with those layers already switched on, with the legends already active on the map and, for the «Urban planning», «Vehicles on the move (2D)» and «Vehicles on the move (3D)» paths, already centred on the area indicated by the path (the 3D one also tilts it, to 60°). The other paths leave the map in the starting view. Once the map is open, the layers can be switched off, switched on and changed as usual (see `45-barra-strati-legende-e-ordine.md`).
 
-There are twelve paths:
+There are thirteen paths:
 
 - **Risks and climate**: Geomorphological hazard, Hydraulic hazard, Coastal erosion hazard, Fires, Heat islands
 - **Schools and neighbourhoods**: Municipal schools and nurseries, Polling sections (sites), Neighbourhoods, Population by section
 - **Mobility**: Metro line, Bus lines, Stops, Charging points, Fuel stations
-- **A city in transformation**: NRRP projects, Public works, Population trend 2011-2023
+- **A city in transformation**: Three-year public works plan 2026-2028, NRRP projects, Public works, Population trend 2011-2023
+- **Public works in the pipeline**: Three-year public works plan 2026-2028, Public works, NRRP projects, Neighbourhoods
 - **Heritage and greenery**: Monuments, Monumental trees, Public drinking fountains, Former Noviziato dei Crociferi in 3D
 - **Urban planning**: Zoning plan 2004: zoning and PPE, Zoning plan 2004: constraints, Cadastre: parcels, OMI zones 2025, House numbers
 - **Road safety**: Accident hotspots, The 20 most dangerous streets, Accidents per km on roads, Accidents
@@ -94,12 +95,12 @@ Typical questions: How do I see the data of a point? Which sections does the pro
 
 To get to know a place it is enough to click on the map, or tap it on a smartphone: on opening, an invitation reminds you (see `51-pagine-privacy-lingua-e-offline.md`). The point is highlighted (see `46-selezione-in-mappa-raggio-e-fumetti.md`) and the profile opens. A single click queries all the layers together: cadastre, zoning plan constraints, road safety, cultural heritage, public transport and the others that are switched on.
 
-The profile is divided into tabs, which appear only if they have content: **Place**, **Planning tools**, **Market**, **Population**, **Terrain**, **Roadside services**, **NRRP**, **Works**, **Other data (RNDT)**. In particular:
+The profile is divided into tabs, which appear only if they have content: **Place**, **Planning tools**, **Market**, **Population**, **Terrain**, **Roadside services**, **NRRP**, **Works**, **Three-year plan**, **Other data (RNDT)**. In particular:
 - **Place**: address, building, nearby stops and fuel stations, monuments, schools, offices and more, with district, neighbourhood and UPL in the heading.
 - **Planning tools**: building, cadastral parcel with the link to SISTER, zoning and constraints of the zoning plan, PAI constraints and fires.
 - **Market**: OMI quotations. **Population**: census section, demographic trend, commuting.
 - **Terrain**: the terrain (DTM 5 m) and the heat island. **Roadside services**: charging points and drinking fountains.
-- **NRRP** and **Works**: projects and public works. **Other data (RNDT)**: the layers added from the catalogue and from «My layers».
+- **NRRP**, **Works** and **Three-year plan**: projects, public works and projects of the three-year public works programme. **Other data (RNDT)**: the layers added from the catalogue and from «My layers».
 
 Every section indicates its source. At the bottom of every profile there is the notice that the data are informational and have no legal value (see `07-fonti-avvertenze-glossario.md`). The details of each profile section are in the files `08`–`33`, the dynamic parts in `34`–`36`.
 

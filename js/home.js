@@ -128,11 +128,11 @@ function costruisciNumeri(argomenti, tutte) {
 // ---- slider ----
 // le ultime cinque novità, la più recente per prima: quando si aggiunge uno strato nuovo, entra in testa al posto del più vecchio
 const SLIDE = [
+  { id: 'piano-triennale', img: 'img/home/strati/piano-triennale.webp', strati: ['piano-triennale'] },
   { id: 'trasporto-mezzi', img: 'img/home/strati/trasporto-mezzi.webp', strati: ['trasporto-mezzi-treni', 'trasporto-mezzi-tram', 'trasporto-mezzi-bus'] },
   { id: 'opere', img: 'img/home/strati/opere.webp', strati: ['opere'] },
   { id: 'distributori', img: 'img/home/strati/distributori.webp', strati: ['distributori'] },
   { id: 'trend-popolazione', img: 'img/home/strati/trend-popolazione.webp', strati: ['trend-popolazione'] },
-  { id: 'pnrr', img: 'img/home/strati/pnrr.webp', strati: ['pnrr'] },
 ];
 
 function costruisciSlider() {

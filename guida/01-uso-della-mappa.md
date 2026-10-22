@@ -65,12 +65,13 @@ Domande tipiche: Cosa sono i percorsi guidati? Come apro la mappa con gli strati
 
 I percorsi guidati stanno nella pagina iniziale del sito, nella sezione «Cosa puoi accendere», sotto il titolo «Percorsi guidati». Anche da Talia si può attivare un percorso: sotto la risposta ci sono i pulsanti dei percorsi, e un clic accende gli strati del percorso (un secondo clic li spegne). Ogni percorso è una scheda con un titolo, una frase che dice di cosa parla, l'elenco degli strati che comprende e il pulsante «Apri la mappa». Il pulsante apre la mappa con quegli strati già accesi, con le legende già attive sulla mappa e, per i percorsi «Urbanistica», «Mezzi in movimento (2D)» e «Mezzi in movimento (3D)», già centrata sulla zona indicata dal percorso (il 3D la inclina anche, a 60°). Gli altri percorsi lasciano la mappa nella vista di partenza. Una volta aperta la mappa, gli strati si possono spegnere, accendere e cambiare come sempre (vedi `45-barra-strati-legende-e-ordine.md`).
 
-I percorsi disponibili sono dodici:
+I percorsi disponibili sono tredici:
 
 - **Rischi e clima**: Pericolosità geomorfologica, Pericolosità idraulica, Pericolosità erosione costiera, Incendi, Isole di calore
 - **Scuole e quartieri**: Scuole e asili comunali, Sezioni elettorali (sedi), Quartieri, Popolazione per sezione
 - **Mobilità**: Linea metro, Linee bus, Fermate, Colonnine di ricarica, Distributori di carburante
-- **Città in trasformazione**: Progetti PNRR, Opere pubbliche, Trend della popolazione 2011-2023
+- **Città in trasformazione**: Piano triennale lavori pubblici 2026-2028, Progetti PNRR, Opere pubbliche, Trend della popolazione 2011-2023
+- **Lavori pubblici in programma**: Piano triennale lavori pubblici 2026-2028, Opere pubbliche, Progetti PNRR, Quartieri
 - **Patrimonio e verde**: Monumenti, Alberi monumentali, Fontanelle pubbliche, Ex Noviziato dei Crociferi in 3D
 - **Urbanistica**: PRG 2004: zonizzazione e PPE, PRG 2004: vincoli, Catasto: particelle, Zone OMI 2025, Numeri civici
 - **Sicurezza stradale**: Hotspot degli incidenti, Le 20 strade più pericolose, Incidenti per km sulle strade, Incidenti
@@ -94,12 +95,12 @@ Domande tipiche: Come vedo i dati di un punto? Quali sezioni ha la scheda? Dove 
 
 Per conoscere un luogo basta fare clic sulla mappa, o toccarla da smartphone: all'apertura un invito lo ricorda (vedi `51-pagine-privacy-lingua-e-offline.md`). Il punto viene evidenziato (vedi `46-selezione-in-mappa-raggio-e-fumetti.md`) e si apre la scheda. Un solo clic interroga insieme tutti gli strati: catasto, vincoli del piano regolatore, sicurezza stradale, beni culturali, trasporto pubblico e gli altri accesi.
 
-La scheda è divisa in tab, che compaiono solo se hanno contenuto: **Luogo**, **Strumenti urbanistici**, **Mercato**, **Popolazione**, **Terreno**, **Servizi su strada**, **PNRR**, **Opere**, **Altri dati (RNDT)**. In particolare:
+La scheda è divisa in tab, che compaiono solo se hanno contenuto: **Luogo**, **Strumenti urbanistici**, **Mercato**, **Popolazione**, **Terreno**, **Servizi su strada**, **PNRR**, **Opere**, **Piano triennale**, **Altri dati (RNDT)**. In particolare:
 - **Luogo**: indirizzo, edificio, fermate e distributori vicini, monumenti, scuole, uffici e altro, con circoscrizione, quartiere e UPL in testata.
 - **Strumenti urbanistici**: edificio, particella catastale con il link a SISTER, zonizzazione e vincoli del PRG, vincoli PAI e incendi.
 - **Mercato**: quotazioni OMI. **Popolazione**: sezione di censimento, trend demografico, pendolarismo.
 - **Terreno**: il terreno (DTM 5 m) e l'isola di calore. **Servizi su strada**: colonnine di ricarica e fontanelle.
-- **PNRR** e **Opere**: progetti e opere pubbliche. **Altri dati (RNDT)**: i layer aggiunti da catalogo e da «I miei layer».
+- **PNRR**, **Opere** e **Piano triennale**: progetti, opere pubbliche e interventi del Programma triennale dei lavori pubblici. **Altri dati (RNDT)**: i layer aggiunti da catalogo e da «I miei layer».
 
 Ogni sezione indica la fonte. In fondo a ogni scheda c'è l'avviso che i dati sono informativi e senza valore legale (vedi `07-fonti-avvertenze-glossario.md`). I dettagli di ogni scheda sono nei file `08`–`33`, le parti dinamiche in `34`–`36`.
 

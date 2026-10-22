@@ -3,7 +3,7 @@
 // modello dati) e si traducono con tl() al momento di mostrarli.
 import { tabScheda, MANCANTE } from './scheda-modello.js';
 
-export const ORDINE_TAB = ['luogo', 'strumenti', 'mercato', 'popolazione', 'terreno', 'servizi', 'pnrr', 'opere'];
+export const ORDINE_TAB = ['luogo', 'strumenti', 'mercato', 'popolazione', 'terreno', 'servizi', 'pnrr', 'opere', 'piano'];
 const MAX_VOCI = 4; // sezioni dettagliate per tab: le altre diventano un elenco di titoli
 const MAX_DATI = 3; // righe per sezione
 

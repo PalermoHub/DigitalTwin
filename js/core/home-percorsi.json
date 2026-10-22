@@ -55,17 +55,35 @@
  {
   "id": "trasformazione",
   "strati": [
+   "piano-triennale",
    "pnrr",
    "opere",
    "trend-popolazione"
   ],
   "it": {
    "titolo": "Città in trasformazione",
-   "testo": "Progetti PNRR, opere pubbliche e come cambia la popolazione dal 2011."
+   "testo": "Piano triennale dei lavori pubblici, progetti PNRR, opere pubbliche e come cambia la popolazione dal 2011."
   },
   "en": {
    "titolo": "A city in transformation",
-   "testo": "PNRR projects, public works and how the population has changed since 2011."
+   "testo": "Three-year public works plan, NRRP projects, public works and how the population has changed since 2011."
+  }
+ },
+ {
+  "id": "lavori-pubblici",
+  "strati": [
+   "piano-triennale",
+   "opere",
+   "pnrr",
+   "quartieri"
+  ],
+  "it": {
+   "titolo": "Lavori pubblici in programma",
+   "testo": "Il Piano triennale 2026-2028 del Comune, le opere pubbliche già avviate e i progetti PNRR, sui confini dei quartieri."
+  },
+  "en": {
+   "titolo": "Public works in the pipeline",
+   "testo": "The City’s three-year plan 2026-2028, public works already under way and NRRP projects, over neighbourhood boundaries."
   }
  },
  {

@@ -29,6 +29,9 @@ export const FONTI = {
   'seggi-hit-punti': { etichetta: t('evidenza.seggio'), colore: '#0c8599' },
   'distributori-hit': { etichetta: t('evidenza.distributore'), colore: '#f2b705' },
   'opere-hit': { etichetta: t('evidenza.opera'), colore: '#e8590c' },
+  'piano-triennale-hit-poli': { etichetta: t('evidenza.piano'), colore: '#c2255c' },
+  'piano-triennale-hit-linee': { etichetta: t('evidenza.piano'), colore: '#c2255c' },
+  'piano-triennale-hit-punti': { etichetta: t('evidenza.piano'), colore: '#c2255c' },
   'colonnine-hit': { etichetta: t('evidenza.colonnina'), colore: '#2b8a3e' },
   'uffici-hit': { etichetta: t('evidenza.uffici'), colore: '#a61e4d' },
   'trasporto-hit-fermate': { etichetta: t('evidenza.fermata'), colore: '#364fc7' },
@@ -42,7 +45,7 @@ export const FONTI = {
 // I layer senza icona qui (es. civici) restano cerchi.
 const ICONE_PUNTI = {
   'monumenti-hit-punti': 'monumento', 'alberi-hit-punti': 'albero', 'fontanelle-hit-punti': 'fontanella',
-  'scuole-hit-punti': 'scuola', 'seggi-hit-punti': 'voto', 'distributori-hit': 'distributori', 'opere-hit': 'cantiere',
+  'scuole-hit-punti': 'scuola', 'seggi-hit-punti': 'voto', 'distributori-hit': 'distributori', 'opere-hit': 'cantiere', 'piano-triennale-hit-punti': 'piano',
   'colonnine-hit': 'colonnine', 'uffici-hit': 'uffici', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
   'distributori-vicini': 'distributori', 'trasporto-vicine': 'trasporto', // evidenze delle voci della scheda
 };

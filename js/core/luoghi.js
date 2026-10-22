@@ -37,6 +37,9 @@ export const FONTI = [
   // opere pubbliche a Palermo (BDAP-MOP): per titolo, indirizzo o titolare; il CUP si cerca come un numero di linea
   { file: 'opere/opere.geojson', facoltativa: true, strato: 'opere', zoom: 18, numero: p => p.cup, nota: p => [tr('luoghi.opere'), p.fase].filter(Boolean).join(' · '),
     campi: p => [p.titolo, p.indirizzo, p.titolare] },
+  // Programma triennale dei lavori pubblici 2026-2028: per titolo o codice intervento (01-01_025); quartiere come testo di ricerca
+  { file: 'piano-triennale/interventi.geojson', facoltativa: true, strato: 'piano-triennale', zoom: 17, numero: p => String(p.cod ?? '').split(';')[0], nota: p => [tr('luoghi.piano'), p.annualita].filter(Boolean).join(' · '),
+    campi: p => [p.titolo, p.quartiere] },
 ];
 
 // Nomi con cui un luogo è noto, oltre a quello del dato (chiave: nome del dato). Chi scrive il nome breve lo trova per primo.

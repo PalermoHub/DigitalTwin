@@ -148,3 +148,13 @@ test('opere pubbliche: un punto per CUP, chiave dal CUP, titolare, fase e costi 
   assert.equal(s.collegamenti.cup('X1'), 'https://opencup.gov.it/portale/progetto/-/cup/X1');
   assert.equal(s.approssimata, false);
 });
+
+test('piano triennale: tre strati hit (punti, linee, poligoni), chiave dal codice, importo e annualità tra le colonne', () => {
+  const s = sorgentePer('piano-triennale');
+  assert.deepEqual(s.strati, ['piano-triennale-hit-punti', 'piano-triennale-hit-linee', 'piano-triennale-hit-poli']);
+  assert.deepEqual(s.visibili, ['piano-triennale-punti', 'piano-triennale-linee', 'piano-triennale-poli']);
+  assert.equal(s.chiave({ cod: '01-01_003' }), '01-01_003');
+  assert.equal(s.chiave({}), null);
+  assert.ok(['cod', 'titolo', 'settore_nome', 'annualita', 'importo', 'cup'].every(c => s.colonne.includes(c)));
+  assert.equal(s.collegamenti.cup('X1'), 'https://www.opencup.gov.it/portale/progetto/-/cup/X1');
+});

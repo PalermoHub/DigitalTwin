@@ -885,5 +885,38 @@
     ]
    ]
   }
+ },
+ "piano-triennale": {
+  "data": "2026-10-22",
+  "aggiornati": "2026-10-22",
+  "enti": [
+   "Comune di Palermo"
+  ],
+  "fonte": {
+   "it": "Comune di Palermo, Programma triennale dei lavori pubblici 2026-2028 (schede e allegati, DCC 553/2026); tabelle estratte dai PDF e geometrie ricavate dalle tavole da OpenDataSicilia con Claude AI; dati informativi, senza valore legale; elaborazione DigitalTwin Palermo.",
+   "en": "City of Palermo, Three-year public works programme 2026-2028 (sheets and annexes, council resolution 553/2026); tables extracted from the PDFs and geometries traced from the programme maps by OpenDataSicilia with Claude AI; informational data, no legal value; DigitalTwin Palermo processing."
+  },
+  "link": {
+   "it": [
+    [
+     "Mappa originale del Piano triennale, OpenDataSicilia",
+     "https://opendatasicilia.github.io/piano_triennale_26_28/"
+    ],
+    [
+     "OpenCUP, Codici Unici di Progetto",
+     "https://www.opencup.gov.it/"
+    ]
+   ],
+   "en": [
+    [
+     "Mappa originale del Piano triennale, OpenDataSicilia",
+     "https://opendatasicilia.github.io/piano_triennale_26_28/"
+    ],
+    [
+     "OpenCUP, Codici Unici di Progetto",
+     "https://www.opencup.gov.it/"
+    ]
+   ]
+  }
  }
 }

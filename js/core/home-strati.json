@@ -406,6 +406,33 @@
    ]
   },
   {
+   "id": "piano-triennale",
+   "titolo": "Piano triennale lavori pubblici 2026-2028",
+   "descrizione": "Programma triennale dei lavori pubblici 2026-2028 del Comune di Palermo (DCC 553/2026): 548 interventi per 4,37 miliardi di euro, di cui 454 localizzati sulla mappa (punti, linee, poligoni colorati per annualità). Nella scheda, tab Piano triennale: importi per anno, fonti di finanziamento, elenco annuale, CUP e grafici sull’intero Programma, anche per gli interventi senza geometria.",
+   "strati": [
+    {
+     "id": "piano-triennale",
+     "etichetta": "Piano triennale lavori pubblici 2026-2028"
+    }
+   ],
+   "fonte": "Comune di Palermo, Programma triennale dei lavori pubblici 2026-2028 (schede e allegati, DCC 553/2026); tabelle estratte dai PDF e geometrie ricavate dalle tavole da OpenDataSicilia con Claude AI; dati informativi, senza valore legale; elaborazione DigitalTwin Palermo.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-22",
+   "aggiornati": "2026-10-22",
+   "link": [
+    [
+     "Mappa originale del Piano triennale, OpenDataSicilia",
+     "https://opendatasicilia.github.io/piano_triennale_26_28/"
+    ],
+    [
+     "OpenCUP, Codici Unici di Progetto",
+     "https://www.opencup.gov.it/"
+    ]
+   ]
+  },
+  {
    "id": "pnrr",
    "titolo": "PNRR – Progetti a Palermo",
    "descrizione": "Progetti del Piano nazionale di ripresa e resilienza localizzati nella sola città di Palermo (open data di Italia Domani): missione, stato di avanzamento, importi e soggetto attuatore. Sulla mappa solo i progetti che hanno un luogo, raggruppati (circa la metà): gli altri si consultano nella scheda, tab PNRR, e nell’elenco completo in CSV.",
@@ -1697,6 +1724,33 @@
     [
      "Open data del Comune di Palermo",
      "https://opendata.comune.palermo.it/index.php"
+    ]
+   ]
+  },
+  {
+   "id": "piano-triennale",
+   "titolo": "Three-year public works plan 2026-2028",
+   "descrizione": "Three-year public works programme 2026-2028 of the City of Palermo (council resolution 553/2026): 548 projects worth 4.37 billion euro, 454 of them located on the map (points, lines and polygons coloured by year). In the side panel, Three-year plan tab: amounts per year, funding sources, annual list, CUP and charts on the whole programme, also for projects without a geometry.",
+   "strati": [
+    {
+     "id": "piano-triennale",
+     "etichetta": "Three-year public works plan 2026-2028"
+    }
+   ],
+   "fonte": "City of Palermo, Three-year public works programme 2026-2028 (sheets and annexes, council resolution 553/2026); tables extracted from the PDFs and geometries traced from the programme maps by OpenDataSicilia with Claude AI; informational data, no legal value; DigitalTwin Palermo processing.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-22",
+   "aggiornati": "2026-10-22",
+   "link": [
+    [
+     "Mappa originale del Piano triennale, OpenDataSicilia",
+     "https://opendatasicilia.github.io/piano_triennale_26_28/"
+    ],
+    [
+     "OpenCUP, Codici Unici di Progetto",
+     "https://www.opencup.gov.it/"
     ]
    ]
   }
