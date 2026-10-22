@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { suntoScheda } from '../../js/core/chat-bot-sunto.js';
-import { tabScheda, MANCANTE } from '../../js/core/scheda-modello.js';
+import { tabScheda, tabDedicato, MANCANTE } from '../../js/core/scheda-modello.js';
 
 const sez = (chiave, peso, titolo, righe = [], extra = {}) => ({ chiave, peso, titolo, gruppi: righe.length ? [{ righe }] : [], ...extra });
 const r = (etichetta, valore) => ({ etichetta, valore });
@@ -11,6 +11,13 @@ test('tabScheda: il tab dal peso e dalla chiave', () => {
   assert.equal(tabScheda(10), 'luogo');
   assert.equal(tabScheda(5, 'pai:1'), 'strumenti');
   assert.equal(tabScheda(95), 'pnrr');
+});
+
+test('tabDedicato: il tab dello strato dalle sue voci, null se solo Luogo', () => {
+  assert.equal(tabDedicato([{ peso: 102 }, { peso: 103 }]), 'piano');
+  assert.equal(tabDedicato([{ peso: 10 }, { peso: 96 }]), 'pnrr');
+  assert.equal(tabDedicato([{ peso: 10 }, {}]), null);
+  assert.equal(tabDedicato([]), null);
 });
 
 test('un tab per gruppo di sezioni, nell\'ordine della scheda', () => {

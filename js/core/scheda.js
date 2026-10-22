@@ -1,4 +1,4 @@
-import { unisci, sezioniConRitardo, testoContesto, titoloScheda, tabScheda, NOTA_LEGALE, MANCANTE } from './scheda-modello.js';
+import { unisci, sezioniConRitardo, testoContesto, titoloScheda, tabScheda, tabDedicato, NOTA_LEGALE, MANCANTE } from './scheda-modello.js';
 import { applicaPreferenze, registraVisti, leggiPreferenze, salvaPreferenze } from './scheda-preferenze.js';
 import { svgIcona } from './icone.js';
 import { segnala } from './pannello.js';
@@ -459,12 +459,14 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
       const layers = m.scheda.layers.filter(id => map.getLayer(id));
       if (!layers.length) continue;
       const esatti = trovaFeature(map, m === sopra?.m ? e.point : punto, layers);
-      if (esatti.length && e.originalEvent) tabIniziale ??= m.scheda.tabAlClic?.(map) ?? null;
       trovatiTutti.push(...esatti);
       // `scheda.vicini` ({ raggio, max }): il layer mostra anche i suoi punti nei dintorni del clic, a strato acceso o spento
       const vicini = m.scheda.vicini ? featureVicine(map, lngLat, layers, { ...m.scheda.vicini, raggio: raggioVicini() }, esatti) : [];
       viciniTutti.push(...vicini);
-      voci.push(...m.scheda.voci(esatti.concat(vicini), lngLat));
+      const vociM = m.scheda.voci(esatti.concat(vicini), lngLat);
+      // clic vero su un elemento: la scheda si apre sul tab dedicato dello strato (`scheda.tabAlClic` lo sceglie o lo esclude)
+      if (esatti.length && e.originalEvent) tabIniziale ??= (m.scheda.tabAlClic ? m.scheda.tabAlClic(map) : tabDedicato(vociM)) ?? null;
+      voci.push(...vociM);
     }
     // dalla vista «Strati in 3D» il clic dice quali strati ha toccato: la scheda si apre sul tab del primo che ha dati qui
     // (PRG e vincoli: «Strumenti urbanistici»)

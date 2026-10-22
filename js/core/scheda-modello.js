@@ -130,3 +130,6 @@ export const valoreLungo = valore => String(valore).length > 24;
 
 // Il tab di una sezione della scheda, dal suo peso (e per alcune dalla chiave)
 export const tabScheda = (p, chiave = '') => (p === 100 ? 'rndt' : p === 20 || p === 40 || p === 50 || /^(pai|incendio)[:-]/.test(String(chiave)) ? 'strumenti' : p === 60 ? 'mercato' : p === 70 ? 'popolazione' : p === 80 ? 'terreno' : p === 90 ? 'servizi' : p >= 94 && p <= 96 ? 'pnrr' : p >= 97 && p <= 99 ? 'opere' : p >= 101 && p <= 103 ? 'piano' : 'luogo');
+
+// Il tab dedicato di uno strato, dedotto dalle sue voci (peso/chiave): null se stanno tutte nel tab Luogo
+export const tabDedicato = voci => voci.map(v => tabScheda(v.peso, v.chiave)).find(t => t !== 'luogo') ?? null;
