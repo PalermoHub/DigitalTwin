@@ -2967,6 +2967,8 @@
   "lbl.Traffico navale": "Maritime traffic",
   "lbl.Navi nel golfo di Palermo da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.": "Ships in the Gulf of Palermo from AIS data, with category, destination, speed and heading, updated every few minutes.",
   "lbl.Navi": "Ships",
+  "lbl.Aviazione": "Aviation",
+  "lbl.Marittimo": "Maritime",
   "lbl.AISStream (AIS terrestre) — dati AIS dei transponder delle navi": "AISStream (terrestrial AIS) — AIS data from ship transponders",
   "lbl.Passeggeri": "Passenger",
   "lbl.Merci": "Cargo",

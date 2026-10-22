@@ -2,6 +2,7 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { STATI, COLORE_ALTRO, coloreStato, modelloPopupVolo, voceVolo } from './scheda-voli.js';
+import { contenutoPopupTraffico } from './popup-traffico.js';
 import { tl, t } from '../core/i18n.js';
 import { registraGlifo, registraBadge, layerBadge, idBadge, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 import { scegliProxy } from '../rndt/proxy.js';
@@ -35,14 +36,6 @@ function el(tag, classe, testo) {
   if (classe) e.className = classe;
   if (testo != null) e.textContent = tl(testo);
   return e;
-}
-
-function contenutoPopup(p) {
-  const m = modelloPopupVolo(p);
-  const radice = el('div', 'monumento-popup');
-  radice.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.sottotitolo));
-  for (const r of m.righe) radice.append(el('p', 'monumento-desc', `${tl(r.etichetta)}: ${r.valore}`));
-  return radice;
 }
 
 function scriviNota(aggiornato) {
@@ -157,8 +150,14 @@ export default {
       const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] })[0];
       popup?.remove();
       if (!f) return;
-      popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
-        .setLngLat(f.geometry.coordinates).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
+      const p = completo(f.properties);
+      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', offset: 10, closeButton: false })
+        .setLngLat(f.geometry.coordinates)
+        .setDOMContent(contenutoPopupTraffico({
+          sezione: 'Aviazione', icona: 'aereo', colore: coloreStato(p.stato),
+          modello: modelloPopupVolo(p), coordinate: f.geometry.coordinates, chiudi: () => popup.remove(),
+        }))
+        .addTo(map);
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: ICONA,
