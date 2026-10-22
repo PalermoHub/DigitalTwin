@@ -151,13 +151,18 @@ export default {
       popup?.remove();
       if (!f) return;
       const p = completo(f.properties);
-      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', offset: 10, closeButton: false })
+      const { x, y } = e.point;
+      const alto = y < map.getContainer().clientHeight * 0.4;
+      const anchor = `${alto ? 'top' : 'bottom'}-${x > map.getContainer().clientWidth / 2 ? 'right' : 'left'}`;
+      const colore = coloreStato(p.stato);
+      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset: [0, alto ? 64 : -64], closeButton: false })
         .setLngLat(f.geometry.coordinates)
         .setDOMContent(contenutoPopupTraffico({
-          sezione: 'Aviazione', icona: 'aereo', colore: coloreStato(p.stato),
+          sezione: 'Aviazione', icona: 'aereo', colore,
           modello: modelloPopupVolo(p), coordinate: f.geometry.coordinates, chiudi: () => popup.remove(),
         }))
         .addTo(map);
+      popup.getElement().style.setProperty('--traffico-colore', colore);
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: ICONA,

@@ -136,13 +136,18 @@ export default {
       popup?.remove();
       if (!f) return;
       const p = completo(f.properties);
-      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', offset: 10, closeButton: false })
+      const { x, y } = e.point;
+      const alto = y < map.getContainer().clientHeight * 0.4;
+      const anchor = `${alto ? 'top' : 'bottom'}-${x > map.getContainer().clientWidth / 2 ? 'right' : 'left'}`;
+      const colore = coloreCategoria(p.categoria);
+      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset: [0, alto ? 64 : -64], closeButton: false })
         .setLngLat(f.geometry.coordinates)
         .setDOMContent(contenutoPopupTraffico({
-          sezione: 'Marittimo', icona: 'nave', colore: coloreCategoria(p.categoria),
+          sezione: 'Marittimo', icona: 'nave', colore,
           modello: modelloPopupNave(p), coordinate: f.geometry.coordinates, chiudi: () => popup.remove(),
         }))
         .addTo(map);
+      popup.getElement().style.setProperty('--traffico-colore', colore);
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: ICONA,
