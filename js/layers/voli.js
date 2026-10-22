@@ -2,7 +2,7 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { STATI, COLORE_ALTRO, coloreStato, modelloPopupVolo, voceVolo } from './scheda-voli.js';
-import { contenutoPopupTraffico } from './popup-traffico.js';
+import { contenutoPopupTraffico, ancoraPopupTraffico } from './popup-traffico.js';
 import { tl, t } from '../core/i18n.js';
 import { registraGlifo, registraBadge, layerBadge, idBadge, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 import { scegliProxy } from '../rndt/proxy.js';
@@ -151,11 +151,9 @@ export default {
       popup?.remove();
       if (!f) return;
       const p = completo(f.properties);
-      const { x, y } = e.point;
-      const alto = y < map.getContainer().clientHeight * 0.4;
-      const anchor = `${alto ? 'top' : 'bottom'}-${x > map.getContainer().clientWidth / 2 ? 'right' : 'left'}`;
+      const { anchor, offset } = ancoraPopupTraffico(e.point, map.getContainer());
       const colore = coloreStato(p.stato);
-      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset: [0, alto ? 64 : -64], closeButton: false })
+      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset, closeButton: false })
         .setLngLat(f.geometry.coordinates)
         .setDOMContent(contenutoPopupTraffico({
           sezione: 'Aviazione', icona: 'aereo', colore,

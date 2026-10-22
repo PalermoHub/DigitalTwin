@@ -40,3 +40,17 @@ export function contenutoPopupTraffico({ sezione, icona, colore, modello, coordi
   }
   return radice;
 }
+
+// Dove mettere la scheda rispetto al mezzo: dal lato (destra o sinistra) e dalla parte (sopra o sotto) con più spazio libero.
+// La linea di richiamo parte dallo spigolo della scheda e scende fino al mezzo (LINEA px).
+const LINEA = 64;
+const LARGHEZZA = 300;
+const ALTEZZA = 320;
+
+export function ancoraPopupTraffico(punto, contenitore) {
+  const destra = contenitore.clientWidth - punto.x;
+  const sotto = contenitore.clientHeight - punto.y;
+  const lato = destra >= LARGHEZZA || destra >= punto.x ? 'left' : 'right'; // «left»: la scheda si apre a destra del mezzo
+  const sopra = punto.y >= ALTEZZA + LINEA || punto.y >= sotto; // preferita: scheda sopra il mezzo
+  return { anchor: `${sopra ? 'bottom' : 'top'}-${lato}`, offset: [0, sopra ? -LINEA : LINEA] };
+}
