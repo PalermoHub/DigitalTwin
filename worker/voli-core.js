@@ -81,7 +81,7 @@ export async function gestisciVoli(richiesta, env, fetchFn, cache) {
     const intestazioni = { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_SECONDI}` };
     await cache?.put(chiave, new Response(corpo, { headers: intestazioni }));
     return new Response(corpo, { status: 200, headers: { ...intestazioni, ...cors } });
-  } catch {
-    return json(502, { errore: 'adsb.lol non raggiungibile' }, { ...cors, 'cache-control': 'no-store' });
+  } catch (e) {
+    return json(502, { errore: 'adsb.lol non raggiungibile', dettaglio: String(e?.message ?? e).slice(0, 120) }, { ...cors, 'cache-control': 'no-store' });
   }
 }

@@ -87,16 +87,17 @@ export async function raccogli(chiave, apri, adesso = () => Math.floor(Date.now(
   const fine = new Promise(risolvi => {
     diag.messaggi = 0;
     diag.tipi = {};
-    ws.addEventListener('message', ev => {
+    ws.addEventListener('message', async ev => {
       diag.messaggi++;
       try {
-        const testo = typeof ev.data === 'string' ? ev.data : new TextDecoder().decode(ev.data);
+        const d = ev.data;
+        const testo = typeof d === 'string' ? d : typeof d?.text === 'function' ? await d.text() : new TextDecoder().decode(d);
         const grezzo = JSON.parse(testo);
         diag.tipi[grezzo?.MessageType ?? 'altro'] = (diag.tipi[grezzo?.MessageType ?? 'altro'] ?? 0) + 1;
         const m = leggiMessaggio(grezzo, adesso());
         if (m) modifiche.push(m);
         else diag.scartato ??= testo.slice(0, 300); // es. errore di AISStream (chiave, riquadro)
-      } catch { /* messaggio non valido: si ignora */ }
+      } catch (e) { diag.eccezione ??= String(e?.message ?? e); }
     });
     ws.addEventListener('close', ev => { diag.chiusa = `${ev?.code} ${ev?.reason ?? ''}`.trim(); risolvi(); });
     ws.addEventListener('error', ev => { diag.errore = String(ev?.message ?? ev?.type ?? 'errore'); risolvi(); });
