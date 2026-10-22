@@ -125,6 +125,8 @@ function creaPannello(gruppo) {
 export default {
   id: 'voli',
   titolo: 'Traffico aereo',
+  gruppo: 'trasporto', // dentro «Trasporti», in una sezione propria accanto a RFI e AMAT
+  sezione: 'Traffico aereo',
   argomento: { titolo: 'Traffico aereo', descrizione: 'Aerei in volo attorno all\'aeroporto di Palermo, con quota, velocità e stato (in arrivo, in partenza, in transito), aggiornati ogni 5 minuti.' },
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO });

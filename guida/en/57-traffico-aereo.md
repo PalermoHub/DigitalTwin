@@ -6,7 +6,7 @@ Keywords: air traffic, aircraft, flights, airport, Punta Raisi, PMO, LICJ, adsb.
 
 Typical questions: How do I see the aircraft above Palermo? How often are they updated? How can I tell whether an aircraft is arriving or departing? Why is there no destination for the flight? Where is the airport?
 
-The **«Aircraft in flight»** layer, in the **«Air traffic»** group of the Layer panel, shows the aircraft within **100 nautical miles (about 185 km)** of Palermo Falcone e Borsellino airport (Punta Raisi, PMO). When it is switched on the **airport** also appears, with its name. Each aircraft is a silhouette rotated to its heading and coloured by status:
+The **«Aircraft in flight»** layer, in the **«Air traffic»** section of the **«Transport»** group of the Layer panel, shows the aircraft within **100 nautical miles (about 185 km)** of Palermo Falcone e Borsellino airport (Punta Raisi, PMO). When it is switched on the **airport** also appears, with its name. Each aircraft is a silhouette rotated to its heading and coloured by status:
 - **Arriving** (green): below 15,000 feet, within 60 miles of the airport, descending.
 - **Departing** (orange): below 15,000 feet, within 60 miles of the airport, climbing.
 - **In transit** (blue): all the other aircraft, including those cruising over the Tyrrhenian Sea.

@@ -6,7 +6,7 @@ Parole chiave: traffico aereo, aerei, voli, aeroporto, Punta Raisi, PMO, LICJ, a
 
 Domande tipiche: Come vedo gli aerei sopra Palermo? Ogni quanto si aggiornano? Come si capisce se un aereo sta arrivando o partendo? Perché non c'è la destinazione del volo? Dove si trova l'aeroporto?
 
-Il layer **«Aerei in volo»**, nel gruppo **«Traffico aereo»** del pannello Layer, mostra gli aerei entro **100 miglia nautiche (circa 185 km)** dall'aeroporto di Palermo Falcone e Borsellino (Punta Raisi, PMO). Quando si accende compare anche l'**aeroporto**, con il suo nome. Ogni aereo è una sagoma ruotata secondo la sua rotta e colorata per stato:
+Il layer **«Aerei in volo»**, nella sezione **«Traffico aereo»** del gruppo **«Trasporti»** del pannello Layer, mostra gli aerei entro **100 miglia nautiche (circa 185 km)** dall'aeroporto di Palermo Falcone e Borsellino (Punta Raisi, PMO). Quando si accende compare anche l'**aeroporto**, con il suo nome. Ogni aereo è una sagoma ruotata secondo la sua rotta e colorata per stato:
 - **In arrivo** (verde): sotto i 15.000 piedi, entro 60 miglia dall'aeroporto, in discesa.
 - **In partenza** (arancione): sotto i 15.000 piedi, entro 60 miglia dall'aeroporto, in salita.
 - **In transito** (blu): tutti gli altri aerei, compresi quelli in crociera sopra il Tirreno.
