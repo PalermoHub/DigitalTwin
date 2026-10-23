@@ -3,7 +3,8 @@ import { urlDati } from '../core/config.js';
 import { collegamento } from '../core/url-sicuro.js';
 import { t, tl } from '../core/i18n.js';
 import { apriVisore } from './peba-visore.js';
-import { COLORE_LIVELLO, NOTA_QUALITA, criticita, percorsoMiniatura, urlFoto, testoBadge } from './scheda-peba.js';
+import { barraNavigazione } from '../core/scheda-navigazione.js';
+import { COLORE_LIVELLO, NOTA_QUALITA, posizioneScheda, criticita, percorsoMiniatura, urlFoto, testoBadge } from './scheda-peba.js';
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -71,3 +72,11 @@ export function contenutoDinamico(p) {
   radice.append(notaQualita());
   return radice;
 }
+
+export const EVENTO_FILTRI_PEBA = 'peba:filtri';
+
+// Frecce sotto alla scheda: passano alla scheda PEBA precedente o successiva (in ordine di codice) tra quelle che i filtri della legenda lasciano in mappa
+export const barraSchede = (codice, visibili, vai) => barraNavigazione({
+  posizione: () => posizioneScheda(visibili(), codice), vai, evento: EVENTO_FILTRI_PEBA,
+  etichette: { gruppo: t('peba.nav.gruppo'), prec: t('peba.nav.prec'), succ: t('peba.nav.succ') },
+});

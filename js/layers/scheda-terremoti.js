@@ -1,5 +1,6 @@
 import { righe } from '../core/scheda-util.js';
 import { t, tl, tn, localeIntl } from '../core/i18n.js';
+import { posizioneIn } from '../core/scheda-navigazione.js';
 
 // Modello puro dei terremoti in tempo reale (INGV, servizio FDSN event): stesse righe per il popup e per la scheda di destra (tab «Luogo»).
 // Il browser interroga direttamente il servizio (risponde con CORS aperto): ogni evento ha magnitudo, ora (UTC), zona, profondità (km, terza coordinata) e autore della localizzazione.
@@ -97,13 +98,8 @@ export function voceTerremoto(p, adesso = Date.now(), dinamico = null) {
   };
 }
 
-// Posto dell'evento `id` tra quelli in mappa (dal più recente): `prec` è l'evento più recente, `succ` il meno recente; null se `id` non c'è
-export function posizioneEvento(visibili, id) {
-  const ordinati = [...visibili].sort((a, b) => b.ts - a.ts);
-  const i = ordinati.findIndex(p => p.id === id);
-  if (i < 0) return null;
-  return { pos: i + 1, tot: ordinati.length, prec: ordinati[i - 1] ?? null, succ: ordinati[i + 1] ?? null };
-}
+// Posto dell'evento `id` tra quelli in mappa, dal più recente: `prec` è l'evento più recente, `succ` il meno recente
+export const posizioneEvento = (visibili, id) => posizioneIn([...visibili].sort((a, b) => b.ts - a.ts), id);
 
 export const MAX_ELENCO = 100;
 

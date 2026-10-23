@@ -3,6 +3,7 @@ import { LIMITI } from '../core/config.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { FASCE, URL_SERVIZIO, GIORNI_MAX, filtro, passaFiltro, espressioneFiltro, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, voceAltri, riassuntoTerremoti } from './scheda-terremoti.js';
 import { EVENTO_FILTRO, menuFiltro, elencoAltri, testoGiorni, barraEventi } from './scheda-terremoti-dom.js';
+import { clicSu } from '../core/scheda-navigazione.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 
 // Terremoti in tempo reale attorno a Palermo: gli eventi degli ultimi 30 giorni dal servizio FDSN dell'INGV, chiesto direttamente dal browser (CORS aperto, nessun Worker).
@@ -111,10 +112,7 @@ const evento = trovati => {
   return attuale ?? [...trovati].sort((a, b) => b.properties.mag - a.properties.mag)[0];
 };
 function vaiAEvento(p) {
-  scelto = { id: p.id, fino: Date.now() + FINESTRA_SCELTA_MS };
-  const lngLat = { lng: p.lon, lat: p.lat };
-  mappa.jumpTo({ center: [p.lon, p.lat] });
-  mappa.fire('click', { point: mappa.project(lngLat), lngLat });
+  clicSu(mappa, [p.lon, p.lat], () => { scelto = { id: p.id, fino: Date.now() + FINESTRA_SCELTA_MS }; });
 }
 
 const proprieta = f => ({ ...f.properties, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] });

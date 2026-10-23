@@ -4,8 +4,9 @@ import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { coloraEdifici3d, coloriPerFid, volumi3dAcceso } from '../core/colori-3d.js';
 import { tl } from '../core/i18n.js';
-import { GRUPPI, LIVELLI, modelloTooltipPeba, voceScheda } from './scheda-peba.js';
-import { contenutoDinamico } from './scheda-peba-dom.js';
+import { clicSu } from '../core/scheda-navigazione.js';
+import { GRUPPI, LIVELLI, modelloTooltipPeba, voceScheda, puntoInterno } from './scheda-peba.js';
+import { contenutoDinamico, barraSchede, EVENTO_FILTRI_PEBA } from './scheda-peba-dom.js';
 import { registraGlifo, layerGlifo, espressioneGlifo, simboloGlifo } from '../core/icone-mappa.js';
 
 // PEBA (Piano di Eliminazione delle Barriere Architettoniche, Comune di Palermo): edifici e aree verdi sono poligoni, vie, percorsi
@@ -33,6 +34,7 @@ let legenda = null;
 let stratoAcceso = false;
 let fidPerCodice = {}; // codice PEBA -> fid degli edifici (id del tile edificato), da edifici_fid.json
 const schede = new Map(); // codice -> proprietà (livello e gruppo colorano il volume 3D)
+const centri = new Map(); // codice -> punto su cui cliccare per aprirne la scheda
 let modo = 'livello'; // colore della mappa e del tooltip: 'livello' | 'gruppo'
 const livelliAccesi = new Set(LIVELLI.map(([n]) => n));
 const gruppiAccesi = new Set(GRUPPI.map(([n]) => n));
@@ -72,6 +74,7 @@ function applicaFiltri() {
   for (const id of [FILL, LINEA]) if (mappa.getLayer(id)) mappa.setFilter(id, con(poligoni));
   if (mappa.getLayer(PUNTI)) mappa.setFilter(PUNTI, con(PUNTO));
   colora3d();
+  document.dispatchEvent(new CustomEvent(EVENTO_FILTRI_PEBA)); // le frecce della scheda contano solo le schede rimaste in mappa
 }
 
 function applicaColore() {
@@ -81,6 +84,18 @@ function applicaColore() {
   mappa.setPaintProperty(PUNTI, 'icon-color', colore());
   colora3d();
 }
+
+// Schede che i filtri della legenda lasciano in mappa
+const visibili = () => [...schede.values()].filter(p => livelliAccesi.has(p.livello ?? 'Non valutabile') && gruppiAccesi.has(p.gruppo));
+
+// Le frecce della scheda scelgono la scheda da aprire: il clic simulato, dove ce ne sono di sovrapposte, mette la scelta per prima
+const FINESTRA_SCELTA_MS = 1500;
+let scelto = null;
+function vaiAScheda(p) {
+  const c = centri.get(p.codice);
+  if (c && mappa) clicSu(mappa, c, () => { scelto = { codice: p.codice, fino: Date.now() + FINESTRA_SCELTA_MS }; });
+}
+const inTesta = codice => (scelto && Date.now() < scelto.fino && scelto.codice === codice ? 0 : 1);
 
 function famiglia(titolo, voci, accesi, perGruppo) {
   const blocco = el('div', 'peba-famiglia'); // un contenitore per famiglia: il clic isola solo dentro la propria
@@ -157,7 +172,11 @@ export default {
   async avvia() {
     try {
       const dati = await (await fetch(urlDati('peba/peba.geojson'))).json(); // già in cache: è il file della sorgente
-      for (const f of dati.features) schede.set(f.properties.codice, f.properties);
+      for (const f of dati.features) {
+        schede.set(f.properties.codice, f.properties);
+        const c = puntoInterno(f.geometry);
+        if (c) centri.set(f.properties.codice, c);
+      }
       fidPerCodice = await (await fetch(urlDati('peba/edifici_fid.json'))).json();
     } catch { fidPerCodice = {}; } // senza i dati gli edifici restano poligoni piatti
     document.addEventListener('vista3d', applicaFiltri); // i volumi 3D si accendono e spengono
@@ -169,7 +188,8 @@ export default {
     voci(trovati) {
       const visti = new Set();
       return [...tutti(trovati, HIT_PUNTI), ...tutti(trovati, HIT)]
-        .map(f => voceScheda(f.properties, contenutoDinamico))
+        .sort((a, b) => inTesta(a.properties.codice) - inTesta(b.properties.codice))
+        .map(f => voceScheda(f.properties, p => { const radice = contenutoDinamico(p); radice.prepend(barraSchede(p.codice, visibili, vaiAScheda)); return radice; }))
         .filter(v => !visti.has(v.chiave) && visti.add(v.chiave))
         .slice(0, 6);
     },

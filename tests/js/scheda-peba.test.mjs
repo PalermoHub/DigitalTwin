@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { voceScheda, righeAnagrafica, righeAccessibilita, modelloTooltipPeba, criticita, urlPdf, urlFoto, percorsoMiniatura, dimensioneFile, euro, passoFoto, ruotaGradi, fuocoDopoTab, NOTA_QUALITA, LIVELLI, GRUPPI, COLORE_LIVELLO, COLORE_GRUPPO } from '../../js/layers/scheda-peba.js';
+import { voceScheda, righeAnagrafica, righeAccessibilita, modelloTooltipPeba, criticita, urlPdf, urlFoto, percorsoMiniatura, dimensioneFile, euro, passoFoto, ruotaGradi, fuocoDopoTab, NOTA_QUALITA, puntoInterno, posizioneScheda, LIVELLI, GRUPPI, COLORE_LIVELLO, COLORE_GRUPPO } from '../../js/layers/scheda-peba.js';
 import { unisci } from '../../js/core/scheda-modello.js';
 
 const P = {
@@ -147,4 +147,23 @@ test('fuocoDopoTab: il fuoco resta dentro il visore, in avanti e all\'indietro',
 test('nota sulla qualità dei dati: testo esportato per il blocco apri/chiudi, non più un paragrafo fisso della scheda', () => {
   assert.match(NOTA_QUALITA, /estratti in automatico dai PDF/);
   assert.equal(voceScheda(P, () => null).nota, undefined);
+});
+
+test('puntoInterno: punto stesso, o un punto dentro l\'area anche se il centro del riquadro cade fuori', () => {
+  assert.deepEqual(puntoInterno({ type: 'Point', coordinates: [13.3, 38.1] }), [13.3, 38.1]);
+  const ele = { type: 'Polygon', coordinates: [[[0, 0], [10, 0], [10, 1], [1, 1], [1, 10], [0, 10], [0, 0]]] }; // una «L»: il centro (5, 5) è fuori
+  const [x, y] = puntoInterno(ele);
+  assert.ok((x < 1 && y < 10) || (y < 1 && x < 10));
+  const multi = { type: 'MultiPolygon', coordinates: [[[[0, 0], [1, 0], [1, 1], [0, 0]]], [[[20, 20], [30, 20], [30, 30], [20, 30], [20, 20]]]] };
+  assert.deepEqual(puntoInterno(multi), [25, 25]); // il poligono più grande
+  assert.equal(puntoInterno(null), null);
+});
+
+test('posizioneScheda: ordine di codice con numeri naturali', () => {
+  const el = ['AV_10', 'AV_2', 'S_19'].map(codice => ({ codice }));
+  const q = posizioneScheda(el, 'AV_10');
+  assert.equal(q.pos, 2);
+  assert.equal(q.prec.codice, 'AV_2');
+  assert.equal(q.succ.codice, 'S_19');
+  assert.equal(posizioneScheda(el, 'zz'), null);
 });

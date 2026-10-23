@@ -43,6 +43,18 @@ function copiaTesto(testo) {
   return Promise.resolve();
 }
 
+// Le frecce avanti/indietro di una scheda stanno sotto al dito: la scheda nuova si scorre in modo che la sua barra resti alla stessa altezza di prima
+const altezzaBarra = contenitore => {
+  const barra = contenitore.querySelector('.scheda-nav');
+  const corpo = contenitore.querySelector('.scheda-corpo');
+  return barra && corpo ? barra.getBoundingClientRect().top - corpo.getBoundingClientRect().top : null;
+};
+function rimettiBarra(contenitore, sopra) {
+  const corpo = contenitore.querySelector('.scheda-corpo');
+  const barra = corpo?.querySelector('.scheda-nav');
+  if (barra) corpo.scrollTop += barra.getBoundingClientRect().top - corpo.getBoundingClientRect().top - sopra;
+}
+
 function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabIniziale = null) {
   const { contesto, sezioni, legale } = dati;
   let corrente = dati; // le sezioni RNDT arrivano dopo: `aggiungi` le fonde qui e ridisegna il corpo
@@ -452,12 +464,15 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
       return;
     }
     ultimoClic = e.lngLat;
+    // `mantieniVista` (frecce avanti/indietro di una scheda): la scheda nuova si apre sullo stesso tab e alla stessa altezza di scorrimento di quella che sostituisce
+    const vistaPrima = e.mantieniVista && !contenitore.hidden
+      ? { tab: contenitore.querySelector('[role=tab][aria-selected="true"]')?.dataset.tab ?? null, sopra: altezzaBarra(contenitore) } : null;
     // i dati degli strati puntuali si scaricano in secondo piano: un clic arrivato prima li attende
     if (window.dt && window.dt.differitiPronti === false) await window.dt.differiti();
     const voci = [];
     const trovatiTutti = [];
     const viciniTutti = []; // punti dei dintorni (`scheda.vicini`): evidenziati ma non cambiano il tab né l'evidenza principale
-    let tabIniziale = null; // lo strato cliccato può chiedere il suo tab; solo per un clic vero (non per il ripristino da un link condiviso)
+    let tabIniziale = vistaPrima?.tab ?? null; // lo strato cliccato può chiedere il suo tab; solo per un clic vero (non per il ripristino da un link condiviso)
     // Un oggetto 3D sopra la mappa (es. l'edificio per piani, anche esploso) sta più in alto del terreno: e.lngLat è il punto
     // a terra dietro di lui. Lo strato che lo possiede dice dove sta l'oggetto, e la scheda (luogo, edificio, catasto…) si
     // apre lì; il suo strato si interroga invece al pixel cliccato.
@@ -505,6 +520,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     evidenzia(map, scelte);
     document.dispatchEvent(new CustomEvent('scheda:evidenzia-gruppo', { detail: null })); // il vincolo scelto nella scheda precedente non vale più
     const scheda = mostra(contenitore, lngLat, dati, chiudiScheda, adattaVista, pref, tabIniziale);
+    if (vistaPrima?.sopra != null) rimettiBarra(contenitore, vistaPrima.sopra);
     if (risposte) {
       const punto = contenitore.dataset.punto;
       risposte.then(nuove => {

@@ -2,6 +2,8 @@
 // Il disegno interattivo (barra del punteggio, criticità, foto) sta in scheda-peba-dom.js e arriva da `voce.dinamico`.
 import { righe } from '../core/scheda-util.js';
 import { localeIntl, t, tl } from '../core/i18n.js';
+import { puntoInPoligono } from '../core/tabella/geom.js';
+import { posizioneIn } from '../core/scheda-navigazione.js';
 
 export const SITO = 'https://palermohub.github.io/peba/';
 export const INFO = 'https://palermohub.opendatasicilia.it/peba.html';
@@ -106,3 +108,23 @@ export function modelloTooltipPeba(p, modo) {
   const colore = (modo === 'gruppo' ? COLORE_GRUPPO : COLORE_LIVELLO)[valore] ?? GRIGIO;
   return { titolo, pallino: colore, badge: valore ? { testo: tl(valore), colore: testoBadge(colore) } : undefined };
 }
+
+// Punto su cui cliccare per aprire la scheda di un elemento: il punto stesso, o per un'area il centro del riquadro se cade dentro, altrimenti il primo punto interno di una griglia
+export function puntoInterno(geometria) {
+  if (geometria?.type === 'Point') return geometria.coordinates;
+  const poligoni = geometria?.type === 'MultiPolygon' ? geometria.coordinates : geometria?.type === 'Polygon' ? [geometria.coordinates] : [];
+  const grande = poligoni.reduce((a, b) => (areaAnello(b[0]) > areaAnello(a?.[0] ?? []) ? b : a), null);
+  if (!grande) return null;
+  const xs = grande[0].map(c => c[0]);
+  const ys = grande[0].map(c => c[1]);
+  const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+  const N = 8;
+  const candidati = [[(x0 + x1) / 2, (y0 + y1) / 2]];
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) candidati.push([x0 + (x1 - x0) * (i + 0.5) / N, y0 + (y1 - y0) * (j + 0.5) / N]);
+  return candidati.find(c => puntoInPoligono(c, grande)) ?? grande[0][0];
+}
+const areaAnello = anello => Math.abs(anello.reduce((s, [x, y], i) => { const [x2, y2] = anello[(i + 1) % anello.length]; return s + x * y2 - x2 * y; }, 0)) / 2;
+
+// Posto della scheda `codice` tra quelle in elenco, in ordine di codice (AV_2 prima di AV_10)
+const ordineCodice = new Intl.Collator('it', { numeric: true }).compare;
+export const posizioneScheda = (elenco, codice) => posizioneIn(elenco.map(p => ({ ...p, id: p.codice })).sort((a, b) => ordineCodice(a.codice, b.codice)), codice);
