@@ -3244,5 +3244,7 @@
   "home.slide.protezione-civile.titolo": "Emergency plan",
   "home.slide.protezione-civile.testo": "Where to go in an emergency: waiting areas (green), shelter and reception areas (red) and rescuers’ assembly areas (yellow) from the Civil Protection plan.",
   "home.slide.protezione-civile.alt": "The map of Palermo with emergency areas coloured green, red and yellow",
-  "lbl.Aree sovrapposte": "Overlapping areas"
+  "lbl.Aree sovrapposte": "Overlapping areas",
+  "lbl.Altri incendi": "Other fires",
+  "lbl.Altri vincoli": "Other constraints"
 }

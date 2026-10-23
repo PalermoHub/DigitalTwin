@@ -1,3 +1,4 @@
+import { apriPopupScheda } from './popup-traffico.js';
 import { urlDati } from '../core/config.js';
 import { quotaIcone } from '../core/quota-icone.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
@@ -201,11 +202,9 @@ const luogoDi = p => luoghi.get(p.id) ?? { n: p.n ?? 1, progetti: [], fette: [] 
 
 // Popup al clic sul marker: tutti i progetti del luogo, raggruppati per missione, con il titolo e il soggetto attuatore.
 // Il dettaglio di ogni progetto è nella scheda di destra (tab PNRR).
-function contenutoPopup(luogo) {
-  const radice = el('div', 'monumento-popup pnrr-popup');
-  radice.append(el('h3', null, tn('pnrr.luogo', luogo.n)));
-  const indirizzi = [...new Set(luogo.progetti.map(p => p.indirizzo).filter(Boolean))];
-  if (indirizzi.length === 1) radice.append(el('p', 'monumento-cat', indirizzi[0]));
+// Corpo del popup unico: l'elenco dei progetti del luogo, con il colore dell'area di ciascuno.
+function corpoPopup(luogo) {
+  const radice = el('div', 'pnrr-popup');
   const elenco = el('ul', 'pnrr-popup-elenco');
   for (const p of elencoLuogo(luogo)) {
     const voce = el('li');
@@ -219,7 +218,12 @@ function contenutoPopup(luogo) {
     elenco.append(voce);
   }
   radice.append(elenco, el('p', 'monumento-desc uffici-suggerimento', t('pnrr.popupSuggerimento')));
-  return radice;
+  return [radice];
+}
+// Titolo e indirizzo (se uno solo) del luogo.
+function modelloPopupLuogo(luogo) {
+  const indirizzi = [...new Set(luogo.progetti.map(p => p.indirizzo).filter(Boolean))];
+  return { titolo: tn('pnrr.luogo', luogo.n), sottotitolo: indirizzi.length === 1 ? indirizzi[0] : null };
 }
 const campioneLuogo = p => {
   const l = luogoDi(p);
@@ -258,11 +262,9 @@ export default {
     map.on('click', e => {
       if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
       const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] })[0];
-      popup?.remove();
       const luogo = f && luoghi.get(f.properties.id);
-      if (!luogo) return;
-      popup = new maplibregl.Popup({ maxWidth: '360px', className: 'monumento-popup-box', offset: 8 })
-        .setLngLat(f.geometry.coordinates).setDOMContent(contenutoPopup(luogo)).addTo(map);
+      if (!luogo) { popup?.remove(); return; }
+      popup = apriPopupScheda(map, { precedente: popup, sezione: 'PNRR', icona: 'euro', colore: coloreMissione(elencoLuogo(luogo)[0]?.missione) ?? '#495057', modello: modelloPopupLuogo(luogo), corpo: corpoPopup(luogo), punto: e.point, lngLat: f.geometry.coordinates });
     });
   },
   async avvia() {

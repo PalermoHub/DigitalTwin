@@ -3244,5 +3244,7 @@
   "home.slide.protezione-civile.titolo": "Piano di emergenza",
   "home.slide.protezione-civile.testo": "Dove andare in caso di emergenza: aree di attesa (verdi), di ricovero e accoglienza (rosse) e di ammassamento dei soccorritori (gialle), del Piano della Protezione civile.",
   "home.slide.protezione-civile.alt": "La mappa di Palermo con le aree di emergenza colorate di verde, rosso e giallo",
-  "lbl.Aree sovrapposte": "Aree sovrapposte"
+  "lbl.Aree sovrapposte": "Aree sovrapposte",
+  "lbl.Altri incendi": "Altri incendi",
+  "lbl.Altri vincoli": "Altri vincoli"
 }

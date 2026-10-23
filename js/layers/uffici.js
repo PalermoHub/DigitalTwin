@@ -8,6 +8,7 @@ import { fette, areeDaSedi, coloriSedi } from './uffici-fette.js';
 import { coloraEdifici3d } from '../core/colori-3d.js';
 import { PR, iconaFette } from './marker-fette.js';
 import { tl } from '../core/i18n.js';
+import { apriPopupScheda } from './popup-traffico.js';
 
 // Sedi degli uffici comunali (dati/uffici/sedi.geojson), tematizzate per area. Ogni sede è un'icona disegnata su canvas:
 // cerchio pieno se ospita una sola area, anello a fette colorate (una per area) se ne ospita più d'una; al centro l'icona dell'edificio (la dimensione cresce con il numero degli uffici).
@@ -36,15 +37,14 @@ function el(tag, classe, testo) {
   return e;
 }
 
-function contenutoPopup(p) {
-  const m = modelloPopupSede(p);
-  const radice = el('div', 'monumento-popup uffici-popup');
-  radice.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.sottotitolo));
-  if (m.indirizzo) radice.append(el('p', 'monumento-desc', m.indirizzo));
-  for (const a of m.aree) radice.append(el('p', 'monumento-desc', `• ${a.area} (${a.n})`));
-  if (m.altreAree) radice.append(el('p', 'monumento-desc', `… e altre ${m.altreAree} aree`));
-  radice.append(el('p', 'monumento-desc uffici-suggerimento', 'Elenco, responsabili e contatti nella scheda a destra.'));
-  return radice;
+// Corpo del popup unico: indirizzo e aree presenti nella sede.
+function corpoPopup(m) {
+  const nodi = [];
+  if (m.indirizzo) nodi.push(el('p', 'monumento-desc', m.indirizzo));
+  for (const a of m.aree) nodi.push(el('p', 'monumento-desc', `• ${a.area} (${a.n})`));
+  if (m.altreAree) nodi.push(el('p', 'monumento-desc', `… e altre ${m.altreAree} aree`));
+  nodi.push(el('p', 'monumento-desc uffici-suggerimento', 'Elenco, responsabili e contatti nella scheda a destra.'));
+  return nodi;
 }
 
 // In 3D l'edificio della sede si colora nel volume di edifici-3d, con il colore della sua area più numerosa tra quelle accese.
@@ -146,10 +146,10 @@ export default {
     map.on('click', e => {
       if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
       const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] })[0];
-      popup?.remove();
-      if (!f) return;
-      popup = new maplibregl.Popup({ maxWidth: '340px', className: 'monumento-popup-box', offset: 8 })
-        .setLngLat(f.geometry.coordinates).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
+      if (!f) { popup?.remove(); return; }
+      const m = modelloPopupSede(completo(f.properties));
+      const colore = aree.find(x => x.area === m.aree[0]?.area)?.colore ?? '#495057';
+      popup = apriPopupScheda(map, { precedente: popup, sezione: 'Uffici comunali', icona: 'uffici', colore, modello: { titolo: m.titolo, sottotitolo: m.sottotitolo }, corpo: corpoPopup(m), punto: e.point, lngLat: f.geometry.coordinates });
     });
     registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'uffici', campione: p => { const a = modelloPopupSede(completo(p)).aree; const col = a.length === 1 ? aree.find(x => x.area === a[0].area)?.colore : null; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: col }]) : null; }, modello: p => modelloPopupSede(completo(p)) }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });

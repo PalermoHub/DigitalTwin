@@ -3,6 +3,8 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { voceStrato } from '../core/legenda.js';
 import { voceAlbero, modelloPopupAlbero } from './scheda-alberi.js';
 import { tl, t } from '../core/i18n.js';
+import { apriPopupScheda } from './popup-traffico.js';
+
 import { registraGlifo, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 
 const COLORE = '#2f7d32';
@@ -22,24 +24,17 @@ function el(tag, classe, testo) {
   return e;
 }
 
-function contenutoPopup(p) {
-  const m = modelloPopupAlbero(p);
-  const radice = el('div', 'monumento-popup');
-  radice.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.sottotitolo));
-  for (const r of m.righe) radice.append(el('p', 'monumento-desc', `${r.etichetta}: ${r.valore}`));
-  radice.append(el('p', 'monumento-fonte', t('layer.fonte', { fonte: tl(m.fonte) })));
-  return radice;
-}
+// Righe nel popup unico; sotto, la fonte dei dati.
+const corpoPopup = m => [el('p', 'monumento-fonte', t('layer.fonte', { fonte: tl(m.fonte) }))];
 
 function collegaPopup(map) {
   let popup = null;
   map.on('click', e => {
     if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
     const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] })[0];
-    popup?.remove();
-    if (!f) return;
-    popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
-      .setLngLat(e.lngLat).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
+    if (!f) { popup?.remove(); return; }
+    const modello = modelloPopupAlbero(completo(f.properties));
+    popup = apriPopupScheda(map, { precedente: popup, sezione: 'Alberi monumentali', icona: 'albero', colore: COLORE, modello, corpo: corpoPopup(modello), punto: e.point, lngLat: e.lngLat });
   });
   registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'albero', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, COLORE)]), modello: p => modelloPopupAlbero(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });

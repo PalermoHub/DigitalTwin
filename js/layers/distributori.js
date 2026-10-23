@@ -2,6 +2,7 @@ import { urlDati } from '../core/config.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
+import { apriPopupScheda } from './popup-traffico.js';
 import { modelloPopupDistributore, vociDistributori, distributoriVicini, CARBURANTI } from './scheda-distributori.js';
 import { tl } from '../core/i18n.js';
 import { raggioVicini } from '../core/raggio-vicini.js';
@@ -33,14 +34,6 @@ function el(tag, classe, testo) {
   if (classe) e.className = classe;
   if (testo != null) e.textContent = tl(testo);
   return e;
-}
-
-function contenutoPopup(p) {
-  const m = modelloPopupDistributore(p);
-  const radice = el('div', 'monumento-popup');
-  radice.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.sottotitolo));
-  for (const r of m.righe) radice.append(el('p', 'monumento-desc', `${tl(r.etichetta)}: ${r.valore}`));
-  return radice;
 }
 
 function applicaFiltri() {
@@ -126,10 +119,9 @@ export default {
     map.on('click', e => {
       if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
       const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] })[0];
-      popup?.remove();
-      if (!f) return;
-      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'monumento-popup-box', offset: 8 })
-        .setLngLat(f.geometry.coordinates).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
+      if (!f) { popup?.remove(); return; }
+      const p = completo(f.properties);
+      popup = apriPopupScheda(map, { precedente: popup, sezione: 'Distributori di carburante', icona: ICONA, colore: MARCHI.find(([m]) => m === p.marchio)?.[1] ?? ALTRO, modello: modelloPopupDistributore(p), punto: e.point, lngLat: f.geometry.coordinates });
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: 'distributori',

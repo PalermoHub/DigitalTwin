@@ -1,6 +1,7 @@
 import { urlDati } from '../core/config.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { filtroInsieme, voceFiltro, voceStrato } from '../core/legenda.js';
+import { apriPopupScheda } from './popup-traffico.js';
 import { voceScuola, voceSeggio, voceIndirizzo, modelloPopupScuola } from './scheda-scuole.js';
 import { voceUsoEdificio } from './scheda-uso.js';
 import { coloraEdifici3d, coloriPerFid, senzaVolume, volumi3dAcceso } from '../core/colori-3d.js';
@@ -58,14 +59,6 @@ function el(tag, classe, testo) {
   return e;
 }
 
-function contenutoPopup(p) {
-  const m = modelloPopupScuola(p);
-  const radice = el('div', 'monumento-popup');
-  radice.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.sottotitolo));
-  for (const r of m.righe) radice.append(el('p', 'monumento-desc', `${r.etichetta}: ${r.valore}`));
-  return radice;
-}
-
 function collegaPopup(map, s) {
   const { punti, poli } = ids(s.chiave);
   registraTooltipStrati(map, [{ layers: [punti, poli], icona: 'scuola', campione: p => { const col = s.chiave === 'seggi' ? SEGGI_COLORE : TIPI_SCUOLA.find(([n]) => n === p.tipo)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(iconaDi(s.chiave), col)]) : null; }, modello: p => modelloPopupScuola(completo(p)) }]);
@@ -73,10 +66,10 @@ function collegaPopup(map, s) {
   map.on('click', e => {
     if (map.getLayoutProperty(poli, 'visibility') !== 'visible') return;
     const f = map.queryRenderedFeatures(e.point, { layers: [punti, poli] })[0];
-    popup?.remove();
-    if (!f) return;
-    popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
-      .setLngLat(e.lngLat).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
+    if (!f) { popup?.remove(); return; }
+    const p = completo(f.properties);
+    const colore = s.chiave === 'seggi' ? SEGGI_COLORE : TIPI_SCUOLA.find(([n]) => n === p.tipo)?.[1] ?? SEGGI_COLORE;
+    popup = apriPopupScheda(map, { precedente: popup, sezione: s.chiave === 'seggi' ? 'Sedi elettorali' : 'Scuole e asili', icona: iconaDi(s.chiave), colore, modello: modelloPopupScuola(p), punto: e.point, lngLat: e.lngLat });
   });
   for (const id of [punti, poli]) {
     map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });

@@ -430,6 +430,12 @@ dialog li { margin: 4px 0; }
 .traffico-righe dt, .traffico-righe dd { margin: 0; padding: 5px 0; border-top: 1px solid var(--border); }
 .traffico-righe dt { padding-right: 14px; font: var(--fs-xs) ui-monospace, monospace; color: var(--text-muted); }
 .traffico-righe dd { text-align: right; font-weight: 600; color: var(--text); }
+.traffico-corpo { margin: 0 0 6px; }
+.traffico-corpo .monumento-foto { max-height: 110px; margin-bottom: 6px; border-radius: var(--r-sm); }
+.traffico-corpo .monumento-desc, .traffico-corpo .monumento-cat, .traffico-corpo .monumento-fonte, .traffico-corpo .monumento-scomparso { margin-left: 0; margin-right: 0; }
+.traffico-corpo .monumento-cat { color: var(--text-muted); }
+.traffico-corpo .monumento-link { margin: 8px 0 4px; }
+.traffico-corpo .pnrr-popup-elenco { margin-top: 4px; }
 .traffico-coordinate { margin: 6px 0 0; padding-top: 6px; border-top: 1px solid var(--border); font: var(--fs-xs) ui-monospace, monospace; color: var(--text-muted); }
 
 .monumento-link { display: block; margin: 8px 10px 10px; padding: 7px 10px; border-radius: var(--r-sm); background: var(--link); color: var(--bianco); text-align: center; text-decoration: none; font-weight: 600; }

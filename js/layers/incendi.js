@@ -4,6 +4,7 @@ import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { modelloPopup, vociIncendi } from './scheda-incendi.js';
 import { tl } from '../core/i18n.js';
+import { apriPopupScheda } from './popup-traffico.js';
 
 // Incendi nel Comune di Palermo dal Censimento Incendi della Regione Siciliana (un layer per anno sul server, un solo PMTiles qui, zoom 12–18).
 // Colori e trasparenza di ogni anno sono quelli della simbologia del server e viaggiano dentro ogni feature (`colore`, `bordo`, `opacita`):
@@ -13,7 +14,6 @@ const SRC = 'incendi';
 const FILL = 'incendi-fill';
 const BORDO = 'incendi-bordo';
 const HIT = 'incendi-hit';
-const MAX_NEL_POPUP = 4;
 const MAX_NELLA_SCHEDA = 6;
 
 let legenda = null;
@@ -36,18 +36,12 @@ function distinti(feature) {
   }).sort((a, b) => b.properties.anno - a.properties.anno || String(b.properties.data ?? '').localeCompare(String(a.properties.data ?? '')));
 }
 
-function contenutoPopup(lista) {
-  const radice = el('div', 'monumento-popup incendi-popup');
-  for (const f of lista.slice(0, MAX_NEL_POPUP)) {
-    const m = modelloPopup(f.properties);
-    const blocco = el('div', 'incendi-popup-voce');
-    blocco.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.sottotitolo));
-    for (const r of m.righe) blocco.append(el('p', 'monumento-desc', `${r.etichetta}: ${r.valore}`));
-    radice.append(blocco);
-  }
-  if (lista.length > MAX_NEL_POPUP) radice.append(el('p', 'monumento-desc', `… e altri ${lista.length - MAX_NEL_POPUP} incendi`));
-  radice.append(el('p', 'monumento-desc uffici-suggerimento', 'Tutti i dati nella scheda a destra.'));
-  return radice;
+// Il popup unico mostra l'incendio più recente sotto il clic; se ce ne sono altri sovrapposti lo dice in una riga (il resto sta nella scheda).
+function apriPopup(map, lista, e, precedente) {
+  const p = lista[0].properties;
+  const modello = modelloPopup(p);
+  if (lista.length > 1) modello.righe.push({ etichetta: 'Altri incendi', valore: String(lista.length - 1) });
+  return apriPopupScheda(map, { precedente, sezione: 'Incendi', icona: 'incendio', colore: p.colore, modello, punto: e.point, lngLat: e.lngLat });
 }
 
 function applicaFiltro(map) {
@@ -111,10 +105,8 @@ export default {
     map.on('click', e => {
       if (map.getLayoutProperty(FILL, 'visibility') !== 'visible') return;
       const lista = distinti(map.queryRenderedFeatures(e.point, { layers: [FILL] }));
-      popup?.remove();
-      if (!lista.length) return;
-      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'monumento-popup-box', offset: 8 })
-        .setLngLat(e.lngLat).setDOMContent(contenutoPopup(lista)).addTo(map);
+      if (!lista.length) { popup?.remove(); return; }
+      popup = apriPopup(map, lista, e, popup);
     });
     registraTooltipStrati(map, [{ layers: [FILL], icona: 'incendio', campione: p => campioneTooltip('legenda-incendi', simbolo({ colore: p.colore, bordo: p.bordo, opacita: p.opacita })), modello: modelloPopup }]);
     map.on('mouseenter', FILL, () => { map.getCanvas().style.cursor = 'pointer'; });

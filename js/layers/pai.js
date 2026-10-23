@@ -4,6 +4,7 @@ import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { chiavePai, modelloPopup, vociPai } from './scheda-pai.js';
 import { tl, t } from '../core/i18n.js';
+import { apriPopupScheda } from './popup-traffico.js';
 import { registraSorgenti } from '../core/tabella/sorgenti.js';
 
 // Vincoli del PAI (Piano di Assetto Idrogeologico, Regione Siciliana) nel Comune di Palermo: pericolosità e rischio idraulico e geomorfologico,
@@ -15,7 +16,6 @@ const SRC = 'pai';
 const MINZOOM = 12;
 const OPACITA = 0.65; // sul server i riempimenti sono pieni; qui lasciano vedere base ed edifici sotto
 const TRASPARENTE = 'rgba(0,0,0,0)'; // valori senza simbolo sul server (es. pericolo 0): il server non li disegna
-const MAX_NEL_POPUP = 4;
 const MAX_PER_DATASET_IN_SCHEDA = 4;
 
 const el = (tag, classe, testo) => {
@@ -79,19 +79,13 @@ function distinti(feature, ds) {
   });
 }
 
-function contenutoPopup(lista) {
-  const radice = el('div', 'monumento-popup pai-popup');
-  for (const { f, ds, t } of lista.slice(0, MAX_NEL_POPUP)) {
-    const m = modelloPopup(ds, t, f.properties);
-    const blocco = el('div', 'pai-popup-voce');
-    blocco.append(el('h3', null, m.titolo));
-    if (m.sottotitolo && m.sottotitolo !== m.titolo) blocco.append(el('p', 'monumento-cat', m.sottotitolo));
-    for (const r of m.righe) blocco.append(el('p', 'monumento-desc', `${r.etichetta}: ${r.valore}`));
-    radice.append(blocco);
-  }
-  if (lista.length > MAX_NEL_POPUP) radice.append(el('p', 'monumento-desc', `… e altri ${lista.length - MAX_NEL_POPUP} vincoli`));
-  radice.append(el('p', 'monumento-desc uffici-suggerimento', 'Tutti i dati nella scheda a destra.'));
-  return radice;
+// Il popup unico mostra il primo vincolo sotto il clic; se ce ne sono altri sovrapposti lo dice in una riga (il resto sta nella scheda).
+function apriPopup(map, lista, e, precedente) {
+  const { f, ds, t } = lista[0];
+  const modello = modelloPopup(ds, t, f.properties);
+  if (lista.length > 1) modello.righe.push({ etichetta: 'Altri vincoli', valore: String(lista.length - 1) });
+  const colore = t.classi.find(k => k.label === f.properties[`cls_${t.id}`])?.colore ?? t.classi.find(k => k.n > 0)?.colore ?? '#2b8a3e';
+  return apriPopupScheda(map, { precedente, sezione: 'Vincoli PAI', icona: 'pai', colore, modello, punto: e.point, lngLat: e.lngLat });
 }
 
 // ---- legenda -------------------------------------------------------------------------------------------------------------------------
@@ -234,10 +228,8 @@ export default {
       for (const tema of attivi) {
         for (const f of distinti(map.queryRenderedFeatures(e.point, { layers: layerDelTema(tema).slice(0, 1) }), tema.ds)) lista.push({ f, ds: tema.ds, t: tema.t });
       }
-      popup?.remove();
-      if (!lista.length) return;
-      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'monumento-popup-box', offset: 8 })
-        .setLngLat(e.lngLat).setDOMContent(contenutoPopup(lista)).addTo(map);
+      if (!lista.length) { popup?.remove(); return; }
+      popup = apriPopup(map, lista, e, popup);
     });
     registraTooltipStrati(map, TEMI.map(tema => ({ layers: layerDelTema(tema).slice(0, 1), icona: 'pai', modello: p => modelloPopup(tema.ds, tema.t, p), campione: p => { const c = tema.t.classi.find(k => k.label === p[`cls_${tema.t.id}`]); return c ? campioneTooltip('legenda-pai', campione(tema.ds, c)) : null; } })));
     const tuttiLayer = TEMI.flatMap(layerDelTema);

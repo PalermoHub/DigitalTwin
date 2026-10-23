@@ -2,6 +2,7 @@ import { urlDati } from '../core/config.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
+import { apriPopupScheda } from './popup-traffico.js';
 import { modelloPopupColonnina, vociColonnine } from './scheda-colonnine.js';
 import { graficiColonnine } from './colonnine-grafici.js';
 import { applicaSnapshot, scaricaSnapshot } from './colonnine-live.js';
@@ -32,14 +33,6 @@ function el(tag, classe, testo) {
   if (classe) e.className = classe;
   if (testo != null) e.textContent = tl(testo);
   return e;
-}
-
-function contenutoPopup(p) {
-  const m = modelloPopupColonnina(p);
-  const radice = el('div', 'monumento-popup');
-  radice.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.sottotitolo));
-  for (const r of m.righe) radice.append(el('p', 'monumento-desc', `${r.etichetta}: ${r.valore}`));
-  return radice;
 }
 
 function dati() {
@@ -167,10 +160,9 @@ export default {
     map.on('click', e => {
       if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
       const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] })[0];
-      popup?.remove();
-      if (!f) return;
-      popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
-        .setLngLat(f.geometry.coordinates).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
+      if (!f) { popup?.remove(); return; }
+      const p = completo(f.properties);
+      popup = apriPopupScheda(map, { precedente: popup, sezione: 'Colonnine di ricarica', icona: 'colonnine', colore: STATI.find(([s]) => s === p.stato)?.[1] ?? ALTRO, modello: modelloPopupColonnina(p), punto: e.point, lngLat: f.geometry.coordinates });
     });
     registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'colonnine', campione: p => { const col = STATI.find(([s]) => s === completo(p).stato)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(ICONA, col)]) : null; }, modello: p => modelloPopupColonnina(completo(p)) }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });

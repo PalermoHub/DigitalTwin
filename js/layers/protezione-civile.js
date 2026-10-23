@@ -4,7 +4,7 @@ import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { CLASSI, CONTORNO, classe, chiave, modelloPopup, vociPc } from './scheda-protezione-civile.js';
 import { tl } from '../core/i18n.js';
-import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
+import { apriPopupScheda } from './popup-traffico.js';
 
 // Piano di emergenza della Protezione civile (Comune di Palermo, Portale Open Data dataset 351): 478 aree in un solo PMTiles (zoom 11–17).
 // Simbologia dell'Allegato B del Dipartimento della Protezione Civile: tratteggio verde = area di attesa, rosso = ricovero e accoglienza,
@@ -65,18 +65,9 @@ function registraImmagini(map) {
 
 // Popup nello stile degli altri strati (scheda scura con intestazione, titolo e righe): mostra l'area cliccata, e quante altre le stanno sotto.
 function apriPopup(map, lista, e, precedente) {
-  precedente?.remove();
   const modello = modelloPopup(lista[0].properties);
   if (lista.length > 1) modello.righe.push({ etichetta: 'Aree sovrapposte', valore: String(lista.length) });
-  const coordinate = [e.lngLat.lng, e.lngLat.lat];
-  const { anchor, offset } = ancoraPopupTraffico(e.point, map.getContainer());
-  const popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset, closeButton: false })
-    .setLngLat(coordinate)
-    .setDOMContent(contenutoPopupTraffico({ sezione: 'Piano di emergenza', icona: 'protezione-civile', colore: COLORE_POPUP, modello, coordinate, chiudi: () => popup.remove() }))
-    .addTo(map);
-  rifinisciPopupTraffico(popup, anchor, COLORE_POPUP);
-  centraPopupTraffico(map, popup, anchor, coordinate);
-  return popup;
+  return apriPopupScheda(map, { precedente, sezione: 'Piano di emergenza', icona: 'protezione-civile', colore: COLORE_POPUP, modello, punto: e.point, lngLat: e.lngLat });
 }
 
 function applicaFiltro(map) {

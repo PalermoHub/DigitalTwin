@@ -13,8 +13,8 @@ function el(tag, classe, testo) {
 
 const gradi = (v, pos, neg) => `${Math.abs(v).toFixed(5)}° ${v >= 0 ? pos : neg}`;
 
-// opzioni: { sezione, icona, colore, modello: { titolo, sottotitolo, righe }, coordinate: [lon, lat], chiudi }
-export function contenutoPopupTraffico({ sezione, icona, colore, modello, coordinate, chiudi }) {
+// opzioni: { sezione, icona, colore, modello: { titolo, sottotitolo, righe? }, corpo?: nodi in più (foto, descrizione, elenchi), coordinate: [lon, lat], chiudi }
+export function contenutoPopupTraffico({ sezione, icona, colore, modello, corpo = [], coordinate, chiudi }) {
   const radice = el('div', 'traffico-popup');
   radice.style.setProperty('--traffico-colore', colore);
 
@@ -30,9 +30,17 @@ export function contenutoPopupTraffico({ sezione, icona, colore, modello, coordi
   radice.append(testa, el('h3', 'traffico-titolo', tl(modello.titolo)));
   if (modello.sottotitolo) radice.append(el('p', 'traffico-stato', tl(modello.sottotitolo)));
 
-  const lista = el('dl', 'traffico-righe');
-  for (const r of modello.righe) lista.append(el('dt', null, tl(r.etichetta)), el('dd', null, tl(String(r.valore))));
-  radice.append(lista);
+  if (corpo.length) {
+    const blocco = el('div', 'traffico-corpo');
+    blocco.append(...corpo);
+    radice.append(blocco);
+  }
+
+  if (modello.righe?.length) {
+    const lista = el('dl', 'traffico-righe');
+    for (const r of modello.righe) lista.append(el('dt', null, tl(r.etichetta)), el('dd', null, tl(String(r.valore))));
+    radice.append(lista);
+  }
 
   if (coordinate) {
     const [lon, lat] = coordinate;
@@ -81,4 +89,20 @@ export function centraPopupTraffico(map, popup, anchor, lngLat) {
     map.easeTo({ center: lngLat, offset: [x, y], duration: 500 });
   };
   setTimeout(() => (map.isEasing() ? map.once('moveend', vai) : vai()), 0);
+}
+
+// Apre il popup di un elemento (punto o area) di uno strato, nello stile unico: scheda scura con linea di richiamo, ancorata dal lato con più spazio
+// e centrata nella parte visibile della mappa. `punto` è la posizione sullo schermo del clic, `lngLat` quella sulla mappa ([lon, lat] o {lng, lat}).
+// Chiude `precedente` e restituisce il nuovo popup.
+export function apriPopupScheda(map, { precedente, sezione, icona, colore, modello, corpo, punto, lngLat }) {
+  precedente?.remove();
+  const coordinate = Array.isArray(lngLat) ? lngLat : [lngLat.lng, lngLat.lat];
+  const { anchor, offset } = ancoraPopupTraffico(punto, map.getContainer());
+  const popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset, closeButton: false })
+    .setLngLat(coordinate)
+    .setDOMContent(contenutoPopupTraffico({ sezione, icona, colore, modello, corpo, coordinate, chiudi: () => popup.remove() }))
+    .addTo(map);
+  rifinisciPopupTraffico(popup, anchor, colore);
+  centraPopupTraffico(map, popup, anchor, coordinate);
+  return popup;
 }

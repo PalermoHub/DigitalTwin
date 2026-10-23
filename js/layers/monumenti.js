@@ -86,29 +86,27 @@ function el(tag, classe, testo) {
   return e;
 }
 
-// Popup sulla mappa: foto, breve descrizione e pulsante verso il portale del Comune.
-function contenutoPopup(p) {
-  const m = modelloPopup(p, risolvi);
-  const radice = el('div', 'monumento-popup');
+// Corpo del popup unico: foto, breve descrizione e pulsante verso il portale del Comune.
+function corpoPopup(m) {
+  const nodi = [];
   if (m.foto) {
     const img = el('img', 'monumento-foto');
     img.src = m.foto;
     img.alt = m.titolo;
     img.loading = 'lazy';
     img.addEventListener('error', () => img.remove());
-    radice.append(img);
+    nodi.push(img);
   }
-  radice.append(el('h3', null, m.titolo), el('p', 'monumento-cat', m.categoria));
-  if (m.scomparso) radice.append(el('p', 'monumento-scomparso', t('monumento.scomparso.avviso')));
-  if (m.descrizione) radice.append(el('p', 'monumento-desc', m.descrizione));
+  if (m.scomparso) nodi.push(el('p', 'monumento-scomparso', t('monumento.scomparso.avviso')));
+  if (m.descrizione) nodi.push(el('p', 'monumento-desc', m.descrizione));
   if (m.url) {
     const a = el('a', 'monumento-link', 'Vai al sito del Comune');
     collegamento(a, m.url);
-    radice.append(a);
+    nodi.push(a);
   } else {
-    radice.append(el('p', 'monumento-fonte', t('layer.fonte', { fonte: tl(m.fonte) })));
+    nodi.push(el('p', 'monumento-fonte', t('layer.fonte', { fonte: tl(m.fonte) })));
   }
-  return radice;
+  return nodi;
 }
 
 function collegaPopup(map) {
@@ -117,15 +115,15 @@ function collegaPopup(map) {
   map.on('click', e => {
     if (map.getLayoutProperty(POLI, 'visibility') !== 'visible') return;
     const f = map.queryRenderedFeatures(e.point, { layers: LAYERS.filter(id => map.getLayer(id)) })[0];
-    popup?.remove();
-    if (!f) return;
+    if (!f) { popup?.remove(); return; }
     if (f.properties.cluster) { // un cluster si apre zoomando fino a separare i luoghi
       map.getSource(SRC).getClusterExpansionZoom(f.properties.cluster_id)
         .then(zoom => map.easeTo({ center: f.geometry.coordinates, zoom: zoom + 0.5 }));
       return;
     }
-    popup = new maplibregl.Popup({ maxWidth: '280px', className: 'monumento-popup-box', offset: 8 })
-      .setLngLat(e.lngLat).setDOMContent(contenutoPopup(completo(f.properties))).addTo(map);
+    const p = completo(f.properties);
+    const m = modelloPopup(p, risolvi);
+    popup = apriPopupScheda(map, { precedente: popup, sezione: 'Monumenti', icona: 'monumento', colore: MONUMENTI_CATEGORIE.find(([n]) => n === p.categoria)?.[1] ?? '#555', modello: { titolo: m.titolo, sottotitolo: m.categoria }, corpo: corpoPopup(m), punto: e.point, lngLat: e.lngLat });
   });
   for (const id of LAYERS) {
     map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
