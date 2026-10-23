@@ -1,8 +1,8 @@
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
-import { GRUPPI, NOME_GRUPPO, coloreGruppo, voceSatellite, modelloPopupSatellite, testoPassaggio, sopraOrizzonte } from './scheda-satelliti.js';
-import { creaSatelliti, posizione, daPalermo, prossimoPassaggio, arcoCielo, proiezioneCielo, elementiVecchi, traccia, CENTRO_CIELO } from './satelliti-orbite.js';
+import { GRUPPI, NOME_GRUPPO, coloreGruppo, voceSatellite, modelloPopupSatellite, testoPassaggio, testoPassaggioIss } from './scheda-satelliti.js';
+import { creaSatelliti, posizione, daPalermo, prossimoPassaggio, dettaglioPassaggio, arcoCielo, proiezioneCielo, elementiVecchi, traccia, CENTRO_CIELO } from './satelliti-orbite.js';
 import { creaMondo } from './satelliti-mondo.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico } from './popup-traffico.js';
 import { tl, t } from '../core/i18n.js';
@@ -35,6 +35,8 @@ const perId = new Map(); // id -> satellite
 const dettagli = new Map(); // id -> proprietà del satellite sopra l'orizzonte, ricalcolate a ogni secondo
 let passaggioIss = null; // prossimo passaggio dell'ISS (calcolato quando serve)
 let mondo = null; // mini-mappa del mondo
+let riquadroIss = null; // riquadro «Prossimo passaggio dell'ISS» sulla mappa
+let dettaglioIss = null;
 let riquadroMondo = null; // il suo riquadro sulla mappa (la legenda del layer sta nel pannello, che di solito è chiuso)
 let tracciaIss = []; // traccia a terra dell'ISS (±45 minuti), ricalcolata ogni TRACCIA_MS
 let tracciaDel = 0;
@@ -77,6 +79,13 @@ function scriviNota(adesso) {
   nota.textContent = [t('satelliti.sopraPalermo', { n: sopra }), riga].filter(Boolean).join(' · ');
 }
 
+// Il riquadro dell'ISS: il conto alla rovescia cambia a ogni secondo, le direzioni solo a ogni nuovo passaggio
+function scriviRiquadroIss(adesso) {
+  if (!riquadroIss) return;
+  const { titolo, righe } = testoPassaggioIss(dettaglioIss, adesso);
+  riquadroIss.replaceChildren(el('strong', null, titolo), ...righe.map(r => { const p = document.createElement('p'); p.className = 'uffici-nota'; p.textContent = r; return p; }));
+}
+
 // Posizione di ogni satellite oggi: tiene solo quelli sopra l'orizzonte di Palermo
 function calcola() {
   const adesso = new Date();
@@ -105,8 +114,10 @@ function calcola() {
   mondo?.disegna({ satelliti: sulMondo, traccia: accesi.has(NOME_GRUPPO.stations) ? tracciaIss : [], palermo: CENTRO_CIELO });
   if (iss && (!passaggioIss || (passaggioIss.fine && passaggioIss.fine < adesso))) {
     passaggioIss = prossimoPassaggio(iss, adesso);
+    dettaglioIss = dettaglioPassaggio(iss, passaggioIss);
     mappa?.getSource(SRC_ARCO)?.setData(passaggioIss?.fine ? { type: 'Feature', geometry: { type: 'LineString', coordinates: arcoCielo(iss, passaggioIss) }, properties: {} } : VUOTO);
   }
+  scriviRiquadroIss(adesso);
   scriviNota(adesso);
 }
 
@@ -160,6 +171,9 @@ function creaLegenda() {
   }
   mondo = creaMondo(Object.fromEntries(GRUPPI));
   mondo.elemento.setAttribute('aria-label', t('satelliti.mondoAlt'));
+  riquadroIss = el('div', 'legenda legenda-monumenti lg-satelliti-iss');
+  riquadroIss.hidden = true;
+  document.getElementById('legende').append(riquadroIss);
   riquadroMondo = el('div', 'legenda legenda-monumenti lg-satelliti-mondo');
   riquadroMondo.hidden = true;
   riquadroMondo.append(el('strong', null, 'Satelliti nel mondo'), mondo.elemento);
@@ -279,6 +293,7 @@ export default {
       acceso = attivo;
       if (legenda) legenda.hidden = !attivo;
       if (riquadroMondo) riquadroMondo.hidden = !attivo;
+      if (riquadroIss) riquadroIss.hidden = !attivo;
       for (const { pannello } of caselle.values()) pannello.disabled = !attivo;
       if (attivo) aggiorna();
       else { dettagli.clear(); mappa?.getSource(SRC)?.setData(VUOTO); }

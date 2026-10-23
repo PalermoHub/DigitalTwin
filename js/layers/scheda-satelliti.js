@@ -59,3 +59,28 @@ export function modelloPopupSatellite(p, passaggio, adesso = new Date()) {
     righe: righeSatellite(p, passaggio, adesso).filter(r => !['Gruppo', 'Designazione'].includes(r.etichetta)),
   };
 }
+
+// ---- Riquadro «Prossimo passaggio dell'ISS»: righe di testo per chi deve sapere dove guardare
+
+const durata = s => (s >= 90 ? t('satelliti.minuti', { n: Math.round(s / 60) }) : t('satelliti.secondi', { n: s }));
+const tra = ms => {
+  const m = Math.max(0, Math.round(ms / 60000));
+  return m >= 60 ? t('satelliti.traOreMinuti', { h: Math.floor(m / 60), m: m % 60 }) : t('satelliti.traMinuti', { n: m });
+};
+const INGLESE = { SO: 'SW', O: 'W', NO: 'NW' }; // i punti cardinali di orbite.js sono italiani
+const cardinale = az => {
+  const c = puntoCardinale(az);
+  return typeof document !== 'undefined' && document.documentElement.lang?.startsWith('en') ? (INGLESE[c] ?? c) : c;
+};
+const dove = az => `${cardinale(az)} (${num(az)}°)`;
+
+// `d` = dettaglioPassaggio(); restituisce { titolo, righe: [stringhe] } o null senza passaggio.
+export function testoPassaggioIss(d, adesso = new Date()) {
+  if (!d) return { titolo: t('satelliti.issNessuno'), righe: [] };
+  const righe = [];
+  if (d.inCorso) righe.push(t('satelliti.issInCorso'));
+  else if (d.inizio) righe.push(t('satelliti.issTra', { tempo: tra(d.inizio.quando - adesso) }), t('satelliti.sorge', { dove: dove(d.inizio.azimut), ora: ora(d.inizio.quando) }));
+  if (d.culmine) righe.push(t('satelliti.culmina', { gradi: num(d.culmine.elevazione), dove: dove(d.culmine.azimut), ora: ora(d.culmine.quando) }));
+  if (d.fine) righe.push(t('satelliti.tramonta', { dove: dove(d.fine.azimut), ora: ora(d.fine.quando), durata: d.durataS ? durata(d.durataS) : '' }));
+  return { titolo: t('satelliti.issTitolo'), righe };
+}

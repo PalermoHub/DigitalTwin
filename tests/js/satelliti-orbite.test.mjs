@@ -83,3 +83,30 @@ test('arcoCielo: l\'arco del passaggio sta dentro il cerchio e senza passaggio Ã
   }
   assert.deepEqual(arcoCielo(iss, null), []);
 });
+
+import { dettaglioPassaggio } from '../../js/layers/satelliti-orbite.js';
+
+test('dettaglioPassaggio: sorge, culmina e tramonta, nell\'ordine giusto e con azimut validi', () => {
+  const p = prossimoPassaggio(iss, ORA, 72);
+  const d = dettaglioPassaggio(iss, p);
+  assert.equal(d.inCorso, false);
+  for (const k of ['inizio', 'culmine', 'fine']) assert.ok(d[k].azimut >= 0 && d[k].azimut < 360, k);
+  assert.ok(d.inizio.quando <= d.culmine.quando && d.culmine.quando <= d.fine.quando);
+  assert.ok(Math.abs(d.culmine.elevazione - p.elevazioneMax) < 1);
+  assert.ok(d.durataS > 60 && d.durataS < 900);
+  assert.equal(dettaglioPassaggio(iss, null), null);
+});
+
+import { testoPassaggioIss } from '../../js/layers/scheda-satelliti.js';
+
+test('testoPassaggioIss: titolo e righe, anche senza passaggio e con passaggio in corso', () => {
+  const p = prossimoPassaggio(iss, ORA, 72);
+  const d = dettaglioPassaggio(iss, p);
+  const x = testoPassaggioIss(d, ORA);
+  assert.ok(x.titolo.length > 0);
+  assert.equal(x.righe.length, 4); // tra quanto, sorge, culmina, tramonta
+  assert.ok(x.righe.every(r => r.length > 5 && !/\{|undefined|NaN/.test(r)), x.righe.join(' | '));
+  assert.deepEqual(testoPassaggioIss(null).righe, []);
+  const incorso = testoPassaggioIss({ ...d, inCorso: true, inizio: null }, ORA);
+  assert.equal(incorso.righe.length, 3);
+});

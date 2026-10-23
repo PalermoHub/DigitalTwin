@@ -100,3 +100,18 @@ export function arcoCielo(s, passaggio, passoSecondi = 15) {
   }
   return punti;
 }
+
+// Un passaggio spiegato a chi guarda il cielo: dove e quando sorge, culmina e tramonta (azimut in gradi, elevazione al culmine)
+export function dettaglioPassaggio(s, passaggio) {
+  if (!passaggio) return null;
+  const punto = quando => {
+    const v = quando && daPalermo(s, quando);
+    return v ? { quando, azimut: v.azimut, elevazione: v.elevazione } : null;
+  };
+  const inizio = passaggio.in_corso ? null : punto(passaggio.inizio);
+  const fine = punto(passaggio.fine);
+  return {
+    inCorso: !!passaggio.in_corso, inizio, culmine: punto(passaggio.culmine), fine,
+    durataS: passaggio.fine ? Math.round((passaggio.fine - passaggio.inizio) / 1000) : null,
+  };
+}
