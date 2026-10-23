@@ -3000,6 +3000,8 @@
   "evidenza.nave": "Nave",
   "tabella.fonte.ais": "AISStream, AIS terrestre",
   "tabella.layer.navi": "Navi",
+  "tabella.layer.terremoti": "Terremoti in tempo reale",
+  "tabella.fonte.ingv": "INGV, servizio FDSN event, CC BY 4.0 (ora UTC, profondità in km)",
   "navi.aggiornato": "Aggiornato di recente · {n} navi",
   "navi.nonDisponibile": "Dati sulle navi non disponibili in questo momento",
   "navi.pochiSecondi": "pochi secondi fa",

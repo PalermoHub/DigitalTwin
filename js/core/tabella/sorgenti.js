@@ -28,9 +28,11 @@ const piano = t('tabella.fonte.piano');
 const mimit = t('tabella.fonte.mimit');
 const adsb = t('tabella.fonte.adsb');
 const ais = t('tabella.fonte.ais');
+const ingv = t('tabella.fonte.ingv');
 const pendolarismo = t('tabella.fonte.pendolarismo');
 
 export const SORGENTI = [
+  { id: 'terremoti', nome: t('tabella.layer.terremoti'), strati: ['terremoti-hit'], visibili: ['terremoti-punti'], chiave: p => p.id, colonne: ['ora', 'luogo', 'mag', 'tipoMag', 'prof', 'fascia', 'autore'], fonte: ingv, approssimata: false, esporta: true, colore: '#e03131' },
   { id: 'colonnine', nome: t('tabella.layer.colonnine'), strati: ['colonnine-hit'], visibili: ['colonnine-punti'], chiave: p => p.id, fonte: progetto, approssimata: false, esporta: true, colore: '#2b8a3e' },
   { id: 'distributori', nome: t('tabella.layer.distributori'), strati: ['distributori-hit'], visibili: ['distributori-punti'], chiave: p => p.id, colonne: ['bandiera', 'gestore', 'indirizzo', 'benzina', 'gasolio', 'gpl', 'metano', 'prezzi_del'], fonte: mimit, approssimata: false, esporta: true, colore: '#f2b705' },
   { id: 'voli', nome: t('tabella.layer.voli'), strati: ['voli-hit'], visibili: ['voli-punti'], chiave: p => p.id, colonne: ['volo', 'matricola', 'tipo', 'stato', 'quota_ft', 'velocita_kt', 'rotta', 'rateo_fpm', 'distanza_nm'], fonte: adsb, approssimata: false, esporta: true, colore: '#1971c2' },

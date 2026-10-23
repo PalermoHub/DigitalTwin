@@ -3000,6 +3000,8 @@
   "evidenza.nave": "Ship",
   "tabella.fonte.ais": "AISStream, terrestrial AIS",
   "tabella.layer.navi": "Ships",
+  "tabella.layer.terremoti": "Earthquakes in real time",
+  "tabella.fonte.ingv": "INGV, FDSN event service, CC BY 4.0 (UTC time, depth in km)",
   "navi.aggiornato": "Recently updated · {n} ships",
   "navi.nonDisponibile": "Ship data not available right now",
   "navi.pochiSecondi": "a few seconds ago",
