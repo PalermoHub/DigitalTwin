@@ -57,6 +57,7 @@ import uffici from './layers/uffici.js';
 import colonnine from './layers/colonnine.js';
 import distributori from './layers/distributori.js';
 import incendi from './layers/incendi.js';
+import protezioneCivile from './layers/protezione-civile.js';
 import isoleCalore from './layers/isole-calore.js';
 import mefImmobili from './layers/mef-immobili.js';
 import peba from './layers/peba.js';
@@ -93,7 +94,7 @@ riduciLegenda.addEventListener('click', () => {
 });
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [base, terreno, popolazione, territorio, mefImmobili, peba, pnrr, opere, pianoTriennale, pendolarismo, trendPopolazione, edifici, crociferi, pai, monumenti, alberi, fontanelle, trasporto, voli, navi, traffico, eventi, terremoti, satelliti, radarAllerte, sicurezza, colonnine, distributori, uffici, scuole, incendi, isoleCalore, confini];
+const MODULI = [base, terreno, popolazione, territorio, mefImmobili, peba, pnrr, opere, pianoTriennale, pendolarismo, trendPopolazione, edifici, crociferi, pai, monumenti, alberi, fontanelle, trasporto, voli, navi, traffico, eventi, terremoti, satelliti, radarAllerte, sicurezza, colonnine, distributori, uffici, scuole, incendi, protezioneCivile, isoleCalore, confini];
 traduciModuli(MODULI); // in inglese: titoli, etichette e descrizioni dei layer dai dizionari (lbl.*)
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);

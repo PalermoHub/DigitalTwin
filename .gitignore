@@ -30,6 +30,8 @@ dati/*/
 !dati/trend/
 # eccezione: isole di calore (piccolo, rigenerato da scripts/isole_calore.py)
 !dati/isole-calore/
+# eccezione: Piano di emergenza della Protezione civile (generato a mano da scripts/protezione_civile.py)
+!dati/protezione-civile/
 # eccezione: edifici in 3D (piante DWG di partenza e modello generato da scripts/edificio/)
 !dati/edificio/
 # dati di lavoro degli script (non servono alla webapp)
@@ -87,6 +89,7 @@ scripts/*
 !scripts/trend_demografico.py
 !scripts/incendi.py
 !scripts/pai.py
+!scripts/protezione_civile.py
 !scripts/uffici_build.py
 !scripts/uffici_scrape.py
 !scripts/mef_immobili.py

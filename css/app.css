@@ -668,6 +668,7 @@ dialog li { margin: 4px 0; }
 
 .uffici-popup .uffici-suggerimento { margin-top: 6px; font-style: italic; color: var(--text-muted); }
 .legenda-uffici { max-height: 45vh; overflow-y: auto; }
+.legenda-pc i.pc-campione, .lg-pc i.pc-campione { display: inline-block; width: 14px; height: 10px; border: 1.5px solid; border-radius: 2px; vertical-align: -1px; opacity: .8; }
 .legenda-incendi i.incendi-campione { width: 14px; height: 10px; border: 1.5px solid; border-radius: 2px; }
 .lg-allerte i.incendi-campione, .lg-radar i.incendi-campione { display: inline-block; width: 14px; height: 10px; border: 1.5px solid rgba(0, 0, 0, .35); border-radius: 2px; vertical-align: -1px; }
 .lg-allerte .allerta-riga { margin: 4px 0; font-size: 12px; }

@@ -15,6 +15,7 @@ const prg = t('tabella.fonte.prg');
 const omi = t('tabella.fonte.omi');
 const incendi = t('tabella.fonte.incendi');
 const calore = t('tabella.fonte.calore');
+const protezioneCivile = t('tabella.fonte.protezioneCivile');
 const pai = t('tabella.fonte.pai');
 const alberi = t('tabella.fonte.alberi');
 const turismo = t('tabella.fonte.monumenti');
@@ -63,6 +64,7 @@ export const SORGENTI = [
   { id: 'trasporto-bus', nome: t('tabella.layer.bus'), strati: ['trasporto-hit-linee'], visibili: ['trasporto-bus'], filtro: p => p.tipo === 'bus', chiave: p => p.id, colonne: ['numero', 'nome', 'direzione', 'da', 'a'], fonte: comune, approssimata: false, esporta: true, colore: '#e8590c' },
   { id: 'trasporto-tram', nome: t('tabella.layer.tram'), strati: ['trasporto-hit-linee'], visibili: ['trasporto-tram'], filtro: p => p.tipo === 'tram', chiave: p => p.id, colonne: ['numero', 'nome', 'direzione', 'da', 'a'], fonte: comune, approssimata: false, esporta: true, colore: '#c92a2a' },
   { id: 'incendi', nome: t('tabella.layer.incendi'), strati: ['incendi-hit'], visibili: ['incendi-fill'], chiave: p => (p.id != null ? `${p.anno}/${p.id}` : null), colonne: ['anno', 'data', 'localita', 'luogo_inizio', 'tipo_evento', 'uso', 'sup_ha', 'sup_boscata_ha', 'sup_non_boscata_ha', 'durata_min', 'squadre_aib', 'feriti', 'periti'], fonte: incendi, approssimata: true, esporta: true, colore: '#e03131' },
+  { id: 'protezione-civile', nome: t('tabella.layer.protezioneCivile'), strati: ['protezione-civile-hit'], visibili: ['protezione-civile-fill'], chiave: p => p.id, colonne: ['numero', 'descrizione', 'tipo', 'sup_m2', 'circoscrizione', 'quartiere', 'upl', 'nota'], fonte: protezioneCivile, approssimata: true, esporta: true, colore: '#2f9e44' },
   { id: 'civici', nome: t('tabella.layer.civici'), strati: ['civici-hit'], visibili: ['civici'], chiave: p => p.PROGRESSIVO_SNC, colonne: ['Odonimo', 'Civico', 'Esponente', 'Quartiere', 'UPL', 'Circoscrizione'], fonte: comune, approssimata: false, esporta: true, colore: '#495057' },
   { id: 'omi', nome: t('tabella.layer.omi'), strati: ['omi-hit'], visibili: ['omi'], chiave: p => p.fid, colonne: ['Zona', 'Zona_Descr', 'Microzona', 'Descr_Tipologia', 'Fascia', 'Fascia_Descr', 'Compr_min', 'Compr_max', 'Loc_min', 'Loc_max', 'Stato', 'Anno_Semestre'], fonte: omi, approssimata: true, esporta: true, colore: '#f08c00' },
   { id: 'prg', nome: t('tabella.layer.prg'), strati: ['prg-zto-hit'], visibili: ['prg-zto'], chiave: p => p.fid, colonne: ['ZTO', 'DESCRIZION', 'NOTE'], fonte: prg, approssimata: true, esporta: true, colore: '#d6336c' },

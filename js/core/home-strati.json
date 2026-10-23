@@ -406,6 +406,29 @@
    ]
   },
   {
+   "id": "protezione-civile",
+   "titolo": "Piano di emergenza",
+   "descrizione": "Aree di attesa, di ricovero e accoglienza e di ammassamento dei soccorritori del Piano di emergenza della Protezione civile del Comune di Palermo.",
+   "strati": [
+    {
+     "id": "protezione-civile",
+     "etichetta": "Piano di emergenza (da zoom 11)"
+    }
+   ],
+   "fonte": "Comune di Palermo, Protezione civile: Piano di emergenza (Portale Open Data, dataset 351), con circoscrizione, quartiere e UPL aggiunti da DigitalTwin Palermo. Licenza CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2021-09-06",
+   "link": [
+    [
+     "Piano di emergenza, Portale Open Data",
+     "https://opendata.comune.palermo.it/opendata-dataset.php?dataset=351"
+    ]
+   ]
+  },
+  {
    "id": "piano-triennale",
    "titolo": "Piano triennale lavori pubblici 2026-2028",
    "descrizione": "Programma triennale dei lavori pubblici 2026-2028 del Comune di Palermo (DCC 553/2026): 548 interventi per 4,37 miliardi di euro, di cui 454 localizzati sulla mappa (punti, linee, poligoni colorati per annualità). Nella scheda, tab Piano triennale: importi per anno, fonti di finanziamento, elenco annuale, CUP e grafici sull’intero Programma, anche per gli interventi senza geometria.",
@@ -1225,6 +1248,29 @@
     [
      "Progetto Fontanelle, onData",
      "https://fontanelle.ondata.it/"
+    ]
+   ]
+  },
+  {
+   "id": "protezione-civile",
+   "titolo": "Emergency plan",
+   "descrizione": "Waiting areas, shelter and reception areas and rescuers’ assembly areas of the Palermo Civil Protection emergency plan.",
+   "strati": [
+    {
+     "id": "protezione-civile",
+     "etichetta": "Emergency plan (from zoom 11)"
+    }
+   ],
+   "fonte": "Municipality of Palermo, Civil Protection: emergency plan (Open Data Portal, dataset 351), with district, neighbourhood and UPL added by DigitalTwin Palermo. Licence CC BY 4.0.",
+   "enti": [
+    "Comune di Palermo"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2021-09-06",
+   "link": [
+    [
+     "Emergency plan, Open Data Portal",
+     "https://opendata.comune.palermo.it/opendata-dataset.php?dataset=351"
     ]
    ]
   },

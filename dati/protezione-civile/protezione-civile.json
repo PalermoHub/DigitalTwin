@@ -1,0 +1,67 @@
+{
+ "n": 478,
+ "per_classe": {
+  "attesa": 393,
+  "accoglienza": 37,
+  "ammassamento": 26,
+  "ospedale": 20,
+  "rischio": 2
+ },
+ "per_circoscrizione": {
+  "I": {
+   "attesa": 50,
+   "ammassamento": 1,
+   "ospedale": 1
+  },
+  "II": {
+   "attesa": 24,
+   "accoglienza": 3,
+   "ospedale": 1,
+   "ammassamento": 1,
+   "rischio": 2
+  },
+  "III": {
+   "attesa": 33,
+   "ospedale": 3,
+   "accoglienza": 5,
+   "ammassamento": 2
+  },
+  "IV": {
+   "attesa": 53,
+   "ospedale": 4,
+   "ammassamento": 2,
+   "accoglienza": 7
+  },
+  "V": {
+   "attesa": 53,
+   "ammassamento": 1,
+   "ospedale": 2,
+   "accoglienza": 1
+  },
+  "VI": {
+   "attesa": 49,
+   "accoglienza": 6,
+   "ammassamento": 5,
+   "ospedale": 7
+  },
+  "VII": {
+   "attesa": 59,
+   "accoglienza": 13,
+   "ammassamento": 10,
+   "ospedale": 1
+  },
+  "VIII": {
+   "attesa": 72,
+   "accoglienza": 2,
+   "ammassamento": 4,
+   "ospedale": 1
+  }
+ },
+ "sup_m2": {
+  "attesa": 2441464,
+  "accoglienza": 1665633,
+  "ammassamento": 1474759,
+  "ospedale": 1068173,
+  "rischio": 513272
+ }
+}

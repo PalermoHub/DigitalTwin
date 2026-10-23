@@ -1126,5 +1126,30 @@
     ]
    ]
   }
+ },
+ "protezione-civile": {
+  "data": "2026-10-23",
+  "aggiornati": "2021-09-06",
+  "enti": [
+   "Comune di Palermo"
+  ],
+  "fonte": {
+   "it": "Comune di Palermo, Protezione civile: Piano di emergenza (Portale Open Data, dataset 351), con circoscrizione, quartiere e UPL aggiunti da DigitalTwin Palermo. Licenza CC BY 4.0.",
+   "en": "Municipality of Palermo, Civil Protection: emergency plan (Open Data Portal, dataset 351), with district, neighbourhood and UPL added by DigitalTwin Palermo. Licence CC BY 4.0."
+  },
+  "link": {
+   "it": [
+    [
+     "Piano di emergenza, Portale Open Data",
+     "https://opendata.comune.palermo.it/opendata-dataset.php?dataset=351"
+    ]
+   ],
+   "en": [
+    [
+     "Emergency plan, Open Data Portal",
+     "https://opendata.comune.palermo.it/opendata-dataset.php?dataset=351"
+    ]
+   ]
+  }
  }
 }
