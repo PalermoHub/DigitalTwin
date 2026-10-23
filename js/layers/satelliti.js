@@ -4,7 +4,7 @@ import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { GRUPPI, NOME_GRUPPO, coloreGruppo, voceSatellite, modelloPopupSatellite, testoPassaggio, testoPassaggioIss } from './scheda-satelliti.js';
 import { creaSatelliti, posizione, daPalermo, prossimoPassaggio, dettaglioPassaggio, arcoCielo, proiezioneCielo, elementiVecchi, traccia, CENTRO_CIELO } from './satelliti-orbite.js';
 import { creaMondo } from './satelliti-mondo.js';
-import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico } from './popup-traffico.js';
+import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 import { tl, t } from '../core/i18n.js';
 import { registraGlifo, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 import { scegliProxy } from '../rndt/proxy.js';
@@ -255,6 +255,7 @@ export default {
         }))
         .addTo(map);
       rifinisciPopupTraffico(popup, anchor, colore);
+      centraPopupTraffico(map, popup, anchor, f.geometry.coordinates);
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: ICONA,

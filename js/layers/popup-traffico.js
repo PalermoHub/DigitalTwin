@@ -68,3 +68,17 @@ export function rifinisciPopupTraffico(popup, anchor, colore) {
   radice.style.setProperty('--traffico-h', `${altezza}px`);
   popup.setOffset(spostamento(anchor, altezza));
 }
+
+// Porta l'oggetto cliccato e la sua scheda al centro dell'area visibile della mappa (che già esclude la scheda del luogo aperta di lato).
+// Il blocco oggetto + scheda è largo ORIZZ + LARGHEZZA e alto altezza + BASSO: il suo mezzo cade al centro. Parte dopo la scheda del luogo,
+// che al clic centra a sua volta l'oggetto, e attende la fine del suo spostamento.
+export function centraPopupTraffico(map, popup, anchor, lngLat) {
+  const vai = () => {
+    if (!popup.isOpen()) return;
+    const altezza = popup.getElement().querySelector('.maplibregl-popup-content').offsetHeight;
+    const x = (ORIZZ + LARGHEZZA) / 2 * (anchor.endsWith('left') ? -1 : 1);
+    const y = (altezza + BASSO) / 2 * (anchor.startsWith('top') ? 1 : -1);
+    map.easeTo({ center: lngLat, offset: [x, y], duration: 500 });
+  };
+  setTimeout(() => (map.isEasing() ? map.once('moveend', vai) : vai()), 0);
+}

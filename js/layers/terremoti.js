@@ -1,7 +1,7 @@
 import { tl, t, localeIntl } from '../core/i18n.js';
 import { LIMITI } from '../core/config.js';
 import { FASCE, URL_SERVIZIO, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti } from './scheda-terremoti.js';
-import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico } from './popup-traffico.js';
+import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 
 // Terremoti in tempo reale attorno a Palermo: gli eventi degli ultimi 7 giorni dal servizio FDSN dell'INGV, chiesto direttamente dal browser (CORS aperto, nessun Worker).
 // Cerchio = un evento: più grande è la magnitudo, più grande il cerchio; il colore dice da quanto è successo. Si rinnova ogni 2 minuti finché lo strato è acceso.
@@ -119,6 +119,7 @@ export default {
         .setDOMContent(contenutoPopupTraffico({ sezione: 'Terremoti', icona: 'terremoto', colore: f.properties.colore, modello: modelloPopupTerremoto(proprieta(f)), coordinate: f.geometry.coordinates, chiudi: () => popup?.remove() }))
         .addTo(map);
       rifinisciPopupTraffico(popup, anchor, f.properties.colore);
+      centraPopupTraffico(map, popup, anchor, f.geometry.coordinates);
     });
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
