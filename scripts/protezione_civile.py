@@ -6,7 +6,7 @@ lavoro/isole-calore/sezioni_lst_years.geojson, che portano i tre nomi) e la supe
 Scrive:
   aree.geojson              aree in WGS84 (senza quota), con classe, circoscrizione, quartiere, upl
   protezione-civile.json    conteggi per classe e per circoscrizione, usati da legenda e scheda
-  protezione-civile.pmtiles strato `aree`, zoom 11–17 (richiede tippecanoe)
+  protezione-civile.pmtiles strati `aree` e `punti` (un punto per area, per l'icona), zoom 11–17 (richiede tippecanoe)
 Uso: python3 scripts/protezione_civile.py [--sorgente lavoro/ppc/pc_palermo.geojson] [--senza-pmtiles]
 """
 import argparse
@@ -53,7 +53,7 @@ def main():
     albero = STRtree(geo_sez)
     metri = Transformer.from_crs(4326, 32633, always_xy=True).transform
 
-    feats, senza_zona = [], 0
+    feats, punti, senza_zona = [], [], 0
     for i, f in enumerate(aree, 1):
         p = f["properties"]
         g = shape(f["geometry"])
@@ -77,8 +77,12 @@ def main():
             "circoscrizione": zona["circoscrizione"], "quartiere": zona["Quartiere"], "upl": zona["UPL_nome"],
         }
         feats.append({"type": "Feature", "properties": {k2: v for k2, v in props.items() if v is not None}, "geometry": geom})
+        # un solo punto per area, dove va l'icona: sui poligoni MapLibre ne metterebbe una per ogni pezzo tagliato dalle tile
+        punti.append({"type": "Feature", "properties": {"id": i, "classe": CLASSE[tipo]},
+                      "geometry": {"type": "Point", "coordinates": [round(punto.x, 6), round(punto.y, 6)]}})
 
     OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / "punti.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": punti}, separators=(",", ":")), encoding="utf-8")
     (OUT / "aree.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": feats}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     per_classe = Counter(f["properties"]["classe"] for f in feats)
     per_circ = {}
@@ -95,7 +99,7 @@ def main():
         return
     cmd = ["tippecanoe", "-o", str(OUT / "protezione-civile.pmtiles"), "-q", "-f", f"-Z{ZOOM_MIN}", f"-z{ZOOM_MAX}",
            "--no-feature-limit", "--no-tile-size-limit", "--no-simplification-of-shared-nodes", "--no-tiny-polygon-reduction",
-           "-L", f"aree:{OUT / 'aree.geojson'}"]
+           "-L", f"aree:{OUT / 'aree.geojson'}", "-L", f"punti:{OUT / 'punti.geojson'}"]
     subprocess.run(cmd, check=True)
     print(f"protezione-civile.pmtiles: zoom {ZOOM_MIN}-{ZOOM_MAX}, {(OUT / 'protezione-civile.pmtiles').stat().st_size} byte")
 

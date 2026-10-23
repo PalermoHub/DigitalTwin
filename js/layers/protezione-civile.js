@@ -133,9 +133,9 @@ export default {
       id: BORDO, type: 'line', source: SRC, 'source-layer': 'aree', minzoom: MINZOOM, layout: nascosto,
       paint: { 'line-color': CONTORNO, 'line-width': ['interpolate', ['linear'], ['zoom'], 11, 0.5, 17, 1.4] },
     });
-    // simbolo blu della classe al centro dell'area (Allegato B); l'area che non ci sta non lo mostra
+    // simbolo blu della classe, uno per area (strato punti); l'area troppo piccola non lo mostra
     map.addLayer({
-      id: ICONE, type: 'symbol', source: SRC, 'source-layer': 'aree', minzoom: MINZOOM,
+      id: ICONE, type: 'symbol', source: SRC, 'source-layer': 'punti', minzoom: MINZOOM,
       layout: {
         ...nascosto,
         'icon-image': ['match', ['get', 'classe'], ...conIcona.flatMap(c => [c.id, idIcona(c.id)]), ''],
