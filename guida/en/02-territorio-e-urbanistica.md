@@ -86,7 +86,7 @@ Keywords: fires, burnt areas, fire, Bellolampo, Fire Census, wooded area.
 
 Typical questions: Where have there been fires? How many hectares have burnt?
 
-The «Fires» layer (Territory group, from zoom 12) shows the areas swept by fire in the Municipality of Palermo since 2007, year by year, from the Fire Census of the Sicilian Region. The colour indicates the year. The profile of a fire gives date, locality, total and wooded area and, when available, the crews that intervened. If several fires overlap, the profile lists them all. In the search you can filter by year (for example «incendi 2023»).
+The «Fires» layer (Events group, from zoom 12) shows the areas swept by fire in the Municipality of Palermo since 2007, year by year, from the Fire Census of the Sicilian Region. The colour indicates the year. The profile of a fire gives date, locality, total and wooded area and, when available, the crews that intervened. If several fires overlap, the profile lists them all. In the search you can filter by year (for example «incendi 2023»).
 
 ---
 

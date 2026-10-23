@@ -86,7 +86,7 @@ Parole chiave: incendi, aree bruciate, fuoco, Bellolampo, Censimento Incendi, su
 
 Domande tipiche: Dove ci sono stati incendi? Quanti ettari sono bruciati?
 
-Lo strato «Incendi» (gruppo Territorio, da zoom 12) mostra le aree percorse dal fuoco nel Comune di Palermo dal 2007, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l'anno. La scheda di un incendio riporta data, località, superficie totale e boscata e, quando disponibili, le squadre intervenute. Se più incendi si sovrappongono, la scheda li elenca tutti. Nella ricerca si può filtrare per anno (per esempio «incendi 2023»).
+Lo strato «Incendi» (gruppo Eventi, da zoom 12) mostra le aree percorse dal fuoco nel Comune di Palermo dal 2007, anno per anno, dal Censimento Incendi della Regione Siciliana. Il colore indica l'anno. La scheda di un incendio riporta data, località, superficie totale e boscata e, quando disponibili, le squadre intervenute. Se più incendi si sovrappongono, la scheda li elenca tutti. Nella ricerca si può filtrare per anno (per esempio «incendi 2023»).
 
 ---
 

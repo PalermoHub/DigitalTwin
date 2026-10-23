@@ -90,8 +90,8 @@ export default {
   id: 'incendi',
   titolo: 'Incendi',
   argomento: { titolo: 'Incendi', descrizione: 'Aree percorse dal fuoco nel Comune di Palermo dal 2007, anno per anno, dal Censimento Incendi della Regione Siciliana.' },
-  gruppo: 'territorio',
-  sezioniFisse: true, // «Immobili comunali» resta una sezione a sé nel gruppo Territorio: il riordino non attraversa le intestazioni
+  gruppo: 'eventi',
+  sezioniFisse: true, // ogni layer di Eventi resta una sezione a sé: il riordino non attraversa le intestazioni
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'vector', url: pmt('incedi/incendi.pmtiles') });
   },

@@ -93,7 +93,7 @@ const proprieta = f => ({ ...f.properties, lon: f.geometry.coordinates[0], lat: 
 export default {
   id: 'terremoti',
   titolo: 'Terremoti in tempo reale',
-  gruppo: 'territorio',
+  gruppo: 'eventi',
   sezione: 'Terremoti',
   sezioniFisse: true,
   argomento: { titolo: 'Terremoti in tempo reale', descrizione: 'I terremoti degli ultimi 7 giorni attorno a Palermo, in Sicilia nord-occidentale e nel Tirreno meridionale, dal servizio dell\'INGV: magnitudo, profondità, zona e distanza da Palermo, aggiornati ogni 2 minuti.' },

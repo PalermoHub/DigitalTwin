@@ -179,6 +179,8 @@ async function caricaAllerte() {
 export default {
   id: 'radar-allerte',
   titolo: 'Radar pioggia e allerte',
+  gruppo: 'eventi',
+  sezioniFisse: true, // ogni layer di Eventi resta una sezione a sé: il riordino non attraversa le intestazioni
   argomento: { titolo: 'Radar pioggia e allerte', descrizione: 'Dove sta piovendo adesso (radar degli ultimi 120 minuti) e l\'allerta meteo-idro della Protezione Civile per oggi e domani nelle zone di allerta della Sicilia.' },
   aggiungiSorgenti(map) {
     map.addSource(SRC_ALLERTE, { type: 'geojson', data: VUOTO });
