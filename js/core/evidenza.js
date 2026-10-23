@@ -50,9 +50,12 @@ export const FONTI = {
 const ICONE_PUNTI = {
   'monumenti-hit-punti': 'monumento', 'alberi-hit-punti': 'albero', 'fontanelle-hit-punti': 'fontanella',
   'scuole-hit-punti': 'scuola', 'seggi-hit-punti': 'voto', 'distributori-hit': 'distributori', 'opere-hit': 'cantiere', 'piano-triennale-hit-punti': 'piano',
-  'colonnine-hit': 'colonnine', 'voli-hit': 'aereo', 'voli-aeroporto-hit': 'aereo', 'navi-hit': 'nave', 'satelliti-hit': 'satellite', 'uffici-hit': 'uffici', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
+  'colonnine-hit': 'colonnine', 'uffici-hit': 'uffici', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
   'distributori-vicini': 'distributori', 'trasporto-vicine': 'trasporto', // evidenze delle voci della scheda
 };
+// Layer con la propria sagoma in mappa (aerei e navi ruotati, satelliti) e un tooltip proprio: la selezione resta un cerchio alone,
+// senza icona sovrapposta, e non aggiunge al tooltip la riga con il nome del layer.
+const SENZA_TOOLTIP = new Set(['voli-hit', 'voli-aeroporto-hit', 'navi-hit', 'satelliti-hit']);
 const DISCHI = new Set(['trasporto-hit-fermate', 'trasporto-hit-stazioni', 'trasporto-hit-fermate-vicini', 'trasporto-hit-stazioni-vicini']); // punti con il disco di contrasto
 const ICONE_EXTRA = ['tram']; // icone che una singola feature può scegliere con `properties.icona` (fermate di tram)
 const iconaDi = (id, geometria) => (geometria.type === 'Point' ? ICONE_PUNTI[id] ?? ICONE_PUNTI[id.replace(/-vicini$/, '')] ?? '' : '');
@@ -118,7 +121,7 @@ export function collezione(scelte) {
   return {
     type: 'FeatureCollection',
     features: scelte.flatMap(s => s.features.map(f => ({
-      type: 'Feature', geometry: f.geometry, properties: { colore: s.colore, etichetta: s.etichetta, icona: f.properties?.icona ?? iconaDi(s.id, f.geometry), disco: f.properties?.disco ?? DISCHI.has(s.id), sposta: f.properties?.sposta ?? DISCHI.has(s.id), attributo: attributoDi(s.id, f.properties) ?? '' },
+      type: 'Feature', geometry: f.geometry, properties: { colore: s.colore, etichetta: s.etichetta, icona: f.properties?.icona ?? iconaDi(s.id, f.geometry), disco: f.properties?.disco ?? DISCHI.has(s.id), sposta: f.properties?.sposta ?? DISCHI.has(s.id), senzaTooltip: SENZA_TOOLTIP.has(s.id), attributo: attributoDi(s.id, f.properties) ?? '' },
     }))),
   };
 }
@@ -138,7 +141,7 @@ let tooltipAttivo = true; // il pulsante della legenda lo spegne
 function tooltipSelezione(map, punto) {
   if (!tooltipAttivo) return null;
   const trovati = map.queryRenderedFeatures(punto, { layers: STRATI.filter(id => map.getLayer(id)) });
-  const viste = new Map(trovati.map(f => [`${f.properties.etichetta}\n${f.properties.attributo}`, f.properties]));
+  const viste = new Map(trovati.filter(f => !f.properties.senzaTooltip).map(f => [`${f.properties.etichetta}\n${f.properties.attributo}`, f.properties]));
   if (!viste.size) return null;
   const contenuto = document.createElement('div');
   contenuto.className = 'legenda';
