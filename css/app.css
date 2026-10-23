@@ -2220,6 +2220,14 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .terremoti-filtri { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 6px 0; }
 .terremoti-filtro { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 0; font-size: var(--fs-xs); color: var(--text-muted); }
 .terremoti-filtro select { margin: 0; padding: 5px; }
+.terremoti-barre { display: flex; align-items: flex-end; gap: 2px; height: 110px; margin: 8px 0 2px; }
+.terremoti-barra { flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+.terremoti-barra i { display: block; width: 100%; border-radius: 2px 2px 0 0; background: var(--accent); opacity: .7; }
+.terremoti-barra i.sciame { background: #e03131; opacity: 1; }
+.terremoti-barra span { height: 14px; font-size: 10px; line-height: 14px; color: var(--text-muted); white-space: nowrap; overflow: visible; }
+.terremoti-sequenze h4 { margin: 12px 0 6px; font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.terremoti-sequenza { display: flex; flex-direction: column; gap: 1px; padding: 5px 0; border-top: 1px solid var(--border); font-size: var(--fs-xs); }
+.terremoti-sequenza span { color: var(--text-muted); }
 .scheda-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 0; }
 .scheda-nav[hidden] { display: none; }
 .scheda-nav-conta { font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }

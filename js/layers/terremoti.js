@@ -1,8 +1,8 @@
 import { tl, t, localeIntl } from '../core/i18n.js';
 import { LIMITI } from '../core/config.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
-import { FASCE, URL_SERVIZIO, GIORNI_MAX, filtro, passaFiltro, espressioneFiltro, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, voceAltri, riassuntoTerremoti } from './scheda-terremoti.js';
-import { EVENTO_FILTRO, menuFiltro, elencoAltri, testoGiorni, barraEventi } from './scheda-terremoti-dom.js';
+import { FASCE, URL_SERVIZIO, GIORNI_MAX, filtro, passaFiltro, espressioneFiltro, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, voceSerie, voceAltri, riassuntoTerremoti } from './scheda-terremoti.js';
+import { EVENTO_FILTRO, menuFiltro, elencoAltri, graficoSerie, testoGiorni, barraEventi } from './scheda-terremoti-dom.js';
 import { clicSu } from '../core/scheda-navigazione.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 
@@ -162,7 +162,7 @@ export default {
     voci(trovati) {
       const primo = evento(trovati.filter(f => f.layer.id === HIT));
       if (!primo) return [];
-      return [voceTerremoto(proprieta(primo), Date.now(), () => barraEventi(primo.properties.id, visibili, vaiAEvento)), voceAltri(() => elencoAltri(() => eventi, new Set([primo.properties.id])))];
+      return [voceTerremoto(proprieta(primo), Date.now(), () => barraEventi(primo.properties.id, visibili, vaiAEvento)), voceSerie(() => graficoSerie(AREA)), voceAltri(() => elencoAltri(() => eventi, new Set([primo.properties.id])))];
     },
     // gli eventi stanno in mare e fuori dal Comune: il clic su un cerchio apre la scheda (solo a strato acceso: i dati si scaricano all'accensione)
     apertoFuoriComune(map, e) {

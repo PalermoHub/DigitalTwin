@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
+import { serieEventi, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
 
 const ingv = (extra = {}, coord = [14.1717, 38.7938, 8.8]) => ({
   type: 'Feature', geometry: { type: 'Point', coordinates: coord },
@@ -131,4 +131,71 @@ test('voceTerremoto: la barra dinamica è facoltativa', () => {
   assert.equal('dinamico' in voceTerremoto(p, ADESSO), false);
   const f = () => null;
   assert.equal(voceTerremoto(p, ADESSO, f).dinamico, f);
+});
+
+const giorno = (g, ora = 12) => new Date(2026, 9, g, ora).getTime(); // ottobre 2026, ora locale
+const OGGI = giorno(23, 15);
+
+test('eventiDaTesto: legge ora e magnitudo, salta intestazione e righe rotte', () => {
+  const testo = '#EventID|Time|Latitude|Longitude|Depth/Km|Author|Catalog|Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName|EventType\n1|2026-10-23T13:45:38.880000|38.7|14.1|10.0|X|||| ML|2.1|--|Z|earthquake\n2|rotta|1|1|1|X||||ML|abc|--|Z|earthquake\n';
+  const ev = eventiDaTesto(testo);
+  assert.equal(ev.length, 1);
+  assert.equal(ev[0].mag, 2.1);
+  assert.equal(ev[0].ts, Date.parse('2026-10-23T13:45:38.880Z'));
+});
+
+test('serieEventi: barre per giorno, 30 finestre, la più recente è oggi', () => {
+  const s = serieEventi([{ ts: giorno(23, 9), mag: 2.4 }, { ts: giorno(23, 10), mag: 3.1 }, { ts: giorno(20), mag: 2 }], 'giorno', 2, OGGI);
+  assert.equal(s.barre.length, 30);
+  assert.equal(s.barre.at(-1).n, 2);
+  assert.equal(s.barre.at(-1).magMax, 3.1);
+  assert.equal(s.barre.at(-4).n, 1);
+  assert.equal(s.totale, 3);
+});
+
+test('serieEventi: la magnitudo minima scarta gli eventi sotto soglia e mai sotto lo storico', () => {
+  const ev = [{ ts: giorno(22), mag: 2.2 }, { ts: giorno(22), mag: 3.5 }, { ts: giorno(22), mag: 1.5 }];
+  assert.equal(serieEventi(ev, 'giorno', 3, OGGI).totale, 1);
+  assert.equal(serieEventi(ev, 'giorno', 1, OGGI).totale, 2);
+});
+
+test('serieEventi: sciame = barra anomala; barre di sciame consecutive formano una sequenza', () => {
+  const ev = [];
+  for (let g = 1; g <= 23; g++) ev.push({ ts: giorno(g), mag: 2.1 }); // un evento al giorno
+  for (const g of [10, 11, 12]) for (let k = 0; k < 15; k++) ev.push({ ts: giorno(g, k), mag: 2 + k / 10 });
+  for (let k = 0; k < 9; k++) ev.push({ ts: giorno(20, k), mag: 2 });
+  const s = serieEventi(ev, 'giorno', 2, OGGI);
+  assert.equal(s.barre.filter(b => b.sciame).length, 4);
+  assert.equal(s.sequenze.length, 2);
+  assert.equal(s.sequenze[0].barre, 3);
+  assert.equal(s.sequenze[0].n, 48);
+  assert.equal(s.sequenze[1].barre, 1);
+});
+
+test('serieEventi: senza anomalie non ci sono sciami', () => {
+  const ev = [];
+  for (let g = 1; g <= 23; g++) ev.push({ ts: giorno(g), mag: 2.1 }, { ts: giorno(g, 14), mag: 2.3 });
+  const s = serieEventi(ev, 'giorno', 2, OGGI);
+  assert.equal(s.sequenze.length, 0);
+});
+
+test('serieEventi: per mese 24 barre e per anno 5, con eventi di anni fa', () => {
+  const ev = [{ ts: new Date(2026, 9, 3).getTime(), mag: 2 }, { ts: new Date(2026, 8, 3).getTime(), mag: 2 }, { ts: new Date(2024, 2, 3).getTime(), mag: 4 }];
+  const m = serieEventi(ev, 'mese', 2, OGGI);
+  assert.equal(m.barre.length, 24);
+  assert.equal(m.barre.at(-1).n, 1);
+  assert.equal(m.barre.at(-2).n, 1);
+  const a = serieEventi(ev, 'anno', 2, OGGI);
+  assert.equal(a.barre.length, 5);
+  assert.equal(a.barre.at(-1).n, 2);
+  assert.equal(a.barre.at(-3).magMax, 4);
+});
+
+test('periodoSequenza e urlStorico', () => {
+  const s = serieEventi([], 'giorno', 2, OGGI);
+  assert.match(periodoSequenza({ da: giorno(10, 0), a: giorno(13, 0) }, 'giorno'), /10.*–.*12/);
+  assert.equal(s.totale, 0);
+  const u = urlStorico({ minlon: 11.7, minlat: 36.3, maxlon: 16.2, maxlat: 39.2 }, OGGI);
+  assert.match(u, /format=text/);
+  assert.match(u, /minmag=2/);
 });

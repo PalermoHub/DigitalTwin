@@ -151,6 +151,95 @@ export const voceAltri = dinamico => ({
   fonte: t('layer.fonte', { fonte: tl(FONTE) }),
 });
 
+// ---------- serie temporale: eventi per giorno, mese o anno, con sciami e sequenze ----------
+// Il servizio si interroga una volta sola per gli ultimi ANNI_STORICO anni, dalla magnitudo MAG_STORICO (sotto, in 5 anni, gli eventi sarebbero decine di migliaia).
+export const UNITA = ['giorno', 'mese', 'anno'];
+export const ANNI_STORICO = 5;
+export const MAG_STORICO = 2;
+const FINESTRE = { giorno: 30, mese: 24, anno: ANNI_STORICO }; // quante barre
+const MIN_SCIAME = 6; // sotto questo numero di eventi in una barra non è mai uno sciame
+
+export const urlStorico = (area, adesso = Date.now()) => {
+  const q = new URLSearchParams({ format: 'text', starttime: new Date(adesso - ANNI_STORICO * 366 * GIORNO_MS).toISOString().slice(0, 19), orderby: 'time', minmag: String(MAG_STORICO), limit: '20000', ...Object.fromEntries(Object.entries(area).map(([k, v]) => [k, v.toFixed(3)])) });
+  return `${URL_SERVIZIO}?${q}`;
+};
+
+// Formato «text» di INGV: righe separate da «|», la prima con l'intestazione. Colonne: 1 = ora, 10 = magnitudo
+export function eventiDaTesto(testo) {
+  const eventi = [];
+  for (const riga of String(testo).split('\n')) {
+    if (!riga || riga.startsWith('#')) continue;
+    const c = riga.split('|');
+    const ts = oraEvento(c[1]), mag = Number(c[10]);
+    if (Number.isFinite(ts) && Number.isFinite(mag)) eventi.push({ ts, mag });
+  }
+  return eventi;
+}
+
+// Inizio della barra che contiene `ts` e della successiva (ora locale: «giorno» è il giorno di calendario di Palermo)
+function inizioBarra(ts, unita, passo = 0) {
+  const d = new Date(ts);
+  if (unita === 'giorno') return new Date(d.getFullYear(), d.getMonth(), d.getDate() + passo).getTime();
+  if (unita === 'mese') return new Date(d.getFullYear(), d.getMonth() + passo, 1).getTime();
+  return new Date(d.getFullYear() + passo, 0, 1).getTime();
+}
+
+// Barre della serie (dalla più vecchia alla più recente) con il conteggio degli eventi M ≥ magMin e la magnitudo massima; `sciame` = barra anomala rispetto alle altre.
+// Le sequenze sono le barre di sciame consecutive, riunite.
+export function serieEventi(eventi, unita, magMin = MAG_STORICO, adesso = Date.now()) {
+  const n = FINESTRE[unita];
+  const barre = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const da = inizioBarra(inizioBarra(adesso, unita), unita, -i);
+    barre.push({ da, a: inizioBarra(da, unita, 1), n: 0, magMax: null, sciame: false });
+  }
+  const primo = barre[0].da;
+  for (const e of eventi) {
+    if (e.mag < Math.max(magMin, MAG_STORICO) || e.ts < primo || e.ts > adesso) continue;
+    const b = barre.find(x => e.ts >= x.da && e.ts < x.a);
+    if (!b) continue;
+    b.n++;
+    if (b.magMax == null || e.mag > b.magMax) b.magMax = e.mag;
+  }
+  // mediana e scarto mediano (robusti: gli sciami stessi non alzano la soglia)
+  const mediana = v => { const o = [...v].sort((a, b) => a - b); return (o[Math.floor((n - 1) / 2)] + o[Math.ceil((n - 1) / 2)]) / 2; };
+  const centro = mediana(barre.map(b => b.n));
+  const scarto = Math.max(1, mediana(barre.map(b => Math.abs(b.n - centro))));
+  const soglia = Math.max(MIN_SCIAME, Math.ceil(centro + 4 * scarto));
+  const max = Math.max(1, ...barre.map(b => b.n));
+  for (const b of barre) { b.sciame = b.n >= soglia; b.quota = b.n / max * 100; }
+  const sequenze = [];
+  for (const b of barre) {
+    if (!b.sciame) continue;
+    const ultima = sequenze.at(-1);
+    if (ultima && ultima.a === b.da) { ultima.a = b.a; ultima.n += b.n; ultima.barre++; ultima.magMax = Math.max(ultima.magMax, b.magMax); }
+    else sequenze.push({ da: b.da, a: b.a, n: b.n, barre: 1, magMax: b.magMax });
+  }
+  return { unita, barre, sequenze: sequenze.sort((x, y) => y.n - x.n), soglia, totale: barre.reduce((s, b) => s + b.n, 0) };
+}
+
+// Etichetta breve sotto la barra e testo completo del suggerimento
+export function etichettaBarra(b, unita) {
+  const f = opz => new Date(b.da).toLocaleDateString(localeIntl(), opz);
+  if (unita === 'giorno') return { breve: f({ day: 'numeric' }), lunga: f({ day: 'numeric', month: 'long', year: 'numeric' }) };
+  if (unita === 'mese') return { breve: f({ month: 'short' }).slice(0, 3), lunga: f({ month: 'long', year: 'numeric' }) };
+  return { breve: f({ year: 'numeric' }), lunga: f({ year: 'numeric' }) };
+}
+
+// Periodo di una sequenza: «12 ott» o «12 – 15 ott 2026» (l'ultima barra è inclusa)
+export function periodoSequenza(s, unita) {
+  const opz = unita === 'giorno' ? { day: 'numeric', month: 'short' } : unita === 'mese' ? { month: 'short', year: 'numeric' } : { year: 'numeric' };
+  const fmt = ts => new Date(ts).toLocaleDateString(localeIntl(), opz);
+  const dal = fmt(s.da), al = fmt(s.a - 1);
+  return dal === al ? dal : `${dal} – ${al}`;
+}
+
+export const voceSerie = dinamico => ({
+  chiave: 'terremoti:serie', tipo: 'terremoto', peso: PESO_LUOGO, strato: 'terremoti', titolo: 'Terremoti nel tempo', icona: 'terremoto', sempre: true,
+  gruppi: [], dinamico,
+  fonte: t('layer.fonte', { fonte: tl(FONTE) }),
+});
+
 // Riassunto per la legenda: quanti eventi e il più forte
 export function riassuntoTerremoti(eventi) {
   if (!eventi.length) return null;
