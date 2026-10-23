@@ -2,12 +2,16 @@
 // Traffico a flusso di Palermo da TomTom: tile colorate del flusso e velocità del tratto di strada cliccato. Rotte: /traffico/tile/{z}/{x}/{y} e /traffico/segmento?lat=&lon=
 // La chiave TOMTOM_KEY è un secret del Worker (mai nel codice). Piano gratuito: 200.000 tile e 20.000 richieste di segmento al mese, senza carta:
 // la cache di Cloudflare (condivisa da tutti gli utenti) tiene ogni tile e ogni segmento per TTL_SECONDI, e il Worker serve solo l'area di Palermo, a zoom da città.
-// La chiave è ristretta al dominio del progetto: TomTom controlla l'intestazione Referer, che il Worker imposta.
+// La chiave è ristretta al dominio del progetto: TomTom controlla l'intestazione Referer, che il Worker imposta. Origin e Referer del visitatore non sono una difesa (si falsificano): la difesa è il tetto giornaliero (TETTO_GIORNO).
 
 export const FONTE = 'TomTom Traffic Flow';
 export const TTL_SECONDI = 120;
 export const ZOOM_MIN = 8;
 export const ZOOM_MAX = 17;
+// Tetto giornaliero di richieste a TomTom (solo le cache miss), a prescindere da chi le fa: Origin e Referer li falsifica chiunque, e senza tetto
+// un client qualunque che varia le coordinate esaurirebbe la quota gratuita del mese (20.000 segmenti, 200.000 tile) e spegnerebbe il layer per tutti.
+// Il conteggio sta nel KV (env.NAVI): non è atomico, ma per un tetto grossolano basta. Oltre il tetto il Worker risponde 429 (si ferma da solo).
+export const TETTO_GIORNO = { tile: 6000, segmento: 600 }; // circa 180.000 e 18.000 al mese
 export const AREA = { ovest: 13.05, sud: 37.95, est: 13.65, nord: 38.35 }; // Palermo e dintorni
 const REFERER = 'https://palermodigitaltwin.opendatasicilia.it/';
 const BASE = 'https://api.tomtom.com/traffic';
@@ -48,6 +52,16 @@ function origineDi(richiesta) {
   try { return new URL(richiesta.headers.get('referer')).origin; } catch { return null; }
 }
 
+// true se la richiesta rientra nel tetto di oggi (e la conta); senza KV non si può contare e si lascia passare
+export async function entroIlTetto(env, tipo, adesso = new Date()) {
+  if (!env?.NAVI) return true;
+  const chiave = `traffico:${tipo}:${adesso.toISOString().slice(0, 10)}`;
+  const n = Number(await env.NAVI.get(chiave)) || 0;
+  if (n >= TETTO_GIORNO[tipo]) return false;
+  await env.NAVI.put(chiave, String(n + 1), { expirationTtl: 2 * 24 * 60 * 60 });
+  return true;
+}
+
 async function servi(cache, chiave, produci, cors) {
   const salvata = await cache?.match(chiave);
   if (salvata) return new Response(salvata.body, { status: 200, headers: { ...Object.fromEntries(salvata.headers), ...cors } });
@@ -76,6 +90,7 @@ export async function gestisciTraffico(richiesta, env, fetchFn, cache) {
       if (z < ZOOM_MIN || z > ZOOM_MAX || x >= 2 ** z || y >= 2 ** z) return json(400, { errore: 'tile fuori dai livelli di zoom serviti' }, { ...cors, 'cache-control': 'no-store' });
       if (!tileInArea(z, x, y)) return json(404, { errore: 'tile fuori da Palermo' }, { ...cors, 'cache-control': 'no-store' });
       return await servi(cache, new Request(`https://cache.interno/traffico/${z}/${x}/${y}`), async () => {
+        if (!await entroIlTetto(env, 'tile')) throw Object.assign(new Error('tetto giornaliero'), { tetto: true });
         const r = await fetchFn(`${BASE}/map/4/tile/flow/relative0/${z}/${x}/${y}.png?tileSize=256&${chiaveTomTom}`, dalleTomTom);
         if (!r.ok) throw new Error(`TomTom ${r.status}`);
         return { corpo: await r.arrayBuffer(), tipo: 'image/png' };
@@ -87,6 +102,7 @@ export async function gestisciTraffico(richiesta, env, fetchFn, cache) {
       if (!Number.isFinite(lat) || !Number.isFinite(lon) || !dentro(lat, lon)) return json(400, { errore: 'punto non valido o fuori da Palermo' }, { ...cors, 'cache-control': 'no-store' });
       const punto = `${lat.toFixed(4)},${lon.toFixed(4)}`; // circa 11 m: clic vicini condividono la risposta
       return await servi(cache, new Request(`https://cache.interno/traffico-segmento/${punto}`), async () => {
+        if (!await entroIlTetto(env, 'segmento')) throw Object.assign(new Error('tetto giornaliero'), { tetto: true });
         const r = await fetchFn(`${BASE}/services/4/flowSegmentData/absolute/${ZOOM_SEGMENTO}/json?point=${punto}&unit=KMPH&${chiaveTomTom}`, dalleTomTom);
         if (r.status === 400) throw Object.assign(new Error('nessuna strada'), { nessunaStrada: true });
         if (!r.ok) throw new Error(`TomTom ${r.status}`);
@@ -95,6 +111,7 @@ export async function gestisciTraffico(richiesta, env, fetchFn, cache) {
     }
     return json(404, { errore: 'rotta non trovata' }, { ...cors, 'cache-control': 'no-store' });
   } catch (e) {
+    if (e?.tetto) return json(429, { errore: 'limite giornaliero raggiunto, riprova domani' }, { ...cors, 'cache-control': 'no-store' });
     if (e?.nessunaStrada) return json(404, { errore: 'nessuna strada vicino al punto' }, { ...cors, 'cache-control': 'public, max-age=60' });
     return json(502, { errore: 'TomTom non raggiungibile', dettaglio: String(e?.message ?? e).replace(/key=[^&\s]+/g, 'key=…').slice(0, 120) }, { ...cors, 'cache-control': 'no-store' });
   }
