@@ -5,6 +5,7 @@ import { t, tl, tn, localeIntl } from '../core/i18n.js';
 // Il browser interroga direttamente il servizio (risponde con CORS aperto): ogni evento ha magnitudo, ora (UTC), zona, profondità (km, terza coordinata) e autore della localizzazione.
 
 export const FONTE = 'INGV, Istituto Nazionale di Geofisica e Vulcanologia: terremoti in tempo reale (CC BY 4.0)';
+export const SITO = 'https://terremoti.ingv.it/';
 export const LINK = 'https://terremoti.ingv.it/event/';
 export const URL_SERVIZIO = 'https://webservices.ingv.it/fdsnws/event/1/query';
 const PESO_LUOGO = 8;
@@ -89,13 +90,32 @@ export function modelloPopupTerremoto(p, adesso = Date.now()) {
 export function voceTerremoto(p, adesso = Date.now()) {
   return {
     chiave: `terremoto-${p.id}`, tipo: 'terremoto', peso: PESO_LUOGO, strato: 'terremoti', titolo: titoloTerremoto(p), icona: 'terremoto', badge: p.fascia, sempre: true,
-    gruppi: [{ righe: righeTerremoto(p, adesso) }],
+    gruppi: [{ righe: righeTerremoto(p, adesso) }], miniatura: miniatura(p),
     link: { testo: 'Scheda dell\'evento su INGV', url: LINK + p.id, icona: 'esterno', suggerimento: 'Pagina dell\'evento sul sito terremoti.ingv.it' },
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
 }
 
 export const MAX_ELENCO = 100;
+
+// Miniatura quadrata dell'epicentro: poche tessere raster (al massimo 2×2, caricate solo quando la card si apre) invece di una mappa interattiva per card.
+// Un clic apre la mappa del sito sullo stesso punto.
+const ZOOM_MINIATURA = 8;
+const LATO_MINIATURA = 160;
+const TESSERA = 256;
+export function miniatura({ lon, lat }, zoom = ZOOM_MINIATURA, lato = LATO_MINIATURA) {
+  const n = 2 ** zoom;
+  const rad = lat * Math.PI / 180;
+  const sinistra = (lon + 180) / 360 * n * TESSERA - lato / 2;
+  const alto = (1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2 * n * TESSERA - lato / 2;
+  const tessere = [];
+  for (let ty = Math.floor(alto / TESSERA); ty <= Math.floor((alto + lato - 1) / TESSERA); ty++) {
+    for (let tx = Math.floor(sinistra / TESSERA); tx <= Math.floor((sinistra + lato - 1) / TESSERA); tx++) {
+      tessere.push({ url: `https://tile.openstreetmap.org/${zoom}/${tx}/${ty}.png`, x: Math.round(tx * TESSERA - sinistra), y: Math.round(ty * TESSERA - alto) });
+    }
+  }
+  return { lato, tessere, href: `mappa.html#${zoom + 1}/${lat.toFixed(4)}/${lon.toFixed(4)}`, attribuzione: '© OpenStreetMap' };
+}
 
 // Elenco «gli altri terremoti» della scheda: quelli che passano il filtro, senza i cliccati, dal più recente (al massimo MAX_ELENCO)
 export function altriTerremoti(eventi, esclusi, f = filtro, adesso = Date.now()) {
@@ -111,6 +131,7 @@ export function accordionTerremoti(elenco, adesso = Date.now()) {
     riassunto: n > mostrati.length ? t('terremoti.altriParziale', { mostrati: mostrati.length, n }) : tn('terremoti.altri', n),
     elementi: mostrati.map(p => ({
       titolo: titoloTerremoto(p), anteprima: quantoTempoFa(p.ts, adesso),
+      miniatura: miniatura(p),
       righe: [...righeTerremoto(p, adesso), { etichetta: 'Scheda INGV', valore: 'terremoti.ingv.it', urlValore: LINK + p.id }],
     })),
   };
@@ -119,7 +140,9 @@ export function accordionTerremoti(elenco, adesso = Date.now()) {
 // Sezione sotto agli eventi cliccati; `dinamico` disegna filtro ed elenco (scheda-terremoti-dom.js)
 export const voceAltri = dinamico => ({
   chiave: 'terremoti:altri', tipo: 'terremoto', peso: PESO_LUOGO, strato: 'terremoti', titolo: 'Gli altri terremoti', icona: 'terremoto', sempre: true,
-  gruppi: [], dinamico, fonte: t('layer.fonte', { fonte: tl(FONTE) }),
+  gruppi: [], dinamico,
+  link: { testo: 'Tutti i terremoti su INGV', url: SITO, icona: 'esterno', suggerimento: 'Elenco completo sul sito terremoti.ingv.it' },
+  fonte: t('layer.fonte', { fonte: tl(FONTE) }),
 });
 
 // Riassunto per la legenda: quanti eventi e il più forte

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, altriTerremoti, accordionTerremoti, voceAltri, MAX_ELENCO } from '../../js/layers/scheda-terremoti.js';
+import { eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, altriTerremoti, accordionTerremoti, voceAltri, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
 
 const ingv = (extra = {}, coord = [14.1717, 38.7938, 8.8]) => ({
   type: 'Feature', geometry: { type: 'Point', coordinates: coord },
@@ -100,4 +100,19 @@ test('voceAltri: sezione con contenuto dinamico', () => {
   const v = voceAltri(() => null);
   assert.equal(v.sempre, true);
   assert.equal(typeof v.dinamico, 'function');
+});
+
+test('miniatura: tessere che coprono il quadrato centrato sul punto, link alla mappa', () => {
+  const m = miniatura({ lon: 13.3614, lat: 38.1157 });
+  assert.ok(m.tessere.length >= 1 && m.tessere.length <= 4);
+  assert.match(m.tessere[0].url, /tile\.openstreetmap\.org\/8\/\d+\/\d+\.png$/);
+  assert.equal(m.href, 'mappa.html#9/38.1157/13.3614');
+  // il punto sta al centro: la tessera che lo contiene copre il centro del quadrato
+  const c = m.lato / 2;
+  assert.ok(m.tessere.some(t => t.x <= c && c < t.x + 256 && t.y <= c && c < t.y + 256));
+});
+
+test('voceTerremoto: porta la miniatura dell\'epicentro', () => {
+  const v = voceTerremoto({ id: '1', mag: 3, ts: ADESSO - 60000, lon: 13.3, lat: 38.1, luogo: 'Z', fascia: 'Ultima ora' }, ADESSO);
+  assert.equal(v.miniatura.tessere.length >= 1, true);
 });

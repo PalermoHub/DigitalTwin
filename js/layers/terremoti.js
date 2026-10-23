@@ -143,15 +143,11 @@ export default {
   },
   scheda: {
     layers: [HIT],
-    // prima l'evento cliccato (in evidenza), poi tutti gli altri che passano il filtro
+    // prima l'evento cliccato (il più forte sotto il cerchio, in evidenza), poi tutti gli altri che passano il filtro, anche quelli sovrapposti
     voci(trovati) {
-      const visti = new Set();
-      const cliccati = trovati.filter(f => f.layer.id === HIT).sort((a, b) => b.properties.mag - a.properties.mag).flatMap(f => {
-        if (visti.has(f.properties.id)) return [];
-        visti.add(f.properties.id);
-        return [voceTerremoto(proprieta(f))];
-      });
-      return cliccati.length ? [...cliccati, voceAltri(() => elencoAltri(() => eventi, visti))] : [];
+      const primo = trovati.filter(f => f.layer.id === HIT).sort((a, b) => b.properties.mag - a.properties.mag)[0];
+      if (!primo) return [];
+      return [voceTerremoto(proprieta(primo)), voceAltri(() => elencoAltri(() => eventi, new Set([primo.properties.id])))];
     },
     // gli eventi stanno in mare e fuori dal Comune: il clic su un cerchio apre la scheda (solo a strato acceso: i dati si scaricano all'accensione)
     apertoFuoriComune(map, e) {

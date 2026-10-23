@@ -115,6 +115,28 @@ function disegnaGruppo(g) {
   return box;
 }
 
+// Mappa piccola e quadrata fatta di tessere raster, con un puntino al centro; il clic apre la mappa grande in un'altra pagina.
+function disegnaMiniatura(m, titolo) {
+  const a = el('a', 'scheda-mini');
+  a.href = m.href;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.title = tr('scheda.apriMappa');
+  a.setAttribute('aria-label', `${tr('scheda.apriMappa')}: ${tl(titolo)}`);
+  a.style.setProperty('--lato', `${m.lato}px`);
+  for (const tessera of m.tessere) {
+    const img = el('img');
+    img.src = tessera.url;
+    img.alt = '';
+    img.loading = 'lazy';
+    img.draggable = false;
+    img.style.cssText = `left:${tessera.x}px;top:${tessera.y}px`;
+    a.append(img);
+  }
+  a.append(el('i', 'scheda-mini-punto'), el('span', 'scheda-mini-attr', m.attribuzione));
+  return a;
+}
+
 export function disegnaAccordion(a) {
   const radice = el('details', 'scheda-acc');
   if (a.aperto) radice.open = true;
@@ -132,6 +154,7 @@ export function disegnaAccordion(a) {
     tipo.append(sommario);
     if (e.strato) tipo.dataset.strato = e.strato;
     for (const r of e.righe) tipo.append(disegnaRiga(r));
+    if (e.miniatura) tipo.addEventListener('toggle', () => { if (tipo.open && !tipo.querySelector('.scheda-mini')) tipo.append(disegnaMiniatura(e.miniatura, e.titolo)); }); // le tessere si scaricano solo all'apertura
     radice.append(tipo);
   }
   return radice;
@@ -220,6 +243,7 @@ export function disegnaSezione(s, i) {
   }
   if (s.testo) corpo.push(el('p', 'scheda-testo', tl(s.testo)));
   corpo.push(...s.gruppi.map(disegnaGruppo));
+  if (s.miniatura) corpo.push(disegnaMiniatura(s.miniatura, s.titolo));
   if (s.dinamico) corpo.push(s.dinamico()); // contenuto interattivo costruito dal layer (es. orari con selettore del giorno)
   if (s.accordion) corpo.push(disegnaAccordion(s.accordion));
   for (const l of [].concat(s.link ?? [])) corpo.push(disegnaLink(l));
