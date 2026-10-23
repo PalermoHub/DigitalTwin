@@ -113,9 +113,12 @@ export function modelloTooltip(p) {
   const n = Number(p.n) || codici(p.cod).length;
   return {
     titolo: accorcia(frase(p.titolo) ?? p.cod ?? ''),
-    sottotitolo: [nomeClasse(p.classe), p.origine === 'approssimato' ? tl('Posizione approssimata') : null].filter(Boolean).map(tl).join(' · '),
-    pallino: coloreSettore(p.settore),
-    righe: righe([['Settore', p.settore ? nomeSettore(p.settore) : null], ['Importo del triennio', euro(p.importo)], ['Interventi sulla geometria', n > 1 ? n : null], ['Quartiere', p.quartiere]]),
+    // settore col pallino della legenda (campione); l'annualità è l'etichetta colorata come sulla mappa
+    sottotitolo: [p.settore ? nomeSettore(p.settore) : null, p.origine === 'approssimato' ? 'Posizione approssimata' : null].filter(Boolean).map(tl).join(' · '),
+    badge: Number(p.classe) ? { testo: tl(nomeClasse(p.classe)), colore: coloreClasse(p.classe) } : undefined,
+    righe: righe([['Importo del triennio', euro(p.importo)], ['Interventi sulla geometria', n > 1 ? n : null], ['Quartiere', p.quartiere], ['Circoscrizione', p.circoscrizione]]),
+    elenco: [euro(p.importo) ? `${tl('Importo del triennio')}: ${euro(p.importo)}` : null, p.quartiere ? `${tl('Quartiere')}: ${p.quartiere}` : null].filter(Boolean),
+    suggerimento: t('piano.tooltipSuggerimento'),
   };
 }
 

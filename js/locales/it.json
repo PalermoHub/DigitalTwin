@@ -1908,6 +1908,8 @@
   "opere.senzaPosizione": "senza posizione",
   "opere.cliccaInfo": "Clicca per l’elenco e ulteriori informazioni",
   "opere.eAltre": "… e altre {n}",
+  "piano.tooltipSuggerimento": "Clic per aprire la scheda",
+  "piano.popupSuggerimento": "Il dettaglio dell’intervento è nella scheda a destra, tab Piano triennale.",
   "opere.popupSuggerimento": "Il dettaglio di ogni opera è nella scheda a destra, tab Opere.",
   "opere.altroTitolare": "Altro titolare…",
   "opere.filtraTitolare": "Un clic su un titolare filtra la mappa sulle sue opere.",

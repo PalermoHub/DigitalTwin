@@ -436,6 +436,8 @@ dialog li { margin: 4px 0; }
 .traffico-corpo .monumento-cat { color: var(--text-muted); }
 .traffico-corpo .monumento-link { margin: 8px 0 4px; }
 .traffico-corpo .pnrr-popup-elenco { margin-top: 4px; }
+.traffico-etichette { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+.traffico-etichette .tooltip-badge { margin-top: 0; }
 .traffico-coordinate { margin: 6px 0 0; padding-top: 6px; border-top: 1px solid var(--border); font: var(--fs-xs) ui-monospace, monospace; color: var(--text-muted); }
 
 .monumento-link { display: block; margin: 8px 10px 10px; padding: 7px 10px; border-radius: var(--r-sm); background: var(--link); color: var(--bianco); text-align: center; text-decoration: none; font-weight: 600; }

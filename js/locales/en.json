@@ -1908,6 +1908,8 @@
   "opere.senzaPosizione": "no position",
   "opere.cliccaInfo": "Click for the list and more information",
   "opere.eAltre": "… and {n} more",
+  "piano.tooltipSuggerimento": "Click to open the sheet",
+  "piano.popupSuggerimento": "The details of the project are in the side panel, Three-year plan tab.",
   "opere.popupSuggerimento": "The details of each work are in the side panel, Works tab.",
   "opere.altroTitolare": "Other owner…",
   "opere.filtraTitolare": "Clicking an owner filters the map on its works.",

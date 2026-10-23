@@ -3,7 +3,8 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { t, tl } from '../core/i18n.js';
-import { ANNUALITA, COLORE_APPROSSIMATO, SETTORI, codici, coloreClasse, coloreSettore, indicePerCodice, modelloTooltip, voceScheda, voceSintesi, voceTendina } from './scheda-piano-triennale.js';
+import { apriPopupScheda } from './popup-traffico.js';
+import { ANNUALITA, COLORE_APPROSSIMATO, SETTORI, accorcia, codici, coloreClasse, coloreSettore, euroCompatto, frase, indicePerCodice, modelloTooltip, nomeSettore, voceScheda, voceSintesi, voceTendina } from './scheda-piano-triennale.js';
 import { contenutoDinamico, contenutoTendina } from './scheda-piano-triennale-dom.js';
 
 // Programma triennale dei lavori pubblici 2026-2028 del Comune di Palermo (DCC 553/2026), dati in dati/piano-triennale/ (scripts/piano_triennale.py):
@@ -76,6 +77,34 @@ function creaLegenda() {
   document.getElementById('legende').append(legenda);
 }
 
+// Corpo del popup al clic: titolo dell'intervento, poi settore, importo del triennio e annualità come etichette colorate, e l'invito ad aprire la scheda.
+function corpoPopup(p) {
+  const corpo = document.createElement('div');
+  const titolo = document.createElement('p');
+  titolo.className = 'monumento-desc';
+  titolo.textContent = tl(accorcia(frase(p.titolo) ?? p.cod ?? ''));
+  corpo.append(titolo);
+  const etichette = [
+    p.settore ? [tl(nomeSettore(p.settore)), coloreSettore(p.settore)] : null,
+    euroCompatto(p.importo) ? [euroCompatto(p.importo), '#f08c00'] : null,
+    Number(p.classe) ? [String(2025 + Number(p.classe)), coloreClasse(p.classe)] : null,
+  ].filter(Boolean);
+  const riga = document.createElement('div');
+  riga.className = 'traffico-etichette';
+  for (const [testo, colore] of etichette) {
+    const e = document.createElement('span');
+    e.className = 'tooltip-badge';
+    e.style.setProperty('--colore', colore);
+    e.textContent = testo;
+    riga.append(e);
+  }
+  const invito = document.createElement('p');
+  invito.className = 'monumento-desc uffici-suggerimento';
+  invito.textContent = t('piano.popupSuggerimento');
+  corpo.append(riga, invito);
+  return [corpo];
+}
+
 export default {
   id: 'piano-triennale',
   titolo: 'Piano triennale lavori pubblici 2026-2028',
@@ -115,6 +144,17 @@ export default {
       layers: [PUNTI, LINEE, POLI], icona: 'piano', modello: modelloTooltip,
       campione: p => campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: coloreSettore(p.settore) }]),
     }]);
+    let popup = null;
+    map.on('click', e => {
+      const attivi = [PUNTI, LINEE, POLI].filter(id => map.getLayoutProperty(id, 'visibility') === 'visible');
+      const f = attivi.length ? map.queryRenderedFeatures([[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]], { layers: attivi })[0] : null;
+      if (!f) { popup?.remove(); return; }
+      const p = f.properties;
+      popup = apriPopupScheda(map, {
+        precedente: popup, sezione: 'Piano triennale LL.PP.', icona: 'piano', colore: coloreSettore(p.settore),
+        modello: { titolo: p.cod ?? '', sottotitolo: null }, corpo: corpoPopup(p), punto: e.point, lngLat: e.lngLat,
+      });
+    });
     for (const id of [PUNTI, LINEE, POLI]) {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
       map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });

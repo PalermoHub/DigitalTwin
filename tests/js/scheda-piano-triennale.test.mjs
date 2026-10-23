@@ -78,7 +78,8 @@ test('voceScheda: peso nel tab Piano triennale, gruppi e link', () => {
 test('modelloTooltip: titolo accorciato, settore e importo', () => {
   const m = modelloTooltip({ cod: 'a;b', n: 2, titolo: 'X'.repeat(200), settore: '05', importo: 1000000, classe: 2, quartiere: 'Zisa' });
   assert.ok(m.titolo.length <= 91);
-  assert.equal(m.pallino, coloreSettore('05'));
+  assert.equal(m.badge.colore, coloreClasse(2));
+  assert.match(m.sottotitolo, new RegExp(nomeSettore('05')));
   assert.equal(valore(m.righe, 'Interventi sulla geometria'), '2');
   assert.equal(valore(m.righe, 'Quartiere'), 'Zisa');
   assert.match(modelloTooltip({ cod: 'a', origine: 'approssimato' }).sottotitolo, /approssimata/);
