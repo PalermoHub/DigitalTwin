@@ -1068,5 +1068,30 @@
     ]
    ]
   }
+ },
+ "traffico": {
+  "data": "2026-10-23",
+  "aggiornati": "2026-10-23",
+  "enti": [
+   "TomTom"
+  ],
+  "fonte": {
+   "it": "TomTom Traffic Flow: velocità di scorrimento delle strade, rinnovata ogni 2 minuti (piano gratuito, con la fonte citata).",
+   "en": "TomTom Traffic Flow: road flow speeds, renewed every 2 minutes (free plan, source credited)."
+  },
+  "link": {
+   "it": [
+    [
+     "TomTom Traffic API",
+     "https://www.tomtom.com/products/traffic-apis/"
+    ]
+   ],
+   "en": [
+    [
+     "TomTom Traffic API",
+     "https://www.tomtom.com/products/traffic-apis/"
+    ]
+   ]
+  }
  }
 }

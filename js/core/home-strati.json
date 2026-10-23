@@ -745,6 +745,29 @@
    ]
   },
   {
+   "id": "traffico",
+   "titolo": "Traffico a flusso",
+   "descrizione": "Le strade di Palermo colorate dal verde al rosso secondo quanto scorre il traffico in questo momento (dati TomTom, aggiornati ogni 2 minuti), con la velocità del tratto cliccato.",
+   "strati": [
+    {
+     "id": "traffico",
+     "etichetta": "Traffico a flusso"
+    }
+   ],
+   "fonte": "TomTom Traffic Flow: velocità di scorrimento delle strade, rinnovata ogni 2 minuti (piano gratuito, con la fonte citata).",
+   "enti": [
+    "TomTom"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2026-10-23",
+   "link": [
+    [
+     "TomTom Traffic API",
+     "https://www.tomtom.com/products/traffic-apis/"
+    ]
+   ]
+  },
+  {
    "id": "voli",
    "titolo": "Traffico aereo",
    "descrizione": "Aerei in volo attorno all'aeroporto di Palermo, con quota, velocità e stato (in arrivo, in partenza, in transito), aggiornati ogni 5 minuti.",
@@ -1995,6 +2018,29 @@
     [
      "OpenCUP, Codici Unici di Progetto",
      "https://www.opencup.gov.it/"
+    ]
+   ]
+  },
+  {
+   "id": "traffico",
+   "titolo": "Traffic flow",
+   "descrizione": "Palermo's roads coloured from green to red by how freely traffic is moving right now (TomTom data, updated every 2 minutes), with the speed of the stretch you click.",
+   "strati": [
+    {
+     "id": "traffico",
+     "etichetta": "Traffic flow"
+    }
+   ],
+   "fonte": "TomTom Traffic Flow: road flow speeds, renewed every 2 minutes (free plan, source credited).",
+   "enti": [
+    "TomTom"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2026-10-23",
+   "link": [
+    [
+     "TomTom Traffic API",
+     "https://www.tomtom.com/products/traffic-apis/"
     ]
    ]
   }
