@@ -4,7 +4,7 @@
 // resta in ascolto qualche secondo e `unisci` mette le posizioni nel KV (una nave per MMSI, scartate dopo SCADENZA_S senza segnali);
 // `gestisciNavi` restituisce il KV come GeoJSON, con cache. Il browser non parla mai con AISStream.
 
-export const RIQUADRO = [[36, 11.5], [39, 15.5]]; // [lat, lon] sud-ovest e nord-est: Tirreno meridionale, Canale di Sicilia e coste siciliane (nel golfo di Palermo i ricevitori di volontari non arrivano: le navi sono lungo la costa orientale e al largo di Trapani)
+export const RIQUADRO = [[35.3, 11.7], [39.0, 15.9]]; // [lat, lon] sud-ovest e nord-est: tutta la Sicilia con le isole minori (da Lampedusa a Ustica e Eolie, da Pantelleria allo Stretto di Messina) e i mari attorno. La copertura AIS dipende dai ricevitori di volontari di AISStream, non dal riquadro
 export const ASCOLTO_MS = 75000;
 export const SCADENZA_S = 30 * 60;
 export const TTL_SECONDI = 120;

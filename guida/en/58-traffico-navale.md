@@ -14,7 +14,7 @@ Keywords: update, every 5 minutes, last signal, terrestrial AIS, coverage, 30 mi
 
 Typical questions: How often are the ships updated? Why does a ship disappear? Are ships offshore shown?
 
-The data are not stored in the site: a service (Worker) listens to **AISStream** every 5 minutes and keeps the last position of every ship seen in the **last 30 minutes**; with the layer on the map reloads every 2 minutes. The AIS is **terrestrial**: the data come from volunteers' AISStream receivers, so coverage **depends on where there are any**. Today ships show up mostly along the eastern coast of Sicily and off Trapani; **in the Gulf of Palermo signals are few or absent**. A ship with no signal for more than 30 minutes disappears. Positions are those of the last signal received, not a continuous track.
+The data are not stored in the site: a service (Worker) listens to **AISStream** every 5 minutes and keeps the last position of every ship seen in the **last 30 minutes**; with the layer on the map reloads every 2 minutes. The AIS is **terrestrial**: the data come from volunteers' AISStream receivers, so coverage **depends on where there are any**. The listening area covers **the whole of Sicily with its minor islands** (from Lampedusa to the Aeolians, from Pantelleria to the Strait of Messina). Today ships show up mostly along the eastern coast of Sicily and off Trapani; **in the Gulf of Palermo signals are few or absent**. A ship with no signal for more than 30 minutes disappears. Positions are those of the last signal received, not a continuous track.
 
 ## What the popup and the card show
 
