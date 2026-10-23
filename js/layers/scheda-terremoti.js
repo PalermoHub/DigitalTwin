@@ -234,6 +234,16 @@ export function puntiMagnitudo(eventi, unita, magMin = MAG_STORICO, adesso = Dat
   return { da, a: adesso, base, cima, livelli, punti, mainshock, repliche };
 }
 
+// Curva cumulativa: eventi accumulati nel tempo, sulla stessa finestra del grafico magnitudo-tempo. `g` = risultato di puntiMagnitudo.
+// `passi` = vertici della scala (x 0-1, n = eventi finora); un cambio di pendenza segnala un aumento (o un calo) di attività.
+export function curvaCumulativa(g) {
+  const passi = [{ x: 0, n: 0 }];
+  g.punti.forEach((p, i) => passi.push({ x: p.x, n: i }, { x: p.x, n: i + 1 }));
+  const totale = g.punti.length;
+  passi.push({ x: 1, n: totale });
+  return { passi, totale };
+}
+
 // Proprietà di un evento dello storico, come quelle di un evento in mappa (per popup e scheda), o null se mancano le coordinate
 export function proprietaStorico(e, adesso = Date.now()) {
   if (!Number.isFinite(e?.lon) || !Number.isFinite(e?.lat)) return null;

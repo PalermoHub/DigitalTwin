@@ -3158,6 +3158,8 @@
   "terremoti.serie.riprova": "Retry",
   "terremoti.mt.titolo": "Magnitude over time",
   "terremoti.mt.nota": "Each stem is an earthquake, as tall as its magnitude (M ≥ {mag}). The strongest, in red: M {forte}, {data}; {repliche} events after it, the possible aftershocks.",
+  "terremoti.cum.titolo": "Cumulative events over time",
+  "terremoti.cum.nota": "Number of events accumulated (M ≥ {mag}): {n} in the window. A change of slope signals an increase in activity.",
   "lbl.Terremoti nel tempo": "Earthquakes over time",
   "terremoti.nessunAltro": "No other earthquake with these filters.",
   "lbl.Tutti i terremoti su INGV": "All earthquakes on INGV",

@@ -2,7 +2,7 @@
 import { disegnaAccordion } from '../core/scheda-disegno.js';
 import { t, tn, localeIntl } from '../core/i18n.js';
 import { barraNavigazione } from '../core/scheda-navigazione.js';
-import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, puntiMagnitudo, etichettaBarra, periodoSequenza } from './scheda-terremoti.js';
+import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, puntiMagnitudo, curvaCumulativa, etichettaBarra, periodoSequenza } from './scheda-terremoti.js';
 
 export const EVENTO_FILTRO = 'terremoti:filtro';
 
@@ -144,6 +144,34 @@ function disegnaMagnitudoTempo(g, apri) {
   return blocco;
 }
 
+// Curva cumulativa: scala degli eventi accumulati; l'asse verticale va da 0 al totale
+function disegnaCurva(g) {
+  const c = curvaCumulativa(g);
+  if (!c.totale) return el('div'); // senza eventi la nota del grafico precedente basta
+  const blocco = el('div', 'terremoti-serie');
+  blocco.append(el('h4', 'terremoti-titolo', t('terremoti.cum.titolo')));
+  const px = x => MS + x * (L - MS - MD), py = n => A - MB - n / c.totale * (A - MB - MA);
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt terremoti-cum', role: 'img', 'aria-label': t('terremoti.cum.titolo') });
+  for (const n of [0, c.totale]) {
+    svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py(n), y2: py(n), class: 'asse' }));
+    const e = nodoSvg('text', { x: MS - 4, y: py(n) + 3, 'text-anchor': 'end', class: 'et' });
+    e.textContent = num(n);
+    svg.append(e);
+  }
+  [g.da, g.a].forEach((ts, i) => {
+    const e = nodoSvg('text', { x: i ? L - MD : MS, y: A - 4, 'text-anchor': i ? 'end' : 'start', class: 'et' });
+    e.textContent = new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
+    svg.append(e);
+  });
+  const vertici = c.passi.map(p => `${px(p.x).toFixed(1)},${py(p.n).toFixed(1)}`);
+  svg.append(
+    nodoSvg('polygon', { points: `${px(0)},${py(0)} ${vertici.join(' ')} ${px(1)},${py(0)}`, class: 'area' }),
+    nodoSvg('polyline', { points: vertici.join(' '), class: 'curva' }),
+  );
+  blocco.append(svg, el('p', 'scheda-nota', t('terremoti.cum.nota', { n: num(c.totale), mag: g.base })));
+  return blocco;
+}
+
 function disegnaSerie(serie) {
   const blocco = el('div', 'terremoti-serie');
   const barre = el('div', 'terremoti-barre');
@@ -184,7 +212,8 @@ export function graficoSerie(area, apri) {
   const corpo = el('div');
   let eventi = null;
   const disegna = () => {
-    if (eventi) corpo.replaceChildren(disegnaSerie(serieEventi(eventi, unita, filtro.magMin)), disegnaMagnitudoTempo(puntiMagnitudo(eventi, unita, filtro.magMin), apri));
+    const g = eventi && puntiMagnitudo(eventi, unita, filtro.magMin);
+    if (eventi) corpo.replaceChildren(disegnaSerie(serieEventi(eventi, unita, filtro.magMin)), disegnaMagnitudoTempo(g, apri), disegnaCurva(g));
   };
   const carica = () => {
     corpo.replaceChildren(el('p', 'scheda-nota', t('terremoti.serie.carico')));

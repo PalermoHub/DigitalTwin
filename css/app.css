@@ -2237,6 +2237,8 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .terremoti-mt .apribile:hover circle, .terremoti-mt .apribile:focus-visible circle { r: 5; stroke: var(--text, #222); stroke-width: 1.5; }
 .terremoti-mt .forte line { stroke: #e03131; stroke-width: 1.5; }
 .terremoti-mt .forte circle { fill: #e03131; }
+.terremoti-cum .area { fill: var(--accent); opacity: .15; }
+.terremoti-cum .curva { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linejoin: round; }
 .terremoti-sequenze h4 { margin: 12px 0 6px; font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
 .terremoti-sequenza { display: flex; flex-direction: column; gap: 1px; padding: 5px 0; border-top: 1px solid var(--border); font-size: var(--fs-xs); }
 .terremoti-sequenza span { color: var(--text-muted); }

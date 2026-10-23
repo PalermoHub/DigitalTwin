@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { proprietaStorico, serieEventi, puntiMagnitudo, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
+import { proprietaStorico, serieEventi, puntiMagnitudo, curvaCumulativa, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
 
 const ingv = (extra = {}, coord = [14.1717, 38.7938, 8.8]) => ({
   type: 'Feature', geometry: { type: 'Point', coordinates: coord },
@@ -219,6 +219,15 @@ test('puntiMagnitudo: senza eventi non c\'è mainshock; la magnitudo minima filt
   const g = puntiMagnitudo([{ ts: giorno(20), mag: 2.2 }, { ts: giorno(20), mag: 3.4 }], 'giorno', 3, OGGI);
   assert.equal(g.punti.length, 1);
   assert.equal(g.base, 3);
+});
+
+test('curvaCumulativa: scala crescente da 0 al totale, sulla finestra intera', () => {
+  const c = curvaCumulativa(puntiMagnitudo([{ ts: giorno(10), mag: 2.1 }, { ts: giorno(15), mag: 4.6 }, { ts: giorno(22), mag: 2.4 }], 'giorno', 2, OGGI));
+  assert.equal(c.totale, 3);
+  assert.deepEqual([c.passi[0].x, c.passi[0].n], [0, 0]);
+  assert.deepEqual([c.passi.at(-1).x, c.passi.at(-1).n], [1, 3]);
+  assert.ok(c.passi.every((p, i, a) => !i || (p.x >= a[i - 1].x && p.n >= a[i - 1].n)));
+  assert.equal(curvaCumulativa(puntiMagnitudo([], 'mese', 2, OGGI)).totale, 0);
 });
 
 test('proprietaStorico: proprietà come quelle in mappa; senza coordinate è null', () => {
