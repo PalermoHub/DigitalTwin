@@ -2,7 +2,8 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { GRUPPI, NOME_GRUPPO, coloreGruppo, voceSatellite, modelloPopupSatellite, testoPassaggio, sopraOrizzonte } from './scheda-satelliti.js';
-import { creaSatelliti, posizione, daPalermo, prossimoPassaggio, arcoCielo, proiezioneCielo, elementiVecchi, RAGGIO_CIELO_KM, CENTRO_CIELO } from './satelliti-orbite.js';
+import { creaSatelliti, posizione, daPalermo, prossimoPassaggio, arcoCielo, proiezioneCielo, elementiVecchi, traccia, CENTRO_CIELO } from './satelliti-orbite.js';
+import { creaMondo } from './satelliti-mondo.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico } from './popup-traffico.js';
 import { tl, t } from '../core/i18n.js';
 import { registraGlifo, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
@@ -25,6 +26,7 @@ const COLORE_CIELO = '#495057';
 const ISS = 25544;
 const INTERVALLO_MS = 1000;
 const RIFRESCO_ELEMENTI_MS = 2 * 60 * 60 * 1000;
+const TRACCIA_MS = 30 * 1000;
 const VUOTO = { type: 'FeatureCollection', features: [] };
 const urlSatelliti = () => `${scegliProxy(location.search, location.hostname)}/satelliti`;
 
@@ -32,6 +34,10 @@ let satelliti = []; // creaSatelliti() degli elementi scaricati
 const perId = new Map(); // id -> satellite
 const dettagli = new Map(); // id -> proprietà del satellite sopra l'orizzonte, ricalcolate a ogni secondo
 let passaggioIss = null; // prossimo passaggio dell'ISS (calcolato quando serve)
+let mondo = null; // mini-mappa del mondo
+let riquadroMondo = null; // il suo riquadro sulla mappa (la legenda del layer sta nel pannello, che di solito è chiuso)
+let tracciaIss = []; // traccia a terra dell'ISS (±45 minuti), ricalcolata ogni TRACCIA_MS
+let tracciaDel = 0;
 let mappa = null;
 let legenda = null;
 let nota = null;
@@ -76,11 +82,15 @@ function calcola() {
   const adesso = new Date();
   dettagli.clear();
   const features = [];
+  const sulMondo = [];
   for (const s of satelliti) {
-    const v = daPalermo(s, adesso);
-    if (!v || v.elevazione < 0) continue;
     const p = posizione(s, adesso);
     if (!p) continue;
+    const v = daPalermo(s, adesso);
+    const sopra = !!v && v.elevazione >= 0;
+    const gruppo = NOME_GRUPPO[s.gruppo] ?? s.gruppo;
+    if (accesi.has(gruppo)) sulMondo.push({ lng: p.lng, lat: p.lat, gruppo, sopra, iss: s.id === ISS });
+    if (!sopra) continue;
     const props = {
       id: s.id, nome: s.nome, gruppo: NOME_GRUPPO[s.gruppo] ?? s.gruppo, designazione: s.designazione,
       elevazione: v.elevazione, azimut: v.azimut, distanza_km: v.distanzaKm,
@@ -91,6 +101,8 @@ function calcola() {
   }
   mappa?.getSource(SRC)?.setData({ type: 'FeatureCollection', features });
   const iss = perId.get(ISS);
+  if (iss && Date.now() - tracciaDel > TRACCIA_MS) { tracciaIss = traccia(iss, adesso, 45, 45, 60); tracciaDel = Date.now(); }
+  mondo?.disegna({ satelliti: sulMondo, traccia: accesi.has(NOME_GRUPPO.stations) ? tracciaIss : [], palermo: CENTRO_CIELO });
   if (iss && (!passaggioIss || (passaggioIss.fine && passaggioIss.fine < adesso))) {
     passaggioIss = prossimoPassaggio(iss, adesso);
     mappa?.getSource(SRC_ARCO)?.setData(passaggioIss?.fine ? { type: 'Feature', geometry: { type: 'LineString', coordinates: arcoCielo(iss, passaggioIss) }, properties: {} } : VUOTO);
@@ -146,8 +158,16 @@ function creaLegenda() {
     caselle.set(gruppo, { ...caselle.get(gruppo), legenda: riga._filtro.casella });
     legenda.append(riga);
   }
+  mondo = creaMondo(Object.fromEntries(GRUPPI));
+  mondo.elemento.setAttribute('aria-label', t('satelliti.mondoAlt'));
+  riquadroMondo = el('div', 'legenda legenda-monumenti lg-satelliti-mondo');
+  riquadroMondo.hidden = true;
+  riquadroMondo.append(el('strong', null, 'Satelliti nel mondo'), mondo.elemento);
+  document.getElementById('legende').append(riquadroMondo);
+  const come = el('p', 'uffici-nota');
+  come.textContent = t('satelliti.comeLeggere');
   nota = el('p', 'uffici-nota');
-  legenda.append(nota);
+  legenda.append(come, nota);
   document.getElementById('legende').append(legenda);
 }
 
@@ -258,6 +278,7 @@ export default {
     suCambio(attivo) {
       acceso = attivo;
       if (legenda) legenda.hidden = !attivo;
+      if (riquadroMondo) riquadroMondo.hidden = !attivo;
       for (const { pannello } of caselle.values()) pannello.disabled = !attivo;
       if (attivo) aggiorna();
       else { dettagli.clear(); mappa?.getSource(SRC)?.setData(VUOTO); }

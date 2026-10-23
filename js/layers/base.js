@@ -20,6 +20,9 @@ const RASTER = {
   'google-strade': { url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', max: 20, attr: '© Google' },
   satellite: { url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', max: 20, attr: '© Google' },
   'esri-satellite': { url: `${ESRI}/World_Imagery/MapServer/tile/{z}/{y}/{x}`, max: 19, attr: '© Esri, Maxar, Earthstar Geographics' },
+  // Immagini satellitari libere: Sentinel-2 senza nuvole (EOX, gratuito per usi non commerciali, CC BY-NC-SA 4.0) e NASA GIBS (VIIRS a colori naturali di ieri, UTC: quello di oggi arriva nel pomeriggio)
+  sentinel2: { url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg', max: 17, attr: 'EOxCloudless https://cloudless.eox.at by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024)' }, // i18n-ok: credito richiesto da EOX
+  'nasa-ieri': { url: `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/${new Date(Date.now() - 864e5).toISOString().slice(0, 10)}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`, max: 9, attr: 'NASA EOSDIS GIBS, Suomi NPP VIIRS' }, // i18n-ok: credito della fonte
   ibrido: { url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', max: 20, attr: '© Google' },
   'google-terreno': { url: 'https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', max: 20, attr: '© Google' },
   opentopo: { url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png', max: 17, attr: '© OpenStreetMap contributors, SRTM | © OpenTopoMap (CC-BY-SA)' },
@@ -79,6 +82,8 @@ const GRUPPI = [
   { titolo: 'Immagini aeree', basi: [
     { id: 'satellite', etichetta: 'Satellite', titolo: 'Google Satellite' },
     { id: 'esri-satellite', etichetta: 'Esri', titolo: 'Esri World Imagery' },
+    { id: 'sentinel2', etichetta: 'Sentinel-2', titolo: 'Sentinel-2 senza nuvole 2024 (EOX, uso non commerciale)' },
+    { id: 'nasa-ieri', etichetta: 'NASA ieri', titolo: 'NASA GIBS: colori naturali di ieri (VIIRS, risoluzione 250 m)' },
     { id: 'ibrido', etichetta: 'Ibrido', titolo: 'Google Satellite con strade e nomi' },
   ] },
   { titolo: 'Topografiche', basi: [

@@ -9,7 +9,7 @@ Domande tipiche: Come cambio la mappa di sfondo? Come vedo il satellite? Quale b
 Il tab **Base cartografica** (barra di sinistra) sceglie la mappa che sta sotto gli strati. **Una sola base è visibile alla volta**; all'inizio è «Mappa chiara». Ogni base ha una miniatura e un nome; sotto la lista c'è il suggerimento «Seleziona la cartografia da usare come base.» Le basi sono divise in gruppi, come nel selettore dell'Atlante storico:
 
 - **Mappe stradali**: (base di partenza: Mapbox chiara o scura secondo il tema) Mappa chiara (OpenFreeMap), Scura (OpenFreeMap), Luminosa (OpenFreeMap Bright), Mapbox (stile personale) e Mapbox scura (Dark, stile standard; si alternano col tema), OpenStreetMap (standard), OSM Francia, OSM Umanitaria (Humanitarian), Esri Strade (World Street Map), Google (strade), Esri Scura (Dark Gray Canvas).
-- **Immagini aeree**: Satellite (Google), Esri (World Imagery), Ibrido (satellite di Google con strade e nomi).
+- **Immagini aeree**: Satellite (Google), Esri (World Imagery), **Sentinel-2** (immagini Copernicus senza nuvole 2024, a 10 m, di EOX: gratuite solo per usi non commerciali, CC BY-NC-SA 4.0), **NASA ieri** (colori naturali del giorno prima dal satellite VIIRS di NASA GIBS, libere, ma a 250 m per pixel: servono per il contesto, non per la città), Ibrido (satellite di Google con strade e nomi).
 - **Topografiche**: Terreno (Google, rilievo), OpenTopo (curve di livello), Esri Topo (World Topographic Map).
 - **Mappe storiche**: vedi sotto.
 - **Cartografia tecnica**: CSG 1989 (Carta Tecnica Comunale CSG 2k, 1989/91), CTC 2k (Carta Tecnica Comunale, 2007/09), CTR 10k (Carta Tecnica Regionale, 2012/13).
