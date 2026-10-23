@@ -499,7 +499,8 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     const base = soloCliccato(sceltePerLayer(trovatiTutti, lngLat));
     for (const m of conScheda) m.scheda.suEvidenza?.(base); // chi ridisegna l'evidenza dopo il clic (es. percorso di una linea) tiene anche questa
     const scelte = [...base, ...extra];
-    if (cerchioVisibile() && conScheda.some(m => m.scheda.vicini)) mostraCerchio(map, lngLat, raggioVicini()); // il cerchio dei punti vicini, sotto all'evidenza
+    // fuori dal Comune (terremoti, aerei, navi…) il cerchio non serve: l'oggetto cliccato è già evidenziato
+    if (!fuori && cerchioVisibile() && conScheda.some(m => m.scheda.vicini)) mostraCerchio(map, lngLat, raggioVicini()); // il cerchio dei punti vicini, sotto all'evidenza
     else nascondiCerchio(map);
     evidenzia(map, scelte);
     document.dispatchEvent(new CustomEvent('scheda:evidenzia-gruppo', { detail: null })); // il vincolo scelto nella scheda precedente non vale più
