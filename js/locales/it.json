@@ -3156,6 +3156,8 @@
   "terremoti.serie.carico": "Carico lo storico degli ultimi 5 anni…",
   "terremoti.serie.errore": "Storico INGV non disponibile in questo momento.",
   "terremoti.serie.riprova": "Riprova",
+  "terremoti.mt.titolo": "Magnitudo nel tempo",
+  "terremoti.mt.nota": "Ogni stelo è un terremoto, alto quanto la magnitudo (M ≥ {mag}). Il più forte, in rosso: M {forte}, {data}; {repliche} eventi dopo di lui, le possibili repliche.",
   "lbl.Terremoti nel tempo": "Terremoti nel tempo",
   "terremoti.nessunAltro": "Nessun altro terremoto con questi filtri.",
   "lbl.Tutti i terremoti su INGV": "Tutti i terremoti su INGV",

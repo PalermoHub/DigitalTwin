@@ -2,7 +2,7 @@
 import { disegnaAccordion } from '../core/scheda-disegno.js';
 import { t, tn, localeIntl } from '../core/i18n.js';
 import { barraNavigazione } from '../core/scheda-navigazione.js';
-import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, etichettaBarra, periodoSequenza } from './scheda-terremoti.js';
+import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, puntiMagnitudo, etichettaBarra, periodoSequenza } from './scheda-terremoti.js';
 
 export const EVENTO_FILTRO = 'terremoti:filtro';
 
@@ -88,6 +88,62 @@ const testoUnita = u => t(`terremoti.unita.${u}`);
 const num = n => n.toLocaleString(localeIntl());
 let unita = 'giorno';
 
+// Magnitudo-tempo: uno stelo per evento, alto quanto la magnitudo; la mainshock è in rosso con l'etichetta.
+const SVG = 'http://www.w3.org/2000/svg';
+const L = 320, A = 150, MS = 28, MD = 8, MA = 8, MB = 18; // viewBox e margini (sinistro, destro, alto, basso)
+function nodoSvg(tag, attributi, titolo) {
+  const n = document.createElementNS(SVG, tag);
+  for (const [k, v] of Object.entries(attributi)) n.setAttribute(k, v);
+  if (titolo) n.append(Object.assign(document.createElementNS(SVG, 'title'), { textContent: titolo }));
+  return n;
+}
+const dataEvento = ts => new Date(ts).toLocaleString(localeIntl(), { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+function disegnaMagnitudoTempo(g, apri) {
+  const blocco = el('div', 'terremoti-serie');
+  blocco.append(el('h4', 'terremoti-titolo', t('terremoti.mt.titolo')));
+  if (!g.punti.length) {
+    blocco.append(el('p', 'scheda-nota', t('terremoti.serie.vuota')));
+    return blocco;
+  }
+  const px = x => MS + x * (L - MS - MD), py = y => A - MB - y * (A - MB - MA);
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt', role: 'img', 'aria-label': t('terremoti.mt.titolo') });
+  for (const m of g.livelli) {
+    svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py((m - g.base) / (g.cima - g.base)), y2: py((m - g.base) / (g.cima - g.base)), class: 'asse' }));
+    const e = nodoSvg('text', { x: MS - 4, y: py((m - g.base) / (g.cima - g.base)) + 3, 'text-anchor': 'end', class: 'et' });
+    e.textContent = `M${m}`;
+    svg.append(e);
+  }
+  const date = [g.da, g.a];
+  date.forEach((ts, i) => {
+    const e = nodoSvg('text', { x: i ? L - MD : MS, y: A - 4, 'text-anchor': i ? 'end' : 'start', class: 'et' });
+    e.textContent = new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
+    svg.append(e);
+  });
+  for (const p of g.punti) {
+    const forte = p === g.mainshock;
+    const x = px(p.x), y = py(p.y);
+    const gruppo = nodoSvg('g', { class: forte ? 'forte' : 'evento' }, `M ${p.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 })} · ${dataEvento(p.ts)}`);
+    gruppo.append(nodoSvg('line', { x1: x, x2: x, y1: py(0), y2: y }), nodoSvg('circle', { cx: x, cy: y, r: forte ? 4 : 2 }));
+    if (apri && Number.isFinite(p.lon)) { // clic su uno stelo: l'evento si apre in mappa (la zona sensibile è larga 8 px)
+      gruppo.classList.add('apribile');
+      gruppo.setAttribute('tabindex', '0');
+      gruppo.setAttribute('role', 'button');
+      gruppo.append(nodoSvg('line', { x1: x, x2: x, y1: py(0), y2: y - 3, class: 'zona' }));
+      gruppo.addEventListener('click', () => apri(p));
+      gruppo.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); apri(p); } });
+    }
+    svg.append(gruppo);
+  }
+  const m = g.mainshock;
+  const dx = px(m.x);
+  const et = nodoSvg('text', { x: dx > L / 2 ? dx - 7 : dx + 7, y: py(m.y) + 3, 'text-anchor': dx > L / 2 ? 'end' : 'start', class: 'et forte' });
+  et.textContent = `M ${m.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 })}`;
+  svg.append(et);
+  blocco.append(svg, el('p', 'scheda-nota', t('terremoti.mt.nota', { n: num(g.punti.length), mag: g.base, forte: m.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 }), data: dataEvento(m.ts), repliche: num(g.repliche) })));
+  return blocco;
+}
+
 function disegnaSerie(serie) {
   const blocco = el('div', 'terremoti-serie');
   const barre = el('div', 'terremoti-barre');
@@ -123,12 +179,12 @@ function disegnaSerie(serie) {
 }
 
 // Contenuto della sezione: menu giorno/mese/anno e barre; si ridisegna al cambio di unità e di magnitudo minima. `area` = riquadro per il servizio INGV.
-export function graficoSerie(area) {
+export function graficoSerie(area, apri) {
   const radice = el('div', 'terremoti-elenco');
   const corpo = el('div');
   let eventi = null;
   const disegna = () => {
-    if (eventi) corpo.replaceChildren(disegnaSerie(serieEventi(eventi, unita, filtro.magMin)));
+    if (eventi) corpo.replaceChildren(disegnaSerie(serieEventi(eventi, unita, filtro.magMin)), disegnaMagnitudoTempo(puntiMagnitudo(eventi, unita, filtro.magMin), apri));
   };
   const carica = () => {
     corpo.replaceChildren(el('p', 'scheda-nota', t('terremoti.serie.carico')));

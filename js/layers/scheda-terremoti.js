@@ -164,14 +164,14 @@ export const urlStorico = (area, adesso = Date.now()) => {
   return `${URL_SERVIZIO}?${q}`;
 };
 
-// Formato «text» di INGV: righe separate da «|», la prima con l'intestazione. Colonne: 1 = ora, 10 = magnitudo
+// Formato «text» di INGV: righe separate da «|», la prima con l'intestazione. Colonne: 0 = id, 1 = ora, 2-3 = lat/lon, 4 = profondità, 5 = autore, 9 = tipo magnitudo, 10 = magnitudo, 12 = zona
 export function eventiDaTesto(testo) {
   const eventi = [];
   for (const riga of String(testo).split('\n')) {
     if (!riga || riga.startsWith('#')) continue;
     const c = riga.split('|');
-    const ts = oraEvento(c[1]), mag = Number(c[10]);
-    if (Number.isFinite(ts) && Number.isFinite(mag)) eventi.push({ ts, mag });
+    const ts = oraEvento(c[1]), mag = Number(c[10]), lat = Number(c[2]), lon = Number(c[3]), prof = Number(c[4]);
+    if (Number.isFinite(ts) && Number.isFinite(mag)) eventi.push({ ts, mag, id: c[0], lat: c[2] === '' ? NaN : lat, lon: c[3] === '' ? NaN : lon, prof: c[4] !== '' && Number.isFinite(prof) ? prof : null, tipoMag: c[9] ?? '', autore: c[5] ?? '', luogo: c[12] ?? '' });
   }
   return eventi;
 }
@@ -216,6 +216,29 @@ export function serieEventi(eventi, unita, magMin = MAG_STORICO, adesso = Date.n
     else sequenze.push({ da: b.da, a: b.a, n: b.n, barre: 1, magMax: b.magMax });
   }
   return { unita, barre, sequenze: sequenze.sort((x, y) => y.n - x.n), soglia, totale: barre.reduce((s, b) => s + b.n, 0) };
+}
+
+// Grafico magnitudo-tempo: ogni evento è uno stelo alto quanto la magnitudo, sulla stessa finestra della serie a barre.
+// `x` e `y` sono quote 0-1 (y = 0 sulla base, 1 in cima all'asse); la scossa più forte è la mainshock, quelle dopo di lei le repliche.
+export function puntiMagnitudo(eventi, unita, magMin = MAG_STORICO, adesso = Date.now()) {
+  const da = inizioBarra(inizioBarra(adesso, unita), unita, -(FINESTRE[unita] - 1));
+  const minimo = Math.max(magMin, MAG_STORICO);
+  const scelti = eventi.filter(e => e.mag >= minimo && e.ts >= da && e.ts <= adesso).sort((a, b) => a.ts - b.ts);
+  const base = Math.floor(minimo);
+  const cima = Math.max(base + 2, Math.ceil(scelti.reduce((m, e) => Math.max(m, e.mag), 0)));
+  const durata = adesso - da;
+  const punti = scelti.map(e => ({ ...e, x: (e.ts - da) / durata, y: (e.mag - base) / (cima - base) }));
+  const mainshock = punti.reduce((a, b) => (!a || b.mag > a.mag ? b : a), null);
+  const repliche = mainshock ? punti.filter(p => p.ts > mainshock.ts).length : 0;
+  const livelli = Array.from({ length: cima - base + 1 }, (_, i) => base + i);
+  return { da, a: adesso, base, cima, livelli, punti, mainshock, repliche };
+}
+
+// Proprietà di un evento dello storico, come quelle di un evento in mappa (per popup e scheda), o null se mancano le coordinate
+export function proprietaStorico(e, adesso = Date.now()) {
+  if (!Number.isFinite(e?.lon) || !Number.isFinite(e?.lat)) return null;
+  const fascia = fasciaEta(e.ts, adesso);
+  return { id: String(e.id), mag: e.mag, tipoMag: e.tipoMag ?? '', luogo: e.luogo ?? '', ts: e.ts, prof: e.prof ?? null, autore: e.autore ?? '', fascia: fascia.nome, colore: fascia.colore, lon: e.lon, lat: e.lat };
 }
 
 // Etichetta breve sotto la barra e testo completo del suggerimento

@@ -3156,6 +3156,8 @@
   "terremoti.serie.carico": "Loading the last 5 years…",
   "terremoti.serie.errore": "INGV history not available right now.",
   "terremoti.serie.riprova": "Retry",
+  "terremoti.mt.titolo": "Magnitude over time",
+  "terremoti.mt.nota": "Each stem is an earthquake, as tall as its magnitude (M ≥ {mag}). The strongest, in red: M {forte}, {data}; {repliche} events after it, the possible aftershocks.",
   "lbl.Terremoti nel tempo": "Earthquakes over time",
   "terremoti.nessunAltro": "No other earthquake with these filters.",
   "lbl.Tutti i terremoti su INGV": "All earthquakes on INGV",

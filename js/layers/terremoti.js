@@ -1,7 +1,7 @@
 import { tl, t, localeIntl } from '../core/i18n.js';
 import { LIMITI } from '../core/config.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
-import { FASCE, URL_SERVIZIO, GIORNI_MAX, filtro, passaFiltro, espressioneFiltro, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, voceSerie, voceAltri, riassuntoTerremoti } from './scheda-terremoti.js';
+import { FASCE, URL_SERVIZIO, GIORNI_MAX, filtro, passaFiltro, espressioneFiltro, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, voceSerie, voceAltri, riassuntoTerremoti, proprietaStorico } from './scheda-terremoti.js';
 import { EVENTO_FILTRO, menuFiltro, elencoAltri, graficoSerie, testoGiorni, barraEventi } from './scheda-terremoti-dom.js';
 import { clicSu } from '../core/scheda-navigazione.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
@@ -115,6 +115,29 @@ function vaiAEvento(p) {
   clicSu(mappa, [p.lon, p.lat], () => { scelto = { id: p.id, fino: Date.now() + FINESTRA_SCELTA_MS }; });
 }
 
+function apriPopup(p, punto) {
+  popup?.remove();
+  const coordinate = [p.lon, p.lat];
+  const { anchor, offset } = ancoraPopupTraffico(punto, mappa.getContainer());
+  popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset, closeButton: false })
+    .setLngLat(coordinate)
+    .setDOMContent(contenutoPopupTraffico({ sezione: 'Terremoti', icona: 'terremoto', colore: p.colore, modello: modelloPopupTerremoto(p), coordinate, chiudi: () => popup?.remove() }))
+    .addTo(mappa);
+  rifinisciPopupTraffico(popup, anchor, p.colore);
+  centraPopupTraffico(mappa, popup, anchor, coordinate);
+}
+
+// Clic su uno stelo del grafico magnitudo-tempo: se l'evento è in mappa si apre la sua scheda, altrimenti (più vecchio del periodo scelto, o fuori dai filtri) la mappa va al punto e mostra un popup
+function apriDaGrafico(e) {
+  const p = proprietaStorico(e);
+  if (!p || !mappa) return;
+  const inMappa = acceso && visibili().find(v => v.id === p.id);
+  if (inMappa) { vaiAEvento(inMappa); return; }
+  popup?.remove();
+  mappa.once('moveend', () => apriPopup(p, mappa.project([p.lon, p.lat])));
+  mappa.flyTo({ center: [p.lon, p.lat], zoom: Math.max(mappa.getZoom(), 9), duration: 700 });
+}
+
 const proprieta = f => ({ ...f.properties, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] });
 
 export default {
@@ -140,13 +163,7 @@ export default {
       popup?.remove();
       const f = evento(map.queryRenderedFeatures(e.point, { layers: [PUNTI] }));
       if (!f) return;
-      const { anchor, offset } = ancoraPopupTraffico(e.point, map.getContainer());
-      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset, closeButton: false })
-        .setLngLat(f.geometry.coordinates)
-        .setDOMContent(contenutoPopupTraffico({ sezione: 'Terremoti', icona: 'terremoto', colore: f.properties.colore, modello: modelloPopupTerremoto(proprieta(f)), coordinate: f.geometry.coordinates, chiudi: () => popup?.remove() }))
-        .addTo(map);
-      rifinisciPopupTraffico(popup, anchor, f.properties.colore);
-      centraPopupTraffico(map, popup, anchor, f.geometry.coordinates);
+      apriPopup(proprieta(f), e.point);
     });
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
@@ -162,7 +179,7 @@ export default {
     voci(trovati) {
       const primo = evento(trovati.filter(f => f.layer.id === HIT));
       if (!primo) return [];
-      return [voceTerremoto(proprieta(primo), Date.now(), () => barraEventi(primo.properties.id, visibili, vaiAEvento)), voceSerie(() => graficoSerie(AREA)), voceAltri(() => elencoAltri(() => eventi, new Set([primo.properties.id])))];
+      return [voceTerremoto(proprieta(primo), Date.now(), () => barraEventi(primo.properties.id, visibili, vaiAEvento)), voceSerie(() => graficoSerie(AREA, apriDaGrafico)), voceAltri(() => elencoAltri(() => eventi, new Set([primo.properties.id])))];
     },
     // gli eventi stanno in mare e fuori dal Comune: il clic su un cerchio apre la scheda (solo a strato acceso: i dati si scaricano all'accensione)
     apertoFuoriComune(map, e) {

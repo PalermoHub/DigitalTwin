@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { serieEventi, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
+import { proprietaStorico, serieEventi, puntiMagnitudo, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
 
 const ingv = (extra = {}, coord = [14.1717, 38.7938, 8.8]) => ({
   type: 'Feature', geometry: { type: 'Point', coordinates: coord },
@@ -142,6 +142,7 @@ test('eventiDaTesto: legge ora e magnitudo, salta intestazione e righe rotte', (
   assert.equal(ev.length, 1);
   assert.equal(ev[0].mag, 2.1);
   assert.equal(ev[0].ts, Date.parse('2026-10-23T13:45:38.880Z'));
+  assert.deepEqual([ev[0].id, ev[0].lat, ev[0].lon, ev[0].prof, ev[0].luogo], ['1', 38.7, 14.1, 10, 'Z']);
 });
 
 test('serieEventi: barre per giorno, 30 finestre, la più recente è oggi', () => {
@@ -198,4 +199,31 @@ test('periodoSequenza e urlStorico', () => {
   const u = urlStorico({ minlon: 11.7, minlat: 36.3, maxlon: 16.2, maxlat: 39.2 }, OGGI);
   assert.match(u, /format=text/);
   assert.match(u, /minmag=2/);
+});
+
+test('puntiMagnitudo: stelo alto quanto la magnitudo, mainshock e repliche', () => {
+  const ev = [{ ts: giorno(10), mag: 2.1 }, { ts: giorno(15), mag: 4.6 }, { ts: giorno(16), mag: 3.0 }, { ts: giorno(22), mag: 2.4 }, { ts: giorno(1) - 90 * 86400000, mag: 5 }];
+  const g = puntiMagnitudo(ev, 'giorno', 2, OGGI);
+  assert.equal(g.punti.length, 4); // il quinto è fuori finestra
+  assert.equal(g.mainshock.mag, 4.6);
+  assert.equal(g.repliche, 2);
+  assert.equal(g.base, 2);
+  assert.equal(g.cima, 5);
+  assert.deepEqual(g.livelli, [2, 3, 4, 5]);
+  assert.ok(Math.abs(g.mainshock.y - (4.6 - 2) / 3) < 1e-9);
+  assert.ok(g.punti.every((p, i, a) => !i || p.x >= a[i - 1].x));
+});
+
+test('puntiMagnitudo: senza eventi non c\'è mainshock; la magnitudo minima filtra', () => {
+  assert.equal(puntiMagnitudo([], 'mese', 2, OGGI).mainshock, null);
+  const g = puntiMagnitudo([{ ts: giorno(20), mag: 2.2 }, { ts: giorno(20), mag: 3.4 }], 'giorno', 3, OGGI);
+  assert.equal(g.punti.length, 1);
+  assert.equal(g.base, 3);
+});
+
+test('proprietaStorico: proprietà come quelle in mappa; senza coordinate è null', () => {
+  const p = proprietaStorico({ id: '9', ts: OGGI - 3 * 86400000, mag: 3.2, lat: 38.5, lon: 13.9, prof: 8, luogo: 'Golfo', tipoMag: 'ML', autore: 'X' }, OGGI);
+  assert.equal(p.fascia, 'Oltre 24 ore');
+  assert.deepEqual([p.lon, p.lat, p.luogo], [13.9, 38.5, 'Golfo']);
+  assert.equal(proprietaStorico({ ts: OGGI, mag: 2, lat: NaN, lon: NaN }, OGGI), null);
 });
