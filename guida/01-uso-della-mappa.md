@@ -68,7 +68,7 @@ I percorsi guidati stanno nella pagina iniziale del sito, nella sezione «Cosa p
 I percorsi disponibili sono quattordici:
 
 - **Rischi e clima**: Pericolosità geomorfologica, Pericolosità idraulica, Pericolosità erosione costiera, Incendi, Isole di calore
-- **Pericolosità, esposti e rischi**: Pericolosità geomorfologica, Rischio geomorfologico, Pericolosità idraulica, Rischio idraulico, Pericolosità erosione costiera, Rischio erosione costiera, Piano di emergenza (Protezione Civile)
+- **Aree di emergenza**: Pericolosità geomorfologica, Rischio geomorfologico, Pericolosità idraulica, Rischio idraulico, Pericolosità erosione costiera, Rischio erosione costiera, Piano di emergenza (Protezione Civile)
 - **Scuole e quartieri**: Scuole e asili comunali, Sezioni elettorali (sedi), Quartieri, Popolazione per sezione
 - **Mobilità**: Linea metro, Linee bus, Fermate, Colonnine di ricarica, Distributori di carburante
 - **Città in trasformazione**: Piano triennale lavori pubblici 2026-2028, Progetti PNRR, Opere pubbliche, Trend della popolazione 2011-2023

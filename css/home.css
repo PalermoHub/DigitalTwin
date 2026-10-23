@@ -163,6 +163,7 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .home-percorsi { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
 .percorso { display: flex; flex-direction: column; gap: 6px; padding: 16px; border: 1px solid var(--border-ui); border-radius: var(--r-md, 12px); background: var(--surface); }
 .percorso h4 { margin: 0; }
+.percorso-badge { align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #d7263d; color: #fff; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }
 .percorso p { margin: 0; }
 .percorso-strati { color: var(--text-muted); font-size: var(--fs-xs); }
 .percorso-apri { margin-top: auto; align-self: flex-start; padding: 6px 14px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: var(--fs-sm); font-weight: 700; text-decoration: none; }

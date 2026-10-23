@@ -15,6 +15,20 @@ In the Layers panel, in the **«Events»** group, **«Emergency plan»** section
 
 The legend, under the layer, shows how many areas there are of each type and lets you turn them on or off one by one. Areas appear from **zoom 11**.
 
+## How to reach an area in an emergency
+
+Keywords: reach an area, nearest area, route, directions, navigation, smartphone, phone, emergency, evacuation, how to get there.
+
+Typical questions: How do I get to the nearest emergency area? How do I find the way to the waiting area? How can my phone guide me to a Civil Protection area? What should I do in an earthquake or flood to know where to go?
+
+In an emergency, three steps are enough:
+
+1. **Turn on the «Emergency plan» layer** («Events» group): the areas appear on the map.
+2. **Tap the area nearest to you**, on the hatched polygon or on its blue symbol: the profile opens on the **Place** tab and shows the area you tapped **first**, with its heading highlighted.
+3. **Tap the green «Open in navigation app» button** (the «Percorso» row) in the area's profile: your smartphone's navigation app (on a computer, the browser) opens with directions already set to that area. Start the route and follow the directions.
+
+To know what each area is for, look at its colour: **green** waiting area, **red** shelter and reception, **yellow** rescuers' assembly. In an emergency, always follow the instructions of Civil Protection and the authorities.
+
 ## The profile of an area
 
 Keywords: emergency area profile, area number, surface, district, neighbourhood, UPL.

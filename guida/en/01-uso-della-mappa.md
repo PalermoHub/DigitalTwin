@@ -68,7 +68,7 @@ The guided paths are on the home page of the site, in the «What you can switch 
 There are fourteen paths:
 
 - **Risks and climate**: Geomorphological hazard, Hydraulic hazard, Coastal erosion hazard, Fires, Heat islands
-- **Hazard, exposure and risk**: Geomorphological hazard, Geomorphological risk, Hydraulic hazard, Hydraulic risk, Coastal erosion hazard, Coastal erosion risk, Emergency plan (Civil Protection)
+- **Emergency areas**: Geomorphological hazard, Geomorphological risk, Hydraulic hazard, Hydraulic risk, Coastal erosion hazard, Coastal erosion risk, Emergency plan (Civil Protection)
 - **Schools and neighbourhoods**: Municipal schools and nurseries, Polling sections (sites), Neighbourhoods, Population by section
 - **Mobility**: Metro line, Bus lines, Stops, Charging points, Fuel stations
 - **A city in transformation**: Three-year public works plan 2026-2028, NRRP projects, Public works, Population trend 2011-2023

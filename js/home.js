@@ -388,6 +388,7 @@ async function costruisciPercorsi() {
     const apri = el('a', { className: 'percorso-apri', href: MAPPA, textContent: tr('home.percorsi.apri') });
     linkMappa(p.strati, true, p.vista).then(href => { apri.href = href; });
     box.append(el('li', { className: 'percorso' },
+      ...(testi.badge ? [el('span', { className: 'percorso-badge', textContent: testi.badge })] : []),
       el('h4', { textContent: testi.titolo }),
       el('p', { textContent: testi.testo }),
       el('p', { className: 'percorso-strati', textContent: p.strati.map(id => nomi.get(id) ?? id).join(' · ') }),

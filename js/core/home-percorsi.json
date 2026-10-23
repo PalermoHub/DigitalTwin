@@ -29,11 +29,13 @@
    "protezione-civile"
   ],
   "it": {
-   "titolo": "Pericolosità, esposti e rischi",
+   "badge": "Emergenza",
+   "titolo": "Aree di emergenza",
    "testo": "Frane, alluvioni ed erosione costiera: dove il pericolo è maggiore, quali elementi sono esposti (rischio) e le aree di attesa, accoglienza e ammassamento del Piano di emergenza."
   },
   "en": {
-   "titolo": "Hazard, exposure and risk",
+   "badge": "Emergency",
+   "titolo": "Emergency areas",
    "testo": "Landslides, floods and coastal erosion: where the hazard is highest, which elements are exposed (risk) and the waiting, reception and assembly areas of the Emergency Plan."
   }
  },
