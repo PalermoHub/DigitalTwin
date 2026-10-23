@@ -3217,7 +3217,6 @@
   "lbl.Piano di eliminazione delle barriere architettoniche (PEBA): Comune di Palermo, Delibera di Giunta comunale n. 272 del 18/07/2026, elaborazione OpenDataSicilia e PalermoHub": "Plan for the elimination of architectural barriers (PEBA): Comune di Palermo, Municipal Executive Resolution no. 272 of 18/07/2026, processed by OpenDataSicilia and PalermoHub",
   "lbl.PEBA su PalermoHub (dati, foto e PDF)": "PEBA on PalermoHub (data, photos and PDFs)",
   "pc.numero": "no. {n}",
-  "pc.altre": "… and {n} more areas",
   "pc.riassunto": "{n} overlapping areas · {tipi}",
   "pc.aree.uno": "{n} area",
   "pc.aree.altri": "{n} areas",
@@ -3244,5 +3243,6 @@
   "lbl.Piano di emergenza della Protezione civile, Portale Open Data del Comune di Palermo": "Civil Protection emergency plan, Palermo Open Data Portal",
   "home.slide.protezione-civile.titolo": "Emergency plan",
   "home.slide.protezione-civile.testo": "Where to go in an emergency: waiting areas (green), shelter and reception areas (red) and rescuers’ assembly areas (yellow) from the Civil Protection plan.",
-  "home.slide.protezione-civile.alt": "The map of Palermo with emergency areas coloured green, red and yellow"
+  "home.slide.protezione-civile.alt": "The map of Palermo with emergency areas coloured green, red and yellow",
+  "lbl.Aree sovrapposte": "Overlapping areas"
 }

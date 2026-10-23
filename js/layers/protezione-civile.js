@@ -3,7 +3,8 @@ import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { CLASSI, CONTORNO, classe, chiave, modelloPopup, vociPc } from './scheda-protezione-civile.js';
-import { t, tl } from '../core/i18n.js';
+import { tl } from '../core/i18n.js';
+import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 
 // Piano di emergenza della Protezione civile (Comune di Palermo, Portale Open Data dataset 351): 478 aree in un solo PMTiles (zoom 11–17).
 // Simbologia dell'Allegato B del Dipartimento della Protezione Civile: tratteggio verde = area di attesa, rosso = ricovero e accoglienza,
@@ -15,7 +16,7 @@ const BORDO = 'protezione-civile-bordo';
 const ICONE = 'protezione-civile-icone';
 const HIT = 'protezione-civile-hit';
 const MINZOOM = 11;
-const MAX_NEL_POPUP = 4;
+const COLORE_POPUP = '#1c71b8'; // il blu dei simboli dell'Allegato B
 const MAX_NELLA_SCHEDA = 6;
 
 let legenda = null;
@@ -62,19 +63,20 @@ function registraImmagini(map) {
   }
 }
 
-function contenutoPopup(lista) {
-  const radice = el('div', 'monumento-popup pc-popup');
-  for (const f of lista.slice(0, MAX_NEL_POPUP)) {
-    const m = modelloPopup(f.properties);
-    const blocco = el('div', 'pc-popup-voce');
-    blocco.append(el('h3', null, m.titolo));
-    if (m.sottotitolo) blocco.append(el('p', 'monumento-cat', m.sottotitolo));
-    for (const r of m.righe) blocco.append(el('p', 'monumento-desc', `${r.etichetta}: ${r.valore}`));
-    radice.append(blocco);
-  }
-  if (lista.length > MAX_NEL_POPUP) radice.append(el('p', 'monumento-desc', t('pc.altre', { n: lista.length - MAX_NEL_POPUP })));
-  radice.append(el('p', 'monumento-desc uffici-suggerimento', 'Tutti i dati nella scheda a destra.'));
-  return radice;
+// Popup nello stile degli altri strati (scheda scura con intestazione, titolo e righe): mostra l'area cliccata, e quante altre le stanno sotto.
+function apriPopup(map, lista, e, precedente) {
+  precedente?.remove();
+  const modello = modelloPopup(lista[0].properties);
+  if (lista.length > 1) modello.righe.push({ etichetta: 'Aree sovrapposte', valore: String(lista.length) });
+  const coordinate = [e.lngLat.lng, e.lngLat.lat];
+  const { anchor, offset } = ancoraPopupTraffico(e.point, map.getContainer());
+  const popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset, closeButton: false })
+    .setLngLat(coordinate)
+    .setDOMContent(contenutoPopupTraffico({ sezione: 'Piano di emergenza', icona: 'protezione-civile', colore: COLORE_POPUP, modello, coordinate, chiudi: () => popup.remove() }))
+    .addTo(map);
+  rifinisciPopupTraffico(popup, anchor, COLORE_POPUP);
+  centraPopupTraffico(map, popup, anchor, coordinate);
+  return popup;
 }
 
 function applicaFiltro(map) {
@@ -156,10 +158,8 @@ export default {
     map.on('click', e => {
       if (map.getLayoutProperty(FILL, 'visibility') !== 'visible') return;
       const lista = distinti(map.queryRenderedFeatures(e.point, { layers: [FILL] }));
-      popup?.remove();
-      if (!lista.length) return;
-      popup = new maplibregl.Popup({ maxWidth: '300px', className: 'monumento-popup-box', offset: 8 })
-        .setLngLat(e.lngLat).setDOMContent(contenutoPopup(lista)).addTo(map);
+      if (!lista.length) { popup?.remove(); return; }
+      popup = apriPopup(map, lista, e, popup);
     });
     registraTooltipStrati(map, [{ layers: [FILL], icona: 'protezione-civile', campione: p => campioneTooltip('legenda-pc', simbolo(classe(p.classe) ?? { colore: '#868e96' })), modello: modelloPopup }]);
     map.on('mouseenter', FILL, () => { map.getCanvas().style.cursor = 'pointer'; });
