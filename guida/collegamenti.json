@@ -226,5 +226,11 @@
  "60-radar-allerte.md": [
   "allerte",
   "radar"
+ ],
+ "61-traffico-flusso.md": [
+  "traffico"
+ ],
+ "62-terremoti.md": [
+  "terremoti"
  ]
 }
