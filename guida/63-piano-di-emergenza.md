@@ -17,15 +17,16 @@ La legenda, sotto lo strato, indica quante aree ci sono per tipo e permette di a
 
 ## Come raggiungere un'area in caso di emergenza
 
-Parole chiave: raggiungere un'area, area più vicina, percorso, indicazioni stradali, navigatore, smartphone, telefono, emergenza, evacuazione, come arrivare.
+Parole chiave: la mia posizione, dove mi trovo, raggiungere un'area, area più vicina, percorso, indicazioni stradali, navigatore, smartphone, telefono, emergenza, evacuazione, come arrivare.
 
-Domande tipiche: Come arrivo all'area di emergenza più vicina? Come trovo la strada per l'area di attesa? Come faccio a farmi guidare dal telefono fino a un'area della Protezione civile? Cosa devo fare in caso di terremoto o alluvione per sapere dove andare?
+Domande tipiche: Come faccio a vedere dove mi trovo rispetto alle aree? Come arrivo all'area di emergenza più vicina? Come trovo la strada per l'area di attesa? Come faccio a farmi guidare dal telefono fino a un'area della Protezione civile? Cosa devo fare in caso di terremoto o alluvione per sapere dove andare?
 
-In caso di emergenza bastano tre passaggi:
+In caso di emergenza bastano quattro passaggi:
 
 1. **Accendi lo strato «Piano di emergenza»** (gruppo «Eventi»): le aree compaiono sulla mappa.
-2. **Tocca l'area più vicina a te**, sul poligono tratteggiato o sul suo simbolo blu: la scheda si apre sul tab **Luogo** e mostra **per prima** l'area che hai toccato, con l'intestazione evidenziata.
-3. **Tocca il pulsante verde «Apri nel navigatore»** (riga «Percorso») nella scheda dell'area: si apre l'app di navigazione del tuo smartphone (sul computer, il browser) con le indicazioni stradali già impostate verso quell'area. Avvia il percorso e segui le indicazioni.
+2. **Premi «La mia posizione»** nella barra degli strumenti e consenti l'accesso alla posizione quando il browser lo chiede: sulla mappa compare un punto che indica dove ti trovi, così capisci quale area ti è più vicina.
+3. **Tocca l'area più vicina a te**, sul poligono tratteggiato o sul suo simbolo blu: la scheda si apre sul tab **Luogo** e mostra **per prima** l'area che hai toccato, con l'intestazione evidenziata.
+4. **Tocca il pulsante verde «Apri nel navigatore»** (riga «Percorso») nella scheda dell'area: si apre l'app di navigazione del tuo smartphone (sul computer, il browser) con le indicazioni stradali già impostate verso quell'area. Avvia il percorso e segui le indicazioni.
 
 Per sapere a cosa serve ogni area, guarda il colore: **verde** area di attesa, **rosso** ricovero e accoglienza, **giallo** ammassamento dei soccorritori. In emergenza valgono sempre le indicazioni della Protezione civile e delle autorità.
 
