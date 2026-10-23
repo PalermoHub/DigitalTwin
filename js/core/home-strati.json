@@ -682,6 +682,33 @@
    ]
   },
   {
+   "id": "terremoti",
+   "titolo": "Terremoti in tempo reale",
+   "descrizione": "I terremoti degli ultimi 7 giorni attorno a Palermo, in Sicilia nord-occidentale e nel Tirreno meridionale, dal servizio dell'INGV: magnitudo, profondità, zona e distanza da Palermo, aggiornati ogni 2 minuti.",
+   "strati": [
+    {
+     "id": "terremoti",
+     "etichetta": "Terremoti in tempo reale"
+    }
+   ],
+   "fonte": "INGV, Istituto Nazionale di Geofisica e Vulcanologia: terremoti in tempo reale, servizio FDSN event (CC BY 4.0), rinnovati ogni 2 minuti.",
+   "enti": [
+    "INGV"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2026-10-23",
+   "link": [
+    [
+     "Terremoti INGV",
+     "https://terremoti.ingv.it/"
+    ],
+    [
+     "Servizio web FDSN event",
+     "https://webservices.ingv.it/fdsnws/event/1/"
+    ]
+   ]
+  },
+  {
    "id": "territorio",
    "titolo": "Territorio, catasto e urbanistica",
    "descrizione": "Particelle catastali, zonizzazione e vincoli del PRG 2004, zone OMI, immobili comunali e numeri civici.",
@@ -1329,6 +1356,33 @@
     [
      "ISTAT, Dati per sezioni di censimento",
      "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/"
+    ]
+   ]
+  },
+  {
+   "id": "terremoti",
+   "titolo": "Live earthquakes",
+   "descrizione": "Earthquakes of the last 7 days around Palermo, in north-western Sicily and the southern Tyrrhenian Sea, from the INGV service: magnitude, depth, area and distance from Palermo, updated every 2 minutes.",
+   "strati": [
+    {
+     "id": "terremoti",
+     "etichetta": "Live earthquakes"
+    }
+   ],
+   "fonte": "INGV, National Institute of Geophysics and Volcanology: live earthquakes, FDSN event service (CC BY 4.0), renewed every 2 minutes.",
+   "enti": [
+    "INGV"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2026-10-23",
+   "link": [
+    [
+     "INGV earthquakes",
+     "https://terremoti.ingv.it/"
+    ],
+    [
+     "FDSN event web service",
+     "https://webservices.ingv.it/fdsnws/event/1/"
     ]
    ]
   },

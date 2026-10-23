@@ -32,6 +32,7 @@ export const ICONE = {
   aereo: 'M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z', // aerei in volo attorno all'aeroporto (naso verso l'alto: ruota con `icon-rotate`)
   nave: 'M12 2c2.2 2.6 3.6 5.4 3.6 8.4V19l-1.6 3h-4l-1.6-3v-8.6C8.4 7.4 9.8 4.6 12 2z', // navi nel golfo (vista dall'alto, prua verso l'alto: ruota con `icon-rotate`)
   allerta: 'M12 2.5L22.5 21h-21zM12 7L5.6 19h12.8zM11 10h2v4.5h-2zM11 15.8h2v2h-2z', // allerta meteo-idro (triangolo con punto esclamativo)
+  terremoto: 'M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM12 3.5a8.5 8.5 0 0 1 8.5 8.5h-2A6.5 6.5 0 0 0 12 5.5zM12 20.5A8.5 8.5 0 0 1 3.5 12h2a6.5 6.5 0 0 0 6.5 6.5z', // terremoti in tempo reale (epicentro con onde)
   satellite: 'M12 8l4 4-4 4-4-4zM1.5 9.5h5v5h-5zM17.5 9.5h5v5h-5zM6.5 11.2h2v1.6h-2zM15.5 11.2h2v1.6h-2zM11.2 3.5h1.6V8h-1.6zM11.2 16h1.6v4.5h-1.6z', // satelliti e ISS nel cielo di Palermo
   fontanella: 'M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z',
   scuola: 'M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z',

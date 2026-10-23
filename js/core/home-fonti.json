@@ -1093,5 +1093,38 @@
     ]
    ]
   }
+ },
+ "terremoti": {
+  "data": "2026-10-23",
+  "aggiornati": "2026-10-23",
+  "enti": [
+   "INGV"
+  ],
+  "fonte": {
+   "it": "INGV, Istituto Nazionale di Geofisica e Vulcanologia: terremoti in tempo reale, servizio FDSN event (CC BY 4.0), rinnovati ogni 2 minuti.",
+   "en": "INGV, National Institute of Geophysics and Volcanology: live earthquakes, FDSN event service (CC BY 4.0), renewed every 2 minutes."
+  },
+  "link": {
+   "it": [
+    [
+     "Terremoti INGV",
+     "https://terremoti.ingv.it/"
+    ],
+    [
+     "Servizio web FDSN event",
+     "https://webservices.ingv.it/fdsnws/event/1/"
+    ]
+   ],
+   "en": [
+    [
+     "INGV earthquakes",
+     "https://terremoti.ingv.it/"
+    ],
+    [
+     "FDSN event web service",
+     "https://webservices.ingv.it/fdsnws/event/1/"
+    ]
+   ]
+  }
  }
 }

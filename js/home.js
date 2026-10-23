@@ -128,11 +128,11 @@ function costruisciNumeri(argomenti, tutte) {
 // ---- slider ----
 // le ultime cinque novità, la più recente per prima: quando si aggiunge uno strato nuovo, entra in testa al posto del più vecchio
 const SLIDE = [
+  { id: 'terremoti', img: 'img/home/strati/terremoti.webp', strati: ['terremoti'] },
   { id: 'traffico', img: 'img/home/strati/traffico.webp', strati: ['traffico'] },
   { id: 'radar-allerte', img: 'img/home/strati/radar-allerte.webp', strati: ['allerte', 'radar'] },
   { id: 'satelliti', img: 'img/home/strati/satelliti.webp', strati: ['satelliti'] },
   { id: 'voli', img: 'img/home/strati/voli.webp', strati: ['voli'] },
-  { id: 'piano-triennale', img: 'img/home/strati/piano-triennale.webp', strati: ['piano-triennale'] },
 ];
 
 function costruisciSlider() {
