@@ -1,6 +1,6 @@
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { occhio } from '../core/pannello.js';
-import { filtroInsieme, voceFiltro } from '../core/legenda.js';
+import { voceFiltro } from '../core/legenda.js';
 import { CATEGORIE, COLORE_ALTRO, coloreCategoria, modelloPopupNave, voceNave } from './scheda-navi.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 import { tl, t } from '../core/i18n.js';
@@ -12,11 +12,16 @@ import { scegliProxy } from '../rndt/proxy.js';
 const SRC = 'navi';
 const ICONA = 'nave'; // in mappa è la sagoma dell'icona, ruotata secondo la rotta (vedi core/icone-mappa.js)
 const PUNTI = 'navi-punti';
+const CLUSTER = 'navi-cluster';
+const CLUSTER_N = 'navi-cluster-n';
+const CLUSTER_MAX_ZOOM = 12; // dallo zoom 13 ogni nave ha la sua icona; prima le vicine (porti) sono un solo cerchio col numero
+const singola = ['!', ['has', 'point_count']];
 const HIT = 'navi-hit'; // punti trasparenti, sempre presenti: la scheda mostra la nave sotto il clic anche a strato spento
 const INTERVALLO_MS = 2 * 60 * 1000;
 const VUOTO = { type: 'FeatureCollection', features: [] };
 const urlNavi = () => `${scegliProxy(location.search, location.hostname)}/navi`;
 
+let navi = []; // tutte le navi dell'ultimo scarico, per ricalcolare i gruppi quando la legenda spegne una categoria
 const dettagli = new Map(); // id -> proprietà complete
 const completo = p => dettagli.get(p.id) ?? p;
 let mappa = null;
@@ -48,7 +53,8 @@ async function aggiorna() {
     const fc = await r.json();
     dettagli.clear();
     for (const f of fc.features) dettagli.set(f.properties.id, f.properties);
-    mappa?.getSource(SRC)?.setData(fc);
+    navi = fc.features;
+    alimenta();
     ultimo = Date.now();
     scriviNota(fc.aggiornato);
   } catch {
@@ -62,16 +68,16 @@ function pianifica() {
   if (acceso && !document.hidden) timer = setInterval(aggiorna, INTERVALLO_MS);
 }
 
-function applicaFiltri() {
-  const filtro = filtroInsieme(['get', 'categoria'], accesi, CATEGORIE.length);
-  for (const id of [PUNTI, HIT]) mappa?.getLayer(id) && mappa.setFilter(id, filtro);
+// i gruppi contano solo le categorie accese: si rialimenta la sorgente con le navi filtrate
+function alimenta() {
+  mappa?.getSource(SRC)?.setData({ type: 'FeatureCollection', features: navi.filter(f => accesi.has(f.properties.categoria)) });
 }
 
 function impostaFiltro(categoria, on, origine) {
   on ? accesi.add(categoria) : accesi.delete(categoria);
   const c = caselle.get(categoria);
   if (c) for (const [dove, casella] of Object.entries(c)) if (dove !== origine && casella) casella.checked = on;
-  applicaFiltri();
+  alimenta();
 }
 
 const pallino = col => simboloGlifo(ICONA, col);
@@ -117,24 +123,39 @@ export default {
   sezione: 'Traffico navale',
   argomento: { titolo: 'Traffico navale', descrizione: 'Navi attorno alla Sicilia da dati AIS, con categoria, destinazione, velocità e rotta, aggiornate ogni pochi minuti.' },
   aggiungiSorgenti(map) {
-    map.addSource(SRC, { type: 'geojson', data: VUOTO });
+    map.addSource(SRC, { type: 'geojson', data: VUOTO, cluster: true, clusterMaxZoom: CLUSTER_MAX_ZOOM, clusterRadius: 40 });
   },
   aggiungiLayer(map) {
     mappa = map;
     registraGlifo(map, ICONA);
     const colori = ['match', ['get', 'categoria'], ...CATEGORIE.flatMap(([c, col]) => [c, col]), COLORE_ALTRO];
-    map.addLayer(layerGlifo({
+    // navi vicine (porti): cerchio col numero, più grande dove sono di più
+    map.addLayer({
+      id: CLUSTER, type: 'circle', source: SRC, filter: ['has', 'point_count'], layout: { visibility: 'none' },
+      paint: { 'circle-color': '#4a5d8a', 'circle-opacity': 0.85, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2, 'circle-radius': ['step', ['get', 'point_count'], 12, 10, 16, 50, 21] },
+    });
+    map.addLayer({
+      id: CLUSTER_N, type: 'symbol', source: SRC, filter: ['has', 'point_count'],
+      layout: { visibility: 'none', 'text-field': ['get', 'point_count_abbreviated'], 'text-font': ['Noto Sans Bold'], 'text-size': 12, 'text-allow-overlap': true },
+      paint: { 'text-color': '#fff' },
+    });
+    map.addLayer({ ...layerGlifo({
       id: PUNTI, source: SRC, icona: ICONA, colore: colori,
       layout: { visibility: 'none', 'icon-rotate': ['coalesce', ['get', 'rotta'], 0], 'icon-rotation-alignment': 'map', 'icon-size': ['interpolate', ['linear'], ['zoom'], 8, 1.2, 14, 2.1] },
       paint: { 'icon-halo-width': 1.2 },
-    }));
-    map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 15, 'circle-opacity': 0 } });
+    }), filter: singola });
+    map.addLayer({ id: HIT, type: 'circle', source: SRC, filter: singola, paint: { 'circle-radius': 15, 'circle-opacity': 0 } });
     let popup = null;
     map.on('click', e => {
       if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
-      const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] })[0];
+      const f = map.queryRenderedFeatures(e.point, { layers: [CLUSTER, PUNTI] })[0];
       popup?.remove();
       if (!f) return;
+      if (f.properties.cluster) { // un gruppo si apre zoomando fino a separare le navi
+        map.getSource(SRC).getClusterExpansionZoom(f.properties.cluster_id)
+          .then(zoom => map.easeTo({ center: f.geometry.coordinates, zoom: zoom + 0.5 }));
+        return;
+      }
       const p = completo(f.properties);
       const { anchor, offset } = ancoraPopupTraffico(e.point, map.getContainer());
       const colore = coloreCategoria(p.categoria);
@@ -153,8 +174,10 @@ export default {
       campione: p => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, coloreCategoria(completo(p).categoria))]),
       modello: p => modelloPopupNave(completo(p)),
     }]);
-    map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
-    map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
+    for (const id of [CLUSTER, PUNTI]) {
+      map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
+    }
     document.addEventListener('visibilitychange', () => {
       if (acceso && !document.hidden && Date.now() - ultimo > INTERVALLO_MS) aggiorna();
       pianifica();
@@ -174,7 +197,7 @@ export default {
   },
   legendaPannello: '.lg-navi', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
-    id: 'navi', etichetta: 'Navi', layers: [PUNTI], attivo: false,
+    id: 'navi', etichetta: 'Navi', layers: [CLUSTER, CLUSTER_N, PUNTI], attivo: false,
     sottovoci: [{ titolo: 'Categoria', voci: CATEGORIE.map(([c]) => ({ id: `categoria:${c}`, etichetta: c })) }],
     suCambio(attivo) {
       acceso = attivo;

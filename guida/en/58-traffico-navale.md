@@ -16,6 +16,8 @@ Typical questions: How often are the ships updated? Why does a ship disappear? A
 
 The data are not stored in the site: a service (Worker) listens to **AISStream** every 5 minutes and keeps the last position of every ship seen in the **last 30 minutes**; with the layer on the map reloads every 2 minutes. The AIS is **terrestrial**: the data come from volunteers' AISStream receivers, so coverage **depends on where there are any**. The listening area covers **the whole of Sicily with its minor islands** (from Lampedusa to the Aeolians, from Pantelleria to the Strait of Messina). Today ships show up mostly along the eastern coast of Sicily and off Trapani; **in the Gulf of Palermo signals are few or absent**. A ship with no signal for more than 30 minutes disappears. Positions are those of the last signal received, not a continuous track.
 
+Where many ships are close together (ports, the Strait of Messina) the map shows a **circle with the number** of ships. Clicking the circle zooms in; at close zoom every ship gets its own icon again. The circles count only the categories turned on in the legend.
+
 ## What the popup and the card show
 
 Keywords: popup, tooltip, name, category, status, destination, speed, heading, length, MMSI, last signal, MarineTraffic.
