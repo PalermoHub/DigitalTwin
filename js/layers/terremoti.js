@@ -1,14 +1,15 @@
 import { tl, t, localeIntl } from '../core/i18n.js';
 import { LIMITI } from '../core/config.js';
-import { FASCE, URL_SERVIZIO, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti } from './scheda-terremoti.js';
+import { filtroInsieme, voceFiltro } from '../core/legenda.js';
+import { FASCE, URL_SERVIZIO, GIORNI_MAX, filtro, passaFiltro, espressioneFiltro, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, voceAltri, riassuntoTerremoti } from './scheda-terremoti.js';
+import { EVENTO_FILTRO, menuFiltro, elencoAltri, testoGiorni } from './scheda-terremoti-dom.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 
-// Terremoti in tempo reale attorno a Palermo: gli eventi degli ultimi 7 giorni dal servizio FDSN dell'INGV, chiesto direttamente dal browser (CORS aperto, nessun Worker).
+// Terremoti in tempo reale attorno a Palermo: gli eventi degli ultimi 30 giorni dal servizio FDSN dell'INGV, chiesto direttamente dal browser (CORS aperto, nessun Worker).
 // Cerchio = un evento: più grande è la magnitudo, più grande il cerchio; il colore dice da quanto è successo. Si rinnova ogni 2 minuti finché lo strato è acceso.
 const SRC = 'terremoti';
 const PUNTI = 'terremoti-punti';
 const HIT = 'terremoti-hit'; // cerchi trasparenti, sempre presenti: la scheda mostra l'evento sotto il clic
-const GIORNI = 7;
 const MAGNITUDO_MIN = 1;
 const AREA = { minlon: LIMITI[0][0], minlat: LIMITI[0][1], maxlon: LIMITI[1][0], maxlat: LIMITI[1][1] }; // l'area che la mappa permette di vedere: Sicilia e Tirreno meridionale
 const LIMITE = 1000;
@@ -22,6 +23,7 @@ let timer = null;
 let ultimo = 0;
 let acceso = false;
 let popup = null;
+const fasceAccese = new Set(FASCE.map(f => f.colore)); // fasce d'età della legenda ancora in mappa
 let eventi = []; // proprietà degli eventi in mappa
 
 function el(tag, classe, testo) {
@@ -32,16 +34,16 @@ function el(tag, classe, testo) {
 }
 
 const urlEventi = (adesso = Date.now()) => {
-  const q = new URLSearchParams({ format: 'geojson', starttime: new Date(adesso - GIORNI * 86400000).toISOString().slice(0, 19), orderby: 'time', minmag: String(MAGNITUDO_MIN), limit: String(LIMITE), ...Object.fromEntries(Object.entries(AREA).map(([k, v]) => [k, v.toFixed(3)])) });
+  const q = new URLSearchParams({ format: 'geojson', starttime: new Date(adesso - GIORNI_MAX * 86400000).toISOString().slice(0, 19), orderby: 'time', minmag: String(MAGNITUDO_MIN), limit: String(LIMITE), ...Object.fromEntries(Object.entries(AREA).map(([k, v]) => [k, v.toFixed(3)])) });
   return `${URL_SERVIZIO}?${q}`;
 };
 
 function scriviNota(ok) {
   if (!nota) return;
-  const r = riassuntoTerremoti(eventi);
+  const r = riassuntoTerremoti(eventi.filter(p => passaFiltro(p)));
   if (!ok && !r) { nota.textContent = t('terremoti.nonDisponibile'); return; }
   const ora = new Date(ultimo).toLocaleTimeString(localeIntl(), { hour: '2-digit', minute: '2-digit' });
-  nota.textContent = r ? t('terremoti.riassunto', { n: r.n, ora, mag: r.forte.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 }), luogo: r.forte.luogo }) : t('terremoti.nessuno', { ora });
+  nota.textContent = r ? t('terremoti.riassunto', { giorni: testoGiorni(filtro.giorni), n: r.n, ora, mag: r.forte.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 }), luogo: r.forte.luogo }) : t('terremoti.nessuno', { ora, giorni: testoGiorni(filtro.giorni) });
 }
 
 async function aggiorna() {
@@ -54,6 +56,7 @@ async function aggiorna() {
     eventi = features.map(f => ({ ...f.properties, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] }));
     mappa?.getSource(SRC)?.setData({ type: 'FeatureCollection', features });
     ultimo = adesso;
+    applicaFiltro(); // il periodo scorre con l'ora
     scriviNota(true);
   } catch { scriviNota(false); } // senza risposta restano gli eventi di prima
 }
@@ -65,18 +68,27 @@ function pianifica() {
   if (acceso && !document.hidden) timer = setInterval(aggiorna, INTERVALLO_MS);
 }
 
+// le voci della legenda sono filtri: il colore del cerchio è la fascia d'età
+function applicaFiltro() {
+  const fasce = filtroInsieme(['get', 'colore'], fasceAccese, FASCE.length);
+  const espr = ['all', espressioneFiltro(), ...(fasce ? [fasce] : [])];
+  for (const id of [PUNTI, HIT]) mappa?.getLayer(id) && mappa.setFilter(id, espr);
+  scriviNota(true);
+}
+
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti lg-terremoti');
   legenda.hidden = true;
   legenda.append(el('strong', null, 'Terremoti in tempo reale'));
   for (const f of FASCE) {
-    const riga = el('p', 'allerta-riga');
     const chip = el('i', 'incendi-campione');
     chip.style.background = f.colore;
-    riga.append(chip, ` ${tl(f.nome)}`);
-    legenda.append(riga);
+    legenda.append(voceFiltro(chip, f.nome, acceso => {
+      acceso ? fasceAccese.add(f.colore) : fasceAccese.delete(f.colore);
+      applicaFiltro();
+    }));
   }
-  legenda.append(el('p', 'uffici-nota', t('terremoti.clicca')));
+  legenda.append(menuFiltro(), el('p', 'uffici-nota', t('terremoti.clicca')));
   nota = el('p', 'uffici-nota');
   const credito = el('p', 'uffici-nota');
   const link = el('a', null, 'INGV');
@@ -96,7 +108,7 @@ export default {
   gruppo: 'eventi',
   sezione: 'Terremoti',
   sezioniFisse: true,
-  argomento: { titolo: 'Terremoti in tempo reale', descrizione: 'I terremoti degli ultimi 7 giorni attorno a Palermo, in Sicilia e nel Tirreno meridionale, dal servizio dell\'INGV: magnitudo, profondità, zona e distanza da Palermo, aggiornati ogni 2 minuti.' },
+  argomento: { titolo: 'Terremoti in tempo reale', descrizione: 'I terremoti degli ultimi 30 giorni attorno a Palermo, in Sicilia e nel Tirreno meridionale, dal servizio dell\'INGV: magnitudo, profondità, zona e distanza da Palermo, aggiornati ogni 2 minuti.' },
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO, attribution: '<a href="https://terremoti.ingv.it/" target="_blank" rel="noopener">INGV</a>' });
   },
@@ -123,6 +135,7 @@ export default {
     });
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
+    document.addEventListener(EVENTO_FILTRO, applicaFiltro);
     document.addEventListener('visibilitychange', () => {
       if (acceso && !document.hidden && Date.now() - ultimo > INTERVALLO_MS) aggiorna();
       pianifica();
@@ -130,13 +143,15 @@ export default {
   },
   scheda: {
     layers: [HIT],
+    // prima l'evento cliccato (in evidenza), poi tutti gli altri che passano il filtro
     voci(trovati) {
       const visti = new Set();
-      return trovati.filter(f => f.layer.id === HIT).sort((a, b) => b.properties.mag - a.properties.mag).flatMap(f => {
+      const cliccati = trovati.filter(f => f.layer.id === HIT).sort((a, b) => b.properties.mag - a.properties.mag).flatMap(f => {
         if (visti.has(f.properties.id)) return [];
         visti.add(f.properties.id);
         return [voceTerremoto(proprieta(f))];
       });
+      return cliccati.length ? [...cliccati, voceAltri(() => elencoAltri(() => eventi, visti))] : [];
     },
     // gli eventi stanno in mare e fuori dal Comune: il clic su un cerchio apre la scheda (solo a strato acceso: i dati si scaricano all'accensione)
     apertoFuoriComune(map, e) {

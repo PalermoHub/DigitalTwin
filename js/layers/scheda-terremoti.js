@@ -1,5 +1,5 @@
 import { righe } from '../core/scheda-util.js';
-import { t, tl, localeIntl } from '../core/i18n.js';
+import { t, tl, tn, localeIntl } from '../core/i18n.js';
 
 // Modello puro dei terremoti in tempo reale (INGV, servizio FDSN event): stesse righe per il popup e per la scheda di destra (tab «Luogo»).
 // Il browser interroga direttamente il servizio (risponde con CORS aperto): ogni evento ha magnitudo, ora (UTC), zona, profondità (km, terza coordinata) e autore della localizzazione.
@@ -15,9 +15,19 @@ const ORA_MS = 3600 * 1000;
 export const FASCE = [
   { nome: 'Ultima ora', colore: '#e03131', finoA: ORA_MS },
   { nome: 'Ultime 24 ore', colore: '#f08c00', finoA: 24 * ORA_MS },
-  { nome: 'Ultimi 7 giorni', colore: '#4c6ef5', finoA: Infinity },
+  { nome: 'Oltre 24 ore', colore: '#4c6ef5', finoA: Infinity },
 ];
 export const fasciaEta = (ts, adesso = Date.now()) => FASCE.find(f => adesso - ts < f.finoA) ?? FASCE.at(-1);
+
+// Filtri della scheda e della legenda: periodo (giorni) e magnitudo minima. Il servizio si interroga per GIORNI_MAX giorni, la vista parte da GIORNI_INIZIALI.
+export const GIORNI_MAX = 30;
+export const SCELTE_GIORNI = [1, 7, 30];
+export const SCELTE_MAGNITUDO = [1, 2, 3, 4];
+export const filtro = { giorni: 7, magMin: 1 };
+const GIORNO_MS = 24 * ORA_MS;
+export const passaFiltro = (p, { giorni, magMin } = filtro, adesso = Date.now()) => p.mag >= magMin && adesso - p.ts <= giorni * GIORNO_MS;
+// Stesso filtro come espressione MapLibre (per cerchi e strato di interrogazione)
+export const espressioneFiltro = ({ giorni, magMin } = filtro, adesso = Date.now()) => ['all', ['>=', ['get', 'mag'], magMin], ['>=', ['get', 'ts'], adesso - giorni * GIORNO_MS]];
 
 // Magnitudo → raggio del cerchio in pixel (cresce in modo esponenziale, come l'energia)
 export const raggioMagnitudo = m => Math.max(3, Math.round(2.2 * 1.45 ** (Math.max(m, 0) )));
@@ -84,6 +94,33 @@ export function voceTerremoto(p, adesso = Date.now()) {
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
 }
+
+export const MAX_ELENCO = 100;
+
+// Elenco «gli altri terremoti» della scheda: quelli che passano il filtro, senza i cliccati, dal più recente (al massimo MAX_ELENCO)
+export function altriTerremoti(eventi, esclusi, f = filtro, adesso = Date.now()) {
+  const tutti = eventi.filter(p => !esclusi.has(p.id) && passaFiltro(p, f, adesso)).sort((a, b) => b.ts - a.ts);
+  return { n: tutti.length, mostrati: tutti.slice(0, MAX_ELENCO) };
+}
+
+// Fisarmonica con una card per evento (stesse righe della scheda), per `disegnaAccordion`
+export function accordionTerremoti(elenco, adesso = Date.now()) {
+  const { n, mostrati } = elenco;
+  return {
+    icona: 'terremoto', aperto: n > 0 && n <= 10,
+    riassunto: n > mostrati.length ? t('terremoti.altriParziale', { mostrati: mostrati.length, n }) : tn('terremoti.altri', n),
+    elementi: mostrati.map(p => ({
+      titolo: titoloTerremoto(p), anteprima: quantoTempoFa(p.ts, adesso),
+      righe: [...righeTerremoto(p, adesso), { etichetta: 'Scheda INGV', valore: 'terremoti.ingv.it', urlValore: LINK + p.id }],
+    })),
+  };
+}
+
+// Sezione sotto agli eventi cliccati; `dinamico` disegna filtro ed elenco (scheda-terremoti-dom.js)
+export const voceAltri = dinamico => ({
+  chiave: 'terremoti:altri', tipo: 'terremoto', peso: PESO_LUOGO, strato: 'terremoti', titolo: 'Gli altri terremoti', icona: 'terremoto', sempre: true,
+  gruppi: [], dinamico, fonte: t('layer.fonte', { fonte: tl(FONTE) }),
+});
 
 // Riassunto per la legenda: quanti eventi e il più forte
 export function riassuntoTerremoti(eventi) {

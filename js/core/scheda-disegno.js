@@ -115,7 +115,7 @@ function disegnaGruppo(g) {
   return box;
 }
 
-function disegnaAccordion(a) {
+export function disegnaAccordion(a) {
   const radice = el('details', 'scheda-acc');
   if (a.aperto) radice.open = true;
   const riassunto = el('summary');
