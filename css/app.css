@@ -2220,7 +2220,14 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .terremoti-filtri { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 6px 0; }
 .terremoti-filtro { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 0; font-size: var(--fs-xs); color: var(--text-muted); }
 .terremoti-filtro select { margin: 0; padding: 5px; }
-.scheda-mini { position: relative; display: block; width: var(--lato); height: var(--lato); margin: 8px 0 4px; overflow: hidden; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface-alt); }
+.terremoti-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 0; }
+.terremoti-nav[hidden] { display: none; }
+.terremoti-nav-conta { font-size: var(--fs-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.terremoti-nav-freccia { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border, #c9ced6); background: transparent; color: inherit; font-size: 20px; line-height: 1; cursor: pointer; }
+.terremoti-nav-freccia:hover:not(:disabled) { background: rgb(128 128 128 / .15); }
+.terremoti-nav-freccia:disabled { opacity: .35; cursor: default; }
+.scheda-mini { position: relative; display: block; width: 100%; height: var(--alt); margin: 8px 0 4px; overflow: hidden; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface-alt); }
+.scheda-mini-tele { position: absolute; left: 50%; top: 0; height: 100%; }
 .scheda-mini img { position: absolute; width: 256px; height: 256px; max-width: none; }
 .scheda-mini-punto { position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: #e03131; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, .35); }
 .scheda-mini-attr { position: absolute; right: 0; bottom: 0; padding: 0 3px; font-size: 9px; background: rgba(255, 255, 255, .8); color: #333; }

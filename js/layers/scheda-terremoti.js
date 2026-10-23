@@ -87,34 +87,44 @@ export function modelloPopupTerremoto(p, adesso = Date.now()) {
   return { titolo: titoloTerremoto(p), sottotitolo: p.fascia, righe: righeTerremoto(p, adesso).filter(r => r.etichetta !== 'Zona') };
 }
 
-export function voceTerremoto(p, adesso = Date.now()) {
+export function voceTerremoto(p, adesso = Date.now(), dinamico = null) {
   return {
     chiave: `terremoto-${p.id}`, tipo: 'terremoto', peso: PESO_LUOGO, strato: 'terremoti', titolo: titoloTerremoto(p), icona: 'terremoto', badge: p.fascia, sempre: true,
     gruppi: [{ righe: righeTerremoto(p, adesso) }], miniatura: miniatura(p),
     link: { testo: 'Scheda dell\'evento su INGV', url: LINK + p.id, icona: 'esterno', suggerimento: 'Pagina dell\'evento sul sito terremoti.ingv.it' },
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
+    ...(dinamico ? { dinamico } : {}),
   };
+}
+
+// Posto dell'evento `id` tra quelli in mappa (dal più recente): `prec` è l'evento più recente, `succ` il meno recente; null se `id` non c'è
+export function posizioneEvento(visibili, id) {
+  const ordinati = [...visibili].sort((a, b) => b.ts - a.ts);
+  const i = ordinati.findIndex(p => p.id === id);
+  if (i < 0) return null;
+  return { pos: i + 1, tot: ordinati.length, prec: ordinati[i - 1] ?? null, succ: ordinati[i + 1] ?? null };
 }
 
 export const MAX_ELENCO = 100;
 
-// Miniatura quadrata dell'epicentro: poche tessere raster (al massimo 2×2, caricate solo quando la card si apre) invece di una mappa interattiva per card.
-// Un clic apre la mappa del sito sullo stesso punto.
+// Miniatura rettangolare dell'epicentro, che sta sempre al centro: poche tessere raster (al massimo 3×2, caricate solo quando la card si apre) invece di una mappa interattiva per card.
+// Il riquadro si adatta alla larghezza della scheda e ritaglia ai lati. Un clic apre la mappa del sito sullo stesso punto.
 const ZOOM_MINIATURA = 8;
-const LATO_MINIATURA = 160;
+const LARGHEZZA_MINIATURA = 320;
+const ALTEZZA_MINIATURA = 150;
 const TESSERA = 256;
-export function miniatura({ lon, lat }, zoom = ZOOM_MINIATURA, lato = LATO_MINIATURA) {
+export function miniatura({ lon, lat }, zoom = ZOOM_MINIATURA, larghezza = LARGHEZZA_MINIATURA, altezza = ALTEZZA_MINIATURA) {
   const n = 2 ** zoom;
   const rad = lat * Math.PI / 180;
-  const sinistra = (lon + 180) / 360 * n * TESSERA - lato / 2;
-  const alto = (1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2 * n * TESSERA - lato / 2;
+  const sinistra = (lon + 180) / 360 * n * TESSERA - larghezza / 2;
+  const alto = (1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2 * n * TESSERA - altezza / 2;
   const tessere = [];
-  for (let ty = Math.floor(alto / TESSERA); ty <= Math.floor((alto + lato - 1) / TESSERA); ty++) {
-    for (let tx = Math.floor(sinistra / TESSERA); tx <= Math.floor((sinistra + lato - 1) / TESSERA); tx++) {
+  for (let ty = Math.floor(alto / TESSERA); ty <= Math.floor((alto + altezza - 1) / TESSERA); ty++) {
+    for (let tx = Math.floor(sinistra / TESSERA); tx <= Math.floor((sinistra + larghezza - 1) / TESSERA); tx++) {
       tessere.push({ url: `https://tile.openstreetmap.org/${zoom}/${tx}/${ty}.png`, x: Math.round(tx * TESSERA - sinistra), y: Math.round(ty * TESSERA - alto) });
     }
   }
-  return { lato, tessere, href: `mappa.html#${zoom + 1}/${lat.toFixed(4)}/${lon.toFixed(4)}`, attribuzione: '© OpenStreetMap' };
+  return { larghezza, altezza, tessere, href: `mappa.html#${zoom + 1}/${lat.toFixed(4)}/${lon.toFixed(4)}`, attribuzione: '© OpenStreetMap' };
 }
 
 // Elenco «gli altri terremoti» della scheda: quelli che passano il filtro, senza i cliccati, dal più recente (al massimo MAX_ELENCO)

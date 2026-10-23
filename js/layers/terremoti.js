@@ -2,7 +2,7 @@ import { tl, t, localeIntl } from '../core/i18n.js';
 import { LIMITI } from '../core/config.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { FASCE, URL_SERVIZIO, GIORNI_MAX, filtro, passaFiltro, espressioneFiltro, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, voceAltri, riassuntoTerremoti } from './scheda-terremoti.js';
-import { EVENTO_FILTRO, menuFiltro, elencoAltri, testoGiorni } from './scheda-terremoti-dom.js';
+import { EVENTO_FILTRO, menuFiltro, elencoAltri, testoGiorni, barraEventi } from './scheda-terremoti-dom.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 
 // Terremoti in tempo reale attorno a Palermo: gli eventi degli ultimi 30 giorni dal servizio FDSN dell'INGV, chiesto direttamente dal browser (CORS aperto, nessun Worker).
@@ -100,6 +100,23 @@ function creaLegenda() {
   document.getElementById('legende').append(legenda);
 }
 
+// Eventi che si vedono in mappa: filtri di periodo e magnitudo, più le fasce d'età accese in legenda
+const visibili = () => eventi.filter(p => passaFiltro(p) && fasceAccese.has(p.colore));
+
+// Le frecce della scheda scelgono l'evento da aprire: il clic simulato sul suo cerchio, dove ce ne sono di sovrapposti, non deve ripiegare sul più forte
+const FINESTRA_SCELTA_MS = 1500;
+let scelto = null;
+const evento = trovati => {
+  const attuale = scelto && Date.now() < scelto.fino ? trovati.find(f => f.properties.id === scelto.id) : null;
+  return attuale ?? [...trovati].sort((a, b) => b.properties.mag - a.properties.mag)[0];
+};
+function vaiAEvento(p) {
+  scelto = { id: p.id, fino: Date.now() + FINESTRA_SCELTA_MS };
+  const lngLat = { lng: p.lon, lat: p.lat };
+  mappa.jumpTo({ center: [p.lon, p.lat] });
+  mappa.fire('click', { point: mappa.project(lngLat), lngLat });
+}
+
 const proprieta = f => ({ ...f.properties, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] });
 
 export default {
@@ -123,7 +140,7 @@ export default {
     map.on('click', e => {
       if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
       popup?.remove();
-      const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] }).sort((a, b) => b.properties.mag - a.properties.mag)[0];
+      const f = evento(map.queryRenderedFeatures(e.point, { layers: [PUNTI] }));
       if (!f) return;
       const { anchor, offset } = ancoraPopupTraffico(e.point, map.getContainer());
       popup = new maplibregl.Popup({ maxWidth: '300px', className: 'traffico-popup-box', anchor, offset, closeButton: false })
@@ -145,9 +162,9 @@ export default {
     layers: [HIT],
     // prima l'evento cliccato (il più forte sotto il cerchio, in evidenza), poi tutti gli altri che passano il filtro, anche quelli sovrapposti
     voci(trovati) {
-      const primo = trovati.filter(f => f.layer.id === HIT).sort((a, b) => b.properties.mag - a.properties.mag)[0];
+      const primo = evento(trovati.filter(f => f.layer.id === HIT));
       if (!primo) return [];
-      return [voceTerremoto(proprieta(primo)), voceAltri(() => elencoAltri(() => eventi, new Set([primo.properties.id])))];
+      return [voceTerremoto(proprieta(primo), Date.now(), () => barraEventi(primo.properties.id, visibili, vaiAEvento)), voceAltri(() => elencoAltri(() => eventi, new Set([primo.properties.id])))];
     },
     // gli eventi stanno in mare e fuori dal Comune: il clic su un cerchio apre la scheda (solo a strato acceso: i dati si scaricano all'accensione)
     apertoFuoriComune(map, e) {

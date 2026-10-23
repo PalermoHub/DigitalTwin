@@ -1,7 +1,7 @@
 // Parti disegnate dei terremoti: i due menu del filtro (legenda e scheda) e l'elenco «Gli altri terremoti» della scheda.
 import { disegnaAccordion } from '../core/scheda-disegno.js';
 import { t } from '../core/i18n.js';
-import { SCELTE_GIORNI, SCELTE_MAGNITUDO, filtro, altriTerremoti, accordionTerremoti } from './scheda-terremoti.js';
+import { SCELTE_GIORNI, SCELTE_MAGNITUDO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento } from './scheda-terremoti.js';
 
 export const EVENTO_FILTRO = 'terremoti:filtro';
 
@@ -56,6 +56,39 @@ export function elencoAltri(eventi, esclusi) {
   };
   radice.append(menuFiltro(), corpo);
   const aggiorna = () => (radice.isConnected ? disegna() : document.removeEventListener(EVENTO_FILTRO, aggiorna)); // la scheda chiusa non ascolta più
+  disegna();
+  document.addEventListener(EVENTO_FILTRO, aggiorna);
+  return radice;
+}
+
+// Barra con le frecce sotto all'evento scelto: passa all'evento più recente (‹) o meno recente (›) tra quelli in mappa.
+// `visibili()` = eventi che passano filtri e legenda; `vai(evento)` apre la scheda su quell'evento. Si ridisegna al cambio dei filtri.
+export function barraEventi(id, visibili, vai) {
+  const radice = el('div', 'terremoti-nav');
+  radice.setAttribute('role', 'group');
+  radice.setAttribute('aria-label', t('terremoti.nav.gruppo'));
+  const bottone = (testo, etichetta, evento) => {
+    const b = el('button', 'terremoti-nav-freccia', testo);
+    b.type = 'button';
+    b.title = b.ariaLabel = etichetta;
+    b.disabled = !evento;
+    if (evento) b.addEventListener('click', () => vai(evento));
+    return b;
+  };
+  const disegna = () => {
+    const q = posizioneEvento(visibili(), id);
+    radice.hidden = !q;
+    if (!q) return;
+    const conta = el('span', 'terremoti-nav-conta', t('terremoti.nav.posto', { n: q.pos, tot: q.tot }));
+    conta.setAttribute('aria-live', 'polite');
+    radice.replaceChildren(bottone('‹', t('terremoti.nav.recente'), q.prec), conta, bottone('›', t('terremoti.nav.vecchio'), q.succ));
+  };
+  radice.addEventListener('keydown', e => {
+    const freccia = { ArrowLeft: 0, ArrowRight: 2 }[e.key];
+    const b = freccia == null ? null : radice.children[freccia];
+    if (b && !b.disabled) { e.preventDefault(); e.stopPropagation(); b.click(); }
+  });
+  const aggiorna = () => (radice.isConnected ? disegna() : document.removeEventListener(EVENTO_FILTRO, aggiorna));
   disegna();
   document.addEventListener(EVENTO_FILTRO, aggiorna);
   return radice;

@@ -123,7 +123,9 @@ function disegnaMiniatura(m, titolo) {
   a.rel = 'noopener';
   a.title = tr('scheda.apriMappa');
   a.setAttribute('aria-label', `${tr('scheda.apriMappa')}: ${tl(titolo)}`);
-  a.style.setProperty('--lato', `${m.lato}px`);
+  a.style.setProperty('--alt', `${m.altezza}px`);
+  const tele = el('span', 'scheda-mini-tele'); // largo `larghezza`, centrato: se la scheda è più stretta si ritaglia ai lati e il punto resta al centro
+  tele.style.cssText = `width:${m.larghezza}px;margin-left:-${m.larghezza / 2}px`;
   for (const tessera of m.tessere) {
     const img = el('img');
     img.src = tessera.url;
@@ -131,9 +133,9 @@ function disegnaMiniatura(m, titolo) {
     img.loading = 'lazy';
     img.draggable = false;
     img.style.cssText = `left:${tessera.x}px;top:${tessera.y}px`;
-    a.append(img);
+    tele.append(img);
   }
-  a.append(el('i', 'scheda-mini-punto'), el('span', 'scheda-mini-attr', m.attribuzione));
+  a.append(tele, el('i', 'scheda-mini-punto'), el('span', 'scheda-mini-attr', m.attribuzione));
   return a;
 }
 
