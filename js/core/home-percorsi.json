@@ -18,6 +18,26 @@
   }
  },
  {
+  "id": "pericolosita-rischi",
+  "strati": [
+   "geo_pericolosita",
+   "geo_rischio",
+   "idraulica_pericolosita",
+   "idraulica_rischio",
+   "coste_pericolosita",
+   "coste_rischio",
+   "protezione-civile"
+  ],
+  "it": {
+   "titolo": "Pericolosità, esposti e rischi",
+   "testo": "Frane, alluvioni ed erosione costiera: dove il pericolo è maggiore, quali elementi sono esposti (rischio) e le aree di attesa, accoglienza e ammassamento del Piano di emergenza."
+  },
+  "en": {
+   "titolo": "Hazard, exposure and risk",
+   "testo": "Landslides, floods and coastal erosion: where the hazard is highest, which elements are exposed (risk) and the waiting, reception and assembly areas of the Emergency Plan."
+  }
+ },
+ {
   "id": "scuole",
   "strati": [
    "scuole",

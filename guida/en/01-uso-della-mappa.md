@@ -65,9 +65,10 @@ Typical questions: What are the guided paths? How do I open the map with the rig
 
 The guided paths are on the home page of the site, in the «What you can switch on» section, under the title «Guided paths». A path can also be activated from Talia: below the answer there are the buttons of the paths, and one click switches on the layers of the path (a second click switches them off). Each path is a card with a title, a sentence saying what it is about, the list of the layers it includes and the «Open the map» button. The button opens the map with those layers already switched on, with the legends already active on the map and, for the «Urban planning», «Vehicles on the move (2D)» and «Vehicles on the move (3D)» paths, already centred on the area indicated by the path (the 3D one also tilts it, to 60°). The other paths leave the map in the starting view. Once the map is open, the layers can be switched off, switched on and changed as usual (see `45-barra-strati-legende-e-ordine.md`).
 
-There are thirteen paths:
+There are fourteen paths:
 
 - **Risks and climate**: Geomorphological hazard, Hydraulic hazard, Coastal erosion hazard, Fires, Heat islands
+- **Hazard, exposure and risk**: Geomorphological hazard, Geomorphological risk, Hydraulic hazard, Hydraulic risk, Coastal erosion hazard, Coastal erosion risk, Emergency plan (Civil Protection)
 - **Schools and neighbourhoods**: Municipal schools and nurseries, Polling sections (sites), Neighbourhoods, Population by section
 - **Mobility**: Metro line, Bus lines, Stops, Charging points, Fuel stations
 - **A city in transformation**: Three-year public works plan 2026-2028, NRRP projects, Public works, Population trend 2011-2023

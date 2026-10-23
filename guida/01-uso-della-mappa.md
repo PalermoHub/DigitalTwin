@@ -65,9 +65,10 @@ Domande tipiche: Cosa sono i percorsi guidati? Come apro la mappa con gli strati
 
 I percorsi guidati stanno nella pagina iniziale del sito, nella sezione «Cosa puoi accendere», sotto il titolo «Percorsi guidati». Anche da Talia si può attivare un percorso: sotto la risposta ci sono i pulsanti dei percorsi, e un clic accende gli strati del percorso (un secondo clic li spegne). Ogni percorso è una scheda con un titolo, una frase che dice di cosa parla, l'elenco degli strati che comprende e il pulsante «Apri la mappa». Il pulsante apre la mappa con quegli strati già accesi, con le legende già attive sulla mappa e, per i percorsi «Urbanistica», «Mezzi in movimento (2D)» e «Mezzi in movimento (3D)», già centrata sulla zona indicata dal percorso (il 3D la inclina anche, a 60°). Gli altri percorsi lasciano la mappa nella vista di partenza. Una volta aperta la mappa, gli strati si possono spegnere, accendere e cambiare come sempre (vedi `45-barra-strati-legende-e-ordine.md`).
 
-I percorsi disponibili sono tredici:
+I percorsi disponibili sono quattordici:
 
 - **Rischi e clima**: Pericolosità geomorfologica, Pericolosità idraulica, Pericolosità erosione costiera, Incendi, Isole di calore
+- **Pericolosità, esposti e rischi**: Pericolosità geomorfologica, Rischio geomorfologico, Pericolosità idraulica, Rischio idraulico, Pericolosità erosione costiera, Rischio erosione costiera, Piano di emergenza (Protezione Civile)
 - **Scuole e quartieri**: Scuole e asili comunali, Sezioni elettorali (sedi), Quartieri, Popolazione per sezione
 - **Mobilità**: Linea metro, Linee bus, Fermate, Colonnine di ricarica, Distributori di carburante
 - **Città in trasformazione**: Piano triennale lavori pubblici 2026-2028, Progetti PNRR, Opere pubbliche, Trend della popolazione 2011-2023
