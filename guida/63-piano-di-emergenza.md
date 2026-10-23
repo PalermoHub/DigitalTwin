@@ -38,6 +38,13 @@ Domande tipiche: In che quartiere si trova l'area di attesa? Quanto è grande? C
 
 Un clic sulla mappa, **anche con lo strato spento**, mostra nel tab **Luogo** le aree che contengono il punto cliccato: titolo (la funzione dell'area), **numero dell'area**, **tipologia**, **superficie** (in m² o ettari), eventuali note e **dove si trova**: **circoscrizione**, **quartiere** e **UPL**. Se più aree si sovrappongono, la scheda le raccoglie in una voce a fisarmonica. Il popup in mappa riassume titolo, zona e superficie.
 
+Sotto i dati, la scheda riporta la **definizione dell'area** dal Glossario della Protezione Civile:
+
+- **area di attesa della popolazione**: luogo di prima accoglienza (piazze, slarghi, parcheggi non a rischio) raggiungibile con un percorso sicuro, dove si ricevono le prime informazioni e i primi generi di conforto per poche ore o qualche giorno;
+- **area di ricovero e accoglienza**: area sicura, vicina a risorse idriche, elettriche e fognarie, dove si installano i primi insediamenti abitativi per alloggiare la popolazione colpita, facilmente raggiungibile anche da mezzi grandi;
+- **area di ammassamento dei soccorritori e delle risorse**: zona sicura dove trovano sistemazione soccorritori e mezzi per intervenire nelle zone di emergenza; la permanenza va da poche settimane a qualche mese;
+- **sito a rischio industriale**: stabilimento che usa o detiene sostanze chimiche, il cui incidente può danneggiare persone e ambiente.
+
 I dati si vedono anche nella **tabella dei dati** (con le colonne circoscrizione, quartiere e UPL, utili per filtrare e per esportare).
 
 ## Fonte e limiti

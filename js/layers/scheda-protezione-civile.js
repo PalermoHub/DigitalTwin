@@ -12,11 +12,15 @@ export const FONTE = 'Fonte: Comune di Palermo, Protezione civile — Piano di e
 // ammassamento → «Aree di ammassamento dei soccorritori e risorse»; ospedale → «Strutture ospedaliere e socio-sanitarie».
 export const CONTORNO = '#929290';
 export const CLASSI = [
-  { id: 'attesa', etichetta: 'Area di attesa della popolazione', breve: 'Area di attesa', colore: '#6cb6a6', icona: 'img/protezione-civile/attesa.png' },
-  { id: 'accoglienza', etichetta: 'Area di ricovero e accoglienza', breve: 'Area di accoglienza', colore: '#ffb09d', icona: 'img/protezione-civile/accoglienza.png' },
-  { id: 'ammassamento', etichetta: 'Area di ammassamento dei soccorritori', breve: 'Area di ammassamento', colore: '#ffe044', icona: 'img/protezione-civile/ammassamento.png' },
+  { id: 'attesa', etichetta: 'Area di attesa della popolazione', breve: 'Area di attesa', colore: '#6cb6a6', icona: 'img/protezione-civile/attesa.png',
+    definizione: 'Luoghi di prima accoglienza per la popolazione: possono essere utilizzate piazze, slarghi, parcheggi, spazi pubblici o privati non soggetti a rischio (fuori da frane, alluvioni, crolli di strutture), raggiungibili attraverso un percorso sicuro. La popolazione riceve qui le prime informazioni sull\'evento e i primi generi di conforto, per un periodo da poche ore a qualche giorno. Fonte: Glossario della Protezione Civile.' },
+  { id: 'accoglienza', etichetta: 'Area di ricovero e accoglienza', breve: 'Area di accoglienza', colore: '#ffb09d', icona: 'img/protezione-civile/accoglienza.png',
+    definizione: 'Luoghi in aree sicure, vicini a risorse idriche, elettriche e fognarie, dove vengono installati i primi insediamenti abitativi per alloggiare la popolazione colpita. Devono essere facilmente raggiungibili anche da mezzi di grandi dimensioni, per consentire allestimento e gestione. Possono rientrare anche strutture ricettive (hotel, residence, campeggi). Fonte: Glossario della Protezione Civile.' },
+  { id: 'ammassamento', etichetta: 'Area di ammassamento dei soccorritori', breve: 'Area di ammassamento', colore: '#ffe044', icona: 'img/protezione-civile/ammassamento.png',
+    definizione: 'Zone sicure rispetto ai rischi, dove trovano sistemazione idonea soccorritori e risorse necessarie per un razionale intervento nelle zone di emergenza. Devono essere facilmente raggiungibili attraverso percorsi sicuri, anche con mezzi di grandi dimensioni, e vicine a risorse idriche, elettriche e con possibilità di smaltimento delle acque reflue. La permanenza in emergenza va da poche settimane a qualche mese. Fonte: Glossario della Protezione Civile.' },
   { id: 'ospedale', etichetta: 'Ospedale', breve: 'Ospedale', colore: '#1c7ed6', icona: 'img/protezione-civile/ospedale.png' },
-  { id: 'rischio', etichetta: 'Sito a rischio industriale', breve: 'Rischio industriale', colore: '#7048e8', icona: null }, // l'Allegato B non ha un simbolo per questa classe
+  { id: 'rischio', etichetta: 'Sito a rischio industriale', breve: 'Rischio industriale', colore: '#7048e8', icona: null,
+    definizione: 'La presenza sul territorio di stabilimenti industriali che utilizzano o detengono sostanze chimiche espone la popolazione e l\'ambiente al rischio industriale: un incidente può ferire le persone e danneggiare l\'ambiente. Gli effetti dipendono dalle caratteristiche, dalla concentrazione e dalla durata dell\'esposizione alle sostanze. Conoscere questi aspetti serve a ridurre il rischio al minimo. Fonte: Glossario della Protezione Civile.' }, // l'Allegato B non ha un simbolo per questa classe
 ];
 export const classe = id => CLASSI.find(c => c.id === id) ?? null;
 
@@ -57,6 +61,7 @@ export function vocePc(p, primo = false) {
       { righe: righe([['Tipologia', tipologia(p)], ['Numero area', p.numero], ['Superficie', mq(p.sup_m2)], ['Note', p.nota]]) },
       { titolo: 'Dove si trova', righe: [...righe([['Circoscrizione', p.circoscrizione], ['Quartiere', p.quartiere], ['UPL', p.upl]]), ...rigaPercorso(p)] },
     ],
+    nota: classe(p.classe)?.definizione,
     fonte: FONTE,
   };
 }

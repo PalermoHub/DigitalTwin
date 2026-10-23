@@ -49,3 +49,10 @@ test('percorso: link universale alle indicazioni stradali verso l\'area, solo se
   assert.equal(riga.urlValore, 'https://www.google.com/maps/dir/?api=1&destination=38.1157,13.3615&travelmode=driving');
   assert.ok(!vocePc(attesa).gruppi.flatMap(g => g.righe).some(r => r.etichetta === 'Percorso'));
 });
+
+test('scheda: la definizione della classe sta nella nota; l\'ospedale non ne ha', () => {
+  assert.match(vocePc(attesa).nota, /prima accoglienza/);
+  assert.match(vocePc(vvf).nota, /soccorritori/);
+  assert.equal(vocePc({ ...attesa, classe: 'ospedale' }).nota, undefined);
+  assert.ok(['attesa', 'accoglienza', 'ammassamento', 'rischio'].every(id => classe(id).definizione.endsWith('Glossario della Protezione Civile.')));
+});
