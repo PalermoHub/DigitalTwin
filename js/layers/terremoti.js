@@ -3,6 +3,7 @@ import { LIMITI } from '../core/config.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { FASCE, URL_SERVIZIO, GIORNI_MAX, filtro, passaFiltro, espressioneFiltro, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, voceSerie, voceAltri, riassuntoTerremoti, proprietaStorico } from './scheda-terremoti.js';
 import { EVENTO_FILTRO, menuFiltro, elencoAltri, graficoSerie, testoGiorni, barraEventi } from './scheda-terremoti-dom.js';
+import { pannelloFiltro } from './terremoti-pannello.js';
 import { clicSu } from '../core/scheda-navigazione.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 
@@ -26,6 +27,7 @@ let acceso = false;
 let popup = null;
 const fasceAccese = new Set(FASCE.map(f => f.colore)); // fasce d'età della legenda ancora in mappa
 let eventi = []; // proprietà degli eventi in mappa
+let pannelloPf = null;
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -58,6 +60,7 @@ async function aggiorna() {
     mappa?.getSource(SRC)?.setData({ type: 'FeatureCollection', features });
     ultimo = adesso;
     applicaFiltro(); // il periodo scorre con l'ora
+    pannelloPf?.aggiorna();
     scriviNota(true);
   } catch { scriviNota(false); } // senza risposta restano gli eventi di prima
 }
@@ -89,7 +92,8 @@ function creaLegenda() {
       applicaFiltro();
     }));
   }
-  legenda.append(menuFiltro(), el('p', 'uffici-nota', t('terremoti.clicca')));
+  pannelloPf = pannelloFiltro(() => eventi);
+  legenda.append(pannelloPf.nodo, menuFiltro(), el('p', 'uffici-nota', t('terremoti.clicca')));
   nota = el('p', 'uffici-nota');
   const credito = el('p', 'uffici-nota');
   const link = el('a', null, 'INGV');
@@ -193,7 +197,7 @@ export default {
       acceso = attivo;
       if (legenda) legenda.hidden = !attivo;
       if (attivo && Date.now() - ultimo > INTERVALLO_MS) aggiorna();
-      if (!attivo) { popup?.remove(); popup = null; }
+      if (!attivo) { popup?.remove(); popup = null; pannelloPf?.ferma(); }
       pianifica();
     },
   }],

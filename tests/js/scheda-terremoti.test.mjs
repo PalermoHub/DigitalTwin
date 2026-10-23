@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { proprietaStorico, serieEventi, puntiMagnitudo, curvaCumulativa, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
+import { proprietaStorico, serieEventi, puntiMagnitudo, curvaCumulativa, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, classeMagnitudo, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
 
 const ingv = (extra = {}, coord = [14.1717, 38.7938, 8.8]) => ({
   type: 'Feature', geometry: { type: 'Point', coordinates: coord },
@@ -77,6 +77,45 @@ test('espressioneFiltro: stesse soglie per la mappa', () => {
   const e = espressioneFiltro({ giorni: 7, magMin: 3 }, ADESSO);
   assert.deepEqual(e[1], ['>=', ['get', 'mag'], 3]);
   assert.deepEqual(e[2], ['>=', ['get', 'ts'], ADESSO - 7 * 86400000]);
+});
+
+test('classeMagnitudo: classi 1-2, 2-3, 3-4, 4+', () => {
+  assert.deepEqual([1, 1.9, 2, 3.5, 4, 6].map(classeMagnitudo), [0, 0, 1, 2, 3, 3]);
+});
+
+test('finestra dello slider: intervallo, filtro ed espressione', () => {
+  const f = { giorni: 7, magMin: 1, finestra: [10, 20], classi: null };
+  const [da, a] = intervallo(f, ADESSO);
+  assert.equal(da, ADESSO - 20 * 86400000);
+  assert.equal(a, ADESSO - 10 * 86400000);
+  assert.equal(passaFiltro(ev('a', 2, 15 * 24), f, ADESSO), true);
+  assert.equal(passaFiltro(ev('b', 2, 3 * 24), f, ADESSO), false); // fuori finestra, anche se nei 7 giorni
+  assert.deepEqual(espressioneFiltro(f, ADESSO).at(-1), ['<=', ['get', 'ts'], a]);
+  assert.equal(intervallo({ giorni: 7, finestra: [20, 30] }, ADESSO)[1], Infinity); // fine piena = aperta
+});
+
+test('classi di magnitudo accese: filtro ed espressione', () => {
+  const f = { giorni: 7, magMin: 1, finestra: null, classi: new Set([2]) };
+  assert.equal(passaFiltro(ev('a', 3.2, 1), f, ADESSO), true);
+  assert.equal(passaFiltro(ev('b', 2.2, 1), f, ADESSO), false);
+  assert.deepEqual(espressioneFiltro(f, ADESSO).at(-1), ['any', ['all', ['>=', ['get', 'mag'], 3], ['<', ['get', 'mag'], 4]]]);
+});
+
+test('eventiPerGiorno ed eventiPerClasse: conteggi per i due grafici', () => {
+  const eventi = [ev('a', 1.5, 1), ev('b', 3, 2), ev('c', 3.5, 30), ev('d', 2, 24 * 29), ev('e', 2, 24 * 40)];
+  const g = eventiPerGiorno(eventi, { magMin: 1, classi: null }, ADESSO);
+  assert.equal(g.length, 30);
+  assert.equal(g[29], 2);
+  assert.equal(g[28], 1);
+  assert.equal(g[0], 1);
+  assert.equal(g.reduce((x, y) => x + y), 4); // il quinto è oltre i 30 giorni
+  assert.deepEqual(eventiPerClasse(eventi, { giorni: 7, magMin: 1, finestra: null, classi: new Set([0]) }, ADESSO), [1, 0, 2, 0]);
+});
+
+test('prossimaFinestra: scorre di un giorno e riparte dall\'inizio', () => {
+  assert.deepEqual(prossimaFinestra(null), [0, 3]);
+  assert.deepEqual(prossimaFinestra([0, 3]), [1, 4]);
+  assert.deepEqual(prossimaFinestra([27, 30]), [0, 3]);
 });
 
 test('altriTerremoti: esclude i cliccati, ordina dal più recente, limita', () => {

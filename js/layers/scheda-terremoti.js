@@ -25,11 +25,55 @@ export const fasciaEta = (ts, adesso = Date.now()) => FASCE.find(f => adesso - t
 export const GIORNI_MAX = 30;
 export const SCELTE_GIORNI = [1, 7, 30];
 export const SCELTE_MAGNITUDO = [1, 2, 3, 4];
-export const filtro = { giorni: 7, magMin: 1 };
+// Oltre a questi, il pannello con slider e istogramma imposta `finestra` ([da, a] in giorni interi dall'inizio dei GIORNI_MAX, null = tutto) e `classi` (indici di CLASSI_MAG accesi, null = tutte).
+export const filtro = { giorni: 7, magMin: 1, finestra: null, classi: null };
 const GIORNO_MS = 24 * ORA_MS;
-export const passaFiltro = (p, { giorni, magMin } = filtro, adesso = Date.now()) => p.mag >= magMin && adesso - p.ts <= giorni * GIORNO_MS;
+
+// Classi dell'istogramma di magnitudo
+export const CLASSI_MAG = [{ da: 1, a: 2 }, { da: 2, a: 3 }, { da: 3, a: 4 }, { da: 4, a: Infinity }];
+export const classeMagnitudo = m => Math.max(0, CLASSI_MAG.findIndex(c => m < c.a));
+
+// Intervallo [da, a] in millisecondi: la finestra dello slider se c'è, altrimenti gli ultimi `giorni`. Il limite finale della finestra piena è aperto, così gli eventi nuovi restano dentro.
+export function intervallo({ giorni, finestra } = filtro, adesso = Date.now()) {
+  if (!finestra) return [adesso - giorni * GIORNO_MS, Infinity];
+  const [da, a] = finestra;
+  return [adesso - (GIORNI_MAX - da) * GIORNO_MS, a >= GIORNI_MAX ? Infinity : adesso - (GIORNI_MAX - a) * GIORNO_MS];
+}
+
+export const passaFiltro = (p, f = filtro, adesso = Date.now()) => {
+  const [da, a] = intervallo(f, adesso);
+  return p.mag >= f.magMin && p.ts >= da && p.ts <= a && (!f.classi || f.classi.has(classeMagnitudo(p.mag)));
+};
 // Stesso filtro come espressione MapLibre (per cerchi e strato di interrogazione)
-export const espressioneFiltro = ({ giorni, magMin } = filtro, adesso = Date.now()) => ['all', ['>=', ['get', 'mag'], magMin], ['>=', ['get', 'ts'], adesso - giorni * GIORNO_MS]];
+export function espressioneFiltro(f = filtro, adesso = Date.now()) {
+  const [da, a] = intervallo(f, adesso);
+  return ['all', ['>=', ['get', 'mag'], f.magMin], ['>=', ['get', 'ts'], da], ...(a === Infinity ? [] : [['<=', ['get', 'ts'], a]]),
+    ...(f.classi ? [['any', ...[...f.classi].map(i => ['all', ['>=', ['get', 'mag'], CLASSI_MAG[i].da], ...(CLASSI_MAG[i].a === Infinity ? [] : [['<', ['get', 'mag'], CLASSI_MAG[i].a]])])]] : [])];
+}
+
+// Barre della serie temporale: eventi per giorno negli ultimi GIORNI_MAX giorni (la più a destra è l'ultima), con magnitudo minima e classi ma senza la finestra
+export function eventiPerGiorno(eventi, f = filtro, adesso = Date.now()) {
+  const n = Array(GIORNI_MAX).fill(0);
+  for (const p of eventi) {
+    const i = GIORNI_MAX - 1 - Math.floor((adesso - p.ts) / GIORNO_MS);
+    if (p.mag >= f.magMin && i >= 0 && i < GIORNI_MAX && (!f.classi || f.classi.has(classeMagnitudo(p.mag)))) n[i]++;
+  }
+  return n;
+}
+
+// Barre dell'istogramma di magnitudo: eventi per classe, nell'intervallo di tempo ma senza classi (così si vede cosa si accende)
+export function eventiPerClasse(eventi, f = filtro, adesso = Date.now()) {
+  const n = Array(CLASSI_MAG.length).fill(0);
+  for (const p of eventi) if (passaFiltro(p, { ...f, classi: null }, adesso)) n[classeMagnitudo(p.mag)]++;
+  return n;
+}
+
+// Riproduzione: sposta la finestra di un giorno; arrivata in fondo riparte dall'inizio. Con tutto il periodo parte da una finestra di 3 giorni.
+export function prossimaFinestra(finestra, larghezza = 3) {
+  const [da, a] = finestra ?? [0, GIORNI_MAX];
+  const l = a - da >= GIORNI_MAX ? larghezza : Math.max(1, a - da);
+  return a >= GIORNI_MAX ? [0, l] : [da + 1, a + 1];
+}
 
 // Magnitudo → raggio del cerchio in pixel (cresce in modo esponenziale, come l'energia)
 export const raggioMagnitudo = m => Math.max(3, Math.round(2.2 * 1.45 ** (Math.max(m, 0) )));

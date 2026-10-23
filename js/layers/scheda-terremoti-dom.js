@@ -32,6 +32,7 @@ function menu(etichetta, scelte, valore, testoScelta, suCambio) {
 
 const cambia = campo => v => {
   filtro[campo] = v;
+  if (campo === 'giorni') filtro.finestra = null; // il menu «Periodo» sostituisce l'intervallo dello slider
   document.dispatchEvent(new CustomEvent(EVENTO_FILTRO));
 };
 
