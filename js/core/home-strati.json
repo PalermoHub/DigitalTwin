@@ -474,6 +474,42 @@
    ]
   },
   {
+   "id": "radar-allerte",
+   "titolo": "Radar pioggia e allerte",
+   "descrizione": "Dove sta piovendo adesso (radar degli ultimi 120 minuti) e l'allerta meteo-idro della Protezione Civile per oggi e domani nelle zone di allerta della Sicilia.",
+   "strati": [
+    {
+     "id": "allerte",
+     "etichetta": "Allerta meteo-idro in Sicilia"
+    },
+    {
+     "id": "radar",
+     "etichetta": "Radar della pioggia"
+    }
+   ],
+   "fonte": "Dipartimento della Protezione Civile: bollettino di criticità nazionale (CC BY 4.0), rinnovato ogni giorno e quando le Regioni lo correggono. RainViewer: radar della pioggia, ogni 10 minuti.",
+   "enti": [
+    "Dipartimento della Protezione Civile",
+    "RainViewer"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2026-10-23",
+   "link": [
+    [
+     "Bollettini di criticità del DPC (GitHub)",
+     "https://github.com/pcm-dpc/DPC-Bollettini-Criticita-Idrogeologica-Idraulica"
+    ],
+    [
+     "Allertamento meteo-idro",
+     "https://rischi.protezionecivile.gov.it/it/meteo-idro/"
+    ],
+    [
+     "RainViewer",
+     "https://www.rainviewer.com/"
+    ]
+   ]
+  },
+  {
    "id": "terreno",
    "titolo": "Rilievo",
    "descrizione": "Modello digitale del terreno di Palermo: ombreggiatura 3D ed elevazione colorata.",
@@ -1661,6 +1697,42 @@
     [
      "ANNCSU, Archivio nazionale dei numeri civici",
      "https://www.anncsu.gov.it/it/consultazione-dellarchivio/open-data/"
+    ]
+   ]
+  },
+  {
+   "id": "radar-allerte",
+   "titolo": "Rain radar and alerts",
+   "descrizione": "Where it is raining right now (radar of the last 120 minutes) and the Civil Protection weather and flood alert for today and tomorrow in Sicily's alert zones.",
+   "strati": [
+    {
+     "id": "radar",
+     "etichetta": "Rain radar"
+    },
+    {
+     "id": "allerte",
+     "etichetta": "Weather and flood alert in Sicily"
+    }
+   ],
+   "fonte": "Department of Civil Protection: national criticality bulletin (CC BY 4.0), renewed every day and whenever the Regions correct it. RainViewer: rain radar, every 10 minutes.",
+   "enti": [
+    "Dipartimento della Protezione Civile",
+    "RainViewer"
+   ],
+   "data": "2026-10-23",
+   "aggiornati": "2026-10-23",
+   "link": [
+    [
+     "DPC criticality bulletins (GitHub)",
+     "https://github.com/pcm-dpc/DPC-Bollettini-Criticita-Idrogeologica-Idraulica"
+    ],
+    [
+     "Weather and flood warnings",
+     "https://rischi.protezionecivile.gov.it/it/meteo-idro/"
+    ],
+    [
+     "RainViewer",
+     "https://www.rainviewer.com/"
     ]
    ]
   },

@@ -669,6 +669,17 @@ dialog li { margin: 4px 0; }
 .uffici-popup .uffici-suggerimento { margin-top: 6px; font-style: italic; color: var(--text-muted); }
 .legenda-uffici { max-height: 45vh; overflow-y: auto; }
 .legenda-incendi i.incendi-campione { width: 14px; height: 10px; border: 1.5px solid; border-radius: 2px; }
+.lg-allerte i.incendi-campione, .lg-radar i.incendi-campione { display: inline-block; width: 14px; height: 10px; border: 1.5px solid rgba(0, 0, 0, .35); border-radius: 2px; vertical-align: -1px; }
+.lg-allerte .allerta-riga { margin: 4px 0; font-size: 12px; }
+.lg-allerte .allerta-giorni { display: flex; gap: 6px; margin: 6px 0; }
+.lg-allerte .allerta-giorno { flex: 1; padding: 3px 8px; border: 1px solid currentColor; border-radius: 12px; background: transparent; color: inherit; font-size: 12px; cursor: pointer; }
+.lg-allerte .allerta-giorno[aria-pressed="true"] { background: var(--accent, #e8590c); border-color: var(--accent, #e8590c); color: #fff; }
+.lg-radar .radar-scala { height: 8px; border-radius: 4px; margin: 6px 0 2px; background: linear-gradient(90deg, #9bd5f2, #2f7ed8, #2fb344, #f7e12e, #f08c00, #e03131, #9c36b5); }
+.lg-radar .radar-scala-testo { display: flex; justify-content: space-between; margin: 0 0 6px; }
+.lg-radar .radar-riga { display: flex; align-items: center; gap: 8px; }
+.lg-radar .radar-cursore { flex: 1; min-width: 0; }
+.lg-radar .radar-bottone { width: 28px; height: 28px; border: 1px solid currentColor; border-radius: 50%; background: transparent; color: inherit; font-size: 11px; cursor: pointer; }
+.lg-radar .radar-ora { min-width: 4.5em; font-size: 12px; font-variant-numeric: tabular-nums; }
 .legenda-mef .mef-legenda-riga { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
 .legenda-mef i.mef-campione { width: 14px; height: 10px; border-radius: 2px; border: 1px solid #5c2e0b; flex: none; }
 .legenda-peba i.mef-campione { display: inline-block; width: 14px; height: 10px; margin-right: 6px; border-radius: 2px; border: 1px solid rgb(0 0 0 / .35); flex: none; vertical-align: middle; }

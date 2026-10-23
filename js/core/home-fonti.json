@@ -1026,5 +1026,47 @@
     ]
    ]
   }
+ },
+ "radar-allerte": {
+  "data": "2026-10-23",
+  "aggiornati": "2026-10-23",
+  "enti": [
+   "Dipartimento della Protezione Civile",
+   "RainViewer"
+  ],
+  "fonte": {
+   "it": "Dipartimento della Protezione Civile: bollettino di criticità nazionale (CC BY 4.0), rinnovato ogni giorno e quando le Regioni lo correggono. RainViewer: radar della pioggia, ogni 10 minuti.",
+   "en": "Department of Civil Protection: national criticality bulletin (CC BY 4.0), renewed every day and whenever the Regions correct it. RainViewer: rain radar, every 10 minutes."
+  },
+  "link": {
+   "it": [
+    [
+     "Bollettini di criticità del DPC (GitHub)",
+     "https://github.com/pcm-dpc/DPC-Bollettini-Criticita-Idrogeologica-Idraulica"
+    ],
+    [
+     "Allertamento meteo-idro",
+     "https://rischi.protezionecivile.gov.it/it/meteo-idro/"
+    ],
+    [
+     "RainViewer",
+     "https://www.rainviewer.com/"
+    ]
+   ],
+   "en": [
+    [
+     "DPC criticality bulletins (GitHub)",
+     "https://github.com/pcm-dpc/DPC-Bollettini-Criticita-Idrogeologica-Idraulica"
+    ],
+    [
+     "Weather and flood warnings",
+     "https://rischi.protezionecivile.gov.it/it/meteo-idro/"
+    ],
+    [
+     "RainViewer",
+     "https://www.rainviewer.com/"
+    ]
+   ]
+  }
  }
 }
