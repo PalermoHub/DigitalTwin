@@ -2,9 +2,8 @@ export const DATI = 'dati/';
 // Vista iniziale ed estensione della mappa come nell'app catasto-app di palermohub.opendatasicilia.it.
 export const CENTRO = [13.33225, 38.14074];
 export const ZOOM = window.matchMedia('(max-width: 768px)').matches ? 11 : 12;
-// Limiti di spostamento molto larghi e simmetrici attorno al CENTRO: la vista iniziale resta al centro dei limiti.
-const MARGINE = [1.5, 1];
-export const LIMITI = [[CENTRO[0] - MARGINE[0], CENTRO[1] - MARGINE[1]], [CENTRO[0] + MARGINE[0], CENTRO[1] + MARGINE[1]]];
+// Limiti di spostamento: tutta la Sicilia con le isole minori e un po' di mare, l'area dei servizi in tempo reale (terremoti, voli, navi, allerte).
+export const LIMITI = [[11.7, 36.3], [16.2, 39.2]];
 export const ZOOM_SLIDER = [12, 18];
 // Al clic sulla mappa (scheda del luogo) la vista si avvicina almeno a questo zoom, senza mai allontanarsi.
 export const ZOOM_SCHEDA = 16.5;

@@ -684,7 +684,7 @@
   {
    "id": "terremoti",
    "titolo": "Terremoti in tempo reale",
-   "descrizione": "I terremoti degli ultimi 7 giorni attorno a Palermo, in Sicilia nord-occidentale e nel Tirreno meridionale, dal servizio dell'INGV: magnitudo, profondità, zona e distanza da Palermo, aggiornati ogni 2 minuti.",
+   "descrizione": "I terremoti degli ultimi 7 giorni attorno a Palermo, in Sicilia e nel Tirreno meridionale, dal servizio dell'INGV: magnitudo, profondità, zona e distanza da Palermo, aggiornati ogni 2 minuti.",
    "strati": [
     {
      "id": "terremoti",
@@ -1362,7 +1362,7 @@
   {
    "id": "terremoti",
    "titolo": "Live earthquakes",
-   "descrizione": "Earthquakes of the last 7 days around Palermo, in north-western Sicily and the southern Tyrrhenian Sea, from the INGV service: magnitude, depth, area and distance from Palermo, updated every 2 minutes.",
+   "descrizione": "Earthquakes of the last 7 days around Palermo, in Sicily and the southern Tyrrhenian Sea, from the INGV service: magnitude, depth, area and distance from Palermo, updated every 2 minutes.",
    "strati": [
     {
      "id": "terremoti",

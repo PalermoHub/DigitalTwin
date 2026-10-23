@@ -10,7 +10,7 @@ const PUNTI = 'terremoti-punti';
 const HIT = 'terremoti-hit'; // cerchi trasparenti, sempre presenti: la scheda mostra l'evento sotto il clic
 const GIORNI = 7;
 const MAGNITUDO_MIN = 1;
-const AREA = { minlon: LIMITI[0][0], minlat: LIMITI[0][1], maxlon: LIMITI[1][0], maxlat: LIMITI[1][1] }; // l'area che la mappa permette di vedere: Sicilia nord-occidentale e Tirreno meridionale
+const AREA = { minlon: LIMITI[0][0], minlat: LIMITI[0][1], maxlon: LIMITI[1][0], maxlat: LIMITI[1][1] }; // l'area che la mappa permette di vedere: Sicilia e Tirreno meridionale
 const LIMITE = 1000;
 const INTERVALLO_MS = 2 * 60 * 1000;
 const VUOTO = { type: 'FeatureCollection', features: [] };
@@ -96,7 +96,7 @@ export default {
   gruppo: 'eventi',
   sezione: 'Terremoti',
   sezioniFisse: true,
-  argomento: { titolo: 'Terremoti in tempo reale', descrizione: 'I terremoti degli ultimi 7 giorni attorno a Palermo, in Sicilia nord-occidentale e nel Tirreno meridionale, dal servizio dell\'INGV: magnitudo, profondità, zona e distanza da Palermo, aggiornati ogni 2 minuti.' },
+  argomento: { titolo: 'Terremoti in tempo reale', descrizione: 'I terremoti degli ultimi 7 giorni attorno a Palermo, in Sicilia e nel Tirreno meridionale, dal servizio dell\'INGV: magnitudo, profondità, zona e distanza da Palermo, aggiornati ogni 2 minuti.' },
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO, attribution: '<a href="https://terremoti.ingv.it/" target="_blank" rel="noopener">INGV</a>' });
   },

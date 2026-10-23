@@ -6,7 +6,7 @@ Keywords: earthquake, quake, tremor, magnitude, epicentre, INGV, seismic, latest
 
 Typical questions: Was there an earthquake today? Where were the latest shocks? How strong was the last quake near Palermo? How do I read the circles?
 
-In the Layers panel, in the **«Territory»** group, **«Earthquakes»** section, the **«Live earthquakes»** layer shows the **earthquakes of the last 7 days** around Palermo, in north-western Sicily and the southern Tyrrhenian Sea (the area the map lets you see), from magnitude 1. Each **circle** is an event: **the bigger it is, the stronger the magnitude**. The **colour** tells how long ago it happened: **red** in the last hour, **orange** in the last 24 hours, **blue** within 7 days. The data is renewed every **2 minutes** while the layer is on.
+In the Layers panel, in the **«Territory»** group, **«Earthquakes»** section, the **«Live earthquakes»** layer shows the **earthquakes of the last 7 days** around Palermo, in Sicily and the southern Tyrrhenian Sea (the area the map lets you see), from magnitude 1. Each **circle** is an event: **the bigger it is, the stronger the magnitude**. The **colour** tells how long ago it happened: **red** in the last hour, **orange** in the last 24 hours, **blue** within 7 days. The data is renewed every **2 minutes** while the layer is on.
 
 ## The details of a shock
 

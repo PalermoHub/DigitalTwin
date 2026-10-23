@@ -6,7 +6,7 @@ Parole chiave: terremoto, sisma, scossa, magnitudo, epicentro, INGV, sismico, tr
 
 Domande tipiche: C'è stato un terremoto oggi? Dove sono state le ultime scosse? Quanto è forte stata l'ultima scossa vicino a Palermo? Come si leggono i cerchi?
 
-Nel pannello Layer, nel gruppo **«Territorio»**, sezione **«Terremoti»**, lo strato **«Terremoti in tempo reale»** mostra i **terremoti degli ultimi 7 giorni** attorno a Palermo, nella Sicilia nord-occidentale e nel Tirreno meridionale (l'area che la mappa permette di vedere), a partire da magnitudo 1. Ogni **cerchio** è un evento: **più è grande, più è forte la magnitudo**. Il **colore** dice da quanto è successo: **rosso** nell'ultima ora, **arancione** nelle ultime 24 ore, **blu** nei 7 giorni. I dati si rinnovano ogni **2 minuti** finché lo strato è acceso.
+Nel pannello Layer, nel gruppo **«Territorio»**, sezione **«Terremoti»**, lo strato **«Terremoti in tempo reale»** mostra i **terremoti degli ultimi 7 giorni** attorno a Palermo, nella Sicilia e nel Tirreno meridionale (l'area che la mappa permette di vedere), a partire da magnitudo 1. Ogni **cerchio** è un evento: **più è grande, più è forte la magnitudo**. Il **colore** dice da quanto è successo: **rosso** nell'ultima ora, **arancione** nelle ultime 24 ore, **blu** nei 7 giorni. I dati si rinnovano ogni **2 minuti** finché lo strato è acceso.
 
 ## I dettagli di una scossa
 
