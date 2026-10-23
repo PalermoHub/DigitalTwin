@@ -3144,5 +3144,17 @@
   "home.slide.terremoti.alt": "The map of north-western Sicily with circles for recent earthquakes, bigger when stronger",
   "lbl.Terremoti in tempo reale (magnitudo, ora, zona e profondità degli eventi): INGV, Istituto Nazionale di Geofisica e Vulcanologia, servizio web FDSN event, eventi degli ultimi 7 giorni attorno a Palermo, in Sicilia nord-occidentale e nel Tirreno meridionale, chiesto dal browser ogni 2 minuti": "Live earthquakes (magnitude, time, area and depth of the events): INGV, National Institute of Geophysics and Volcanology, FDSN event web service, events of the last 7 days around Palermo, in north-western Sicily and the southern Tyrrhenian Sea, requested by the browser every 2 minutes",
   "lbl.Terremoti INGV": "INGV earthquakes",
-  "lbl.Servizio web FDSN event": "FDSN event web service"
+  "lbl.Servizio web FDSN event": "FDSN event web service",
+  "lbl.Radar della pioggia: RainViewer, tile radar dei dati meteorologici nazionali, caricate dal browser; allerte meteo-idro: Dipartimento della Protezione Civile, bollettino di criticità idrogeologica e idraulica, 9 zone di allerta della Sicilia, rinnovato ogni 15 minuti": "Rain radar: RainViewer, radar tiles built from national weather data, loaded by the browser; weather and hydrological alerts: Italian Civil Protection Department, hydrogeological and hydraulic criticality bulletin, 9 alert zones of Sicily, renewed every 15 minutes",
+  "lbl.RainViewer": "RainViewer",
+  "lbl.Bollettini di criticità del Dipartimento della Protezione Civile": "Criticality bulletins of the Civil Protection Department",
+  "lbl.Traffico a flusso: TomTom, API Traffic (tile del flusso e velocità del tratto di strada), interrogata dal Worker del sito con cache di 2 minuti": "Flow traffic: TomTom, Traffic API (flow tiles and road segment speed), queried by the site's Worker with a 2-minute cache",
+  "lbl.TomTom Traffic API": "TomTom Traffic API",
+  "lbl.piano gratuito, citando la fonte («© TomTom»)": "free plan, citing the source («© TomTom»)",
+  "lbl.Satelliti e ISS: CelesTrak, elementi orbitali (GP/OMM) di stazioni spaziali e satelliti più luminosi, rinnovati ogni 2 ore; le posizioni sono calcolate nel browser con satellite.js (MIT)": "Satellites and ISS: CelesTrak, orbital elements (GP/OMM) of space stations and brightest satellites, renewed every 2 hours; positions are computed in the browser with satellite.js (MIT)",
+  "lbl.CelesTrak": "CelesTrak",
+  "lbl.satellite.js": "satellite.js",
+  "lbl.dati pubblici di CelesTrak": "public CelesTrak data",
+  "lbl.Piano di eliminazione delle barriere architettoniche (PEBA): Comune di Palermo, Delibera di Giunta comunale n. 272 del 18/07/2026, elaborazione OpenDataSicilia e PalermoHub": "Plan for the elimination of architectural barriers (PEBA): Comune di Palermo, Municipal Executive Resolution no. 272 of 18/07/2026, processed by OpenDataSicilia and PalermoHub",
+  "lbl.PEBA su PalermoHub (dati, foto e PDF)": "PEBA on PalermoHub (data, photos and PDFs)"
 }
