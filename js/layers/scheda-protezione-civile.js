@@ -24,6 +24,12 @@ const mq = v => (Number.isFinite(Number(v)) && Number(v) > 0
   ? (Number(v) >= 10000 ? `${(Number(v) / 10000).toLocaleString(localeIntl(), { maximumFractionDigits: 2 })} ha` : `${Number(v).toLocaleString(localeIntl())} m²`)
   : null);
 
+// Link universale «indicazioni stradali verso»: sul telefono si apre nell'app di navigazione, altrove nel browser.
+export const urlPercorso = p => (Number.isFinite(p.lat) && Number.isFinite(p.lon)
+  ? `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}&travelmode=driving`
+  : null);
+const rigaPercorso = p => (urlPercorso(p) ? [{ etichetta: 'Percorso', valore: t('pc.percorso'), urlValore: urlPercorso(p) }] : []);
+
 export const titolo = p => classe(p.classe)?.etichetta ?? p.descrizione;
 
 // La colonna mobile dei Vigili del Fuoco ha un tipo suo (AM VV.F.): il dettaglio sta nella descrizione del file.
@@ -45,7 +51,7 @@ export function vocePc(p) {
     chiave: chiave(p), peso: 7, strato: 'protezione-civile', titolo: titolo(p), icona: 'protezione-civile', badge: p.numero ? t('pc.numero', { n: p.numero }) : undefined, sempre: true,
     gruppi: [
       { righe: righe([['Tipologia', tipologia(p)], ['Numero area', p.numero], ['Superficie', mq(p.sup_m2)], ['Note', p.nota]]) },
-      { titolo: 'Dove si trova', righe: righe([['Circoscrizione', p.circoscrizione], ['Quartiere', p.quartiere], ['UPL', p.upl]]) },
+      { titolo: 'Dove si trova', righe: [...righe([['Circoscrizione', p.circoscrizione], ['Quartiere', p.quartiere], ['UPL', p.upl]]), ...rigaPercorso(p)] },
     ],
     fonte: FONTE,
   };

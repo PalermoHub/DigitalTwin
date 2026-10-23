@@ -2292,3 +2292,6 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .legenda .terremoti-pf-icona { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 28px; padding: 0; border: 1px solid var(--border); border-radius: var(--r-xs, 4px); background: var(--surface, #fff); color: var(--accent-strong, var(--accent)); cursor: pointer; }
 .legenda .terremoti-pf-icona:hover, .legenda .terremoti-pf-icona:focus-visible { background: color-mix(in srgb, var(--accent) 12%, transparent); }
 .legenda .terremoti-pf-icona svg { display: block; }
+
+/* punto «La mia posizione» */
+.mia-posizione { width: 16px; height: 16px; border-radius: 50%; background: #1a73e8; border: 3px solid #fff; box-shadow: 0 0 0 2px rgba(26,115,232,.35), 0 1px 4px rgba(0,0,0,.4); }

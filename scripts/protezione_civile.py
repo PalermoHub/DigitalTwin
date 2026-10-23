@@ -75,6 +75,7 @@ def main():
             "descrizione": (p.get("descrizion") or "").strip(), "nota": (p.get("Note") or "").strip() or None,
             "sup_m2": round(transform(metri, g).area),
             "circoscrizione": zona["circoscrizione"], "quartiere": zona["Quartiere"], "upl": zona["UPL_nome"],
+            "lat": round(punto.y, 6), "lon": round(punto.x, 6),   # destinazione per il link alle app di navigazione
         }
         feats.append({"type": "Feature", "properties": {k2: v for k2, v in props.items() if v is not None}, "geometry": geom})
         # un solo punto per area, dove va l'icona: sui poligoni MapLibre ne metterebbe una per ogni pezzo tagliato dalle tile

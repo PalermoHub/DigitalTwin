@@ -40,3 +40,10 @@ test('più aree sovrapposte: una sola voce a fisarmonica', () => {
   assert.equal(v.length, 1);
   assert.equal(v[0].accordion.elementi.length, 2);
 });
+
+test('percorso: link universale alle indicazioni stradali verso l\'area, solo se ci sono le coordinate', () => {
+  const con = { ...attesa, lat: 38.1157, lon: 13.3615 };
+  const riga = vocePc(con).gruppi.flatMap(g => g.righe).find(r => r.etichetta === 'Percorso');
+  assert.equal(riga.urlValore, 'https://www.google.com/maps/dir/?api=1&destination=38.1157,13.3615&travelmode=driving');
+  assert.ok(!vocePc(attesa).gruppi.flatMap(g => g.righe).some(r => r.etichetta === 'Percorso'));
+});

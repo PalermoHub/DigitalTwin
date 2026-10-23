@@ -1,6 +1,8 @@
 import { CENTRO, ZOOM, ZOOM_SLIDER } from './config.js';
 import { t } from './i18n.js';
 import { collegaStreetView } from './streetview.js';
+import { collegaGeolocalizzazione } from './geolocalizzazione.js';
+import { segnala } from './pannello.js';
 
 
 // Barra degli strumenti: vista iniziale, schermo intero, slider dello zoom sincronizzato con la mappa.
@@ -8,6 +10,8 @@ export function collegaStrumenti(map) {
   collegaTema(document.getElementById('btn-tema'));
   const btnSv = document.getElementById('btn-streetview');
   if (btnSv) collegaStreetView(map, btnSv);
+  const btnPos = document.getElementById('btn-posizione');
+  if (btnPos) collegaGeolocalizzazione(map, btnPos, segnala);
   const slider = document.getElementById('zoom-slider');
   const badge = document.getElementById('zoom-badge');
   const mostra = z => {
