@@ -10,8 +10,11 @@ export const ZOOM_MIN = 8;
 export const ZOOM_MAX = 17;
 // Tetto giornaliero di richieste a TomTom (solo le cache miss), a prescindere da chi le fa: Origin e Referer li falsifica chiunque, e senza tetto
 // un client qualunque che varia le coordinate esaurirebbe la quota gratuita del mese (20.000 segmenti, 200.000 tile) e spegnerebbe il layer per tutti.
-// Il conteggio sta nel KV (env.NAVI): non è atomico, ma per un tetto grossolano basta. Oltre il tetto il Worker risponde 429 (si ferma da solo).
+// Il conteggio sta nel KV (env.NAVI), che nel piano gratuito ammette 1.000 scritture al giorno, condivise con il cron delle navi (circa 288): per non
+// consumarle, il contatore si scrive solo una volta ogni PASSO richieste (a caso, con probabilità 1/PASSO, aggiungendo PASSO). Il tetto è quindi approssimato.
+// Scritture al giorno, al tetto: 6000/30 + 600/10 = 260. Oltre il tetto il Worker risponde 429 (si ferma da solo).
 export const TETTO_GIORNO = { tile: 6000, segmento: 600 }; // circa 180.000 e 18.000 al mese
+export const PASSO = { tile: 30, segmento: 10 };
 export const AREA = { ovest: 13.05, sud: 37.95, est: 13.65, nord: 38.35 }; // Palermo e dintorni
 const REFERER = 'https://palermodigitaltwin.opendatasicilia.it/';
 const BASE = 'https://api.tomtom.com/traffic';
@@ -52,13 +55,13 @@ function origineDi(richiesta) {
   try { return new URL(richiesta.headers.get('referer')).origin; } catch { return null; }
 }
 
-// true se la richiesta rientra nel tetto di oggi (e la conta); senza KV non si può contare e si lascia passare
-export async function entroIlTetto(env, tipo, adesso = new Date()) {
+// true se la richiesta rientra nel tetto di oggi (e la conta, a blocchi); senza KV non si può contare e si lascia passare
+export async function entroIlTetto(env, tipo, adesso = new Date(), caso = Math.random) {
   if (!env?.NAVI) return true;
   const chiave = `traffico:${tipo}:${adesso.toISOString().slice(0, 10)}`;
   const n = Number(await env.NAVI.get(chiave)) || 0;
   if (n >= TETTO_GIORNO[tipo]) return false;
-  await env.NAVI.put(chiave, String(n + 1), { expirationTtl: 2 * 24 * 60 * 60 });
+  if (caso() < 1 / PASSO[tipo]) await env.NAVI.put(chiave, String(n + PASSO[tipo]), { expirationTtl: 2 * 24 * 60 * 60 });
   return true;
 }
 

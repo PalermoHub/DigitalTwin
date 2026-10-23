@@ -117,11 +117,22 @@ test('tetto giornaliero: oltre il limite 429 senza chiamare TomTom; le risposte 
   assert.equal(await entroIlTetto({ NAVI: kv }, 'tile'), true); // il tetto dei tile è separato
 });
 
-test('tetto giornaliero: ogni cache miss incrementa il contatore, la cache hit no', async () => {
-  const kv = kvFinto(); const n = nuovo(); const cache = cacheFinta();
-  const e = { ...env, NAVI: kv };
+test('tetto giornaliero: scrive nel KV solo una volta ogni PASSO richieste, a blocchi', async () => {
+  const { entroIlTetto, PASSO } = await import('../../worker/traffico-core.js');
+  const kv = kvFinto(); let scritture = 0; const put = kv.put; kv.put = async (k, v, o) => { scritture++; return put(k, v, o); };
+  const sempre = () => 0; const mai = () => 0.999;
+  for (let i = 0; i < 50; i++) await entroIlTetto({ NAVI: kv }, 'tile', new Date(), mai);
+  assert.equal(scritture, 0);
+  await entroIlTetto({ NAVI: kv }, 'tile', new Date(), sempre);
+  assert.equal(scritture, 1);
+  assert.equal([...kv.m.values()][0], String(PASSO.tile));
+});
+
+test('tetto giornaliero: con le cache hit non si legge né scrive il KV', async () => {
+  const kv = kvFinto(); let letture = 0; const get = kv.get; kv.get = async k => { letture++; return get(k); };
+  const n = nuovo(); const cache = cacheFinta(); const e = { ...env, NAVI: kv };
   await gestisciTraffico(rq(TILE), e, fonte(n), cache);
+  const dopoPrima = letture;
   await gestisciTraffico(rq(TILE), e, fonte(n), cache);
-  const [valore] = [...kv.m.values()];
-  assert.equal(valore, '1');
+  assert.equal(letture, dopoPrima);
 });
