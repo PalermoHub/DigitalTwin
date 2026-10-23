@@ -6,7 +6,7 @@ Parole chiave: piano di emergenza, protezione civile, area di attesa, area di ri
 
 Domande tipiche: Dove devo andare in caso di terremoto? Qual è l'area di attesa più vicina a casa mia? Dove sono le aree di accoglienza? Cosa significano il verde, il rosso e il giallo?
 
-Nel pannello Layer, nel gruppo **«Eventi»**, sezione **«Piano di emergenza»**, lo strato **«Piano di emergenza (da zoom 11)»** mostra le aree del Piano di emergenza della Protezione civile del Comune di Palermo, colorate per funzione:
+Nel pannello Layer, nel gruppo **«Eventi»**, sezione **«Piano di emergenza»**, lo strato **«Piano di emergenza (da zoom 11)»** mostra le aree del Piano di emergenza della Protezione civile del Comune di Palermo, con la simbologia dell'**Allegato B** del Dipartimento della Protezione Civile (aree **tratteggiate** con contorno grigio e, al centro, il **simbolo blu** della classe), colorate per funzione:
 
 - **verde**: **area di attesa della popolazione**, dove ci si raduna subito dopo l'evento;
 - **rosso**: **area di ricovero e accoglienza**, dove la popolazione viene alloggiata;

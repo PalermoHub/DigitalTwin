@@ -7,11 +7,12 @@ const attesa = { id: 1, numero: '253.2', tipo: 'AT', classe: 'attesa', descrizio
 const vvf = { id: 2, tipo: 'AM VV.F.', classe: 'ammassamento', descrizione: 'Area ammassamento soccorsi - Colonna mobile Vigili del Fuoco', sup_m2: 800, circoscrizione: 'II', quartiere: 'Q', upl: 'U', nota: 'Solo VV.F.' };
 const righeDi = v => Object.fromEntries(v.gruppi.flatMap(g => g.righe).map(r => [r.etichetta, r.valore]));
 
-test('i colori delle tre classi del piano: verde attesa, rosso accoglienza, giallo ammassamento', () => {
-  assert.equal(classe('attesa').colore, '#2f9e44');
-  assert.equal(classe('accoglienza').colore, '#e03131');
-  assert.equal(classe('ammassamento').colore, '#f2c200');
+test('simbologia dell\'Allegato B: tratteggio verde (attesa), rosso (accoglienza), giallo (ammassamento), un simbolo per classe', () => {
+  assert.equal(classe('attesa').colore, '#6cb6a6');
+  assert.equal(classe('accoglienza').colore, '#ffb09d');
+  assert.equal(classe('ammassamento').colore, '#ffe044');
   assert.equal(new Set(CLASSI.map(c => c.colore)).size, CLASSI.length);
+  assert.ok(CLASSI.filter(c => c.icona).every(c => /^img\/protezione-civile\/\w+\.png$/.test(c.icona)));
 });
 
 test('popup: titolo dalla classe, numero e zona', () => {

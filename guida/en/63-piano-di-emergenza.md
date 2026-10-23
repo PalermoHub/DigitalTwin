@@ -6,7 +6,7 @@ Keywords: emergency plan, civil protection, waiting area, shelter area, receptio
 
 Typical questions: Where should I go in case of an earthquake? Which is the waiting area nearest to my home? Where are the reception areas? What do green, red and yellow mean?
 
-In the Layers panel, in the **«Events»** group, **«Emergency plan»** section, the **«Emergency plan (from zoom 11)»** layer shows the areas of the Palermo Civil Protection emergency plan, coloured by function:
+In the Layers panel, in the **«Events»** group, **«Emergency plan»** section, the **«Emergency plan (from zoom 11)»** layer shows the areas of the Palermo Civil Protection emergency plan, with the symbology of **Annex B** of the Civil Protection Department (**hatched** areas with a grey outline and, at the centre, the class's **blue symbol**), coloured by function:
 
 - **green**: **waiting area for the population**, where people gather right after the event;
 - **red**: **shelter and reception area**, where people are housed;

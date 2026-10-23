@@ -2,16 +2,17 @@ import { urlDati, pmt } from '../core/config.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
-import { CLASSI, classe, chiave, modelloPopup, vociPc } from './scheda-protezione-civile.js';
+import { CLASSI, CONTORNO, classe, chiave, modelloPopup, vociPc } from './scheda-protezione-civile.js';
 import { t, tl } from '../core/i18n.js';
 
 // Piano di emergenza della Protezione civile (Comune di Palermo, Portale Open Data dataset 351): 478 aree in un solo PMTiles (zoom 11–17).
-// Verde = area di attesa della popolazione, rosso = area di ricovero e accoglienza, giallo = area di ammassamento dei soccorritori;
-// ospedali e siti a rischio industriale sono di contesto. Ogni area porta circoscrizione, quartiere e UPL (scripts/protezione_civile.py).
+// Simbologia dell'Allegato B del Dipartimento della Protezione Civile: tratteggio verde = area di attesa, rosso = ricovero e accoglienza,
+// giallo = ammassamento dei soccorritori, con il simbolo blu della classe; ospedali e siti a rischio industriale sono di contesto. Ogni area porta circoscrizione, quartiere e UPL (scripts/protezione_civile.py).
 // Il popup è breve; il dettaglio sta nella scheda di destra, anche a strato spento (layer «hit» trasparente, sempre presente).
 const SRC = 'protezione-civile';
 const FILL = 'protezione-civile-fill';
 const BORDO = 'protezione-civile-bordo';
+const ICONE = 'protezione-civile-icone';
 const HIT = 'protezione-civile-hit';
 const MINZOOM = 11;
 const MAX_NEL_POPUP = 4;
@@ -37,7 +38,29 @@ function distinti(feature) {
   });
 }
 
-const colore = ['match', ['get', 'classe'], ...CLASSI.flatMap(c => [c.id, c.colore]), '#868e96'];
+const idRetino = id => `pc-retino-${id}`;
+const idIcona = id => `pc-icona-${id}`;
+const conIcona = CLASSI.filter(c => c.icona);
+const perClasse = (f, altro) => ['match', ['get', 'classe'], ...CLASSI.flatMap(c => [c.id, f(c)]), altro];
+
+// Retino dell'Allegato B: righe oblique del colore della classe su fondo trasparente (la base resta visibile).
+function retino(colore) {
+  const N = 16;
+  const c = document.createElement('canvas');
+  c.width = c.height = N;
+  const x = c.getContext('2d');
+  x.strokeStyle = colore;
+  x.lineWidth = 3;
+  for (const d of [-N, 0, N]) { x.beginPath(); x.moveTo(d, N); x.lineTo(d + N, 0); x.stroke(); }
+  return x.getImageData(0, 0, N, N);
+}
+
+function registraImmagini(map) {
+  for (const c of CLASSI) if (!map.hasImage(idRetino(c.id))) map.addImage(idRetino(c.id), retino(c.colore), { pixelRatio: 2 });
+  for (const c of conIcona) {
+    map.loadImage(c.icona).then(({ data }) => { if (!map.hasImage(idIcona(c.id))) map.addImage(idIcona(c.id), data, { pixelRatio: 2 }); }).catch(() => {});
+  }
+}
 
 function contenutoPopup(lista) {
   const radice = el('div', 'monumento-popup pc-popup');
@@ -58,12 +81,20 @@ function applicaFiltro(map) {
   const f = accesi ? filtroInsieme(['get', 'classe'], accesi, CLASSI.length) : null;
   map.setFilter(FILL, f);
   map.setFilter(BORDO, f);
+  map.setFilter(ICONE, f);
 }
 
-function simbolo(colorePieno) {
+// Campione di legenda: tratteggio col contorno grigio e, dove l'Allegato B lo prevede, il simbolo blu della classe.
+function simbolo(c) {
   const i = el('i', 'pc-campione');
-  i.style.background = colorePieno;
-  i.style.borderColor = colorePieno;
+  i.style.setProperty('--pc-colore', c.colore);
+  if (c.icona) {
+    const img = el('img', 'pc-icona');
+    img.src = c.icona;
+    img.alt = '';
+    img.width = img.height = 16;
+    i.append(img);
+  }
   return i;
 }
 
@@ -72,7 +103,7 @@ function riempiLegenda(map) {
   legenda.dataset.pronta = '1';
   const tutte = new Set(CLASSI.map(c => c.id));
   for (const c of CLASSI.filter(k => conteggi[k.id] > 0)) {
-    legenda.append(voceFiltro(simbolo(c.colore), `${tl(c.etichetta)} (${conteggi[c.id]})`, acceso => {
+    legenda.append(voceFiltro(simbolo(c), `${tl(c.etichetta)} (${conteggi[c.id]})`, acceso => {
       accesi ??= new Set(tutte);
       acceso ? accesi.add(c.id) : accesi.delete(c.id);
       if (accesi.size >= tutte.size) accesi = null;
@@ -100,13 +131,24 @@ export default {
   },
   aggiungiLayer(map) {
     const nascosto = { visibility: 'none' };
+    registraImmagini(map);
     map.addLayer({
       id: FILL, type: 'fill', source: SRC, 'source-layer': 'aree', minzoom: MINZOOM, layout: nascosto,
-      paint: { 'fill-color': colore, 'fill-opacity': 0.55 },
+      paint: { 'fill-pattern': perClasse(c => idRetino(c.id), idRetino('rischio')), 'fill-opacity': 0.95 },
     });
     map.addLayer({
       id: BORDO, type: 'line', source: SRC, 'source-layer': 'aree', minzoom: MINZOOM, layout: nascosto,
-      paint: { 'line-color': colore, 'line-width': ['interpolate', ['linear'], ['zoom'], 11, 0.6, 17, 1.8], 'line-opacity': 0.95 },
+      paint: { 'line-color': CONTORNO, 'line-width': ['interpolate', ['linear'], ['zoom'], 11, 0.5, 17, 1.4] },
+    });
+    // simbolo blu della classe al centro dell'area (Allegato B); l'area che non ci sta non lo mostra
+    map.addLayer({
+      id: ICONE, type: 'symbol', source: SRC, 'source-layer': 'aree', minzoom: MINZOOM,
+      layout: {
+        ...nascosto,
+        'icon-image': ['match', ['get', 'classe'], ...conIcona.flatMap(c => [c.id, idIcona(c.id)]), ''],
+        'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.4, 14, 0.6, 17, 0.9],
+        'icon-allow-overlap': false, 'symbol-sort-key': ['match', ['get', 'classe'], 'ospedale', 0, 1],
+      },
     });
     // poligoni trasparenti sempre presenti: la scheda del luogo mostra le aree anche a strato spento
     map.addLayer({ id: HIT, type: 'fill', source: SRC, 'source-layer': 'aree', minzoom: MINZOOM, paint: { 'fill-opacity': 0 } });
@@ -119,7 +161,7 @@ export default {
       popup = new maplibregl.Popup({ maxWidth: '300px', className: 'monumento-popup-box', offset: 8 })
         .setLngLat(e.lngLat).setDOMContent(contenutoPopup(lista)).addTo(map);
     });
-    registraTooltipStrati(map, [{ layers: [FILL], icona: 'protezione-civile', campione: p => campioneTooltip('legenda-pc', simbolo(classe(p.classe)?.colore ?? '#868e96')), modello: modelloPopup }]);
+    registraTooltipStrati(map, [{ layers: [FILL], icona: 'protezione-civile', campione: p => campioneTooltip('legenda-pc', simbolo(classe(p.classe) ?? { colore: '#868e96' })), modello: modelloPopup }]);
     map.on('mouseenter', FILL, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', FILL, () => { map.getCanvas().style.cursor = ''; });
   },
@@ -137,7 +179,7 @@ export default {
   },
   legendaPannello: '.lg-pc', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{
-    id: 'protezione-civile', etichetta: 'Piano di emergenza (da zoom 11)', layers: [FILL, BORDO], attivo: false,
+    id: 'protezione-civile', etichetta: 'Piano di emergenza (da zoom 11)', layers: [FILL, BORDO, ICONE], attivo: false,
     suCambio(attivo) { if (legenda) legenda.hidden = !attivo; },
   }],
   pannello: creaLegenda,

@@ -6,12 +6,17 @@ import { localeIntl, t, tl, tn } from '../core/i18n.js';
 export const FONTE = 'Fonte: Comune di Palermo, Protezione civile — Piano di emergenza (Portale Open Data, dataset 351). Aree di emergenza nel Comune di Palermo.';
 
 // Le tre classi del piano (attesa, accoglienza, ammassamento) più due di contesto: ospedali e siti a rischio industriale.
+// Simbologia dell'Allegato B «Simbologia» del Dipartimento della Protezione Civile (v. 1.0, gennaio 2024, Tema 04): poligoni a tratteggio
+// (`colore` = colore delle righe) con contorno grigio, e il simbolo blu della classe (`icona`) al centro dell'area.
+// Attesa → «Aree di attesa»; accoglienza → «Assistenza» (aree di assistenza alla popolazione per attendamenti campali);
+// ammassamento → «Aree di ammassamento dei soccorritori e risorse»; ospedale → «Strutture ospedaliere e socio-sanitarie».
+export const CONTORNO = '#929290';
 export const CLASSI = [
-  { id: 'attesa', etichetta: 'Area di attesa della popolazione', breve: 'Area di attesa', colore: '#2f9e44' },
-  { id: 'accoglienza', etichetta: 'Area di ricovero e accoglienza', breve: 'Area di accoglienza', colore: '#e03131' },
-  { id: 'ammassamento', etichetta: 'Area di ammassamento dei soccorritori', breve: 'Area di ammassamento', colore: '#f2c200' },
-  { id: 'ospedale', etichetta: 'Ospedale', breve: 'Ospedale', colore: '#1c7ed6' },
-  { id: 'rischio', etichetta: 'Sito a rischio industriale', breve: 'Rischio industriale', colore: '#7048e8' },
+  { id: 'attesa', etichetta: 'Area di attesa della popolazione', breve: 'Area di attesa', colore: '#6cb6a6', icona: 'img/protezione-civile/attesa.png' },
+  { id: 'accoglienza', etichetta: 'Area di ricovero e accoglienza', breve: 'Area di accoglienza', colore: '#ffb09d', icona: 'img/protezione-civile/accoglienza.png' },
+  { id: 'ammassamento', etichetta: 'Area di ammassamento dei soccorritori', breve: 'Area di ammassamento', colore: '#ffe044', icona: 'img/protezione-civile/ammassamento.png' },
+  { id: 'ospedale', etichetta: 'Ospedale', breve: 'Ospedale', colore: '#1c7ed6', icona: 'img/protezione-civile/ospedale.png' },
+  { id: 'rischio', etichetta: 'Sito a rischio industriale', breve: 'Rischio industriale', colore: '#7048e8', icona: null }, // l'Allegato B non ha un simbolo per questa classe
 ];
 export const classe = id => CLASSI.find(c => c.id === id) ?? null;
 
