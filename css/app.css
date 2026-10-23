@@ -2295,3 +2295,10 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 
 /* punto «La mia posizione» */
 .mia-posizione { width: 16px; height: 16px; border-radius: 50%; background: #1a73e8; border: 3px solid #fff; box-shadow: 0 0 0 2px rgba(26,115,232,.35), 0 1px 4px rgba(0,0,0,.4); }
+
+/* sezione cercata dal clic (peso 1, es. area del Piano di emergenza): intestazione in evidenza */
+details.scheda-sez[data-peso="1"] > summary { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: var(--r-sm); padding-left: 8px; padding-right: 8px; }
+
+/* badge a tinta piena (es. «Percorso» del Piano di emergenza): verde delle vie di fuga, testo bianco, ben visibile anche a chi è agitato */
+a.scheda-badge-tinta.scheda-badge-pieno { background: var(--tinta); border-color: var(--tinta); color: #fff; padding: 6px 16px; font-size: var(--fs-base); font-weight: 700; box-shadow: 0 1px 4px rgba(0, 0, 0, .3); }
+a.scheda-badge-tinta.scheda-badge-pieno:hover, a.scheda-badge-tinta.scheda-badge-pieno:focus-visible { background: color-mix(in srgb, var(--tinta) 82%, #000); }

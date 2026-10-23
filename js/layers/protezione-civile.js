@@ -21,6 +21,7 @@ const MAX_NELLA_SCHEDA = 6;
 
 let legenda = null;
 let conteggi = {};
+let mappa = null;
 let accesi = null; // classi accese in legenda (null = tutte)
 
 function el(tag, classe, testo) {
@@ -123,6 +124,7 @@ export default {
     map.addSource(SRC, { type: 'vector', url: pmt('protezione-civile/protezione-civile.pmtiles') });
   },
   aggiungiLayer(map) {
+    mappa = map;
     const nascosto = { visibility: 'none' };
     registraImmagini(map);
     map.addLayer({
@@ -166,7 +168,8 @@ export default {
   },
   scheda: {
     layers: [HIT],
-    voci: trovati => vociPc(distinti(tutti(trovati, HIT)).slice(0, MAX_NELLA_SCHEDA).map(f => f.properties)),
+    // a strato acceso la sezione dell'area sta in cima al tab Luogo, per non confonderla con le altre informazioni del punto
+    voci: trovati => vociPc(distinti(tutti(trovati, HIT)).slice(0, MAX_NELLA_SCHEDA).map(f => f.properties), mappa?.getLayoutProperty(FILL, 'visibility') === 'visible'),
   },
   legendaPannello: '.lg-pc', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{

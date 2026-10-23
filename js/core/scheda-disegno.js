@@ -33,7 +33,7 @@ function disegnaRiga(r) {
   }
   riga.append(el('span', 'scheda-et', tl(r.etichetta)));
   if (r.urlValore) { // il valore stesso è il collegamento (es. CUP → scheda del progetto su OpenCUP)
-    const a = el('a', r.colore ? 'scheda-val scheda-badge-tinta' : 'scheda-val', r.valore);
+    const a = el('a', r.colore ? `scheda-val scheda-badge-tinta${r.pieno ? ' scheda-badge-pieno' : ''}` : 'scheda-val', r.valore);
     if (r.colore) a.style.setProperty('--tinta', r.colore); // badge cliccabile
     collegamento(a, r.urlValore);
     riga.append(a);

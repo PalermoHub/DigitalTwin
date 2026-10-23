@@ -197,6 +197,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
     const strumenti = [...corpo.querySelectorAll('.scheda-sez')].filter(sz => sz.dataset.tab === 'strumenti').sort((a, b) => ordine(a) - ordine(b));
     corpo.append(...strumenti);
     if (edificio) corpo.prepend(edificio); // anche in Luogo l'edificio è la prima informazione
+    corpo.prepend(...corpo.querySelectorAll('.scheda-sez[data-peso="1"]')); // tranne lo strato che il clic ha cercato (peso 1, es. l'area del Piano di emergenza)
     const sezioni = [...corpo.querySelectorAll('.scheda-sez')];
     for (const sz of sezioni) if (sz.dataset.strato) sz.querySelector('.scheda-sez-extra').append(creaInterruttoreStrato(sz.dataset.strato));
     for (const t of corpo.querySelectorAll('.scheda-tipo[data-strato]')) t.querySelector(':scope > summary').append(creaInterruttoreStrato(t.dataset.strato));

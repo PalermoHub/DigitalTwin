@@ -28,7 +28,7 @@ const mq = v => (Number.isFinite(Number(v)) && Number(v) > 0
 export const urlPercorso = p => (Number.isFinite(p.lat) && Number.isFinite(p.lon)
   ? `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}&travelmode=driving`
   : null);
-const rigaPercorso = p => (urlPercorso(p) ? [{ etichetta: 'Percorso', valore: t('pc.percorso'), urlValore: urlPercorso(p) }] : []);
+const rigaPercorso = p => (urlPercorso(p) ? [{ etichetta: 'Percorso', valore: t('pc.percorso'), urlValore: urlPercorso(p), colore: '#009a49', pieno: true }] : []);
 
 export const titolo = p => classe(p.classe)?.etichetta ?? p.descrizione;
 
@@ -46,9 +46,13 @@ export function modelloPopup(p) {
   };
 }
 
-export function vocePc(p) {
+// Con lo strato acceso l'area cliccata è la ragione del clic: la sua sezione apre il tab Luogo (peso 1, prima anche dell'edificio).
+export const PESO_PRIMO = 1;
+const PESO = 7;
+
+export function vocePc(p, primo = false) {
   return {
-    chiave: chiave(p), peso: 7, strato: 'protezione-civile', titolo: titolo(p), icona: 'protezione-civile', badge: p.numero ? t('pc.numero', { n: p.numero }) : undefined, sempre: true,
+    chiave: chiave(p), peso: primo ? PESO_PRIMO : PESO, strato: 'protezione-civile', titolo: titolo(p), icona: 'protezione-civile', badge: p.numero ? t('pc.numero', { n: p.numero }) : undefined, sempre: true,
     gruppi: [
       { righe: righe([['Tipologia', tipologia(p)], ['Numero area', p.numero], ['Superficie', mq(p.sup_m2)], ['Note', p.nota]]) },
       { titolo: 'Dove si trova', righe: [...righe([['Circoscrizione', p.circoscrizione], ['Quartiere', p.quartiere], ['UPL', p.upl]]), ...rigaPercorso(p)] },
@@ -58,10 +62,10 @@ export function vocePc(p) {
 }
 
 // Più aree sovrapposte nello stesso punto: una sola sezione a fisarmonica; con una sola resta la sezione completa.
-export function vociPc(lista) {
-  if (lista.length <= 1) return lista.map(vocePc);
+export function vociPc(lista, primo = false) {
+  if (lista.length <= 1) return lista.map(p => vocePc(p, primo));
   return [{
-    chiave: 'pc:gruppo', peso: 7, strato: 'protezione-civile', titolo: 'Piano di emergenza', icona: 'protezione-civile', badge: tn('pc.aree', lista.length), sempre: true,
+    chiave: 'pc:gruppo', peso: primo ? PESO_PRIMO : PESO, strato: 'protezione-civile', titolo: 'Piano di emergenza', icona: 'protezione-civile', badge: tn('pc.aree', lista.length), sempre: true,
     gruppi: [],
     accordion: {
       icona: 'protezione-civile', suggerimento: 'Seleziona un\'area per vedere i dettagli',

@@ -29,6 +29,8 @@ test('scheda: circoscrizione, quartiere e UPL; le righe assenti non compaiono', 
   assert.equal(r['UPL'], 'Tribunali o Kalsa');
   assert.ok(!('Note' in r) && !('Tipologia' in r));
   assert.equal(vocePc(attesa).peso, 7); // tab Luogo
+  assert.equal(vocePc(attesa, true).peso, 1); // clic sull'area a strato acceso: prima di tutto
+  assert.equal(vociPc([attesa, vvf], true)[0].peso, 1);
   assert.equal(righeDi(vocePc(vvf))['Note'], 'Solo VV.F.');
   assert.match(righeDi(vocePc(vvf))['Tipologia'], /Vigili del Fuoco/);
 });
