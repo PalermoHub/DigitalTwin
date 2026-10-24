@@ -2320,3 +2320,7 @@ a.scheda-tel { min-height: 44px; display: inline-flex; align-items: center; box-
 .pc-mini { margin: 8px 0 4px; }
 .pc-mini-tela { position: relative; width: 100%; overflow: hidden; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface-alt); }
 .pc-mini-nota { margin: 4px 2px 0; font-size: var(--fs-xs); color: var(--text-muted); }
+/* righe con pulsante a pieno (telefono, percorso): etichetta e pulsante sulla stessa linea centrale */
+.scheda-riga:has(.scheda-badge-pieno) { align-items: center; }
+.scheda-tel { justify-content: center; min-width: 76px; text-align: center; }
+a.scheda-tel { min-height: 40px; }
