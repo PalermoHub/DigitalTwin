@@ -40,12 +40,25 @@ export function immagineBadge(icona, colore) {
   return g.getImageData(0, 0, LATO, LATO);
 }
 
+// Le immagini si disegnano solo quando la mappa le chiede (`styleimagemissing`: un layer `symbol` visibile le usa), non quando il layer
+// viene aggiunto: all'avvio i layer sono tutti spenti e disegnare ogni sagoma SDF costava mezzo secondo.
+const IMMAGINI = new WeakMap(); // mappa → Map(id → () => [immagine, opzioni])
+function richiediImmagine(map, id, crea) {
+  let voci = IMMAGINI.get(map);
+  if (!voci) {
+    voci = new Map();
+    IMMAGINI.set(map, voci);
+    map.on('styleimagemissing', e => {
+      const voce = voci.get(e.id);
+      if (voce && !map.hasImage(e.id)) map.addImage(e.id, ...voce());
+    });
+  }
+  voci.set(id, crea);
+}
+
 // Registra l'immagine di ogni colore (quelle già presenti restano).
 export function registraBadge(map, icona, colori) {
-  for (const colore of new Set(colori)) {
-    const id = idBadge(icona, colore);
-    if (!map.hasImage(id)) map.addImage(id, immagineBadge(icona, colore), { pixelRatio: PR });
-  }
+  for (const colore of new Set(colori)) richiediImmagine(map, idBadge(icona, colore), () => [immagineBadge(icona, colore), { pixelRatio: PR }]);
 }
 
 // Espressione `icon-image`: l'immagine del colore della categoria (`voci` = [[valore, colore], …]), `altro` se nessuna.
@@ -129,7 +142,7 @@ export function immagineGlifo(icona) {
 }
 
 export function registraGlifo(map, icona) {
-  if (!map.hasImage(idGlifo(icona))) map.addImage(idGlifo(icona), immagineGlifo(icona), { sdf: true, pixelRatio: PR });
+  richiediImmagine(map, idGlifo(icona), () => [immagineGlifo(icona), { sdf: true, pixelRatio: PR }]);
 }
 
 // Espressione `icon-image`: il glifo della categoria (`voci` = [[valore, icona], …]), `altra` se nessuna.
