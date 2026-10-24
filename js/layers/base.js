@@ -112,8 +112,28 @@ const INIZIALE = document.documentElement.dataset.tema === 'scuro' ? 'mapbox-scu
 let baseCorrente = INIZIALE;
 const stiliVettoriali = {}; // id -> promessa del JSON dello stile, scaricato una volta sola
 
+const vettorialiRichieste = new Set(); // basi vettoriali di cui si è già chiesto lo stile
+let basiPronte = false; // le basi raster esistono: da qui in poi una base vettoriale si può caricare
+let sottoBasi; // primo layer dello stile quando nascono le basi: ogni base vettoriale si inserisce sotto a tutto
+
+// Le basi vettoriali OpenFreeMap (circa 170 layer in tutto) si aggiungono alla prima scelta, non all'avvio:
+// la base di partenza è Mapbox e ogni layer in più rallenta lo stile a ogni addLayer e getStyle.
+function caricaVettoriale(map, id) {
+  if (vettorialiRichieste.has(id)) return;
+  vettorialiRichieste.add(id);
+  stiliVettoriali[id] ??= fetch(VETTORIALI[id]).then(r => r.json());
+  stiliVettoriali[id].then(stile => {
+    for (const l of stile.layers) {
+      if (!map.getSource(l.source) && l.type !== 'background') continue;
+      map.addLayer({ ...l, id: `base-${id}-${l.id}`, layout: { ...l.layout, visibility: 'none' } }, sottoBasi);
+    }
+    scegli(map, baseCorrente);
+  }).catch(() => { delete stiliVettoriali[id]; vettorialiRichieste.delete(id); }); // senza rete resta disponibile il resto delle basi; alla scelta successiva si riprova
+}
+
 function scegli(map, base) {
   baseCorrente = base;
+  if (VETTORIALI[base] && basiPronte) caricaVettoriale(map, base);
   for (const l of map.getStyle().layers) {
     const v = Object.keys(VETTORIALI).find(id => l.id.startsWith(`base-${id}-`));
     if (v) map.setLayoutProperty(l.id, 'visibility', base === v ? 'visible' : 'none');
@@ -156,17 +176,9 @@ export default {
     const nascosto = { visibility: 'none' };
     map.addLayer({ id: 'base-bianco', type: 'background', layout: nascosto, paint: { 'background-color': '#ffffff' } }, sotto);
     for (const id of Object.keys(RASTER)) map.addLayer({ id: `base-${id}`, type: 'raster', source: `${id}-r`, layout: nascosto }, sotto);
-    scegli(map, baseCorrente); // nasconde Positron e mostra la base di partenza
-    for (const [id, url] of Object.entries(VETTORIALI)) {
-      stiliVettoriali[id] ??= fetch(url).then(r => r.json());
-      stiliVettoriali[id].then(stile => {
-        for (const l of stile.layers) {
-          if (!map.getSource(l.source) && l.type !== 'background') continue;
-          map.addLayer({ ...l, id: `base-${id}-${l.id}`, layout: { ...l.layout, visibility: 'none' } }, sotto);
-        }
-        scegli(map, baseCorrente);
-      }).catch(() => {}); // senza rete resta disponibile il resto delle basi
-    }
+    sottoBasi = sotto;
+    basiPronte = true;
+    scegli(map, baseCorrente); // nasconde Positron e mostra la base di partenza (una base vettoriale scelta prima si carica qui)
   },
   pannello(el, map) {
     const bottone = document.getElementById('btn-gruppo-base');
