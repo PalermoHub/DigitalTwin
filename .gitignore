@@ -82,6 +82,7 @@ dati/README.md
 dati/pai/README.md
 scripts/*
 !scripts/serve.py
+!scripts/genera_modulepreload.mjs
 !scripts/edificio/
 !scripts/estrai_stile_omi.mjs
 !scripts/colonnine.py
