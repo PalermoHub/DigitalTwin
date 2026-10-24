@@ -222,3 +222,5 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .pagina-info .guida-figura--telefono { max-width: 300px; margin: 0; }
 .pagina-info .guida-figura--telefono img { width: 100%; height: auto; border-radius: var(--r-sm); border: 1px solid var(--border); }
 @media (max-width: 760px) { .pagina-info .emergenza-passo { grid-template-columns: 1fr; gap: 0; } .pagina-info .guida-figura--telefono { margin-top: 12px; } }
+/* la voce «Modalità emergenza» resta rossa anche quando è la pagina corrente (batte la regola di aria-current) */
+.pagina-home #menu-info a[data-scheda="emergenza"][aria-current="page"] { background: var(--emergenza, #d7263d); color: #fff; }
