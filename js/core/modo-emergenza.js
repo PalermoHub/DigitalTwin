@@ -5,6 +5,7 @@ import { t } from './i18n.js';
 
 export const STRATO_EMERGENZA = 'protezione-civile';
 export const CLASSE_EMERGENZA = 'modo-emergenza';
+export const ZOOM_MINIMO_EMERGENZA = 11; // sotto questo zoom i poligoni delle aree non si vedono: in modalità emergenza la mappa non scende oltre
 export const MEDIA_TELEFONO = '(max-width: 720px)';
 
 // La modalità vale solo su telefono, a strato acceso e se non è stata chiusa a mano.
@@ -15,8 +16,8 @@ export const moduliAlClic = (moduli, emergenza) => (emergenza ? moduli.filter(m 
 
 export const inModoEmergenza = (doc = document) => doc.body.classList.contains(CLASSE_EMERGENZA);
 
-// `barraTab` = la barra a tab del telefono; `icone` = gli svg dei tab Home, GPS, Condividi, Talia ed Esci; `suHome` riporta la mappa allo zoom di base, `suGps`, `suCondividi` e `suTalia` aprono posizione, condivisione e chat; `suAttiva` chiude i fogli aperti.
-export function collegaModoEmergenza(doc, { barraTab, icone, suHome = () => {}, suGps = () => {}, suCondividi = () => {}, suTalia = () => {}, suAttiva = () => {} }) {
+// `barraTab` = la barra a tab del telefono; `icone` = gli svg dei tab Home, GPS, Condividi, Talia ed Esci; `suHome` riporta la mappa allo zoom di base, `suGps`, `suCondividi` e `suTalia` aprono posizione, condivisione e chat; `suAttiva` chiude i fogli aperti; `suModo(attivo)` avvisa a ogni cambio di modalità (serve a fermare lo zoom minimo).
+export function collegaModoEmergenza(doc, { barraTab, icone, suHome = () => {}, suGps = () => {}, suCondividi = () => {}, suTalia = () => {}, suAttiva = () => {}, suModo = () => {} }) {
   const finestra = doc.defaultView;
   const telefono = finestra?.matchMedia?.(MEDIA_TELEFONO);
   let uscito = false;
@@ -40,7 +41,9 @@ export function collegaModoEmergenza(doc, { barraTab, icone, suHome = () => {}, 
     const strato = doc.getElementById(`strato-${STRATO_EMERGENZA}`);
     if (!strato?.checked) uscito = false;
     const ora = modoAttivo({ telefono: Boolean(telefono?.matches), stratoAcceso: Boolean(strato?.checked), uscito });
+    const prima = doc.body.classList.contains(CLASSE_EMERGENZA);
     doc.body.classList.toggle(CLASSE_EMERGENZA, ora);
+    if (ora !== prima) suModo(ora);
     if (ora) { suAttiva(); setTimeout(suAttiva, 0); } // anche a fine gestori: un link o l'app stessa possono riaprire il foglio
   }
 

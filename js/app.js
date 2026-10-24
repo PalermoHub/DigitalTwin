@@ -76,7 +76,7 @@ import { collegaFiltroLinea } from './layers/trasporto-filtro.js';
 import terreno from './layers/terreno.js';
 import base from './layers/base.js';
 import { t } from './core/i18n.js';
-import { collegaModoEmergenza, inModoEmergenza } from './core/modo-emergenza.js';
+import { collegaModoEmergenza, inModoEmergenza, ZOOM_MINIMO_EMERGENZA } from './core/modo-emergenza.js';
 import { creaRegolatoreRaggio } from './core/raggio-vicini.js';
 import { caricaLiveZoom, collegaLiveZoom, creaInterruttoreLegenda as interruttoreLiveZoomLegenda } from './core/live-zoom.js';
 
@@ -260,7 +260,8 @@ map.once('style.load', async () => {
   // telefono con il Piano di emergenza acceso: barra con soli Mappa e Talia (il resto lo nasconde il CSS)
   apriTalia = () => { tab.imposta(null); rail.commuta('chatbot'); };
   const iconeEmergenza = { home: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21M8 8.5h5v4H8z"/></svg>', gps: document.getElementById('btn-posizione').innerHTML, condividi: document.getElementById('btn-condividi').innerHTML, talia: ICONE_RAIL.chatbot, esci: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' };
-  const emergenza = collegaModoEmergenza(document, { barraTab: tab.barra, icone: iconeEmergenza, suHome: () => map.flyTo({ center: CENTRO, zoom: ZOOM, bearing: 0, pitch: 0 }), suGps: () => document.getElementById('btn-posizione').click(), suCondividi: () => document.getElementById('btn-condividi').click(), suTalia: () => apriTalia(), suAttiva: () => tab.imposta(null) });
+  const zoomMinimoNormale = map.getMinZoom();
+  const emergenza = collegaModoEmergenza(document, { barraTab: tab.barra, icone: iconeEmergenza, suHome: () => map.flyTo({ center: CENTRO, zoom: ZOOM, bearing: 0, pitch: 0 }), suGps: () => document.getElementById('btn-posizione').click(), suCondividi: () => document.getElementById('btn-condividi').click(), suTalia: () => apriTalia(), suAttiva: () => tab.imposta(null), suModo: attivo => map.setMinZoom(attivo ? ZOOM_MINIMO_EMERGENZA : zoomMinimoNormale) }); // in emergenza lo zoom minimo si ferma dove si vedono i poligoni
   emergenza.aggiorna();
   map.once('idle', emergenza.aggiorna);
   tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); rail.chiudi('chatbot'); if (inModoEmergenza()) document.querySelector('#scheda:not([hidden]) .scheda-x')?.click(); /* in emergenza «Mappa» chiude anche la scheda */ document.getElementById('crediti').open && document.getElementById('crediti').close(); };
