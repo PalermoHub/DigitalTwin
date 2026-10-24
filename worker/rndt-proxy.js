@@ -7,10 +7,13 @@ import { aggiorna, apriWebSocket, gestisciNavi } from './navi-core.js';
 import { gestisciSatelliti } from './satelliti-core.js';
 import { gestisciAllerte } from './allerte-core.js';
 import { gestisciTraffico } from './traffico-core.js';
+import { gestisciCorto } from './corto-core.js';
 
 export default {
   fetch(richiesta, env) {
-    const percorso = new URL(richiesta.url).pathname;
+    const { pathname: percorso, hostname } = new URL(richiesta.url);
+    // la radice del dominio corto serve i link corti; /corto (creazione) risponde su qualunque indirizzo del Worker
+    if (percorso === '/corto' || (env.DOMINIO_CORTO && hostname === new URL(env.DOMINIO_CORTO).hostname)) return gestisciCorto(richiesta, env);
     if (percorso === '/voli') return gestisciVoli(richiesta, env, fetch, caches.default);
     if (percorso === '/aeroporto') return gestisciAeroporto(richiesta, env, fetch, caches.default);
     if (percorso === '/navi') return gestisciNavi(richiesta, env, caches.default);

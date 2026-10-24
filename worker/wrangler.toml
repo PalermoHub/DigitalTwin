@@ -3,9 +3,19 @@ main = "rndt-proxy.js"
 compatibility_date = "2026-09-01"
 workers_dev = true
 
+# domini propri (zona palermodigitaltwin.link su Cloudflare): la radice serve i link corti, api. serve il proxy e i dati live
+routes = [
+  { pattern = "palermodigitaltwin.link", custom_domain = true },
+  { pattern = "api.palermodigitaltwin.link", custom_domain = true },
+]
+
 [vars]
 # origini che possono usare il proxy (separate da virgola): sviluppo locale (scripts/serve.py), GitHub Pages (account personale e organizzazione PalermoHub) e il dominio del progetto
 ORIGINI = "http://localhost:8000,http://127.0.0.1:8000,https://gbvitrano.github.io,https://palermohub.github.io,https://palermodigitaltwin.opendatasicilia.it"
+
+# link corti: siti a cui un link corto può portare (il primo è quello della radice) e indirizzo pubblico del servizio
+SITI = "https://palermodigitaltwin.opendatasicilia.it,https://gbvitrano.github.io,https://palermohub.github.io"
+DOMINIO_CORTO = "https://palermodigitaltwin.link"
 
 # navi: ogni 5 minuti il Worker ascolta AISStream per qualche secondo e unisce le posizioni nel KV (chiave AISSTREAM_KEY = secret, mai nel codice)
 [triggers]
@@ -14,3 +24,8 @@ crons = ["*/5 * * * *"]
 [[kv_namespaces]]
 binding = "NAVI"
 id = "55b7416863594bd387403dccc359e75b"
+
+# link corti: codice -> link lungo (chiavi u:<codice>) e link lungo -> codice (chiavi h:<impronta>)
+[[kv_namespaces]]
+binding = "LINK"
+id = "ac4c048857e74afda4da94f8de24ecd0"

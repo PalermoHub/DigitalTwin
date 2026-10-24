@@ -4,6 +4,7 @@ import { codifica, decodifica, costruisciLink, PARAMETRO } from './condivisione-
 import { RETI, TESTO_CONDIVISIONE } from './condivisione-reti.js';
 import { installaOverlay } from './condivisione-storage.js';
 import { raccogli, applica } from './condivisione-stato.js';
+import { accorcia } from './condivisione-corto.js';
 import { svgIcona } from './icone.js';
 import { t as tr } from './i18n.js';
 
@@ -57,14 +58,18 @@ export function collegaCondivisione(map, bottone, { storage }) {
   }
 
   const chiudi = () => { menu.hidden = true; bottone.setAttribute('aria-expanded', 'false'); };
-  async function apri() {
-    const r = await link();
-    campo.value = r.link;
+  function mostra(indirizzo) {
+    campo.value = indirizzo;
     reti.replaceChildren(...RETI.map(rete => {
-      const a = el('a', { className: 'condividi-rete', href: rete.url(r.link, TESTO_CONDIVISIONE), target: '_blank', rel: 'noopener noreferrer', title: tr('condividi.su', { rete: rete.nome }), innerHTML: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="${rete.icona}"/></svg>` });
+      const a = el('a', { className: 'condividi-rete', href: rete.url(indirizzo, TESTO_CONDIVISIONE), target: '_blank', rel: 'noopener noreferrer', title: tr('condividi.su', { rete: rete.nome }), innerHTML: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="${rete.icona}"/></svg>` });
       a.setAttribute('aria-label', tr('condividi.su', { rete: rete.nome }));
       return a;
     }));
+  }
+
+  async function apri() {
+    const r = await link();
+    mostra(r.link);
     const avvisi = [];
     if (r.scartati) avvisi.push(tr('condividi.scartati', { n: r.scartati }));
     if (r.troncato) avvisi.push(tr('condividi.troncato'));
@@ -74,6 +79,9 @@ export function collegaCondivisione(map, bottone, { storage }) {
     bottone.setAttribute('aria-expanded', 'true');
     campo.focus();
     campo.select();
+    // il link lungo è già pronto e copiabile; se il Worker risponde in fretta lo si sostituisce con quello corto
+    const corto = await accorcia(r.link);
+    if (corto && !menu.hidden && campo.value === r.link) { mostra(corto); campo.select(); }
   }
 
   bottone.addEventListener('click', () => (menu.hidden ? apri() : chiudi()));

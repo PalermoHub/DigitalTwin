@@ -44,3 +44,16 @@ Parole chiave: link alla scheda, punto cliccato, scheda condivisa, tab della sch
 Domande tipiche: Se condivido il link con la scheda aperta, chi lo riceve la vede? Il tab scelto resta?
 
 Quando si apre la scheda del luogo, l'indirizzo del browser si aggiorna con il punto cliccato e il tab scelto. Aprendo un link che contiene un punto della scheda, l'app, dopo il primo caricamento dei dati, **riapre la scheda in quel punto** (e sul tab indicato).
+
+
+---
+
+## Link corto
+
+Parole chiave: link corto, accorciare, shortlink, palermodigitaltwin.link, link lungo, link scaduto, link non trovato.
+
+Domande tipiche: Perché il link che condivido è corto? Il link corto funziona per sempre? Che cosa succede se il link corto non si apre? Perché a volte il link resta lungo?
+
+Quando si apre la finestra di condivisione, l'app mostra subito il link completo e, in pochi istanti, lo **sostituisce con un link corto** del tipo `palermodigitaltwin.link/a7Kd9xQ`. Chi lo apre arriva alla stessa vista. Il link corto custodisce lo stesso stato del link lungo: la vista resta com'è, cambia solo l'indirizzo.
+
+Se il servizio dei link corti non risponde (rete assente, uso in locale), il campo resta con il **link lungo**, che funziona comunque. I link corti restano validi **due anni** dalla creazione; un codice sbagliato o scaduto dà «link non trovato». Il link corto porta solo a pagine di questo sito.

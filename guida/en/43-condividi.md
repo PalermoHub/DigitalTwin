@@ -44,3 +44,16 @@ Keywords: link to the profile, clicked point, shared profile, profile tab, profi
 Typical questions: If I share the link with the profile open, does whoever receives it see it? Does the chosen tab stay?
 
 When the place profile is opened, the browser address is updated with the clicked point and the chosen tab. When a link that contains a profile point is opened, the app, after the first loading of the data, **reopens the profile at that point** (and on the tab indicated).
+
+
+---
+
+## Short link
+
+Keywords: short link, shorten, shortlink, palermodigitaltwin.link, long link, expired link, link not found.
+
+Typical questions: Why is the link I share short? Does the short link work forever? What happens if the short link does not open? Why does the link sometimes stay long?
+
+When the share window opens, the app shows the full link straight away and, within moments, **replaces it with a short link** such as `palermodigitaltwin.link/a7Kd9xQ`. Whoever opens it arrives at the same view. The short link holds the same state as the long link: the view stays as it is, only the address changes.
+
+If the short-link service does not answer (no network, local use), the field keeps the **long link**, which works anyway. Short links stay valid for **two years** from when they are created; a wrong or expired code gives «link not found». The short link only leads to pages of this site.
