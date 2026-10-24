@@ -1,5 +1,5 @@
 import { allineaLayerAlPiano } from './allinea-piano.js';
-import { CENTRO, ZOOM, LIMITI, STILE_BASE } from './config.js';
+import { CENTRO, ZOOM, LIMITI, STILE_AVVIO } from './config.js';
 
 const STILE_VUOTO = {
   version: 8,
@@ -29,7 +29,7 @@ export function creaMappa(idContenitore, suRipiego = () => {}) {
   const protocollo = new pmtiles.Protocol();
   maplibregl.addProtocol('pmtiles', protocollo.tile);
   const map = new maplibregl.Map({
-    container: idContenitore, center: CENTRO, zoom: ZOOM, maxZoom: 19, maxBounds: LIMITI, style: STILE_BASE, hash: true,
+    container: idContenitore, center: CENTRO, zoom: ZOOM, maxZoom: 19, maxBounds: LIMITI, style: STILE_AVVIO, hash: true,
     pitch: 0, bearing: 0,
   });
   abilitaInclinazione(map, false);

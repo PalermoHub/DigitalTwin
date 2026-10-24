@@ -1,5 +1,6 @@
 import { svgIcona } from '../core/icone.js';
 import { t, tl } from '../core/i18n.js';
+import { STILE_BASE } from '../core/config.js';
 
 // Basi cartografiche alternative: Positron (stile di partenza), basi raster classiche (OSM, Esri, Google,
 // OpenTopoMap), carte tecniche comunali e regionali e sfondi neutri. Una sola è visibile alla volta.
@@ -59,8 +60,9 @@ for (const s of STORICHE) {
     attr: `${s.attr} · Atlante storico OpenDataSicilia, georeferenziazione su Map Warper`,
   };
 }
-// Basi vettoriali OpenFreeMap: stessi sprite, font e sorgenti dello stile di partenza, quindi se ne aggiungono solo i layer.
+// Basi vettoriali OpenFreeMap (Positron, scura, luminosa): condividono sprite, font e sorgenti, che arrivano con lo stile della prima scelta.
 const VETTORIALI = {
+  positron: STILE_BASE,
   'ofm-dark': 'https://tiles.openfreemap.org/styles/dark',
   'ofm-bright': 'https://tiles.openfreemap.org/styles/bright',
 };
@@ -106,23 +108,26 @@ const GRUPPI = [
 ];
 const miniatura = id => new URL(`img/basi/${id}.jpg`, document.baseURI).href; // assoluto: la variabile CSS si risolve rispetto a css/
 
-let idPositron = [];
-// Base di partenza: Mapbox chiara o scura, secondo il tema all'avvio (lo stile OpenFreeMap serve solo per font e sprite).
+// Base di partenza: Mapbox chiara o scura, secondo il tema all'avvio (lo stile di avvio ha solo i font delle etichette).
 const INIZIALE = document.documentElement.dataset.tema === 'scuro' ? 'mapbox-scuro' : 'mapbox-chiaro';
 let baseCorrente = INIZIALE;
 const stiliVettoriali = {}; // id -> promessa del JSON dello stile, scaricato una volta sola
 
 const vettorialiRichieste = new Set(); // basi vettoriali di cui si è già chiesto lo stile
 let basiPronte = false; // le basi raster esistono: da qui in poi una base vettoriale si può caricare
-let sottoBasi; // primo layer dello stile quando nascono le basi: ogni base vettoriale si inserisce sotto a tutto
+let sottoBasi; // primo layer delle basi: ogni base vettoriale si inserisce sotto a tutto
+let spriteImpostato = false; // lo sprite OpenFreeMap si imposta con la prima base vettoriale
 
-// Le basi vettoriali OpenFreeMap (circa 170 layer in tutto) si aggiungono alla prima scelta, non all'avvio:
+// Le basi vettoriali OpenFreeMap (Positron, scura, luminosa: circa 220 layer in tutto) si aggiungono alla prima scelta, non all'avvio:
 // la base di partenza è Mapbox e ogni layer in più rallenta lo stile a ogni addLayer e getStyle.
+// Con lo stile arrivano anche le sorgenti vettoriali e lo sprite (uguali per tutte e tre).
 function caricaVettoriale(map, id) {
   if (vettorialiRichieste.has(id)) return;
   vettorialiRichieste.add(id);
   stiliVettoriali[id] ??= fetch(VETTORIALI[id]).then(r => r.json());
   stiliVettoriali[id].then(stile => {
+    for (const [nome, sorgente] of Object.entries(stile.sources ?? {})) if (!map.getSource(nome)) map.addSource(nome, sorgente);
+    if (stile.sprite && !spriteImpostato) { map.setSprite(stile.sprite); spriteImpostato = true; }
     for (const l of stile.layers) {
       if (!map.getSource(l.source) && l.type !== 'background') continue;
       map.addLayer({ ...l, id: `base-${id}-${l.id}`, layout: { ...l.layout, visibility: 'none' } }, sottoBasi);
@@ -138,23 +143,19 @@ function scegli(map, base) {
     const v = Object.keys(VETTORIALI).find(id => l.id.startsWith(`base-${id}-`));
     if (v) map.setLayoutProperty(l.id, 'visibility', base === v ? 'visible' : 'none');
   }
-  for (const id of idPositron) {
-    if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', base === 'positron' ? 'visible' : 'none');
-  }
   map.setLayoutProperty('base-bianco', 'visibility', base === 'bianco' ? 'visible' : 'none');
   for (const id of Object.keys(RASTER)) map.setLayoutProperty(`base-${id}`, 'visibility', base === id ? 'visible' : 'none');
 }
 
-// Layer della base cartografica (raster, bianca, vettoriali e Positron): la vista «Strati in 3D» li mette nel piano più basso.
-export const eBase = id => id.startsWith('base-') || idPositron.includes(id);
+// Layer della base cartografica (raster, bianca e vettoriali): la vista «Strati in 3D» li mette nel piano più basso.
+export const eBase = id => id.startsWith('base-');
 
-// Primo layer sopra le basi (le raster, la bianca, le vettoriali e quelle di Positron): lì stanno le ortofoto, sotto ogni dato.
+// Primo layer sopra le basi (le raster, la bianca e le vettoriali): lì stanno le ortofoto, sotto ogni dato.
 // `undefined` se non c'è altro: il layer va in cima.
 export function sopraLeBasi(map) {
   const strati = map.getStyle().layers;
-  const sono = new Set(idPositron);
   let ultimo = -1;
-  strati.forEach((l, i) => { if (l.id.startsWith('base-') || sono.has(l.id)) ultimo = i; });
+  strati.forEach((l, i) => { if (l.id.startsWith('base-')) ultimo = i; });
   return strati[ultimo + 1]?.id;
 }
 
@@ -170,15 +171,13 @@ export default {
     }
   },
   aggiungiLayer(map) {
-    const stile = map.getStyle().layers;
-    idPositron = stile.filter(l => !l.id.startsWith('base-')).map(l => l.id);
-    const sotto = stile[0]?.id; // le basi stanno sotto a tutto
+    const sotto = map.getStyle().layers[0]?.id; // le basi stanno sotto a tutto (lo stile di avvio è vuoto: di norma `undefined`)
     const nascosto = { visibility: 'none' };
     map.addLayer({ id: 'base-bianco', type: 'background', layout: nascosto, paint: { 'background-color': '#ffffff' } }, sotto);
     for (const id of Object.keys(RASTER)) map.addLayer({ id: `base-${id}`, type: 'raster', source: `${id}-r`, layout: nascosto }, sotto);
-    sottoBasi = sotto;
+    sottoBasi = 'base-bianco';
     basiPronte = true;
-    scegli(map, baseCorrente); // nasconde Positron e mostra la base di partenza (una base vettoriale scelta prima si carica qui)
+    scegli(map, baseCorrente); // mostra la base di partenza (una base vettoriale scelta prima si carica qui)
   },
   pannello(el, map) {
     const bottone = document.getElementById('btn-gruppo-base');

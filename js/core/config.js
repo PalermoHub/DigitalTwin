@@ -9,7 +9,10 @@ export const ZOOM_SLIDER = [12, 18];
 export const ZOOM_SCHEDA = 16.5;
 
 // Stile della base cartografica delle app originali (porta con sé i font dei numeri civici).
-export const STILE_BASE = 'https://tiles.openfreemap.org/styles/positron';
+export const STILE_BASE = 'https://tiles.openfreemap.org/styles/positron'; // Positron: la base «Mappa chiara» scelta dall'utente e la mini-mappa della scheda
+// Stile con cui parte la mappa: senza sorgenti né layer, perché la base di partenza è raster (Mapbox). Servono solo i font delle etichette;
+// gli stili OpenFreeMap (con sprite e sorgenti vettoriali) arrivano soltanto se l'utente sceglie una base OpenFreeMap (vedi layers/base.js).
+export const STILE_AVVIO = { version: 8, glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf', sources: {}, layers: [] };
 
 // Percorso in dati/ -> link pubblicato (dal catalogo). Chi non ha un link si legge da dati/.
 const remoti = new Map();
