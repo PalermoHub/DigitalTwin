@@ -340,7 +340,9 @@ async function costruisciElenco() {
   const bottoneVerso = el('button', { type: 'button', className: 'filtro-chip' });
   bottoneVerso.addEventListener('click', () => { verso = -verso; ordina(); });
   function ordina() {
-    ul.append(...[...card].sort((x, y) => verso * criteri[criterio].confronta(x, y)));
+    // la scheda di emergenza resta sempre in cima, qualunque sia l'ordine scelto
+    const emerg = li => (STRATI_EMERGENZA.has(li.dataset.strato) ? 0 : 1);
+    ul.append(...[...card].sort((x, y) => emerg(x) - emerg(y) || verso * criteri[criterio].confronta(x, y)));
     bottoniOrdine.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.criterio === criterio)));
     bottoneVerso.textContent = tr(verso > 0 ? 'home.ordina.cresc' : 'home.ordina.decresc');
   }
@@ -390,7 +392,9 @@ async function costruisciPercorsi() {
     return;
   }
   const nomi = new Map(argomenti.flatMap(a => a.strati.map(s => [s.id, s.etichetta])));
-  for (const p of percorsi) {
+  // il percorso di emergenza sta sempre per primo, a prescindere dall'ordine del file
+  const emerg = p => (p.strati.some(id => STRATI_EMERGENZA.has(id)) ? 0 : 1);
+  for (const p of [...percorsi].sort((x, y) => emerg(x) - emerg(y))) {
     const testi = p[lingua()] ?? p.it;
     const apri = el('a', { className: 'percorso-apri', href: MAPPA, textContent: tr('home.percorsi.apri') });
     linkMappa(p.strati, true, p.vista).then(href => { apri.href = href; });
