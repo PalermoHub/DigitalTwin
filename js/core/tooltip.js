@@ -24,28 +24,22 @@ export function impostaTooltipAttivi(valore) {
   if (!abilitato) { popup?.remove(); popup = null; }
 }
 
-// I popup dei layer aperti con un clic si chiudono quando il mouse passa su un altro oggetto della mappa (e compare un tooltip diverso
-// da quello che c'era sotto il clic): i due riquadri insieme si leggono male. Sopra l'oggetto cliccato il popup resta. La selezione
-// in mappa e la scheda non si toccano.
-let tooltipClic = null; // il tooltip «di riferimento» (quello sotto il clic): si fissa al primo movimento del mouse a mappa ferma, perché la scheda può spostarla
-let puntoClic = null;
-const VICINO_AL_CLIC = 12; // px: entro questa distanza dal clic il cursore è ancora sull'oggetto cliccato
+// Un popup aperto con un clic resta dov'è: lo chiudono solo la X, Esc, un clic sulla mappa vuota o un altro clic su un oggetto,
+// mai il passaggio del mouse (la mappa può spostarsi sotto il cursore). Finché è aperto i tooltip al passaggio sono sospesi,
+// così i due riquadri non si sovrappongono. La selezione in mappa e la scheda non si toccano.
 const aperti = new Set();
-function seguiPopupAperti() { // i popup che non sono il tooltip: li si ricorda finché restano aperti
+function seguiPopupAperti(map) { // i popup che non sono il tooltip: li si ricorda finché restano aperti
   if (typeof maplibregl === 'undefined') return; // nei test non c'è
   const addToOriginale = maplibregl.Popup.prototype.addTo;
-  maplibregl.Popup.prototype.addTo = function (map) {
-    if (!this.options.className?.includes('mappa-tooltip')) { aperti.add(this); this.once('close', () => aperti.delete(this)); }
-    return addToOriginale.call(this, map);
+  maplibregl.Popup.prototype.addTo = function (m) {
+    const risultato = addToOriginale.call(this, m);
+    if (!this.options.className?.includes('mappa-tooltip') && !aperti.has(this)) {
+      aperti.add(this);
+      this.once('close', () => aperti.delete(this));
+      nascondi(map); // il tooltip del passaggio sparisce appena si apre il popup
+    }
+    return risultato;
   };
-}
-function chiudiAperti(map, punto, testo) {
-  if (tooltipClic === null) {
-    if (map.isMoving()) return;
-    tooltipClic = Math.hypot(punto.x - puntoClic.x, punto.y - puntoClic.y) <= VICINO_AL_CLIC ? testo : '';
-  }
-  if (testo === tooltipClic) return;
-  for (const p of [...aperti]) p.remove();
 }
 
 function nascondi(map) {
@@ -72,20 +66,18 @@ export function contenutoTooltip(e) {
 }
 
 function collega(map) {
-  seguiPopupAperti();
+  seguiPopupAperti(map);
   map.on('mousemove', e => {
     if (!abilitato) return;
+    if (aperti.size) return; // popup aperto con un clic: niente tooltip al passaggio
     const tip = contenutoTooltip(e);
-    if (puntoClic && tooltipClic === null && !tip) chiudiAperti(map, e.point, '');
     if (!tip) return nascondi(map);
     if (tip.cursore) { map.getCanvas().style.cursor = 'pointer'; mioCursore = true; }
     else if (mioCursore) { map.getCanvas().style.cursor = ''; mioCursore = false; }
     const { corpo } = tip;
     popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'mappa-tooltip', anchor: 'top', offset: 14 });
     popup.setLngLat(e.lngLat).setDOMContent(corpo).addTo(map);
-    if (puntoClic) chiudiAperti(map, e.point, corpo.textContent);
   });
-  map.on('click', e => { tooltipClic = null; puntoClic = e.point; });
   map.on('mouseout', () => nascondi(map));
 }
 
