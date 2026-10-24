@@ -55,7 +55,7 @@ Parole chiave: modalità emergenza, telefono, smartphone, semplificare, solo are
 
 Domande tipiche: Perché sul telefono ho solo Mappa e Talia? Come esco dalla modalità emergenza? Come vedo di nuovo tutti gli strati?
 
-Sul **telefono**, quando il layer «Piano di emergenza» è acceso (da solo o con il percorso «Aree di emergenza»), l'app si riduce all'essenziale: la barra in basso ha solo **Mappa**, **GPS**, **Condividi**, **Talia** ed **Esci**, gli strumenti sulla mappa spariscono (il GPS è nella barra), il foglio degli strati non si apre e un clic su un'area apre **solo la scheda di quell'area**, senza le altre informazioni del punto.
+Sul **telefono**, quando il layer «Piano di emergenza» è acceso (da solo o con il percorso «Aree di emergenza»), l'app si riduce all'essenziale: la barra in basso ha solo **Mappa**, **Zoom base** (riporta la mappa allo zoom di base su Palermo), **GPS**, **Condividi**, **Talia** ed **Esci**, gli strumenti sulla mappa spariscono (il GPS è nella barra), il foglio degli strati non si apre e un clic su un'area apre **solo la scheda di quell'area**, senza le altre informazioni del punto.
 
 Il clic non apre il popup sulla mappa (resta il tooltip) e la scheda si apre a tutta altezza.
 

@@ -184,12 +184,14 @@ function costruisciSlider() {
 // ---- elenco degli strati ----
 const NUOVO_GIORNI = 7; // una scheda è «Nuova» per una settimana dopo l'aggiunta alla mappa
 const GIORNO = 86400000;
+const STRATI_EMERGENZA = new Set(['protezione-civile']); // scheda col badge «Emergenza» e bordo rosso, come il percorso «Aree di emergenza»
 const isNuovo = data => !!data && Date.now() - new Date(data).getTime() <= NUOVO_GIORNI * GIORNO;
 const formatoData = data => new Date(data).toLocaleDateString(lingua(), { day: 'numeric', month: 'long', year: 'numeric' });
 
 // Card a due facce: davanti immagine, titolo, descrizione e pulsante; dietro i dettagli. Si gira col clic sulla card.
 function costruisciCard(s, a) {
   const li = el('li', { className: 'strato-card' });
+  li.classList.toggle('emerg', STRATI_EMERGENZA.has(s.id));
   const interno = el('div', { className: 'card-interno' });
   const chip = [a.titolo, s.sezione].filter(Boolean);
   // sul fronte: ultimo aggiornamento dei dati, o la data di aggiunta se non sono mai stati aggiornati
@@ -197,6 +199,7 @@ function costruisciCard(s, a) {
   const data = s.data ?? a.data;
   const dataCard = a.aggiornati && !s.data ? tr('home.card.aggiornato', { data: formatoData(a.aggiornati) }) : data ? tr('home.card.aggiunto', { data: formatoData(data) }) : '';
   const fronte = el('div', { className: 'card-faccia card-fronte' },
+    ...(STRATI_EMERGENZA.has(s.id) ? [el('span', { className: 'card-emergenza', textContent: tr('home.emergenza') })] : []),
     ...(isNuovo(data) ? [el('span', { className: 'card-nuovo', textContent: tr('home.nuovo') })] : []),
     el('img', { className: 'card-img', src: `img/home/strati/${s.id}.webp`, alt: '', title: s.etichetta, width: 640, height: 360, loading: 'lazy' }),
     el('div', { className: 'card-corpo' },

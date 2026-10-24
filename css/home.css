@@ -156,14 +156,15 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .numero span { color: var(--text-muted); font-size: var(--fs-md); }
 @media (prefers-reduced-motion: reduce) { .numero { transition: none; } }
 
-/* percorsi guidati, filtro per ente, badge «Nuovo» */
+/* percorsi guidati, filtro per ente, badge «Nuovo» e «Emergenza» */
+:root { --emergenza: #d7263d; }
 .home-percorsi-fascia { margin-bottom: 28px; }
 .home-percorsi-fascia h3 { margin: 0 0 4px; }
 .home-percorsi-intro { margin: 0 0 14px; color: var(--text-muted); }
 .home-percorsi { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
 .percorso { display: flex; flex-direction: column; gap: 6px; padding: 16px; border: 1px solid var(--border-ui); border-radius: var(--r-md, 12px); background: var(--surface); }
 .percorso h4 { margin: 0; }
-.percorso-badge { align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #d7263d; color: #fff; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }
+.percorso-badge { align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: var(--emergenza); color: #fff; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }
 .percorso p { margin: 0; }
 .percorso-strati { color: var(--text-muted); font-size: var(--fs-xs); }
 .percorso-apri { margin-top: auto; align-self: flex-start; padding: 6px 14px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: var(--fs-sm); font-weight: 700; text-decoration: none; }
@@ -182,6 +183,9 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .home-menu-voce:hover { background: var(--surface-hover); }
 .home-scelte { display: contents; }
 .home-azzera { padding: 6px 8px; border: 0; background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-sm); text-decoration: underline; cursor: pointer; }
+.card-emergenza { position: absolute; top: 10px; right: 10px; z-index: 1; padding: 3px 10px; border-radius: 999px; background: var(--emergenza); color: #fff; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }
+.strato-card.emerg .card-fronte { box-shadow: inset 0 0 0 3px var(--emergenza); }
+.percorso:has(.percorso-badge) { border-color: var(--emergenza); box-shadow: inset 0 0 0 2px var(--emergenza); }
 .card-nuovo { position: absolute; top: 10px; left: 10px; z-index: 1; padding: 3px 10px; border-radius: 999px; background: #1e8e3e; color: #fff; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }
 
 /* pagine di testo a fasce (about.html): le schede del modale Info diventano fasce, senza riquadro */

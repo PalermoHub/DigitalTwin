@@ -1712,7 +1712,7 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
    Telefono (fino a 720 px): barra a quattro tab (Mappa, Strati, Aggiungi, Info), ricerca in alto,
    strumenti della mappa in colonna a destra. Sopra i 720 px resta l'interfaccia a barre laterali.
    ========================================================================== */
-:root { --tab-h: 60px; --footer-h: 36px; }
+:root { --tab-h: 60px; --footer-h: 36px; --emergenza: #d7263d; } /* rosso dell'emergenza: barra in modalità emergenza, badge «Emergenza» e scheda del percorso nella home */
 #barra-tab, #switch-tema, .menu-gruppo { display: none; }
 @media (max-width: 720px) {
   #barra-tab {
@@ -1758,12 +1758,15 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #barra-strumenti { top: 68px; right: 12px; left: auto; flex-direction: column; align-items: center; gap: 8px; }
   #barra-strumenti > #btn-rndt, #barra-strumenti > #btn-tema { display: none; }
 
-  /* modalità emergenza (Piano di emergenza acceso): barra con Mappa, GPS, Talia ed Esci, nessuno strumento sulla mappa, solo la scheda dell'area */
-  #barra-tab button:is([data-tab="gps"], [data-tab="condividi"], [data-tab="talia"], [data-tab="esci"]) { display: none; }
-  body.modo-emergenza #barra-tab button:is([data-tab="gps"], [data-tab="condividi"], [data-tab="talia"], [data-tab="esci"]) { display: flex; }
-  body.modo-emergenza #barra-tab button:not([data-tab="mappa"], [data-tab="gps"], [data-tab="condividi"], [data-tab="talia"], [data-tab="esci"]),
+  /* modalità emergenza (Piano di emergenza acceso): barra con Mappa, Home, GPS, Talia ed Esci, nessuno strumento sulla mappa, solo la scheda dell'area */
+  #barra-tab button:is([data-tab="home"], [data-tab="gps"], [data-tab="condividi"], [data-tab="talia"], [data-tab="esci"]) { display: none; }
+  body.modo-emergenza #barra-tab button:is([data-tab="home"], [data-tab="gps"], [data-tab="condividi"], [data-tab="talia"], [data-tab="esci"]) { display: flex; }
+  body.modo-emergenza #barra-tab button:not([data-tab="mappa"], [data-tab="home"], [data-tab="gps"], [data-tab="condividi"], [data-tab="talia"], [data-tab="esci"]),
   body.modo-emergenza #barra-strumenti, body.modo-emergenza #legende-raggio, body.modo-emergenza .invito-clic, body.modo-emergenza #zoom-box,
   body.modo-emergenza #barra-strati, body.modo-emergenza #pannello { display: none; }
+  body.modo-emergenza #barra-tab { background: var(--emergenza); border-top-color: rgba(0, 0, 0, .3); box-shadow: 0 -2px 8px rgba(0, 0, 0, .3); }
+  body.modo-emergenza #barra-tab button, body.modo-emergenza #barra-tab button[aria-pressed="true"] { color: #fff; font-weight: 700; }
+  body.modo-emergenza #barra-tab button[aria-pressed="true"] { border-top-color: #fff; background: rgba(0, 0, 0, .18); }
 
   /* i fogli e i pannelli finiscono sopra la barra dei tab */
   body.strati-aperti #barra-strati { bottom: var(--tab-h); }
