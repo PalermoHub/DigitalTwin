@@ -1765,8 +1765,7 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   body.modo-emergenza #barra-strumenti, body.modo-emergenza #legende-raggio, body.modo-emergenza .invito-clic, body.modo-emergenza #zoom-box,
   body.modo-emergenza #barra-strati, body.modo-emergenza #pannello { display: none; }
   body.modo-emergenza #barra-tab { background: var(--emergenza); border-top-color: rgba(0, 0, 0, .3); box-shadow: 0 -2px 8px rgba(0, 0, 0, .3); }
-  body.modo-emergenza #barra-tab button, body.modo-emergenza #barra-tab button[aria-pressed="true"] { color: #fff; font-weight: 700; }
-  body.modo-emergenza #barra-tab button[aria-pressed="true"] { border-top-color: #fff; background: rgba(0, 0, 0, .18); }
+  body.modo-emergenza #barra-tab button, body.modo-emergenza #barra-tab button[aria-pressed="true"] { color: #fff; font-weight: 700; border-top-color: transparent; } /* tutti i tab uguali, anche l'attivo */
 
   /* i fogli e i pannelli finiscono sopra la barra dei tab */
   body.strati-aperti #barra-strati { bottom: var(--tab-h); }
