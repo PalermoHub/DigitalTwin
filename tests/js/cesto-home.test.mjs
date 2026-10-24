@@ -25,3 +25,10 @@ test('le caselle accese sulla mappa finiscono nel cesto, esclusi i layer aggiunt
   ascolti.change({ target: caselle[1] });
   assert.deepEqual(leggiCesto(s), ['catasto', 'prg']);
 });
+
+test('su telefono il Piano di emergenza apre subito la mappa, gli altri strati no', async () => {
+  const { apreSubito } = await import('../../js/core/cesto-home.js');
+  assert.equal(apreSubito(['protezione-civile'], true), true);
+  assert.equal(apreSubito(['protezione-civile'], false), false);
+  assert.equal(apreSubito(['scuole'], true), false);
+});

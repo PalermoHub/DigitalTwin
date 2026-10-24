@@ -4,6 +4,10 @@ import { ESTERNO } from './condivisione-stato.js';
 
 export const CHIAVE_CESTO = 'dt-home-strati';
 
+// Su telefono, aggiungere il Piano di emergenza apre subito la mappa: nessun clic su «Apri la mappa».
+export const STRATI_APERTURA_DIRETTA = ['protezione-civile'];
+export const apreSubito = (aggiunti, telefono) => Boolean(telefono && aggiunti.some(id => STRATI_APERTURA_DIRETTA.includes(id)));
+
 export function leggiCesto(storage) {
   try {
     const ids = JSON.parse(storage?.getItem(CHIAVE_CESTO));

@@ -3,7 +3,8 @@ import { caricaDizionari, applicaDom, lingua, t as tr } from './core/i18n.js';
 import { avviaTestata } from './core/testata-pagina.js';
 import { codifica, costruisciLink, PARAMETRO } from './core/condivisione-codec.js';
 import { svgIcona } from './core/icone.js';
-import { leggiCesto, salvaCesto } from './core/cesto-home.js';
+import { leggiCesto, salvaCesto, apreSubito } from './core/cesto-home.js';
+import { MEDIA_TELEFONO } from './core/modo-emergenza.js';
 import { precaricaMappaARiposo } from './core/precarica-mappa.js';
 
 await caricaDizionari();
@@ -53,7 +54,10 @@ function bottoneAggiungi(strati, etichetta, classe = 'strato-aggiungi') {
   bottone.addEventListener('click', e => {
     e.stopPropagation();
     if (strati.every(id => cesto.has(id))) for (const id of strati) cesto.delete(id);
-    else for (const id of strati) cesto.add(id);
+    else {
+      for (const id of strati) cesto.add(id);
+      if (apreSubito(strati, matchMedia(MEDIA_TELEFONO).matches)) { aggiornaCesto(); linkMappa([...cesto]).then(href => location.assign(href)); return; }
+    }
     aggiornaCesto();
   });
   bottoniStrato.push({ bottone, strati });
