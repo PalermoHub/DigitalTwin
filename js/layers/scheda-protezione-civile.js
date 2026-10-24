@@ -51,6 +51,14 @@ const gruppiNumeri = () => [
   { titolo: 'Protezione civile', righe: NUMERI_PROTEZIONE_CIVILE },
 ];
 
+// Siti ufficiali in fondo alla scheda
+const LINK_GLOSSARIO = { testo: 'Glossario della Protezione Civile', url: GLOSSARIO, icona: 'esterno', suggerimento: 'Definizioni ufficiali dei termini di protezione civile' };
+const LINK_UFFICIALI = [
+  { testo: 'Protezione Civile nazionale', url: 'https://www.protezionecivile.gov.it/it/', icona: 'esterno', suggerimento: 'Dipartimento della Protezione Civile' },
+  { testo: 'Protezione Civile del Comune di Palermo', url: 'https://protezionecivile.comune.palermo.it/', icona: 'esterno', suggerimento: 'Piani, aree e informazioni del Comune di Palermo' },
+  { testo: 'Protezione Civile Regione Siciliana', url: 'https://www.protezionecivilesicilia.it/it/', icona: 'esterno', suggerimento: 'Dipartimento regionale della Protezione Civile' },
+];
+
 export const titolo = p => classe(p.classe)?.etichetta ?? p.descrizione;
 
 // La colonna mobile dei Vigili del Fuoco ha un tipo suo (AM VV.F.): il dettaglio sta nella descrizione del file.
@@ -80,7 +88,7 @@ export function vocePc(p, primo = false, conNumeri = true) {
       ...(conNumeri ? gruppiNumeri() : []),
     ],
     nota: classe(p.classe)?.definizione,
-    link: classe(p.classe)?.definizione ? { testo: 'Glossario della Protezione Civile', url: GLOSSARIO, icona: 'esterno', suggerimento: 'Definizioni ufficiali dei termini di protezione civile' } : undefined,
+    link: [...(classe(p.classe)?.definizione ? [LINK_GLOSSARIO] : []), ...LINK_UFFICIALI],
     fonte: FONTE,
   };
 }

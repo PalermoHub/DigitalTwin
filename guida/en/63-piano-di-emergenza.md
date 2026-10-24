@@ -34,8 +34,6 @@ To know what each area is for, look at its colour: **green** waiting area, **red
 
 Keywords: emergency area profile, area number, surface, district, neighbourhood, UPL.
 
-Below the area and the navigation button, the card lists **emergency numbers**: **112** (single number), **115** (fire brigade), **118** (medical emergency), **113** (State Police), **1515** (forest fires), the national civil protection toll-free number **800 840 840** and the Sicily Region operations room **800 404 040**. On a phone, tap a number to open the dialer with the number already entered (on a computer the numbers are read-only). A reminder says what to tell the operator: where you are, what happened, how many people are involved, and do not hang up until told to.
-
 Typical questions: In which neighbourhood is the waiting area? How big is it? How do I find the nearest area to an address?
 
 A click on the map, **even with the layer off**, shows in the **Place** tab the areas containing the clicked point: title (the area's function), **area number**, **type**, **surface** (in m² or hectares), any notes and **where it is**: **district** (circoscrizione), **neighbourhood** and **UPL**. If several areas overlap, the profile gathers them in one accordion entry. The map popup summarises title, zone and surface.
@@ -57,6 +55,18 @@ A tap does not open the map popup (the tooltip stays) and the card opens at full
 The **Map** tab closes the card and takes you back to the map.
 
 To **leave**, tap **Exit**, the last tab of the bar: the full bar, the layers and the full cards come back, and the layer stays on. Turning the layer off and on again restarts the mode. It does not apply on large screens.
+
+---
+
+## Useful numbers and official websites
+
+Keywords: useful numbers, emergency number, 112, 115, 118, 113, 1515, 800 840 840, 800 404 040, phone, call, fire brigade, ambulance, police, civil protection, operations room, official websites, what to tell the operator.
+
+Typical questions: Which number do I call in an emergency? What is the Civil Protection number? How do I call the fire brigade? What should I say when I call? Where are the official Civil Protection websites? Can I call from the card?
+
+Below the area and the navigation button, the card lists **emergency numbers**: **112** (single number), **115** (fire brigade), **118** (medical emergency), **113** (State Police), **1515** (forest fires), the national civil protection toll-free number **800 840 840** and the Sicily Region operations room **800 404 040**. On a phone, tap a number to open the dialer with the number already entered (on a computer the numbers are read-only). A reminder says what to tell the operator: where you are, what happened, how many people are involved, and do not hang up until told to. At the bottom of the card are links to the official websites: national Civil Protection, Civil Protection of the Municipality of Palermo and Sicily Region Civil Protection.
+
+Official websites (links at the bottom of the card): national Civil Protection (https://www.protezionecivile.gov.it/it/), Civil Protection of the Municipality of Palermo (https://protezionecivile.comune.palermo.it/) and Sicily Region Civil Protection (https://www.protezionecivilesicilia.it/it/). If in doubt, in a real emergency call **112**: it is free and routes the request to the right service.
 
 ---
 

@@ -38,8 +38,6 @@ Domande tipiche: In che quartiere si trova l'area di attesa? Quanto è grande? C
 
 Un clic sulla mappa, **anche con lo strato spento**, mostra nel tab **Luogo** le aree che contengono il punto cliccato: titolo (la funzione dell'area), **numero dell'area**, **tipologia**, **superficie** (in m² o ettari), eventuali note e **dove si trova**: **circoscrizione**, **quartiere** e **UPL**. Se più aree si sovrappongono, la scheda le raccoglie in una voce a fisarmonica. Il popup in mappa riassume titolo, zona e superficie.
 
-Sotto la zona e il pulsante del navigatore la scheda riporta i **numeri utili in caso di emergenza**: **112** (numero unico), **115** (Vigili del Fuoco), **118** (emergenza sanitaria), **113** (Polizia di Stato), **1515** (incendi boschivi), il numero verde nazionale della Protezione civile **800 840 840** e la sala operativa della Regione Siciliana **800 404 040**. Sul telefono basta toccare un numero: si apre la tastiera di chiamata con il numero già pronto (sul computer i numeri sono solo da leggere). C'è anche il promemoria su cosa dire all'operatore: dove sei, cosa è successo, quante persone sono coinvolte, e non riagganciare finché non lo dice lui.
-
 Sotto i dati, la scheda riporta la **definizione dell'area** dal Glossario della Protezione Civile:
 
 - **area di attesa della popolazione**: luogo di prima accoglienza (piazze, slarghi, parcheggi non a rischio) raggiungibile con un percorso sicuro, dove si ricevono le prime informazioni e i primi generi di conforto per poche ore o qualche giorno;
@@ -64,6 +62,18 @@ Il clic non apre il popup sulla mappa (resta il tooltip) e la scheda si apre a t
 Il tab **Mappa** chiude la scheda e riporta alla mappa.
 
 Per **uscire** si tocca **Esci**, l'ultimo tab della barra: tornano la barra completa, gli strati e le schede intere, e il layer resta acceso. Spegnendo il layer e riaccendendolo la modalità riparte. Sugli schermi grandi non c'è.
+
+---
+
+## Numeri utili e siti ufficiali
+
+Parole chiave: numeri utili, numero di emergenza, 112, 115, 118, 113, 1515, 800 840 840, 800 404 040, telefono, chiamare, vigili del fuoco, ambulanza, polizia, protezione civile, sala operativa, siti ufficiali, cosa dire all'operatore.
+
+Domande tipiche: Che numero chiamo in caso di emergenza? Qual è il numero della Protezione civile? Come chiamo i Vigili del Fuoco? Cosa devo dire quando chiamo? Dove trovo i siti ufficiali della Protezione civile? Posso chiamare dalla scheda?
+
+Sotto la zona e il pulsante del navigatore la scheda riporta i **numeri utili in caso di emergenza**: **112** (numero unico), **115** (Vigili del Fuoco), **118** (emergenza sanitaria), **113** (Polizia di Stato), **1515** (incendi boschivi), il numero verde nazionale della Protezione civile **800 840 840** e la sala operativa della Regione Siciliana **800 404 040**. Sul telefono basta toccare un numero: si apre la tastiera di chiamata con il numero già pronto (sul computer i numeri sono solo da leggere). C'è anche il promemoria su cosa dire all'operatore: dove sei, cosa è successo, quante persone sono coinvolte, e non riagganciare finché non lo dice lui. In fondo alla scheda ci sono i collegamenti ai siti ufficiali: Protezione Civile nazionale, Protezione Civile del Comune di Palermo e Protezione Civile della Regione Siciliana.
+
+I siti ufficiali (collegamenti in fondo alla scheda): Protezione Civile nazionale (https://www.protezionecivile.gov.it/it/), Protezione Civile del Comune di Palermo (https://protezionecivile.comune.palermo.it/) e Protezione Civile della Regione Siciliana (https://www.protezionecivilesicilia.it/it/). Nel dubbio, in una vera emergenza chiama il **112**: è gratuito e smista la richiesta all'ente giusto.
 
 ---
 
