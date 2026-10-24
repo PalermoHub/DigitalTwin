@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { modoAttivo, moduliAlClic, STRATO_EMERGENZA } from '../../js/core/modo-emergenza.js';
+import { modoAttivo, moduliAlClic, STRATO_EMERGENZA, zoomMinimoEmergenza } from '../../js/core/modo-emergenza.js';
 
 test('modoAttivo: serve telefono, strato acceso e non uscito a mano', () => {
   assert.equal(modoAttivo({ telefono: true, stratoAcceso: true, uscito: false }), true);
@@ -21,4 +21,9 @@ test('mini-mappa aree: zoom in base alla superficie e filtro sull\'id delle aree
   assert.ok(zoomPerSuperficie(1e9) >= 13.5 && zoomPerSuperficie(1) <= 16);
   assert.equal(zoomPerSuperficie(NaN), 14.8);
   assert.deepEqual(filtroEvidenza([12]), ['in', ['get', 'id'], ['literal', [12]]]);
+});
+
+test('zoomMinimoEmergenza: con un rischio PAI acceso non scende sotto zoom 12 (partenza dei tile)', () => {
+  assert.equal(zoomMinimoEmergenza(false), 11);
+  assert.equal(zoomMinimoEmergenza(true), 12);
 });

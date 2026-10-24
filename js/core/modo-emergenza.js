@@ -6,6 +6,8 @@ import { t } from './i18n.js';
 export const STRATO_EMERGENZA = 'protezione-civile';
 export const CLASSE_EMERGENZA = 'modo-emergenza';
 export const ZOOM_MINIMO_EMERGENZA = 11; // sotto questo zoom i poligoni delle aree non si vedono: in modalità emergenza la mappa non scende oltre
+export const ZOOM_MINIMO_RISCHI = 12; // i tile dei rischi PAI partono da zoom 12: con almeno un rischio acceso la mappa non scende sotto
+export const zoomMinimoEmergenza = rischiAcceso => (rischiAcceso ? ZOOM_MINIMO_RISCHI : ZOOM_MINIMO_EMERGENZA);
 export const MEDIA_TELEFONO = '(max-width: 720px)';
 
 // La modalità vale solo su telefono, a strato acceso e se non è stata chiusa a mano.
