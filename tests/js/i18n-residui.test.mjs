@@ -9,7 +9,7 @@ export const ECCEZIONI = [
   'js/vendor/', // librerie di terzi (il plugin RNDT ha la sua traduzione, vedi rndt-traduzione.test.mjs)
   'js/locales/', // i dizionari
   'js/layers/', // i testi del modello dati si traducono al render con tl(): li controlla i18n-lbl.test.mjs
-  'js/core/catalogo.js', 'js/core/scheda-about.js', 'js/core/scheda-fonti.js', 'js/core/scheda-digitaltwin.js', 'js/core/scheda-plugin.js', 'js/core/scheda-privacy.js', 'js/core/guida-contenuti.js', 'js/geoimage/guida-contenuti.js', 'js/rndt/info.js', 'js/core/scheda-preferenze.js', // idem
+  'js/core/catalogo.js', 'js/core/scheda-about.js', 'js/core/scheda-fonti.js', 'js/core/scheda-digitaltwin.js', 'js/core/scheda-plugin.js', 'js/core/scheda-privacy.js', 'js/core/guida-contenuti.js', 'js/geoimage/guida-contenuti.js', 'js/core/emergenza-contenuti.js', 'js/rndt/info.js', 'js/core/scheda-preferenze.js', // idem
   'js/core/palette.js', // copia identica dell'originale (vedi il test «palette.js è la copia identica…»)
   'js/consenso.js', // script classico con la propria tabella IT/EN
   'js/core/gerarchia.js', 'js/core/zone.js', // nomi propri di circoscrizioni, quartieri e UPL (dati)

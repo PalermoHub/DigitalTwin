@@ -86,7 +86,7 @@ export function daTradurre(sorgente) {
 export function fileModelli(radice) {
   const out = [];
   for (const dir of ['js/layers']) for (const n of readdirSync(join(radice, dir))) if (n.endsWith('.js')) out.push(`${dir}/${n}`);
-  out.push('js/rndt/info.js', 'js/core/scheda-preferenze.js', 'js/core/catalogo.js', 'js/core/scheda-about.js', 'js/core/scheda-fonti.js', 'js/core/scheda-digitaltwin.js', 'js/core/scheda-plugin.js', 'js/core/scheda-privacy.js', 'js/core/guida-contenuti.js', 'js/geoimage/guida-contenuti.js');
+  out.push('js/rndt/info.js', 'js/core/scheda-preferenze.js', 'js/core/catalogo.js', 'js/core/scheda-about.js', 'js/core/scheda-fonti.js', 'js/core/scheda-digitaltwin.js', 'js/core/scheda-plugin.js', 'js/core/scheda-privacy.js', 'js/core/guida-contenuti.js', 'js/geoimage/guida-contenuti.js', 'js/core/emergenza-contenuti.js');
   return out;
 }
 

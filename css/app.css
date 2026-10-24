@@ -1549,6 +1549,8 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #menu-info { display: flex; align-items: center; gap: 2px; margin-left: auto; min-width: 0; }
 #menu-info button, #menu-info a { display: block; box-sizing: border-box; text-decoration: none; padding: 10px 12px; border: 0; border-bottom: 3px solid transparent; border-radius: var(--r-sm) var(--r-sm) 0 0; background: none; color: var(--text-muted); font: inherit; font-weight: 600; white-space: nowrap; cursor: pointer; }
 #menu-info button:hover, #menu-info a:hover { background: var(--surface-hover); color: var(--text); }
+#menu-info a[data-scheda="emergenza"], #menu-info a[data-scheda="emergenza"]:hover { background: var(--emergenza, #d7263d); color: #fff; font-weight: 700; } /* voce «Modalità emergenza»: sfondo nel rosso dell'emergenza */
+#menu-info a[data-scheda="emergenza"]:hover { filter: brightness(.92); }
 #menu-info button[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
 /* «Guida generale» e «About» sono voci vere; la freccia accanto apre le altre (Plugin RNDT e Geoimage; Presentazione e Privacy) */
 .menu-tendina { position: relative; }

@@ -1,4 +1,4 @@
-// Menu del sito, definito qui una volta sola e usato da tutte le pagine statiche (home, About, Guida, Fonti, Privacy, Plugin, Geoimage, Digital Twin, Presentazione).
+// Menu del sito, definito qui una volta sola e usato da tutte le pagine statiche (home, About, Guida, Fonti, Privacy, Plugin, Geoimage, Modalità emergenza, Digital Twin, Presentazione).
 // La mappa (mappa.html) ha le stesse voci come pulsanti, pilotati da js/app.js.
 import { applicaDom, t, lingua } from './i18n.js';
 import { precaricaMappaARiposo } from './precarica-mappa.js';
@@ -23,7 +23,7 @@ export const menuHtml = () => `
   ${voce('index.html', 'home.menu.home', 'id="link-home" ')}
   ${scheda('mappa.html', 'mappa')}
   ${scheda('digitaltwin.html', 'digitaltwin')}${tendina('menu-guide', 'html.menu.gruppo.altreguide',
-    scheda('guida.html', 'guida'), [scheda('plugin.html', 'plugin'), scheda('geoimage.html', 'geoimage')])}
+    scheda('guida.html', 'guida'), [scheda('plugin.html', 'plugin'), scheda('geoimage.html', 'geoimage'), scheda('emergenza.html', 'emergenza')])}
   ${scheda('fonti.html', 'fonti')}${tendina('menu-altro', 'html.menu.gruppo.altro',
     scheda('about.html', 'about'), [voce('presentazione.html', 'html.menu.presentazione', 'id="link-presentazione" '), scheda('privacy.html', 'privacy')])}`;
 

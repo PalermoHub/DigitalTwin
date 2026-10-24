@@ -4,11 +4,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { menuHtml, paginaCorrente } from '../../js/core/menu-sito.js';
 
-const PAGINE = ['index', 'about', 'guida', 'fonti', 'privacy', 'plugin', 'geoimage', 'digitaltwin', 'presentazione'];
+const PAGINE = ['index', 'about', 'guida', 'fonti', 'privacy', 'plugin', 'geoimage', 'emergenza', 'digitaltwin', 'presentazione'];
 
 test('il menu elenca tutte le pagine del sito', () => {
   const href = [...menuHtml().matchAll(/<a [^>]*href="([^"]+)"/g)].map(m => m[1]);
-  assert.deepEqual(href, ['index.html', 'mappa.html', 'digitaltwin.html', 'guida.html', 'plugin.html', 'geoimage.html', 'fonti.html', 'about.html', 'presentazione.html', 'privacy.html']);
+  assert.deepEqual(href, ['index.html', 'mappa.html', 'digitaltwin.html', 'guida.html', 'plugin.html', 'geoimage.html', 'emergenza.html', 'fonti.html', 'about.html', 'presentazione.html', 'privacy.html']);
 });
 
 test('ogni voce è traducibile', () => {
