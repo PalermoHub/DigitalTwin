@@ -10,6 +10,15 @@ test('mappa.html elenca tutti i moduli raggiunti con import statici', () => {
   assert.equal(sostituisciBlocco(html, bloccoLink(moduliStatici())), html, 'lancia node scripts/genera_modulepreload.mjs');
 });
 
+test('app.js è in preload subito, gli altri moduli dopo il primo paint', () => {
+  const html = readFileSync(PAGINA, 'utf8');
+  assert.match(html, /<link rel="modulepreload" href="js\/app\.js">/);
+  assert.match(html, /first-contentful-paint/);
+  const elenco = JSON.parse(/var m=(\[.*?\]),f=0/.exec(html)[1]);
+  assert.deepEqual(elenco, moduliStatici().filter(m => m !== 'js/app.js'));
+  assert.ok(!html.includes('<link rel="modulepreload" href="js/layers/base.js">'), 'niente link statici davanti al paint');
+});
+
 test('i moduli caricati a richiesta (import dinamici) non sono nell\'elenco', () => {
   const moduli = moduliStatici();
   assert.ok(moduli.includes('js/app.js') && moduli.includes('js/layers/base.js'));

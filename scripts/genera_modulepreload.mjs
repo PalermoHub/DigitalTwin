@@ -1,6 +1,6 @@
-// Elenca i moduli JS raggiunti con import statici da avvio.js e app.js e li scrive come <link rel="modulepreload">
-// in mappa.html, tra i due marcatori. Senza elenco il browser scopre gli import un livello alla volta
-// (circa 230 file in cascata); con l'elenco li scarica tutti insieme.
+// Elenca i moduli JS raggiunti con import statici da avvio.js e app.js e li mette in mappa.html, tra i due marcatori:
+// app.js come <link rel="modulepreload"> subito, gli altri con un piccolo script che li aggiunge dopo il primo paint.
+// Senza elenco il browser scopre gli import un livello alla volta (circa 230 file in cascata); con l'elenco li scarica insieme.
 //   node scripts/genera_modulepreload.mjs          riscrive mappa.html
 //   node scripts/genera_modulepreload.mjs --verifica   esce con errore se mappa.html non è aggiornato
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -31,8 +31,12 @@ export function moduliStatici(ingressi = INGRESSI, radice = RADICE) {
   return ordine;
 }
 
+// app.js parte subito (come prima); gli altri partono dopo il primo paint: scaricati e valutati in blocco
+// prima del paint, 230 moduli rubano CPU e banda a CSS e font e il primo paint slitta di oltre un secondo.
 export function bloccoLink(moduli) {
-  return [INIZIO, ...moduli.map(m => `<link rel="modulepreload" href="${m}">`), FINE].join('\n');
+  const altri = moduli.filter(m => m !== 'js/app.js');
+  const script = `(function(){var m=${JSON.stringify(altri)},f=0;function v(){if(f)return;f=1;m.forEach(function(h){var l=document.createElement('link');l.rel='modulepreload';l.href=h;document.head.append(l)})}try{new PerformanceObserver(function(l,o){if(l.getEntries().some(function(e){return e.name==='first-contentful-paint'})){o.disconnect();v()}}).observe({type:'paint',buffered:true})}catch(e){v()}setTimeout(v,2500)})();`;
+  return [INIZIO, '<link rel="modulepreload" href="js/app.js">', `<script>${script}</script>`, FINE].join('\n');
 }
 
 export function sostituisciBlocco(html, blocco) {
