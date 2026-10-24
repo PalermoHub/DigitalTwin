@@ -362,6 +362,8 @@ const DISCLAIMER_STAMPA = tr('scheda.disclaimer');
 
 let richiestaLuogo = 0;
 
+const DISTANZA_CHIUDE_SCHEDA = 8; // px dal punto della scheda oltre i quali un tooltip la chiude
+
 export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   const rndt = opzioni.rndt;
   // stampa: tutte le schede aperte e visibili; dopo, si torna alla scheda attiva
@@ -457,6 +459,14 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   // i clic fuori dai confini del Comune non aprono la scheda; senza il confine (rete assente) si accettano tutti
   let anelli = [];
   fetch(urlDati('popolazione/confini_zone.json')).then(r => r.json()).then(z => { anelli = anelliDaZone(z); }).catch(() => {});
+  // un tooltip che compare altrove, con la scheda aperta, la chiude: i due riquadri insieme si leggono male.
+  // Subito dopo il clic il cursore è ancora sul punto della scheda: lì il tooltip non la chiude.
+  document.addEventListener('tooltip:mostrato', e => {
+    if (contenitore.hidden || !contenitore.dataset.punto) return;
+    const [lng, lat] = contenitore.dataset.punto.split(',').map(Number);
+    const sede = map.project([lng, lat]);
+    if (Math.hypot(sede.x - e.detail.point.x, sede.y - e.detail.point.y) > DISTANZA_CHIUDE_SCHEDA) contenitore.querySelector('.scheda-x')?.click();
+  });
   map.on('click', async e => {
     // Fuori dal Comune si apre la scheda solo dei moduli che lo chiedono (`scheda.apertoFuoriComune(map, e)`, es. l'aeroporto di Punta Raisi e gli aerei in volo)
     const fuori = anelli.length > 0 && !anelli.some(a => dentroAnello([e.lngLat.lng, e.lngLat.lat], a));

@@ -57,6 +57,7 @@ function collega(map) {
     const { corpo } = tip;
     popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'mappa-tooltip', anchor: 'top', offset: 14 });
     popup.setLngLat(e.lngLat).setDOMContent(corpo).addTo(map);
+    document.dispatchEvent(new CustomEvent('tooltip:mostrato', { detail: { point: e.point } })); // la scheda aperta si chiude (scheda.js)
   });
   map.on('mouseout', () => nascondi(map));
 }
