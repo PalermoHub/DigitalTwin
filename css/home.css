@@ -184,7 +184,7 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .home-scelte { display: contents; }
 .home-azzera { padding: 6px 8px; border: 0; background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-sm); text-decoration: underline; cursor: pointer; }
 .card-emergenza { position: absolute; top: 10px; right: 10px; z-index: 1; padding: 3px 10px; border-radius: 999px; background: var(--emergenza); color: #fff; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }
-.strato-card.emerg .card-fronte { box-shadow: inset 0 0 0 3px var(--emergenza); }
+.strato-card.emerg .card-fronte::after { content: ''; position: absolute; inset: 0; z-index: 2; border: 3px solid var(--emergenza); border-radius: inherit; pointer-events: none; } /* sopra anche l'immagine */
 .percorso:has(.percorso-badge) { border-color: var(--emergenza); box-shadow: inset 0 0 0 2px var(--emergenza); }
 .card-nuovo { position: absolute; top: 10px; left: 10px; z-index: 1; padding: 3px 10px; border-radius: 999px; background: #1e8e3e; color: #fff; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }
 
