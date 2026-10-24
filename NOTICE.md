@@ -12,6 +12,7 @@ condizioni aggiornate presso il titolare. Fonti usate:
 
 - ISTAT (sezioni censuarie, indicatori, censimento permanente): in genere CC BY
 - Comune di Palermo (catasto/SITR, PRG, civici, GTFS, uffici): condizioni del portale open data del Comune
+- Font delle etichette della mappa (`fonts/glyphs/`): Noto Sans (copiato da OpenFreeMap) e IM FELL English (da maplibre-style-server di Kanahiro), entrambi con licenza SIL Open Font License 1.1
 - Ministero dell'economia e delle finanze, Dipartimento del Tesoro (immobili dichiarati al censimento, `dati/mef-immobili/`): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), con citazione della fonte
 - Comune di Palermo, Piano di Eliminazione delle Barriere Architettoniche (PEBA), Delibera di Giunta Comunale n. 272 del 18/07/2026, elaborazione OpenDataSicilia e PalermoHub (`dati/peba/`; foto e PDF originali su <https://palermohub.github.io/peba/>): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), con citazione della fonte
 - Ministero dell'economia e delle finanze, Ragioneria generale dello Stato, Open BDAP: Monitoraggio Opere Pubbliche (MOP), progetti e localizzazione delle opere pubbliche a Palermo (`dati/opere/`; <https://bdap-opendata.rgs.mef.gov.it/>; licenza «CC BY - Libero riuso citando la fonte»); posizioni dai numeri civici ANNCSU, elaborazione DigitalTwin Palermo

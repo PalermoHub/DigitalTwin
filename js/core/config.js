@@ -12,7 +12,10 @@ export const ZOOM_SCHEDA = 16.5;
 export const STILE_BASE = 'https://tiles.openfreemap.org/styles/positron'; // Positron: la base «Mappa chiara» scelta dall'utente e la mini-mappa della scheda
 // Stile con cui parte la mappa: senza sorgenti né layer, perché la base di partenza è raster (Mapbox). Servono solo i font delle etichette;
 // gli stili OpenFreeMap (con sprite e sorgenti vettoriali) arrivano soltanto se l'utente sceglie una base OpenFreeMap (vedi layers/base.js).
-export const STILE_AVVIO = { version: 8, glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf', sources: {}, layers: [] };
+// I font stanno in fonts/glyphs/ (Noto Sans copiato da OpenFreeMap, IM FELL English per la base «Antica»; solo gli intervalli latino, greco, cirillico e arabo di base):
+// l'indirizzo dev'essere assoluto, perché lo legge un worker. Fuori dal browser (test) resta quello di OpenFreeMap.
+const FONT = typeof document === 'undefined' ? 'https://tiles.openfreemap.org/fonts/' : new URL('fonts/glyphs/', document.baseURI).href;
+export const STILE_AVVIO = { version: 8, glyphs: `${FONT}{fontstack}/{range}.pbf`, sources: {}, layers: [] };
 
 // Percorso in dati/ -> link pubblicato (dal catalogo). Chi non ha un link si legge da dati/.
 const remoti = new Map();

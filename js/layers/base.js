@@ -65,6 +65,7 @@ const VETTORIALI = {
   positron: STILE_BASE,
   'ofm-dark': 'https://tiles.openfreemap.org/styles/dark',
   'ofm-bright': 'https://tiles.openfreemap.org/styles/bright',
+  antico: 'https://kanahiro.github.io/maplibre-style-server/styles/antique.json', // stile «antique» di Kanahiro (dati OpenFreeMap): sorgenti e sprite propri
 };
 // Raggruppate come nel selettore dell'atlante: mappe stradali, immagini aeree, topografiche, cartografia tecnica, sfondi neutri.
 const GRUPPI = [
@@ -72,6 +73,7 @@ const GRUPPI = [
     { id: 'positron', etichetta: 'Mappa chiara', titolo: 'Mappa chiara (OpenFreeMap)' },
     { id: 'ofm-dark', etichetta: 'Scura', titolo: 'Mappa scura (OpenFreeMap)' },
     { id: 'ofm-bright', etichetta: 'Luminosa', titolo: 'Mappa luminosa (OpenFreeMap Bright)' },
+    { id: 'antico', etichetta: 'Antica', titolo: 'Mappa in stile antico (Kanahiro, dati OpenFreeMap)' },
     { id: 'mapbox-chiaro', etichetta: 'Mapbox', titolo: 'Mappa chiara (Mapbox, stile personale)' },
     { id: 'mapbox-scuro', etichetta: 'Mapbox scura', titolo: 'Mappa scura (Mapbox Dark)' },
     { id: 'osm', etichetta: 'OpenStreetMap', titolo: 'OpenStreetMap standard' },
@@ -127,7 +129,8 @@ function caricaVettoriale(map, id) {
   stiliVettoriali[id] ??= fetch(VETTORIALI[id]).then(r => r.json());
   stiliVettoriali[id].then(stile => {
     for (const [nome, sorgente] of Object.entries(stile.sources ?? {})) if (!map.getSource(nome)) map.addSource(nome, sorgente);
-    if (stile.sprite && !spriteImpostato) { map.setSprite(stile.sprite); spriteImpostato = true; }
+    if (Array.isArray(stile.sprite)) for (const sp of stile.sprite) map.addSprite(sp.id, sp.url); // più sprite con prefisso (es. `antique:city`)
+    else if (stile.sprite && !spriteImpostato) { map.setSprite(stile.sprite); spriteImpostato = true; }
     for (const l of stile.layers) {
       if (!map.getSource(l.source) && l.type !== 'background') continue;
       map.addLayer({ ...l, id: `base-${id}-${l.id}`, layout: { ...l.layout, visibility: 'none' } }, sottoBasi);
