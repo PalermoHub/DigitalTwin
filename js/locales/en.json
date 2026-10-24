@@ -1536,7 +1536,7 @@
   "legenda.raggio.etichetta": "Radius around the click: {m} m",
   "legenda.raggio.cerchio": "Show the circle on the map",
   "livezoom.interruttore": "Live Zoom",
-  "livezoom.descrizione": "Fit the map to the results every time a filter changes",
+  "livezoom.descrizione": "On: the map zooms to the clicked point and fits the results whenever a filter changes. Off: a click only centres the point",
   "legenda.pannello.suMappa": "Legends on the map",
   "legenda.pannello.titolo": "Legend",
   "legenda.esterna.file": "Uploaded file",

@@ -1,16 +1,16 @@
 // «Live Zoom»: a ogni modifica di un filtro (caselle delle legende e dei pannelli) la mappa si adatta ai risultati rimasti.
 // Un solo stato per tutta l'app, con due interruttori che lo mostrano (gruppo Overlay del tab Layer e riquadro legenda).
-// Il valore sta in localStorage; il browser arriva come parametro.
+// Il valore sta in localStorage (acceso se non è mai stato scelto); il browser arriva come parametro.
 import { t } from './i18n.js';
 
 export const CHIAVE_LIVE_ZOOM = 'dt-live-zoom';
 export const EVENTO_LIVE_ZOOM = 'dt:live-zoom'; // sul document a ogni cambio di stato: gli interruttori si allineano
 
-let attivo = false;
+let attivo = true;
 export const liveZoomAttivo = () => attivo;
 
 export function caricaLiveZoom(storage) {
-  try { attivo = storage?.getItem(CHIAVE_LIVE_ZOOM) === '1'; } catch { attivo = false; }
+  try { attivo = storage?.getItem(CHIAVE_LIVE_ZOOM) !== '0'; } catch { attivo = true; }
   return attivo;
 }
 

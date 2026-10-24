@@ -4,6 +4,7 @@ import { applicaPreferenze, registraVisti, leggiPreferenze, salvaPreferenze } fr
 import { svgIcona } from './icone.js';
 import { segnala } from './pannello.js';
 import { ZOOM_SCHEDA, urlDati } from './config.js';
+import { liveZoomAttivo } from './live-zoom.js';
 import { anelliDaZone, dentroAnello } from '../rndt/area.js';
 import { sceltePerLayer, soloCliccato, evidenzia, cancellaEvidenza, evidenzaVicine } from './evidenza.js';
 import { featureVicine } from './scheda-util.js';
@@ -290,11 +291,12 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
 // Il margine segue i pannelli (padding-mappa.js): il centro dello spostamento è il centro della parte visibile.
 // `centro` = punto da portare lì; senza, si riallinea solo il margine. Con il cerchio dei vicini (`raggio` in metri) lo zoom lo
 // inquadra per intero (barra strumenti in alto, ricerca in basso); senza, si avvicina a ZOOM_SCHEDA se serve.
+// Lo zoom c'è solo con Live Zoom acceso: spento, il clic centra il punto e lascia lo zoom com'è.
 const MARGINE_CERCHIO = { top: 70, right: 20, bottom: 90, left: 20 };
 function adattaVistaMappa(map, centro, raggio) {
   if (!centro) return allineaPadding(map);
-  let zoom = Math.max(map.getZoom(), ZOOM_SCHEDA);
-  if (raggio) {
+  let zoom = liveZoomAttivo() ? Math.max(map.getZoom(), ZOOM_SCHEDA) : map.getZoom();
+  if (raggio && liveZoomAttivo()) {
     const tela = map.getContainer();
     const dimensioni = { larghezza: tela.clientWidth, altezza: tela.clientHeight };
     zoom = Math.min(zoomPerCerchio(dimensioni, calcolaPadding(document, tela, matchMedia('(max-width: 720px)').matches), MARGINE_CERCHIO, raggio, centro.lat), 18);

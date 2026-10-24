@@ -15,15 +15,16 @@ test('riquadroDa: punti, linee e poligoni; senza coordinate → null', () => {
   assert.equal(riquadroDa([{ geometry: { type: 'Point', coordinates: [NaN, 1] } }]), null);
 });
 
-test('Live Zoom: spento all\'inizio, impostaLiveZoom salva e avvisa il document', () => {
+test('Live Zoom: acceso all\'inizio, impostaLiveZoom salva e avvisa il document', () => {
   const eventi = [];
   globalThis.document = { dispatchEvent: e => eventi.push(e.type) };
-  assert.equal(caricaLiveZoom(deposito()), false);
+  assert.equal(caricaLiveZoom(deposito()), true);
   const d = deposito();
   assert.equal(impostaLiveZoom(true, d), true);
   assert.deepEqual(d.scritto, [CHIAVE_LIVE_ZOOM, '1']);
   assert.equal(liveZoomAttivo(), true);
   assert.deepEqual(eventi, ['dt:live-zoom']);
   assert.equal(caricaLiveZoom(deposito('1')), true);
-  assert.equal(caricaLiveZoom({ getItem() { throw new Error('bloccato'); } }), false);
+  assert.equal(caricaLiveZoom(deposito('0')), false);
+  assert.equal(caricaLiveZoom({ getItem() { throw new Error('bloccato'); } }), true);
 });
