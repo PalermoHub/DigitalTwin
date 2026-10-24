@@ -24,11 +24,12 @@ export function impostaTooltipAttivi(valore) {
   if (!abilitato) { popup?.remove(); popup = null; }
 }
 
-// I popup aperti con un clic (scheda, popup dei layer) si chiudono quando un tooltip compare lontano dal punto del clic:
-// i due riquadri insieme si leggono male. Subito dopo il clic il cursore è ancora lì e il tooltip dello stesso oggetto non li chiude.
-// La distanza si misura dal clic sullo schermo: la mappa può spostarsi per far posto alla scheda.
-const DISTANZA_CHIUDE = 8; // px
+// I popup dei layer aperti con un clic si chiudono quando il mouse passa su un altro oggetto della mappa (e compare un tooltip diverso
+// da quello che c'era sotto il clic): i due riquadri insieme si leggono male. Sopra l'oggetto cliccato il popup resta. La selezione
+// in mappa e la scheda non si toccano.
+let tooltipClic = null; // il tooltip «di riferimento» (quello sotto il clic): si fissa al primo movimento del mouse a mappa ferma, perché la scheda può spostarla
 let puntoClic = null;
+const VICINO_AL_CLIC = 12; // px: entro questa distanza dal clic il cursore è ancora sull'oggetto cliccato
 const aperti = new Set();
 function seguiPopupAperti() { // i popup che non sono il tooltip: li si ricorda finché restano aperti
   if (typeof maplibregl === 'undefined') return; // nei test non c'è
@@ -38,10 +39,13 @@ function seguiPopupAperti() { // i popup che non sono il tooltip: li si ricorda 
     return addToOriginale.call(this, map);
   };
 }
-function chiudiAperti(punto) {
-  if (!puntoClic || Math.hypot(puntoClic.x - punto.x, puntoClic.y - punto.y) <= DISTANZA_CHIUDE) return;
+function chiudiAperti(map, punto, testo) {
+  if (tooltipClic === null) {
+    if (map.isMoving()) return;
+    tooltipClic = Math.hypot(punto.x - puntoClic.x, punto.y - puntoClic.y) <= VICINO_AL_CLIC ? testo : '';
+  }
+  if (testo === tooltipClic) return;
   for (const p of [...aperti]) p.remove();
-  document.dispatchEvent(new CustomEvent('tooltip:lontano')); // chiude la scheda (scheda.js)
 }
 
 function nascondi(map) {
@@ -72,15 +76,16 @@ function collega(map) {
   map.on('mousemove', e => {
     if (!abilitato) return;
     const tip = contenutoTooltip(e);
+    if (puntoClic && tooltipClic === null && !tip) chiudiAperti(map, e.point, '');
     if (!tip) return nascondi(map);
     if (tip.cursore) { map.getCanvas().style.cursor = 'pointer'; mioCursore = true; }
     else if (mioCursore) { map.getCanvas().style.cursor = ''; mioCursore = false; }
     const { corpo } = tip;
     popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'mappa-tooltip', anchor: 'top', offset: 14 });
     popup.setLngLat(e.lngLat).setDOMContent(corpo).addTo(map);
-    chiudiAperti(e.point);
+    if (puntoClic) chiudiAperti(map, e.point, corpo.textContent);
   });
-  map.on('click', e => { puntoClic = e.point; });
+  map.on('click', e => { tooltipClic = null; puntoClic = e.point; });
   map.on('mouseout', () => nascondi(map));
 }
 

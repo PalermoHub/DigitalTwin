@@ -457,10 +457,6 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   // i clic fuori dai confini del Comune non aprono la scheda; senza il confine (rete assente) si accettano tutti
   let anelli = [];
   fetch(urlDati('popolazione/confini_zone.json')).then(r => r.json()).then(z => { anelli = anelliDaZone(z); }).catch(() => {});
-  // un tooltip che compare lontano dal clic, con la scheda aperta, la chiude: i due riquadri insieme si leggono male
-  document.addEventListener('tooltip:lontano', () => {
-    if (!contenitore.hidden) contenitore.querySelector('.scheda-x')?.click();
-  });
   map.on('click', async e => {
     // Fuori dal Comune si apre la scheda solo dei moduli che lo chiedono (`scheda.apertoFuoriComune(map, e)`, es. l'aeroporto di Punta Raisi e gli aerei in volo)
     const fuori = anelli.length > 0 && !anelli.some(a => dentroAnello([e.lngLat.lng, e.lngLat.lat], a));
