@@ -10,6 +10,7 @@ export const FONTE = 'Fonte: Comune di Palermo, Protezione civile — Piano di e
 // (`colore` = colore delle righe) con contorno grigio, e il simbolo blu della classe (`icona`) al centro dell'area.
 // Attesa → «Aree di attesa»; accoglienza → «Assistenza» (aree di assistenza alla popolazione per attendamenti campali);
 // ammassamento → «Aree di ammassamento dei soccorritori e risorse»; ospedale → «Strutture ospedaliere e socio-sanitarie».
+export const GLOSSARIO = 'https://www.protezionecivile.gov.it/it/glossario/';
 export const CONTORNO = '#929290';
 export const CLASSI = [
   { id: 'attesa', etichetta: 'Area di attesa della popolazione', breve: 'Area di attesa', colore: '#6cb6a6', icona: 'img/protezione-civile/attesa.png',
@@ -62,6 +63,7 @@ export function vocePc(p, primo = false) {
       { titolo: 'Dove si trova', righe: [...righe([['Circoscrizione', p.circoscrizione], ['Quartiere', p.quartiere], ['UPL', p.upl]]), ...rigaPercorso(p)] },
     ],
     nota: classe(p.classe)?.definizione,
+    link: classe(p.classe)?.definizione ? { testo: 'Glossario della Protezione Civile', url: GLOSSARIO, icona: 'esterno', suggerimento: 'Definizioni ufficiali dei termini di protezione civile' } : undefined,
     fonte: FONTE,
   };
 }
