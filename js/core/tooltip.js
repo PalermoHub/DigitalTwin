@@ -24,6 +24,26 @@ export function impostaTooltipAttivi(valore) {
   if (!abilitato) { popup?.remove(); popup = null; }
 }
 
+// I popup aperti con un clic (scheda, popup dei layer) si chiudono quando un tooltip compare lontano dal punto del clic:
+// i due riquadri insieme si leggono male. Subito dopo il clic il cursore è ancora lì e il tooltip dello stesso oggetto non li chiude.
+// La distanza si misura dal clic sullo schermo: la mappa può spostarsi per far posto alla scheda.
+const DISTANZA_CHIUDE = 8; // px
+let puntoClic = null;
+const aperti = new Set();
+function seguiPopupAperti() { // i popup che non sono il tooltip: li si ricorda finché restano aperti
+  if (typeof maplibregl === 'undefined') return; // nei test non c'è
+  const addToOriginale = maplibregl.Popup.prototype.addTo;
+  maplibregl.Popup.prototype.addTo = function (map) {
+    if (!this.options.className?.includes('mappa-tooltip')) { aperti.add(this); this.once('close', () => aperti.delete(this)); }
+    return addToOriginale.call(this, map);
+  };
+}
+function chiudiAperti(punto) {
+  if (!puntoClic || Math.hypot(puntoClic.x - punto.x, puntoClic.y - punto.y) <= DISTANZA_CHIUDE) return;
+  for (const p of [...aperti]) p.remove();
+  document.dispatchEvent(new CustomEvent('tooltip:lontano')); // chiude la scheda (scheda.js)
+}
+
 function nascondi(map) {
   popup?.remove();
   popup = null;
@@ -48,6 +68,7 @@ export function contenutoTooltip(e) {
 }
 
 function collega(map) {
+  seguiPopupAperti();
   map.on('mousemove', e => {
     if (!abilitato) return;
     const tip = contenutoTooltip(e);
@@ -57,8 +78,9 @@ function collega(map) {
     const { corpo } = tip;
     popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'mappa-tooltip', anchor: 'top', offset: 14 });
     popup.setLngLat(e.lngLat).setDOMContent(corpo).addTo(map);
-    document.dispatchEvent(new CustomEvent('tooltip:mostrato', { detail: { point: e.point } })); // la scheda aperta si chiude (scheda.js)
+    chiudiAperti(e.point);
   });
+  map.on('click', e => { puntoClic = e.point; });
   map.on('mouseout', () => nascondi(map));
 }
 
