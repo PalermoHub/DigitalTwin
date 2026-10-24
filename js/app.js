@@ -9,6 +9,7 @@ import { caricaCatalogo, commutaCrediti } from './core/catalogo.js';
 import { collegaRail, ICONE_RAIL } from './core/rail.js';
 import { creaPannelloInterfaccia } from './core/pannello-interfaccia.js';
 import { collegaScheda } from './core/scheda.js';
+import { collegaPaddingMappa } from './core/padding-mappa.js';
 import { collegaTooltipScheda } from './core/tooltip-scheda.js';
 import { collegaRndt, creaInterrogazione } from './rndt/index.js';
 import { creaGruppo, creaGruppoRndt, OPZIONI_MIEI } from './rndt/gruppo.js';
@@ -126,6 +127,7 @@ const collegaRicercaGuide = (apri, altra) => {
 const SCHEDA_INDIRIZZO = location.hash.slice(1);
 const map = creaMappa('mappa', () => segnala(t('app.basemap.errore')));
 collegaLiveZoom(map);
+collegaPaddingMappa(map);
 // Se i dati in ritardo servono subito (strato acceso, clic sulla mappa) e non sono ancora arrivati, un avviso lo dice.
 const attesaDati = creaAvvisoAttesa(document.getElementById('avvisi'), t('avviso.attesaCaricamento'));
 // Qualunque strato acceso che tarda a comparire (dati o tile pesanti) mostra lo stesso avviso, finché la mappa non è ferma.

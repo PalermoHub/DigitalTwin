@@ -1,3 +1,4 @@
+import { allineaPadding, calcolaPadding, zoomPerCerchio } from './padding-mappa.js';
 import { unisci, sezioniConRitardo, testoContesto, titoloScheda, tabScheda, tabDedicato, NOTA_LEGALE, MANCANTE } from './scheda-modello.js';
 import { applicaPreferenze, registraVisti, leggiPreferenze, salvaPreferenze } from './scheda-preferenze.js';
 import { svgIcona } from './icone.js';
@@ -286,28 +287,19 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   };
 }
 
-const ZERO = { top: 0, right: 0, bottom: 0, left: 0 };
-
-// Spazio che la scheda toglie alla mappa: a destra su desktop, in basso quando è il foglio basso su mobile
-// (a tutto schermo la mappa non si vede: nessun margine).
-function paddingScheda(contenitore) {
-  if (contenitore.hidden) return ZERO;
-  const r = contenitore.getBoundingClientRect();
-  if (matchMedia('(max-width: 720px)').matches) {
-    return contenitore.classList.contains('scheda-piena') ? ZERO : { ...ZERO, bottom: Math.round((document.getElementById('corpo')?.getBoundingClientRect().bottom ?? innerHeight) - r.top) };
+// Il margine segue i pannelli (padding-mappa.js): il centro dello spostamento è il centro della parte visibile.
+// `centro` = punto da portare lì; senza, si riallinea solo il margine. Con il cerchio dei vicini (`raggio` in metri) lo zoom lo
+// inquadra per intero (barra strumenti in alto, ricerca in basso); senza, si avvicina a ZOOM_SCHEDA se serve.
+const MARGINE_CERCHIO = { top: 70, right: 20, bottom: 90, left: 20 };
+function adattaVistaMappa(map, centro, raggio) {
+  if (!centro) return allineaPadding(map);
+  let zoom = Math.max(map.getZoom(), ZOOM_SCHEDA);
+  if (raggio) {
+    const tela = map.getContainer();
+    const dimensioni = { larghezza: tela.clientWidth, altezza: tela.clientHeight };
+    zoom = Math.min(zoomPerCerchio(dimensioni, calcolaPadding(document, tela, matchMedia('(max-width: 720px)').matches), MARGINE_CERCHIO, raggio, centro.lat), 18);
   }
-  return { ...ZERO, right: Math.round(r.width) };
-}
-
-// Il margine della mappa segue la scheda: così il centro di ogni spostamento (Home, ricerca, zoom su una zona)
-// è il centro della parte visibile. `centro` = punto da portare lì (avvicinando lo zoom se serve);
-// senza, la vista non si muove.
-function adattaVistaMappa(map, contenitore, centro) {
-  const tela = map.getCanvas();
-  const centroVisivo = map.unproject([tela.clientWidth / 2, tela.clientHeight / 2]);
-  const vista = { center: centro ?? centroVisivo, padding: paddingScheda(contenitore), duration: centro ? 600 : 300 };
-  if (centro) vista.zoom = Math.max(map.getZoom(), ZOOM_SCHEDA);
-  map.easeTo(vista);
+  allineaPadding(map, { center: centro, zoom, duration: 600 });
 }
 
 // Prima il punto esatto; per i layer senza risultato, un riquadro di ±R pixel.
@@ -503,7 +495,8 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     if (daStrato) tabIniziale = tabScheda(daStrato.peso, daStrato.chiave);
     const interrogabili = rndt && !fuori && !emergenza ? rndt.layerAlPunto(lngLat) : []; // i servizi RNDT valgono per il Comune
     if (interrogabili.length) voci.push(rndt.segnaposto()); // la scheda si apre subito: le risposte dei servizi arrivano dopo
-    const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);
+    let raggioCerchio = null; // metri, se il cerchio dei vicini è in mappa
+    const adattaVista = centro => adattaVistaMappa(map, centro, raggioCerchio);
     const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); document.dispatchEvent(new CustomEvent('scheda:chiusa')); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); nascondiCerchio(map); adattaVista(); };
     const dati = unisci(voci);
     if (!dati.sezioni.length) { // clic su un punto vuoto
@@ -519,7 +512,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     for (const m of conScheda) m.scheda.suEvidenza?.(base); // chi ridisegna l'evidenza dopo il clic (es. percorso di una linea) tiene anche questa
     const scelte = [...base, ...extra];
     // fuori dal Comune (terremoti, aerei, navi…) il cerchio non serve: l'oggetto cliccato è già evidenziato
-    if (!fuori && cerchioVisibile() && conScheda.some(m => m.scheda.vicini)) mostraCerchio(map, lngLat, raggioVicini()); // il cerchio dei punti vicini, sotto all'evidenza
+    if (!fuori && cerchioVisibile() && conScheda.some(m => m.scheda.vicini)) { raggioCerchio = raggioVicini(); mostraCerchio(map, lngLat, raggioCerchio); } // il cerchio dei punti vicini, sotto all'evidenza
     else nascondiCerchio(map);
     evidenzia(map, scelte);
     document.dispatchEvent(new CustomEvent('scheda:evidenzia-gruppo', { detail: null })); // il vincolo scelto nella scheda precedente non vale più

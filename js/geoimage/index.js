@@ -42,11 +42,9 @@ export function collegaGeoimage(map, elemento) {
     suVisibilita: fn => ascoltatori.visibilita.push(fn),
     sulTasto: fn => ascoltatori.tasto.push(fn), // fn(evento) → true se ha gestito il tasto
     cambiato: () => ascoltatori.cambio.forEach(fn => fn()),
-    // il pannello copre la destra della mappa e la ricerca il basso: l'immagine si inquadra nella parte rimasta visibile
+    // i pannelli sono già nel margine della mappa (padding-mappa.js); la ricerca copre il basso
     inquadra(angoli, maxZoom = 16) {
-      const r = elemento.getBoundingClientRect();
-      const destra = aperto() ? window.innerWidth - r.left : 44;
-      map.fitBounds(limiti(angoli), { padding: { top: 40, bottom: 80, left: 60, right: destra + 20 }, maxZoom });
+      map.fitBounds(limiti(angoli), { padding: { top: 40, bottom: 80, left: 20, right: 20 }, maxZoom });
     },
     impostaAngoli(angoli) { stato.angoli = angoli; overlay.angoli(angoli); ctx.maniglie.aggiorna(); },
     conferma() { storico.salva(stato.angoli); ctx.cambiato(); }, // fine di un gesto: entra nella cronologia
