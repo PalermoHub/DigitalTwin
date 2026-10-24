@@ -76,10 +76,12 @@ import { collegaFiltroLinea } from './layers/trasporto-filtro.js';
 import terreno from './layers/terreno.js';
 import base from './layers/base.js';
 import { t } from './core/i18n.js';
+import { collegaModoEmergenza, inModoEmergenza } from './core/modo-emergenza.js';
 import { creaRegolatoreRaggio } from './core/raggio-vicini.js';
 import { caricaLiveZoom, collegaLiveZoom, creaInterruttoreLegenda as interruttoreLiveZoomLegenda } from './core/live-zoom.js';
 
 // telefono: barra a quattro tab (Mappa, Strati, Aggiungi, Info) e foglio degli strati; la legenda si può ridurre
+let apriTalia = () => {}; // tab Talia della modalità emergenza: si completa insieme ai pannelli
 let tornaAllaMappa = () => {}; // si completa quando i pannelli laterali esistono
 let filtraDaTalia = () => null; // applica i filtri a parole del Chat bot (vedi più sotto)
 let ricercaMappa = null; // ricerche che usano la mappa, per il Chat bot (vedi creaRicercaMappa)
@@ -255,7 +257,13 @@ map.once('style.load', async () => {
     document.dispatchEvent(new CustomEvent('talia:racconta-pronto', { detail: e.detail }));
   });
   document.addEventListener('scheda:vai', () => rail.mostra('scheda')); // dal Chat bot: la scheda torna in primo piano
-  tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); rail.chiudi('chatbot'); document.getElementById('crediti').open && document.getElementById('crediti').close(); };
+  // telefono con il Piano di emergenza acceso: barra con soli Mappa e Talia (il resto lo nasconde il CSS)
+  apriTalia = () => { tab.imposta(null); rail.commuta('chatbot'); };
+  const iconeEmergenza = { gps: document.getElementById('btn-posizione').innerHTML, condividi: document.getElementById('btn-condividi').innerHTML, talia: ICONE_RAIL.chatbot, esci: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' };
+  const emergenza = collegaModoEmergenza(document, { barraTab: tab.barra, icone: iconeEmergenza, suGps: () => document.getElementById('btn-posizione').click(), suCondividi: () => document.getElementById('btn-condividi').click(), suTalia: () => apriTalia(), suAttiva: () => tab.imposta(null) });
+  emergenza.aggiorna();
+  map.once('idle', emergenza.aggiorna);
+  tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); rail.chiudi('chatbot'); if (inModoEmergenza()) document.querySelector('#scheda:not([hidden]) .scheda-x')?.click(); /* in emergenza «Mappa» chiude anche la scheda */ document.getElementById('crediti').open && document.getElementById('crediti').close(); };
   aggiungi.ripristina(); // i layer aggiunti dall'utente tornano prima, così quelli RNDT restano sopra
   rndt.ripristina(); // i layer RNDT della sessione precedente tornano sopra tutti gli altri
   geoimage.ripristina(); // e la mappa storica di Geoimage, se c'era

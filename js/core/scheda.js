@@ -11,6 +11,7 @@ import { ICONA_INGRANAGGIO, ICONA_X, creaPannelloPreferenze } from './scheda-pan
 import { t as tr, tl } from './i18n.js';
 import { mostraCerchio, nascondiCerchio } from './cerchio-raggio.js';
 import { raggioVicini, cerchioVisibile, EVENTO_RAGGIO } from './raggio-vicini.js';
+import { inModoEmergenza, moduliAlClic } from './modo-emergenza.js';
 import { ICONE_RAIL } from './rail.js';
 import { paroleScheda } from './scheda-parole.js';
 
@@ -75,7 +76,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   maniglia.setAttribute('aria-label', tr('scheda.altezza'));
   maniglia.append(el('i'));
   const imposta = alt => { contenitore.dataset.altezza = alt; contenitore.classList.toggle('scheda-piena', alt === 'pieno'); };
-  imposta('meta');
+  imposta(inModoEmergenza() ? 'pieno' : 'meta'); // in modalità emergenza (telefono) la scheda dell'area si apre a tutta altezza
   let y0 = 0, mosso = false;
   maniglia.addEventListener('pointerdown', e => { y0 = e.clientY; mosso = false; });
   maniglia.addEventListener('pointerup', e => {
@@ -459,7 +460,9 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   map.on('click', async e => {
     // Fuori dal Comune si apre la scheda solo dei moduli che lo chiedono (`scheda.apertoFuoriComune(map, e)`, es. l'aeroporto di Punta Raisi e gli aerei in volo)
     const fuori = anelli.length > 0 && !anelli.some(a => dentroAnello([e.lngLat.lng, e.lngLat.lat], a));
-    const moduliClic = fuori ? conScheda.filter(m => m.scheda.apertoFuoriComune?.(map, e)) : conScheda;
+    const emergenza = inModoEmergenza(); // telefono con il Piano di emergenza: la scheda è solo quella dell'area
+    const moduliBase = moduliAlClic(conScheda, emergenza);
+    const moduliClic = fuori ? moduliBase.filter(m => m.scheda.apertoFuoriComune?.(map, e)) : moduliBase;
     if (fuori && !moduliClic.length) {
       segnala(tr('scheda.fuoriComune'));
       return;
@@ -498,7 +501,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     // (PRG e vincoli: «Strumenti urbanistici»)
     const daStrato = e.strati?.map(id => voci.find(v => v.strato === id)).find(Boolean);
     if (daStrato) tabIniziale = tabScheda(daStrato.peso, daStrato.chiave);
-    const interrogabili = rndt && !fuori ? rndt.layerAlPunto(lngLat) : []; // i servizi RNDT valgono per il Comune
+    const interrogabili = rndt && !fuori && !emergenza ? rndt.layerAlPunto(lngLat) : []; // i servizi RNDT valgono per il Comune
     if (interrogabili.length) voci.push(rndt.segnaposto()); // la scheda si apre subito: le risposte dei servizi arrivano dopo
     const adattaVista = centro => adattaVistaMappa(map, contenitore, centro);
     const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); document.dispatchEvent(new CustomEvent('scheda:chiusa')); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); nascondiCerchio(map); adattaVista(); };

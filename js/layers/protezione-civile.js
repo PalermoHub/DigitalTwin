@@ -2,9 +2,11 @@ import { urlDati, pmt } from '../core/config.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { tutti } from '../core/scheda-util.js';
 import { filtroInsieme, voceFiltro } from '../core/legenda.js';
-import { CLASSI, CONTORNO, classe, chiave, modelloPopup, vociPc } from './scheda-protezione-civile.js';
+import { CLASSI, CONTORNO, classe, chiave, modelloPopup, vociPc, retino } from './scheda-protezione-civile.js';
 import { tl } from '../core/i18n.js';
 import { apriPopupScheda } from './popup-traffico.js';
+import { creaMiniMappaAree } from './scheda-pc-mappa.js';
+import { inModoEmergenza } from '../core/modo-emergenza.js';
 
 // Piano di emergenza della Protezione civile (Comune di Palermo, Portale Open Data dataset 351): 478 aree in un solo PMTiles (zoom 11–17).
 // Simbologia dell'Allegato B del Dipartimento della Protezione Civile: tratteggio verde = area di attesa, rosso = ricovero e accoglienza,
@@ -44,18 +46,6 @@ const idRetino = id => `pc-retino-${id}`;
 const idIcona = id => `pc-icona-${id}`;
 const conIcona = CLASSI.filter(c => c.icona);
 const perClasse = (f, altro) => ['match', ['get', 'classe'], ...CLASSI.flatMap(c => [c.id, f(c)]), altro];
-
-// Retino dell'Allegato B: righe oblique del colore della classe su fondo trasparente (la base resta visibile).
-function retino(colore) {
-  const N = 16;
-  const c = document.createElement('canvas');
-  c.width = c.height = N;
-  const x = c.getContext('2d');
-  x.strokeStyle = colore;
-  x.lineWidth = 3;
-  for (const d of [-N, 0, N]) { x.beginPath(); x.moveTo(d, N); x.lineTo(d + N, 0); x.stroke(); }
-  return x.getImageData(0, 0, N, N);
-}
 
 function registraImmagini(map) {
   for (const c of CLASSI) if (!map.hasImage(idRetino(c.id))) map.addImage(idRetino(c.id), retino(c.colore), { pixelRatio: 2 });
@@ -150,6 +140,7 @@ export default {
     let popup = null;
     map.on('click', e => {
       if (map.getLayoutProperty(FILL, 'visibility') !== 'visible') return;
+      if (inModoEmergenza()) { popup?.remove(); return; } // telefono in modalità emergenza: niente popup, restano tooltip e scheda
       const lista = distinti(map.queryRenderedFeatures(e.point, { layers: [FILL] }));
       if (!lista.length) { popup?.remove(); return; }
       popup = apriPopup(map, lista, e, popup);
@@ -169,7 +160,11 @@ export default {
   scheda: {
     layers: [HIT],
     // a strato acceso la sezione dell'area sta in cima al tab Luogo, per non confonderla con le altre informazioni del punto
-    voci: trovati => vociPc(distinti(tutti(trovati, HIT)).slice(0, MAX_NELLA_SCHEDA).map(f => f.properties), mappa?.getLayoutProperty(FILL, 'visibility') === 'visible'),
+    voci: trovati => {
+      const aree = distinti(tutti(trovati, HIT)).slice(0, MAX_NELLA_SCHEDA).map(f => f.properties);
+      // il riquadro con la mappa delle aree sta nella prima sezione: l'area cliccata è in evidenza
+      return vociPc(aree, mappa?.getLayoutProperty(FILL, 'visibility') === 'visible').map((v, i) => (i === 0 ? { ...v, dinamico: () => creaMiniMappaAree(aree) } : v));
+    },
   },
   legendaPannello: '.lg-pc', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{

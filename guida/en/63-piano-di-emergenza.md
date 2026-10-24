@@ -38,7 +38,25 @@ Typical questions: In which neighbourhood is the waiting area? How big is it? Ho
 
 A click on the map, **even with the layer off**, shows in the **Place** tab the areas containing the clicked point: title (the area's function), **area number**, **type**, **surface** (in m² or hectares), any notes and **where it is**: **district** (circoscrizione), **neighbourhood** and **UPL**. If several areas overlap, the profile gathers them in one accordion entry. The map popup summarises title, zone and surface.
 
+At the bottom of the section there is a **small map of the emergency areas** (move it with two fingers on a phone, Ctrl + scroll on a computer, or the + and − buttons): the areas of the Plan are coloured by type and the one you tapped is highlighted in pink, with a marker. It shows at a glance where the area is compared with the others nearby.
+
 The data are also in the **data table** (with district, neighbourhood and UPL columns, handy for filtering and exporting).
+
+## Emergency mode on the phone
+
+Keywords: emergency mode, phone, smartphone, simplify, area only, Talia, exit, bottom bar.
+
+Typical questions: Why do I only have Map and Talia on the phone? How do I leave emergency mode? How do I get all the layers back?
+
+On the **phone**, when the «Emergency Plan» layer is on (alone or with the «Emergency areas» route), the app is reduced to the essentials: the bottom bar has only **Map**, **GPS**, **Share**, **Talia** and **Exit**, the map tools disappear (GPS is in the bar), the layers sheet does not open, and a tap on an area opens **only that area's card**, without the other information for the point.
+
+A tap does not open the map popup (the tooltip stays) and the card opens at full height.
+
+The **Map** tab closes the card and takes you back to the map.
+
+To **leave**, tap **Exit**, the last tab of the bar: the full bar, the layers and the full cards come back, and the layer stays on. Turning the layer off and on again restarts the mode. It does not apply on large screens.
+
+---
 
 ## Source and limits
 

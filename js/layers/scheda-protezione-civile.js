@@ -80,3 +80,21 @@ export function vociPc(lista, primo = false) {
     fonte: FONTE,
   }];
 }
+
+// Zoom in base alla superficie dell'area (m²): le aree grandi si vedono intere, le piccole con più contesto intorno.
+export const zoomPerSuperficie = mq => (Number.isFinite(mq) ? Math.max(13.5, Math.min(16, 16.2 - Math.log2(Math.max(mq, 400) / 400) * 0.45)) : 14.8);
+
+// Filtro delle aree cliccate (per id)
+export const filtroEvidenza = ids => ['in', ['get', 'id'], ['literal', ids]];
+
+// Retino dell'Allegato B: righe oblique del colore della classe su fondo trasparente (la base resta visibile).
+export function retino(colore) {
+  const N = 16;
+  const c = document.createElement('canvas');
+  c.width = c.height = N;
+  const x = c.getContext('2d');
+  x.strokeStyle = colore;
+  x.lineWidth = 3;
+  for (const d of [-N, 0, N]) { x.beginPath(); x.moveTo(d, N); x.lineTo(d + N, 0); x.stroke(); }
+  return x.getImageData(0, 0, N, N);
+}

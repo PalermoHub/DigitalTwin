@@ -45,7 +45,25 @@ Sotto i dati, la scheda riporta la **definizione dell'area** dal Glossario della
 - **area di ammassamento dei soccorritori e delle risorse**: zona sicura dove trovano sistemazione soccorritori e mezzi per intervenire nelle zone di emergenza; la permanenza va da poche settimane a qualche mese;
 - **sito a rischio industriale**: stabilimento che usa o detiene sostanze chimiche, il cui incidente può danneggiare persone e ambiente.
 
+In fondo alla sezione c'è un **riquadro con la mappa delle aree di emergenza** (si sposta con due dita sul telefono, con Ctrl + rotella sul computer, oppure con i pulsanti + e −): le aree del Piano sono colorate per tipo e quella cliccata è in evidenza, in rosa, con un segnaposto. Serve a capire a colpo d'occhio dov'è l'area rispetto alle altre vicine.
+
 I dati si vedono anche nella **tabella dei dati** (con le colonne circoscrizione, quartiere e UPL, utili per filtrare e per esportare).
+
+## La modalità emergenza sul telefono
+
+Parole chiave: modalità emergenza, telefono, smartphone, semplificare, solo area, Talia, esci, barra in basso.
+
+Domande tipiche: Perché sul telefono ho solo Mappa e Talia? Come esco dalla modalità emergenza? Come vedo di nuovo tutti gli strati?
+
+Sul **telefono**, quando il layer «Piano di emergenza» è acceso (da solo o con il percorso «Aree di emergenza»), l'app si riduce all'essenziale: la barra in basso ha solo **Mappa**, **GPS**, **Condividi**, **Talia** ed **Esci**, gli strumenti sulla mappa spariscono (il GPS è nella barra), il foglio degli strati non si apre e un clic su un'area apre **solo la scheda di quell'area**, senza le altre informazioni del punto.
+
+Il clic non apre il popup sulla mappa (resta il tooltip) e la scheda si apre a tutta altezza.
+
+Il tab **Mappa** chiude la scheda e riporta alla mappa.
+
+Per **uscire** si tocca **Esci**, l'ultimo tab della barra: tornano la barra completa, gli strati e le schede intere, e il layer resta acceso. Spegnendo il layer e riaccendendolo la modalità riparte. Sugli schermi grandi non c'è.
+
+---
 
 ## Fonte e limiti
 
