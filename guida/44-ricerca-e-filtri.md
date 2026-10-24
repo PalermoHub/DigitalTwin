@@ -63,6 +63,22 @@ I filtri scelti entrano anche nel link di «Condividi».
 
 ---
 
+## Live Zoom: la mappa segue i filtri
+
+Parole chiave: live zoom, zoom in tempo reale, adatta la mappa, inquadrare i risultati, seguire i filtri, interruttore, overlay.
+
+Domande tipiche: Come faccio a far inquadrare alla mappa i risultati del filtro? Cos'è il Live Zoom? Dove si accende?
+
+Con **Live Zoom** acceso, a ogni modifica di un filtro la mappa si **adatta ai punti rimasti**: togli una categoria dalla legenda o scegli una voce di filtro nel pannello di un layer e la vista si sposta e si ingrandisce su ciò che resta. Togliendo il filtro la mappa torna a inquadrare tutto il layer. È spento all'inizio.
+
+**Dove si accende.** Ci sono due interruttori che mostrano lo stesso stato (se ne accendi uno, si accende anche l'altro) e la scelta resta salvata nel browser:
+- nel tab **Layer**, nel gruppo **Overlay**, insieme a «Tooltip sulla mappa» e «Legende sulla mappa»;
+- nel riquadro della **legenda** sulla mappa, in prima riga, sopra «Raggio intorno al clic».
+
+**Cosa tocca e cosa no.** Reagisce alle caselle e ai comandi dei filtri dei layer, non all'accensione di uno strato. Funziona per tutti i layer con filtri. Per i layer a tile vettoriali tiene conto solo di ciò che è già caricato nella vista. Se il filtro non lascia nessun punto, la mappa resta ferma.
+
+---
+
 ## Il pulsante «Ripristina»
 
 Parole chiave: ripristina, reset, ripristino impostazioni, personalizzazioni, ordine degli strati, invito all'avvio.

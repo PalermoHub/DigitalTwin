@@ -63,6 +63,22 @@ The chosen filters are also included in the link of «Share this view».
 
 ---
 
+## Live Zoom: the map follows the filters
+
+Keywords: live zoom, real-time zoom, fit the map, frame the results, follow the filters, switch, overlay.
+
+Typical questions: How do I make the map frame the filter results? What is Live Zoom? Where do I turn it on?
+
+With **Live Zoom** on, every time you change a filter the map **fits to the points that remain**: remove a category from the legend or pick a filter option in a layer's panel and the view moves and zooms onto what is left. Removing the filter takes the map back to the whole layer. It is off at first.
+
+**Where to turn it on.** There are two switches showing the same state (turning one on turns the other on too) and the choice is kept in the browser:
+- in the **Layers** tab, in the **Overlay** group, next to «Map tooltips» and «Legends on the map»;
+- in the **legend** box on the map, as the first row, above «Radius around the click».
+
+**What it reacts to.** It reacts to the checkboxes and controls of the layer filters, not to turning a layer on. It works for every layer with filters. For vector-tile layers it only counts what is already loaded in the view. If the filter leaves no points, the map stays where it is.
+
+---
+
 ## The «Reset» button
 
 Keywords: reset, restore settings, customisations, layer order, initial prompt, undo my changes, default colours.
