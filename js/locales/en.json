@@ -1535,6 +1535,8 @@
   "legenda.esterna.vettoriale": "Layer colour",
   "legenda.raggio.etichetta": "Radius around the click: {m} m",
   "legenda.raggio.cerchio": "Show the circle on the map",
+  "livezoom.interruttore": "Live Zoom",
+  "livezoom.descrizione": "Fit the map to the results every time a filter changes",
   "legenda.pannello.suMappa": "Legends on the map",
   "legenda.pannello.titolo": "Legend",
   "legenda.esterna.file": "Uploaded file",

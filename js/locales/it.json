@@ -1535,6 +1535,8 @@
   "legenda.esterna.vettoriale": "Colore del layer",
   "legenda.raggio.etichetta": "Raggio intorno al clic: {m} m",
   "legenda.raggio.cerchio": "Mostra il cerchio in mappa",
+  "livezoom.interruttore": "Live Zoom",
+  "livezoom.descrizione": "Adatta la mappa ai risultati a ogni modifica del filtro",
   "legenda.pannello.suMappa": "Legende sulla mappa",
   "legenda.pannello.titolo": "Legenda",
   "legenda.esterna.file": "File caricato",

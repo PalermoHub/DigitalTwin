@@ -11,6 +11,7 @@ import { ETICHETTE, EVENTO_GRUPPO } from './pannello-comune.js';
 import { aggiornaSottogruppi, rendiPieghevoli } from './sottogruppi.js';
 import { t } from './i18n.js';
 import { tooltipAttivi, impostaTooltipAttivi } from './tooltip.js';
+import { creaInterruttorePannello as interruttoreLiveZoom } from './live-zoom.js';
 
 
 const mostrati = new Set();
@@ -360,7 +361,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     const titoloOpz = document.createElement('h2');
     titoloOpz.textContent = t('pannello.overlay.titolo');
     sommarioOpz.append(titoloOpz);
-    opzioni.append(sommarioOpz, interruttore, ...(legendeUi ? [legendeUi.interruttore] : []));
+    opzioni.append(sommarioOpz, interruttore, ...(legendeUi ? [legendeUi.interruttore] : []), interruttoreLiveZoom(occhio, storage));
     campo.after(opzioni, disegno.el);
     campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; opzioni.hidden = !!cercando; });
     contenitore.addEventListener('change', e => { if (e.target.matches?.('label.strato input[type=checkbox]')) { if (disegno.el.open) disegno.ridisegna(); else disegno.aggiornaTestata(); } });

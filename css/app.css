@@ -805,6 +805,7 @@ dialog li { margin: 4px 0; }
 .legende-raggio-cerchio input::after { content: ''; position: absolute; top: 1px; left: 1px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-ui); box-sizing: border-box; box-shadow: var(--ombra); transition: transform var(--t-rapida); }
 .legende-raggio-cerchio input:checked { background: var(--accent); border-color: var(--accent); }
 .legende-raggio-cerchio input:checked::after { transform: translateX(16px); }
+.live-zoom-legenda { margin: 0 0 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border-ui); }
 .legende-raggio-cerchio input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 #legende { position: static; max-width: none; padding: 0 10px 8px; overflow-y: auto; min-height: 0; }
 #legende-box { --legende-bottom: 28px; --legende-alto: 172px; display: flex; flex-direction: column; max-height: calc(100dvh - var(--legende-bottom) - var(--legende-alto)); }

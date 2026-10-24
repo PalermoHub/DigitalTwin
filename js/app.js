@@ -77,6 +77,7 @@ import terreno from './layers/terreno.js';
 import base from './layers/base.js';
 import { t } from './core/i18n.js';
 import { creaRegolatoreRaggio } from './core/raggio-vicini.js';
+import { caricaLiveZoom, collegaLiveZoom, creaInterruttoreLegenda as interruttoreLiveZoomLegenda } from './core/live-zoom.js';
 
 // telefono: barra a quattro tab (Mappa, Strati, Aggiungi, Info) e foglio degli strati; la legenda si può ridurre
 let tornaAllaMappa = () => {}; // si completa quando i pannelli laterali esistono
@@ -85,7 +86,10 @@ let ricercaMappa = null; // ricerche che usano la mappa, per il Chat bot (vedi c
 const tab = collegaTabMobile(document, { barraTitolo: document.querySelector('#barra-strati .barra-titolo'), suMappa: () => tornaAllaMappa() });
 document.getElementById('corpo').append(tab.barra);
 document.getElementById('chiudi-strati').addEventListener('click', () => tab.imposta(null));
-document.getElementById('legende-box').append(creaRegolatoreRaggio(localStorage));
+caricaLiveZoom(localStorage);
+const regolatoreRaggio = creaRegolatoreRaggio(localStorage);
+regolatoreRaggio.prepend(interruttoreLiveZoomLegenda(localStorage));
+document.getElementById('legende-box').append(regolatoreRaggio);
 const riduciLegenda = document.getElementById('legende-riduci');
 riduciLegenda.addEventListener('click', () => {
   const ridotta = document.getElementById('legende-box').classList.toggle('ridotta');
@@ -119,6 +123,7 @@ const collegaRicercaGuide = (apri, altra) => {
 // la mappa (hash: true) riscrive subito l'hash con la vista: la scheda richiesta dall'indirizzo (#guida, #fonti…) va letta prima
 const SCHEDA_INDIRIZZO = location.hash.slice(1);
 const map = creaMappa('mappa', () => segnala(t('app.basemap.errore')));
+collegaLiveZoom(map);
 // Se i dati in ritardo servono subito (strato acceso, clic sulla mappa) e non sono ancora arrivati, un avviso lo dice.
 const attesaDati = creaAvvisoAttesa(document.getElementById('avvisi'), t('avviso.attesaCaricamento'));
 // Qualunque strato acceso che tarda a comparire (dati o tile pesanti) mostra lo stesso avviso, finché la mappa non è ferma.
