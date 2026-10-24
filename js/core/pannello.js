@@ -284,17 +284,17 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     }
     if (m.pannello) m.pannello(gruppo, map);
     // pallino verde sull'icona se nel gruppo c'è almeno uno strato acceso
-    const segna = () => {
+    const segna = (conta = true) => {
       const caselle = [...gruppo.querySelectorAll('input[type=checkbox]:not([data-filtro])')];
       if (caselle.length) {
         const n = caselle.filter(c => c.checked).length;
         gruppo.bottone.dataset.attivo = String(n > 0);
         gruppo.bottone.dataset.n = String(n);
       }
-      aggiornaConteggio();
+      if (conta === true) aggiornaConteggio(); // in costruzione basta il conteggio finale (sotto)
     };
-    gruppo.addEventListener('change', segna);
-    segna();
+    gruppo.addEventListener('change', () => segna());
+    segna(false);
   }
   // i filtri della ricerca (zona, trasporto, incidenti, catasto) vivono in un tab proprio, non in un popup sulla mappa
   const filtri = document.getElementById('pannello-filtri');
