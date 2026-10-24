@@ -54,7 +54,7 @@ A tap does not open the map popup (the tooltip stays) and the card opens at full
 
 The **Map** tab closes the card and takes you back to the map.
 
-To **leave**, tap **Exit**, the last tab of the bar: the full bar, the layers and the full cards come back, and the layer stays on. Turning the layer off and on again restarts the mode. It does not apply on large screens.
+To **leave**, tap **Exit**, the last tab of the bar: the full bar, the layers and the full cards come back, and the layer stays on. Turning the layer off and on again restarts the mode. It also works when you **rotate the phone**: in landscape the red bar stays at the bottom and the area card opens on the right. It does not apply on large screens (computers, tablets).
 
 ---
 

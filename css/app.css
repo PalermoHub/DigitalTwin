@@ -1792,6 +1792,25 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #menu-info .menu-tendina-lista :is(button, a) { padding-right: 16px; }
   #menu-info #link-home { order: -1; } #menu-info [data-scheda="digitaltwin"] { order: 1; } #menu-info #menu-guide { order: 3; } #menu-info [data-scheda="fonti"] { order: 4; } #menu-info #menu-altro { order: 5; }
 }
+/* modalità emergenza a telefono ruotato (touch, altezza fino a 500 px, oltre 720 px di larghezza): la stessa barra rossa in basso e la scheda dell'area a destra sopra la barra; niente testata, piede, barra dei pannelli né strumenti. Il resto dell'app, ruotato, resta quello desktop */
+@media (min-width: 721px) and (pointer: coarse) and (max-height: 500px) {
+  body.modo-emergenza #app-header, body.modo-emergenza #app-footer, body.modo-emergenza #rail-pannelli, body.modo-emergenza #barra-strumenti,
+  body.modo-emergenza #legende-raggio, body.modo-emergenza .invito-clic, body.modo-emergenza #zoom-box, body.modo-emergenza #barra-strati, body.modo-emergenza #pannello,
+  body.modo-emergenza #barra-tab button:not([data-tab="mappa"], [data-tab="home"], [data-tab="gps"], [data-tab="condividi"], [data-tab="talia"], [data-tab="esci"]) { display: none; }
+  body.modo-emergenza #barra-tab {
+    position: fixed; z-index: calc(var(--z-foglio) + 1); left: 0; right: 0; bottom: 0; height: var(--tab-h); display: flex;
+    background: var(--emergenza); border-top: 1px solid rgba(0, 0, 0, .3); box-shadow: 0 -2px 8px rgba(0, 0, 0, .3);
+  }
+  body.modo-emergenza #barra-tab button, body.modo-emergenza #barra-tab button[aria-pressed="true"] {
+    position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    border: 0; border-top: 3px solid transparent; background: none; color: #fff; font: inherit; font-size: var(--fs-xs); font-weight: 700;
+  }
+  body.modo-emergenza #area-ricerca { top: 8px; bottom: auto; left: 8px; right: auto; width: min(360px, calc(100% - var(--scheda-w) - 24px)); transform: none; }
+  body.modo-emergenza #cerca-risultati { bottom: auto; top: calc(100% + 8px); }
+  body.modo-emergenza #scheda { top: 0; right: 0; bottom: var(--tab-h); width: min(var(--scheda-w), 55%); z-index: var(--z-foglio); }
+  body.modo-emergenza :is(#rndt-pannello, #geoimage-pannello, #tema-ui-pannello, #chatbot-pannello) { right: 0; bottom: var(--tab-h); width: min(var(--scheda-w), 55%); }
+  body.modo-emergenza #legende-box { --legende-bottom: calc(var(--tab-h) + 12px); bottom: calc(var(--tab-h) + 12px); left: 8px; }
+}
 .btn-consenso { min-height: 44px; padding: 8px 16px; border: 2px solid var(--accent-strong, #b45309); border-radius: var(--r-md); background: transparent; color: inherit; font-weight: 700; cursor: pointer; }
 .strati-tooltip-corpo strong { color: var(--tooltip-enfasi); }
 .strati-tooltip-corpo > div + div { margin-top: 4px; }

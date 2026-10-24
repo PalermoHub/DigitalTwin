@@ -61,7 +61,7 @@ Il clic non apre il popup sulla mappa (resta il tooltip) e la scheda si apre a t
 
 Il tab **Mappa** chiude la scheda e riporta alla mappa.
 
-Per **uscire** si tocca **Esci**, l'ultimo tab della barra: tornano la barra completa, gli strati e le schede intere, e il layer resta acceso. Spegnendo il layer e riaccendendolo la modalità riparte. Sugli schermi grandi non c'è.
+Per **uscire** si tocca **Esci**, l'ultimo tab della barra: tornano la barra completa, gli strati e le schede intere, e il layer resta acceso. Spegnendo il layer e riaccendendolo la modalità riparte. Vale anche **ruotando il telefono**: in orizzontale la barra rossa resta in basso e la scheda dell'area si apre sulla destra. Sugli schermi grandi (computer, tablet) non c'è.
 
 ---
 

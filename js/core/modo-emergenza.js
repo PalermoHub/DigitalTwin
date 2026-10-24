@@ -1,4 +1,4 @@
-// «Modalità emergenza» su telefono: con il Piano di emergenza acceso (da solo o con il percorso «Aree di emergenza») l'interfaccia
+// «Modalità emergenza» su telefono (anche ruotato): con il Piano di emergenza acceso (da solo o con il percorso «Aree di emergenza») l'interfaccia
 // si riduce all'essenziale: barra in basso con soli Mappa, Home, GPS, Condividi, Talia ed Esci, un clic sulla mappa apre solo la scheda dell'area. «Esci» è l'ultimo tab della barra.
 // Il resto lo fa il CSS con body.modo-emergenza. Spento e riacceso lo strato, la modalità riparte; «Esci» vale finché lo strato resta acceso.
 import { t } from './i18n.js';
@@ -8,9 +8,9 @@ export const CLASSE_EMERGENZA = 'modo-emergenza';
 export const ZOOM_MINIMO_EMERGENZA = 11; // sotto questo zoom i poligoni delle aree non si vedono: in modalità emergenza la mappa non scende oltre
 export const ZOOM_MINIMO_RISCHI = 12; // i tile dei rischi PAI partono da zoom 12: con almeno un rischio acceso la mappa non scende sotto
 export const zoomMinimoEmergenza = rischiAcceso => (rischiAcceso ? ZOOM_MINIMO_RISCHI : ZOOM_MINIMO_EMERGENZA);
-export const MEDIA_TELEFONO = '(max-width: 720px)';
+export const MEDIA_TELEFONO = '(max-width: 720px), (pointer: coarse) and (max-height: 500px)'; // in piedi o ruotato (oltre 720 px di larghezza, ma basso e al tocco)
 
-// La modalità vale solo su telefono, a strato acceso e se non è stata chiusa a mano.
+// La modalità vale solo su telefono (anche ruotato), a strato acceso e se non è stata chiusa a mano.
 export const modoAttivo = ({ telefono, stratoAcceso, uscito }) => Boolean(telefono && stratoAcceso && !uscito);
 
 // Moduli da interrogare al clic: in modalità emergenza solo quello dell'area.
