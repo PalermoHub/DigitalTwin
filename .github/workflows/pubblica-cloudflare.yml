@@ -1,0 +1,50 @@
+name: Pubblica su Cloudflare Pages
+
+# Copia del sito su Cloudflare Pages, in parallelo a GitHub Pages (che resta quello in uso: non lo tocca).
+# Per ora solo a mano (Actions → «Pubblica su Cloudflare Pages» → Run workflow) e si guarda su https://<progetto>.pages.dev.
+# Quando ODS sposta il CNAME di palermodigitaltwin.opendatasicilia.it su <progetto>.pages.dev, togliere il commento ai due
+# trigger sotto e spegnere «Pubblica sito» (vedi docs/CLOUDFLARE_PAGES.md).
+#
+# Segreti del repo: CLOUDFLARE_API_TOKEN (permesso «Cloudflare Pages: Edit») e CLOUDFLARE_ACCOUNT_ID.
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+  # workflow_run:
+  #   workflows: ["Aggiorna colonnine", "Aggiorna distributori", "Aggiorna GTFS", "Aggiorna incendi", "Aggiorna MEF", "Aggiorna PAI", "Aggiorna uffici"]
+  #   types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pubblica-cloudflare
+  cancel-in-progress: false
+
+env:
+  PROGETTO: palermo-digitaltwin
+
+jobs:
+  pubblica:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # solo ciò che serve al sito: niente test, script, worker, workflow, documenti interni. Cloudflare Pages rifiuta i file oltre 25 MB.
+      - name: Prepara la cartella da pubblicare
+        run: |
+          mkdir -p _sito
+          git ls-files -z | grep -zvE '^(tests|scripts|worker|\.github|docs|graphify-out|lavoro|\.remember|\.superpowers)/|^(package\.json|pytest\.ini|README\.md|aggiungere\.txt)$' \
+            | xargs -0 -I{} cp --parents {} _sito/
+          find _sito -type f -size +25M -print -delete
+          echo "File da pubblicare: $(find _sito -type f | wc -l) (limite 20000)"
+          du -sh _sito
+
+      - name: Pubblica
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0 (fissata allo SHA: riceve il token Cloudflare)
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _sito --project-name=${{ env.PROGETTO }} --branch=main --commit-dirty=true

@@ -1651,6 +1651,11 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #stampa-menu select { width: auto; margin: 0; padding: 4px 8px; }
 #stampa-menu button { padding: 5px 14px; font: inherit; font-weight: 600; color: var(--accent-ink); background: var(--accent); border: 1px solid var(--accent); border-radius: var(--r-pill); cursor: pointer; }
 #stampa-menu button:disabled { opacity: .6; cursor: wait; }
+/* pagine statiche: il pulsante «Condividi» chiude la testata a destra (anche sul telefono, dopo tema e lingua) */
+#app-header > #btn-condividi { order: 10; flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; color: var(--text); background: var(--surface-alt); border: 1px solid var(--border-ui); border-radius: 50%; cursor: pointer; }
+#app-header > #btn-condividi:hover { background: var(--surface-hover); }
+#app-header > #btn-condividi:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+#app-header > #btn-condividi svg { width: 18px; height: 18px; }
 #condividi-menu { position: fixed; z-index: var(--z-barra); top: 70px; right: calc(var(--scheda-l) + 12px); width: min(360px, calc(100vw - 24px)); display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-lg); box-shadow: var(--ombra); font-size: var(--fs-sm); color: var(--text); }
 #condividi-menu[hidden] { display: none; }
 #condividi-menu h2 { margin: 0; font-size: var(--fs-sm); font-weight: 700; }
@@ -1731,6 +1736,7 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #barra-tab .conta-strati[hidden] { display: none; }
 
   /* tema scuro: interruttore nell'header, a destra */
+  #app-header > #btn-condividi { margin-left: 8px; }
   #switch-tema { display: flex; align-items: center; margin-left: auto; width: 64px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
   #switch-tema .switch-pista { position: relative; width: 56px; height: 28px; box-sizing: border-box; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface-alt); transition: background var(--t-rapida), border-color var(--t-rapida); }
   #switch-tema .switch-sole, #switch-tema .switch-luna { position: absolute; top: 6px; color: var(--text-muted); }

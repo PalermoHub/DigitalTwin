@@ -3,13 +3,26 @@
 import { creaInterruttoreLingua, t as tr } from './i18n.js';
 import { svgIcona } from './icone.js';
 import { creaMenuSito, duplicaPrincipale } from './menu-sito.js';
+import { collegaMenuCondivisione } from './condivisione-menu.js';
 
 const el = (tag, props = {}, ...figli) => { const e = Object.assign(document.createElement(tag), props); e.append(...figli); return e; };
+
+// Pulsante «Condividi» prima dell'interruttore del tema: offre il link della pagina (senza ancora né parametri di vista) con copia, menu nativo e reti.
+function creaPulsanteCondividi() {
+  const bottone = el('button', { id: 'btn-condividi', type: 'button', title: tr('html.btn.condividiPagina'), innerHTML: svgIcona('condividi', 20) });
+  bottone.setAttribute('aria-label', tr('html.btn.condividiPagina'));
+  bottone.setAttribute('aria-haspopup', 'dialog');
+  bottone.setAttribute('aria-expanded', 'false');
+  document.querySelector('#app-header').append(bottone);
+  const pagina = () => ({ link: location.origin + location.pathname });
+  collegaMenuCondivisione(bottone, pagina, { corto: false, chiaveLink: 'condividi.linkPagina', chiaveTitolo: 'html.btn.condividiPagina' });
+}
 
 export async function avviaTestata() {
   // le etichette dei tab si risolvono quando il modulo si carica: va importato dopo i dizionari
   const { TAB } = await import('./tab-mobile.js');
   document.getElementById('switch-tema').after(creaInterruttoreLingua(document));
+  creaPulsanteCondividi();
   // Tema scuro e menu: gli stessi gesti dell'app, senza la mappa.
   const radice = document.documentElement;
   const interruttoreTema = document.getElementById('switch-tema');

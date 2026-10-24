@@ -1,0 +1,30 @@
+# Intestazioni di Cloudflare Pages (non hanno effetto su GitHub Pages). Cloudflare comprime già in Brotli/gzip e parla HTTP/3.
+# Il service worker (sw.js) ha la sua cache: qui si regola solo quella del browser e dell'edge.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# pagine, codice e service worker: si controlla sempre (ETag), così un rilascio nuovo arriva subito
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+/js/*
+  Cache-Control: public, max-age=300, must-revalidate
+/css/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+# immagini e guida: cambiano di rado
+/img/*
+  Cache-Control: public, max-age=604800
+/guida/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# dati: alcuni si rigenerano ogni giorno (colonnine, distributori, incendi...), quindi un'ora, poi si rivalida in sottofondo
+/dati/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+# tile vettoriali: file grandi letti a intervalli (Range); un giorno basta
+/dati/*.pmtiles
+  Cache-Control: public, max-age=86400
+  Accept-Ranges: bytes
