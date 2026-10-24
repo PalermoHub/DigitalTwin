@@ -35,6 +35,22 @@ export const urlPercorso = p => (Number.isFinite(p.lat) && Number.isFinite(p.lon
   : null);
 const rigaPercorso = p => (urlPercorso(p) ? [{ etichetta: 'Percorso', valore: t('pc.percorso'), urlValore: urlPercorso(p), colore: '#009a49', pieno: true }] : []);
 
+// Numeri utili in emergenza (uguali per ogni area): su telefono un tocco apre la chiamata.
+const ROSSO = '#d7263d';
+const num = (etichetta, n) => ({ etichetta, valore: n, tel: n, colore: ROSSO });
+export const NUMERI_EMERGENZA = [
+  num('Emergenza (numero unico)', '112'), num('Vigili del Fuoco', '115'), num('Emergenza sanitaria', '118'),
+  num('Polizia di Stato', '113'), num('Incendi boschivi', '1515'),
+];
+export const NUMERI_PROTEZIONE_CIVILE = [
+  num('Protezione civile (numero verde nazionale)', '800 840 840'), num('Sala operativa Regione Siciliana', '800 404 040'),
+];
+// Una sola volta per scheda, anche con più aree sovrapposte.
+const gruppiNumeri = () => [
+  { titolo: 'In caso di emergenza', righe: [...NUMERI_EMERGENZA, { etichetta: 'Cosa dire', valore: 'Dove sei, cosa è successo, quante persone sono coinvolte e in che condizioni. Non riagganciare finché non lo dice l\'operatore.' }] },
+  { titolo: 'Protezione civile', righe: NUMERI_PROTEZIONE_CIVILE },
+];
+
 export const titolo = p => classe(p.classe)?.etichetta ?? p.descrizione;
 
 // La colonna mobile dei Vigili del Fuoco ha un tipo suo (AM VV.F.): il dettaglio sta nella descrizione del file.
@@ -55,12 +71,13 @@ export function modelloPopup(p) {
 export const PESO_PRIMO = 1;
 const PESO = 7;
 
-export function vocePc(p, primo = false) {
+export function vocePc(p, primo = false, conNumeri = true) {
   return {
     chiave: chiave(p), peso: primo ? PESO_PRIMO : PESO, strato: 'protezione-civile', titolo: titolo(p), icona: 'protezione-civile', badge: p.numero ? t('pc.numero', { n: p.numero }) : undefined, sempre: true,
     gruppi: [
       { righe: righe([['Tipologia', tipologia(p)], ['Numero area', p.numero], ['Superficie', mq(p.sup_m2)], ['Note', p.nota]]) },
       { titolo: 'Dove si trova', righe: [...righe([['Circoscrizione', p.circoscrizione], ['Quartiere', p.quartiere], ['UPL', p.upl]]), ...rigaPercorso(p)] },
+      ...(conNumeri ? gruppiNumeri() : []),
     ],
     nota: classe(p.classe)?.definizione,
     link: classe(p.classe)?.definizione ? { testo: 'Glossario della Protezione Civile', url: GLOSSARIO, icona: 'esterno', suggerimento: 'Definizioni ufficiali dei termini di protezione civile' } : undefined,
@@ -73,11 +90,11 @@ export function vociPc(lista, primo = false) {
   if (lista.length <= 1) return lista.map(p => vocePc(p, primo));
   return [{
     chiave: 'pc:gruppo', peso: primo ? PESO_PRIMO : PESO, strato: 'protezione-civile', titolo: 'Piano di emergenza', icona: 'protezione-civile', badge: tn('pc.aree', lista.length), sempre: true,
-    gruppi: [],
+    gruppi: gruppiNumeri(),
     accordion: {
       icona: 'protezione-civile', suggerimento: 'Seleziona un\'area per vedere i dettagli',
       riassunto: t('pc.riassunto', { n: lista.length, tipi: [...new Set(lista.map(p => tl(classe(p.classe)?.breve ?? p.descrizione)))].join(', ') }),
-      elementi: lista.map(p => ({ titolo: titolo(p), anteprima: p.numero ? t('pc.numero', { n: p.numero }) : '', righe: vocePc(p).gruppi.flatMap(g => g.righe) })),
+      elementi: lista.map(p => ({ titolo: titolo(p), anteprima: p.numero ? t('pc.numero', { n: p.numero }) : '', righe: vocePc(p, false, false).gruppi.flatMap(g => g.righe) })),
     },
     fonte: FONTE,
   }];

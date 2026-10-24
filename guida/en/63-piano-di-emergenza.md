@@ -34,6 +34,8 @@ To know what each area is for, look at its colour: **green** waiting area, **red
 
 Keywords: emergency area profile, area number, surface, district, neighbourhood, UPL.
 
+Below the area and the navigation button, the card lists **emergency numbers**: **112** (single number), **115** (fire brigade), **118** (medical emergency), **113** (State Police), **1515** (forest fires), the national civil protection toll-free number **800 840 840** and the Sicily Region operations room **800 404 040**. On a phone, tap a number to open the dialer with the number already entered (on a computer the numbers are read-only). A reminder says what to tell the operator: where you are, what happened, how many people are involved, and do not hang up until told to.
+
 Typical questions: In which neighbourhood is the waiting area? How big is it? How do I find the nearest area to an address?
 
 A click on the map, **even with the layer off**, shows in the **Place** tab the areas containing the clicked point: title (the area's function), **area number**, **type**, **surface** (in m² or hectares), any notes and **where it is**: **district** (circoscrizione), **neighbourhood** and **UPL**. If several areas overlap, the profile gathers them in one accordion entry. The map popup summarises title, zone and surface.

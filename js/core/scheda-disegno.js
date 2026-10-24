@@ -32,6 +32,18 @@ function disegnaRiga(r) {
     return riga;
   }
   riga.append(el('span', 'scheda-et', tl(r.etichetta)));
+  if (r.tel) { // numero di telefono: su telefono un tocco apre la tastiera di chiamata con il numero già composto, altrove resta testo
+    const cifre = String(r.tel).replace(/[^\d+]/g, '');
+    const chiamabile = cifre && globalThis.matchMedia?.('(pointer: coarse)')?.matches;
+    const n = el(chiamabile ? 'a' : 'span', `scheda-val scheda-badge-tinta scheda-badge-pieno scheda-tel`, r.valore);
+    if (r.colore) n.style.setProperty('--tinta', r.colore);
+    if (chiamabile) {
+      n.href = `tel:${cifre}`;
+      n.setAttribute('aria-label', `${tr('scheda.chiama')} ${r.valore}`);
+    }
+    riga.append(n);
+    return riga;
+  }
   if (r.urlValore) { // il valore stesso è il collegamento (es. CUP → scheda del progetto su OpenCUP)
     const a = el('a', r.colore ? `scheda-val scheda-badge-tinta${r.pieno ? ' scheda-badge-pieno' : ''}` : 'scheda-val', r.valore);
     if (r.colore) a.style.setProperty('--tinta', r.colore); // badge cliccabile

@@ -2312,6 +2312,9 @@ details.scheda-sez[data-peso="1"] > summary { background: var(--accent-soft); bo
 /* badge a tinta piena (es. «Percorso» del Piano di emergenza): verde delle vie di fuga, testo bianco, ben visibile anche a chi è agitato */
 a.scheda-badge-tinta.scheda-badge-pieno { background: var(--tinta); border-color: var(--tinta); color: #fff; padding: 6px 16px; font-size: var(--fs-base); font-weight: 700; box-shadow: 0 1px 4px rgba(0, 0, 0, .3); }
 a.scheda-badge-tinta.scheda-badge-pieno:hover, a.scheda-badge-tinta.scheda-badge-pieno:focus-visible { background: color-mix(in srgb, var(--tinta) 82%, #000); }
+/* numeri di telefono: pieno anche quando non sono chiamabili (computer); sul telefono area di tocco da 44px */
+.scheda-tel { background: var(--tinta, var(--emergenza, #d7263d)); border-color: var(--tinta, var(--emergenza, #d7263d)); color: #fff; padding: 6px 16px; font-size: var(--fs-base); font-weight: 700; letter-spacing: .02em; text-decoration: none; white-space: nowrap; }
+a.scheda-tel { min-height: 44px; display: inline-flex; align-items: center; box-sizing: border-box; box-shadow: 0 1px 4px rgba(0, 0, 0, .3); }
 
 /* riquadro con la mappa delle aree di emergenza nella scheda */
 .pc-mini { margin: 8px 0 4px; }

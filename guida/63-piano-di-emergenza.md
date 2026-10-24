@@ -38,6 +38,8 @@ Domande tipiche: In che quartiere si trova l'area di attesa? Quanto è grande? C
 
 Un clic sulla mappa, **anche con lo strato spento**, mostra nel tab **Luogo** le aree che contengono il punto cliccato: titolo (la funzione dell'area), **numero dell'area**, **tipologia**, **superficie** (in m² o ettari), eventuali note e **dove si trova**: **circoscrizione**, **quartiere** e **UPL**. Se più aree si sovrappongono, la scheda le raccoglie in una voce a fisarmonica. Il popup in mappa riassume titolo, zona e superficie.
 
+Sotto la zona e il pulsante del navigatore la scheda riporta i **numeri utili in caso di emergenza**: **112** (numero unico), **115** (Vigili del Fuoco), **118** (emergenza sanitaria), **113** (Polizia di Stato), **1515** (incendi boschivi), il numero verde nazionale della Protezione civile **800 840 840** e la sala operativa della Regione Siciliana **800 404 040**. Sul telefono basta toccare un numero: si apre la tastiera di chiamata con il numero già pronto (sul computer i numeri sono solo da leggere). C'è anche il promemoria su cosa dire all'operatore: dove sei, cosa è successo, quante persone sono coinvolte, e non riagganciare finché non lo dice lui.
+
 Sotto i dati, la scheda riporta la **definizione dell'area** dal Glossario della Protezione Civile:
 
 - **area di attesa della popolazione**: luogo di prima accoglienza (piazze, slarghi, parcheggi non a rischio) raggiungibile con un percorso sicuro, dove si ricevono le prime informazioni e i primi generi di conforto per poche ore o qualche giorno;

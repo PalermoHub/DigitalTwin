@@ -56,3 +56,12 @@ test('scheda: la definizione della classe sta nella nota; l\'ospedale non ne ha'
   assert.equal(vocePc({ ...attesa, classe: 'ospedale' }).nota, undefined);
   assert.ok(['attesa', 'accoglienza', 'ammassamento', 'rischio'].every(id => classe(id).definizione.endsWith('Glossario della Protezione Civile.')));
 });
+
+test('numeri utili: 112 e gli altri con tel, una sola volta anche con più aree sovrapposte', () => {
+  const numeri = v => v.gruppi.flatMap(g => g.righe).filter(r => r.tel);
+  assert.deepEqual(numeri(vocePc(attesa)).map(r => r.tel).slice(0, 3), ['112', '115', '118']);
+  assert.ok(numeri(vocePc(attesa)).some(r => r.tel === '800 840 840'));
+  const multi = vociPc([attesa, vvf])[0];
+  assert.equal(numeri(multi).length, numeri(vocePc(attesa)).length);
+  assert.ok(multi.accordion.elementi.every(e => !e.righe.some(r => r.tel)));
+});
