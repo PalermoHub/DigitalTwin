@@ -66,9 +66,9 @@ test('numeri utili: 112 e gli altri con tel, una sola volta anche con più aree 
   assert.ok(multi.accordion.elementi.every(e => !e.righe.some(r => r.tel)));
 });
 
-test('link in fondo: glossario (se c\'è la definizione) e i tre siti ufficiali', () => {
-  const urls = v => [].concat(v.link).map(l => l.url);
-  assert.deepEqual(urls(vocePc(attesa)).slice(1), ['https://www.protezionecivile.gov.it/it/', 'https://protezionecivile.comune.palermo.it/', 'https://www.protezionecivilesicilia.it/it/']);
-  assert.equal(urls(vocePc(attesa))[0], 'https://www.protezionecivile.gov.it/it/glossario/');
-  assert.equal(urls(vocePc({ ...attesa, classe: 'ospedale' })).length, 3);
+test('siti ufficiali: tre righe-collegamento nella scheda; nel piede resta solo il glossario', () => {
+  const siti = vocePc(attesa).gruppi.flatMap(g => g.righe).filter(r => r.urlValore && r.etichetta !== 'Percorso').map(r => r.urlValore);
+  assert.deepEqual(siti, ['https://www.protezionecivile.gov.it/it/', 'https://www.protezionecivilesicilia.it/it/', 'https://protezionecivile.comune.palermo.it/']);
+  assert.equal(vocePc(attesa).link.url, 'https://www.protezionecivile.gov.it/it/glossario/');
+  assert.equal(vocePc({ ...attesa, classe: 'ospedale' }).link, undefined);
 });

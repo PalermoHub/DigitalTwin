@@ -49,14 +49,15 @@ export const NUMERI_PROTEZIONE_CIVILE = [
 const gruppiNumeri = () => [
   { titolo: 'In caso di emergenza', righe: [...NUMERI_EMERGENZA, { etichetta: 'Cosa dire', valore: 'Dove sei, cosa è successo, quante persone sono coinvolte e in che condizioni. Non riagganciare finché non lo dice l\'operatore.' }] },
   { titolo: 'Protezione civile', righe: NUMERI_PROTEZIONE_CIVILE },
+  { titolo: 'Siti ufficiali', righe: SITI_UFFICIALI },
 ];
 
-// Siti ufficiali in fondo alla scheda
 const LINK_GLOSSARIO = { testo: 'Glossario della Protezione Civile', url: GLOSSARIO, icona: 'esterno', suggerimento: 'Definizioni ufficiali dei termini di protezione civile' };
-const LINK_UFFICIALI = [
-  { testo: 'Protezione Civile nazionale', url: 'https://www.protezionecivile.gov.it/it/', icona: 'esterno', suggerimento: 'Dipartimento della Protezione Civile' },
-  { testo: 'Protezione Civile del Comune di Palermo', url: 'https://protezionecivile.comune.palermo.it/', icona: 'esterno', suggerimento: 'Piani, aree e informazioni del Comune di Palermo' },
-  { testo: 'Protezione Civile Regione Siciliana', url: 'https://www.protezionecivilesicilia.it/it/', icona: 'esterno', suggerimento: 'Dipartimento regionale della Protezione Civile' },
+// Siti ufficiali: righe in fondo alla sezione (nel piede della scheda quattro pulsanti non entrano sopra la barra dei tab)
+export const SITI_UFFICIALI = [
+  { etichetta: 'Nazionale', valore: 'protezionecivile.gov.it', urlValore: 'https://www.protezionecivile.gov.it/it/' },
+  { etichetta: 'Regione Siciliana', valore: 'protezionecivilesicilia.it', urlValore: 'https://www.protezionecivilesicilia.it/it/' },
+  { etichetta: 'Comune di Palermo', valore: 'protezionecivile.comune.palermo.it', urlValore: 'https://protezionecivile.comune.palermo.it/' },
 ];
 
 export const titolo = p => classe(p.classe)?.etichetta ?? p.descrizione;
@@ -88,7 +89,7 @@ export function vocePc(p, primo = false, conNumeri = true) {
       ...(conNumeri ? gruppiNumeri() : []),
     ],
     nota: classe(p.classe)?.definizione,
-    link: [...(classe(p.classe)?.definizione ? [LINK_GLOSSARIO] : []), ...LINK_UFFICIALI],
+    link: classe(p.classe)?.definizione ? LINK_GLOSSARIO : undefined,
     fonte: FONTE,
   };
 }
