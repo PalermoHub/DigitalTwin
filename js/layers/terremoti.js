@@ -4,6 +4,7 @@ import { filtroInsieme, voceFiltro } from '../core/legenda.js';
 import { FASCE, URL_SERVIZIO, GIORNI_MAX, filtro, passaFiltro, espressioneFiltro, eventoDaIngv, modelloPopupTerremoto, voceTerremoto, voceSerie, voceAltri, riassuntoTerremoti, proprietaStorico } from './scheda-terremoti.js';
 import { EVENTO_FILTRO, menuFiltro, elencoAltri, graficoSerie, testoGiorni, barraEventi } from './scheda-terremoti-dom.js';
 import { pannelloFiltro } from './terremoti-pannello.js';
+import { registraTooltipStrati } from '../core/tooltip.js';
 import { clicSu } from '../core/scheda-navigazione.js';
 import { contenutoPopupTraffico, ancoraPopupTraffico, rifinisciPopupTraffico, centraPopupTraffico } from './popup-traffico.js';
 
@@ -169,6 +170,10 @@ export default {
       if (!f) return;
       apriPopup(proprieta(f), e.point);
     });
+    registraTooltipStrati(map, [{
+      layers: [PUNTI], icona: 'terremoto', sezione: 'Terremoti', colore: p => p.colore,
+      modello: p => { const m = modelloPopupTerremoto(p); return { titolo: m.titolo, sottotitolo: m.sottotitolo, elenco: m.righe.map(r => `${tl(r.etichetta)}: ${r.valore}`) }; },
+    }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
     document.addEventListener(EVENTO_FILTRO, applicaFiltro);
