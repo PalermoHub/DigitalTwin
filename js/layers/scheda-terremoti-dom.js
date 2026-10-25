@@ -1,9 +1,9 @@
 // Parti disegnate dei terremoti: i due menu del filtro (legenda e scheda) e l'elenco «Gli altri terremoti» della scheda.
 import { disegnaAccordion } from '../core/scheda-disegno.js';
 import { t, tn, localeIntl } from '../core/i18n.js';
-import { titoloConInfo } from '../core/info-grafico.js';
+import { titoloConInfo, apriGrande } from '../core/info-grafico.js';
 import { barraNavigazione } from '../core/scheda-navigazione.js';
-import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, puntiMagnitudo, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, etichettaBarra, periodoSequenza } from './scheda-terremoti.js';
+import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, puntiMagnitudo, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, finestraTempo, etichettaBarra, periodoSequenza } from './scheda-terremoti.js';
 
 export const EVENTO_FILTRO = 'terremoti:filtro';
 
@@ -92,7 +92,163 @@ let unita = 'giorno';
 
 // Magnitudo-tempo: uno stelo per evento, alto quanto la magnitudo; la mainshock è in rosso con l'etichetta.
 const SVG = 'http://www.w3.org/2000/svg';
-const L = 320, A = 150, MS = 28, MD = 8, MA = 8, MB = 18; // viewBox e margini (sinistro, destro, alto, basso)
+// viewBox e margini (sinistro, destro, alto, basso): piccolo nella scheda, grande nel popup (solo desktop)
+const DIM = { L: 320, A: 150, MS: 28, MD: 8, MA: 8, MB: 18 };
+const DIM_GRANDE = { L: 900, A: 420, MS: 58, MD: 18, MA: 18, MB: 48 };
+const dimensioni = grande => (grande ? DIM_GRANDE : DIM);
+const dataBreve = ts => new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
+const mag1 = m => m.toLocaleString(localeIntl(), { minimumFractionDigits: 1 });
+
+// Intestazione del grafico: titolo, «i» e (solo nella scheda) il pulsante che lo apre in grande. `rifai(chiudi)` ridisegna il grafico in grande.
+function intestazione(testo, id, grande, rifai) {
+  return titoloConInfo('h4', 'terremoti-titolo', testo, id, grande ? null : () => apriGrande(testo, rifai));
+}
+
+// Asse delle date: due estremi nella scheda, sei tacche con griglia verticale nel popup; più il titolo dell'asse
+function asseDate(svg, g, grande) {
+  const { L, A, MS, MD, MA, MB } = dimensioni(grande);
+  const passi = grande ? 5 : 1;
+  for (let i = 0; i <= passi; i++) {
+    const f = i / passi, x = MS + f * (L - MS - MD);
+    const e = nodoSvg('text', { x, y: grande ? A - 26 : A - 4, 'text-anchor': i === 0 ? 'start' : i === passi ? 'end' : 'middle', class: 'et' });
+    e.textContent = g.a - g.da < 3 * 86400000 ? dataEvento(g.da + f * (g.a - g.da)) : dataBreve(g.da + f * (g.a - g.da));
+    svg.append(e);
+    if (grande && i > 0 && i < passi) svg.append(nodoSvg('line', { x1: x, x2: x, y1: MA, y2: A - MB, class: 'asse fine' }));
+  }
+  if (grande) titoliAssi(svg, grande, 'terremoti.asse.tempo');
+}
+// Titoli degli assi, solo nel popup: orizzontale in basso e verticale a sinistra
+function titoliAssi(svg, grande, chiaveX, chiaveY) {
+  if (!grande) return;
+  const { L, A, MS, MD, MA, MB } = DIM_GRANDE;
+  if (chiaveX) {
+    const e = nodoSvg('text', { x: MS + (L - MS - MD) / 2, y: A - 6, 'text-anchor': 'middle', class: 'et asse-titolo' });
+    e.textContent = t(chiaveX);
+    svg.append(e);
+  }
+  if (chiaveY) {
+    const e = nodoSvg('text', { transform: `translate(13 ${MA + (A - MA - MB) / 2}) rotate(-90)`, 'text-anchor': 'middle', class: 'et asse-titolo' });
+    e.textContent = t(chiaveY);
+    svg.append(e);
+  }
+}
+// Un marcatore per evento sulla curva (solo nel popup), come gli steli di magnitudo-tempo: tooltip al passaggio, clic = apre l'evento in mappa.
+// `testo(i)` = riga in più del tooltip, `quota(i)` = ordinata del marcatore nel grafico.
+function marcatori(svg, g, apri, px, py, quota, testo) {
+  g.punti.forEach((p, i) => {
+    const forte = p === g.mainshock;
+    const gruppo = nodoSvg('g', { class: forte ? 'forte' : 'evento' }, `M ${mag1(p.mag)} · ${dataEvento(p.ts)} · ${testo(i)}`);
+    gruppo.append(nodoSvg('circle', { cx: px(p.x), cy: py(quota(i)), r: forte ? 5 : 3 }));
+    if (apri && Number.isFinite(p.lon)) {
+      gruppo.classList.add('apribile');
+      gruppo.setAttribute('tabindex', '0');
+      gruppo.setAttribute('role', 'button');
+      gruppo.addEventListener('click', () => apri(p));
+      gruppo.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); apri(p); } });
+    }
+    svg.append(gruppo);
+  });
+}
+// Zoom nel popup: si trascina sul grafico per scegliere un tratto di tempo, che viene ridisegnato; «Reimposta» (o doppio clic) torna a tutto.
+// `g` = dati mostrati, `origine` = dati interi, `ridisegna(g)` = grafico nuovo per quei dati.
+function zoomGrande(blocco, svg, g, origine, ridisegna) {
+  const { L, A, MS, MD, MA, MB } = DIM_GRANDE;
+  let corrente = blocco; // il blocco in pagina: il pan lo sostituisce mentre si trascina
+  const sostituisci = nuovo => { corrente.replaceWith(nuovo); corrente = nuovo; };
+  const tutto = () => sostituisci(ridisegna(origine));
+  if (g !== origine) svg.classList.add('zoomato');
+  if (g === origine) svg.before(el('p', 'scheda-nota zoom-aiuto', t('terremoti.zoom.aiuto')));
+  else {
+    const riga = el('div', 'zoom-riga');
+    const reimposta = el('button', 'scheda-filtro', t('terremoti.zoom.reimposta'));
+    reimposta.type = 'button';
+    reimposta.addEventListener('click', tutto);
+    riga.append(reimposta, el('span', 'scheda-nota', t('terremoti.zoom.tratto', { da: dataEvento(g.da), a: dataEvento(g.a) })));
+    svg.before(riga);
+  }
+  svg.addEventListener('dblclick', tutto);
+  const frazione = ev => {
+    const r = svg.getBoundingClientRect();
+    return Math.min(1, Math.max(0, (((ev.clientX - r.left) * L) / r.width - MS) / (L - MS - MD)));
+  };
+  const xSvg = f => MS + f * (L - MS - MD);
+  // Rotella: ingrandisce (o riduce) attorno al cursore; tornando alla durata intera si rivede tutto. Un colpo ogni 80 ms, per non ridisegnare a raffica.
+  let ultimaRotella = 0;
+  svg.addEventListener('wheel', ev => {
+    ev.preventDefault();
+    if (ev.timeStamp - ultimaRotella < 80) return;
+    ultimaRotella = ev.timeStamp;
+    const f = frazione(ev), durata = g.a - g.da;
+    const nuova = durata * (ev.deltaY < 0 ? 0.7 : 1 / 0.7);
+    if (nuova >= origine.a - origine.da) { if (g !== origine) tutto(); return; }
+    if (nuova < 60000) return;
+    const da = Math.min(Math.max(g.da + f * durata - f * nuova, origine.da), origine.a - nuova);
+    const nuovo = ridisegna(finestraTempo(origine, da, da + nuova));
+    if (nuovo.querySelector('svg')) sostituisci(nuovo);
+  }, { passive: false });
+  // Pan: con il grafico ingrandito il trascinamento sposta il tratto (Maiusc + trascinamento = nuova selezione). Si parte sempre dai dati d'inizio.
+  const panorama = ev => {
+    const larghezza = svg.getBoundingClientRect().width, x0 = ev.clientX, durata = g.a - g.da;
+    let attesa = false, ultimo = null;
+    const sposta = () => {
+      attesa = false;
+      const df = ((ultimo - x0) * L / larghezza) / (L - MS - MD);
+      const da = Math.min(Math.max(g.da - df * durata, origine.da), origine.a - durata);
+      const nuovo = ridisegna(finestraTempo(origine, da, da + durata));
+      if (nuovo.querySelector('svg')) sostituisci(nuovo);
+    };
+    const muovi = e => {
+      ultimo = e.clientX;
+      if (!attesa) { attesa = true; requestAnimationFrame(sposta); }
+    };
+    const fine = () => {
+      window.removeEventListener('pointermove', muovi);
+      window.removeEventListener('pointerup', fine);
+      if (Math.abs((ultimo ?? x0) - x0) < 6) return;
+      const ferma = c => c.stopPropagation();
+      svg.addEventListener('click', ferma, true);
+      setTimeout(() => svg.removeEventListener('click', ferma, true), 0);
+    };
+    window.addEventListener('pointermove', muovi);
+    window.addEventListener('pointerup', fine);
+  };
+  svg.addEventListener('pointerdown', ev => {
+    if (ev.button !== 0) return;
+    if (g !== origine && !ev.shiftKey) return panorama(ev);
+    const f0 = frazione(ev), x0 = ev.clientX;
+    let rett = null, trascinato = false;
+    const muovi = e => {
+      if (!trascinato && Math.abs(e.clientX - x0) < 6) return; // sotto 6 px è un clic (apre l'evento)
+      trascinato = true;
+      rett ??= svg.appendChild(nodoSvg('rect', { class: 'brush', y: MA, height: A - MA - MB }));
+      const [a, b] = [f0, frazione(e)].sort((x, y) => x - y);
+      rett.setAttribute('x', xSvg(a));
+      rett.setAttribute('width', xSvg(b) - xSvg(a));
+    };
+    const fine = e => {
+      window.removeEventListener('pointermove', muovi);
+      window.removeEventListener('pointerup', fine);
+      rett?.remove();
+      if (!trascinato) return;
+      const ferma = c => c.stopPropagation(); // il clic che chiude il trascinamento non deve aprire un evento
+      svg.addEventListener('click', ferma, true);
+      setTimeout(() => svg.removeEventListener('click', ferma, true), 0);
+      const [a, b] = [f0, frazione(e)].sort((x, y) => x - y);
+      if (b - a < 0.01) return;
+      const nuovo = ridisegna(finestraTempo(g, g.da + a * (g.a - g.da), g.da + b * (g.a - g.da)));
+      if (nuovo.querySelector('svg')) sostituisci(nuovo); // tratto troppo povero di eventi: si resta dove si è
+    };
+    window.addEventListener('pointermove', muovi);
+    window.addEventListener('pointerup', fine);
+  });
+}
+// Linea verticale tratteggiata sulla scossa più forte (solo nel popup)
+function lineaForte(svg, g, grande, px) {
+  if (!grande || !g.mainshock) return;
+  const { A, MA, MB } = DIM_GRANDE;
+  const x = px(g.mainshock.x);
+  svg.append(nodoSvg('line', { x1: x, x2: x, y1: MA, y2: A - MB, class: 'marca-forte' }));
+}
 function nodoSvg(tag, attributi, titolo) {
   const n = document.createElementNS(SVG, tag);
   for (const [k, v] of Object.entries(attributi)) n.setAttribute(k, v);
@@ -101,32 +257,29 @@ function nodoSvg(tag, attributi, titolo) {
 }
 const dataEvento = ts => new Date(ts).toLocaleString(localeIntl(), { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-function disegnaMagnitudoTempo(g, apri) {
+function disegnaMagnitudoTempo(g, apri, grande = false, origine = g) {
+  const { L, A, MS, MD, MA, MB } = dimensioni(grande);
   const blocco = el('div', 'terremoti-serie');
-  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.mt.titolo'), 'mt'));
+  blocco.append(intestazione(t('terremoti.mt.titolo'), 'mt', grande, chiudi => disegnaMagnitudoTempo(g, apri && (p => { chiudi(); apri(p); }), true)));
   if (!g.punti.length) {
     blocco.append(el('p', 'scheda-nota', t('terremoti.serie.vuota')));
     return blocco;
   }
   const px = x => MS + x * (L - MS - MD), py = y => A - MB - y * (A - MB - MA);
-  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt', role: 'img', 'aria-label': t('terremoti.mt.titolo') });
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: `terremoti-mt${grande ? ' grande' : ''}`, role: 'img', 'aria-label': t('terremoti.mt.titolo') });
   for (const m of g.livelli) {
     svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py((m - g.base) / (g.cima - g.base)), y2: py((m - g.base) / (g.cima - g.base)), class: 'asse' }));
     const e = nodoSvg('text', { x: MS - 4, y: py((m - g.base) / (g.cima - g.base)) + 3, 'text-anchor': 'end', class: 'et' });
     e.textContent = `M${m}`;
     svg.append(e);
   }
-  const date = [g.da, g.a];
-  date.forEach((ts, i) => {
-    const e = nodoSvg('text', { x: i ? L - MD : MS, y: A - 4, 'text-anchor': i ? 'end' : 'start', class: 'et' });
-    e.textContent = new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
-    svg.append(e);
-  });
+  asseDate(svg, g, grande);
+  titoliAssi(svg, grande, null, 'terremoti.asse.mag');
   for (const p of g.punti) {
     const forte = p === g.mainshock;
     const x = px(p.x), y = py(p.y);
     const gruppo = nodoSvg('g', { class: forte ? 'forte' : 'evento' }, `M ${p.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 })} · ${dataEvento(p.ts)}`);
-    gruppo.append(nodoSvg('line', { x1: x, x2: x, y1: py(0), y2: y }), nodoSvg('circle', { cx: x, cy: y, r: forte ? 4 : 2 }));
+    gruppo.append(nodoSvg('line', { x1: x, x2: x, y1: py(0), y2: y }), nodoSvg('circle', { cx: x, cy: y, r: (forte ? 4 : 2) * (grande ? 1.5 : 1) }));
     if (apri && Number.isFinite(p.lon)) { // clic su uno stelo: l'evento si apre in mappa (la zona sensibile è larga 8 px)
       gruppo.classList.add('apribile');
       gruppo.setAttribute('tabindex', '0');
@@ -140,52 +293,63 @@ function disegnaMagnitudoTempo(g, apri) {
   const m = g.mainshock;
   const dx = px(m.x);
   const et = nodoSvg('text', { x: dx > L / 2 ? dx - 7 : dx + 7, y: py(m.y) + 3, 'text-anchor': dx > L / 2 ? 'end' : 'start', class: 'et forte' });
-  et.textContent = `M ${m.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 })}`;
+  et.textContent = grande ? `M ${mag1(m.mag)} · ${dataEvento(m.ts)}` : `M ${mag1(m.mag)}`;
   svg.append(et);
   blocco.append(svg, el('p', 'scheda-nota', t('terremoti.mt.nota', { n: num(g.punti.length), mag: g.base, forte: m.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 }), data: dataEvento(m.ts), repliche: num(g.repliche) })));
+  if (grande) zoomGrande(blocco, svg, g, origine, gw => disegnaMagnitudoTempo(gw, apri, true, origine));
   return blocco;
 }
 
 // Curva cumulativa: scala degli eventi accumulati; l'asse verticale va da 0 al totale
-function disegnaCurva(g) {
+function disegnaCurva(g, apri, grande = false, origine = g) {
   const c = curvaCumulativa(g);
   if (!c.totale) return el('div'); // senza eventi la nota del grafico precedente basta
+  const { L, A, MS, MD, MA, MB } = dimensioni(grande);
   const blocco = el('div', 'terremoti-serie');
-  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.cum.titolo'), 'cum'));
+  blocco.append(intestazione(t('terremoti.cum.titolo'), 'cum', grande, chiudi => disegnaCurva(g, apri && (p => { chiudi(); apri(p); }), true)));
   const px = x => MS + x * (L - MS - MD), py = n => A - MB - n / c.totale * (A - MB - MA);
-  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt terremoti-cum', role: 'img', 'aria-label': t('terremoti.cum.titolo') });
-  for (const n of [0, c.totale]) {
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: `terremoti-mt terremoti-cum${grande ? ' grande' : ''}`, role: 'img', 'aria-label': t('terremoti.cum.titolo') });
+  for (const n of grande ? [0, 1, 2, 3, 4].map(k => Math.round(c.totale * k / 4)).concat(c.totale).filter((v, i, a) => a.indexOf(v) === i) : [0, c.totale]) {
     svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py(n), y2: py(n), class: 'asse' }));
     const e = nodoSvg('text', { x: MS - 4, y: py(n) + 3, 'text-anchor': 'end', class: 'et' });
     e.textContent = num(n);
     svg.append(e);
   }
-  [g.da, g.a].forEach((ts, i) => {
-    const e = nodoSvg('text', { x: i ? L - MD : MS, y: A - 4, 'text-anchor': i ? 'end' : 'start', class: 'et' });
-    e.textContent = new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
-    svg.append(e);
-  });
+  asseDate(svg, g, grande);
+  titoliAssi(svg, grande, null, 'terremoti.asse.eventi');
+  lineaForte(svg, g, grande, px);
   const vertici = c.passi.map(p => `${px(p.x).toFixed(1)},${py(p.n).toFixed(1)}`);
   svg.append(
     nodoSvg('polygon', { points: `${px(0)},${py(0)} ${vertici.join(' ')} ${px(1)},${py(0)}`, class: 'area' }),
     nodoSvg('polyline', { points: vertici.join(' '), class: 'curva' }),
   );
+  if (grande) marcatori(svg, g, apri, px, py, i => i + 1, i => tn('terremoti.nEventi', i + 1, { n: num(i + 1) }));
   blocco.append(svg, el('p', 'scheda-nota', t('terremoti.cum.nota', { n: num(c.totale), mag: g.base })));
+  if (grande) zoomGrande(blocco, svg, g, origine, gw => disegnaCurva(gw, apri, true, origine));
   return blocco;
 }
 
 // Legge di Omori: repliche per giorno dopo la mainshock, assi logaritmici (decadimento ≈ retta)
-function disegnaOmori(g) {
+function disegnaOmori(g, grande = false) {
   const o = omori(g);
   const v = o.giorni.filter(d => d.n > 0);
   if (!o.mainshock || !v.length) return el('div');
+  const { L, A, MS, MD, MA, MB } = dimensioni(grande);
   const blocco = el('div', 'terremoti-serie');
-  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.omori.titolo'), 'omori'));
+  blocco.append(intestazione(t('terremoti.omori.titolo'), 'omori', grande, () => disegnaOmori(g, true)));
   const tMax = Math.max(10, o.giorni.length + 0.5), nMax = Math.max(10, ...v.map(d => d.n));
   const decT = Math.ceil(Math.log10(tMax)), decN = Math.ceil(Math.log10(nMax));
   const x0 = Math.log10(0.5), px = tt => MS + (Math.log10(tt) - x0) / (decT - x0) * (L - MS - MD);
   const py = n => A - MB - Math.log10(n) / decN * (A - MB - MA);
-  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt terremoti-omori', role: 'img', 'aria-label': t('terremoti.omori.titolo') });
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: `terremoti-mt terremoti-omori${grande ? ' grande' : ''}`, role: 'img', 'aria-label': t('terremoti.omori.titolo') });
+  if (grande) { // nel popup anche le righe intermedie di ogni decade (2…9), più tenui
+    for (let k = 0; k < decN; k++) for (let m = 2; m < 10; m++) svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py(m * 10 ** k), y2: py(m * 10 ** k), class: 'asse fine' }));
+    for (let k = 0; k < decT; k++) for (let m = 1; m < 10; m++) {
+      const tt = m * 10 ** k;
+      if (tt > 0.5 && tt < 10 ** decT) svg.append(nodoSvg('line', { x1: px(tt), x2: px(tt), y1: MA, y2: A - MB, class: 'asse fine' }));
+    }
+    titoliAssi(svg, grande, 'terremoti.asse.giorni', 'terremoti.asse.repliche');
+  }
   for (let k = 0; k <= decN; k++) {
     svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py(10 ** k), y2: py(10 ** k), class: 'asse' }));
     const e = nodoSvg('text', { x: MS - 4, y: py(10 ** k) + 3, 'text-anchor': 'end', class: 'et' });
@@ -193,7 +357,7 @@ function disegnaOmori(g) {
     svg.append(e);
   }
   for (let k = 0; k <= decT; k++) {
-    const e = nodoSvg('text', { x: px(10 ** k), y: A - 4, 'text-anchor': 'middle', class: 'et' });
+    const e = nodoSvg('text', { x: px(10 ** k), y: grande ? A - 26 : A - 4, 'text-anchor': 'middle', class: 'et' });
     e.textContent = t('terremoti.omori.giorno', { n: num(10 ** k) });
     svg.append(e);
   }
@@ -201,51 +365,58 @@ function disegnaOmori(g) {
     const f = tt => py(10 ** (o.fit.logK - o.fit.p * Math.log10(tt)));
     const [a, b] = [0.5, tMax];
     svg.append(nodoSvg('line', { x1: px(a), x2: px(b), y1: Math.max(f(a), MA), y2: Math.min(f(b), A - MB), class: 'fit' }));
+    if (grande) {
+      const e = nodoSvg('text', { x: L - MD - 8, y: MA + 16, 'text-anchor': 'end', class: 'et forte' });
+      e.textContent = t('terremoti.omori.fit', { p: o.fit.p.toLocaleString(localeIntl(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) });
+      svg.append(e);
+    }
   }
-  for (const d of v) svg.append(nodoSvg('circle', { cx: px(d.t), cy: py(d.n), r: 2.5, class: 'punto' }, `${t('terremoti.omori.giorno', { n: Math.ceil(d.t) })}: ${tn('terremoti.nEventi', d.n, { n: num(d.n) })}`));
+  for (const d of v) svg.append(nodoSvg('circle', { cx: px(d.t), cy: py(d.n), r: grande ? 4 : 2.5, class: 'punto' }, `${t('terremoti.omori.giorno', { n: Math.ceil(d.t) })}: ${tn('terremoti.nEventi', d.n, { n: num(d.n) })}`));
   blocco.append(svg, el('p', 'scheda-nota', t(o.fit ? 'terremoti.omori.nota' : 'terremoti.omori.notaPoca', { forte: o.mainshock.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 }), data: dataEvento(o.mainshock.ts), p: o.fit ? o.fit.p.toLocaleString(localeIntl(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '' })));
   return blocco;
 }
 
 // Rilascio cumulativo di energia (momento sismico): quota del totale, dominata dagli eventi grandi
-function disegnaRilascio(g) {
+function disegnaRilascio(g, apri, grande = false, origine = g) {
   const r = rilascioCumulativo(g);
   if (!r.totale) return el('div');
+  const { L, A, MS, MD, MA, MB } = dimensioni(grande);
   const blocco = el('div', 'terremoti-serie');
-  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.energia.titolo'), 'energia'));
+  blocco.append(intestazione(t('terremoti.energia.titolo'), 'energia', grande, chiudi => disegnaRilascio(g, apri && (p => { chiudi(); apri(p); }), true)));
   const px = x => MS + x * (L - MS - MD), py = f => A - MB - f * (A - MB - MA);
-  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt terremoti-cum terremoti-energia', role: 'img', 'aria-label': t('terremoti.energia.titolo') });
-  for (const f of [0, 0.5, 1]) {
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: `terremoti-mt terremoti-cum terremoti-energia${grande ? ' grande' : ''}`, role: 'img', 'aria-label': t('terremoti.energia.titolo') });
+  for (const f of grande ? [0, 0.25, 0.5, 0.75, 1] : [0, 0.5, 1]) {
     svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py(f), y2: py(f), class: 'asse' }));
     const e = nodoSvg('text', { x: MS - 4, y: py(f) + 3, 'text-anchor': 'end', class: 'et' });
     e.textContent = `${f * 100}%`;
     svg.append(e);
   }
-  [g.da, g.a].forEach((ts, i) => {
-    const e = nodoSvg('text', { x: i ? L - MD : MS, y: A - 4, 'text-anchor': i ? 'end' : 'start', class: 'et' });
-    e.textContent = new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
-    svg.append(e);
-  });
+  asseDate(svg, g, grande);
+  titoliAssi(svg, grande, null, 'terremoti.asse.energia');
+  lineaForte(svg, g, grande, px);
   const vertici = r.passi.map(p => `${px(p.x).toFixed(1)},${py(p.f).toFixed(1)}`);
   svg.append(nodoSvg('polygon', { points: `${px(0)},${py(0)} ${vertici.join(' ')} ${px(1)},${py(0)}`, class: 'area' }), nodoSvg('polyline', { points: vertici.join(' '), class: 'curva' }));
+  if (grande) marcatori(svg, g, apri, px, py, i => r.passi[2 * i + 2].f, i => `${(r.passi[2 * i + 2].f * 100).toLocaleString(localeIntl(), { maximumFractionDigits: 1 })}%`);
   blocco.append(svg, el('p', 'scheda-nota', t('terremoti.energia.nota', { mag: r.magEquiv.toLocaleString(localeIntl(), { maximumFractionDigits: 1 }), forte: g.mainshock.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 }), quota: Math.round(r.quotaMax * 100), n: num(g.punti.length) })));
+  if (grande) zoomGrande(blocco, svg, g, origine, gw => disegnaRilascio(gw, apri, true, origine));
   return blocco;
 }
 
 // Tempi tra eventi successivi: istogramma delle attese, da brevissime (sciame) a lunghe (attività di fondo)
 const nomeAttesa = min => (min < 60 ? `${min}${t('terremoti.attesa.min')}` : min < 1440 ? `${min / 60}${t('terremoti.attesa.ore')}` : min < 525600 ? `${min / 1440}${t('terremoti.attesa.giorni')}` : `1${t('terremoti.attesa.anni')}`);
 const intervalloAttesa = c => (c.a === Infinity ? `> ${nomeAttesa(c.da)}` : c.da ? `${nomeAttesa(c.da)} – ${nomeAttesa(c.a)}` : `< ${nomeAttesa(c.a)}`);
-function disegnaAttese(g) {
+function disegnaAttese(g, grande = false) {
   const a = tempiTraEventi(g);
   if (!a) return el('div');
   const blocco = el('div', 'terremoti-serie');
-  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.attese.titolo'), 'attese'));
-  const barre = el('div', 'terremoti-barre');
+  blocco.append(intestazione(t('terremoti.attese.titolo'), 'attese', grande, () => disegnaAttese(g, true)));
+  const barre = el('div', `terremoti-barre${grande ? ' grande' : ''}`);
   for (const c of a.classi) {
     const colonna = el('div', 'terremoti-barra');
     colonna.title = `${intervalloAttesa(c)}: ${num(c.n)}`;
     const asta = el('i', c.da < 1440 && c.n ? 'sciame' : null); // attese sotto un giorno = eventi ravvicinati
     asta.style.height = `${c.n ? Math.max(c.n / a.max * 100, 3) : 0}%`;
+    if (grande) colonna.append(el('b', null, num(c.n))); // numero di attese sopra ogni barra
     colonna.append(asta, el('span', null, c.da ? nomeAttesa(c.da) : `<${nomeAttesa(c.a)}`));
     barre.append(colonna);
   }
@@ -255,28 +426,27 @@ function disegnaAttese(g) {
 }
 
 // Diagramma spazio-tempo: latitudine contro tempo, un cerchio per evento
-function disegnaSpazioTempo(g, apri) {
+function disegnaSpazioTempo(g, apri, grande = false, origine = g) {
   const st = spazioTempo(g);
   if (!st) return el('div');
+  const { L, A, MS, MD, MA, MB } = dimensioni(grande);
   const blocco = el('div', 'terremoti-serie');
-  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.st.titolo'), 'spaziotempo'));
+  blocco.append(intestazione(t('terremoti.st.titolo'), 'spaziotempo', grande, chiudi => disegnaSpazioTempo(g, apri && (p => { chiudi(); apri(p); }), true)));
   const px = x => MS + x * (L - MS - MD), py = y => A - MB - y * (A - MB - MA);
-  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt terremoti-st', role: 'img', 'aria-label': t('terremoti.st.titolo') });
-  for (const y of [0, 0.5, 1]) {
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: `terremoti-mt terremoti-st${grande ? ' grande' : ''}`, role: 'img', 'aria-label': t('terremoti.st.titolo') });
+  for (const y of grande ? [0, 0.25, 0.5, 0.75, 1] : [0, 0.5, 1]) {
     svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py(y), y2: py(y), class: 'asse' }));
     const e = nodoSvg('text', { x: MS - 4, y: py(y) + 3, 'text-anchor': 'end', class: 'et' });
     e.textContent = `${(st.latMin + y * (st.latMax - st.latMin)).toLocaleString(localeIntl(), { minimumFractionDigits: 1, maximumFractionDigits: 1 })}°`;
     svg.append(e);
   }
-  [g.da, g.a].forEach((ts, i) => {
-    const e = nodoSvg('text', { x: i ? L - MD : MS, y: A - 4, 'text-anchor': i ? 'end' : 'start', class: 'et' });
-    e.textContent = new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
-    svg.append(e);
-  });
+  asseDate(svg, g, grande);
+  titoliAssi(svg, grande, null, 'terremoti.asse.lat');
+  lineaForte(svg, g, grande, px);
   for (const p of st.punti) {
     const forte = p === st.mainshock;
     const gruppo = nodoSvg('g', { class: forte ? 'forte' : 'evento' }, `M ${p.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 })} · ${dataEvento(p.ts)}`);
-    gruppo.append(nodoSvg('circle', { cx: px(p.x), cy: py(p.y), r: Math.max(1.5, (p.mag - 1) * 1.6), class: 'pt' }));
+    gruppo.append(nodoSvg('circle', { cx: px(p.x), cy: py(p.y), r: Math.max(1.5, (p.mag - 1) * 1.6) * (grande ? 1.8 : 1), class: 'pt' }));
     if (apri && Number.isFinite(p.lon)) {
       gruppo.classList.add('apribile');
       gruppo.setAttribute('tabindex', '0');
@@ -287,20 +457,22 @@ function disegnaSpazioTempo(g, apri) {
     svg.append(gruppo);
   }
   blocco.append(svg, el('p', 'scheda-nota', t('terremoti.st.nota', { n: num(st.punti.length) })));
+  if (grande) zoomGrande(blocco, svg, g, origine, gw => disegnaSpazioTempo(gw, apri, true, origine));
   return blocco;
 }
 
-function disegnaSerie(serie) {
+function disegnaSerie(serie, grande = false) {
   const blocco = el('div', 'terremoti-serie');
-  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.barre.titolo'), 'barre'));
-  const barre = el('div', 'terremoti-barre');
-  const ogni = serie.unita === 'giorno' ? 5 : serie.unita === 'mese' ? 3 : 1; // etichette sotto una barra ogni tanto: lo spazio è poco
+  blocco.append(intestazione(t('terremoti.barre.titolo'), 'barre', grande, () => disegnaSerie(serie, true)));
+  const barre = el('div', `terremoti-barre${grande ? ' grande' : ''}`);
+  const ogni = grande ? (serie.unita === 'giorno' ? 2 : 1) : serie.unita === 'giorno' ? 5 : serie.unita === 'mese' ? 3 : 1; // etichette sotto una barra ogni tanto: nella scheda lo spazio è poco
   serie.barre.forEach((b, i) => {
     const { breve, lunga } = etichettaBarra(b, serie.unita);
     const colonna = el('div', 'terremoti-barra');
     colonna.title = `${lunga}: ${tn('terremoti.nEventi', b.n, { n: num(b.n) })}${b.magMax == null ? '' : ` · ${t('terremoti.magMax', { mag: b.magMax.toLocaleString(localeIntl(), { minimumFractionDigits: 1 }) })}`}`;
     const asta = el('i', b.sciame ? 'sciame' : null);
     asta.style.height = `${b.n ? Math.max(b.quota, 3) : 0}%`;
+    if (grande) colonna.append(el('b', null, b.n ? num(b.n) : '')); // numero di eventi sopra ogni barra
     colonna.append(asta, el('span', null, (serie.barre.length - 1 - i) % ogni === 0 ? breve : ''));
     barre.append(colonna);
   });
@@ -312,7 +484,7 @@ function disegnaSerie(serie) {
   if (serie.sequenze.length) {
     const elenco = el('div', 'terremoti-sequenze');
     elenco.append(el('h4', null, t('terremoti.sequenze')));
-    for (const s of serie.sequenze.slice(0, 5)) {
+    for (const s of serie.sequenze.slice(0, grande ? 15 : 5)) {
       const riga = el('div', 'terremoti-sequenza');
       riga.append(
         el('strong', null, periodoSequenza(s, serie.unita)),
@@ -332,7 +504,7 @@ export function graficoSerie(area, apri) {
   let eventi = null;
   const disegna = () => {
     const g = eventi && puntiMagnitudo(eventi, unita, filtro.magMin);
-    if (eventi) corpo.replaceChildren(disegnaSerie(serieEventi(eventi, unita, filtro.magMin)), disegnaMagnitudoTempo(g, apri), disegnaCurva(g), disegnaRilascio(g), disegnaOmori(g), disegnaAttese(g), disegnaSpazioTempo(g, apri));
+    if (eventi) corpo.replaceChildren(disegnaSerie(serieEventi(eventi, unita, filtro.magMin)), disegnaMagnitudoTempo(g, apri), disegnaCurva(g, apri), disegnaRilascio(g, apri), disegnaOmori(g), disegnaAttese(g), disegnaSpazioTempo(g, apri));
   };
   const carica = () => {
     corpo.replaceChildren(el('p', 'scheda-nota', t('terremoti.serie.carico')));

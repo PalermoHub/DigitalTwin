@@ -43,12 +43,45 @@ export function iconaInfo(id) {
   return b;
 }
 
+// Popup grande con il grafico ridisegnato in più dettaglio. `rifai(chiudi)` restituisce il grafico (`chiudi` serve a chi, cliccando un punto, lascia il popup).
+export function apriGrande(titolo, rifai) {
+  const finestra = document.createElement('dialog');
+  finestra.className = 'grafico-grande-popup';
+  finestra.setAttribute('aria-label', titolo);
+  const chiudi = document.createElement('button');
+  chiudi.type = 'button';
+  chiudi.className = 'info-grafico-chiudi';
+  chiudi.textContent = t('info.chiudi');
+  const esci = () => finestra.close();
+  chiudi.addEventListener('click', esci);
+  finestra.append(rifai(esci), chiudi);
+  finestra.addEventListener('click', e => { if (e.target === finestra) finestra.close(); });
+  finestra.addEventListener('close', () => finestra.remove());
+  document.body.append(finestra);
+  finestra.showModal();
+}
+
+// Pulsante che apre il grafico in grande (nascosto dal CSS sotto il desktop)
+function iconaIngrandisci(testo, suClic) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'ingrandisci-grafico';
+  b.innerHTML = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M9.5 2H14v4.5M6.5 14H2V9.5M14 2 9 7M2 14l5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const et = t('info.ingrandisci', { grafico: testo });
+  b.title = et;
+  b.setAttribute('aria-label', et);
+  b.addEventListener('click', e => { e.stopPropagation(); suClic(); });
+  return b;
+}
+
 // Intestazione di un grafico: testo e icona sulla stessa riga. `tag`/`classe` = elemento da usare.
-export function titoloConInfo(tag, classe, testo, id) {
+// `suIngrandisci` (facoltativo) aggiunge il pulsante «ingrandisci», visibile solo su desktop.
+export function titoloConInfo(tag, classe, testo, id, suIngrandisci) {
   const h = document.createElement(tag);
   h.className = `${classe ?? ''} titolo-con-info`.trim();
   const s = document.createElement('span');
   s.textContent = testo;
   h.append(s, iconaInfo(id));
+  if (suIngrandisci) h.append(iconaIngrandisci(testo, suIngrandisci));
   return h;
 }

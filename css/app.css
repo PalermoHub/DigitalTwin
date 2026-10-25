@@ -2331,6 +2331,10 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .terremoti-mt .apribile:hover circle, .terremoti-mt .apribile:focus-visible circle { r: 5; stroke: var(--text, #222); stroke-width: 1.5; }
 .terremoti-mt .forte line { stroke: #e03131; stroke-width: 1.5; }
 .terremoti-mt .forte circle { fill: #e03131; }
+.terremoti-mt .asse.fine { stroke-opacity: .45; stroke-dasharray: 2 3; }
+.terremoti-mt .marca-forte { stroke: #e03131; stroke-width: 1; stroke-dasharray: 4 3; opacity: .7; }
+.terremoti-mt .asse-titolo { font-weight: 600; letter-spacing: .02em; }
+.terremoti-mt.grande .et { font-size: 12px; }
 .terremoti-cum .area { fill: var(--accent); opacity: .15; }
 .terremoti-cum .curva { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linejoin: round; }
 .terremoti-st .pt { fill: var(--accent); opacity: .55; stroke: var(--accent); stroke-width: .5; }
@@ -2441,6 +2445,31 @@ a.scheda-tel { min-height: 40px; }
 .mappa-tooltip.traffico-popup-box .maplibregl-popup-tip { display: block; }
 .mappa-tooltip.traffico-popup-box .maplibregl-popup-content { padding: 10px 14px 12px; }
 
+/* pulsante «ingrandisci» e popup grande dei grafici: solo desktop */
+.ingrandisci-grafico { display: none; flex: none; width: 18px; height: 18px; padding: 0; border: 1px solid var(--text-muted); border-radius: 4px; background: transparent; color: var(--text-muted); cursor: pointer; place-items: center; }
+.ingrandisci-grafico:hover, .ingrandisci-grafico:focus-visible { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (min-width: 1000px) and (hover: hover) { .ingrandisci-grafico { display: inline-grid; } }
+.grafico-grande-popup { width: min(1000px, calc(100vw - 48px)); max-height: 90vh; padding: 8px 18px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); box-shadow: 0 12px 40px rgba(0, 0, 0, .35); overflow-y: auto; }
+.grafico-grande-popup::backdrop { background: rgba(0, 0, 0, .5); }
+.grafico-grande-popup .terremoti-serie { margin: 8px 0; padding: 4px 16px 14px; }
+.grafico-grande-popup .scheda-nota { font-size: var(--fs-sm, 13px); }
+.grafico-grande-popup .terremoti-titolo { font-size: var(--fs-sm, 13px); }
+.terremoti-cum .evento circle, .terremoti-cum .forte circle { stroke: var(--surface, #fff); stroke-width: 1; }
+.terremoti-omori.grande .punto { transition: r .1s; }
+.terremoti-omori.grande .punto:hover { r: 6; stroke: var(--text, #222); stroke-width: 1.5; }
+.terremoti-barre.grande .terremoti-barra:hover i { opacity: 1; }
+.terremoti-barre.grande .terremoti-barra:hover { background: rgba(127, 127, 127, .12); }
+.terremoti-mt .brush { fill: var(--accent); opacity: .22; stroke: var(--accent); stroke-width: 1; pointer-events: none; }
+.terremoti-mt.grande { cursor: crosshair; user-select: none; touch-action: none; }
+.terremoti-mt.grande .apribile { cursor: pointer; }
+.terremoti-mt.grande.zoomato { cursor: grab; }
+.zoom-aiuto { margin: 0 0 4px; }
+.zoom-riga { display: flex; align-items: center; gap: 10px; margin: 2px 0 6px; }
+.zoom-riga .scheda-nota { margin: 0; }
+.terremoti-barre.grande { height: 280px; margin-top: 18px; padding-top: 30px; gap: 4px; }
+.terremoti-barre.grande .terremoti-barra b { height: 14px; font-size: 11px; line-height: 14px; font-weight: 600; color: var(--text); }
+.terremoti-barre.grande .terremoti-barra span { font-size: 11px; }
+.grafico-grande-popup .terremoti-sequenza { font-size: var(--fs-sm, 13px); }
 /* icona «i» dei grafici e popup di spiegazione (js/core/info-grafico.js) */
 .titolo-con-info { display: flex; align-items: center; gap: 6px; }
 .info-grafico { flex: none; width: 18px; height: 18px; padding: 0; border: 1px solid var(--text-muted); border-radius: 50%; background: transparent; color: var(--text-muted); font: italic 700 11px/1 Georgia, serif; text-transform: none; letter-spacing: 0; cursor: pointer; }

@@ -278,6 +278,16 @@ export function puntiMagnitudo(eventi, unita, magMin = MAG_STORICO, adesso = Dat
   return { da, a: adesso, base, cima, livelli, punti, mainshock, repliche };
 }
 
+// Zoom su un tratto del tempo: stessi dati di `g` ristretti a [da, a], con `x` rifatta su quel tratto (la scala delle magnitudo non cambia).
+// La mainshock è la più forte del tratto.
+export function finestraTempo(g, da, a) {
+  const durata = a - da;
+  const punti = g.punti.filter(p => p.ts >= da && p.ts <= a).map(p => ({ ...p, x: (p.ts - da) / durata }));
+  const mainshock = punti.reduce((m, p) => (!m || p.mag > m.mag ? p : m), null);
+  const repliche = mainshock ? punti.filter(p => p.ts > mainshock.ts).length : 0;
+  return { ...g, da, a, punti, mainshock, repliche };
+}
+
 // Curva cumulativa: eventi accumulati nel tempo, sulla stessa finestra del grafico magnitudo-tempo. `g` = risultato di puntiMagnitudo.
 // `passi` = vertici della scala (x 0-1, n = eventi finora); un cambio di pendenza segnala un aumento (o un calo) di attività.
 export function curvaCumulativa(g) {

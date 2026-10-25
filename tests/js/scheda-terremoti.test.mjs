@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { proprietaStorico, serieEventi, puntiMagnitudo, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, classeMagnitudo, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
+import { proprietaStorico, serieEventi, puntiMagnitudo, finestraTempo, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, classeMagnitudo, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
 
 const ingv = (extra = {}, coord = [14.1717, 38.7938, 8.8]) => ({
   type: 'Feature', geometry: { type: 'Point', coordinates: coord },
@@ -314,4 +314,21 @@ test('spazioTempo: latitudine in quota 0-1; senza coordinate è null', () => {
   assert.ok(Math.abs(st.punti[0].y) < 1e-9 && Math.abs(st.punti.at(-1).y - 1) < 1e-9);
   assert.equal(st.mainshock.mag, 5);
   assert.equal(spazioTempo(puntiMagnitudo([{ ts: giorno(5), mag: 3 }, { ts: giorno(6), mag: 3 }], 'giorno', 2, OGGI)), null);
+});
+
+test('finestraTempo: restringe a un tratto, rifà x e riconosce la mainshock del tratto', () => {
+  const g = puntiMagnitudo([
+    { id: 'a', ts: OGGI - 5 * 86400000, mag: 5 },
+    { id: 'b', ts: OGGI - 3 * 86400000, mag: 3 },
+    { id: 'c', ts: OGGI - 2 * 86400000, mag: 4 },
+    { id: 'd', ts: OGGI - 86400000, mag: 2.5 },
+  ], 'giorno', 2, OGGI);
+  const w = finestraTempo(g, OGGI - 3.5 * 86400000, OGGI - 0.5 * 86400000);
+  assert.deepEqual(w.punti.map(p => p.id), ['b', 'c', 'd']);
+  assert.equal(w.mainshock.id, 'c');
+  assert.equal(w.repliche, 1);
+  assert.ok(w.punti.every(p => p.x >= 0 && p.x <= 1));
+  assert.equal(w.punti[0].x, 0.5 / 3);
+  assert.equal(w.base, g.base);
+  assert.equal(finestraTempo(g, OGGI - 0.5 * 86400000, OGGI).mainshock, null);
 });
