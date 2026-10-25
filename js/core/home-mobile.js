@@ -25,7 +25,6 @@ function creaNumeriUtili() {
   const li = el('li', { className: 'numeri-utili' }, el('span', { className: 'numeri-nome', textContent: tr('home.banda.numeri') }), tel('112', '112', tr('home.banda.chiama112')), tel(PC, tr('home.banda.pc'), tr('home.banda.chiamaPc')));
   return li;
 }
-const CHEVRON = '<svg class="acc-freccia" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
 
 // `riempiEmergenze(ul)` mette nel pannello «Emergenze» ciò che in home è già di emergenza (percorso e scheda dello strato).
 export function avviaHomeMobile({ riempiEmergenze }) {
@@ -47,7 +46,7 @@ export function avviaHomeMobile({ riempiEmergenze }) {
     if (scorri) bottoni.get(fascia)?.scrollIntoView({ behavior: riduci ? 'auto' : 'smooth', block: 'start' });
   }
   for (const s of fasce) {
-    const b = el('button', { type: 'button', className: `acc-toggle acc-${s.tono}`, innerHTML: `<span class="acc-icona">${s.svg}</span><span class="acc-testo"><span class="acc-nome"></span><span class="acc-sotto"></span></span>${CHEVRON}` });
+    const b = el('button', { type: 'button', className: `acc-toggle acc-${s.tono}`, innerHTML: `<span class="acc-icona">${s.svg}</span><span class="acc-testo"><span class="acc-nome"></span><span class="acc-sotto"></span></span>` });
     b.querySelector('.acc-nome').textContent = tr(s.chiave);
     b.querySelector('.acc-sotto').textContent = tr(s.sotto);
     b.setAttribute('aria-expanded', 'false');

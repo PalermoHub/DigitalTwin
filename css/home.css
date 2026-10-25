@@ -297,16 +297,14 @@ html.home-attesa:not(.home-pronta) #corpo { visibility: hidden; animation: home-
   .acc-testo { flex: 1; min-width: 0; display: grid; gap: 2px; }
   .acc-conta { display: inline-block; padding: 2px 9px; border-radius: 999px; background: color-mix(in srgb, var(--tono) 14%, var(--surface)); color: var(--tono); font-size: .75rem; font-weight: 700; line-height: 1.4; white-space: nowrap; }
   .acc-nome { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
-  .acc-sotto { font-size: .8125rem; font-weight: 400; line-height: 1.3; opacity: .78; }
-  .acc-freccia { flex: none; color: var(--text-muted); transition: transform .2s; }
-  .acc-toggle[aria-expanded="true"] .acc-freccia { transform: rotate(90deg); }
+  .acc-sotto { font-size: .8125rem; font-weight: 400; line-height: 1.3; color: color-mix(in srgb, var(--text) 78%, var(--surface)); } /* grigio scuro pieno (AA), niente opacità */
   .acc-percorsi { --tono: #1f6fd1; } .acc-catalogo { --tono: #178a5b; } .acc-info { --tono: #7a5bd0; }
   /* «Emergenze»: scheda bianca con bordo rosso e tessera rossa; si accende tutta di rosso (anche col tema scuro) solo con un'allerta attiva */
   .acc-emergenza { --tono: var(--emergenza); box-shadow: inset 0 0 0 2px var(--emergenza), 0 6px 18px rgb(0 0 0 / .07); }
   .acc-emergenza .acc-icona { background: var(--emergenza); color: #fff; }
   .acc-emergenza.in-allerta { background: var(--emergenza); color: #fff; }
   .acc-emergenza.in-allerta .acc-icona { background: #fff; color: var(--emergenza); }
-  .acc-emergenza.in-allerta .acc-freccia { color: #fff; }
+  .acc-emergenza.in-allerta .acc-sotto { color: #fff; }
   /* «Numeri utili» nel pannello Emergenze, dopo la scheda del Piano di emergenza */
   .numeri-utili { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 12px 16px; border-radius: 16px; background: var(--surface); border: 2px solid var(--emergenza); }
   .numeri-nome { font-weight: 700; margin-right: auto; }
@@ -330,7 +328,6 @@ html.home-attesa:not(.home-pronta) #corpo { visibility: hidden; animation: home-
 }
 @media (max-width: 720px) and (max-height: 560px) { .acc-sotto { display: none; } }
 @media (max-width: 720px) { .pagina-home #menu-info-toggle { display: none; } } /* in piedi il menù è il tab «Menu» */
-@media (prefers-reduced-motion: reduce) { .acc-freccia { transition: none; } }
 /* ruotato (oltre 720 px): niente barra a tab, resta l'hamburger a sinistra; tema e comandi come nel pannello in piedi */
 @media (min-width: 721px) and (pointer: coarse) and (max-height: 500px) {
   .pagina-home #app-header { min-height: 60px; }
