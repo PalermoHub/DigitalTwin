@@ -2317,7 +2317,9 @@ a.scheda-badge-tinta:hover, a.scheda-badge-tinta:focus-visible { background: col
 .terremoti-barra i { display: block; width: 100%; border-radius: 2px 2px 0 0; background: var(--accent); opacity: .7; }
 .terremoti-barra i.sciame { background: #e03131; opacity: 1; }
 .terremoti-barra span { height: 14px; font-size: 10px; line-height: 14px; color: var(--text-muted); white-space: nowrap; overflow: visible; }
-.terremoti-titolo { margin: 12px 0 4px; font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.terremoti-serie { margin: 14px 0; padding: 4px 12px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface, rgba(127,127,127,.05)); }
+.terremoti-serie .scheda-nota { margin: 6px 0 0; }
+.terremoti-titolo { margin: 10px 0 4px; font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
 .terremoti-mt { display: block; width: 100%; height: auto; }
 .terremoti-mt .asse { stroke: var(--border); stroke-width: 1; }
 .terremoti-mt .et { fill: var(--text-muted); font-size: 9px; }
