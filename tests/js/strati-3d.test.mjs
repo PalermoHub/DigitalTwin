@@ -214,3 +214,13 @@ test('attributiFeature: campi parlanti prima, niente id né vuoti, titolo non ri
   assert.equal(attributiFeature(p, 1).length, 1);
   assert.deepEqual(attributiFeature(null), []);
 });
+
+test('attributiFeature ed etichette: date vuote nascoste, aree in km², campi leggibili', async () => {
+  const { attributiFeature, etichettaCampo, etichettaFeature } = await import('../../js/core/strati-3d-modello.js');
+  const a = attributiFeature({ Data_dpr: '1899-12-30', Comune: 'Palermo', Area: 20293565.64 }, 4);
+  assert.deepEqual(a.map(([k]) => k), ['Comune', 'Area']);
+  assert.match(a[1][1], /^20[,.]29 km²$/);
+  assert.equal(etichettaCampo('Data_dpr'), 'Data decreto');
+  assert.equal(etichettaCampo('foo_bar'), 'foo bar');
+  assert.deepEqual(etichettaFeature({ circoscriz: 'III', area: 5 }), { titolo: 'Circoscrizione III', sotto: '' });
+});

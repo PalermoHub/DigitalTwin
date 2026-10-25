@@ -1,12 +1,12 @@
 import { t } from './i18n.js';
 import { segnala } from './pannello.js';
 import { eBase } from '../layers/base.js';
-import { gruppiStrati, limitaPiani, quote, unisciTerreno, etichettaFeature, layerDaInterrogare, MAX_PIANI,
+import { gruppiStrati, limitaPiani, quote, unisciTerreno, etichettaFeature, etichettaCampo, layerDaInterrogare, MAX_PIANI,
   varchi, varcoPer, camminaVarco, opacitaDentro, passoOcchio, trasformaMondo, pianiAccesi, ruotaAttorno, passoAvanti, zoomDentro, ZOOM_DENTRO,
   assiDaTasti, sommaAssi, avvicina, versoNord, tastoDiMoto, ASSI, layerFratelli, attributiFeature, zoomSonda, puntoDaPiano } from './strati-3d-modello.js';
 import { creaNavigatore, creaGuida } from './strati-3d-navigatore.js';
 import { gradoni } from './strati-3d-terreno.js';
-import { modelloTooltipDi, disegnaVoceTooltip } from './tooltip.js';
+import { gruppoTooltipDi, disegnaVoceTooltip } from './tooltip.js';
 
 // «Strati in 3D»: i layer accesi, fotografati uno per uno nell'inquadratura corrente, si separano in una pila
 // che si gira col mouse o col dito. Un clic su un punto di uno strato apre la scheda di quel punto sopra la scena;
@@ -442,16 +442,23 @@ function apriScena(map, { piani, angoli, camera, terreno, vista }, alChiudere) {
       if (!ids.length) return;
       const voci = new Map();
       for (const f of map.queryRenderedFeatures(riquadro, { layers: ids })) {
-        let v = modelloTooltipDi(f.layer.id)?.(f.properties);
-        if (!v?.titolo) {
+        const gruppo = gruppoTooltipDi(f.layer.id);
+        let v = gruppo?.modello?.(f.properties);
+        const proprio = !!v?.titolo; // con un modello dell'app; altrimenti l'etichetta ricavata dalle proprietà
+        if (!proprio) {
           const e = etichettaFeature(f.properties);
           v = e && (e.foglio ? { titolo: t('strati3d.particella', e) } : { titolo: e.titolo, sottotitolo: e.sotto });
         }
         if (!v?.titolo) continue;
+        // il simbolo della legenda e il colore dello strato, dallo stesso gruppo del tooltip della mappa
+        if (proprio) v = { ...v, campione: v.campione ?? gruppo.campione?.(f.properties, f.layer.id) ?? undefined, colorePiano: gruppo.colore?.(f.properties) };
         const attributi = attributiFeature(f.properties, 4, [v.titolo, v.sottotitolo]);
-        voci.set(`${v.titolo}\n${v.sottotitolo ?? ''}\n${attributi.join('|')}`, { ...v, attributi });
+        voci.set(`${v.titolo}\n${v.sottotitolo ?? ''}\n${attributi.join('|')}`, { ...v, attributi, proprio });
       }
-      if (voci.size) sezioni.push({ i, voci: [...voci.values()] });
+      // dove c'è un modello dell'app le voci generiche sullo stesso strato (altro riempimento della sorgente) ripetono gli stessi dati
+      const elenco = [...voci.values()];
+      const scelte = elenco.some(v => v.proprio) ? elenco.filter(v => v.proprio) : elenco;
+      if (scelte.length) sezioni.push({ i, voci: scelte });
     });
     if (!sezioni.length) return null;
     // lo strato «sotto il mouse»: il primo con dati scendendo da quello toccato (le parti vuote di un piano non contano)
@@ -461,13 +468,15 @@ function apriScena(map, { piani, angoli, camera, terreno, vista }, alChiudere) {
     for (const { i, voci } of sezioni) {
       const sez = el('div', 'strati3d-tip-sez');
       if (i === qui) sez.classList.add('qui');
+      const colorePiano = voci.find(v => v.colorePiano)?.colorePiano;
+      if (colorePiano) sez.style.setProperty('--colore-strato', colorePiano); // il riquadro prende il colore dello strato
       const testa = el('div', 'strati3d-tip-testa');
       testa.append(el('i', null, String(i + 1)), el('b', null, titoloPiano(piani[i])));
       sez.append(testa, ...voci.slice(0, MAX_VOCI).map(v => {
         const voce = disegnaVoceTooltip(v);
         if (v.attributi.length) {
           const dl = el('dl', 'strati3d-tip-attr');
-          for (const [k, val] of v.attributi) dl.append(el('dt', null, k), el('dd', null, val));
+          for (const [k, val] of v.attributi) dl.append(el('dt', null, etichettaCampo(k)), el('dd', null, val));
           voce.append(dl);
         }
         return voce;

@@ -124,6 +124,8 @@ export function disegnaVoceTooltip(m) {
     i.innerHTML = svgIcona(m.icona, 14);
     titolo.append(i);
   }
+  const conSottotitolo = m.sottotitolo && m.sottotitolo !== m.titolo;
+  if (m.campione && !conSottotitolo) titolo.append(m.campione); // senza sottotitolo il simbolo di legenda sta davanti al titolo
   titolo.append(m.titolo);
   voce.append(titolo);
   if (m.badge?.testo) {
@@ -133,7 +135,7 @@ export function disegnaVoceTooltip(m) {
     badge.style.setProperty('--colore', m.badge.colore);
     voce.append(badge);
   }
-  if (m.sottotitolo && m.sottotitolo !== m.titolo) {
+  if (conSottotitolo) {
     const dettaglio = document.createElement('div');
     if (m.campione) dettaglio.append(m.campione); // il simbolo della legenda, accanto all'attributo
     dettaglio.append(m.sottotitolo);
@@ -187,6 +189,8 @@ export function campioneTooltip(legenda, i) {
 // i modelli di tooltip registrati, per layer: la vista «Strati in 3D» li riusa per descrivere ogni strato della pila
 const modelli = [];
 export const modelloTooltipDi = id => modelli.find(g => g.layers.includes(id))?.modello ?? null;
+// il gruppo intero ({ modello, campione?, colore?, … }): la vista 3D ne ricava anche il simbolo di legenda e il colore dello strato
+export const gruppoTooltipDi = id => modelli.find(g => g.layers.includes(id)) ?? null;
 
 export function registraTooltipStrati(map, gruppi, priorita = 2) {
   modelli.push(...gruppi);

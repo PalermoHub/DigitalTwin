@@ -2064,6 +2064,7 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .strati3d-tip-sez { padding: 4px 6px 5px; border-radius: 6px; border-left: 3px solid transparent; }
 .strati3d-tip-sez + .strati3d-tip-sez { border-top: 1px solid var(--tooltip-bordo); border-top-left-radius: 0; border-top-right-radius: 0; }
 .strati3d-tip-sez.qui { background: var(--accent-soft); border-left-color: var(--accent); }
+.strati3d-tip-sez.qui[style*="--colore-strato"] { background: color-mix(in srgb, var(--colore-strato) 16%, transparent); border-left-color: var(--colore-strato); }
 .strati3d-tip-testa { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; font-size: var(--fs-3xs); text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }
 .strati3d-tip-testa i { font-style: normal; font-weight: 700; min-width: 16px; height: 16px; display: grid; place-items: center; border-radius: 4px; border: 1.5px solid currentColor; }
 .strati3d-tip-sez.qui .strati3d-tip-testa { color: var(--accent-strong); }

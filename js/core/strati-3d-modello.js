@@ -1,5 +1,6 @@
 // Modello della vista «Strati in 3D»: quali piani mostrare e come un punto di un piano torna un punto della mappa.
 // Niente DOM né MapLibre qui: le funzioni lavorano su elenchi e numeri (vedi tests/js/strati-3d.test.mjs).
+import { t, localeIntl } from './i18n.js';
 
 // Piani massimi: oltre, si tengono quelli più in alto nell'ordine di disegno (la base resta sempre).
 export const MAX_PIANI = { desktop: 14, telefono: 8 };
@@ -71,6 +72,14 @@ export const quote = (n, lato) => Array.from({ length: n }, (_, i) => i * lato *
 // come dettaglio; in mancanza, il primo testo o il primo numero che non sia un identificativo.
 const CHIAVI = ['nome', 'name', 'denominazione', 'denominaz', 'titolo', 'title', 'route_long_name', 'route_short_name', 'linea',
   'zto', 'zona', 'descrizion', 'descrizione', 'descrizone', 'tipo', 'categoria', 'indirizzo', 'quartiere', 'circoscriz', 'circoscrizione', 'sezione', 'classe'];
+// nomi di campo dei dati (colonne dei file) con un'etichetta leggibile; gli altri perdono almeno i trattini bassi
+const CAMPI = { data_dpr: 'strati3d.campo.dataDpr', data_gurs: 'strati3d.campo.dataGurs', bcn_nmr: 'strati3d.campo.bene', circoscriz: 'strati3d.campo.circoscrizione', area: 'strati3d.campo.area', shape_area: 'strati3d.campo.area', superficie: 'strati3d.campo.area' };
+export const etichettaCampo = k => (CAMPI[k.toLowerCase()] ? t(CAMPI[k.toLowerCase()]) : k.replace(/_/g, ' '));
+const NULLO_EXCEL = /^1899-12-30/; // la data «vuota» dei fogli di calcolo: non è un dato
+const AREA = /^(area|shape_area|superficie)$/i;
+// un'area in m² (come nei dati) diventa km² o ettari; i numeri piccoli restano come sono
+const areaLeggibile = v => (v >= 1e6 ? `${(v / 1e6).toLocaleString(localeIntl(), { maximumFractionDigits: 2 })} km²`
+  : v >= 1e4 ? `${(v / 1e4).toLocaleString(localeIntl(), { maximumFractionDigits: 1 })} ha` : `${v.toLocaleString(localeIntl())} m²`);
 const IDENTIFICATIVO = /^(fid|id|id1|ogc_fid|objectid|gid|cod_istat|cod_cat)$/i;
 export function etichettaFeature(p) {
   if (!p) return null;
@@ -81,7 +90,8 @@ export function etichettaFeature(p) {
   if (vale(foglio) && vale(particella)) return { foglio: String(p[foglio]), particella: String(p[particella]) };
   const trovate = CHIAVI.map(trova).filter(vale);
   if (trovate.length) {
-    const titolo = String(p[trovate[0]]);
+    const circoscrizione = /^circoscriz/i.test(trovate[0]) && String(p[trovate[0]]).length <= 6;
+    const titolo = circoscrizione ? t('strati3d.circoscrizione', { n: p[trovate[0]] }) : String(p[trovate[0]]);
     const sotto = trovate.slice(1).map(k => String(p[k])).find(v => v !== titolo && v.length <= 80) ?? '';
     return { titolo, sotto };
   }
@@ -243,12 +253,12 @@ export function attributiFeature(p, max = 4, salta = []) {
   if (!p) return [];
   const gia = new Set(salta.filter(Boolean).map(String));
   const vale = k => p[k] != null && typeof p[k] !== 'object' && String(p[k]).trim() !== '' && !/^(null|undefined)$/i.test(String(p[k]))
-    && !IDENTIFICATIVO.test(k) && !/^(id\d*|fid|shape_.*|objectid_\d+)$/i.test(k);
+    && !IDENTIFICATIVO.test(k) && !/^(id\d*|fid|shape_.*|objectid_\d+)$/i.test(k) && !NULLO_EXCEL.test(String(p[k]));
   const rango = k => { const i = CHIAVI.indexOf(k.toLowerCase()); return i < 0 ? CHIAVI.length : i; };
   const campi = Object.keys(p).filter(vale).sort((a, b) => rango(a) - rango(b));
   const fuori = [];
   for (const k of campi) {
-    let v = typeof p[k] === 'number' ? p[k].toLocaleString() : String(p[k]).trim();
+    let v = typeof p[k] === 'number' ? (AREA.test(k) && p[k] >= 1000 ? areaLeggibile(p[k]) : p[k].toLocaleString()) : String(p[k]).trim();
     if (gia.has(v)) continue;
     if (v.length > 90) v = `${v.slice(0, 87)}…`;
     fuori.push([k, v]);
