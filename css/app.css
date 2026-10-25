@@ -1798,7 +1798,7 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #btn-tabella-m { order: 4; grid-column: 1 / -1; } /* foglio Strati: base, layer, filtri in riga, la tabella sotto a tutta larghezza (niente riquadro orfano) */
 
   /* foglio «Menu»: pannello a tutta larghezza sopra la barra a tab, voci grandi a sinistra, sfondo oscurato */
-  body.info-aperto::after { content: ""; position: fixed; inset: 0 0 var(--tab-h); z-index: calc(var(--z-header) - 1); background: color-mix(in srgb, var(--accent) 90%, transparent); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+  body.info-aperto::after { content: ""; position: fixed; inset: 0 0 var(--tab-h); z-index: calc(var(--z-header) - 1); background: color-mix(in srgb, var(--accent) 35%, transparent); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
   body.info-aperto #menu-info {
     display: flex; position: fixed; top: auto; left: 8px; right: 8px; bottom: calc(var(--tab-h) + var(--footer-h) + 8px); width: auto; min-width: 0; max-height: 72dvh; overflow-y: auto;
     flex-direction: column; align-items: stretch; gap: 8px; margin: 0; padding: 10px; z-index: calc(var(--z-header) + 1); text-align: left;
