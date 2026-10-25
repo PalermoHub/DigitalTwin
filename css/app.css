@@ -2449,7 +2449,7 @@ a.scheda-tel { min-height: 40px; }
 .ingrandisci-grafico { display: none; flex: none; width: 18px; height: 18px; padding: 0; border: 1px solid var(--text-muted); border-radius: 4px; background: transparent; color: var(--text-muted); cursor: pointer; place-items: center; }
 .ingrandisci-grafico:hover, .ingrandisci-grafico:focus-visible { background: var(--accent); border-color: var(--accent); color: #fff; }
 @media (min-width: 1000px) and (hover: hover) { .ingrandisci-grafico { display: inline-grid; } }
-.grafico-grande-popup { width: min(1000px, calc(100vw - 48px)); max-height: 90vh; padding: 8px 18px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); box-shadow: 0 12px 40px rgba(0, 0, 0, .35); overflow-y: auto; }
+.grafico-grande-popup { width: min(1000px, calc(100vw - 48px)); max-width: none; max-height: 90vh; padding: 8px 18px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); box-shadow: 0 12px 40px rgba(0, 0, 0, .35); overflow-y: auto; }
 .grafico-grande-popup::backdrop { background: rgba(0, 0, 0, .5); }
 .grafico-grande-popup .terremoti-serie { margin: 8px 0; padding: 4px 16px 14px; }
 .grafico-grande-popup .scheda-nota { font-size: var(--fs-sm, 13px); }
@@ -2466,6 +2466,28 @@ a.scheda-tel { min-height: 40px; }
 .zoom-aiuto { margin: 0 0 4px; }
 .zoom-riga { display: flex; align-items: center; gap: 10px; margin: 2px 0 6px; }
 .zoom-riga .scheda-nota { margin: 0; }
+/* minimappa accanto al grafico (popup grande) */
+.grafico-grande-popup:has(.con-mappa) { width: min(1760px, calc(100vw - 24px)); max-height: 95vh; padding: 8px 14px 14px; overflow: auto; } /* sotto ~1250 px di schermo si scorre in orizzontale */
+.terremoti-serie.con-mappa { display: grid; grid-template-columns: minmax(520px, 1fr) 300px 320px; column-gap: 14px; min-width: 1200px; }
+.terremoti-serie.con-mappa > .terremoti-titolo, .terremoti-serie.con-mappa > .zoom-aiuto, .terremoti-serie.con-mappa > .zoom-riga, .terremoti-serie.con-mappa > .scheda-nota { grid-column: 1 / -1; }
+.terremoti-serie.con-mappa > svg.terremoti-mt { grid-column: 1; grid-row: 3; height: var(--alt-grafico); }
+.terremoti-minimappa { grid-column: 2; grid-row: 3; align-self: start; height: var(--alt-grafico); display: flex; flex-direction: column; gap: 6px; }
+.minimappa-quadro { position: relative; flex: none; width: 300px; overflow: hidden; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface-alt); }
+.minimappa-quadro img { position: absolute; width: 256px; height: 256px; max-width: none; }
+.minimappa-punti { position: absolute; inset: 0; width: 100%; height: 100%; }
+.minimappa-punti .evento circle { fill: var(--accent); fill-opacity: .55; stroke: #fff; stroke-width: 1; cursor: pointer; }
+.minimappa-punti .forte circle { fill: #e03131; fill-opacity: .85; stroke: #fff; stroke-width: 1.2; cursor: pointer; }
+.minimappa-punti .sel circle { fill-opacity: 1; stroke: #111; stroke-width: 2; r: 8; }
+.minimappa-punti .fissato circle { stroke: #f08c00; stroke-width: 3; }
+.terremoti-mt .sel circle { stroke: var(--text, #222); stroke-width: 2; r: 6; opacity: 1; }
+.terremoti-mt .sel line:not(.zona) { stroke-width: 2.5; opacity: 1; }
+.terremoti-mt .fissato circle { stroke: #f08c00; stroke-width: 3; }
+.minimappa-attr { position: absolute; right: 0; bottom: 0; padding: 0 3px; font-size: 9px; background: rgba(255, 255, 255, .8); color: #333; }
+.minimappa-scheda { display: flex; flex-direction: column; gap: 3px; height: 56px; overflow: hidden; font-size: var(--fs-sm, 13px); }
+.minimappa-scheda span { color: var(--text-muted); }
+.minimappa-dettaglio { grid-column: 3; grid-row: 3; align-self: start; display: flex; flex-direction: column; gap: 6px; height: var(--alt-grafico); overflow-y: auto; }
+.minimappa-dettaglio .scheda-sez { margin-top: 0; flex: 1; }
+.minimappa-dettaglio > button { align-self: flex-start; }
 .terremoti-barre.grande { height: 280px; margin-top: 18px; padding-top: 30px; gap: 4px; }
 .terremoti-barre.grande .terremoti-barra b { height: 14px; font-size: 11px; line-height: 14px; font-weight: 600; color: var(--text); }
 .terremoti-barre.grande .terremoti-barra span { font-size: 11px; }

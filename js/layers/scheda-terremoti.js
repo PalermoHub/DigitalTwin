@@ -167,6 +167,30 @@ export function miniatura({ lon, lat }, zoom = ZOOM_MINIATURA, larghezza = LARGH
   return { larghezza, altezza, tessere, href: `mappa.html#${zoom + 1}/${lat.toFixed(4)}/${lon.toFixed(4)}`, attribuzione: '© OpenStreetMap' };
 }
 
+// Minimappa del grafico grande: centro e zoom (tessere OSM) che contengono tutti i punti `{lon, lat}` in una cornice larghezza × altezza.
+// Un solo punto, o punti vicinissimi, si fermano a ZOOM_MAX_INQUADRA.
+const ZOOM_MAX_INQUADRA = 12;
+const mondoX = lon => (lon + 180) / 360;
+const mondoY = lat => (1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2;
+export function inquadra(punti, larghezza, altezza, margine = 24) {
+  const v = punti.filter(p => Number.isFinite(p.lon) && Number.isFinite(p.lat));
+  if (!v.length) return null;
+  const xs = v.map(p => mondoX(p.lon)), ys = v.map(p => mondoY(p.lat));
+  const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+  let zoom = 2;
+  for (let z = ZOOM_MAX_INQUADRA; z > 2; z--) {
+    const lato = TESSERA * 2 ** z;
+    if ((x1 - x0) * lato <= larghezza - 2 * margine && (y1 - y0) * lato <= altezza - 2 * margine) { zoom = z; break; }
+  }
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  return { zoom, centro: { lon: cx * 360 - 180, lat: Math.atan(Math.sinh(Math.PI * (1 - 2 * cy))) * 180 / Math.PI } };
+}
+// Posizione in pixel di un punto nella cornice centrata su `centro` (la stessa delle tessere di miniatura())
+export function proiettaMiniatura(centro, zoom, larghezza, altezza) {
+  const lato = TESSERA * 2 ** zoom, cx = mondoX(centro.lon) * lato, cy = mondoY(centro.lat) * lato;
+  return ({ lon, lat }) => ({ x: mondoX(lon) * lato - cx + larghezza / 2, y: mondoY(lat) * lato - cy + altezza / 2 });
+}
+
 // Elenco «gli altri terremoti» della scheda: quelli che passano il filtro, senza i cliccati, dal più recente (al massimo MAX_ELENCO)
 export function altriTerremoti(eventi, esclusi, f = filtro, adesso = Date.now()) {
   const tutti = eventi.filter(p => !esclusi.has(p.id) && passaFiltro(p, f, adesso)).sort((a, b) => b.ts - a.ts);

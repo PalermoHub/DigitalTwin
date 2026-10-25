@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { proprietaStorico, serieEventi, puntiMagnitudo, finestraTempo, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, classeMagnitudo, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
+import { proprietaStorico, serieEventi, puntiMagnitudo, finestraTempo, inquadra, proiettaMiniatura, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, classeMagnitudo, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
 
 const ingv = (extra = {}, coord = [14.1717, 38.7938, 8.8]) => ({
   type: 'Feature', geometry: { type: 'Point', coordinates: coord },
@@ -331,4 +331,21 @@ test('finestraTempo: restringe a un tratto, rifà x e riconosce la mainshock del
   assert.equal(w.punti[0].x, 0.5 / 3);
   assert.equal(w.base, g.base);
   assert.equal(finestraTempo(g, OGGI - 0.5 * 86400000, OGGI).mainshock, null);
+});
+
+test('inquadra: tutti i punti stanno nella cornice; un solo punto = zoom massimo e centro sul punto', () => {
+  const punti = [{ lon: 13.0, lat: 38.0 }, { lon: 15.5, lat: 37.2 }, { lon: 14.1, lat: 38.6 }];
+  const { zoom, centro } = inquadra(punti, 300, 380);
+  const proietta = proiettaMiniatura(centro, zoom, 300, 380);
+  for (const p of punti) {
+    const { x, y } = proietta(p);
+    assert.ok(x >= 0 && x <= 300 && y >= 0 && y <= 380, `${p.lon},${p.lat} -> ${x},${y}`);
+  }
+  assert.ok(inquadra(punti, 300, 380, 24).zoom > inquadra([...punti, { lon: 30, lat: 30 }], 300, 380).zoom);
+  const uno = inquadra([{ lon: 13.36, lat: 38.12 }], 300, 380);
+  assert.equal(uno.zoom, 12);
+  assert.ok(Math.abs(uno.centro.lon - 13.36) < 1e-9 && Math.abs(uno.centro.lat - 38.12) < 1e-9);
+  assert.equal(inquadra([], 300, 380), null);
+  const q = proiettaMiniatura(uno.centro, uno.zoom, 300, 380)({ lon: 13.36, lat: 38.12 });
+  assert.ok(Math.abs(q.x - 150) < 1e-6 && Math.abs(q.y - 190) < 1e-6);
 });
