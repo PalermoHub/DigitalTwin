@@ -11,7 +11,7 @@ const gradi = v => `${v.toLocaleString(localeIntl(), { minimumFractionDigits: 1,
 const conSegno = d => { const v = Math.round(d * 100) / 100; return `${v > 0 ? '+' : v < 0 ? '−' : ''}${gradi(Math.abs(v))}`; };
 
 // `grafico`: funzione che costruisce il grafico (DOM) per questa sezione; assente nei test.
-export function voceIsolaCalore(p, dati, grafico = null) {
+export function voceIsolaCalore(p, dati, grafico = null, colore = null) {
   const ultimo = dati.anno;
   const t = p[`LST_${ultimo}`];
   if (t == null) return null;
@@ -24,7 +24,7 @@ export function voceIsolaCalore(p, dati, grafico = null) {
       ['Temperatura estiva', `${gradi(t)} (${ultimo})`],
       ['Rispetto alla media comunale', conSegno(t - mediaComune)],
       [`Variazione dal ${primo}`, prima != null ? conSegno(t - prima) : null],
-    ]) }],
+    ]).map((r, i) => (i === 0 && colore ? { ...r, campione: { legenda: 'legenda-isole-calore', colore } } : r)) }],
     ...(grafico && { dinamico: grafico }),
     link: { testo: 'Studio completo sulle isole di calore', url: dati.link, icona: 'esterno', suggerimento: 'Mappe per anno, bivariata e «isola vera» depurata dal territorio' },
     fonte: FONTE,

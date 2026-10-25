@@ -24,6 +24,16 @@ export function modelliDaVoci(voci, { acceso, escludi = [] }) {
   return modelli;
 }
 
+// Il simbolo di una riga: `{ legenda, colore }` (quadratino colorato), `{ legenda, classe }` (la classe dell'<i> della legenda)
+// oppure `{ legenda, immagine }` (il simbolo 16×16 della legenda, es. quelli del PRG)
+function simboloRiga({ legenda, colore, classe, immagine }) {
+  if (!immagine) return campioneTooltip(legenda, [classe ?? '', colore ? { background: colore } : {}]);
+  const img = document.createElement('img');
+  Object.assign(img, { src: immagine, alt: '', width: 16, height: 16 });
+  img.style.imageRendering = 'pixelated';
+  return campioneTooltip(legenda, img);
+}
+
 function disegna(modelli) {
   const corpo = document.createElement('div');
   corpo.className = 'strati-tooltip-corpo';
@@ -53,8 +63,8 @@ function disegna(modelli) {
       etichetta.textContent = r.etichetta;
       const valore = document.createElement('b');
       valore.textContent = r.valore;
-      // una riga con `campione` ({ legenda, colore }) mostra il simbolo di legenda accanto al valore
-      if (r.campione) valore.prepend(campioneTooltip(r.campione.legenda, ['', { background: r.campione.colore }]));
+      // una riga con `campione` mostra il simbolo di legenda accanto al valore (vedi simboloRiga)
+      if (r.campione) valore.prepend(simboloRiga(r.campione));
       riga.append(etichetta, valore);
       voce.append(riga);
     }

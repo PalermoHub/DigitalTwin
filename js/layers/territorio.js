@@ -5,7 +5,7 @@ import { filtroInsieme, dopoClicMultiplo, voceFiltro, voceStrato } from '../core
 import { STILE_OMI } from './stile-omi.js';
 import { vociOmi, FASCE_OMI, coloreZona } from './scheda-omi.js';
 import { t, tl } from '../core/i18n.js';
-import { creaLegendaZonizzazione, creaLegendaVincoli } from './legenda-prg.js';
+import { creaLegendaZonizzazione, creaLegendaVincoli, campioneZona, campioneAmbito, campioneVincolo } from './legenda-prg.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 
 // Come nell'app originale (catasto-app): la vestizione di PRG, PPE e vincoli è fatta di tile
@@ -113,6 +113,8 @@ const nascosto = { visibility: 'none' };
 const RASTER = ['prg-zto', 'prg-ppe', 'prg-vl', 'prg-va'];
 
 const NESSUNO = ['==', ['get', 'fid'], -1];
+// aggiunge a una riga della scheda il simbolo di legenda (campione) mostrato nel tooltip
+const conCampione = (rr, etichetta, campione) => (campione ? rr.map(r => (r.etichetta === etichetta ? { ...r, campione } : r)) : rr);
 const COLORE_VINCOLO = '#c2255c'; // come «Vincolo PRG» in core/evidenza.js
 
 // Mostra in mappa il vincolo scelto nella scheda ({ layer: 'va'|'vl', fid, tipo }), o nessuno. Senza `fid` si ripiega sul tipo.
@@ -253,7 +255,7 @@ export default {
         const p = particella.properties;
         voci.push({
           chiave: 'particella', peso: 20, strato: 'catasto', titolo: 'Particella catastale', icona: 'particella',
-          gruppi: [{ righe: righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]) }],
+          gruppi: [{ righe: conCampione(righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]), 'Particella', { legenda: 'legenda-catasto', classe: 'catasto-particella' }) }],
           legale: true,
           link: [{
             testo: 'Visura su SISTER', icona: 'esterno', url: 'https://sister3.agenziaentrate.gov.it/', etichetta: `Fg.${p.Foglio} · P.${p.Paricella}`,
@@ -266,17 +268,17 @@ export default {
       const zto = primo(trovati, 'prg-zto-hit'), ns = primo(trovati, 'prg-ns-hit'), cs = primo(trovati, 'prg-cs-hit');
       if (zto || ns || cs) {
         const zona = (zto ?? ns)?.properties;
-        const gruppo = zona ? righe([['Zona', zona.ZTO], ['Descrizione', zona.DESCRIZION]]) : [];
-        if (ns) gruppo.push({ etichetta: 'Ambito', valore: 'Netto storico' });
-        if (cs) gruppo.push({ etichetta: 'Ambito', valore: 'Centro storico' }, { etichetta: 'Strumento', valore: 'PPE' });
+        const gruppo = zona ? conCampione(righe([['Zona', zona.ZTO], ['Descrizione', zona.DESCRIZION]]), 'Zona', campioneZona(zona.ZTO)) : [];
+        if (ns) gruppo.push({ etichetta: 'Ambito', valore: 'Netto storico', campione: campioneAmbito('Netto storico') });
+        if (cs) gruppo.push({ etichetta: 'Ambito', valore: 'Centro storico', campione: campioneAmbito('Centro storico') }, { etichetta: 'Strumento', valore: 'PPE' });
         voci.push({ chiave: 'zonizzazione', peso: 40, strato: 'prg', titolo: 'Zonizzazione (PRG 2004)', icona: 'mappa', gruppi: [{ righe: gruppo }],
           legale: true, nota: NOTA_PRG, link: { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' } });
       }
 
       // Vincoli: un gruppo per vincolo (areali e lineari)
       const vincoli = [
-        ...tutti(trovati, 'prg-va-hit').map(f => ['Vincolo areale', righe([['Tipo', f.properties.tipo], ['Descrizione', f.properties.descrizone], ['Note', f.properties.note]]), { layer: 'va', fid: f.properties.fid, tipo: f.properties.tipo }]),
-        ...tutti(trovati, 'prg-vl-hit').map(f => ['Vincolo lineare', righe([['Tipo', f.properties.TIPO], ['Descrizione', f.properties.DESCRIZION], ['Note', f.properties.NOTE]]), { layer: 'vl', fid: f.properties.fid, tipo: f.properties.TIPO }]),
+        ...tutti(trovati, 'prg-va-hit').map(f => ['Vincolo areale', conCampione(righe([['Tipo', f.properties.tipo], ['Descrizione', f.properties.descrizone], ['Note', f.properties.note]]), 'Tipo', campioneVincolo(f.properties.tipo)), { layer: 'va', fid: f.properties.fid, tipo: f.properties.tipo }]),
+        ...tutti(trovati, 'prg-vl-hit').map(f => ['Vincolo lineare', conCampione(righe([['Tipo', f.properties.TIPO], ['Descrizione', f.properties.DESCRIZION], ['Note', f.properties.NOTE]]), 'Tipo', campioneVincolo(f.properties.TIPO, true)), { layer: 'vl', fid: f.properties.fid, tipo: f.properties.TIPO }]),
       ];
       const visti = new Set();
       const gruppi = [];

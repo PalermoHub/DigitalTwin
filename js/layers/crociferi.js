@@ -54,10 +54,11 @@ function tooltip(e) {
     titolo: p.nome || t(`edificio.tipo.${p.tipo}`),
     sottotitolo: [stanza, nomePiano(p.piano, p.nome_piano)].filter(Boolean).join(' · '),
     pallino: COLORI_PIANI[p.piano],
+    icona: 'edifici', sezione: 'Ex Noviziato dei Crociferi', colore: COLORI_PIANI[p.piano] ?? '#495057',
   });
   const corpo = el('div', 'strati-tooltip-corpo');
   corpo.append(voce);
-  return { contenuto: corpo, cursore: true, esclusivo: true };
+  return { contenuto: corpo, cursore: true, esclusivo: true, colore: COLORI_PIANI[p.piano] ?? '#495057' };
 }
 
 const el = (tag, classe, testo) => {

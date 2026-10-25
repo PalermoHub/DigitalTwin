@@ -57,6 +57,16 @@ function applicaClassi() {
   disegnaScala();
 }
 
+// il colore della classe in cui cade la temperatura, con il metodo e le classi scelti in legenda (lo stesso della mappa)
+function coloreClasse(valore) {
+  if (valore == null) return NODATA;
+  const lim = soglie();
+  const c = colori();
+  let i = 0;
+  while (i < lim.length - 2 && valore >= lim[i + 1]) i++; // `step` di MapLibre: il limite appartiene alla classe sopra
+  return c[i];
+}
+
 const gradi = v => `${v.toLocaleString(localeIntl(), { minimumFractionDigits: 1, maximumFractionDigits: 1 })} °C`;
 
 // Barra a classi (una cella per classe, il limite nel suggerimento), estremi sotto e «Nessun dato».
@@ -169,7 +179,7 @@ export default {
     tooltip: true,
     voci: trovati => {
       if (!dati) return [];
-      return distinte(tutti(trovati, HIT)).slice(0, 1).flatMap(f => voceIsolaCalore(f.properties, dati, () => graficoAndamento(f.properties, dati.serie, t('isole.sezioneEMedia', { da: dati.anni[0], a: dati.anno }))) ?? []);
+      return distinte(tutti(trovati, HIT)).slice(0, 1).flatMap(f => voceIsolaCalore(f.properties, dati, () => graficoAndamento(f.properties, dati.serie, t('isole.sezioneEMedia', { da: dati.anni[0], a: dati.anno })), coloreClasse(f.properties[`LST_${dati.anno}`])) ?? []);
     },
   },
   legendaPannello: '.lg-isole-calore', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)

@@ -109,6 +109,28 @@ const PPE_TIPOLOGIA = [
   ['ppe-verde-pubblico', 'Verde Pubblico'],
 ];
 
+// Simbolo di legenda (campione per il tooltip della scheda) della zona, dell'ambito o del vincolo trovati sotto il cursore.
+// La zona è il codice ZTO del PRG (A1, B0a, F10, IC3, V2, S1…): le zone F, IC, S e V condividono il simbolo della loro famiglia.
+const campionePrg = id => (id ? { legenda: 'legenda-prg', immagine: `img/prg/${id}.png` } : undefined);
+const chiaveTesto = testo => String(testo ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const ZONE_CON_SIMBOLO = new Set(ZONIZZAZIONE.map(([id]) => id.slice(4)).filter(z => /^(a\d|b|ca|cb|d\d|e\d)/.test(z)));
+export function campioneZona(zto) {
+  const z = String(zto ?? '').toLowerCase();
+  if (z === 'parcheggi') return campionePrg('zto-parcheggi');
+  if (z === 'vs') return campionePrg('zto-verde-storico');
+  if (ZONE_CON_SIMBOLO.has(z)) return campionePrg(`zto-${z}`);
+  if (/^f\d/.test(z)) return campionePrg('zto-f');
+  if (/^ic\d/.test(z)) return campionePrg('zto-ic');
+  if (/^s\d/.test(z)) return campionePrg('zto-istruzione');
+  if (/^v\d/.test(z)) return campionePrg('zto-verde');
+  return undefined;
+}
+export const campioneAmbito = ambito => campionePrg(ambito === 'Netto storico' ? 'ns' : ambito === 'Centro storico' ? 'cs' : null);
+export function campioneVincolo(tipo, lineare = false) {
+  const voce = (lineare ? VINCOLI_LINEARI : VINCOLI_AREALI).find(([, testo]) => chiaveTesto(testo) === chiaveTesto(tipo));
+  return campionePrg(voce?.[0]);
+}
+
 const el = (tag, classe, testo) => Object.assign(document.createElement(tag), { className: classe ?? '', textContent: testo ?? '' });
 
 function riga([simbolo, testo], classe = 'prg-voce') {

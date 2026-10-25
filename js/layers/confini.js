@@ -1,11 +1,8 @@
 import { pmt, urlDati } from '../core/config.js';
 import { primo, righe } from '../core/scheda-util.js';
 import { registraTooltip } from '../core/tooltip.js';
-import { svgIcona } from '../core/icone.js';
-import { tl } from '../core/i18n.js';
 import { CONFINI_LEVEL_KEYS, confiniStyle, sezioniColors } from '../core/palette.js';
 
-const COLORE = '#495057';
 export const SRC_SEZIONI = 'sezioni';
 const SRC_AMAP = 'amap-distretti';
 const ROSSO_AMAP = '#d32f2f';
@@ -29,17 +26,6 @@ function collegaTooltip(map) {
     if (!righe.length) return null;
     const html = document.createElement('div');
     html.className = 'confini-tooltip';
-    const testa = document.createElement('div'); // intestazione come nel popup
-    testa.className = 'tooltip-testa';
-    const marchio = document.createElement('span');
-    marchio.className = 'tooltip-marchio';
-    marchio.style.background = COLORE;
-    marchio.innerHTML = svgIcona('confini', 14);
-    const sezione = document.createElement('span');
-    sezione.className = 'tooltip-sezione';
-    sezione.textContent = tl('Confini');
-    testa.append(marchio, sezione);
-    html.append(testa);
     righe.forEach(([nome, valore]) => {
       const riga = document.createElement('div');
       riga.className = 'tooltip-riga';
@@ -50,7 +36,7 @@ function collegaTooltip(map) {
       riga.append(et, val);
       html.append(riga);
     });
-    return { contenuto: html, colore: COLORE };
+    return { contenuto: html };
   }, 10);
 }
 

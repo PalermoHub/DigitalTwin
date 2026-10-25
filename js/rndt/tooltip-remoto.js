@@ -3,6 +3,7 @@
 // allontana (DISTANZA_PX). Il tooltip è sincrono: arrivata la risposta si rilancia un movimento del mouse per ridisegnarlo.
 import { registraTooltip, disegnaVoceTooltip } from '../core/tooltip.js';
 
+const COLORE = '#495057';
 const RITARDO_MS = 180;
 const DISTANZA_PX = 8;
 const MAX_VOCI = 3;
@@ -20,7 +21,7 @@ function sezione(voci) {
   corpo.className = 'strati-tooltip-corpo';
   for (const v of voci.slice(0, MAX_VOCI)) {
     const [prima, ...altre] = v.gruppi[0].righe;
-    const voce = disegnaVoceTooltip({ titolo: v.titolo, sottotitolo: `${prima.etichetta}: ${prima.valore}` });
+    const voce = disegnaVoceTooltip({ titolo: v.titolo, icona: 'mappa', sezione: 'Layer aggiunto', colore: COLORE, sottotitolo: `${prima.etichetta}: ${prima.valore}` });
     for (const r of altre.slice(0, MAX_RIGHE - 1)) {
       const riga = document.createElement('div');
       riga.className = 'tooltip-riga';
@@ -51,7 +52,7 @@ export function collegaTooltipRemoto(map, interrogazione) {
 
   registraTooltip(map, e => {
     if (!ultimo || Math.hypot(e.point.x - ultimo.point.x, e.point.y - ultimo.point.y) > DISTANZA_PX) return null;
-    return { contenuto: sezione(ultimo.voci), cursore: true };
+    return { contenuto: sezione(ultimo.voci), cursore: true, colore: COLORE };
   }, 3);
 
   map.on('mousemove', e => {

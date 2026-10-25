@@ -5,6 +5,7 @@ import { registraTooltip, campioneTooltip, disegnaVoceTooltip } from '../core/to
 import { proprieta } from './info.js';
 import { origineLayer } from './legenda.js';
 
+const COLORE = '#495057';
 const MAX_VOCI = 5;
 const LAYER_ESTENSIONI = /-footprints-fill$/;
 
@@ -39,11 +40,7 @@ export function collegaTooltipEstensioni(map) {
     const corpo = document.createElement('div');
     corpo.className = 'strati-tooltip-corpo';
     for (const v of voci.slice(0, MAX_VOCI)) {
-      const riga = document.createElement('div');
-      const titolo = document.createElement('strong');
-      titolo.textContent = v.titolo;
-      riga.append(titolo);
-      corpo.append(riga);
+      corpo.append(disegnaVoceTooltip({ titolo: v.titolo, icona: 'mappa', sezione: 'Catalogo RNDT', colore: COLORE }));
     }
     if (voci.length > MAX_VOCI) {
       const altre = document.createElement('div');
@@ -51,7 +48,7 @@ export function collegaTooltipEstensioni(map) {
       altre.textContent = `+ altri ${voci.length - MAX_VOCI}`;
       corpo.append(altre);
     }
-    return { contenuto: corpo, cursore: true };
+    return { contenuto: corpo, cursore: true, colore: COLORE };
   }, 3);
 }
 
@@ -71,7 +68,7 @@ export function collegaTooltipLayerEsterni(map, hosts) {
         if (!righe.length) continue;
         const [prima, ...altre] = righe;
         const voce = disegnaVoceTooltip({
-          titolo: layer.nome, sottotitolo: `${prima.etichetta}: ${prima.valore}`,
+          titolo: layer.nome, icona: 'mappa', sezione: 'Layer aggiunto', colore: layer.colore ?? COLORE, sottotitolo: `${prima.etichetta}: ${prima.valore}`,
           campione: layer.colore ? campioneTooltip('legenda-esterna', ['', { background: layer.colore }]) : undefined,
         });
         for (const r of altre.slice(0, MAX_RIGHE - 1)) {
@@ -98,6 +95,6 @@ export function collegaTooltipLayerEsterni(map, hosts) {
     const corpo = document.createElement('div');
     corpo.className = 'strati-tooltip-corpo';
     corpo.append(...voci.slice(0, MAX_LAYER));
-    return { contenuto: corpo, cursore: true };
+    return { contenuto: corpo, cursore: true, colore: COLORE };
   }, 3);
 }
