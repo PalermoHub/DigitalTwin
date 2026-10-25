@@ -82,6 +82,8 @@ function mostraSezione(chiave, attivo) {
   legenda.hidden = Object.values(sezioni).every(x => x.hidden);
 }
 
+const COLORE_SICUREZZA = '#d64545';
+
 // Tooltip sugli archi, solo a strato acceso (sezione di quello condiviso).
 function collegaTooltip(map) {
   const acceso = id => map.getLayoutProperty(id, 'visibility') === 'visible';
@@ -98,8 +100,8 @@ function collegaTooltip(map) {
     }
     if (!sotto.length) return null;
     const corpo = el('div', 'sicurezza-tooltip-corpo strati-tooltip-corpo');
-    for (const t of sotto) corpo.append(disegnaVoceTooltip({ titolo: t.titolo, icona: t.icona, sottotitolo: t.dettaglio }));
-    return { contenuto: corpo, cursore: true };
+    for (const t of sotto) corpo.append(disegnaVoceTooltip({ titolo: t.titolo, icona: t.icona, sezione: 'Sicurezza stradale', colore: COLORE_SICUREZZA, sottotitolo: t.dettaglio }));
+    return { contenuto: corpo, cursore: true, colore: COLORE_SICUREZZA };
   }, 1);
 }
 

@@ -243,6 +243,8 @@ function aggiornaLegenda() {
   if (legenda) legenda.hidden = !STRATI_TRASPORTO.some(id => document.getElementById(`strato-${id}`)?.checked);
 }
 
+const COLORE_TRASPORTO = '#364fc7'; // come --trasporto
+
 // Tooltip al passaggio del mouse, solo sugli strati accesi (a strato spento sulla mappa non c'è nulla da indicare):
 // sezione del tooltip condiviso.
 function collegaTooltip(map) {
@@ -257,10 +259,10 @@ function collegaTooltip(map) {
     const html = el('div', 'trasporto-tooltip-corpo strati-tooltip-corpo');
     if (fermata) {
       const t = tooltipFermata(fermate.get(fermata.properties.id) ?? { ...fermata.properties, linee: [] });
-      html.append(disegnaVoceTooltip({ titolo: t.titolo, icona: t.icona, sottotitolo: t.dettaglio }));
+      html.append(disegnaVoceTooltip({ titolo: t.titolo, icona: t.icona, sezione: 'Trasporto pubblico', colore: COLORE_TRASPORTO, sottotitolo: t.dettaglio }));
     } else {
       const t = tooltipLinee(sotto);
-      html.append(disegnaVoceTooltip({ titolo: t.titolo, icona: t.icona }));
+      html.append(disegnaVoceTooltip({ titolo: t.titolo, icona: t.icona, sezione: 'Trasporto pubblico', colore: COLORE_TRASPORTO }));
       for (const l of t.linee) {
         const riga = el('div', 'trasporto-tooltip-linea');
         const chip = el('span', 'trasporto-chip', l.numero);
@@ -271,7 +273,7 @@ function collegaTooltip(map) {
       }
       if (t.altre) html.append(el('div', 'trasporto-tooltip-altre', `+ altre ${t.altre} linee`));
     }
-    return { contenuto: html, cursore: true };
+    return { contenuto: html, cursore: true, colore: COLORE_TRASPORTO };
   }, 0);
 }
 

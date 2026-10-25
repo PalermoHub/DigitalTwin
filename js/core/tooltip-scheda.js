@@ -2,9 +2,11 @@
 // proprio mostra, a strato acceso, titolo e prime righe della sua voce di scheda. Così il tooltip descrive tutti gli strati aperti.
 import { registraTooltip, campioneTooltip } from './tooltip.js';
 import { svgIcona } from './icone.js';
+import { tl } from './i18n.js';
 
 const MAX_VOCI = 3;
 const MAX_RIGHE = 3;
+const COLORE = '#495057'; // colore del marchio e della linea di richiamo, finché le voci di scheda non ne hanno uno
 const R = 4; // riquadro di ±R pixel attorno al cursore, come per i clic
 
 // Voci di scheda → modelli di tooltip {titolo, righe}, solo per gli strati accesi e non esclusi
@@ -27,16 +29,22 @@ function disegna(modelli) {
   corpo.className = 'strati-tooltip-corpo';
   for (const m of modelli.slice(0, MAX_VOCI)) {
     const voce = document.createElement('div');
-    const titolo = document.createElement('strong');
-    const svg = m.icona ? svgIcona(m.icona, 14) : '';
-    if (svg) { // iconcina colorata davanti al titolo, come nella scheda
-      const i = document.createElement('span');
-      i.className = 'tooltip-icona';
-      i.innerHTML = svg;
-      titolo.append(i);
+    const testa = document.createElement('div'); // intestazione come nel popup: marchio colorato e titolo della voce in maiuscolo
+    testa.className = 'tooltip-testa';
+    const marchio = document.createElement('span');
+    marchio.className = 'tooltip-marchio';
+    marchio.style.background = COLORE;
+    marchio.innerHTML = m.icona ? svgIcona(m.icona, 14) : '';
+    const sezione = document.createElement('span');
+    sezione.className = 'tooltip-sezione';
+    sezione.textContent = tl(m.titolo);
+    testa.append(marchio, sezione);
+    voce.append(testa);
+    if (m.badge) {
+      const badge = document.createElement('strong');
+      badge.textContent = m.badge;
+      voce.append(badge);
     }
-    titolo.append(m.titolo);
-    voce.append(titolo);
     // righe come nella scheda: etichetta attenuata a sinistra, valore in grassetto a destra
     for (const r of m.righe) {
       const riga = document.createElement('div');
@@ -79,6 +87,6 @@ export function collegaTooltipScheda(map, moduli) {
       if (!trovati.length) continue;
       modelli.push(...modelliDaVoci(m.scheda.voci(trovati, e.lngLat), { acceso, escludi: m.scheda.senzaTooltip }));
     }
-    return modelli.length ? { contenuto: disegna(modelli) } : null;
+    return modelli.length ? { contenuto: disegna(modelli), colore: COLORE } : null;
   }, 2);
 }
