@@ -18,7 +18,11 @@ export function modelliDaVoci(voci, { acceso, escludi = [] }) {
     const chiave = v.chiave ?? v.titolo;
     if (visti.has(chiave)) continue;
     visti.add(chiave);
-    const rr = (v.gruppi ?? []).flatMap(g => g.righe ?? []).filter(r => r?.etichetta && r?.valore != null).slice(0, v.maxRighe ?? MAX_RIGHE);
+    const valide = g => (g.righe ?? []).filter(r => r?.etichetta && r?.valore != null);
+    // `unaRigaPerGruppo`: con più gruppi (es. più vincoli sotto lo stesso punto) ognuno dà la sua prima riga, col titolo del gruppo
+    const rr = v.unaRigaPerGruppo && (v.gruppi?.length ?? 0) > 1
+      ? v.gruppi.flatMap(g => valide(g).slice(0, 1).map(r => ({ ...r, etichetta: g.titolo ?? r.etichetta }))).slice(0, v.maxRighe ?? MAX_RIGHE)
+      : (v.gruppi ?? []).flatMap(valide).slice(0, v.maxRighe ?? MAX_RIGHE);
     modelli.push({ titolo: v.titolo, icona: v.icona, badge: v.badge, righe: rr });
   }
   return modelli;

@@ -290,7 +290,7 @@ export default {
       }
       if (gruppi.length) {
         voci.push({
-          chiave: 'vincoli', peso: 50, strato: 'vincoli', titolo: 'Vincoli', icona: 'vincolo', legale: true, link: { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' },
+          chiave: 'vincoli', peso: 50, strato: 'vincoli', titolo: 'Vincoli', icona: 'vincolo', legale: true, unaRigaPerGruppo: true, maxRighe: 6, link: { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' },
           gruppi: gruppi.map((g, i) => ({ titolo: gruppi.length > 1 ? `${g.nome} ${i + 1}` : g.nome, righe: g.righe, evidenzia: g.evidenzia })),
         });
       }
