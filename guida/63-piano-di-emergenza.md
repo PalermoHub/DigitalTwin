@@ -21,12 +21,22 @@ Parole chiave: la mia posizione, dove mi trovo, raggiungere un'area, area più v
 
 Domande tipiche: Come faccio a vedere dove mi trovo rispetto alle aree? Come arrivo all'area di emergenza più vicina? Come trovo la strada per l'area di attesa? Come faccio a farmi guidare dal telefono fino a un'area della Protezione civile? Cosa devo fare in caso di terremoto o alluvione per sapere dove andare?
 
-In caso di emergenza bastano quattro passaggi:
+In emergenza, dal telefono, bastano sei passaggi:
 
-1. **Accendi lo strato «Piano di emergenza»** (gruppo «Eventi»): le aree compaiono sulla mappa.
-2. **Premi «La mia posizione»** nella barra degli strumenti e consenti l'accesso alla posizione quando il browser lo chiede: sulla mappa compare un punto che indica dove ti trovi, così capisci quale area ti è più vicina.
-3. **Tocca l'area più vicina a te**, sul poligono tratteggiato o sul suo simbolo blu: la scheda si apre sul tab **Luogo** e mostra **per prima** l'area che hai toccato, con l'intestazione evidenziata.
-4. **Tocca il pulsante verde «Apri nel navigatore»** (riga «Percorso») nella scheda dell'area: si apre l'app di navigazione del tuo smartphone (sul computer, il browser) con le indicazioni stradali già impostate verso quell'area. Avvia il percorso e segui le indicazioni.
+1. **Tocca «Emergenze»** nella home. Qui arrivano le notifiche dei bollettini della Protezione civile: quando a Palermo c'è un'allerta il pulsante **diventa rosso** e il sottotitolo dice quale (per esempio «Allerta gialla a Palermo: vedi il bollettino»); senza allerta resta bianco con il bordo rosso.
+2. **Leggi il bollettino** in cima al pannello: per ogni zona dice il **tipo di avviso** (allerta gialla, arancione o rossa, con i rischi: temporali, idrogeologico, idraulico), con data e ora del bollettino. Il link **«Bollettino sul sito della Protezione Civile»** apre direttamente il sito ufficiale. Poi, sulla scheda **«Piano di emergenza»**, tocca **«Aggiungi alla mappa»**: la barra in basso diventa rossa (modalità emergenza).
+3. **Guarda la mappa**: le aree compaiono colorate per funzione. Con **«GPS»** (consenti l'accesso alla posizione) compare un punto che indica dove ti trovi, così capisci quale area ti è più vicina.
+4. **Avvicina la mappa** all'area più vicina: il colore e il tratteggio dicono a cosa serve.
+5. **Tocca l'area**, sul poligono tratteggiato o sul suo simbolo blu: si apre la scheda di quell'area, con numero, superficie e dove si trova. **Tocca il pulsante verde «Apri nel navigatore»** (riga «Percorso»): si apre l'app di navigazione dello smartphone con le indicazioni già impostate verso quell'area. Avvia il percorso e segui le indicazioni.
+6. **Scorri la scheda** per i **numeri utili** (112, 115, 118, 113, 1515, Protezione civile), i siti ufficiali e la mappa con l'area scelta in rosa.
+
+## Il pulsante «Emergenze» e il bollettino della Protezione civile
+
+Parole chiave: pulsante Emergenze, bollettino, allerta, allerta gialla, arancione, rossa, avviso, notifica, protezione civile, pulsante rosso, link bollettino, criticità.
+
+Domande tipiche: Perché il pulsante Emergenze è rosso? Dove leggo che tipo di allerta c'è a Palermo? Come apro il bollettino della Protezione civile? Come arrivano gli avvisi?
+
+Nel pulsante **«Emergenze»** della home arrivano le **notifiche dei bollettini di criticità della Protezione civile** (Dipartimento della Protezione Civile, zone di allerta della Sicilia). Quando c'è un'allerta per Palermo il pulsante **diventa rosso** e nel sottotitolo compare il livello. Toccandolo si apre il pannello, dove si legge **il tipo di avviso** per ogni zona (livello e rischi) con data e ora del bollettino, e si può aprire il **link diretto al sito della Protezione civile** («Bollettino sul sito della Protezione Civile»). Nello stesso pannello ci sono la scheda del **Piano di emergenza** (pulsante «Aggiungi alla mappa») e i numeri utili.
 
 Per sapere a cosa serve ogni area, guarda il colore: **verde** area di attesa, **rosso** ricovero e accoglienza, **giallo** ammassamento dei soccorritori. In emergenza valgono sempre le indicazioni della Protezione civile e delle autorità.
 

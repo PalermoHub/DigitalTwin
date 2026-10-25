@@ -21,12 +21,22 @@ Keywords: my location, where am I, reach an area, nearest area, route, direction
 
 Typical questions: How do I see where I am relative to the areas? How do I get to the nearest emergency area? How do I find the way to the waiting area? How can my phone guide me to a Civil Protection area? What should I do in an earthquake or flood to know where to go?
 
-In an emergency, four steps are enough:
+In an emergency, from a phone, six steps are enough:
 
-1. **Turn on the «Emergency plan» layer** («Events» group): the areas appear on the map.
-2. **Press «My location»** in the toolbar and allow access to your location when the browser asks: a dot appears on the map showing where you are, so you can see which area is nearest.
-3. **Tap the area nearest to you**, on the hatched polygon or on its blue symbol: the profile opens on the **Place** tab and shows the area you tapped **first**, with its heading highlighted.
-4. **Tap the green «Open in navigation app» button** (the «Percorso» row) in the area's profile: your smartphone's navigation app (on a computer, the browser) opens with directions already set to that area. Start the route and follow the directions.
+1. **Tap «Emergencies»** on the home page. Civil Protection bulletin notifications arrive here: when there is an alert in Palermo the button **turns red** and the subtitle says which one (for example «Yellow alert in Palermo: see the bulletin»); with no alert it stays white with a red border.
+2. **Read the bulletin** at the top of the panel: for each zone it gives the **type of warning** (yellow, orange or red alert, with the risks: thunderstorms, hydrogeological, hydraulic), with the bulletin date and time. The **«Bulletin on the Civil Protection website»** link opens the official site directly. Then, on the **«Emergency plan»** card, tap **«Add to map»**: the bottom bar turns red (emergency mode).
+3. **Look at the map**: the areas appear coloured by function. With **«GPS»** (allow access to your location) a dot shows where you are, so you can see which area is nearest.
+4. **Zoom the map in** on the nearest area: colour and hatching tell you what it is for.
+5. **Tap the area**, on the hatched polygon or on its blue symbol: the card of that area opens, with number, surface and where it is. **Tap the green «Open in navigator» button** (the «Percorso» row): your smartphone's navigation app opens with directions already set to that area. Start the route and follow the directions.
+6. **Scroll the card** for the **useful numbers** (112, 115, 118, 113, 1515, Civil Protection), the official websites and the map with the chosen area in pink.
+
+## The «Emergencies» button and the Civil Protection bulletin
+
+Keywords: Emergencies button, bulletin, alert, yellow alert, orange, red, warning, notification, civil protection, red button, bulletin link, criticality.
+
+Typical questions: Why is the Emergencies button red? Where do I read what kind of alert there is in Palermo? How do I open the Civil Protection bulletin? How do warnings arrive?
+
+The home page **«Emergencies»** button receives the **Civil Protection criticality bulletin notifications** (Department of Civil Protection, Sicilian alert zones). When there is an alert for Palermo the button **turns red** and the subtitle shows the level. Tapping it opens the panel, where you read **the type of warning** for each zone (level and risks) with the bulletin date and time, and can open the **direct link to the Civil Protection website** («Bulletin on the Civil Protection website»). The same panel holds the **Emergency plan** card («Add to map» button) and the useful numbers.
 
 To know what each area is for, look at its colour: **green** waiting area, **red** shelter and reception, **yellow** rescuers' assembly. In an emergency, always follow the instructions of Civil Protection and the authorities.
 
