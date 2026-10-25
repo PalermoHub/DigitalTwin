@@ -25,3 +25,21 @@ Domande tipiche: Da dove vengono i dati? Sono ufficiali? Una magnitudo può camb
 I dati vengono dall'**INGV** (Istituto Nazionale di Geofisica e Vulcanologia), dal servizio web FDSN, con licenza CC BY 4.0. Le localizzazioni dei primi minuti sono **automatiche e possono essere riviste**: magnitudo e posizione possono cambiare dopo la verifica dei sismologi. Il layer ha scopo **informativo**: per allerte e indicazioni di sicurezza vale solo la Protezione Civile.
 
 Con un clic su un cerchio la scheda (tab «Luogo») mostra prima **quell'evento**, in evidenza, e sotto **«Gli altri terremoti»**: una card per evento, dal più recente, con gli stessi due filtri.
+
+## I grafici dei terremoti e l'icona «i»
+
+Parole chiave: grafico, icona i, informazioni, spiegazione, barre, magnitudo nel tempo, eventi accumulati, Omori, repliche, mainshock, sciame, sequenza sismica, filtro sulla mappa, slider, istogramma, energia, momento sismico, tempi tra eventi, spazio-tempo, latitudine, migrazione sciami.
+
+Domande tipiche: Cosa significa il grafico dei terremoti? Come si legge il grafico magnitudo nel tempo? Cos'è la legge di Omori? Cosa sono le repliche e la mainshock? Come funziona lo slider del filtro sulla mappa? A cosa serve l'icona i sui grafici dei terremoti?
+
+Ogni grafico dei terremoti ha accanto al titolo un'icona tonda **«i»**: un clic apre un riquadro con tre parti, **«Cosa rappresenta»**, **«Come funziona»** e **«Come leggerlo»**. Si chiude con **«Chiudi»** o con un clic fuori dal riquadro. I grafici sono nove.
+
+- **«Terremoti per giorno, mese o anno»** (scheda, sezione «Terremoti nel tempo»): barre con il numero di eventi per periodo, dati INGV degli ultimi 5 anni da magnitudo 2. Il menu **«Eventi per»** sceglie giorno (30 barre), mese (24) o anno (5). Una barra diventa **rossa** (sciame) quando supera la soglia calcolata dalla mediana più 4 volte lo scarto mediano, mai sotto 6 eventi; le barre rosse consecutive formano una **sequenza** nell'elenco «Sciami e sequenze sismiche».
+- **«Magnitudo nel tempo»**: uno stelo per terremoto, alto quanto la magnitudo. La scossa più forte (**mainshock**) è in rosso; gli eventi dopo di lei sono le possibili **repliche**. Un clic su uno stelo apre l'evento.
+- **«Eventi accumulati nel tempo»**: curva che sale di uno a ogni terremoto. La pendenza è il ritmo dell'attività: piatta = calma, ripida = molti eventi ravvicinati.
+- **«Legge di Omori: repliche per giorno»**: repliche contate in giorni interi dopo la mainshock, su assi logaritmici (i giorni senza repliche non si disegnano). La retta tratteggiata è l'adattamento n ∝ t^−p (serve almeno 3 giorni con repliche): se i punti la seguono la sequenza decade in modo regolare; **p** vicino a 1 è un decadimento tipico, più alto = si spegne più in fretta. È una stima, non una previsione.
+- **«Eventi per giorno»** (legenda, pannello «Filtro sulla mappa», pulsante «Grafici»): barre degli ultimi 30 giorni e **slider a due maniglie**; l'intervallo scelto filtra mappa, menu ed elenco. «Riproduci» sposta la finestra di un giorno alla volta, «Azzera» torna a tutto il periodo.
+- **«Eventi per magnitudo»** (stesso pannello): istogramma a quattro classi (1–2, 2–3, 3–4, 4 o più); un clic su una colonna accende o spegne la classe sulla mappa.
+- **«Rilascio cumulativo di energia»**: momento sismico accumulato nel tempo, in percentuale del totale. Ogni terremoto pesa circa 32 volte più del precedente per ogni unità di magnitudo (relazione di Hanks e Kanamori), quindi la curva è dominata dai pochi eventi grandi, a differenza del conteggio. La nota dà la magnitudo equivalente a un unico terremoto e il peso del più forte.
+- **«Tempi tra eventi successivi»**: istogramma delle attese tra un evento e il successivo, da meno di un minuto a oltre un anno (in rosso le attese sotto il giorno). Distingue gli sciami (molte attese brevi) dall'attività di fondo; il coefficiente di variazione vale circa 1 se gli eventi arrivano a caso, di più se sono raggruppati.
+- **«Diagramma spazio-tempo»**: tempo in orizzontale, latitudine in verticale, un cerchio per evento (più grande = più forte, rosso il più forte). Mostra se uno sciame migra verso nord o sud; è la latitudine, non la distanza lungo una faglia. Un clic apre l'evento.

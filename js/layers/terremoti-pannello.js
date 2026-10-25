@@ -2,6 +2,7 @@
 // Scrive nel filtro condiviso (`finestra`, `classi`) e avvisa con EVENTO_FILTRO: mappa, menu ed elenco si aggiornano da soli.
 import { t, localeIntl } from '../core/i18n.js';
 import { GIORNI_MAX, CLASSI_MAG, filtro, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra } from './scheda-terremoti.js';
+import { titoloConInfo } from '../core/info-grafico.js';
 import { EVENTO_FILTRO } from './scheda-terremoti-dom.js';
 
 const PASSO_RIPRODUZIONE_MS = 700;
@@ -82,7 +83,7 @@ export function pannelloFiltro(eventi) {
     return { b, asta, conto };
   });
 
-  corpo.append(el('p', 'terremoti-pf-et', t('terremoti.pf.tempo')), barre, slider, el('p', 'terremoti-pf-et', t('terremoti.pf.magnitudo')), istogramma, el('p', 'uffici-nota', t('terremoti.pf.nota')));
+  corpo.append(titoloConInfo('p', 'terremoti-pf-et', t('terremoti.pf.tempo'), 'pf-tempo'), barre, slider, titoloConInfo('p', 'terremoti-pf-et', t('terremoti.pf.magnitudo'), 'pf-magnitudo'), istogramma, el('p', 'uffici-nota', t('terremoti.pf.nota')));
   nodo.append(testa, testoIntervallo, corpo);
   apri(false);
 

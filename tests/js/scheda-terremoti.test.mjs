@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { proprietaStorico, serieEventi, puntiMagnitudo, curvaCumulativa, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, classeMagnitudo, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
+import { proprietaStorico, serieEventi, puntiMagnitudo, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, classeMagnitudo, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
 
 const ingv = (extra = {}, coord = [14.1717, 38.7938, 8.8]) => ({
   type: 'Feature', geometry: { type: 'Point', coordinates: coord },
@@ -274,4 +274,44 @@ test('proprietaStorico: proprietà come quelle in mappa; senza coordinate è nul
   assert.equal(p.fascia, 'Oltre 24 ore');
   assert.deepEqual([p.lon, p.lat, p.luogo], [13.9, 38.5, 'Golfo']);
   assert.equal(proprietaStorico({ ts: OGGI, mag: 2, lat: NaN, lon: NaN }, OGGI), null);
+});
+
+test('omori: repliche per giorno dopo la mainshock e pendenza log-log', () => {
+  const ev = [{ ts: giorno(5), mag: 5 }];
+  // decadimento ~ 1/t: 16, 8, 5, 4, 3 repliche nei giorni 1-5 dopo la scossa
+  [16, 8, 5, 4, 3].forEach((n, i) => { for (let k = 0; k < n; k++) ev.push({ ts: giorno(5 + i, 13 + k * 0.1), mag: 2.1 }); });
+  const o = omori(puntiMagnitudo(ev, 'giorno', 2, OGGI));
+  assert.equal(o.mainshock.mag, 5);
+  assert.deepEqual(o.giorni.slice(0, 5).map(d => d.n), [16, 8, 5, 4, 3]);
+  assert.ok(o.fit.p > 0.5 && o.fit.p < 1.5);
+  assert.equal(omori(puntiMagnitudo([], 'giorno', 2, OGGI)).mainshock, null);
+  assert.equal(omori(puntiMagnitudo([{ ts: giorno(5), mag: 5 }, { ts: giorno(6), mag: 2.5 }], 'giorno', 2, OGGI)).fit, null);
+});
+
+const evGeo = [{ ts: giorno(5), mag: 5, lat: 38.0, lon: 13 }, { ts: giorno(5, 14), mag: 2.1, lat: 38.1, lon: 13 }, { ts: giorno(5, 15), mag: 2.2, lat: 38.2, lon: 13 }, { ts: giorno(9), mag: 2.0, lat: 38.4, lon: 13 }];
+
+test('rilascioCumulativo: domina l\'evento grande; magnitudo equivalente ≥ del più forte', () => {
+  const r = rilascioCumulativo(puntiMagnitudo(evGeo, 'giorno', 2, OGGI));
+  assert.ok(r.quotaMax > 0.99);
+  assert.ok(r.magEquiv >= 5 && r.magEquiv < 5.01);
+  assert.equal(r.passi.at(-1).f, 1);
+  assert.ok(r.passi.every((p, i, a) => !i || (p.x >= a[i - 1].x && p.f >= a[i - 1].f)));
+  assert.equal(rilascioCumulativo(puntiMagnitudo([], 'giorno', 2, OGGI)).totale, 0);
+});
+
+test('tempiTraEventi: attese in classi, cv > 1 se raggruppati; meno di 3 eventi è null', () => {
+  const a = tempiTraEventi(puntiMagnitudo(evGeo, 'giorno', 2, OGGI));
+  assert.equal(a.n, 3);
+  assert.equal(a.classi.reduce((s, c) => s + c.n, 0), 3);
+  assert.equal(a.classi.find(c => c.da === 60).n, 2); // 2 ore e 1 ora tra i primi eventi
+  assert.ok(a.cv > 0.5);
+  assert.equal(tempiTraEventi(puntiMagnitudo(evGeo.slice(0, 2), 'giorno', 2, OGGI)), null);
+});
+
+test('spazioTempo: latitudine in quota 0-1; senza coordinate è null', () => {
+  const st = spazioTempo(puntiMagnitudo(evGeo, 'giorno', 2, OGGI));
+  assert.deepEqual([st.latMin, st.latMax], [38, 38.4]);
+  assert.ok(Math.abs(st.punti[0].y) < 1e-9 && Math.abs(st.punti.at(-1).y - 1) < 1e-9);
+  assert.equal(st.mainshock.mag, 5);
+  assert.equal(spazioTempo(puntiMagnitudo([{ ts: giorno(5), mag: 3 }, { ts: giorno(6), mag: 3 }], 'giorno', 2, OGGI)), null);
 });

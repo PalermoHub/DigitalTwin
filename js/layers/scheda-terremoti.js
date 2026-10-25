@@ -288,6 +288,77 @@ export function curvaCumulativa(g) {
   return { passi, totale };
 }
 
+// Legge di Omori: repliche per giorno dopo la mainshock. `giorni` = bin di 24 ore dalla scossa (t = metà del bin, in giorni), solo quelli completi;
+// `fit` = retta sul piano log-log, n ≈ K · t^-p (minimi quadrati sui giorni con almeno una replica), o null con meno di 3 punti.
+export function omori(g) {
+  const m = g.mainshock;
+  if (!m) return { giorni: [], fit: null, mainshock: null };
+  const completi = Math.floor((g.a - m.ts) / GIORNO_MS);
+  const n = Array(completi).fill(0);
+  for (const p of g.punti) {
+    const i = Math.floor((p.ts - m.ts) / GIORNO_MS);
+    if (p.ts > m.ts && i >= 0 && i < completi) n[i]++;
+  }
+  const giorni = n.map((c, i) => ({ t: i + 0.5, n: c }));
+  const v = giorni.filter(d => d.n > 0);
+  let fit = null;
+  if (v.length >= 3) {
+    const x = v.map(d => Math.log10(d.t)), y = v.map(d => Math.log10(d.n));
+    const mx = x.reduce((s, a) => s + a, 0) / v.length, my = y.reduce((s, a) => s + a, 0) / v.length;
+    const sxx = x.reduce((s, a) => s + (a - mx) ** 2, 0);
+    if (sxx > 0) {
+      const pend = x.reduce((s, a, i) => s + (a - mx) * (y[i] - my), 0) / sxx;
+      fit = { p: -pend, logK: my - pend * mx };
+    }
+  }
+  return { giorni, fit, mainshock: m };
+}
+
+// Momento sismico di una magnitudo (N·m, relazione di Hanks e Kanamori): ogni unità di magnitudo vale circa 32 volte più energia.
+export const momentoSismico = m => 10 ** (1.5 * m + 9.1);
+export const magnitudoDaMomento = m0 => (Math.log10(m0) - 9.1) * 2 / 3;
+
+// Rilascio cumulativo: momento sismico accumulato, in quota 0-1 del totale della finestra. A differenza del conteggio è dominato dai pochi eventi grandi.
+// `magEquiv` = magnitudo di un unico terremoto con tutto il momento della finestra; `quotaMax` = quota dell'evento più forte.
+export function rilascioCumulativo(g) {
+  const tot = g.punti.reduce((s, p) => s + momentoSismico(p.mag), 0);
+  if (!tot) return { passi: [], totale: 0, magEquiv: null, quotaMax: 0 };
+  const passi = [{ x: 0, f: 0 }];
+  let acc = 0;
+  for (const p of g.punti) {
+    const prima = acc / tot;
+    acc += momentoSismico(p.mag);
+    passi.push({ x: p.x, f: prima }, { x: p.x, f: acc / tot });
+  }
+  passi.push({ x: 1, f: 1 });
+  return { passi, totale: tot, magEquiv: magnitudoDaMomento(tot), quotaMax: momentoSismico(g.mainshock.mag) / tot };
+}
+
+// Tempi tra eventi successivi: classi (minuti) dall'attesa più breve alla più lunga. Un'attività di fondo ha attese lunghe e sparse;
+// uno sciame riempie le classi brevi. `cv` = deviazione standard / media delle attese: ≈ 1 se gli eventi arrivano a caso, > 1 se sono raggruppati.
+export const CLASSI_ATTESA = [0, 1, 10, 60, 360, 1440, 4320, 10080, 43200, 129600, 525600]; // minuti: inizio di ogni classe
+export function tempiTraEventi(g) {
+  const ts = g.punti.map(p => p.ts);
+  if (ts.length < 3) return null;
+  const attese = ts.slice(1).map((x, i) => (x - ts[i]) / 60000);
+  const classi = CLASSI_ATTESA.map((da, i) => ({ da, a: CLASSI_ATTESA[i + 1] ?? Infinity, n: 0 }));
+  for (const a of attese) classi[classi.findLastIndex(c => a >= c.da)].n++;
+  const media = attese.reduce((s, a) => s + a, 0) / attese.length;
+  const ord = [...attese].sort((a, b) => a - b);
+  const mediana = (ord[Math.floor((ord.length - 1) / 2)] + ord[Math.ceil((ord.length - 1) / 2)]) / 2;
+  const varianza = attese.reduce((s, a) => s + (a - media) ** 2, 0) / attese.length;
+  return { classi, n: attese.length, mediana, media, cv: media ? Math.sqrt(varianza) / media : 0, max: Math.max(...classi.map(c => c.n)) };
+}
+
+// Diagramma spazio-tempo: x = tempo (quota 0-1 della finestra), y = latitudine (quota 0-1 tra la più bassa e la più alta). Mostra se uno sciame migra verso nord o sud.
+export function spazioTempo(g) {
+  const geo = g.punti.filter(p => Number.isFinite(p.lat));
+  if (geo.length < 2) return null;
+  let min = Math.min(...geo.map(p => p.lat)), max = Math.max(...geo.map(p => p.lat));
+  if (max - min < 0.1) { min -= 0.05; max += 0.05; }
+  return { punti: geo.map(p => ({ ...p, y: (p.lat - min) / (max - min) })), latMin: min, latMax: max, mainshock: geo.includes(g.mainshock) ? g.mainshock : null };
+}
+
 // Proprietà di un evento dello storico, come quelle di un evento in mappa (per popup e scheda), o null se mancano le coordinate
 export function proprietaStorico(e, adesso = Date.now()) {
   if (!Number.isFinite(e?.lon) || !Number.isFinite(e?.lat)) return null;

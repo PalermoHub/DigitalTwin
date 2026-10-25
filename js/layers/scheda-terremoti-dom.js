@@ -1,8 +1,9 @@
 // Parti disegnate dei terremoti: i due menu del filtro (legenda e scheda) e l'elenco «Gli altri terremoti» della scheda.
 import { disegnaAccordion } from '../core/scheda-disegno.js';
 import { t, tn, localeIntl } from '../core/i18n.js';
+import { titoloConInfo } from '../core/info-grafico.js';
 import { barraNavigazione } from '../core/scheda-navigazione.js';
-import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, puntiMagnitudo, curvaCumulativa, etichettaBarra, periodoSequenza } from './scheda-terremoti.js';
+import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, puntiMagnitudo, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, etichettaBarra, periodoSequenza } from './scheda-terremoti.js';
 
 export const EVENTO_FILTRO = 'terremoti:filtro';
 
@@ -102,7 +103,7 @@ const dataEvento = ts => new Date(ts).toLocaleString(localeIntl(), { day: 'numer
 
 function disegnaMagnitudoTempo(g, apri) {
   const blocco = el('div', 'terremoti-serie');
-  blocco.append(el('h4', 'terremoti-titolo', t('terremoti.mt.titolo')));
+  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.mt.titolo'), 'mt'));
   if (!g.punti.length) {
     blocco.append(el('p', 'scheda-nota', t('terremoti.serie.vuota')));
     return blocco;
@@ -150,7 +151,7 @@ function disegnaCurva(g) {
   const c = curvaCumulativa(g);
   if (!c.totale) return el('div'); // senza eventi la nota del grafico precedente basta
   const blocco = el('div', 'terremoti-serie');
-  blocco.append(el('h4', 'terremoti-titolo', t('terremoti.cum.titolo')));
+  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.cum.titolo'), 'cum'));
   const px = x => MS + x * (L - MS - MD), py = n => A - MB - n / c.totale * (A - MB - MA);
   const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt terremoti-cum', role: 'img', 'aria-label': t('terremoti.cum.titolo') });
   for (const n of [0, c.totale]) {
@@ -173,8 +174,125 @@ function disegnaCurva(g) {
   return blocco;
 }
 
+// Legge di Omori: repliche per giorno dopo la mainshock, assi logaritmici (decadimento ≈ retta)
+function disegnaOmori(g) {
+  const o = omori(g);
+  const v = o.giorni.filter(d => d.n > 0);
+  if (!o.mainshock || !v.length) return el('div');
+  const blocco = el('div', 'terremoti-serie');
+  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.omori.titolo'), 'omori'));
+  const tMax = Math.max(10, o.giorni.length + 0.5), nMax = Math.max(10, ...v.map(d => d.n));
+  const decT = Math.ceil(Math.log10(tMax)), decN = Math.ceil(Math.log10(nMax));
+  const x0 = Math.log10(0.5), px = tt => MS + (Math.log10(tt) - x0) / (decT - x0) * (L - MS - MD);
+  const py = n => A - MB - Math.log10(n) / decN * (A - MB - MA);
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt terremoti-omori', role: 'img', 'aria-label': t('terremoti.omori.titolo') });
+  for (let k = 0; k <= decN; k++) {
+    svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py(10 ** k), y2: py(10 ** k), class: 'asse' }));
+    const e = nodoSvg('text', { x: MS - 4, y: py(10 ** k) + 3, 'text-anchor': 'end', class: 'et' });
+    e.textContent = num(10 ** k);
+    svg.append(e);
+  }
+  for (let k = 0; k <= decT; k++) {
+    const e = nodoSvg('text', { x: px(10 ** k), y: A - 4, 'text-anchor': 'middle', class: 'et' });
+    e.textContent = t('terremoti.omori.giorno', { n: num(10 ** k) });
+    svg.append(e);
+  }
+  if (o.fit) {
+    const f = tt => py(10 ** (o.fit.logK - o.fit.p * Math.log10(tt)));
+    const [a, b] = [0.5, tMax];
+    svg.append(nodoSvg('line', { x1: px(a), x2: px(b), y1: Math.max(f(a), MA), y2: Math.min(f(b), A - MB), class: 'fit' }));
+  }
+  for (const d of v) svg.append(nodoSvg('circle', { cx: px(d.t), cy: py(d.n), r: 2.5, class: 'punto' }, `${t('terremoti.omori.giorno', { n: Math.ceil(d.t) })}: ${tn('terremoti.nEventi', d.n, { n: num(d.n) })}`));
+  blocco.append(svg, el('p', 'scheda-nota', t(o.fit ? 'terremoti.omori.nota' : 'terremoti.omori.notaPoca', { forte: o.mainshock.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 }), data: dataEvento(o.mainshock.ts), p: o.fit ? o.fit.p.toLocaleString(localeIntl(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '' })));
+  return blocco;
+}
+
+// Rilascio cumulativo di energia (momento sismico): quota del totale, dominata dagli eventi grandi
+function disegnaRilascio(g) {
+  const r = rilascioCumulativo(g);
+  if (!r.totale) return el('div');
+  const blocco = el('div', 'terremoti-serie');
+  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.energia.titolo'), 'energia'));
+  const px = x => MS + x * (L - MS - MD), py = f => A - MB - f * (A - MB - MA);
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt terremoti-cum terremoti-energia', role: 'img', 'aria-label': t('terremoti.energia.titolo') });
+  for (const f of [0, 0.5, 1]) {
+    svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py(f), y2: py(f), class: 'asse' }));
+    const e = nodoSvg('text', { x: MS - 4, y: py(f) + 3, 'text-anchor': 'end', class: 'et' });
+    e.textContent = `${f * 100}%`;
+    svg.append(e);
+  }
+  [g.da, g.a].forEach((ts, i) => {
+    const e = nodoSvg('text', { x: i ? L - MD : MS, y: A - 4, 'text-anchor': i ? 'end' : 'start', class: 'et' });
+    e.textContent = new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
+    svg.append(e);
+  });
+  const vertici = r.passi.map(p => `${px(p.x).toFixed(1)},${py(p.f).toFixed(1)}`);
+  svg.append(nodoSvg('polygon', { points: `${px(0)},${py(0)} ${vertici.join(' ')} ${px(1)},${py(0)}`, class: 'area' }), nodoSvg('polyline', { points: vertici.join(' '), class: 'curva' }));
+  blocco.append(svg, el('p', 'scheda-nota', t('terremoti.energia.nota', { mag: r.magEquiv.toLocaleString(localeIntl(), { maximumFractionDigits: 1 }), forte: g.mainshock.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 }), quota: Math.round(r.quotaMax * 100), n: num(g.punti.length) })));
+  return blocco;
+}
+
+// Tempi tra eventi successivi: istogramma delle attese, da brevissime (sciame) a lunghe (attività di fondo)
+const nomeAttesa = min => (min < 60 ? `${min}${t('terremoti.attesa.min')}` : min < 1440 ? `${min / 60}${t('terremoti.attesa.ore')}` : min < 525600 ? `${min / 1440}${t('terremoti.attesa.giorni')}` : `1${t('terremoti.attesa.anni')}`);
+const intervalloAttesa = c => (c.a === Infinity ? `> ${nomeAttesa(c.da)}` : c.da ? `${nomeAttesa(c.da)} – ${nomeAttesa(c.a)}` : `< ${nomeAttesa(c.a)}`);
+function disegnaAttese(g) {
+  const a = tempiTraEventi(g);
+  if (!a) return el('div');
+  const blocco = el('div', 'terremoti-serie');
+  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.attese.titolo'), 'attese'));
+  const barre = el('div', 'terremoti-barre');
+  for (const c of a.classi) {
+    const colonna = el('div', 'terremoti-barra');
+    colonna.title = `${intervalloAttesa(c)}: ${num(c.n)}`;
+    const asta = el('i', c.da < 1440 && c.n ? 'sciame' : null); // attese sotto un giorno = eventi ravvicinati
+    asta.style.height = `${c.n ? Math.max(c.n / a.max * 100, 3) : 0}%`;
+    colonna.append(asta, el('span', null, c.da ? nomeAttesa(c.da) : `<${nomeAttesa(c.a)}`));
+    barre.append(colonna);
+  }
+  const med = a.mediana < 60 ? `${num(Math.round(a.mediana))} ${t('terremoti.attesa.min')}` : a.mediana < 1440 ? `${num(Math.round(a.mediana / 60))} ${t('terremoti.attesa.ore')}` : `${num(Math.round(a.mediana / 1440))} ${t('terremoti.attesa.giorni')}`;
+  blocco.append(barre, el('p', 'scheda-nota', t('terremoti.attese.nota', { n: num(a.n), mediana: med, cv: a.cv.toLocaleString(localeIntl(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }) })));
+  return blocco;
+}
+
+// Diagramma spazio-tempo: latitudine contro tempo, un cerchio per evento
+function disegnaSpazioTempo(g, apri) {
+  const st = spazioTempo(g);
+  if (!st) return el('div');
+  const blocco = el('div', 'terremoti-serie');
+  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.st.titolo'), 'spaziotempo'));
+  const px = x => MS + x * (L - MS - MD), py = y => A - MB - y * (A - MB - MA);
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} ${A}`, class: 'terremoti-mt terremoti-st', role: 'img', 'aria-label': t('terremoti.st.titolo') });
+  for (const y of [0, 0.5, 1]) {
+    svg.append(nodoSvg('line', { x1: MS, x2: L - MD, y1: py(y), y2: py(y), class: 'asse' }));
+    const e = nodoSvg('text', { x: MS - 4, y: py(y) + 3, 'text-anchor': 'end', class: 'et' });
+    e.textContent = `${(st.latMin + y * (st.latMax - st.latMin)).toLocaleString(localeIntl(), { minimumFractionDigits: 1, maximumFractionDigits: 1 })}°`;
+    svg.append(e);
+  }
+  [g.da, g.a].forEach((ts, i) => {
+    const e = nodoSvg('text', { x: i ? L - MD : MS, y: A - 4, 'text-anchor': i ? 'end' : 'start', class: 'et' });
+    e.textContent = new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
+    svg.append(e);
+  });
+  for (const p of st.punti) {
+    const forte = p === st.mainshock;
+    const gruppo = nodoSvg('g', { class: forte ? 'forte' : 'evento' }, `M ${p.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 })} · ${dataEvento(p.ts)}`);
+    gruppo.append(nodoSvg('circle', { cx: px(p.x), cy: py(p.y), r: Math.max(1.5, (p.mag - 1) * 1.6), class: 'pt' }));
+    if (apri && Number.isFinite(p.lon)) {
+      gruppo.classList.add('apribile');
+      gruppo.setAttribute('tabindex', '0');
+      gruppo.setAttribute('role', 'button');
+      gruppo.addEventListener('click', () => apri(p));
+      gruppo.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); apri(p); } });
+    }
+    svg.append(gruppo);
+  }
+  blocco.append(svg, el('p', 'scheda-nota', t('terremoti.st.nota', { n: num(st.punti.length) })));
+  return blocco;
+}
+
 function disegnaSerie(serie) {
   const blocco = el('div', 'terremoti-serie');
+  blocco.append(titoloConInfo('h4', 'terremoti-titolo', t('terremoti.barre.titolo'), 'barre'));
   const barre = el('div', 'terremoti-barre');
   const ogni = serie.unita === 'giorno' ? 5 : serie.unita === 'mese' ? 3 : 1; // etichette sotto una barra ogni tanto: lo spazio è poco
   serie.barre.forEach((b, i) => {
@@ -214,7 +332,7 @@ export function graficoSerie(area, apri) {
   let eventi = null;
   const disegna = () => {
     const g = eventi && puntiMagnitudo(eventi, unita, filtro.magMin);
-    if (eventi) corpo.replaceChildren(disegnaSerie(serieEventi(eventi, unita, filtro.magMin)), disegnaMagnitudoTempo(g, apri), disegnaCurva(g));
+    if (eventi) corpo.replaceChildren(disegnaSerie(serieEventi(eventi, unita, filtro.magMin)), disegnaMagnitudoTempo(g, apri), disegnaCurva(g), disegnaRilascio(g), disegnaOmori(g), disegnaAttese(g), disegnaSpazioTempo(g, apri));
   };
   const carica = () => {
     corpo.replaceChildren(el('p', 'scheda-nota', t('terremoti.serie.carico')));
