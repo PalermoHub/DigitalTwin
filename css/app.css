@@ -920,6 +920,8 @@ details.scheda-sez > summary { display: flex; align-items: center; gap: 6px; min
   #cerca-ripristina { width: 44px; height: 44px; }
   #barra-strumenti button { width: 44px; height: 44px; }
   .sotto-pannello label, #pannello-filtri label { min-height: 36px; display: flex; align-items: center; gap: 8px; }
+  #pannello-filtri label > span { flex: 0 0 8.5em; } /* etichette della stessa larghezza: le tendine partono dallo stesso punto e hanno la stessa lunghezza */
+  #pannello-filtri label select { flex: 1; min-width: 0; width: auto; }
   .sotto-pannello input[type=checkbox], .sotto-pannello input[type=radio] { width: 20px; height: 20px; }
   #crediti button { min-height: 44px; }
   #crediti .crediti-x { width: 44px; height: 44px; }
@@ -1780,6 +1782,8 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   body.modo-emergenza #barra-tab button:not([data-tab="mappa"], [data-tab="home"], [data-tab="gps"], [data-tab="condividi"], [data-tab="talia"], [data-tab="esci"]),
   body.modo-emergenza #barra-strumenti, body.modo-emergenza #legende-raggio, body.modo-emergenza .invito-clic, body.modo-emergenza #zoom-box,
   body.modo-emergenza #barra-strati, body.modo-emergenza #pannello { display: none; }
+  body.modo-emergenza #pannello:has(#gruppo-filtri:not([hidden])) { display: block; } /* il tasto Filtri della ricerca riapre solo il pannello dei filtri */
+  body.modo-emergenza #pannello-filtri .filtri-ordinari { display: none; } /* in emergenza restano i filtri di zona (territorio): via trasporto, incidenti e catasto */
   body.modo-emergenza #barra-tab { background: var(--emergenza); border-top-color: rgba(0, 0, 0, .3); box-shadow: 0 -2px 8px rgba(0, 0, 0, .3); }
   body.modo-emergenza #barra-tab button svg, body.modo-emergenza #barra-tab button[aria-pressed="true"] svg { background: none; padding-inline: 0; }
   body.modo-emergenza #barra-tab button, body.modo-emergenza #barra-tab button[aria-pressed="true"] { color: #fff; font-weight: 700; border-top-color: transparent; } /* tutti i tab uguali, anche l'attivo */
@@ -1832,6 +1836,8 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   body.modo-emergenza #app-header, body.modo-emergenza #app-footer, body.modo-emergenza #rail-pannelli, body.modo-emergenza #barra-strumenti,
   body.modo-emergenza #legende-raggio, body.modo-emergenza .invito-clic, body.modo-emergenza #zoom-box, body.modo-emergenza #barra-strati, body.modo-emergenza #pannello,
   body.modo-emergenza #barra-tab button:not([data-tab="mappa"], [data-tab="home"], [data-tab="gps"], [data-tab="condividi"], [data-tab="talia"], [data-tab="esci"]) { display: none; }
+  body.modo-emergenza #pannello-filtri .filtri-ordinari { display: none; }
+  body.modo-emergenza #pannello:has(#gruppo-filtri:not([hidden])) { display: block; }
   body.modo-emergenza #barra-tab {
     position: fixed; z-index: calc(var(--z-foglio) + 1); left: 0; right: 0; bottom: 0; height: var(--tab-h); display: flex;
     background: var(--emergenza); border-top: 1px solid rgba(0, 0, 0, .3); box-shadow: 0 -2px 8px rgba(0, 0, 0, .3);

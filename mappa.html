@@ -117,18 +117,18 @@
     <label><span data-i18n="html.filtri.circ">Circoscrizione</span> <select id="f-circ" data-i18n-aria="html.filtri.circ.aria" aria-label="Circoscrizione"></select></label>
     <label><span data-i18n="html.filtri.quart">Quartiere</span> <select id="f-quart" data-i18n-aria="html.filtri.quart.aria" aria-label="Quartiere"></select></label>
     <label><span data-i18n="html.filtri.upl">UPL</span> <select id="f-upl" data-i18n-aria="html.filtri.upl" aria-label="UPL"></select></label>
-    <h2 data-i18n="html.filtri.trasporto">Trasporto pubblico</h2>
-    <label><span data-i18n="html.filtri.linea">Linea</span> <select id="f-linea" data-i18n-aria="html.filtri.linea.aria" aria-label="Linea"></select></label>
-    <h2 data-i18n="html.filtri.incidenti">Incidenti</h2>
-    <label><span data-i18n="html.filtri.anno">Anno</span> <select id="sicurezza-anno" data-i18n-aria="html.filtri.anno.aria" aria-label="Anno degli incidenti"></select></label>
-    <label><span data-i18n="html.filtri.gravita">Gravità</span> <select id="sicurezza-gravita" data-i18n-aria="html.filtri.gravita.aria" aria-label="Gravità degli incidenti"></select></label>
-    <h2 data-i18n="html.filtri.catasto">Catasto</h2>
-    <div id="cerca-particella">
+    <h2 class="filtri-ordinari" data-i18n="html.filtri.trasporto">Trasporto pubblico</h2>
+    <label class="filtri-ordinari"><span data-i18n="html.filtri.linea">Linea</span> <select id="f-linea" data-i18n-aria="html.filtri.linea.aria" aria-label="Linea"></select></label>
+    <h2 class="filtri-ordinari" data-i18n="html.filtri.incidenti">Incidenti</h2>
+    <label class="filtri-ordinari"><span data-i18n="html.filtri.anno">Anno</span> <select id="sicurezza-anno" data-i18n-aria="html.filtri.anno.aria" aria-label="Anno degli incidenti"></select></label>
+    <label class="filtri-ordinari"><span data-i18n="html.filtri.gravita">Gravità</span> <select id="sicurezza-gravita" data-i18n-aria="html.filtri.gravita.aria" aria-label="Gravità degli incidenti"></select></label>
+    <h2 class="filtri-ordinari" data-i18n="html.filtri.catasto">Catasto</h2>
+    <div id="cerca-particella" class="filtri-ordinari">
       <input id="cerca-foglio" type="number" min="1" data-i18n-placeholder="html.filtri.foglio" data-i18n-aria="html.filtri.foglio.aria" placeholder="Foglio" aria-label="Foglio catastale">
       <input id="cerca-numero" type="number" min="1" data-i18n-placeholder="html.filtri.particella" data-i18n-aria="html.filtri.particella.aria" placeholder="Particella" aria-label="Particella catastale">
       <button id="cerca-particella-vai" type="button" data-i18n="html.filtri.cerca">Cerca particella</button>
     </div>
-    <p class="filtri-nota" data-i18n="html.filtri.nota">Nella barra di ricerca puoi cercare anche gli argomenti delle guide.</p>
+    <p class="filtri-nota filtri-ordinari" data-i18n="html.filtri.nota">Nella barra di ricerca puoi cercare anche gli argomenti delle guide.</p>
   </div>
   <form id="cerca" role="search" autocomplete="off">
     <span class="cerca-icona"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span>
