@@ -5,7 +5,7 @@ import { t, tl, localeIntl } from '../core/i18n.js';
 // I dati li serve il Worker (/allerte): una feature per zona, con i livelli di oggi e di domani; il livello è 0 (nessuna allerta), 1 gialla, 2 arancione, 3 rossa.
 
 const FONTE = 'Dipartimento della Protezione Civile, bollettino di criticità nazionale (CC BY 4.0)';
-const LINK = 'https://rischi.protezionecivile.gov.it/it/meteo-idro/';
+export const LINK = 'https://rischi.protezionecivile.gov.it/it/meteo-idro/';
 const PESO_LUOGO = 8;
 
 export const LIVELLI = [

@@ -17,6 +17,14 @@ const SCHEDE = [
   { id: 'catalogo', tono: 'catalogo', chiave: 'home.catalogo.titolo', sotto: 'home.acc.sotto.catalogo', svg: svgIcona('base', 26) },
   { id: 'numeri', tono: 'info', chiave: 'home.acc.informazioni', sotto: 'home.acc.sotto.informazioni', svg: icona('M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z') },
 ];
+const PC = '800840840'; // Protezione civile regionale (stesso numero della scheda del piano di emergenza)
+
+// «Numeri utili»: 112 e Protezione civile a un tocco, nel pannello «Emergenze» subito dopo la scheda del Piano di emergenza
+function creaNumeriUtili() {
+  const tel = (num, testo, aria) => el('a', { className: 'numeri-tel', href: `tel:${num}`, textContent: testo, ariaLabel: aria });
+  const li = el('li', { className: 'numeri-utili' }, el('span', { className: 'numeri-nome', textContent: tr('home.banda.numeri') }), tel('112', '112', tr('home.banda.chiama112')), tel(PC, tr('home.banda.pc'), tr('home.banda.chiamaPc')));
+  return li;
+}
 const CHEVRON = '<svg class="acc-freccia" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
 
 // `riempiEmergenze(ul)` mette nel pannello «Emergenze» ciò che in home è già di emergenza (percorso e scheda dello strato).
@@ -72,7 +80,10 @@ export function avviaHomeMobile({ riempiEmergenze }) {
       const sezione = document.getElementById(id);
       if (mobile) info.append(sezione); else document.getElementById('corpo').append(sezione);
     }
-    riempiEmergenze(document.getElementById('home-emergenze'), mobile);
+    const ul = document.getElementById('home-emergenze');
+    riempiEmergenze(ul, mobile);
+    ul.querySelector('.numeri-utili')?.remove();
+    if (mobile) ul.firstElementChild?.after(creaNumeriUtili());
     document.body.classList.toggle('acc-aperto', mobile && conBarra());
   }
   mq.addEventListener('change', adatta);
@@ -85,5 +96,25 @@ export function avviaHomeMobile({ riempiEmergenze }) {
   };
   daAncora();
   window.addEventListener('hashchange', daAncora);
-  return { apriPerElemento };
+  // con un'allerta attiva a Palermo il pulsante «Emergenze» si accende di rosso e il sottotitolo dice quale (senza allerta resta bianco con bordo rosso)
+  // `bollettino` (nodo con i testi del bollettino) sta in cima al pannello «Emergenze»
+  const segnalaAllerta = (testo, bollettino) => {
+    document.querySelector('#emergenze-pannello .allerta-bollettino')?.remove();
+    if (bollettino) document.getElementById('emergenze-pannello').prepend(bollettino);
+    const b = bottoni.get(document.getElementById('emergenze'));
+    b.classList.toggle('in-allerta', !!testo);
+    b.querySelector('.acc-sotto').textContent = testo || tr('home.acc.sotto.emergenze');
+  };
+  // pastiglia col numero accanto al nome («124 strati», «8 itinerari»): conteggi = { id fascia: n }
+  const CONTA = { catalogo: 'home.acc.conta.catalogo', strati: 'home.acc.conta.percorsi', numeri: 'home.acc.conta.informazioni' };
+  const mostraConteggi = conteggi => {
+    const nf = new Intl.NumberFormat(document.documentElement.lang || undefined);
+    for (const [id, chiave] of Object.entries(CONTA)) {
+      const nome = bottoni.get(document.getElementById(id))?.querySelector('.acc-nome');
+      if (!nome || !conteggi[id]) continue;
+      nome.querySelector('.acc-conta')?.remove();
+      nome.append(el('span', { className: 'acc-conta', textContent: tr(chiave, { n: nf.format(conteggi[id]) }) }));
+    }
+  };
+  return { apriPerElemento, segnalaAllerta, mostraConteggi };
 }

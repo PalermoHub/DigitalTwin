@@ -1,5 +1,5 @@
 // Pagina iniziale (index.html): slider «in evidenza» e card degli strati, ciascuna con il link che apre la mappa con lo strato acceso.
-import { caricaDizionari, applicaDom, lingua, t as tr } from './core/i18n.js';
+import { caricaDizionari, applicaDom, lingua, t as tr, tl } from './core/i18n.js';
 import { avviaTestata } from './core/testata-pagina.js';
 import { codifica, costruisciLink, PARAMETRO } from './core/condivisione-codec.js';
 import { svgIcona } from './core/icone.js';
@@ -7,6 +7,8 @@ import { leggiCesto, salvaCesto, apreSubito } from './core/cesto-home.js';
 import { MEDIA_TELEFONO } from './core/modo-emergenza.js';
 import { precaricaMappaARiposo } from './core/precarica-mappa.js';
 import { avviaHomeMobile } from './core/home-mobile.js';
+import { scegliProxy } from './rndt/proxy.js';
+import { livelloMassimo, nomeLivello, riassuntoGiorno, LINK as LINK_BOLLETTINO } from './layers/scheda-allerte.js';
 
 await caricaDizionari();
 applicaDom(document);
@@ -109,6 +111,7 @@ function costruisciIndice() {
   evidenzia();
 }
 
+const conteggi = {}; // numeri per le pastiglie dei pulsanti su telefono: id fascia → quanti
 let homeMobile = null; // impaginazione a tendine su telefono (core/home-mobile.js)
 let creaCardEmergenza = null; // nuova card dello strato di emergenza, per il pannello «Emergenze» del telefono
 
@@ -121,6 +124,8 @@ function costruisciNumeri(argomenti, tutte) {
     ['fonti', distinti(argomenti.flatMap(a => a.enti ?? [])), 'mappa.html#fonti'],
   ];
   const nf = new Intl.NumberFormat(lingua());
+  conteggi.catalogo = tutte.length;
+  conteggi.numeri = dati[2][1];
   document.getElementById('home-numeri').append(...dati.map(([chiave, n, dest]) => {
     const a = el('a', { href: dest, className: 'numero' },
       el('strong', { textContent: nf.format(n) }), el('span', { textContent: tr(`home.numeri.${chiave}`) }));
@@ -400,6 +405,7 @@ async function costruisciPercorsi() {
     return;
   }
   const nomi = new Map(argomenti.flatMap(a => a.strati.map(s => [s.id, s.etichetta])));
+  conteggi.strati = percorsi.length;
   // il percorso di emergenza sta sempre per primo, a prescindere dall'ordine del file
   const emerg = p => (p.strati.some(id => STRATI_EMERGENZA.has(id)) ? 0 : 1);
   for (const p of [...percorsi].sort((x, y) => emerg(x) - emerg(y))) {
@@ -433,6 +439,23 @@ costruisciSlider();
 await costruisciPercorsi();
 await costruisciElenco();
 homeMobile = avviaHomeMobile({ riempiEmergenze });
+homeMobile.mostraConteggi(conteggi);
+// Riquadro con i testi del bollettino (oggi e domani, zona di Palermo e zone in allerta) e il link al sito della Protezione Civile
+function creaBollettino(zone, p) {
+  const giorno = g => [el('h4', { textContent: tr(`allerte.${g}`) }), ...riassuntoGiorno(zone, g).map(r => el('p', { className: 'allerta-riga', textContent: r.testo }))];
+  return el('div', { className: 'allerta-bollettino' },
+    el('h3', { textContent: tr('home.allerta.titolo') }), ...giorno('oggi'), ...giorno('domani'),
+    ...(p.bollettino ? [el('p', { className: 'allerta-fonte', textContent: p.bollettino })] : []),
+    el('a', { className: 'allerta-link', href: LINK_BOLLETTINO, target: '_blank', rel: 'noopener', textContent: tr('home.allerta.sito') }));
+}
+// allerta meteo-idro della zona di Palermo (oggi o domani): accende il pulsante «Emergenze»; senza rete o senza bollettino resta spento
+fetch(`${scegliProxy(location.search, location.hostname)}/allerte`).then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+  .then(dati => {
+    const zone = dati.features.map(f => f.properties);
+    const p = zone.find(z => z.palermo);
+    const livello = livelloMassimo(p);
+    if (livello > 0) homeMobile.segnalaAllerta(tr('home.allerta.attiva', { livello: tl(nomeLivello(livello)) }), creaBollettino(zone, p));
+  }).catch(() => {});
 document.documentElement.classList.add('home-pronta');
 aggiornaCesto();
 
