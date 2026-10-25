@@ -249,7 +249,7 @@ html.home-attesa:not(.home-pronta) #corpo { visibility: hidden; animation: home-
   .home-mobile .home-intro { order: 0; padding: 14px 16px 0; margin-bottom: 12px; }
   /* presentazione a scheda: la città in 3D sullo sfondo, testo chiaro e pulsante principale sopra */
   .home-mobile .home-intro > .fascia-in { padding: 22px 18px 18px; border-radius: 22px; overflow: hidden; box-shadow: var(--ombra-tooltip);
-    background: linear-gradient(180deg, rgb(15 23 42 / .30) 0%, rgb(15 23 42 / .86) 100%), url("../img/home/edifici.webp") 40% 50% / cover; }
+    background: linear-gradient(180deg, rgb(15 23 42 / .08) 0%, rgb(15 23 42 / .60) 100%), url("../img/home/hero-mobile.webp") 50% 50% / cover; }
   .home-mobile .home-intro p { color: #fff; text-shadow: 0 1px 6px rgb(0 0 0 / .5); margin-bottom: 4px; }
   .home-mobile .home-intro > .fascia-in { min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end; }
   .home-mobile .home-slider, .home-mobile .home-intro .perche-presentazione { display: none; }
