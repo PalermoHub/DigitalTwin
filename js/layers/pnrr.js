@@ -255,7 +255,7 @@ export default {
     });
     // trasparente e sempre presente: la scheda del luogo mostra i progetti anche a strato spento
     map.addLayer({ id: HIT, type: 'circle', source: SRC_HIT, paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
-    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'euro', modello: p => modelloTooltipLuogo(luogoDi(p)), campione: campioneLuogo }]);
+    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'euro', sezione: 'PNRR', colore: p => coloreMissione(elencoLuogo(luogoDi(p))[0]?.missione) ?? '#495057', modello: p => modelloTooltipLuogo(luogoDi(p)), campione: campioneLuogo }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
     let popup = null;

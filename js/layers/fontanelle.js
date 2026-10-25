@@ -36,7 +36,7 @@ function collegaPopup(map) {
     const modello = modelloPopupFontanella(completo(f.properties));
     popup = apriPopupScheda(map, { precedente: popup, sezione: 'Fontanelle', icona: 'fontanella', colore: COLORE, modello, corpo: corpoPopup(modello), punto: e.point, lngLat: e.lngLat });
   });
-  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'fontanella', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, COLORE)]), modello: p => modelloPopupFontanella(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'fontanella', sezione: 'Fontanelle', colore: () => COLORE, campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, COLORE)]), modello: p => modelloPopupFontanella(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }

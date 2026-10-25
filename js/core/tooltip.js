@@ -2,6 +2,8 @@
 // mouse ognuno dice cosa c'è sotto il cursore e il contenuto di tutti finisce in un unico riquadro, una sezione sotto
 // l'altra, così i tooltip non si sovrappongono mai.
 import { svgIcona } from './icone.js';
+import { tl } from './i18n.js';
+import { ancoraPopupTraffico, rifinisciPopupTraffico } from '../layers/popup-traffico.js';
 
 const fornitori = [];
 let collegato = false;
@@ -62,7 +64,7 @@ export function contenutoTooltip(e) {
     sezione.append(s.contenuto);
     corpo.append(sezione);
   }
-  return { corpo, cursore: sezioni.some(s => s.cursore) };
+  return { corpo, cursore: sezioni.some(s => s.cursore), colore: sezioni.find(s => s.colore)?.colore };
 }
 
 function collega(map) {
@@ -75,6 +77,16 @@ function collega(map) {
     if (tip.cursore) { map.getCanvas().style.cursor = 'pointer'; mioCursore = true; }
     else if (mioCursore) { map.getCanvas().style.cursor = ''; mioCursore = false; }
     const { corpo } = tip;
+    if (tip.colore) { // voce con intestazione: come il popup, con la linea di richiamo verticale e orizzontale
+      const { anchor, offset } = ancoraPopupTraffico(e.point, map.getContainer());
+      if (popup?.ancora !== anchor) { popup?.remove(); popup = null; }
+      popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, maxWidth: '300px', className: 'mappa-tooltip traffico-popup-box', anchor, offset });
+      popup.ancora = anchor;
+      popup.setLngLat(e.lngLat).setDOMContent(corpo).addTo(map);
+      rifinisciPopupTraffico(popup, anchor, tip.colore);
+      return;
+    }
+    if (popup?.ancora) { popup.remove(); popup = null; }
     popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'mappa-tooltip', anchor: 'top', offset: 14 });
     popup.setLngLat(e.lngLat).setDOMContent(corpo).addTo(map);
   });
@@ -86,6 +98,19 @@ const MAX_VOCI = 3;
 // Una voce del tooltip: titolo in grassetto (con il pallino colorato se il modello ne ha uno), badge, poi il sottotitolo.
 export function disegnaVoceTooltip(m) {
   const voce = document.createElement('div');
+  if (m.sezione && m.icona && svgIcona(m.icona)) { // intestazione come nel popup: marchio colorato con l'icona e nome della sezione
+    const testa = document.createElement('div');
+    testa.className = 'tooltip-testa';
+    const marchio = document.createElement('span');
+    marchio.className = 'tooltip-marchio';
+    marchio.style.background = m.colore ?? 'var(--text-muted)';
+    marchio.innerHTML = svgIcona(m.icona, 14);
+    const sezione = document.createElement('span');
+    sezione.className = 'tooltip-sezione';
+    sezione.textContent = tl(m.sezione);
+    testa.append(marchio, sezione);
+    voce.append(testa);
+  }
   const titolo = document.createElement('strong');
   if (m.pallino) {
     const pallino = document.createElement('span');
@@ -93,7 +118,7 @@ export function disegnaVoceTooltip(m) {
     pallino.style.background = m.pallino;
     titolo.append(pallino);
   }
-  if (m.icona && svgIcona(m.icona)) { // iconcina davanti al titolo, come nella scheda
+  if (m.icona && !m.sezione && svgIcona(m.icona)) { // iconcina davanti al titolo, come nella scheda
     const i = document.createElement('span');
     i.className = 'tooltip-icona';
     i.innerHTML = svgIcona(m.icona, 14);
@@ -169,12 +194,13 @@ export function registraTooltipStrati(map, gruppi, priorita = 2) {
   registraTooltip(map, e => {
     const riquadro = [[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]];
     const voci = new Map();
-    for (const { layers, modello, icona, campione } of gruppi) {
+    for (const { layers, modello, icona, campione, sezione, colore } of gruppi) {
       const attivi = layers.filter(acceso);
       if (!attivi.length) continue;
       for (const f of map.queryRenderedFeatures(riquadro, { layers: attivi })) {
         const m = modello(f.properties);
         if (m && !m.icona && icona) m.icona = icona;
+        if (m && sezione && !m.sezione) { m.sezione = sezione; m.colore = colore?.(f.properties) ?? m.colore; }
         if (m && !m.campione && campione) m.campione = campione(f.properties, f.layer.id) ?? undefined;
         if (m?.titolo) voci.set(`${m.titolo}\n${m.sottotitolo ?? ''}`, m);
       }
@@ -190,6 +216,6 @@ export function registraTooltipStrati(map, gruppi, priorita = 2) {
       altre.textContent = `+ altri ${mostrate.length - MAX_VOCI}`;
       corpo.append(altre);
     }
-    return { contenuto: corpo };
+    return { contenuto: corpo, colore: mostrate[0].sezione ? mostrate[0].colore : undefined };
   }, priorita);
 }

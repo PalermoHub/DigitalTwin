@@ -258,7 +258,7 @@ export default {
       centraPopupTraffico(map, popup, anchor, f.geometry.coordinates);
     });
     registraTooltipStrati(map, [{
-      layers: [PUNTI], icona: ICONA,
+      layers: [PUNTI], icona: ICONA, sezione: 'Spazio', colore: p => coloreGruppo(p.gruppo),
       campione: p => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, coloreGruppo(p.gruppo))]),
       modello: p => modelloPopupSatellite(dettagli.get(p.id) ?? p, passaggioDi(p.id)),
     }]);

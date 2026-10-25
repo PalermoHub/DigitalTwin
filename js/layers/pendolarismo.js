@@ -91,7 +91,7 @@ export default {
     });
     // trasparente e sempre presente: la scheda del luogo mostra il pendolarismo anche a strato spento
     map.addLayer({ id: HIT, type: 'circle', source: SRC, filter: ['!=', ['get', 'tipo'], 'arco'], paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
-    registraTooltipStrati(map, [{ layers: [NODI, PALERMO], icona: 'treno', modello: modelloTooltipPendolarismo }]);
+    registraTooltipStrati(map, [{ layers: [NODI, PALERMO], icona: 'treno', sezione: 'Pendolarismo', colore: () => '#495057', modello: modelloTooltipPendolarismo }]);
     for (const id of [NODI, PALERMO]) {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
       map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });

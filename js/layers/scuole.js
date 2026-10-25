@@ -61,7 +61,7 @@ function el(tag, classe, testo) {
 
 function collegaPopup(map, s) {
   const { punti, poli } = ids(s.chiave);
-  registraTooltipStrati(map, [{ layers: [punti, poli], icona: 'scuola', campione: p => { const col = s.chiave === 'seggi' ? SEGGI_COLORE : TIPI_SCUOLA.find(([n]) => n === p.tipo)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(iconaDi(s.chiave), col)]) : null; }, modello: p => modelloPopupScuola(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [punti, poli], icona: 'scuola', sezione: 'Scuole e sezioni elettorali', colore: p => (s.chiave === 'seggi' ? SEGGI_COLORE : TIPI_SCUOLA.find(([n]) => n === p.tipo)?.[1]) ?? '#495057', campione: p => { const col = s.chiave === 'seggi' ? SEGGI_COLORE : TIPI_SCUOLA.find(([n]) => n === p.tipo)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(iconaDi(s.chiave), col)]) : null; }, modello: p => modelloPopupScuola(completo(p)) }]);
   let popup = null;
   map.on('click', e => {
     if (map.getLayoutProperty(poli, 'visibility') !== 'visible') return;

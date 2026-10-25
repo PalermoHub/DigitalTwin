@@ -189,11 +189,22 @@ select { width: 100%; margin: 2px 0 6px; }
 #avvisi .avviso-attesa::before { content: ''; flex: none; width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--text-muted); border-radius: 50%; animation: giro-attesa .8s linear infinite; }
 @keyframes giro-attesa { to { transform: rotate(360deg); } }
 
-/* tooltip sulla mappa: uno solo (core/tooltip.js), con una sezione per fonte (trasporto, sicurezza, confini) */
-.mappa-tooltip .maplibregl-popup-content {
-  padding: 6px 10px; font-size: var(--fs-xs); border-radius: var(--r-sm); pointer-events: none;
-  background: var(--tooltip-bg); border: 1px solid var(--tooltip-bordo); box-shadow: var(--ombra-tooltip);
+/* grafica unica per tutti i popup e i tooltip della mappa: scheda a vetro che segue il tema */
+.maplibregl-popup-content {
+  background: color-mix(in srgb, var(--surface) 94%, transparent); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--r-md); box-shadow: 0 8px 28px rgba(0, 0, 0, .28); backdrop-filter: blur(8px);
 }
+.maplibregl-popup-anchor-top .maplibregl-popup-tip, .maplibregl-popup-anchor-top-left .maplibregl-popup-tip, .maplibregl-popup-anchor-top-right .maplibregl-popup-tip { border-bottom-color: var(--surface); }
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip, .maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip, .maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip { border-top-color: var(--surface); }
+.maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: var(--surface); }
+.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: var(--surface); }
+.maplibregl-popup-close-button { color: var(--text-muted); }
+
+/* tooltip sulla mappa: uno solo (core/tooltip.js), con una sezione per fonte (trasporto, sicurezza, confini) */
+.mappa-tooltip .maplibregl-popup-content { padding: 10px 14px 12px; font-size: var(--fs-sm); pointer-events: none; }
+.mappa-tooltip-corpo > .mappa-tooltip-sezione > div > strong:first-child { font-size: var(--fs-base); font-weight: 700; color: var(--text); }
+.mappa-tooltip .tooltip-riga { border-bottom-color: var(--border); font-size: var(--fs-xs); }
+.mappa-tooltip .tooltip-riga > span { font-family: ui-monospace, monospace; }
 .mappa-tooltip .maplibregl-popup-tip { display: none; }
 .mappa-tooltip-sezione + .mappa-tooltip-sezione { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--tooltip-bordo); }
 
@@ -2413,3 +2424,10 @@ a.scheda-tel { min-height: 40px; }
   .home-imp-voci #switch-tema:focus-visible .switch-pista { outline: 2px solid var(--focus); outline-offset: 2px; }
 }
 @media (max-width: 720px), (pointer: coarse) and (max-height: 500px) { #app-header > #home-imp-apri { margin-left: auto; } }
+
+/* tooltip: intestazione come quella del popup (marchio colorato e nome della sezione) */
+.tooltip-testa { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.tooltip-marchio { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 5px; color: #fff; }
+.tooltip-sezione { font: 600 var(--fs-xs) ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); }
+.mappa-tooltip.traffico-popup-box .maplibregl-popup-tip { display: block; }
+.mappa-tooltip.traffico-popup-box .maplibregl-popup-content { padding: 10px 14px 12px; }

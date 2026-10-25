@@ -170,7 +170,7 @@ export default {
       centraPopupTraffico(map, popup, anchor, f.geometry.coordinates);
     });
     registraTooltipStrati(map, [{
-      layers: [PUNTI], icona: ICONA,
+      layers: [PUNTI], icona: ICONA, sezione: 'Marittimo', colore: p => coloreCategoria(completo(p).categoria),
       campione: p => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, coloreCategoria(completo(p).categoria))]),
       modello: p => modelloPopupNave(completo(p)),
     }]);

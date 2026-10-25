@@ -197,7 +197,7 @@ export default {
     });
     map.addLayer({ id: 'omi-hit', type: 'fill', source: 'omi', 'source-layer': 'Zone_OMI_2025_II', paint: vuoto });
     map.addLayer({ id: 'immobili-hit', type: 'fill', source: 'immobili', 'source-layer': 'immobili_comunali_2024', paint: vuoto });
-    registraTooltipStrati(map, [{ layers: ['immobili'], icona: 'monumento', campione: () => campioneTooltip('legenda-immobili', ['', { background: '#6a3d9a', opacity: '0.5' }]), modello: p => ({ titolo: tl('Immobile comunale'), sottotitolo: p.INDIRIZZO || p.TIPO || '' }) }]);
+    registraTooltipStrati(map, [{ layers: ['immobili'], icona: 'monumento', sezione: 'Immobili comunali', colore: () => '#6a3d9a', campione: () => campioneTooltip('legenda-immobili', ['', { background: '#6a3d9a', opacity: '0.5' }]), modello: p => ({ titolo: tl('Immobile comunale'), sottotitolo: p.INDIRIZZO || p.TIPO || '' }) }]);
     // numeri civici: testo come nell'app originale (font forniti dallo stile della base)
     map.addLayer({
       id: 'civici', type: 'symbol', source: 'civici', 'source-layer': 'civici_wgs84', minzoom: 14,

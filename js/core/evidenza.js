@@ -146,6 +146,17 @@ function tooltipSelezione(map, punto) {
   if (!viste.size) return null;
   const contenuto = document.createElement('div');
   contenuto.className = 'legenda';
+  const testa = document.createElement('div'); // intestazione come nel popup: marchio colorato e nome della sezione
+  testa.className = 'tooltip-testa';
+  const marchio = document.createElement('span');
+  marchio.className = 'tooltip-marchio';
+  marchio.style.background = [...viste.values()][0].colore;
+  marchio.innerHTML = svgIcona('mappa', 14);
+  const sezione = document.createElement('span');
+  sezione.className = 'tooltip-sezione';
+  sezione.textContent = t('evidenza.titolo');
+  testa.append(marchio, sezione);
+  contenuto.append(testa);
   for (const { etichetta, colore, icona, attributo } of viste.values()) {
     const riga = document.createElement('div');
     const simbolo = icona ? simboloGlifo(icona, colore) : document.createElement('i');
@@ -166,7 +177,7 @@ function tooltipSelezione(map, punto) {
     riga.append(simbolo, testo);
     contenuto.append(riga);
   }
-  return { contenuto };
+  return { contenuto, colore: [...viste.values()][0].colore };
 }
 
 function assicuraStrati(map) {

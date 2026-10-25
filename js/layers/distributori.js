@@ -124,7 +124,7 @@ export default {
       popup = apriPopupScheda(map, { precedente: popup, sezione: 'Distributori di carburante', icona: ICONA, colore: MARCHI.find(([m]) => m === p.marchio)?.[1] ?? ALTRO, modello: modelloPopupDistributore(p), punto: e.point, lngLat: f.geometry.coordinates });
     });
     registraTooltipStrati(map, [{
-      layers: [PUNTI], icona: 'distributori',
+      layers: [PUNTI], icona: 'distributori', sezione: 'Distributori di carburante', colore: p => MARCHI.find(([m]) => m === completo(p).marchio)?.[1] ?? ALTRO,
       campione: p => { const col = MARCHI.find(([m]) => m === completo(p).marchio)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(ICONA, col)]) : null; },
       modello: p => modelloPopupDistributore(completo(p)),
     }]);

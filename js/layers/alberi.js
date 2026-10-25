@@ -36,7 +36,7 @@ function collegaPopup(map) {
     const modello = modelloPopupAlbero(completo(f.properties));
     popup = apriPopupScheda(map, { precedente: popup, sezione: 'Alberi monumentali', icona: 'albero', colore: COLORE, modello, corpo: corpoPopup(modello), punto: e.point, lngLat: e.lngLat });
   });
-  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'albero', campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, COLORE)]), modello: p => modelloPopupAlbero(completo(p)) }]);
+  registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'albero', sezione: 'Alberi monumentali', colore: () => COLORE, campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, COLORE)]), modello: p => modelloPopupAlbero(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }

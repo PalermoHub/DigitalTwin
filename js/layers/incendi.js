@@ -108,7 +108,7 @@ export default {
       if (!lista.length) { popup?.remove(); return; }
       popup = apriPopup(map, lista, e, popup);
     });
-    registraTooltipStrati(map, [{ layers: [FILL], icona: 'incendio', campione: p => campioneTooltip('legenda-incendi', simbolo({ colore: p.colore, bordo: p.bordo, opacita: p.opacita })), modello: modelloPopup }]);
+    registraTooltipStrati(map, [{ layers: [FILL], icona: 'incendio', sezione: 'Incendi', colore: p => p.colore, campione: p => campioneTooltip('legenda-incendi', simbolo({ colore: p.colore, bordo: p.bordo, opacita: p.opacita })), modello: modelloPopup }]);
     map.on('mouseenter', FILL, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', FILL, () => { map.getCanvas().style.cursor = ''; });
   },

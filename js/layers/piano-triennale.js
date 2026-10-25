@@ -141,7 +141,7 @@ export default {
     map.addLayer({ id: HIT_LINEE, type: 'line', source: SRC, filter: filtro('linea'), paint: { 'line-color': '#000', 'line-opacity': 0, 'line-width': 14 } });
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: filtro('punto'), paint: { 'circle-radius': 10, 'circle-opacity': 0 } });
     registraTooltipStrati(map, [{
-      layers: [PUNTI, LINEE, POLI], icona: 'piano', modello: modelloTooltip,
+      layers: [PUNTI, LINEE, POLI], icona: 'piano', sezione: 'Piano triennale LL.PP.', colore: p => coloreSettore(p.settore), modello: modelloTooltip,
       campione: p => campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: coloreSettore(p.settore) }]),
     }]);
     let popup = null;

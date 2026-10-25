@@ -151,7 +151,7 @@ export default {
       const colore = aree.find(x => x.area === m.aree[0]?.area)?.colore ?? '#495057';
       popup = apriPopupScheda(map, { precedente: popup, sezione: 'Uffici comunali', icona: 'uffici', colore, modello: { titolo: m.titolo, sottotitolo: m.sottotitolo }, corpo: corpoPopup(m), punto: e.point, lngLat: f.geometry.coordinates });
     });
-    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'uffici', campione: p => { const a = modelloPopupSede(completo(p)).aree; const col = a.length === 1 ? aree.find(x => x.area === a[0].area)?.colore : null; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: col }]) : null; }, modello: p => modelloPopupSede(completo(p)) }]);
+    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'uffici', sezione: 'Uffici comunali', colore: p => aree.find(x => x.area === modelloPopupSede(completo(p)).aree[0]?.area)?.colore ?? '#495057', campione: p => { const a = modelloPopupSede(completo(p)).aree; const col = a.length === 1 ? aree.find(x => x.area === a[0].area)?.colore : null; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', { background: col }]) : null; }, modello: p => modelloPopupSede(completo(p)) }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
   },

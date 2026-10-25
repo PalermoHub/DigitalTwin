@@ -146,7 +146,7 @@ export default {
     // trasparente e sempre presente: la scheda del luogo mostra il trend anche a strato spento
     // copre tutti i livelli: un clic restituisce UPL, quartiere e circoscrizione del punto
     map.addLayer({ id: HIT, type: 'fill', source: SRC, filter: ['==', ['get', 'tipo'], 'area'], paint: { 'fill-opacity': 0 } });
-    registraTooltipStrati(map, [{ layers: [FILL], icona: 'popolazione', modello: p => ({ ...modelloTooltipTrend(p), dom: graficoConValori(p) }) }]);
+    registraTooltipStrati(map, [{ layers: [FILL], icona: 'popolazione', sezione: 'Trend della popolazione 2011-2023', colore: () => '#495057', modello: p => ({ ...modelloTooltipTrend(p), dom: graficoConValori(p) }) }]);
   },
   legendaPannello: '.lg-trend-popolazione', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: [{

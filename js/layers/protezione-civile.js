@@ -145,7 +145,7 @@ export default {
       if (!lista.length) { popup?.remove(); return; }
       popup = apriPopup(map, lista, e, popup);
     });
-    registraTooltipStrati(map, [{ layers: [FILL], icona: 'protezione-civile', campione: p => campioneTooltip('legenda-pc', simbolo(classe(p.classe) ?? { colore: '#868e96' })), modello: modelloPopup }]);
+    registraTooltipStrati(map, [{ layers: [FILL], icona: 'protezione-civile', sezione: 'Piano di emergenza', colore: () => COLORE_POPUP, campione: p => campioneTooltip('legenda-pc', simbolo(classe(p.classe) ?? { colore: '#868e96' })), modello: modelloPopup }]);
     map.on('mouseenter', FILL, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', FILL, () => { map.getCanvas().style.cursor = ''; });
   },

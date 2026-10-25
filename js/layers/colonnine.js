@@ -164,7 +164,7 @@ export default {
       const p = completo(f.properties);
       popup = apriPopupScheda(map, { precedente: popup, sezione: 'Colonnine di ricarica', icona: 'colonnine', colore: STATI.find(([s]) => s === p.stato)?.[1] ?? ALTRO, modello: modelloPopupColonnina(p), punto: e.point, lngLat: f.geometry.coordinates });
     });
-    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'colonnine', campione: p => { const col = STATI.find(([s]) => s === completo(p).stato)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(ICONA, col)]) : null; }, modello: p => modelloPopupColonnina(completo(p)) }]);
+    registraTooltipStrati(map, [{ layers: [PUNTI], icona: 'colonnine', sezione: 'Colonnine di ricarica', colore: p => STATI.find(([s]) => s === completo(p).stato)?.[1] ?? ALTRO, campione: p => { const col = STATI.find(([s]) => s === completo(p).stato)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(ICONA, col)]) : null; }, modello: p => modelloPopupColonnina(completo(p)) }]);
     map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
   },

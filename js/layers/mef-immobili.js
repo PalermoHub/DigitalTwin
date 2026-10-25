@@ -115,7 +115,7 @@ export default {
     // trasparenti e sempre presenti: la scheda del luogo mostra i beni anche a strato spento
     map.addLayer({ id: HIT, type: 'fill', source: SRC, filter: POLIGONO, paint: { 'fill-opacity': 0 } });
     map.addLayer({ id: HIT_PUNTI, type: 'circle', source: SRC, filter: PUNTO, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
-    registraTooltipStrati(map, [{ layers: [FILL, FILL_TERRENO, PUNTI], icona: 'monumento', modello: modelloTooltipMef,
+    registraTooltipStrati(map, [{ layers: [FILL, FILL_TERRENO, PUNTI], icona: 'monumento', sezione: 'Immobili dichiarati al MEF', colore: () => COLORE_UNO, modello: modelloTooltipMef,
       campione: (p, id) => {
         const col = id === FILL ? (p.n_beni > 1 ? COLORE_PIU : COLORE_UNO) : id === FILL_TERRENO ? COLORE_TERRENO : COLORE_PUNTO;
         return campioneTooltip('legenda-mef', id === PUNTI ? ['monumenti-pallino', stileGlifo(ICONA, col)] : ['mef-campione', { background: col }]);

@@ -231,7 +231,7 @@ export default {
       if (!lista.length) { popup?.remove(); return; }
       popup = apriPopup(map, lista, e, popup);
     });
-    registraTooltipStrati(map, TEMI.map(tema => ({ layers: layerDelTema(tema).slice(0, 1), icona: 'pai', modello: p => modelloPopup(tema.ds, tema.t, p), campione: p => { const c = tema.t.classi.find(k => k.label === p[`cls_${tema.t.id}`]); return c ? campioneTooltip('legenda-pai', campione(tema.ds, c)) : null; } })));
+    registraTooltipStrati(map, TEMI.map(tema => ({ layers: layerDelTema(tema).slice(0, 1), icona: 'pai', sezione: 'Vincoli PAI', colore: p => tema.t.classi.find(k => k.label === p[`cls_${tema.t.id}`])?.colore ?? '#2b8a3e', modello: p => modelloPopup(tema.ds, tema.t, p), campione: p => { const c = tema.t.classi.find(k => k.label === p[`cls_${tema.t.id}`]); return c ? campioneTooltip('legenda-pai', campione(tema.ds, c)) : null; } })));
     const tuttiLayer = TEMI.flatMap(layerDelTema);
     for (const id of tuttiLayer) {
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });

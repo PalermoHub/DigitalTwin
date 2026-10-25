@@ -192,7 +192,7 @@ export default {
       centraPopupTraffico(map, popup, anchor, f.geometry.coordinates);
     });
     registraTooltipStrati(map, [{
-      layers: [PUNTI], icona: ICONA,
+      layers: [PUNTI], icona: ICONA, sezione: 'Aviazione', colore: p => coloreStato(completo(p).stato),
       campione: p => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(ICONA, coloreStato(completo(p).stato))]),
       modello: p => modelloPopupVolo(completo(p)),
     }]);

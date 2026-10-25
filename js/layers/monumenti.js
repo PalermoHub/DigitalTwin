@@ -111,7 +111,7 @@ function corpoPopup(m) {
 
 function collegaPopup(map) {
   let popup = null;
-  registraTooltipStrati(map, [{ layers: [POLI, PUNTI], icona: 'monumento', campione: p => { const col = MONUMENTI_CATEGORIE.find(([n]) => n === completo(p).categoria)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(iconaCategoria(completo(p).categoria), col)]) : null; }, modello: p => ({ titolo: completo(p).nome, sottotitolo: completo(p).categoria }) }]);
+  registraTooltipStrati(map, [{ layers: [POLI, PUNTI], icona: 'monumento', sezione: 'Monumenti', colore: p => MONUMENTI_CATEGORIE.find(([n]) => n === completo(p).categoria)?.[1] ?? '#555', campione: p => { const col = MONUMENTI_CATEGORIE.find(([n]) => n === completo(p).categoria)?.[1]; return col ? campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileGlifo(iconaCategoria(completo(p).categoria), col)]) : null; }, modello: p => ({ titolo: completo(p).nome, sottotitolo: completo(p).categoria }) }]);
   map.on('click', e => {
     if (map.getLayoutProperty(POLI, 'visibility') !== 'visible') return;
     const f = map.queryRenderedFeatures(e.point, { layers: LAYERS.filter(id => map.getLayer(id)) })[0];
