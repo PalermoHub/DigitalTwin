@@ -433,6 +433,7 @@ costruisciSlider();
 await costruisciPercorsi();
 await costruisciElenco();
 homeMobile = avviaHomeMobile({ riempiEmergenze });
+document.documentElement.classList.add('home-pronta');
 aggiornaCesto();
 
 // tornando indietro dalla mappa (pagina dalla cache del browser) il cesto va riletto: la mappa può averlo cambiato

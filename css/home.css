@@ -226,6 +226,9 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 .pagina-home #menu-info a[data-scheda="emergenza"][aria-current="page"] { background: var(--emergenza, #d7263d); color: #fff; }
 
 /* ---- telefono: home a pulsanti grandi (solo impaginazione; js/core/home-mobile.js) ---- */
+/* su telefono il corpo resta nascosto finché home-mobile.js non l'ha impaginato (niente lampo della vecchia home); se il JS tarda o fallisce, torna visibile da solo dopo 4 s */
+html.home-attesa:not(.home-pronta) #corpo { visibility: hidden; animation: home-rivela 0s 4s forwards; }
+@keyframes home-rivela { to { visibility: visible; } }
 .home-emergenze { display: none; }
 /* telefono in piedi o ruotato (stessa condizione di MEDIA_TELEFONO in core/modo-emergenza.js) */
 @media (max-width: 720px), (pointer: coarse) and (max-height: 500px) {
