@@ -4,6 +4,7 @@ import { creaInterruttoreLingua, t as tr } from './i18n.js';
 import { svgIcona } from './icone.js';
 import { creaMenuSito, duplicaPrincipale } from './menu-sito.js';
 import { collegaMenuCondivisione } from './condivisione-menu.js';
+import { avviaImpostazioni } from './impostazioni-mobile.js';
 
 const el = (tag, props = {}, ...figli) => { const e = Object.assign(document.createElement(tag), props); e.append(...figli); return e; };
 
@@ -78,6 +79,8 @@ export async function avviaTestata() {
     if (document.body.classList.contains('info-aperto') && !e.target.closest('#menu-info, #barra-tab')) { chiudiMenu(); sincronizzaTabMenu(); }
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') sincronizzaTabMenu(); });
+
+  avviaImpostazioni(); // telefono: tema, lingua e condividi dietro l'ingranaggio
 
   // pulsante «torna in cima»: compare dopo 400 px di scorrimento (index.html, about.html)
   const cima = document.getElementById('home-cima');

@@ -224,3 +224,98 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 @media (max-width: 760px) { .pagina-info .emergenza-passo { grid-template-columns: 1fr; gap: 0; } .pagina-info .guida-figura--telefono { margin-top: 12px; } }
 /* la voce «Modalità emergenza» resta rossa anche quando è la pagina corrente (batte la regola di aria-current) */
 .pagina-home #menu-info a[data-scheda="emergenza"][aria-current="page"] { background: var(--emergenza, #d7263d); color: #fff; }
+
+/* ---- telefono: home a pulsanti grandi (solo impaginazione; js/core/home-mobile.js) ---- */
+.home-emergenze { display: none; }
+/* telefono in piedi o ruotato (stessa condizione di MEDIA_TELEFONO in core/modo-emergenza.js) */
+@media (max-width: 720px), (pointer: coarse) and (max-height: 500px) {
+  /* testata: logo al centro, ingranaggio a destra; tema, lingua e condividi stanno nel pannello */
+  .pagina-home #app-header { background: var(--home-sfondo, var(--surface)); justify-content: center; min-height: 96px; align-items: flex-end; padding-bottom: 10px; border-bottom: 0; }
+  .pagina-home #app-logo { margin: 0 auto; }
+  .pagina-home #app-logo img { height: 56px; }
+  .pagina-home #home-imp-apri { position: absolute; right: 8px; top: 8px; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--text-muted); cursor: pointer; }
+  .pagina-home #home-imp-apri[hidden] { display: none; }
+  .pagina-home #home-imp-apri:hover { background: var(--surface-hover); color: var(--text); }
+
+  /* corpo: testo di apertura, poi i quattro pulsanti; niente slider, niente piede */
+  /* la pagina riempie lo schermo: i pulsanti si allargano nello spazio libero (fino a un tetto), poi tutto resta compatto */
+  .home-mobile .home { display: flex; flex-direction: column; min-height: calc(100dvh - var(--home-header, 76px)); padding-bottom: 20px; }
+  body.pagina-home.home-mobile { --home-sfondo: color-mix(in srgb, var(--text) 5%, var(--surface)); background: var(--home-sfondo); }
+  .home-mobile .home-intro { order: 0; padding: 14px 16px 0; margin-bottom: 12px; }
+  /* presentazione a scheda: la città in 3D sullo sfondo, testo chiaro e pulsante principale sopra */
+  .home-mobile .home-intro > .fascia-in { padding: 22px 18px 18px; border-radius: 22px; overflow: hidden; box-shadow: var(--ombra-tooltip);
+    background: linear-gradient(180deg, rgb(15 23 42 / .30) 0%, rgb(15 23 42 / .86) 100%), url("../img/home/edifici.webp") 40% 50% / cover; }
+  .home-mobile .home-intro p { color: #fff; text-shadow: 0 1px 6px rgb(0 0 0 / .5); margin-bottom: 4px; }
+  .home-mobile .home-intro > .fascia-in { min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .home-mobile .home-slider, .home-mobile .home-intro .perche-presentazione { display: none; }
+  /* «Apri la mappa»: il pulsante principale della pagina, a tutta larghezza */
+  .home-mobile .home-intro .azioni { display: block; margin-top: 16px; }
+  .home-mobile .home-intro a.perche-bottone { display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 14px; background: var(--accent); color: var(--accent-ink); font-size: 1.0625rem; font-weight: 700; box-shadow: var(--ombra-tooltip); }
+  /* il logo in testata dice già il nome: il titolo resta solo per i lettori di schermo */
+  .home-mobile .home-intro h1 { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .home-mobile .home-intro p { font-size: clamp(.9375rem, 4vw, 1.0625rem); }
+  .home-mobile #emergenze { order: 1; } .home-mobile #strati { order: 2; } .home-mobile #catalogo { order: 3; } .home-mobile #numeri { order: 4; }
+  /* il testo «Perché una nuova mappa…» sta dentro «Informazioni» */
+  .home-mobile #numeri .home-perche { padding: 28px 0 0; background: none; }
+  .home-mobile #numeri .home-perche--dt { padding-bottom: 8px; }
+  .home-mobile #numeri .home-numeri-elenco + .home-perche { border-top: 1px solid var(--border-ui); margin-top: 24px; }
+  .pagina-home.home-mobile #app-footer { display: none; }
+  body.info-aperto.home-mobile #menu-info { bottom: calc(var(--tab-h) + 8px); }
+  .pagina-home.home-mobile #menu-info a[aria-current="page"] { background: var(--surface); border-right-color: transparent; }
+  /* la barra a tab in basso compare solo con un pulsante aperto */
+  .home-mobile:not(.acc-aperto) #barra-tab { display: none; }
+  body.pagina-home.home-mobile:not(.acc-aperto) { padding-bottom: 0; }
+  .home-mobile:not(.acc-aperto) .in-cima { bottom: 12px; }
+  .home-mobile .home-cesto { display: none; bottom: calc(var(--tab-h) + 12px); }
+  .home-mobile.acc-aperto .home-cesto:not([hidden]) { display: flex; }
+  .home-mobile .in-cima { bottom: calc(var(--tab-h) + 12px); }
+  .home-mobile .home-cesto p { white-space: nowrap; }
+  .home-mobile .home-cesto { left: 12px; translate: 0; }
+
+  .home-mobile .fascia.acc { padding: 0 16px; margin: 0 0 12px; background: none; border: 0; scroll-margin-top: calc(var(--home-header, 64px) + 8px); }
+  .home-mobile .fascia.acc:first-of-type { margin-top: 0; }
+  .home-mobile .fascia.acc { display: flex; flex-direction: column; }
+  .home-mobile .fascia.acc:not(.aperta) { flex: 1 1 84px; max-height: 150px; }
+  .home-mobile .fascia.acc > .acc-toggle { flex: 1 1 auto; }
+  .home-mobile #emergenze { display: flex; }
+  .home-mobile .fascia.acc > .fascia-in { display: none; padding: 14px 0 6px; }
+  .home-mobile .fascia.acc.aperta > .fascia-in { display: block; }
+  .home-mobile #titolo-emergenze, .home-mobile #titolo-strati, .home-mobile #titolo-catalogo, .home-mobile #titolo-numeri, .home-mobile .home-percorsi-fascia > h3 { display: none; }
+  .home-mobile #home-emergenze { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+  .home-mobile #home-emergenze .strato-card { max-width: 420px; }
+
+  .acc-toggle { --tono: var(--accent); display: flex; align-items: center; gap: 14px; width: 100%; box-sizing: border-box; min-height: 76px; padding: 12px 16px; border: 0; border-radius: 20px; background: var(--surface); color: var(--text); font: inherit; font-size: 1.125rem; font-weight: 700; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgb(0 0 0 / .06), 0 6px 18px rgb(0 0 0 / .07); position: relative; overflow: hidden; }
+  .acc-icona { flex: none; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: color-mix(in srgb, var(--tono) 14%, var(--surface)); color: var(--tono); }
+  .acc-icona svg { width: 30px; height: 30px; }
+  .acc-testo { flex: 1; min-width: 0; display: grid; gap: 2px; }
+  .acc-sotto { font-size: .8125rem; font-weight: 400; line-height: 1.3; opacity: .78; }
+  .acc-freccia { flex: none; color: var(--text-muted); transition: transform .2s; }
+  .acc-toggle[aria-expanded="true"] .acc-freccia { transform: rotate(90deg); }
+  .acc-percorsi { --tono: #1f6fd1; } .acc-catalogo { --tono: #178a5b; } .acc-info { --tono: #7a5bd0; }
+  /* «Emergenze» sempre dello stesso rosso, anche col tema scuro */
+  .acc-emergenza { --tono: var(--emergenza); background: var(--emergenza); color: #fff; }
+  .acc-emergenza .acc-icona { background: #fff; color: var(--emergenza); }
+  .acc-emergenza .acc-freccia { color: #fff; }
+  .acc-toggle:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+}
+/* schermi bassi (telefoni piccoli): meno aria, niente sottotitoli */
+@media (max-width: 720px) and (max-height: 640px) {
+  .home-mobile .home-intro { padding-top: 12px; margin-bottom: 8px; }
+  .home-mobile .home-intro > .fascia-in { min-height: 0; padding: 14px; }
+  .home-mobile .home-intro p { display: none; }
+  .acc-toggle { min-height: 64px; }
+  .acc-icona { width: 44px; height: 44px; border-radius: 13px; } .acc-icona svg { width: 24px; height: 24px; }
+}
+@media (max-width: 720px) and (max-height: 560px) { .acc-sotto { display: none; } }
+@media (max-width: 720px) { .pagina-home #menu-info-toggle { display: none; } } /* in piedi il menù è il tab «Menu» */
+@media (prefers-reduced-motion: reduce) { .acc-freccia { transition: none; } }
+/* ruotato (oltre 720 px): niente barra a tab, resta l'hamburger a sinistra; tema e comandi come nel pannello in piedi */
+@media (min-width: 721px) and (pointer: coarse) and (max-height: 500px) {
+  .pagina-home #app-header { min-height: 60px; }
+  .pagina-home #app-logo img { height: 40px; }
+  .pagina-home.home-mobile #menu-info-toggle { position: absolute; left: 8px; top: 50%; translate: 0 -50%; }
+  .home-mobile .home-cesto, .home-mobile .in-cima { bottom: 12px; }
+  .home-mobile.acc-aperto .home-cesto:not([hidden]) { display: flex; }
+  .home-impostazioni:not([hidden]) { padding-top: calc(var(--home-header, 60px) + 8px); }
+  .home-imp-scheda { max-height: calc(100dvh - var(--home-header, 60px) - 24px); overflow-y: auto; }
+}

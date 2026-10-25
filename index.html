@@ -42,7 +42,18 @@
 <button id="switch-tema" type="button" role="switch" aria-checked="false" data-i18n-aria="html.tema" data-i18n-title="html.tema" aria-label="Tema scuro" title="Tema scuro"><span class="switch-pista"><svg class="switch-sole" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4z"/></svg><svg class="switch-luna" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg><span class="switch-manopola"></span></span></button>
 <button id="menu-info-toggle" type="button" aria-expanded="false" aria-controls="menu-info" data-i18n-aria="html.menu.apri" aria-label="Menu informazioni"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button>
 <nav id="menu-info" data-i18n-aria="html.menu.info" aria-label="Informazioni"></nav>
+<button id="home-imp-apri" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="home-impostazioni" data-i18n-aria="home.imp.apri" data-i18n-title="home.imp.apri" aria-label="Impostazioni" title="Impostazioni" hidden></button>
 </header>
+<div id="home-impostazioni" class="home-impostazioni" hidden>
+  <div class="home-imp-scheda" role="dialog" aria-modal="true" aria-labelledby="home-imp-titolo">
+    <div class="home-imp-testa"><h2 id="home-imp-titolo" data-i18n="home.imp.titolo">Impostazioni</h2><button id="home-imp-chiudi" type="button" data-i18n-aria="comune.chiudi" data-i18n-title="comune.chiudi" aria-label="Chiudi" title="Chiudi"></button></div>
+    <ul class="home-imp-voci">
+      <li data-imp="switch-tema"><span data-i18n="html.tema">Tema scuro</span></li>
+      <li data-imp="switch-lingua"><span data-i18n="home.imp.lingua">Lingua</span></li>
+      <li data-imp="btn-condividi"><span data-i18n="html.btn.condividiPagina">Condividi questa pagina</span></li>
+    </ul>
+  </div>
+</div>
 <main id="corpo" class="home">
 <nav id="home-indice" class="home-indice" data-i18n-aria="home.indice.aria" aria-label="Sezioni della pagina"></nav>
 <section class="fascia  home-intro" id="in-evidenza">
@@ -60,6 +71,13 @@
   <button type="button" class="slide-freccia slide-succ" id="slide-succ" data-i18n-aria="home.slider.succ" aria-label="Diapositiva successiva">›</button>
   <div class="slide-punti" id="slide-punti" role="group" data-i18n-aria="home.slider.punti" aria-label="Scegli la diapositiva"></div>
 </section>
+</div>
+</section>
+
+<section class="fascia home-emergenze" id="emergenze" aria-labelledby="titolo-emergenze">
+<div class="fascia-in">
+  <h2 id="titolo-emergenze" data-i18n="home.acc.emergenze">Emergenze</h2>
+  <ul class="home-percorsi" id="home-emergenze"></ul>
 </div>
 </section>
 

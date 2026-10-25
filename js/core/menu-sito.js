@@ -2,6 +2,7 @@
 // La mappa (mappa.html) ha le stesse voci come pulsanti, pilotati da js/app.js.
 import { applicaDom, t, lingua } from './i18n.js';
 import { precaricaMappaARiposo } from './precarica-mappa.js';
+import { svgIcona } from './icone.js';
 
 // Nessun testo italiano qui: etichette e suggerimenti vengono dai dizionari (chiave e chiave + «.tip»).
 const voce = (href, chiave, extra = '') =>
@@ -27,6 +28,15 @@ export const menuHtml = () => `
   ${scheda('fonti.html', 'fonti')}${tendina('menu-altro', 'html.menu.gruppo.altro',
     scheda('about.html', 'about'), [voce('presentazione.html', 'html.menu.presentazione', 'id="link-presentazione" '), scheda('privacy.html', 'privacy')])}`;
 
+// Icona di ogni voce (la vede solo il menù del telefono): per data-scheda, o per id dove la voce non ne ha.
+const ICONE = { home: 'casa', mappa: 'mappa', digitaltwin: 'base', guida: 'info', plugin: 'esterno', geoimage: 'tavolozza', emergenza: 'allerta', fonti: 'copia', about: 'fumetto', presentazione: 'monumento', privacy: 'vincolo' };
+function aggiungiIcone(menu) {
+  for (const a of menu.querySelectorAll('a')) {
+    const nome = ICONE[a.dataset.scheda ?? (a.id === 'link-home' ? 'home' : a.id.replace('link-', ''))];
+    if (nome) a.insertAdjacentHTML('afterbegin', `<span class="menu-icona" aria-hidden="true">${svgIcona(nome, 20)}</span>`);
+  }
+}
+
 // pagina corrente dall'URL: «/DigitalTwin/guida.html» → «guida.html»; la radice del sito è la home
 export const paginaCorrente = (percorso = location.pathname) => percorso.split('/').pop() || 'index.html';
 
@@ -34,6 +44,7 @@ export const paginaCorrente = (percorso = location.pathname) => percorso.split('
 export function creaMenuSito(menu = document.getElementById('menu-info'), pagina = paginaCorrente()) {
   menu.innerHTML = menuHtml();
   applicaDom(menu);
+  aggiungiIcone(menu);
   menu.querySelector(`a[href="${pagina}"]`)?.setAttribute('aria-current', 'page');
   if (pagina !== 'index.html' && typeof window !== 'undefined') precaricaMappaARiposo(window, lingua()); // la home lo fa da sé
   return menu;

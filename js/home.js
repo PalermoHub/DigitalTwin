@@ -6,6 +6,7 @@ import { svgIcona } from './core/icone.js';
 import { leggiCesto, salvaCesto, apreSubito } from './core/cesto-home.js';
 import { MEDIA_TELEFONO } from './core/modo-emergenza.js';
 import { precaricaMappaARiposo } from './core/precarica-mappa.js';
+import { avviaHomeMobile } from './core/home-mobile.js';
 
 await caricaDizionari();
 applicaDom(document);
@@ -108,6 +109,9 @@ function costruisciIndice() {
   evidenzia();
 }
 
+let homeMobile = null; // impaginazione a tendine su telefono (core/home-mobile.js)
+let creaCardEmergenza = null; // nuova card dello strato di emergenza, per il pannello «Emergenze» del telefono
+
 // ---- numeri: conteggi ricavati dall'elenco stesso, ogni tessera porta alla sezione giusta ----
 function costruisciNumeri(argomenti, tutte) {
   const distinti = valori => new Set(valori.filter(Boolean)).size;
@@ -123,7 +127,9 @@ function costruisciNumeri(argomenti, tutte) {
     // le tessere che puntano a un'altra pagina (il tab «Fonti e note» della mappa) seguono il link
     if (dest.startsWith('#')) a.addEventListener('click', e => {
       e.preventDefault();
-      document.querySelector(dest).scrollIntoView({ behavior: riduci ? 'auto' : 'smooth' });
+      const bersaglio = document.querySelector(dest);
+      homeMobile?.apriPerElemento(bersaglio); // su telefono la tendina del catalogo è chiusa: va aperta prima di scorrere
+      bersaglio.scrollIntoView({ behavior: riduci ? 'auto' : 'smooth' });
     });
     return el('li', {}, a);
   }));
@@ -255,6 +261,8 @@ async function costruisciElenco() {
     return li;
   });
   costruisciNumeri(argomenti, tutte);
+  const emergenza = tutte.find(({ s }) => STRATI_EMERGENZA.has(s.id));
+  if (emergenza) creaCardEmergenza = () => costruisciCard(emergenza.s, emergenza.a);
   const ul = el('ul', { className: 'home-card-elenco' }, ...card);
   elenco.append(ul);
 
@@ -398,7 +406,7 @@ async function costruisciPercorsi() {
     const testi = p[lingua()] ?? p.it;
     const apri = el('a', { className: 'percorso-apri', href: MAPPA, textContent: tr('home.percorsi.apri') });
     linkMappa(p.strati, true, p.vista).then(href => { apri.href = href; });
-    box.append(el('li', { className: 'percorso' },
+    box.append(el('li', { className: 'percorso', ...(p.strati.some(id => STRATI_EMERGENZA.has(id)) && { id: 'percorso-emergenza' }) },
       ...(testi.badge ? [el('span', { className: 'percorso-badge', textContent: testi.badge })] : []),
       el('h4', { textContent: testi.titolo }),
       el('p', { textContent: testi.testo }),
@@ -407,10 +415,24 @@ async function costruisciPercorsi() {
   }
 }
 
+// Telefono: il percorso e la scheda di emergenza (prima) stanno nel pannello «Emergenze»; sullo schermo largo il percorso torna in testa all'elenco.
+function riempiEmergenze(ul, mobile) {
+  const percorso = document.getElementById('percorso-emergenza');
+  const copia = ul.querySelector('.strato-card');
+  if (mobile) {
+    if (!copia && creaCardEmergenza) ul.prepend(creaCardEmergenza());
+    if (percorso) ul.append(percorso);
+  } else {
+    if (percorso) document.getElementById('home-percorsi').prepend(percorso);
+    copia?.remove();
+  }
+}
+
 costruisciIndice();
 costruisciSlider();
 await costruisciPercorsi();
 await costruisciElenco();
+homeMobile = avviaHomeMobile({ riempiEmergenze });
 aggiornaCesto();
 
 // tornando indietro dalla mappa (pagina dalla cache del browser) il cesto va riletto: la mappa può averlo cambiato

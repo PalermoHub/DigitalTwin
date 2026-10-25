@@ -1564,6 +1564,7 @@ body { grid-auto-rows: 0; } /* righe in più, se ce ne sono, non rubano spazio *
 #menu-info .menu-diviso .menu-tendina-toggle { padding-left: 4px; padding-right: 8px; }
 .menu-diviso .menu-tendina-toggle::after { content: "▾"; }
 .menu-solo-stretto { display: none; }
+.menu-icona { display: none; }
 @media (min-width: 1181px) {
   #menu-info .menu-tendina-lista :is(button, a) { width: 100%; text-align: left; border-radius: 0; border-bottom: 0; }
   #menu-info .menu-tendina-lista :is(button, a)[aria-current="page"] { background: var(--surface-hover); }
@@ -1719,20 +1720,27 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
    Telefono (fino a 720 px): barra a quattro tab (Mappa, Strati, Aggiungi, Info), ricerca in alto,
    strumenti della mappa in colonna a destra. Sopra i 720 px resta l'interfaccia a barre laterali.
    ========================================================================== */
-:root { --tab-h: 60px; --footer-h: 36px; --emergenza: #d7263d; } /* rosso dell'emergenza: barra in modalità emergenza, badge «Emergenza» e scheda del percorso nella home */
+:root { --tab-h: 64px; --footer-h: 36px; --emergenza: #d7263d; } /* rosso dell'emergenza: barra in modalità emergenza, badge «Emergenza» e scheda del percorso nella home */
 #barra-tab, #switch-tema, .menu-gruppo { display: none; }
 @media (max-width: 720px) {
   #barra-tab {
-    position: fixed; z-index: calc(var(--z-foglio) + 1); left: 0; right: 0; bottom: 0; height: var(--tab-h); display: flex;
-    background: var(--surface); border-top: 1px solid var(--border-ui);
+    position: fixed; z-index: calc(var(--z-foglio) + 1); left: 0; right: 0; bottom: 0; height: var(--tab-h); display: flex; padding: 0 6px; box-sizing: border-box;
+    background: color-mix(in srgb, var(--surface) 96%, transparent); border-top: 1px solid var(--border-ui); box-shadow: 0 -6px 18px rgb(0 0 0 / .08);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   }
   #barra-tab button {
     position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-    border: 0; border-top: 3px solid transparent; background: none; color: var(--text-muted); font: inherit; font-size: var(--fs-xs); font-weight: 600;
+    border: 0; border-top: 0 solid transparent; background: none; color: var(--text-muted); font: inherit; font-size: .6875rem; font-weight: 600; letter-spacing: .01em;
+    -webkit-tap-highlight-color: transparent; cursor: pointer;
   }
-  #barra-tab button[aria-pressed="true"] { color: var(--text); border-top-color: var(--accent); }
+  /* l'icona sta su una pillola: vuota a riposo, colorata sul tab attivo */
+  #barra-tab button svg { box-sizing: content-box; padding: 4px 18px; border-radius: var(--r-pill); transition: background var(--t-rapida), color var(--t-rapida); }
+  #barra-tab button[aria-pressed="true"] { color: var(--text); font-weight: 700; }
+  #barra-tab button[aria-pressed="true"] svg { background: color-mix(in srgb, var(--accent) 24%, transparent); color: var(--text); }
+  #barra-tab button:active svg { background: var(--surface-hover); }
+  #barra-tab button:focus-visible { outline: 3px solid var(--focus); outline-offset: -4px; border-radius: 14px; }
   #barra-tab .conta-strati {
-    position: absolute; top: 4px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 4px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+    position: absolute; top: 4px; left: calc(50% + 10px); min-width: 18px; height: 18px; padding: 0 4px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
     border-radius: var(--r-pill); background: var(--text); color: var(--surface); font-size: 11px; font-style: normal; font-weight: 700; line-height: 1;
   }
   #barra-tab .conta-strati[hidden] { display: none; }
@@ -1773,6 +1781,7 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   body.modo-emergenza #barra-strumenti, body.modo-emergenza #legende-raggio, body.modo-emergenza .invito-clic, body.modo-emergenza #zoom-box,
   body.modo-emergenza #barra-strati, body.modo-emergenza #pannello { display: none; }
   body.modo-emergenza #barra-tab { background: var(--emergenza); border-top-color: rgba(0, 0, 0, .3); box-shadow: 0 -2px 8px rgba(0, 0, 0, .3); }
+  body.modo-emergenza #barra-tab button svg, body.modo-emergenza #barra-tab button[aria-pressed="true"] svg { background: none; padding-inline: 0; }
   body.modo-emergenza #barra-tab button, body.modo-emergenza #barra-tab button[aria-pressed="true"] { color: #fff; font-weight: 700; border-top-color: transparent; } /* tutti i tab uguali, anche l'attivo */
 
   /* i fogli e i pannelli finiscono sopra la barra dei tab */
@@ -1788,16 +1797,34 @@ body:has(#rndt-pannello:not([hidden]):not(.collassato), #geoimage-pannello:not([
   #btn-gruppo-miei { order: 1; } #btn-rndt-m { order: 2; } #btn-geoimage-m { order: 3; }
   #btn-tabella-m { order: 4; grid-column: 1 / -1; } /* foglio Strati: base, layer, filtri in riga, la tabella sotto a tutta larghezza (niente riquadro orfano) */
 
-  /* foglio «Menu»: un menù a comparsa sopra il tab Menu, mezza larghezza, testo a destra, a due gruppi */
+  /* foglio «Menu»: pannello a tutta larghezza sopra la barra a tab, voci grandi a sinistra, sfondo oscurato */
+  body.info-aperto::after { content: ""; position: fixed; inset: 0 0 var(--tab-h); z-index: calc(var(--z-header) - 1); background: color-mix(in srgb, var(--accent) 90%, transparent); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
   body.info-aperto #menu-info {
-    display: flex; position: fixed; top: auto; left: auto; right: 8px; bottom: calc(var(--tab-h) + var(--footer-h) + 8px); width: 50%; min-width: 190px; max-height: 70dvh; overflow-y: auto;
-    flex-direction: column; align-items: stretch; margin: 0; padding: 10px 0; z-index: calc(var(--z-header) + 1); text-align: right;
-    background: var(--surface); border: 1px solid var(--border-ui); border-radius: var(--r-md); box-shadow: var(--ombra);
+    display: flex; position: fixed; top: auto; left: 8px; right: 8px; bottom: calc(var(--tab-h) + var(--footer-h) + 8px); width: auto; min-width: 0; max-height: 72dvh; overflow-y: auto;
+    flex-direction: column; align-items: stretch; gap: 8px; margin: 0; padding: 10px; z-index: calc(var(--z-header) + 1); text-align: left;
+    background: none; border: 0; border-radius: 0; box-shadow: none;
   }
-  #menu-info button, #menu-info a { text-align: right; border-left-width: 0; border-right: 3px solid transparent; }
-  #menu-info button[aria-current="page"] { border-left-color: transparent; border-right-color: var(--accent); }
+  #menu-info button, #menu-info a { display: flex; align-items: center; justify-content: space-between; min-height: 54px; padding: 12px 16px; text-align: left; color: var(--text); font-size: 1rem; font-weight: 600; border: 0; border-radius: 16px; background: var(--surface); box-shadow: 0 1px 2px rgb(0 0 0 / .06), 0 4px 12px rgb(0 0 0 / .06); }
+  #menu-info button[aria-current="page"], #menu-info a[aria-current="page"] { background: var(--surface); box-shadow: inset 0 0 0 2px var(--text); color: var(--text); font-weight: 700; }
+  #menu-info a, #menu-info .menu-solo-stretto { justify-content: flex-start; gap: 14px; }
+  #menu-info .menu-tendina-lista .menu-solo-stretto { display: flex; }
+  #menu-info .menu-icona { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: color-mix(in srgb, var(--accent) 22%, var(--surface)); color: var(--text); }
+  #menu-info .menu-tendina-lista .menu-icona { width: 32px; height: 32px; }
+  :root[data-tema="scuro"] #menu-info .menu-icona { background: var(--accent); color: var(--accent-ink); } /* scuro: tessera arancione piena, icona ben visibile */
+  :root[data-tema="scuro"] #menu-info a[data-scheda="emergenza"] .menu-icona { background: rgb(255 255 255 / .22); color: #fff; }
+  #menu-info a[data-scheda="emergenza"] .menu-icona { background: rgb(255 255 255 / .22); color: #fff; }
+  #menu-info .menu-diviso:has(.menu-tendina-toggle[aria-expanded="true"], .menu-tendina-toggle:hover) > a .menu-icona { background: rgb(255 255 255 / .45); }
+  #menu-info .menu-tendina-toggle::after { content: ""; width: 9px; height: 9px; margin-left: auto; border: solid currentColor; border-width: 0 2.4px 2.4px 0; rotate: 45deg; translate: 0 -2px; opacity: .55; transition: rotate .15s; }
+  #menu-info .menu-tendina-toggle[aria-expanded="true"]::after { rotate: -135deg; translate: 0 2px; }
+  #menu-info .menu-tendina-lista { display: none; margin: 8px 0 0; padding: 0; border: 0; background: none; gap: 8px; flex-direction: column; }
+  #menu-info .menu-tendina.aperta .menu-tendina-lista { display: flex; }
+  #menu-info .menu-diviso { display: flex; flex-wrap: wrap; align-items: stretch; }
+  #menu-info .menu-diviso .menu-tendina-toggle { height: 54px; box-shadow: none; background: none; }
+  #menu-info .menu-diviso:has(.menu-tendina-toggle[aria-expanded="true"], .menu-tendina-toggle:hover) > a, #menu-info .menu-tendina-toggle[aria-expanded="true"]:not(.menu-diviso *) { background: var(--accent); color: var(--accent-ink); }
+  #menu-info .menu-diviso > a { flex: 1; }
+  #menu-info .menu-tendina-lista :is(button, a) { min-height: 46px; padding: 10px 16px; font-size: .9375rem; font-weight: 500; color: var(--text-muted); box-shadow: none; border: 1px solid var(--border-ui); }
+  #menu-info .menu-tendina-lista a[data-scheda="emergenza"] { color: #fff; font-weight: 700; border-color: transparent; }
   #menu-info [data-scheda="mappa"] { display: none; }
-  #menu-info .menu-tendina-lista :is(button, a) { padding-right: 16px; }
   #menu-info #link-home { order: -1; } #menu-info [data-scheda="digitaltwin"] { order: 1; } #menu-info #menu-guide { order: 3; } #menu-info [data-scheda="fonti"] { order: 4; } #menu-info #menu-altro { order: 5; }
 }
 /* modalità emergenza a telefono ruotato (touch, altezza fino a 500 px, oltre 720 px di larghezza): la stessa barra rossa in basso e la scheda dell'area a destra sopra la barra; niente testata, piede, barra dei pannelli né strumenti. Il resto dell'app, ruotato, resta quello desktop */
@@ -2351,3 +2378,32 @@ a.scheda-tel { min-height: 44px; display: inline-flex; align-items: center; box-
 .scheda-riga:has(.scheda-badge-pieno) { align-items: center; }
 .scheda-tel { justify-content: center; min-width: 76px; text-align: center; }
 a.scheda-tel { min-height: 40px; }
+
+/* ---- ingranaggio delle impostazioni (telefono): tema, lingua e condividi in un pannello; usato da home, pagine a fasce e mappa (js/core/impostazioni-mobile.js) ---- */
+#home-imp-apri, .home-impostazioni { display: none; }
+@media (max-width: 720px), (pointer: coarse) and (max-height: 500px) {
+  #home-imp-apri:not([hidden]) { display: flex; align-items: center; justify-content: center; flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--text-muted); cursor: pointer; }
+  #home-imp-apri:hover { background: var(--surface-hover); color: var(--text); }
+  .home-impostazioni:not([hidden]) { position: fixed; inset: 0; z-index: calc(var(--z-header) + 5); display: flex; align-items: flex-start; justify-content: center; padding: calc(var(--home-header, 64px) + 8px) 16px 16px; background: rgb(0 0 0 / .45); }
+  .home-imp-scheda { width: min(360px, 100%); box-sizing: border-box; padding: 14px 16px 16px; border-radius: var(--r-lg); background: var(--surface); color: var(--text); box-shadow: var(--ombra); }
+  .home-imp-testa { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .home-imp-testa h2 { margin: 0; font-size: var(--fs-md); }
+  #home-imp-chiudi { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--text-muted); cursor: pointer; }
+  #home-imp-chiudi:hover { background: var(--surface-hover); color: var(--text); }
+  .home-imp-voci { margin: 0; padding: 0; list-style: none; }
+  .home-imp-voci li { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; border-top: 1px solid var(--border-ui); }
+  .home-imp-voci li:first-child { border-top: 0; }
+  .home-imp-voci #btn-condividi { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; color: var(--text); background: var(--surface-alt); border: 1px solid var(--border-ui); border-radius: 50%; cursor: pointer; }
+  .home-imp-voci #btn-condividi svg { width: 18px; height: 18px; }
+  .home-imp-voci #switch-tema { display: flex; align-items: center; margin-left: auto; width: 64px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
+  .home-imp-voci #switch-tema .switch-pista { position: relative; width: 56px; height: 28px; box-sizing: border-box; border: 1px solid var(--border-ui); border-radius: var(--r-pill); background: var(--surface-alt); transition: background var(--t-rapida), border-color var(--t-rapida); }
+  .home-imp-voci #switch-tema .switch-sole, .home-imp-voci #switch-tema .switch-luna { position: absolute; top: 6px; color: var(--text-muted); }
+  .home-imp-voci #switch-tema .switch-sole { left: 7px; }
+  .home-imp-voci #switch-tema .switch-luna { right: 7px; }
+  .home-imp-voci #switch-tema .switch-manopola { position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-ui); box-shadow: var(--ombra); transition: transform var(--t-rapida), background var(--t-rapida); }
+  .home-imp-voci #switch-tema[aria-checked="true"] .switch-pista { background: var(--accent); border-color: var(--accent); }
+  .home-imp-voci #switch-tema[aria-checked="true"] .switch-sole, .home-imp-voci #switch-tema[aria-checked="true"] .switch-luna { color: var(--accent-ink); }
+  .home-imp-voci #switch-tema[aria-checked="true"] .switch-manopola { transform: translateX(28px); }
+  .home-imp-voci #switch-tema:focus-visible .switch-pista { outline: 2px solid var(--focus); outline-offset: 2px; }
+}
+@media (max-width: 720px), (pointer: coarse) and (max-height: 500px) { #app-header > #home-imp-apri { margin-left: auto; } }
