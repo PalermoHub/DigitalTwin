@@ -163,6 +163,13 @@ export function collegaRicerca(map, form, input, lista, vaiParticella = null, zo
     if (!risultati.length) return;
     if (risultati[0].vai) risultati[0].vai(); else vai(risultati[0]);
   });
+  // dalla home: mappa.html?cerca=testo compila la barra e lancia la ricerca
+  const iniziale = new URLSearchParams(location.search).get('cerca');
+  if (iniziale) {
+    input.value = iniziale;
+    const url = new URL(location.href); url.searchParams.delete('cerca'); history.replaceState(null, '', url);
+    form.dispatchEvent(new Event('submit', { cancelable: true }));
+  }
   // la lista si chiude cliccando fuori dalla barra
   document.addEventListener('click', e => { if (!form.contains(e.target)) lista.hidden = true; });
 }

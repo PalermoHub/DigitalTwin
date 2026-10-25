@@ -16,6 +16,31 @@ const parti = chiave => chiave.split('|');
 const nomeBreve = (livello, chiave) => (livello === 'circ' ? NOMI_CIRC[chiave] ?? chiave : parti(chiave)[LIVELLI.indexOf(livello)]);
 const figliDi = (livello, chiave) => Object.keys(GERARCHIA[livello]).filter(k => !chiave || k.startsWith(chiave + '|'));
 
+const ROMANI = Object.keys(NOMI_CIRC);
+
+// Zone il cui nome contiene il testo, senza bisogno della mappa (la usano la barra della mappa e quella della home).
+// Da sole bastano il numero della circoscrizione («1», «I», «circ 1»); per quartieri e UPL servono 3 lettere.
+export function trovaZone(testo, max = 6) {
+  const q = normalizza(testo);
+  const nome = q.replace(/^CIRC(OSCRIZIONE)? /, '');
+  const romano = /^\d+$/.test(nome) ? ROMANI[+nome - 1] : nome;
+  const voce = (livello, chiave, prefisso) => ({
+    livello, chiave, prefisso, etichetta: nomeBreve(livello, chiave),
+    nota: livello === 'circ' ? TIPI.circ : `${TIPI[livello]} · ${parti(chiave)[0]}`, // quartieri e UPL: con la circoscrizione a cui appartengono
+  });
+  if (/^[IVX]+$/.test(romano) || /^\d+$/.test(nome)) return NOMI_CIRC[romano] ? [voce('circ', romano, true)] : [];
+  if (q.length < 3) return [];
+  if ('CIRCOSCRIZIONE'.startsWith(q) || 'CIRCOSCRIZIONI'.startsWith(q)) return ROMANI.map(k => voce('circ', k, true)).slice(0, max);
+  const trovate = [];
+  for (const l of LIVELLI) {
+    for (const k of Object.keys(GERARCHIA[l])) {
+      const n = normalizza(nomeBreve(l, k));
+      if (n.includes(q)) trovate.push(voce(l, k, n.startsWith(q)));
+    }
+  }
+  return trovate.sort((x, y) => y.prefisso - x.prefisso).slice(0, max);
+}
+
 // Filtri a scalare circoscrizione > quartiere > UPL: ogni scelta restringe l'elenco del livello
 // successivo, e scegliere un livello basso imposta anche i suoi genitori. Fuori dalla zona scelta
 // la mappa viene schiarita da una maschera (vale per tutti gli strati).
@@ -83,25 +108,7 @@ export function collegaZone(map, { selezioni, chips }) {
     reimposta() { scegli('circ', '', false); },
     // zone il cui nome contiene il testo digitato, per la barra di ricerca
     suggerisci(testo, max = 6) {
-      const q = normalizza(testo);
-      // numero romano da solo, o preceduto da «circoscrizione»/«circ»: vale solo la circoscrizione esatta
-      const romano = q.replace(/^CIRC(OSCRIZIONE)? /, '');
-      if (/^[IVX]+$/.test(romano)) {
-        return NOMI_CIRC[romano]
-          ? [{ etichetta: NOMI_CIRC[romano], nota: TIPI.circ, prefisso: true, vai: () => scegli('circ', romano) }]
-          : [];
-      }
-      if (q.length < 3) return [];
-      const trovate = [];
-      for (const l of LIVELLI) {
-        for (const k of Object.keys(GERARCHIA[l])) {
-          const nome = normalizza(nomeBreve(l, k));
-          if (nome.includes(q)) {
-            trovate.push({ etichetta: nomeBreve(l, k), nota: TIPI[l], prefisso: nome.startsWith(q), vai: () => scegli(l, k) });
-          }
-        }
-      }
-      return trovate.sort((a, b) => b.prefisso - a.prefisso).slice(0, max);
+      return trovaZone(testo, max).map(z => ({ etichetta: z.etichetta, nota: TIPI[z.livello], prefisso: z.prefisso, vai: () => scegli(z.livello, z.chiave) }));
     },
   };
 }

@@ -226,6 +226,7 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 /* la voce «Modalità emergenza» resta rossa anche quando è la pagina corrente (batte la regola di aria-current) */
 .pagina-home #menu-info a[data-scheda="emergenza"][aria-current="page"] { background: var(--emergenza, #d7263d); color: #fff; }
 
+.home-ricerca-mappa { display: none; } /* solo telefono, vedi sotto */
 /* ---- telefono: home a pulsanti grandi (solo impaginazione; js/core/home-mobile.js) ---- */
 /* su telefono il corpo resta nascosto finché home-mobile.js non l'ha impaginato (niente lampo della vecchia home); se il JS tarda o fallisce, torna visibile da solo dopo 4 s */
 html.home-attesa:not(.home-pronta) #corpo { visibility: hidden; animation: home-rivela 0s 4s forwards; }
@@ -261,7 +262,8 @@ html.home-attesa:not(.home-pronta) #corpo { visibility: hidden; animation: home-
   .home-mobile .home-intro p:not(.hero-m-sotto) { display: none; }
   .home-mobile .home-intro .hero-m-titolo { display: block; margin: 0 0 4px; color: #fff; font-size: clamp(1.625rem, 8vw, 2rem); font-weight: 800; line-height: 1.1; letter-spacing: -.01em; text-shadow: 0 1px 8px rgb(0 0 0 / .55); }
   .home-mobile .home-intro .hero-m-sotto { display: block; font-size: clamp(.875rem, 3.8vw, 1rem); font-weight: 400; line-height: 1.35; white-space: nowrap; }
-  .home-mobile #strati { order: 1; } .home-mobile #catalogo { order: 2; } .home-mobile #numeri { order: 3; } .home-mobile #emergenze { order: 4; }
+  .home-mobile .home-ricerca-mappa { order: 1; display: flex; }
+  .home-mobile #strati { order: 2; } .home-mobile #catalogo { order: 3; } .home-mobile #numeri { order: 4; } .home-mobile #emergenze { order: 5; }
   /* il testo «Perché una nuova mappa…» sta dentro «Informazioni» */
   .home-mobile #numeri .home-perche { padding: 28px 0 0; background: none; }
   .home-mobile #numeri .home-perche--dt { padding-bottom: 8px; }
@@ -282,9 +284,9 @@ html.home-attesa:not(.home-pronta) #corpo { visibility: hidden; animation: home-
   .home-mobile .fascia.acc { padding: 0 16px; margin: 0 0 12px; background: none; border: 0; scroll-margin-top: calc(var(--home-header, 64px) + 8px); }
   .home-mobile .fascia.acc:first-of-type { margin-top: 0; }
   .home-mobile .fascia.acc { display: flex; flex-direction: column; }
-  .home-mobile .fascia.acc:not(.aperta) { flex: 1 1 84px; max-height: 150px; }
+  .home-mobile .fascia.acc:not(.aperta) { flex: 1 1 0; min-height: 84px; max-height: 150px; } /* i tre pulsanti grandi si dividono lo spazio in parti uguali */
   .home-mobile .fascia.acc > .acc-toggle { flex: 1 1 auto; }
-  .home-mobile #emergenze { display: flex; }
+  .home-mobile #emergenze { display: flex; flex-direction: column; }
   .home-mobile .fascia.acc > .fascia-in { display: none; padding: 14px 0 6px; }
   .home-mobile .fascia.acc.aperta > .fascia-in { display: block; }
   .home-mobile #titolo-emergenze, .home-mobile #titolo-strati, .home-mobile #titolo-catalogo, .home-mobile #titolo-numeri, .home-mobile .home-percorsi-fascia > h3 { display: none; }
@@ -316,6 +318,29 @@ html.home-attesa:not(.home-pronta) #corpo { visibility: hidden; animation: home-
   .allerta-riga, .allerta-fonte { margin: 0 0 2px; font-size: .875rem; line-height: 1.4; }
   .allerta-fonte { margin-top: 10px; color: var(--text-muted); font-size: .8125rem; }
   .allerta-link { display: inline-block; margin-top: 8px; min-height: 24px; font-weight: 700; color: var(--emergenza); }
+  /* barra di ricerca sotto l'hero: stessa forma di quella della mappa; i risultati scendono sotto */
+  .home-ricerca-mappa { position: relative; order: 0; display: flex; align-items: center; height: 48px; margin: 0 16px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border-ui); box-shadow: var(--ombra-tooltip); }
+  .home-ricerca-mappa:focus-within { border-color: var(--focus); box-shadow: var(--ombra-tooltip), 0 0 0 2px var(--focus); }
+  .home-ricerca-mappa .cerca-icona { flex: none; display: flex; align-items: center; padding: 0 10px 0 16px; color: var(--text-muted); pointer-events: none; }
+  .home-ricerca-mappa input { flex: 1; min-width: 0; height: 100%; box-sizing: border-box; padding: 0 16px 0 0; border: 0; border-radius: 0 999px 999px 0; background: transparent; color: var(--text); font: inherit; font-size: 1rem; text-overflow: ellipsis; outline: 0; }
+  .home-ricerca-mappa input:focus-visible { outline: 0; }
+  .home-ricerca-mappa input::placeholder { color: var(--text-muted); }
+  .home-mobile .home-ricerca-risultati { order: 1; margin: 0 16px 12px; }
+  .home-ricerca-risultati[hidden] { display: none; }
+  .ricerca-gruppo + .ricerca-gruppo { margin-top: 16px; }
+  .ricerca-gruppo h3 { margin: 0 0 8px; font-size: .875rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+  .ricerca-gruppo .home-card-elenco { grid-template-columns: 1fr; gap: 12px; }
+  .ricerca-luoghi { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .ricerca-luogo { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; padding: 12px 16px; border-radius: 14px; background: var(--surface); box-shadow: var(--ombra-tooltip); }
+  .ricerca-luogo strong { flex: 1 1 100%; }
+  .ricerca-luogo span { flex: 1; color: var(--text-muted); font-size: .875rem; }
+  .ricerca-luogo .percorso-apri { min-height: 44px; display: inline-flex; align-items: center; font-weight: 700; }
+  .ricerca-vuoto { margin: 0; padding: 12px 16px; border-radius: 14px; background: var(--surface); color: var(--text-muted); }
+  /* «Informazioni»: riga compatta, senza sottotitolo, al posto della scheda alta */
+  .home-mobile #numeri.fascia.acc:not(.aperta) { flex: 0 0 auto; min-height: 0; max-height: none; }
+  .home-mobile #numeri > .acc-toggle { flex: 0 0 auto; min-height: 48px; padding: 6px 14px; gap: 12px; border-radius: 14px; font-size: 1rem; }
+  .home-mobile #numeri .acc-icona { width: 34px; height: 34px; border-radius: 10px; } .home-mobile #numeri .acc-icona svg { width: 20px; height: 20px; }
+  .home-mobile #numeri .acc-sotto { display: none; }
   .acc-toggle:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 }
 /* schermi bassi (telefoni piccoli): meno aria, niente sottotitoli */

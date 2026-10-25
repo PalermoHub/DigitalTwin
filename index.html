@@ -77,6 +77,13 @@
 </div>
 </section>
 
+<form class="home-ricerca-mappa" id="home-ricerca-mappa" action="mappa.html" method="get" role="search" autocomplete="off">
+  <label class="solo-lettori" for="home-ricerca-testo" data-i18n="home.ricerca.etichetta">Cerca un indirizzo o uno strato</label>
+  <span class="cerca-icona"><svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span>
+  <input type="search" id="home-ricerca-testo" name="cerca" enterkeyhint="search" data-i18n-placeholder="home.ricerca.segnaposto" placeholder="Cerca un indirizzo o uno strato…">
+</form>
+<div class="home-ricerca-risultati" id="home-ricerca-risultati" role="region" aria-live="polite" data-i18n-aria="home.ricerca.risultati" aria-label="Risultati della ricerca" hidden></div>
+
 <section class="fascia home-emergenze" id="emergenze" aria-labelledby="titolo-emergenze">
 <div class="fascia-in">
   <h2 id="titolo-emergenze" data-i18n="home.acc.emergenze">Emergenze</h2>

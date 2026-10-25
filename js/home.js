@@ -6,6 +6,7 @@ import { svgIcona } from './core/icone.js';
 import { leggiCesto, salvaCesto, apreSubito } from './core/cesto-home.js';
 import { MEDIA_TELEFONO } from './core/modo-emergenza.js';
 import { precaricaMappaARiposo } from './core/precarica-mappa.js';
+import { trovaZone } from './core/zone.js';
 import { avviaHomeMobile } from './core/home-mobile.js';
 import { scegliProxy } from './rndt/proxy.js';
 import { livelloMassimo, nomeLivello, riassuntoGiorno, LINK as LINK_BOLLETTINO } from './layers/scheda-allerte.js';
@@ -27,6 +28,44 @@ async function linkMappa(strati, legendeSuMappa = false, vista = null) {
   } catch {
     return MAPPA;
   }
+}
+
+// Barra «Cerca un indirizzo o uno strato» sotto l'hero: i risultati restano nella home.
+// Strati dal catalogo (stesse card, con «aggiungi alla mappa») e luoghi/indirizzi con la ricerca della mappa; la mappa si apre solo se lo si chiede.
+function collegaRicercaHome(tutte) {
+  const form = document.getElementById('home-ricerca-mappa');
+  const campo = document.getElementById('home-ricerca-testo');
+  const pannello = document.getElementById('home-ricerca-risultati');
+  if (!form || !campo || !pannello) return;
+  const voci = tutte.map(({ s, a }) => ({ s, a, testo: normalizza(`${s.etichetta} ${a.titolo} ${s.sezione ?? ''}`) }));
+  let giro = 0;
+  const gruppo = (titolo, ...figli) => el('section', { className: 'ricerca-gruppo' }, el('h3', { textContent: titolo }), ...figli);
+  function cardLuogo(r) {
+    const apri = el('a', { className: 'percorso-apri', href: `${MAPPA}?cerca=${encodeURIComponent(r.etichetta)}`, textContent: tr('home.ricerca.vediMappa') });
+    return el('li', { className: 'ricerca-luogo' }, el('strong', { textContent: r.etichetta }), ...(r.nota ? [el('span', { textContent: r.nota })] : []), apri);
+  }
+  async function aggiorna() {
+    const q = campo.value.trim();
+    const mio = ++giro;
+    const zone = trovaZone(q, 12);
+    if (q.length < 3 && !zone.length) { pannello.hidden = true; pannello.replaceChildren(); return; }
+    const nq = normalizza(q);
+    const strati = q.length < 3 ? [] : voci.filter(v => v.testo.includes(nq)).slice(0, 6);
+    let luoghi = [];
+    if (q.length >= 3) try {
+      const { cercaOggetti } = await import('./core/ricerca.js');
+      luoghi = await cercaOggetti(q);
+    } catch { /* senza indirizzi restano gli strati */ }
+    if (mio !== giro) return;
+    const parti = [];
+    if (zone.length) parti.push(gruppo(tr('home.ricerca.zone'), el('ul', { className: 'ricerca-luoghi' }, ...zone.map(cardLuogo))));
+    if (luoghi.length) parti.push(gruppo(tr('home.ricerca.luoghi'), el('ul', { className: 'ricerca-luoghi' }, ...luoghi.map(cardLuogo))));
+    if (strati.length) parti.push(gruppo(tr('home.ricerca.strati'), el('ul', { className: 'home-card-elenco' }, ...strati.map(({ s, a }) => costruisciCard(s, a)))));
+    pannello.replaceChildren(...(parti.length ? parti : [el('p', { className: 'ricerca-vuoto', textContent: tr('ricerca.nessunRisultato') })]));
+    pannello.hidden = false;
+  }
+  campo.addEventListener('input', aggiorna);
+  form.addEventListener('submit', e => { e.preventDefault(); aggiorna(); campo.blur(); });
 }
 
 // ---- strati scelti ("aggiunti alla mappa"): restano in sessionStorage finché non si apre la mappa ----
@@ -266,6 +305,7 @@ async function costruisciElenco() {
     return li;
   });
   costruisciNumeri(argomenti, tutte);
+  collegaRicercaHome(tutte);
   const emergenza = tutte.find(({ s }) => STRATI_EMERGENZA.has(s.id));
   if (emergenza) creaCardEmergenza = () => costruisciCard(emergenza.s, emergenza.a);
   const ul = el('ul', { className: 'home-card-elenco' }, ...card);
