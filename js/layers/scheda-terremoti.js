@@ -352,6 +352,32 @@ export function omori(g) {
 export const momentoSismico = m => 10 ** (1.5 * m + 9.1);
 export const magnitudoDaMomento = m0 => (Math.log10(m0) - 9.1) * 2 / 3;
 
+// Dove sta l'evento `p` nella sequenza `punti` (gli eventi del grafico): posizione, scarto dalla scossa più forte, rango per magnitudo, quota di energia,
+// attese dall'evento prima e dopo, repliche, tre vicini e profondità di tutti gli eventi.
+const chiaveEvento = e => String(e.id ?? e.ts);
+export function statisticheEvento(punti, p) {
+  const ordine = [...punti].sort((a, b) => a.ts - b.ts);
+  const i = ordine.findIndex(e => chiaveEvento(e) === chiaveEvento(p));
+  if (i < 0) return null;
+  const forte = ordine.reduce((m, e) => (!m || e.mag > m.mag ? e : m), null);
+  const totale = ordine.reduce((somma, e) => somma + momentoSismico(e.mag), 0);
+  const geo = e => Number.isFinite(e.lon) && Number.isFinite(e.lat);
+  const dopo = ordine.slice(i + 1);
+  const vicini = geo(p) ? ordine.filter(e => e !== ordine[i] && geo(e)).map(e => ({ e, km: distanzaKm([p.lon, p.lat], [e.lon, e.lat]) })).sort((a, b) => a.km - b.km) : [];
+  const prof = ordine.map(e => e.prof).filter(Number.isFinite).sort((a, b) => a - b);
+  return {
+    posizione: i + 1, totale: ordine.length,
+    primo: forte === ordine[i], scartoMs: p.ts - forte.ts,
+    rango: ordine.filter(e => e.mag > p.mag).length + 1,
+    quota: momentoSismico(p.mag) / totale,
+    precedenteMs: i > 0 ? p.ts - ordine[i - 1].ts : null, successivoMs: dopo.length ? dopo[0].ts - p.ts : null,
+    entro24h: dopo.filter(e => e.ts - p.ts <= 86400000).length,
+    entro50km: geo(p) ? dopo.filter(e => geo(e) && distanzaKm([p.lon, p.lat], [e.lon, e.lat]) <= 50).length : null,
+    vicini: vicini.slice(0, 3),
+    profondita: prof, mediana: prof.length ? (prof[(prof.length - 1) >> 1] + prof[prof.length >> 1]) / 2 : null,
+  };
+}
+
 // Rilascio cumulativo: momento sismico accumulato, in quota 0-1 del totale della finestra. A differenza del conteggio è dominato dai pochi eventi grandi.
 // `magEquiv` = magnitudo di un unico terremoto con tutto il momento della finestra; `quotaMax` = quota dell'evento più forte.
 export function rilascioCumulativo(g) {

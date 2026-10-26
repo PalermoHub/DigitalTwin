@@ -3,7 +3,7 @@ import { disegnaAccordion, disegnaSezione } from '../core/scheda-disegno.js';
 import { t, tn, localeIntl } from '../core/i18n.js';
 import { titoloConInfo, apriGrande } from '../core/info-grafico.js';
 import { barraNavigazione } from '../core/scheda-navigazione.js';
-import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, puntiMagnitudo, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, finestraTempo, proprietaStorico, voceTerremoto, inquadra, proiettaMiniatura, miniatura, etichettaBarra, periodoSequenza } from './scheda-terremoti.js';
+import { SCELTE_GIORNI, SCELTE_MAGNITUDO, UNITA, MAG_STORICO, filtro, altriTerremoti, accordionTerremoti, posizioneEvento, urlStorico, eventiDaTesto, serieEventi, puntiMagnitudo, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, finestraTempo, proprietaStorico, voceTerremoto, inquadra, proiettaMiniatura, miniatura, etichettaBarra, periodoSequenza, statisticheEvento } from './scheda-terremoti.js';
 
 export const EVENTO_FILTRO = 'terremoti:filtro';
 
@@ -95,6 +95,7 @@ const SVG = 'http://www.w3.org/2000/svg';
 // viewBox e margini (sinistro, destro, alto, basso): piccolo nella scheda, grande nel popup (solo desktop)
 const DIM = { L: 320, A: 150, MS: 28, MD: 8, MA: 8, MB: 18 };
 const DIM_GRANDE = { L: 900, A: 420, MS: 58, MD: 18, MA: 18, MB: 48 };
+const ALTEZZA_RIQUADRI = 460; // grafico, minimappa e scheda dell'evento: sempre alti uguali, qualunque sia il monitor
 const CON_MAPPA = new Set(['mt', 'cum', 'energia', 'spaziotempo']); // grafici con minimappa e scheda a fianco
 // Il viewBox del popup segue lo spazio vero della colonna del grafico (schermo meno minimappa e scheda), così i testi restano leggibili
 function adattaDimensioni(id) {
@@ -102,7 +103,7 @@ function adattaDimensioni(id) {
   const popup = conMappa ? Math.min(1760, window.innerWidth - 24) : Math.min(1000, window.innerWidth - 48);
   const colonna = conMappa ? Math.max(520, popup - 28 - 300 - 320 - 28 - 14) : popup - 70;
   DIM_GRANDE.L = Math.round(colonna);
-  DIM_GRANDE.A = Math.min(520, Math.max(360, Math.round(colonna * 0.45)));
+  DIM_GRANDE.A = conMappa ? ALTEZZA_RIQUADRI : Math.min(520, Math.max(360, Math.round(colonna * 0.45)));
 }
 const dimensioni = grande => (grande ? DIM_GRANDE : DIM);
 const dataBreve = ts => new Date(ts).toLocaleDateString(localeIntl(), { day: 'numeric', month: 'short', year: '2-digit' });
@@ -187,14 +188,64 @@ function rendiApribile(gruppo, p, apri, sync) {
 }
 
 // Minimappa accanto al grafico: tessere OpenStreetMap standard inquadrate su tutti gli eventi del grafico, un cerchio per evento
-const MAPPA_L = 300, SCHEDINA_A = 56; // larghezza della mappa; altezza della riga con i dati dell'evento sotto di lei
+const MAPPA_L = 300; // larghezza della mappa
+// Durata breve («45 min», «3,2 h», «5 g»)
+function durataBreve(ms) {
+  const min = Math.abs(ms) / 60000;
+  if (min < 60) return t('terremoti.seq.min', { n: num(Math.max(1, Math.round(min))) });
+  if (min < 2880) return t('terremoti.seq.ore', { n: (min / 60).toLocaleString(localeIntl(), { maximumFractionDigits: 1 }) });
+  return t('terremoti.seq.giorni', { n: num(Math.round(min / 1440)) });
+}
+// Striscia delle profondità di tutta la sequenza, con un segno sull'evento scelto
+function strisciaProfondita(prof, valore) {
+  const max = Math.max(1, prof[prof.length - 1]);
+  const L = 280, x = v => 6 + (v / max) * (L - 12);
+  const svg = nodoSvg('svg', { viewBox: `0 0 ${L} 26`, class: 'seq-profondita', role: 'img', 'aria-label': t('terremoti.seq.profondita') });
+  svg.append(nodoSvg('line', { x1: 6, x2: L - 6, y1: 13, y2: 13, class: 'asse' }));
+  for (const v of prof) svg.append(nodoSvg('circle', { cx: x(v), cy: 13, r: 3, class: 'altro' }));
+  if (Number.isFinite(valore)) svg.append(nodoSvg('circle', { cx: x(valore), cy: 13, r: 6, class: 'scelto' }));
+  return svg;
+}
+// Blocco «Nella sequenza» sotto i dati dell'evento scelto, nella scheda del popup
+function disegnaSequenza(s, sync, profEvento) {
+  const blocco = el('div', 'seq-blocco');
+  blocco.append(el('h4', 'seq-titolo', t('terremoti.seq.titolo')));
+  const riga = (etichetta, valore) => {
+    const r = el('div', 'seq-riga');
+    r.append(el('span', null, t(etichetta)), el('strong', null, valore));
+    blocco.append(r);
+  };
+  const pct = s.quota * 100;
+  riga('terremoti.seq.posizione', t('terremoti.seq.di', { n: num(s.posizione), tot: num(s.totale) }));
+  riga('terremoti.seq.dalForte', s.primo ? t('terremoti.seq.eLaForte') : t(s.scartoMs > 0 ? 'terremoti.seq.dopo' : 'terremoti.seq.prima', { d: durataBreve(s.scartoMs) }));
+  riga('terremoti.seq.rango', t('terremoti.seq.nDi', { n: num(s.rango), tot: num(s.totale) }));
+  riga('terremoti.seq.energia', pct < 0.1 ? t('terremoti.seq.pocaEnergia') : t('terremoti.seq.quota', { q: pct.toLocaleString(localeIntl(), { maximumFractionDigits: pct < 10 ? 1 : 0 }) }));
+  if (s.precedenteMs !== null || s.successivoMs !== null) riga('terremoti.seq.attese', t('terremoti.seq.attesePrimaDopo', { a: s.precedenteMs === null ? '–' : durataBreve(s.precedenteMs), b: s.successivoMs === null ? '–' : durataBreve(s.successivoMs) }));
+  if (s.entro50km !== null) riga('terremoti.seq.repliche', t('terremoti.seq.replicheValore', { a: num(s.entro24h), b: num(s.entro50km) }));
+  if (s.profondita.length > 1) {
+    const f = v => v.toLocaleString(localeIntl(), { maximumFractionDigits: 1 });
+    const striscia = strisciaProfondita(s.profondita, profEvento);
+    striscia.append(nodoSvg('title', {}, t('terremoti.seq.profNota', { min: f(s.profondita[0]), max: f(s.profondita[s.profondita.length - 1]), med: f(s.mediana) })));
+    blocco.append(el('p', 'seq-sottotitolo', t('terremoti.seq.profondita')), striscia);
+  }
+  if (s.vicini.length) {
+    blocco.append(el('p', 'seq-sottotitolo', t('terremoti.seq.vicini')));
+    for (const { e, km } of s.vicini) {
+      const b = el('button', 'seq-vicino', `M ${mag1(e.mag)} · ${num(Math.round(km))} km · ${dataEvento(e.ts)}`);
+      b.type = 'button';
+      b.addEventListener('click', () => sync.seleziona(e));
+      blocco.append(b);
+    }
+  }
+  return blocco;
+}
 function creaMinimappa(punti, sync, forteId) {
   const geo = punti.filter(p => Number.isFinite(p.lon) && Number.isFinite(p.lat));
   if (!geo.length) return null;
-  const MAPPA_A = DIM_GRANDE.A - SCHEDINA_A - 6; // grafico, mappa (con la sua riga) e scheda sono alti uguali
+  const MAPPA_A = DIM_GRANDE.A; // grafico, mappa e scheda sono alti uguali; i testi stanno sopra e sotto i riquadri
   const { zoom, centro } = inquadra(geo, MAPPA_L, MAPPA_A);
   const mini = miniatura(centro, zoom, MAPPA_L, MAPPA_A);
-  const radice = el('aside', 'terremoti-minimappa');
+  const aiuto = el('p', 'scheda-nota minimappa-aiuto', t('terremoti.minimappa.aiuto', { n: num(geo.length) }));
   const quadro = el('div', 'minimappa-quadro');
   quadro.style.height = `${MAPPA_A}px`;
   for (const tessera of mini.tessere) {
@@ -222,36 +273,40 @@ function creaMinimappa(punti, sync, forteId) {
   const scheda = el('div', 'minimappa-scheda');
   sync.mostra(p => {
     scheda.replaceChildren();
-    if (!p) { scheda.append(el('span', 'scheda-nota', t('terremoti.minimappa.aiuto', { n: num(geo.length) }))); return; }
+    if (!p) return;
     scheda.append(el('strong', null, `M ${mag1(p.mag)}${p.luogo ? ` · ${p.luogo}` : ''}`), el('span', null, dataEvento(p.ts)));
   });
   // scheda completa dell'evento fissato (la stessa della mappa principale), sotto la minimappa; si ridisegna solo quando cambia l'evento
   const dettaglio = el('div', 'minimappa-dettaglio');
+  const apri = el('div', 'minimappa-apri'); // riga sopra la scheda
   let mostrato = false; // diverso da null: il primo giro scrive anche il testo «nessun evento scelto»
   sync.mostra(() => {
     const id = selezionato && idEvento(selezionato);
     if (id === mostrato) return;
     mostrato = id;
     dettaglio.replaceChildren();
+    apri.replaceChildren();
     const prop = selezionato && proprietaStorico(selezionato);
     if (!prop) { dettaglio.append(el('p', 'scheda-nota', t('terremoti.minimappa.vuota'))); return; }
     if (sync.apri) {
       const b = el('button', 'scheda-filtro', t('terremoti.minimappa.apri'));
       b.type = 'button';
       b.addEventListener('click', () => sync.apri(selezionato));
-      dettaglio.append(b);
+      apri.append(b);
     }
-    dettaglio.append(disegnaSezione({ ...voceTerremoto(prop), miniatura: null, strato: null, sempre: false }, 0));
+    const sezione = disegnaSezione({ ...voceTerremoto(prop), miniatura: null, strato: null, sempre: false }, 0);
+    const stat = statisticheEvento(punti, selezionato);
+    if (stat) sezione.querySelector('.scheda-fonte')?.before(disegnaSequenza(stat, sync, prop.prof));
+    dettaglio.append(sezione);
   });
-  radice.append(quadro, scheda);
-  return { radice, dettaglio };
+  return { aiuto, quadro, scheda, apri, dettaglio };
 }
 function aggiungiMappa(blocco, sync, punti, forte) {
   const mappa = creaMinimappa(punti, sync, forte && idEvento(forte));
   if (!mappa) return;
   blocco.classList.add('con-mappa');
   blocco.style.setProperty('--alt-grafico', `${DIM_GRANDE.A}px`);
-  blocco.append(mappa.radice, mappa.dettaglio); // grafico | minimappa | scheda dell'evento
+  blocco.append(mappa.aiuto, mappa.quadro, mappa.scheda, mappa.apri, mappa.dettaglio); // grafico | minimappa | scheda dell'evento, ognuno con una riga sopra e una sotto
 }
 
 // Un marcatore per evento sulla curva (solo nel popup), come gli steli di magnitudo-tempo: tooltip al passaggio, clic = apre l'evento in mappa.

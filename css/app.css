@@ -2467,12 +2467,19 @@ a.scheda-tel { min-height: 40px; }
 .zoom-riga { display: flex; align-items: center; gap: 10px; margin: 2px 0 6px; }
 .zoom-riga .scheda-nota { margin: 0; }
 /* minimappa accanto al grafico (popup grande) */
-.grafico-grande-popup:has(.con-mappa) { width: min(1760px, calc(100vw - 24px)); max-height: 95vh; padding: 8px 14px 14px; overflow: auto; } /* sotto ~1250 px di schermo si scorre in orizzontale */
-.terremoti-serie.con-mappa { display: grid; grid-template-columns: minmax(520px, 1fr) 300px 320px; column-gap: 14px; min-width: 1200px; }
-.terremoti-serie.con-mappa > .terremoti-titolo, .terremoti-serie.con-mappa > .zoom-aiuto, .terremoti-serie.con-mappa > .zoom-riga, .terremoti-serie.con-mappa > .scheda-nota { grid-column: 1 / -1; }
-.terremoti-serie.con-mappa > svg.terremoti-mt { grid-column: 1; grid-row: 3; height: var(--alt-grafico); }
-.terremoti-minimappa { grid-column: 2; grid-row: 3; align-self: start; height: var(--alt-grafico); display: flex; flex-direction: column; gap: 6px; }
-.minimappa-quadro { position: relative; flex: none; width: 300px; overflow: hidden; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface-alt); }
+.grafico-grande-popup:has(.con-mappa) { width: min(1760px, calc(100vw - 24px)); height: 690px; max-height: 95vh; padding: 8px 14px 14px; overflow: auto; } /* altezza fissa, qualunque sia il monitor; più in basso si scorre, sotto ~1250 px di larghezza anche in orizzontale */
+/* tre riquadri alti uguali, ognuno con una riga di testo sopra e una sotto: grafico | minimappa | scheda dell'evento */
+.terremoti-serie.con-mappa { display: grid; grid-template-columns: minmax(520px, 1fr) 300px 320px; grid-template-rows: auto auto var(--alt-grafico) auto auto; column-gap: 14px; min-width: 1200px; }
+.terremoti-serie.con-mappa > .terremoti-titolo { grid-column: 1 / -1; grid-row: 1; }
+.terremoti-serie.con-mappa > .zoom-aiuto, .terremoti-serie.con-mappa > .zoom-riga { grid-column: 1; grid-row: 2; align-self: end; }
+.terremoti-serie.con-mappa > .minimappa-aiuto { grid-column: 2; grid-row: 2; align-self: end; margin: 0 0 4px; }
+.terremoti-serie.con-mappa > .minimappa-apri { grid-column: 3; grid-row: 2; align-self: end; margin: 0 0 4px; }
+.terremoti-serie.con-mappa > svg.terremoti-mt { grid-column: 1; grid-row: 3; height: var(--alt-grafico); border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
+.terremoti-serie.con-mappa > .minimappa-quadro { grid-column: 2; grid-row: 3; }
+.terremoti-serie.con-mappa > .minimappa-dettaglio { grid-column: 3; grid-row: 3; }
+.terremoti-serie.con-mappa > p.scheda-nota:not(.zoom-aiuto):not(.minimappa-aiuto) { grid-column: 1; grid-row: 4; }
+.terremoti-serie.con-mappa > .minimappa-scheda { grid-column: 2; grid-row: 4; }
+.minimappa-quadro { position: relative; width: 300px; overflow: hidden; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: var(--surface-alt); }
 .minimappa-quadro img { position: absolute; width: 256px; height: 256px; max-width: none; }
 .minimappa-punti { position: absolute; inset: 0; width: 100%; height: 100%; }
 .minimappa-punti .evento circle { fill: var(--accent); fill-opacity: .55; stroke: #fff; stroke-width: 1; cursor: pointer; }
@@ -2483,11 +2490,23 @@ a.scheda-tel { min-height: 40px; }
 .terremoti-mt .sel line:not(.zona) { stroke-width: 2.5; opacity: 1; }
 .terremoti-mt .fissato circle { stroke: #f08c00; stroke-width: 3; }
 .minimappa-attr { position: absolute; right: 0; bottom: 0; padding: 0 3px; font-size: 9px; background: rgba(255, 255, 255, .8); color: #333; }
-.minimappa-scheda { display: flex; flex-direction: column; gap: 3px; height: 56px; overflow: hidden; font-size: var(--fs-sm, 13px); }
+.minimappa-scheda { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; font-size: var(--fs-sm, 13px); }
 .minimappa-scheda span { color: var(--text-muted); }
-.minimappa-dettaglio { grid-column: 3; grid-row: 3; align-self: start; display: flex; flex-direction: column; gap: 6px; height: var(--alt-grafico); overflow-y: auto; }
-.minimappa-dettaglio .scheda-sez { margin-top: 0; flex: 1; }
-.minimappa-dettaglio > button { align-self: flex-start; }
+.minimappa-dettaglio { display: flex; flex-direction: column; box-sizing: border-box; border: 1px solid var(--border-ui); border-radius: var(--r-sm); overflow-y: auto; } /* la cornice resta ferma, scorre il contenuto */
+.minimappa-dettaglio .scheda-sez { margin: 0; flex: none; border: 0; }
+/* blocco «Nella sequenza» nella scheda dell'evento */
+.seq-blocco { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); font-size: var(--fs-sm, 13px); }
+.seq-titolo { margin: 0 0 4px; font-size: var(--fs-sm, 13px); text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }
+.seq-riga { display: flex; justify-content: space-between; gap: 8px; padding: 1px 0; }
+.seq-riga span { color: var(--text-muted); }
+.seq-riga strong { text-align: right; }
+.seq-sottotitolo { margin: 6px 0 2px; color: var(--text-muted); }
+.seq-vicino { display: block; width: 100%; margin: 2px 0; padding: 4px 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: transparent; color: var(--link); font: inherit; text-align: left; cursor: pointer; }
+.seq-vicino:hover, .seq-vicino:focus-visible { background: var(--surface-hover); }
+.seq-profondita { display: block; width: 100%; height: 26px; }
+.seq-profondita .asse { stroke: var(--border-ui); stroke-width: 1; }
+.seq-profondita .altro { fill: var(--accent); fill-opacity: .35; }
+.seq-profondita .scelto { fill: var(--accent); stroke: var(--text); stroke-width: 1.5; }
 .terremoti-barre.grande { height: 280px; margin-top: 18px; padding-top: 30px; gap: 4px; }
 .terremoti-barre.grande .terremoti-barra b { height: 14px; font-size: 11px; line-height: 14px; font-weight: 600; color: var(--text); }
 .terremoti-barre.grande .terremoti-barra span { font-size: 11px; }

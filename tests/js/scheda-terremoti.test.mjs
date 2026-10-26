@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { proprietaStorico, serieEventi, puntiMagnitudo, finestraTempo, inquadra, proiettaMiniatura, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, classeMagnitudo, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura } from '../../js/layers/scheda-terremoti.js';
+import { proprietaStorico, serieEventi, puntiMagnitudo, finestraTempo, inquadra, proiettaMiniatura, curvaCumulativa, omori, rilascioCumulativo, tempiTraEventi, spazioTempo, eventiDaTesto, periodoSequenza, urlStorico, eventoDaIngv, fasciaEta, raggioMagnitudo, oraEvento, distanzaKm, modelloPopupTerremoto, voceTerremoto, riassuntoTerremoti, FASCE, passaFiltro, espressioneFiltro, classeMagnitudo, intervallo, eventiPerGiorno, eventiPerClasse, prossimaFinestra, altriTerremoti, accordionTerremoti, voceAltri, posizioneEvento, MAX_ELENCO, miniatura, statisticheEvento } from '../../js/layers/scheda-terremoti.js';
 
 const ingv = (extra = {}, coord = [14.1717, 38.7938, 8.8]) => ({
   type: 'Feature', geometry: { type: 'Point', coordinates: coord },
@@ -348,4 +348,29 @@ test('inquadra: tutti i punti stanno nella cornice; un solo punto = zoom massimo
   assert.equal(inquadra([], 300, 380), null);
   const q = proiettaMiniatura(uno.centro, uno.zoom, 300, 380)({ lon: 13.36, lat: 38.12 });
   assert.ok(Math.abs(q.x - 150) < 1e-6 && Math.abs(q.y - 190) < 1e-6);
+});
+
+test('statisticheEvento: posizione, rango, attese, repliche e vicini nella sequenza', () => {
+  const H = 3600000, t0 = Date.parse('2026-10-20T00:00:00Z');
+  const ev = (id, ore, mag, lon, lat, prof) => ({ id, ts: t0 + ore * H, mag, lon, lat, prof });
+  const punti = [ev('a', 0, 2, 13.0, 38.0, 5), ev('b', 2, 4, 13.0, 38.1, 10), ev('c', 3, 3, 13.0, 38.2, 12), ev('d', 40, 2.5, 15.0, 38.0, null)];
+  const s = statisticheEvento(punti, punti[2]);
+  assert.equal(s.posizione, 3);
+  assert.equal(s.totale, 4);
+  assert.equal(s.primo, false);
+  assert.equal(s.scartoMs, H);
+  assert.equal(s.rango, 2);
+  assert.equal(s.precedenteMs, H);
+  assert.equal(s.successivoMs, 37 * H);
+  assert.equal(s.entro24h, 0);
+  assert.equal(s.entro50km, 0);
+  assert.deepEqual(s.vicini.map(v => v.e.id), ['b', 'a', 'd']);
+  assert.deepEqual(s.profondita, [5, 10, 12]);
+  assert.equal(s.mediana, 10);
+  assert.ok(s.quota > 0 && s.quota < 0.1);
+  const f = statisticheEvento(punti, punti[1]);
+  assert.equal(f.primo, true);
+  assert.equal(f.rango, 1);
+  assert.equal(f.entro24h, 1);
+  assert.equal(statisticheEvento(punti, { id: 'x', ts: 1 }), null);
 });
