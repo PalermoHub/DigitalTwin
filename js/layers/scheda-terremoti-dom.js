@@ -239,6 +239,8 @@ function disegnaSequenza(s, sync, profEvento) {
   }
   return blocco;
 }
+// Ultimo inquadramento della minimappa: il grafico ridisegna il blocco a ogni zoom, e la mappa parte da qui per zoomare a vista
+let inquadraturaPrecedente = null;
 function creaMinimappa(punti, sync, forteId) {
   const geo = punti.filter(p => Number.isFinite(p.lon) && Number.isFinite(p.lat));
   if (!geo.length) return null;
@@ -248,13 +250,14 @@ function creaMinimappa(punti, sync, forteId) {
   const aiuto = el('p', 'scheda-nota minimappa-aiuto', t('terremoti.minimappa.aiuto', { n: num(geo.length) }));
   const quadro = el('div', 'minimappa-quadro');
   quadro.style.height = `${MAPPA_A}px`;
+  const vista = el('div', 'minimappa-vista'); // tessere e punti si muovono insieme
   for (const tessera of mini.tessere) {
     const img = el('img');
     img.src = tessera.url;
     img.alt = '';
     img.draggable = false;
     img.style.cssText = `left:${tessera.x}px;top:${tessera.y}px`;
-    quadro.append(img);
+    vista.append(img);
   }
   const proietta = proiettaMiniatura(centro, zoom, MAPPA_L, MAPPA_A);
   const svg = nodoSvg('svg', { viewBox: `0 0 ${MAPPA_L} ${MAPPA_A}`, class: 'minimappa-punti', role: 'img', 'aria-label': t('terremoti.minimappa.titolo') });
@@ -269,7 +272,21 @@ function creaMinimappa(punti, sync, forteId) {
     sync.punti.set(idEvento(p), gruppo);
     svg.append(gruppo);
   }
-  quadro.append(svg, el('span', 'minimappa-attr', mini.attribuzione));
+  vista.append(svg);
+  quadro.append(vista, el('span', 'minimappa-attr', mini.attribuzione));
+  // Zoom sincronizzato: la vista riparte dal vecchio inquadramento e scivola sul nuovo (nessun movimento se è un popup nuovo: il quadro precedente non è più in pagina)
+  const prima = inquadraturaPrecedente;
+  inquadraturaPrecedente = { zoom, centro, quadro };
+  if (prima?.quadro.isConnected && (prima.zoom !== zoom || prima.centro.lon !== centro.lon || prima.centro.lat !== centro.lat) && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const { x, y } = proietta(prima.centro);
+    const inizio = `translate(${MAPPA_L / 2 - x}px, ${MAPPA_A / 2 - y}px) scale(${2 ** (prima.zoom - zoom)})`;
+    vista.style.transformOrigin = `${x}px ${y}px`;
+    vista.style.transform = inizio;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      vista.style.transition = 'transform .45s ease-in-out';
+      vista.style.transform = 'none';
+    }));
+  }
   const scheda = el('div', 'minimappa-scheda');
   sync.mostra(p => {
     scheda.replaceChildren();
@@ -328,12 +345,26 @@ function zoomGrande(blocco, svg, g, origine, ridisegna) {
   const sostituisci = nuovo => { corrente.replaceWith(nuovo); corrente = nuovo; };
   const tutto = () => sostituisci(ridisegna(origine));
   if (g !== origine) svg.classList.add('zoomato');
-  if (g === origine) svg.before(el('p', 'scheda-nota zoom-aiuto', t('terremoti.zoom.aiuto')));
-  else {
+  // Lente d'ingrandimento (come l'icona di riferimento) con dentro il simbolo: più, meno, o freccia circolare per reimpostare
+  const SIMBOLI = { piu: 'M7 10h6M10 7v6', meno: 'M7 10h6', reimposta: 'M12.6 8.5A3 3 0 1 0 13 10M11.8 11.2L13 10l1.2 1.2' };
+  const icona = (simbolo, chiave, azione) => {
+    const b = el('button', 'zoom-icona');
+    const lente = nodoSvg('svg', { viewBox: '0 0 24 24', 'aria-hidden': 'true' });
+    lente.append(nodoSvg('circle', { cx: 10, cy: 10, r: 7 }), nodoSvg('path', { d: 'M15.2 15.2L21 21' }), nodoSvg('path', { d: SIMBOLI[simbolo] }));
+    b.append(lente);
+    b.type = 'button';
+    b.title = t(chiave);
+    b.setAttribute('aria-label', t(chiave));
+    b.addEventListener('click', azione);
+    return b;
+  };
+  const piuMeno = () => [icona('piu', 'terremoti.zoom.piu', () => scala(0.5, true)), icona('meno', 'terremoti.zoom.meno', () => scala(0.5, false))];
+  if (g === origine) {
+    const aiuto = el('p', 'scheda-nota zoom-aiuto', t('terremoti.zoom.aiuto'));
+    aiuto.append(' ', ...piuMeno());
+    svg.before(aiuto);
+  } else {
     const riga = el('div', 'zoom-riga');
-    const reimposta = el('button', 'scheda-filtro', t('terremoti.zoom.reimposta'));
-    reimposta.type = 'button';
-    reimposta.addEventListener('click', tutto);
     // frecce: spostano il tratto di un terzo della sua durata, senza uscire dai dati
     const freccia = (simbolo, verso, chiave) => {
       const b = el('button', `zoom-freccia ${verso < 0 ? 'sx' : 'dx'}`, simbolo);
@@ -348,7 +379,7 @@ function zoomGrande(blocco, svg, g, origine, ridisegna) {
       });
       return b;
     };
-    riga.append(reimposta, el('span', 'scheda-nota', t('terremoti.zoom.tratto', { da: dataEvento(g.da), a: dataEvento(g.a) })));
+    riga.append(...piuMeno(), icona('reimposta', 'terremoti.zoom.reimposta', tutto), el('span', 'scheda-nota', t('terremoti.zoom.tratto', { da: dataEvento(g.da), a: dataEvento(g.a) })));
     svg.before(riga);
     blocco.append(freccia('‹', -1, 'terremoti.zoom.sinistra'), freccia('›', 1, 'terremoti.zoom.destra')); // sul grafico, ai lati, come in uno slider di foto
   }
@@ -358,19 +389,23 @@ function zoomGrande(blocco, svg, g, origine, ridisegna) {
     return Math.min(1, Math.max(0, (((ev.clientX - r.left) * L) / r.width - MS) / (L - MS - MD)));
   };
   const xSvg = f => MS + f * (L - MS - MD);
-  // Rotella: ingrandisce (o riduce) attorno al cursore; tornando alla durata intera si rivede tutto. Un colpo ogni 80 ms, per non ridisegnare a raffica.
-  let ultimaRotella = 0;
-  svg.addEventListener('wheel', ev => {
-    ev.preventDefault();
-    if (ev.timeStamp - ultimaRotella < 80) return;
-    ultimaRotella = ev.timeStamp;
-    const f = frazione(ev), durata = g.a - g.da;
-    const nuova = durata * (ev.deltaY < 0 ? 0.7 : 1 / 0.7);
+  // Ingrandisce (o riduce) attorno alla frazione `f` del grafico; tornando alla durata intera si rivede tutto
+  const scala = (f, dentro) => {
+    const durata = g.a - g.da;
+    const nuova = durata * (dentro ? 0.7 : 1 / 0.7);
     if (nuova >= origine.a - origine.da) { if (g !== origine) tutto(); return; }
     if (nuova < 60000) return;
     const da = Math.min(Math.max(g.da + f * durata - f * nuova, origine.da), origine.a - nuova);
     const nuovo = ridisegna(finestraTempo(origine, da, da + nuova));
     if (nuovo.querySelector('svg')) sostituisci(nuovo);
+  };
+  // Rotella: un colpo ogni 80 ms, per non ridisegnare a raffica
+  let ultimaRotella = 0;
+  svg.addEventListener('wheel', ev => {
+    ev.preventDefault();
+    if (ev.timeStamp - ultimaRotella < 80) return;
+    ultimaRotella = ev.timeStamp;
+    scala(frazione(ev), ev.deltaY < 0);
   }, { passive: false });
   // Pan: con il grafico ingrandito il trascinamento sposta il tratto (Maiusc + trascinamento = nuova selezione). Si parte sempre dai dati d'inizio.
   const panorama = ev => {
