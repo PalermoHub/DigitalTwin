@@ -41,6 +41,19 @@ export function riassuntoGiorno(zone, giorno) {
   return righe;
 }
 
+// Terremoti recenti in legenda: non sono allerte del DPC (il sisma non ne ha) ma eventi INGV sopra soglia, a fianco del bollettino
+export const MAG_SISMI = 3;
+export const ORE_SISMI = 24;
+const MAX_SISMI = 5;
+
+// `eventi` = proprietà degli eventi INGV ({ id, mag, ts, luogo }) → i più recenti sopra soglia, dal più recente
+export function sismiRecenti(eventi, adesso = Date.now()) {
+  return (eventi ?? [])
+    .filter(e => e && e.mag >= MAG_SISMI && Number.isFinite(e.ts) && e.ts <= adesso && adesso - e.ts <= ORE_SISMI * 3600000)
+    .sort((a, b) => b.ts - a.ts)
+    .slice(0, MAX_SISMI);
+}
+
 function righeAllerta(p, adesso) {
   const agg = Number.isFinite(p.aggiornato) ? new Date(p.aggiornato * 1000) : null;
   return righe([

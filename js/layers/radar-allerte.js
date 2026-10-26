@@ -1,5 +1,7 @@
 import { tutti } from '../core/scheda-util.js';
-import { LIVELLI, coloreLivello, voceAllerta, riassuntoGiorno } from './scheda-allerte.js';
+import { LIVELLI, coloreLivello, voceAllerta, riassuntoGiorno, sismiRecenti } from './scheda-allerte.js';
+import { URL_SERVIZIO, eventoDaIngv, quantoTempoFa } from './scheda-terremoti.js';
+import { LIMITI } from '../core/config.js';
 import { tl, t, localeIntl } from '../core/i18n.js';
 import { scegliProxy } from '../rndt/proxy.js';
 
@@ -34,6 +36,7 @@ let timerRifresco = null;
 let controlli = null;
 let zone = []; // proprietà delle zone di allerta siciliane (dal Worker), con `aggiornato`
 let giornoAllerta = 'oggi'; // quale giorno colora la mappa
+let sismi = null; // terremoti INGV recenti (proprietà), null finché non arrivano o se il servizio non risponde
 
 function el(tag, classe, testo) {
   const e = document.createElement(tag);
@@ -131,7 +134,7 @@ function colora() {
 function scriviLegendaAllerte() {
   if (!allerteLegenda) return;
   allerteLegenda.replaceChildren(el('strong', null, 'Allerta meteo-idro in Sicilia'));
-  if (!zone.length) { allerteLegenda.append(el('p', 'uffici-nota', t('allerte.nonDisponibile'))); return; }
+  if (!zone.length) { allerteLegenda.append(el('p', 'uffici-nota', t('allerte.nonDisponibile'))); scriviSismi(); return; }
   const giorni = el('div', 'allerta-giorni');
   for (const g of ['oggi', 'domani']) {
     const b = el('button', 'allerta-giorno');
@@ -152,6 +155,31 @@ function scriviLegendaAllerte() {
   const chiave = el('p', 'uffici-nota allerta-chiave');
   for (const l of LIVELLI) { const c = el('i', 'incendi-campione'); c.style.background = l.colore; c.title = tl(l.nome); chiave.append(c, ' '); }
   allerteLegenda.append(chiave, el('p', 'uffici-nota', t('allerte.cliccaZona')), el('p', 'uffici-nota', zone[0].bollettino));
+  scriviSismi();
+}
+
+// Terremoti INGV delle ultime 24 ore sotto il bollettino: un'informazione a parte, il sisma non ha livelli di allerta
+function scriviSismi() {
+  if (!allerteLegenda) return;
+  const sezione = el('div', 'allerta-sismi');
+  sezione.append(el('strong', null, t('allerte.sismiTitolo')));
+  const elenco = sismi ? sismiRecenti(sismi) : null;
+  if (!elenco) sezione.append(el('p', 'uffici-nota', t('allerte.sismiNonDisponibile')));
+  else if (!elenco.length) sezione.append(el('p', 'uffici-nota', t('allerte.sismiNessuno')));
+  else for (const e of elenco) sezione.append(el('p', 'allerta-riga', `M ${e.mag.toLocaleString(localeIntl(), { minimumFractionDigits: 1 })} · ${e.luogo || t('terremoti.zonaSconosciuta')} · ${quantoTempoFa(e.ts)}`));
+  sezione.append(el('p', 'uffici-nota', t('allerte.sismiNota')));
+  allerteLegenda.append(sezione);
+}
+
+async function caricaSismi() {
+  try {
+    const q = new URLSearchParams({ format: 'geojson', starttime: new Date(Date.now() - 24 * 3600000).toISOString().slice(0, 19), orderby: 'time', minmag: '3', limit: '100', minlon: LIMITI[0][0], minlat: LIMITI[0][1], maxlon: LIMITI[1][0], maxlat: LIMITI[1][1] });
+    const r = await fetch(`${URL_SERVIZIO}?${q}`);
+    if (!r.ok && r.status !== 204) throw new Error(String(r.status));
+    const dati = r.status === 204 ? { features: [] } : await r.json();
+    sismi = (dati.features ?? []).map(f => eventoDaIngv(f)).filter(Boolean).map(f => f.properties);
+  } catch { sismi = null; }
+  scriviLegendaAllerte();
 }
 
 function creaLegendaAllerte() {
@@ -219,7 +247,7 @@ export default {
   strati: [
     {
       id: 'allerte', etichetta: 'Allerta meteo-idro in Sicilia', layers: [FILL, BORDO], attivo: false, legendaPannello: '.lg-allerte',
-      suCambio(attivo) { if (allerteLegenda) allerteLegenda.hidden = !attivo; if (attivo) caricaAllerte(); },
+      suCambio(attivo) { if (allerteLegenda) allerteLegenda.hidden = !attivo; if (attivo) { caricaAllerte(); caricaSismi(); } },
     },
     {
       id: 'radar', etichetta: 'Radar della pioggia', layers: Array.from({ length: SLOT }, (_, i) => slot(i)), attivo: false, legendaPannello: '.lg-radar',
