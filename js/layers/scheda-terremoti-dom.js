@@ -334,8 +334,23 @@ function zoomGrande(blocco, svg, g, origine, ridisegna) {
     const reimposta = el('button', 'scheda-filtro', t('terremoti.zoom.reimposta'));
     reimposta.type = 'button';
     reimposta.addEventListener('click', tutto);
+    // frecce: spostano il tratto di un terzo della sua durata, senza uscire dai dati
+    const freccia = (simbolo, verso, chiave) => {
+      const b = el('button', `zoom-freccia ${verso < 0 ? 'sx' : 'dx'}`, simbolo);
+      b.type = 'button';
+      b.title = t(chiave);
+      b.setAttribute('aria-label', t(chiave));
+      b.addEventListener('click', () => {
+        const durata = g.a - g.da;
+        const da = Math.min(Math.max(g.da + verso * durata / 3, origine.da), origine.a - durata);
+        const nuovo = ridisegna(finestraTempo(origine, da, da + durata));
+        if (nuovo.querySelector('svg')) sostituisci(nuovo);
+      });
+      return b;
+    };
     riga.append(reimposta, el('span', 'scheda-nota', t('terremoti.zoom.tratto', { da: dataEvento(g.da), a: dataEvento(g.a) })));
     svg.before(riga);
+    blocco.append(freccia('‹', -1, 'terremoti.zoom.sinistra'), freccia('›', 1, 'terremoti.zoom.destra')); // sul grafico, ai lati, come in uno slider di foto
   }
   svg.addEventListener('dblclick', tutto);
   const frazione = ev => {

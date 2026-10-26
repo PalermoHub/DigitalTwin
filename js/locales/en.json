@@ -3236,6 +3236,8 @@
   "terremoti.asse.repliche": "Aftershocks per day (log scale)",
   "terremoti.omori.fit": "Decay: p = {p}",
   "terremoti.zoom.aiuto": "Drag on the chart or use the mouse wheel to zoom into a time range; double-click to go back to the full range. When zoomed in, drag to pan (Shift + drag for a new selection).",
+  "terremoti.zoom.sinistra": "Pan left (back in time)",
+  "terremoti.zoom.destra": "Pan right (forward in time)",
   "terremoti.zoom.reimposta": "Reset zoom",
   "terremoti.zoom.tratto": "Range: {da} – {a}",
   "terremoti.minimappa.titolo": "Location of the events in the chart",

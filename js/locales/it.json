@@ -3236,6 +3236,8 @@
   "terremoti.asse.repliche": "Repliche al giorno (scala logaritmica)",
   "terremoti.omori.fit": "Decadimento: p = {p}",
   "terremoti.zoom.aiuto": "Trascina sul grafico o usa la rotella per ingrandire un tratto di tempo; doppio clic per tornare a tutto. Da ingrandito, trascina per spostarti (Maiusc + trascina per una nuova selezione).",
+  "terremoti.zoom.sinistra": "Sposta a sinistra (indietro nel tempo)",
+  "terremoti.zoom.destra": "Sposta a destra (avanti nel tempo)",
   "terremoti.zoom.reimposta": "Reimposta zoom",
   "terremoti.zoom.tratto": "Tratto: {da} – {a}",
   "terremoti.minimappa.titolo": "Posizione degli eventi del grafico",
