@@ -1,6 +1,6 @@
 import { tutti } from '../core/scheda-util.js';
-import { LIVELLI, coloreLivello, voceAllerta, riassuntoGiorno, sismiRecenti } from './scheda-allerte.js';
-import { URL_SERVIZIO, eventoDaIngv, quantoTempoFa } from './scheda-terremoti.js';
+import { LIVELLI, coloreLivello, voceAllerta, riassuntoGiorno, sismiRecenti, caricaSismi24h } from './scheda-allerte.js';
+import { quantoTempoFa } from './scheda-terremoti.js';
 import { LIMITI } from '../core/config.js';
 import { tl, t, localeIntl } from '../core/i18n.js';
 import { scegliProxy } from '../rndt/proxy.js';
@@ -172,13 +172,7 @@ function scriviSismi() {
 }
 
 async function caricaSismi() {
-  try {
-    const q = new URLSearchParams({ format: 'geojson', starttime: new Date(Date.now() - 24 * 3600000).toISOString().slice(0, 19), orderby: 'time', minmag: '3', limit: '100', minlon: LIMITI[0][0], minlat: LIMITI[0][1], maxlon: LIMITI[1][0], maxlat: LIMITI[1][1] });
-    const r = await fetch(`${URL_SERVIZIO}?${q}`);
-    if (!r.ok && r.status !== 204) throw new Error(String(r.status));
-    const dati = r.status === 204 ? { features: [] } : await r.json();
-    sismi = (dati.features ?? []).map(f => eventoDaIngv(f)).filter(Boolean).map(f => f.properties);
-  } catch { sismi = null; }
+  try { sismi = await caricaSismi24h(LIMITI); } catch { sismi = null; }
   scriviLegendaAllerte();
 }
 

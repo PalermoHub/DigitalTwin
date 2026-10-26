@@ -2416,6 +2416,7 @@
   "home.banda.chiama112": "Call 112",
   "home.banda.chiamaPc": "Call Civil Protection",
   "home.allerta.attiva": "{livello} in Palermo: see the bulletin",
+  "home.sismo.attivo": "Earthquake M {mag} at {luogo}: see details",
   "home.allerta.titolo": "Weather and hydro-geological alert",
   "home.allerta.sito": "Bulletin on the Civil Protection website",
   "home.acc.informazioni": "Information",

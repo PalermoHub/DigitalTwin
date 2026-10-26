@@ -2416,6 +2416,7 @@
   "home.banda.chiama112": "Chiama il 112",
   "home.banda.chiamaPc": "Chiama la Protezione civile",
   "home.allerta.attiva": "{livello} a Palermo: vedi il bollettino",
+  "home.sismo.attivo": "Terremoto M {mag} a {luogo}: vedi i dettagli",
   "home.allerta.titolo": "Allerta meteo-idro",
   "home.allerta.sito": "Bollettino sul sito della Protezione Civile",
   "home.acc.informazioni": "Informazioni",

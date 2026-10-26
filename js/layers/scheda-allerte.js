@@ -1,5 +1,6 @@
 import { righe } from '../core/scheda-util.js';
 import { t, tl, localeIntl } from '../core/i18n.js';
+import { URL_SERVIZIO, eventoDaIngv } from './scheda-terremoti.js';
 
 // Modello puro dell'allerta meteo-idro del Dipartimento della Protezione Civile per le zone di allerta della Sicilia: la card della scheda (tab «Luogo») e il riassunto della legenda.
 // I dati li serve il Worker (/allerte): una feature per zona, con i livelli di oggi e di domani; il livello è 0 (nessuna allerta), 1 gialla, 2 arancione, 3 rossa.
@@ -44,14 +45,28 @@ export function riassuntoGiorno(zone, giorno) {
 // Terremoti recenti in legenda: non sono allerte del DPC (il sisma non ne ha) ma eventi INGV sopra soglia, a fianco del bollettino
 export const MAG_SISMI = 3;
 export const ORE_SISMI = 24;
+export const MAG_NOTEVOLE = 4; // da qui in su una scossa accende il pulsante «Emergenze» della home
 const MAX_SISMI = 5;
 
 // `eventi` = proprietà degli eventi INGV ({ id, mag, ts, luogo }) → i più recenti sopra soglia, dal più recente
-export function sismiRecenti(eventi, adesso = Date.now()) {
+export function sismiRecenti(eventi, adesso = Date.now(), magMin = MAG_SISMI, max = MAX_SISMI) {
   return (eventi ?? [])
-    .filter(e => e && e.mag >= MAG_SISMI && Number.isFinite(e.ts) && e.ts <= adesso && adesso - e.ts <= ORE_SISMI * 3600000)
+    .filter(e => e && e.mag >= magMin && Number.isFinite(e.ts) && e.ts <= adesso && adesso - e.ts <= ORE_SISMI * 3600000)
     .sort((a, b) => b.ts - a.ts)
-    .slice(0, MAX_SISMI);
+    .slice(0, max);
+}
+
+// La scossa più forte delle ultime ORE_SISMI ore se è notevole (M ≥ MAG_NOTEVOLE), altrimenti null
+export const sismoNotevole = (eventi, adesso = Date.now()) => sismiRecenti(eventi, adesso, MAG_NOTEVOLE, Infinity)
+  .sort((a, b) => b.mag - a.mag)[0] ?? null;
+
+// Terremoti INGV M ≥ MAG_SISMI delle ultime ORE_SISMI ore nei `limiti` ([[lonMin, latMin], [lonMax, latMax]]) → proprietà degli eventi; lancia se il servizio non risponde (204 = nessun evento)
+export async function caricaSismi24h(limiti, fetchFn = fetch, adesso = Date.now()) {
+  const q = new URLSearchParams({ format: 'geojson', starttime: new Date(adesso - ORE_SISMI * 3600000).toISOString().slice(0, 19), orderby: 'time', minmag: String(MAG_SISMI), limit: '100', minlon: limiti[0][0], minlat: limiti[0][1], maxlon: limiti[1][0], maxlat: limiti[1][1] });
+  const r = await fetchFn(`${URL_SERVIZIO}?${q}`);
+  if (!r.ok && r.status !== 204) throw new Error(String(r.status));
+  const dati = r.status === 204 ? { features: [] } : await r.json();
+  return (dati.features ?? []).map(f => eventoDaIngv(f, adesso)).filter(Boolean).map(f => f.properties);
 }
 
 function righeAllerta(p, adesso) {

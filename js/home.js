@@ -9,7 +9,9 @@ import { precaricaMappaARiposo } from './core/precarica-mappa.js';
 import { trovaZone } from './core/zone.js';
 import { avviaHomeMobile } from './core/home-mobile.js';
 import { scegliProxy } from './rndt/proxy.js';
-import { livelloMassimo, nomeLivello, riassuntoGiorno, LINK as LINK_BOLLETTINO } from './layers/scheda-allerte.js';
+import { livelloMassimo, nomeLivello, riassuntoGiorno, sismiRecenti, sismoNotevole, caricaSismi24h, LINK as LINK_BOLLETTINO } from './layers/scheda-allerte.js';
+import { quantoTempoFa } from './layers/scheda-terremoti.js';
+import { LIMITI } from './core/config.js';
 
 await caricaDizionari();
 applicaDom(document);
@@ -488,14 +490,35 @@ function creaBollettino(zone, p) {
     ...(p.bollettino ? [el('p', { className: 'allerta-fonte', textContent: p.bollettino })] : []),
     el('a', { className: 'allerta-link', href: LINK_BOLLETTINO, target: '_blank', rel: 'noopener', textContent: tr('home.allerta.sito') }));
 }
-// allerta meteo-idro della zona di Palermo (oggi o domani): accende il pulsante «Emergenze»; senza rete o senza bollettino resta spento
+// Terremoti INGV delle ultime 24 ore (M ≥ 3): sezione a parte nel riquadro, sempre presente; il sisma non ha livelli di allerta
+function creaSismi(elenco) {
+  const righe = elenco ? sismiRecenti(elenco) : null;
+  const num = n => n.toLocaleString(lingua(), { minimumFractionDigits: 1 });
+  return [el('h4', { textContent: tr('allerte.sismiTitolo') }),
+    ...(!righe ? [el('p', { className: 'allerta-fonte', textContent: tr('allerte.sismiNonDisponibile') })]
+      : !righe.length ? [el('p', { className: 'allerta-fonte', textContent: tr('allerte.sismiNessuno') })]
+        : righe.map(e => el('p', { className: 'allerta-riga', textContent: `M ${num(e.mag)} · ${e.luogo ? tl(e.luogo) : tr('terremoti.zonaSconosciuta')} · ${quantoTempoFa(e.ts)}` }))),
+    el('p', { className: 'allerta-fonte', textContent: tr('allerte.sismiNota') })];
+}
+// «Emergenze» si accende per l'allerta meteo-idro della zona di Palermo (oggi o domani) e per una scossa notevole (M ≥ 4) nelle ultime 24 ore; il riquadro mostra sempre i terremoti recenti.
+// Senza rete o senza bollettino manca quella parte: ogni fonte è indipendente e il riquadro si riscrive a ogni risposta.
+let meteo = null; // { zone, p } dal bollettino DPC
+let sismi; // undefined = in attesa, null = servizio non raggiungibile, altrimenti l'elenco
+function aggiornaEmergenze() {
+  const livello = meteo ? livelloMassimo(meteo.p) : 0;
+  if (livello === 0 && sismi === undefined) return; // niente da mostrare finché non risponde il servizio dei terremoti
+  const notevole = sismi ? sismoNotevole(sismi) : null;
+  const testi = [
+    ...(livello > 0 ? [tr('home.allerta.attiva', { livello: tl(nomeLivello(livello)) })] : []),
+    ...(notevole ? [tr('home.sismo.attivo', { mag: notevole.mag.toLocaleString(lingua(), { minimumFractionDigits: 1 }), luogo: notevole.luogo ? tl(notevole.luogo) : tr('terremoti.zonaSconosciuta') })] : []),
+  ];
+  const nodo = livello > 0 ? creaBollettino(meteo.zone, meteo.p) : el('div', { className: 'allerta-bollettino' });
+  if (sismi !== undefined) nodo.append(...creaSismi(sismi));
+  homeMobile.segnalaAllerta(testi.join(' · '), nodo);
+}
 fetch(`${scegliProxy(location.search, location.hostname)}/allerte`).then(r => (r.ok ? r.json() : Promise.reject(r.status)))
-  .then(dati => {
-    const zone = dati.features.map(f => f.properties);
-    const p = zone.find(z => z.palermo);
-    const livello = livelloMassimo(p);
-    if (livello > 0) homeMobile.segnalaAllerta(tr('home.allerta.attiva', { livello: tl(nomeLivello(livello)) }), creaBollettino(zone, p));
-  }).catch(() => {});
+  .then(dati => { const zone = dati.features.map(f => f.properties); meteo = { zone, p: zone.find(z => z.palermo) }; }).catch(() => {}).then(aggiornaEmergenze);
+caricaSismi24h(LIMITI).catch(() => null).then(elenco => { sismi = elenco; aggiornaEmergenze(); });
 document.documentElement.classList.add('home-pronta');
 aggiornaCesto();
 
