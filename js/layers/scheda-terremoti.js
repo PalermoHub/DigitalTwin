@@ -7,6 +7,7 @@ import { posizioneIn } from '../core/scheda-navigazione.js';
 
 export const FONTE = 'INGV, Istituto Nazionale di Geofisica e Vulcanologia: terremoti in tempo reale (CC BY 4.0)';
 export const SITO = 'https://terremoti.ingv.it/';
+export const SITO_DETTAGLI = 'https://palermohub.opendatasicilia.it/terremoti_italia.html';
 export const LINK = 'https://terremoti.ingv.it/event/';
 export const URL_SERVIZIO = 'https://webservices.ingv.it/fdsnws/event/1/query';
 const PESO_LUOGO = 8;
@@ -136,7 +137,10 @@ export function voceTerremoto(p, adesso = Date.now(), dinamico = null) {
   return {
     chiave: `terremoto-${p.id}`, tipo: 'terremoto', peso: PESO_LUOGO, strato: 'terremoti', titolo: titoloTerremoto(p), icona: 'terremoto', badge: p.fascia, sempre: true,
     gruppi: [{ righe: righeTerremoto(p, adesso) }], miniatura: miniatura(p),
-    link: { testo: 'Scheda dell\'evento su INGV', url: LINK + p.id, icona: 'esterno', suggerimento: 'Pagina dell\'evento sul sito terremoti.ingv.it' },
+    link: [
+      { testo: 'Scheda dell\'evento su INGV', url: LINK + p.id, icona: 'esterno', suggerimento: 'Pagina dell\'evento sul sito terremoti.ingv.it' },
+      { testo: 'Maggiori dettagli', url: SITO_DETTAGLI, icona: 'esterno', suggerimento: 'Mappa dei terremoti in Italia su PalermoHub: archivio dal 1985, sequenze e allerte' },
+    ],
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
     ...(dinamico ? { dinamico } : {}),
   };

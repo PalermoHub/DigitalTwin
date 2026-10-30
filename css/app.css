@@ -2534,3 +2534,7 @@ a.scheda-tel { min-height: 40px; }
 .info-grafico-popup p { margin: 0 0 10px; }
 .info-grafico-popup strong { color: var(--accent-strong); }
 .info-grafico-chiudi { display: block; margin: 4px 0 0 auto; padding: 6px 16px; border: 0; border-radius: var(--r-pill); background: var(--accent-strong); color: var(--accent-strong-ink); font: inherit; font-weight: 600; cursor: pointer; }
+
+/* pulsanti di approfondimento nel piede della scheda: a contorno, icona e testo in colore link */
+.scheda-piede .scheda-link { justify-content: flex-start; padding: 8px 12px; border: 1px solid color-mix(in srgb, var(--link) 45%, transparent); background: var(--surface); color: var(--link); font-size: var(--fs-sm); line-height: 1.25; transition: background .15s, border-color .15s; }
+.scheda-piede .scheda-link:hover, .scheda-piede .scheda-link:focus-visible { border-color: var(--link); background: color-mix(in srgb, var(--link) 10%, var(--surface)); }

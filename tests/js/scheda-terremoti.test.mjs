@@ -53,7 +53,7 @@ test('popup e voce: righe principali e link all\'evento', () => {
   assert.ok(val('Distanza da Palermo'));
   assert.equal(m.righe.find(r => r.etichetta === 'Zona'), undefined);
   const v = voceTerremoto(p, ADESSO);
-  assert.equal(v.link.url, 'https://terremoti.ingv.it/event/47606532');
+  assert.deepEqual(v.link.map(l => l.url), ['https://terremoti.ingv.it/event/47606532', 'https://palermohub.opendatasicilia.it/terremoti_italia.html']);
   assert.equal(v.strato, 'terremoti');
 });
 
