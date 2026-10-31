@@ -3124,7 +3124,7 @@
   "lbl.Segui la nave su MarineTraffic": "Segui la nave su MarineTraffic",
   "lbl.Scheda della nave su MarineTraffic": "Scheda della nave su MarineTraffic",
   "lbl.Nave": "Nave",
-  "lbl.Traffico navale attorno alla Sicilia (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 5 minuti e conservati per 30 minuti; condizioni d'uso da verificare": "Traffico navale attorno alla Sicilia (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 5 minuti e conservati per 30 minuti; condizioni d'uso da verificare",
+  "lbl.Traffico navale attorno alla Sicilia (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 30 minuti e conservati per 60 minuti; condizioni d'uso da verificare": "Traffico navale attorno alla Sicilia (posizione, categoria, destinazione, velocità e rotta delle navi): AISStream, dati AIS terrestri dei transponder delle navi, ascoltati dal Worker ogni 30 minuti e conservati per 60 minuti; condizioni d'uso da verificare",
   "lbl.AISStream": "AISStream",
   "lbl.Documentazione di AISStream": "Documentazione di AISStream",
   "allerte.oggi": "Oggi",

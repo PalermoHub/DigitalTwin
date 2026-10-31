@@ -968,8 +968,8 @@
    "AISStream"
   ],
   "fonte": {
-   "it": "AISStream: dati AIS terrestri dei transponder delle navi, aggiornati ogni 5 minuti. Condizioni d'uso da verificare.",
-   "en": "AISStream: terrestrial AIS data from ship transponders, updated every 5 minutes. Terms of use to be checked."
+   "it": "AISStream: dati AIS terrestri dei transponder delle navi, aggiornati ogni 30 minuti. Condizioni d'uso da verificare.",
+   "en": "AISStream: terrestrial AIS data from ship transponders, updated every 30 minutes. Terms of use to be checked."
   },
   "link": {
    "it": [

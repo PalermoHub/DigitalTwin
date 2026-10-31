@@ -6,7 +6,7 @@
 
 export const RIQUADRO = [[35.3, 11.7], [39.0, 15.9]]; // [lat, lon] sud-ovest e nord-est: tutta la Sicilia con le isole minori (da Lampedusa a Ustica e Eolie, da Pantelleria allo Stretto di Messina) e i mari attorno. La copertura AIS dipende dai ricevitori di volontari di AISStream, non dal riquadro
 export const ASCOLTO_MS = 75000;
-export const SCADENZA_S = 30 * 60;
+export const SCADENZA_S = 60 * 60;
 export const TTL_SECONDI = 120;
 const URL_STREAM = 'https://stream.aisstream.io/v0/stream';
 const CHIAVE_KV = 'navi';

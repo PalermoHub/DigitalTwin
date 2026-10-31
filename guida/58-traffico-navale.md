@@ -10,11 +10,11 @@ Il layer **«Navi»**, nella sezione **«Traffico navale»** del gruppo **«Tras
 
 ## Aggiornamento e limiti
 
-Parole chiave: aggiornamento, ogni 5 minuti, ultimo segnale, AIS terrestre, copertura, 30 minuti, ricevitori.
+Parole chiave: aggiornamento, ogni 30 minuti, ultimo segnale, AIS terrestre, copertura, 60 minuti, ricevitori.
 
 Domande tipiche: Ogni quanto si aggiornano le navi? Perché una nave sparisce? Si vedono anche le navi al largo?
 
-I dati non sono salvati nel sito: un servizio (Worker) ascolta **AISStream** ogni 5 minuti e conserva l'ultima posizione di ogni nave vista negli **ultimi 30 minuti**; la mappa si ricarica ogni 2 minuti con il layer acceso. L'AIS è **terrestre**: i dati arrivano dai ricevitori di volontari di AISStream, quindi la copertura **dipende da dove ce ne sono**. Il riquadro d'ascolto copre **tutta la Sicilia con le isole minori** (da Lampedusa alle Eolie, da Pantelleria allo Stretto di Messina). Oggi le navi si vedono soprattutto lungo la costa orientale della Sicilia e al largo di Trapani; **nel golfo di Palermo i segnali sono pochi o assenti**. Una nave senza segnali per più di 30 minuti sparisce. Le posizioni sono quelle dell'ultimo segnale ricevuto, non una traccia continua.
+I dati non sono salvati nel sito: un servizio (Worker) ascolta **AISStream** ogni 30 minuti e conserva l'ultima posizione di ogni nave vista negli **ultimi 60 minuti**; la mappa si ricarica ogni 2 minuti con il layer acceso. L'AIS è **terrestre**: i dati arrivano dai ricevitori di volontari di AISStream, quindi la copertura **dipende da dove ce ne sono**. Il riquadro d'ascolto copre **tutta la Sicilia con le isole minori** (da Lampedusa alle Eolie, da Pantelleria allo Stretto di Messina). Oggi le navi si vedono soprattutto lungo la costa orientale della Sicilia e al largo di Trapani; **nel golfo di Palermo i segnali sono pochi o assenti**. Una nave senza segnali per più di 60 minuti sparisce. Le posizioni sono quelle dell'ultimo segnale ricevuto, non una traccia continua.
 
 Dove molte navi sono vicine (porti, Stretto di Messina) la mappa mostra un **cerchio col numero** di navi. Un clic sul cerchio avvicina la mappa; dallo zoom ravvicinato ogni nave torna ad avere la sua icona. I cerchi contano solo le categorie accese nella legenda.
 

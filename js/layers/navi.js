@@ -7,8 +7,8 @@ import { tl, t } from '../core/i18n.js';
 import { registraGlifo, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 import { scegliProxy } from '../rndt/proxy.js';
 
-// Navi attorno alla Sicilia (AIS terrestre). I dati non stanno nel repository: li serve il Worker (/navi), che ogni 5 minuti ascolta
-// AISStream e conserva l'ultima posizione di ogni nave vista negli ultimi 30 minuti. Il layer li ricarica ogni 2 minuti finché è acceso.
+// Navi attorno alla Sicilia (AIS terrestre). I dati non stanno nel repository: li serve il Worker (/navi), che ogni 30 minuti ascolta
+// AISStream e conserva l'ultima posizione di ogni nave vista negli ultimi 60 minuti. Il layer li ricarica ogni 2 minuti finché è acceso.
 const SRC = 'navi';
 const ICONA = 'nave'; // in mappa è la sagoma dell'icona, ruotata secondo la rotta (vedi core/icone-mappa.js)
 const PUNTI = 'navi-punti';

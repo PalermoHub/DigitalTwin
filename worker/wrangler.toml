@@ -17,9 +17,9 @@ ORIGINI = "http://localhost:8000,http://127.0.0.1:8000,https://gbvitrano.github.
 SITI = "https://palermodigitaltwin.opendatasicilia.it,https://gbvitrano.github.io,https://palermohub.github.io"
 DOMINIO_CORTO = "https://palermodigitaltwin.link"
 
-# navi: ogni 10 minuti il Worker ascolta AISStream per qualche secondo e unisce le posizioni nel KV (chiave AISSTREAM_KEY = secret, mai nel codice)
+# navi: ogni 30 minuti il Worker ascolta AISStream per qualche secondo e unisce le posizioni nel KV (chiave AISSTREAM_KEY = secret, mai nel codice)
 [triggers]
-crons = ["*/10 * * * *"]
+crons = ["*/30 * * * *"]
 
 [[kv_namespaces]]
 binding = "NAVI"
