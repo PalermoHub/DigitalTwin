@@ -114,7 +114,8 @@ export async function aggiorna(env, apri, adesso = () => Math.floor(Date.now() /
   if (!env?.AISSTREAM_KEY || !env?.NAVI) throw new Error('AISSTREAM_KEY o KV NAVI mancanti');
   const diag = { quando: adesso() };
   const modifiche = await raccogli(env.AISSTREAM_KEY, apri, adesso, durata, diag);
-  await env.NAVI.put('diag', JSON.stringify(diag)); // riepilogo dell'ultimo ascolto (messaggi, tipi, errori): si legge dal KV
+  // riepilogo dell'ultimo ascolto (messaggi, tipi, errori): scritto solo se l'ascolto è andato a vuoto (risparmia scritture KV, limite free 1000/giorno)
+  if (!modifiche.length) await env.NAVI.put('diag', JSON.stringify(diag));
   const stato = unisci(await env.NAVI.get(CHIAVE_KV, 'json'), modifiche, adesso());
   await env.NAVI.put(CHIAVE_KV, JSON.stringify(stato));
   return { ricevuti: modifiche.length, navi: Object.keys(stato).length };
