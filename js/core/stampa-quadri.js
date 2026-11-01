@@ -1,6 +1,7 @@
 // Quadri d'unione per la stampa in scala: per ogni scala (1:500, 1:2.000, 1:5.000, 1:10.000) l'elenco delle tavole predefinite
 // (dati/qu/quadri-stampa.json, generato da scripts/prepara_quadri_stampa.py). Sceglierne una porta il riquadro di stampa sulla tavola.
 
+import { STRATI_AREA } from './stampa-aree.js';
 import { FASCIA_TESTI_MM, MARGINE_MM } from './stampa.js';
 
 export const FORMATO_TAVOLA = 'Tavola'; // formato su misura: la mappa è grande come la tavola
@@ -61,7 +62,7 @@ export function nascondiQuadri(map) {
 
 // Esegue `azione` con i contorni nascosti (non devono finire nell'anteprima né nel file esportato) e poi li rimette
 export async function senzaQuadri(map, azione) {
-  const visibili = STRATI.filter(id => map.getLayer(id) && map.getLayoutProperty(id, 'visibility') !== 'none');
+  const visibili = [...STRATI, ...STRATI_AREA].filter(id => map.getLayer(id) && map.getLayoutProperty(id, 'visibility') !== 'none');
   for (const id of visibili) map.setLayoutProperty(id, 'visibility', 'none');
   try { return await azione(); } finally { for (const id of visibili) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', 'visible'); }
 }

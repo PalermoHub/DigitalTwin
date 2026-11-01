@@ -6,6 +6,7 @@ import { FORMATI, SCALE_STAMPA, areaMappaMm, attribuzioniUniche, el, esportaFile
 import { conAvvisoStampa } from './avviso-attesa.js';
 import { calcolaPadding } from './padding-mappa.js';
 import { FORMATO_TAVOLA, caricaQuadri, misureTavolaM, mostraQuadri, nascondiQuadri, paginaSuMisura, senzaQuadri } from './stampa-quadri.js';
+import { caricaAree, mostraArea, nascondiArea } from './stampa-aree.js';
 import { leggiLegende } from './stampa-legende.js';
 import { areaMappaPoster, caricaLogo, disegnaPoster, paginaMm, sottotitoloPredefinito, zoomPerPagina } from './stampa-poster.js';
 
@@ -76,7 +77,7 @@ const OPZIONI_ELEMENTI = ['legenda', 'scala', 'rosa', 'griglia']; // logo, fonte
 
 export function creaPannelloStampa(map, radice) {
   const contenitore = map.getContainer();
-  const stato = { quadri: [], quadro: null, formato: 'A4', direzione: 'landscape', uscita: 'png', dpi: 150, scala: null, titolo: '', sottotitolo: '', elementi: Object.fromEntries(OPZIONI_ELEMENTI.map(k => [k, true])), riquadro: null, occupato: false };
+  const stato = { quadri: [], quadro: null, areaSel: null, formato: 'A4', direzione: 'landscape', uscita: 'png', dpi: 150, scala: null, titolo: '', sottotitolo: '', elementi: Object.fromEntries(OPZIONI_ELEMENTI.map(k => [k, true])), riquadro: null, occupato: false };
   let logo = null;
   let ultimoFotogramma = null;
   let aperto = false;
@@ -272,7 +273,7 @@ export function creaPannelloStampa(map, radice) {
     map.panBy([p.x - (r.x + r.w / 2), p.y - (r.y + r.h / 2)], { duration: 0 });
   };
   // Formato su misura: la mappa del foglio è grande come la tavola alla scala scelta (cambiando uscita si ricalcola)
-  const tavolaScelta = () => stato.quadri.find(t => t.nome === stato.quadro);
+  const tavolaScelta = () => stato.areaSel ?? stato.quadri.find(t => t.nome === stato.quadro);
   const togliFormatoTavola = () => {
     delete FORMATI[FORMATO_TAVOLA];
     const select = radice.querySelector('#stampa-formato');
@@ -314,12 +315,52 @@ export function creaPannelloStampa(map, radice) {
     campoQuadro.hidden = !stato.quadri.length;
     selectQuadro.replaceChildren(el('option', { value: '', textContent: tr('stampa.quadro.nessuno') }), ...stato.quadri.map(t => el('option', { value: t.nome, textContent: t.nome })));
     disegnaQuadri();
+    if (stato.areaSel) { vaiAllArea(stato.areaSel); aggiornaAnteprima(false); } // cambiata la scala: l'area scelta si rimisura
   }
   selectQuadro.addEventListener('change', () => {
     stato.quadro = selectQuadro.value || null;
+    if (stato.quadro) { stato.areaSel = null; selectArea.value = ''; nascondiArea(map); }
     disegnaQuadri();
     const tavola = tavolaScelta();
     if (tavola) { vaiAlQuadro(tavola); aggiornaAnteprima(); } else togliFormatoTavola();
+  });
+
+  // — aree amministrative: Comune, circoscrizioni, quartieri, UPL —
+  const selectArea = el('select', { id: 'stampa-area' });
+  const campoArea = el('label', { className: 'stampa-campo', htmlFor: 'stampa-area', hidden: true }, el('span', { textContent: tr('stampa.area') }), selectArea);
+  let gruppiAree = [];
+  caricaAree().then(g => {
+    gruppiAree = g;
+    if (!g.length) return;
+    selectArea.replaceChildren(el('option', { value: '', textContent: tr('stampa.area.nessuna') }),
+      ...g.map(gr => el('optgroup', { label: tr(`stampa.area.${gr.id}`) }, ...gr.unita.map(u => el('option', { value: `${gr.id}|${u.nome}`, textContent: gr.id === 'circoscrizioni' ? tr('stampa.area.circoscrizione', { n: u.nome }) : u.nome })))));
+    campoArea.hidden = false;
+  });
+  // Con una scala fissa il foglio diventa «su misura» come per le tavole; senza scala il riquadro tiene il formato scelto e la mappa si ingrandisce fin dove l'area ci sta
+  const vaiAllArea = area => {
+    if (stato.scala) { vaiAlQuadro(area); return; }
+    stato.direzione = area.larghezza >= area.altezza ? 'landscape' : 'portrait';
+    radice.querySelector('#stampa-direzione').value = stato.direzione;
+    stato.riquadro = riquadroIniziale(vista(), proporzione());
+    posiziona();
+    map.jumpTo({ center: area.centro });
+    const a = map.project([area.bbox[0], area.bbox[1]]);
+    const b = map.project([area.bbox[2], area.bbox[3]]);
+    const k = Math.min(stato.riquadro.w / Math.abs(b.x - a.x), stato.riquadro.h / Math.abs(a.y - b.y)) * 0.95;
+    map.jumpTo({ zoom: map.getZoom() + Math.log2(k) });
+    centraSuQuadro(area);
+    aggiornaRisoluzione();
+  };
+  selectArea.addEventListener('change', () => {
+    const [id, nome] = selectArea.value.split('|');
+    const area = gruppiAree.find(g => g.id === id)?.unita.find(u => u.nome === nome) ?? null;
+    stato.areaSel = area;
+    if (!area) { nascondiArea(map); togliFormatoTavola(); return; }
+    stato.quadro = null; selectQuadro.value = '';
+    disegnaQuadri();
+    mostraArea(map, area);
+    vaiAllArea(area);
+    aggiornaAnteprima();
   });
 
   radice.append( // il titolo è quello del tab, già nella sezione
@@ -333,7 +374,7 @@ export function creaPannelloStampa(map, radice) {
     el('div', { className: 'stampa-riga' },
       sceltaDa('stampa-uscita', tr('html.stampa.uscita'), ['png', 'jpg', 'pdf', 'stampa'].map(v => [v, tr(`stampa.uscita.${v}`)]), stato.uscita, v => { stato.uscita = v; dopoCambioProporzione(); }),
       sceltaDa('stampa-scala', tr('html.stampa.scala'), [['', tr('stampa.vistaAttuale')], ...SCALE_STAMPA.map(n => [String(n), tr('stampa.opzioneScala', { n: n.toLocaleString(localeIntl()) })])], '', v => { stato.scala = +v || null; if (stato.scala) { adattaAScala(); portaInVista(); } else { riquadro.classList.remove('a-scala'); stato.riquadro = riquadroIniziale(vista(), proporzione()); posiziona(); } caricaElencoQuadri(); aggiornaAnteprima(false); })),
-    campoQuadro,
+    campoQuadro, campoArea,
     campoRisoluzione, infoRisoluzione,
     elementi,
     statoEsporta,
@@ -381,10 +422,11 @@ export function creaPannelloStampa(map, radice) {
     aperto = apri;
     riquadro.hidden = !apri;
     document.body.classList.toggle('stampa-pannello', apri); // su desktop nasconde legenda, minimappa, logo e scala della mappa
-    if (!apri) { nascondiQuadri(map); map.off('moveend', sulMovimento); window.removeEventListener('resize', sulRidimensionamento); osservaLegende.disconnect(); return; }
+    if (!apri) { nascondiQuadri(map); nascondiArea(map); map.off('moveend', sulMovimento); window.removeEventListener('resize', sulRidimensionamento); osservaLegende.disconnect(); return; }
     stato.riquadro = stato.riquadro ? adattaProporzione(stato.riquadro, proporzione(), vista()) : riquadroIniziale(vista(), proporzione());
     posiziona();
     disegnaQuadri();
+    if (stato.areaSel) mostraArea(map, stato.areaSel);
     map.on('moveend', sulMovimento);
     window.addEventListener('resize', sulRidimensionamento);
     osservaLegende.observe(radiceLegende, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden', 'class'] });

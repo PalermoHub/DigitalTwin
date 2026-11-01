@@ -46,3 +46,17 @@ for (const uscita of ['stampa', 'png']) {
     delete FORMATI[FORMATO_TAVOLA];
   });
 }
+
+import { areaDaAnello, gruppiDaZone } from '../../js/core/stampa-aree.js';
+test('areaDaAnello: centro e misure in metri', () => {
+  const a = areaDaAnello('x', [[13.3, 38.1], [13.32, 38.1], [13.32, 38.11], [13.3, 38.11], [13.3, 38.1]]);
+  assert.deepEqual(a.bbox, [13.3, 38.1, 13.32, 38.11]);
+  assert.ok(Math.abs(a.altezza - 1113.2) < 0.1 && a.larghezza > 1700 && a.larghezza < 1800);
+});
+test('gruppiDaZone: Comune, circoscrizioni, quartieri e UPL; anelli corti scartati', () => {
+  const r = n => [[13, 38], [13.1, 38], [13.1, 38.1], [13, 38.1], [13, 38]].map(p => [p[0] + n, p[1]]);
+  const g = gruppiDaZone({ circoscrizioni: [{ name: 'II', ring: r(0) }, { name: 'I', ring: r(0.1) }], quartieri: [{ name: 'Z', ring: [[1, 1]] }, { name: 'A', ring: r(0) }], upl: [] });
+  assert.deepEqual(g.map(x => x.id), ['comune', 'circoscrizioni', 'quartieri']);
+  assert.deepEqual(g[1].unita.map(u => u.nome), ['I', 'II']);
+  assert.equal(g[0].unita[0].bbox[2], 13.2);
+});

@@ -3518,5 +3518,12 @@
   "lbl.Il tab Stampa: il riquadro sulla mappa è l'area che si stampa.": "Il tab Stampa: il riquadro sulla mappa è l'area che si stampa.",
   "stampa.quadro": "Quadro d'unione",
   "stampa.quadro.nessuno": "Nessuno (scelgo io)",
-  "stampa.formato.tavola": "Su misura (tavola)"
+  "stampa.formato.tavola": "Su misura (tavola)",
+  "stampa.area": "Area amministrativa",
+  "stampa.area.nessuna": "Nessuna",
+  "stampa.area.comune": "Comune",
+  "stampa.area.circoscrizioni": "Circoscrizioni",
+  "stampa.area.quartieri": "Quartieri",
+  "stampa.area.upl": "UPL",
+  "stampa.area.circoscrizione": "Circoscrizione {n}"
 }

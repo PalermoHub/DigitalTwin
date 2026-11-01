@@ -3518,5 +3518,12 @@
   "lbl.Il tab Stampa: il riquadro sulla mappa è l'area che si stampa.": "The Print tab: the frame on the map is the area that gets printed.",
   "stampa.quadro": "Sheet layout",
   "stampa.quadro.nessuno": "None (I choose)",
-  "stampa.formato.tavola": "Custom (sheet)"
+  "stampa.formato.tavola": "Custom (sheet)",
+  "stampa.area": "Administrative area",
+  "stampa.area.nessuna": "None",
+  "stampa.area.comune": "Municipality",
+  "stampa.area.circoscrizioni": "Districts",
+  "stampa.area.quartieri": "Neighbourhoods",
+  "stampa.area.upl": "Planning units (UPL)",
+  "stampa.area.circoscrizione": "District {n}"
 }
