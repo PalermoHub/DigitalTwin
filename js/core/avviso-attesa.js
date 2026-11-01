@@ -42,3 +42,10 @@ export function mappaFerma(map, { attesaMax = 20000, primoControllo = 300 } = {}
     map.on('idle', fine);
   });
 }
+
+// Avviso immediato (senza ritardo) per la preparazione di una stampa o di un PDF: dura finché la promessa non si chiude.
+export function conAvvisoStampa(testo, operazione) {
+  const contenitore = document.getElementById('avvisi');
+  if (!contenitore) return operazione();
+  return creaAvvisoAttesa(contenitore, testo, { ritardo: 0 }).durante(operazione());
+}

@@ -166,7 +166,7 @@ map.once('style.load', async () => {
   try { migraFileLocali(window.localStorage); } catch { /* storage bloccato: niente da spostare */ }
   const gruppoRndt = creaGruppoRndt(); // ultimi gruppi della barra: i loro layer arrivano a runtime
   const gruppoMiei = creaGruppo(OPZIONI_MIEI);
-  costruisciPannello(map, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
+  const pannelloStrati = costruisciPannello(map, [...MODULI, gruppoRndt.modulo, gruppoMiei.modulo], document.getElementById('pannello'), document.getElementById('barra-gruppi'));
   const rndt = collegaRndt(map, document.getElementById('rndt-pannello'), gruppoRndt);
   const aggiungi = collegaAggiungi(map, gruppoMiei);
   collegaLegendeEsterne([rndt.host, aggiungi.host], document.getElementById('legende')); // legende dei layer di servizi esterni
@@ -334,7 +334,9 @@ map.once('style.load', async () => {
   document.getElementById('barra-gruppi').append(btnStrati3d);
   collegaStrati3d(map, MODULI, [document.getElementById('btn-strati3d'), btnStrati3d]);
   collegaCursorePunti(map);
-  collegaStampa(map, document.getElementById('btn-stampa'), document.getElementById('stampa-menu'));
+  // «Stampa» è un tab del pannello di sinistra, subito dopo «Mappe di base»; il contenuto si crea al primo clic sul tab (nessun pulsante nella barra strumenti)
+  const sezioneStampa = pannelloStrati.tab('stampa', t('app.rail.stampa'), { dopo: 'base' });
+  collegaStampa(map, sezioneStampa);
   const archivioLocale = (() => { try { return window.localStorage; } catch { return null; } })();
   window.dt.condivisione = collegaCondivisione(map, document.getElementById('btn-condividi'), { storage: archivioLocale });
   if (condivisione.invalido) segnala(t('app.link.invalido'));
