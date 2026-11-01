@@ -3503,7 +3503,7 @@
   "stampa.errore": "Export failed: reduce the format or the resolution.",
   "stampa.centra": "Center",
   "avviso.stampaInCorso": "Preparing your print: please wait a moment and keep this page open…",
-  "stampa.poster.realizzazione": "Map made with the OpenDataSicilia application · {data}",
+  "stampa.poster.realizzazione": "Map made with the OpenDataSicilia application",
   "stampa.poster.sottotitolo": "Centre {lat}, {lng} · {data}",
   "stampa.poster.titoloDefault": "Palermo Digital Twin",
   "stampa.poster.fonteDati": "Data: OpenDataSicilia and the sources of the layers (Sources and notes page)",

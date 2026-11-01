@@ -30,9 +30,9 @@ export function misureTavolaM(tavola) {
 // Pagina (mm) la cui area di mappa è esattamente `area` (mm): il foglio aggiunge margini e fascia dei testi, il poster banner e cornice
 export function paginaSuMisura(area, uscita) {
   if (uscita === 'stampa') return { larghezza: area.larghezza + 2 * MARGINE_MM, altezza: area.altezza + 2 * MARGINE_MM + FASCIA_TESTI_MM };
-  // poster: corpo = max(2,4; larghezza pagina / 120), cornice 3 corpi per lato, banner 4,2 corpi
+  // poster: corpo = max(2,4; larghezza pagina / 120), cornice 3 corpi per lato, banner 8 corpi
   const corpo = Math.max(2.4, area.larghezza / 114) // da area = pagina - 6 corpi e corpo = pagina / 120;
-  return { larghezza: area.larghezza + 6 * corpo, altezza: area.altezza + 10.2 * corpo };
+  return { larghezza: area.larghezza + 6 * corpo, altezza: area.altezza + 14 * corpo };
 }
 
 // Orizzontale se la tavola è più larga che alta (misure in metri, non in gradi)

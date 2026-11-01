@@ -118,7 +118,7 @@ export function areaMappaPoster(formato, direzione) {
   const p = paginaMm(formato, direzione);
   const corpo = corpoTesto(p.larghezza);
   const bordo = corpo * 3;
-  const banner = corpo * 4.2;
+  const banner = corpo * 8;
   return { x: bordo, y: banner + bordo, larghezza: p.larghezza - 2 * bordo, altezza: p.altezza - banner - 2 * bordo, banner, bordo };
 }
 
@@ -194,9 +194,9 @@ function cornice(ctx, m, proj, corpo, conGriglia, scuro = false) {
     };
     // sottile ma leggibile su ogni base: alone di contrasto sotto e filo sopra, chiari sulle basi scure e scuri su quelle chiare
     ctx.setLineDash([]);
-    ctx.strokeStyle = scuro ? 'rgba(0,0,0,.4)' : 'rgba(255,255,255,.75)'; ctx.lineWidth = 0.3; linee();
+    ctx.strokeStyle = scuro ? 'rgba(0,0,0,.6)' : 'rgba(255,255,255,.9)'; ctx.lineWidth = Math.max(0.5, corpo * 0.2); linee();
     ctx.setLineDash([corpo * 0.7, corpo * 0.45]);
-    ctx.strokeStyle = scuro ? 'rgba(255,255,255,.9)' : 'rgba(20,20,20,.75)'; ctx.lineWidth = 0.1; linee();
+    ctx.strokeStyle = scuro ? '#fff' : '#111'; ctx.lineWidth = Math.max(0.2, corpo * 0.085); linee();
     ctx.restore();
   }
   // fascia a scacchi: nera e bianca alternate fra due linee della graticola
@@ -229,7 +229,7 @@ function cornice(ctx, m, proj, corpo, conGriglia, scuro = false) {
   ctx.textBaseline = 'middle';
 }
 
-// Disegna il poster sulla pagina `canvas`: sfondo bianco, banner, mappa incorniciata con graticola, legenda, scala, rosa dei venti, piede.
+// Disegna il poster sulla pagina `canvas`: sfondo bianco, banner (titolo e crediti), mappa incorniciata con graticola, legenda, scala, rosa dei venti.
 // Le misure sono in mm: il contesto è scalato di `u` px/mm. `mappa` = { immagine, ritaglio? } con ritaglio opzionale { x, y, w, h } in px dell'immagine.
 // `vista` = { centro, zoom } con cui la mappa è stata resa: servono per la graticola e la barra di scala.
 export function disegnaPoster(canvas, opzioni) {
@@ -256,7 +256,7 @@ export function disegnaPoster(canvas, opzioni) {
   const proj = proiettore(vista.centro, vista.zoom, m);
   cornice(ctx, m, proj, corpo, el.griglia, mappa?.immagine ? luminosita(mappa.immagine, mappa.ritaglio) < 120 : false);
 
-  // Banner del titolo: sfumatura blu, reticolo in filigrana e filo ambra
+  // Banner del titolo: sfumatura blu, reticolo in filigrana e filo ambra; a destra due blocchi di crediti (fuori dalla mappa)
   const gb = ctx.createLinearGradient(0, 0, L, 0);
   gb.addColorStop(0, '#093a5c'); gb.addColorStop(0.55, BLU); gb.addColorStop(1, '#2a8fc4');
   ctx.fillStyle = gb; ctx.fillRect(0, 0, L, m.banner);
@@ -270,100 +270,53 @@ export function disegnaPoster(canvas, opzioni) {
   ctx.stroke();
   ctx.restore();
   ctx.fillStyle = '#f5a623'; ctx.fillRect(0, m.banner - corpo * 0.3, L, corpo * 0.3);
-  ctx.fillStyle = '#f5a623'; ctx.fillRect(corpo * 1.5, corpo * 0.9, corpo * 0.35, m.banner * 0.58);
+  // Logo ODS prima del titolo (è scuro: un riquadro bianco arrotondato lo fa leggere sul blu)
+  let xTitolo = corpo * 1.8;
+  if (logo) {
+    const hl = m.banner - corpo * 3.2, lw = hl * (logo.naturalWidth / logo.naturalHeight), lx = corpo * 1.8, ly = (m.banner - corpo * 0.3 - hl) / 2;
+    ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.beginPath(); ctx.roundRect(lx - corpo * 0.4, ly - corpo * 0.4, lw + corpo * 0.8, hl + corpo * 0.8, corpo * 0.8); ctx.fill();
+    ctx.drawImage(logo, lx, ly, lw, hl);
+    xTitolo = lx + lw + corpo * 1.5;
+  }
+  const wTitolo = L * 0.35 - corpo * 1.2 - xTitolo;
   ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
   ctx.font = `bold ${corpo * 2.2}px Montserrat, sans-serif`;
   ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 0.8 * u; ctx.shadowOffsetY = 0.25 * u;
-  ctx.fillText(titolo, corpo * 2.6, m.banner * 0.4, L * 0.55);
+  ctx.fillText(titolo, xTitolo, m.banner * 0.4, wTitolo);
   ctx.restore();
   ctx.font = `${corpo * 0.95}px Montserrat, sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,.88)';
-  ctx.fillText(sottotitolo, corpo * 2.6, m.banner * 0.74, L * 0.55);
+  ctx.fillText(sottotitolo, xTitolo, m.banner * 0.74, wTitolo);
 
-
-  const sx = m.x + margine; // origine degli elementi dentro la mappa
-  const fondo = m.y + m.altezza - margine;
-
-  // Barra di scala (sempre: la scala è nota dallo zoom) in basso a sinistra, su scheda arrotondata
-  const scalaReale = scalaDaZoom(vista.zoom, vista.centro.lat);
-  const hScala = corpo * 3.6;
-  if (el.scala) {
-    const b = barraScala(scalaReale, 60);
-    const yS = fondo - hScala;
-    carta(ctx, u, sx, yS, b.mm + corpo * 8, hScala, corpo * 0.7);
-    const bx = sx + corpo * 1.2, by = yS + corpo * 1.4, spessore = corpo * 0.55;
-    const segmenti = 4;
-    for (let i = 0; i < segmenti; i++) {
-      ctx.fillStyle = i % 2 ? '#fff' : '#1e293b';
-      ctx.fillRect(bx + i * b.mm / segmenti, by, b.mm / segmenti, spessore);
-    }
-    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 0.15; ctx.strokeRect(bx, by, b.mm, spessore);
-    ctx.fillStyle = '#1e293b'; ctx.font = `${corpo * 0.85}px Montserrat, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-    const unita = b.metri >= 1000 ? 'km' : 'm';
-    const divisore = b.metri >= 1000 ? 1000 : 1;
-    ctx.fillText('0', bx, by - corpo * 0.2);
-    ctx.fillText(`${(b.metri / divisore / 2).toLocaleString(localeIntl())}`, bx + b.mm / 2, by - corpo * 0.2);
-    ctx.fillText(`${(b.metri / divisore).toLocaleString(localeIntl())} ${unita}`, bx + b.mm, by - corpo * 0.2);
-    const cifre = 10 ** (Math.floor(Math.log10(scalaReale)) - 1);
-    ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#475569'; ctx.font = `bold ${corpo * 0.9}px Montserrat, sans-serif`;
-    ctx.fillText(`1:${(Math.round(scalaReale / cifre) * cifre).toLocaleString(localeIntl())}`, bx, by + spessore + corpo * 0.95);
-  }
-
-  // Legende dei layer accesi (sopra la scala): un riquadro per layer, in colonne da sinistra; i simboli sono quelli della legenda dell'app
-  if (el.legenda && legende.length) {
-    const wLeg = corpo * 17.5;
-    const sotto = fondo - (el.scala ? hScala + corpo * 0.9 : 0); // sotto la legenda c'è la scala
-    const altezzaMax = (sotto - (m.y + margine)) / corpo;
-    const colonneMax = Math.max(1, Math.floor((m.larghezza * 0.5 - margine) / (wLeg + corpo * 0.8)));
-    const { colonne, omessi } = colonneLegende(legende, altezzaMax, colonneMax);
-    colonne.forEach((colonna, k) => {
-      const x0 = sx + k * (wLeg + corpo * 0.8);
-      let y = sotto - colonna.reduce((t, b, i) => t + altezzaBlocco(b) * corpo + (i ? RESPIRO * corpo : 0), 0);
-      colonna.forEach(blocco => { disegnaBlocco(ctx, u, x0, y, wLeg, blocco, corpo); y += (altezzaBlocco(blocco) + RESPIRO) * corpo; });
-    });
-    if (omessi) {
-      ctx.font = `italic ${corpo * 0.85}px Montserrat, sans-serif`; ctx.fillStyle = '#0f172a'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-      ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 1.5 * u;
-      ctx.fillText(tr('stampa.legenda.omesse', { n: omessi }), sx, m.y + margine + corpo * 1.2); ctx.restore();
-      ctx.textBaseline = 'middle';
-    }
-  }
+  // Blocco 1: fonte dei dati, realizzazione, link all'app, attribuzioni delle basi. Blocco 2: avvertenza
+  const yC = corpo * 0.8, hC = m.banner - corpo * 0.3 - 2 * yC; // altezza utile delle schede
+  const xIni = L * 0.35, xFin = L - corpo * 1.5, gap = corpo * 0.8;
+  const w1 = (xFin - xIni - gap) * 0.56, w2 = xFin - xIni - gap - w1;
+    const tagliaA = (righe, n) => righe.length <= n ? righe : [...righe.slice(0, n - 1), `${righe[n - 1].replace(/[\s·,;.]+$/, '')}…`];
+  ctx.font = `${corpo * 0.95}px Montserrat, sans-serif`;
+  const righe = tagliaA([
+    tr('stampa.poster.fonteDati'),
+    tr('stampa.poster.realizzazione'),
+    URL_APP,
+    ...spezzaRighe(ctx, attribuzioni.join(' · ').replace(/\s*[|·]\s*INGV\b/g, '').replace(/\bINGV\s*[|·]\s*/g, ''), w1 - corpo * 0.8), // l'INGV è l'attribuzione di un layer, non della base: nei crediti del banner non va
+  ], Math.floor((hC - corpo * 0.8) / (corpo * 1.25)));
+  // Nessuna scheda né bordo: il testo sta direttamente sul fondo del banner
+  ctx.textAlign = 'left';
+  const y1 = yC + (hC - righe.length * corpo * 1.25) / 2 + corpo * 0.625;
+  righe.forEach((r, i) => {
+    ctx.font = `${i < 3 ? 'bold ' : ''}${corpo * 0.95}px Montserrat, sans-serif`;
+    ctx.fillStyle = i === 2 ? '#ffd27a' : i < 2 ? '#fff' : 'rgba(255,255,255,.78)';
+    ctx.fillText(r, xIni, y1 + i * corpo * 1.25, w1 - corpo * 0.5);
+  });
+  const x2 = xIni + w1 + gap;
+  ctx.font = `italic ${corpo * 0.8}px Montserrat, sans-serif`;
+  const avviso = tagliaA(spezzaRighe(ctx, tr('stampa.poster.avvertenza'), w2 - corpo * 1.2), Math.floor((hC - corpo * 0.8) / corpo));
+  ctx.fillStyle = 'rgba(255,255,255,.72)'; ctx.textAlign = 'left';
+  const y2 = yC + (hC - avviso.length * corpo) / 2 + corpo * 0.5;
+  avviso.forEach((r, i) => ctx.fillText(r, x2 + corpo * 0.4, y2 + i * corpo, w2 - corpo * 0.8));
 
   // Rosa dei venti (alto a destra dentro la mappa)
   if (el.rosa) roseDeiVenti(ctx, u, m.x + m.larghezza - margine - corpo * 2.6, m.y + margine + corpo * 4, corpo * 1.9);
-
-  // Piede in basso a destra: fonte dei dati, realizzazione, link all'app, attribuzioni delle basi, logo ODS
-  const wPiede = Math.min(m.larghezza * 0.5, corpo * 75);
-  const xTesto = corpo * 6.4; // spazio per il logo
-  ctx.font = `${corpo * 0.95}px Montserrat, sans-serif`;
-  const righe = [
-    tr('stampa.poster.fonteDati'),
-    tr('stampa.poster.realizzazione', { data }),
-    URL_APP,
-    ...spezzaRighe(ctx, attribuzioni.join(' · '), wPiede - xTesto - corpo * 0.8),
-  ];
-  ctx.font = `italic ${corpo * 0.8}px Montserrat, sans-serif`;
-  const avviso = spezzaRighe(ctx, tr('stampa.poster.avvertenza'), wPiede - xTesto - corpo * 0.8);
-  const hRighe = righe.length * corpo * 1.25 + corpo * 1.0;
-  const hPiede = hRighe + avviso.length * corpo * 1.0 + corpo * 1.2;
-  const xP = m.x + m.larghezza - margine - wPiede;
-  const yP = fondo - hPiede;
-  carta(ctx, u, xP, yP, wPiede, hPiede, corpo * 0.8);
-  ctx.fillStyle = BLU; ctx.beginPath(); ctx.roundRect(xP, yP, corpo * 0.45, hPiede, [corpo * 0.8, 0, 0, corpo * 0.8]); ctx.fill();
-  ctx.textAlign = 'left';
-  righe.forEach((r, i) => {
-    ctx.font = `${i < 3 ? 'bold ' : ''}${corpo * 0.95}px Montserrat, sans-serif`;
-    ctx.fillStyle = i === 2 ? '#1d6fa5' : i < 2 ? '#0f172a' : '#475569';
-    ctx.fillText(r, xP + xTesto, yP + corpo * 1.2 + i * corpo * 1.25, wPiede - xTesto - corpo * 0.5);
-  });
-  ctx.strokeStyle = 'rgba(15,23,42,.18)'; ctx.lineWidth = 0.12;
-  ctx.beginPath(); ctx.moveTo(xP + xTesto, yP + hRighe); ctx.lineTo(xP + wPiede - corpo * 0.8, yP + hRighe); ctx.stroke();
-  ctx.font = `italic ${corpo * 0.8}px Montserrat, sans-serif`; ctx.fillStyle = '#64748b';
-  avviso.forEach((r, i) => ctx.fillText(r, xP + xTesto, yP + hRighe + corpo * 1.0 + i * corpo * 1.0, wPiede - xTesto - corpo * 0.5));
-  if (logo) {
-    const hl = Math.min(hRighe - corpo * 0.4, corpo * 4.8);
-    ctx.drawImage(logo, xP + corpo * 1.1, yP + (hRighe - hl) / 2, hl * (logo.naturalWidth / logo.naturalHeight), hl);
-  }
 
   // Filetto esterno della pagina
   ctx.strokeStyle = BLU; ctx.lineWidth = 0.6; ctx.strokeRect(0.3, 0.3, L - 0.6, A - 0.6);

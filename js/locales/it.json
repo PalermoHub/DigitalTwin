@@ -3503,7 +3503,7 @@
   "stampa.errore": "Esportazione non riuscita: riduci il formato o la risoluzione.",
   "stampa.centra": "Centra",
   "avviso.stampaInCorso": "Preparazione della stampa in corso: attendere qualche istante, non chiudere la pagina…",
-  "stampa.poster.realizzazione": "Mappa realizzata con l'applicazione di OpenDataSicilia · {data}",
+  "stampa.poster.realizzazione": "Mappa realizzata con l'applicazione di OpenDataSicilia",
   "stampa.poster.sottotitolo": "Centro {lat}, {lng} · {data}",
   "stampa.poster.titoloDefault": "Palermo Digital Twin",
   "stampa.poster.fonteDati": "Dati: OpenDataSicilia e fonti dei layer (pagina Fonti e note)",
