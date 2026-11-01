@@ -121,13 +121,13 @@ export function creaPannelloStampa(map, radice) {
     stato.riquadro = { x: r.x + r.w / 2 - w / 2, y: r.y + r.h / 2 - h / 2, w, h };
     posiziona();
   };
-  // Se l'estensione della scala non sta nella parte libera della mappa, si allontana lo zoom finché ci sta (la stampa non cambia)
+  // Se l'estensione della scala non sta nella parte libera della mappa (o è minuscola), si cambia lo zoom finché ci sta bene (la stampa non cambia)
   const portaInVista = () => {
     if (!stato.scala || !stato.riquadro) return;
     const v = vista();
     const r = stato.riquadro;
     const lib = { w: v.larghezza - (v.sinistra ?? 0), h: v.altezza - (v.alto ?? 0) };
-    if (r.w <= lib.w && r.h <= lib.h) return;
+    if (r.w <= lib.w && r.h <= lib.h && (r.w >= lib.w * 0.3 || r.h >= lib.h * 0.3)) return; // sta e si vede bene
     const k = Math.min(lib.w * 0.88 / r.w, lib.h * 0.88 / r.h);
     map.zoomTo(map.getZoom() + Math.log2(k), { duration: 0 });
     stato.riquadro = riquadroIniziale(v, proporzione());
