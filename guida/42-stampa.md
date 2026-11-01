@@ -12,7 +12,7 @@ Nel pannello si scelgono:
 - **Titolo** e **Sottotitolo** (vuoto: centro e data).
 - **Formato**: **A4, A3, A2, A1, A0**, e **Orientamento**: Orizzontale o Verticale.
 - **Uscita**: **Scarica PNG (poster)**, **Scarica JPG (poster)**, **Scarica PDF (poster)** oppure **Stampa (foglio)**, che apre la finestra di stampa del browser (da cui si può salvare in PDF).
-- **Scala**: «Vista attuale (senza scala)» oppure **1:1.000, 1:2.000, 1:5.000, 1:10.000, 1:25.000**.
+- **Scala**: «Vista attuale (senza scala)» oppure **1:500, 1:1.000, 1:2.000, 1:5.000, 1:10.000, 1:25.000**. Per 1:500, 1:2.000, 1:5.000 e 1:10.000 compare anche il **Quadro d'unione**: l'elenco delle tavole predefinite (74 a 1:2.000, 18 a 1:5.000, 17 a 1:500, 10 a 1:10.000). Sulla mappa si vedono i contorni; scegliendo una tavola il riquadro si porta sulla sua area e coincide con la tavola. Anche formato e orientamento si adattano: compare il formato **«Su misura (tavola)»**, un foglio grande quanto serve per contenerla alla scala scelta (cambiando l'uscita si ricalcola). Se poi scegli un formato standard, il riquadro torna a quello.
 - **Risoluzione** (per i poster): 96 dpi bozza, 150 buona, 300 alta; se il dispositivo non regge l'immagine, il pannello dice a quanti dpi è limitata.
 - **Elementi del poster**: Legenda, Barra di scala, Rosa dei venti, Griglia e coordinate. Cornice, logo OpenDataSicilia, fonti e attribuzioni delle basi ci sono sempre.
 

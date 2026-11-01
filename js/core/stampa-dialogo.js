@@ -5,6 +5,7 @@ import { t as tr, localeIntl } from './i18n.js';
 import { FORMATI, SCALE_STAMPA, areaMappaMm, attribuzioniUniche, el, esportaFile, limiteLatoGpu, mmInPx, pixelRatioSicuro, stampaFoglio, zoomPerScala } from './stampa.js';
 import { conAvvisoStampa } from './avviso-attesa.js';
 import { calcolaPadding } from './padding-mappa.js';
+import { FORMATO_TAVOLA, caricaQuadri, misureTavolaM, mostraQuadri, nascondiQuadri, paginaSuMisura, senzaQuadri } from './stampa-quadri.js';
 import { leggiLegende } from './stampa-legende.js';
 import { areaMappaPoster, caricaLogo, disegnaPoster, paginaMm, sottotitoloPredefinito, zoomPerPagina } from './stampa-poster.js';
 
@@ -75,7 +76,7 @@ const OPZIONI_ELEMENTI = ['legenda', 'scala', 'rosa', 'griglia']; // logo, fonte
 
 export function creaPannelloStampa(map, radice) {
   const contenitore = map.getContainer();
-  const stato = { formato: 'A4', direzione: 'landscape', uscita: 'png', dpi: 150, scala: null, titolo: '', sottotitolo: '', elementi: Object.fromEntries(OPZIONI_ELEMENTI.map(k => [k, true])), riquadro: null, occupato: false };
+  const stato = { quadri: [], quadro: null, formato: 'A4', direzione: 'landscape', uscita: 'png', dpi: 150, scala: null, titolo: '', sottotitolo: '', elementi: Object.fromEntries(OPZIONI_ELEMENTI.map(k => [k, true])), riquadro: null, occupato: false };
   let logo = null;
   let ultimoFotogramma = null;
   let aperto = false;
@@ -201,7 +202,7 @@ export function creaPannelloStampa(map, radice) {
   }
   async function aggiornaAnteprima(nuovoFotogramma = true) {
     if (!aperto || !stato.riquadro) return;
-    if (nuovoFotogramma) [ultimoFotogramma, legende] = await Promise.all([fotogramma(map), leggiLegende(document)]);
+    if (nuovoFotogramma) [ultimoFotogramma, legende] = await Promise.all([senzaQuadri(map, () => fotogramma(map)), leggiLegende(document)]);
     if (!aperto || !ultimoFotogramma) return;
     disegnaAnteprimaSu(anteprima, LARGHEZZA_ANTEPRIMA);
     if (finestraGrande.open) disegnaAnteprimaSu(telaGrande, LARGHEZZA_GRANDE);
@@ -231,7 +232,7 @@ export function creaPannelloStampa(map, radice) {
     input.addEventListener('input', () => suCambio(input.value.trim()));
     return el('label', { className: 'stampa-campo', htmlFor: id }, el('span', { textContent: etichetta }), input);
   };
-  const dopoCambioProporzione = () => { stato.riquadro = adattaProporzione(stato.riquadro, proporzione(), vista()); posiziona(); adattaAScala(); portaInVista(); aggiornaVisibilita(); aggiornaRisoluzione(); aggiornaAnteprima(false); };
+  const dopoCambioProporzione = () => { if (stato.formato === FORMATO_TAVOLA) applicaFormatoTavola(); stato.riquadro = adattaProporzione(stato.riquadro, proporzione(), vista()); posiziona(); adattaAScala(); portaInVista(); aggiornaVisibilita(); aggiornaRisoluzione(); aggiornaAnteprima(false); };
   const campoSoloPoster = [];
   const elementi = el('fieldset', { className: 'stampa-elementi' }, el('legend', { textContent: tr('stampa.elementi') }),
     ...OPZIONI_ELEMENTI.map(k => {
@@ -260,6 +261,67 @@ export function creaPannelloStampa(map, radice) {
   const centra = el('button', { type: 'button', className: 'stampa-centra', textContent: tr('stampa.centra'), title: tr('stampa.centra.titolo') });
   const adatta = el('button', { type: 'button', className: 'stampa-adatta', textContent: tr('stampa.riquadro.adatta') });
 
+  // — quadri d'unione: tavole predefinite per le scale che le hanno (1:500, 1:2.000, 1:5.000, 1:10.000) —
+  const selectQuadro = el('select', { id: 'stampa-quadro' });
+  const campoQuadro = el('label', { className: 'stampa-campo', htmlFor: 'stampa-quadro', hidden: true }, el('span', { textContent: tr('stampa.quadro') }), selectQuadro);
+  // Porta il riquadro sulla tavola: orientamento del foglio come la tavola, mappa centrata sul suo centro
+  const centraSuQuadro = tavola => {
+    const [lng, lat] = tavola.centro;
+    const r = stato.riquadro;
+    const p = map.project([lng, lat]);
+    map.panBy([p.x - (r.x + r.w / 2), p.y - (r.y + r.h / 2)], { duration: 0 });
+  };
+  // Formato su misura: la mappa del foglio è grande come la tavola alla scala scelta (cambiando uscita si ricalcola)
+  const tavolaScelta = () => stato.quadri.find(t => t.nome === stato.quadro);
+  const togliFormatoTavola = () => {
+    delete FORMATI[FORMATO_TAVOLA];
+    const select = radice.querySelector('#stampa-formato');
+    select.querySelector(`option[value="${FORMATO_TAVOLA}"]`)?.remove();
+    if (stato.formato === FORMATO_TAVOLA) { stato.formato = 'A4'; select.value = 'A4'; if (stato.riquadro) { stato.riquadro = riquadroIniziale(vista(), proporzione()); posiziona(); adattaAScala(); } }
+  };
+  const applicaFormatoTavola = () => {
+    const tavola = tavolaScelta();
+    if (!tavola || !stato.scala) return;
+    const m = misureTavolaM(tavola);
+    const pagina = paginaSuMisura({ larghezza: m.larghezza * 1000 / stato.scala, altezza: m.altezza * 1000 / stato.scala }, stato.uscita);
+    FORMATI[FORMATO_TAVOLA] = [Math.min(pagina.larghezza, pagina.altezza), Math.max(pagina.larghezza, pagina.altezza)];
+    stato.formato = FORMATO_TAVOLA;
+    stato.direzione = pagina.larghezza >= pagina.altezza ? 'landscape' : 'portrait';
+    const select = radice.querySelector('#stampa-formato');
+    if (!select.querySelector(`option[value="${FORMATO_TAVOLA}"]`)) select.append(el('option', { value: FORMATO_TAVOLA, textContent: tr('stampa.formato.tavola') }));
+    select.value = FORMATO_TAVOLA;
+    radice.querySelector('#stampa-direzione').value = stato.direzione;
+  };
+  // Porta il riquadro sulla tavola: foglio su misura, mappa centrata sul suo centro
+  const vaiAlQuadro = tavola => {
+    applicaFormatoTavola();
+    stato.riquadro = riquadroIniziale(vista(), proporzione());
+    posiziona();
+    map.jumpTo({ center: tavola.centro });
+    centraSuQuadro(tavola);
+    adattaAScala();
+    portaInVista();
+    centraSuQuadro(tavola);
+    aggiornaRisoluzione();
+  };
+  const disegnaQuadri = () => { if (aperto && stato.quadri.length) mostraQuadri(map, stato.quadri, stato.quadro); else nascondiQuadri(map); };
+  async function caricaElencoQuadri() {
+    const scala = stato.scala;
+    stato.quadro = null;
+    togliFormatoTavola();
+    stato.quadri = scala ? ((await caricaQuadri())[scala] ?? []) : [];
+    if (scala !== stato.scala) return; // nel frattempo la scala è cambiata
+    campoQuadro.hidden = !stato.quadri.length;
+    selectQuadro.replaceChildren(el('option', { value: '', textContent: tr('stampa.quadro.nessuno') }), ...stato.quadri.map(t => el('option', { value: t.nome, textContent: t.nome })));
+    disegnaQuadri();
+  }
+  selectQuadro.addEventListener('change', () => {
+    stato.quadro = selectQuadro.value || null;
+    disegnaQuadri();
+    const tavola = tavolaScelta();
+    if (tavola) { vaiAlQuadro(tavola); aggiornaAnteprima(); } else togliFormatoTavola();
+  });
+
   radice.append( // il titolo è quello del tab, già nella sezione
     anteprima,
     el('p', { className: 'stampa-nota', textContent: tr('stampa.riquadro.nota') }),
@@ -270,7 +332,8 @@ export function creaPannelloStampa(map, radice) {
       sceltaDa('stampa-direzione', tr('html.stampa.orient'), [['landscape', tr('stampa.orizzontale')], ['portrait', tr('stampa.verticale')]], stato.direzione, v => { stato.direzione = v; dopoCambioProporzione(); })),
     el('div', { className: 'stampa-riga' },
       sceltaDa('stampa-uscita', tr('html.stampa.uscita'), ['png', 'jpg', 'pdf', 'stampa'].map(v => [v, tr(`stampa.uscita.${v}`)]), stato.uscita, v => { stato.uscita = v; dopoCambioProporzione(); }),
-      sceltaDa('stampa-scala', tr('html.stampa.scala'), [['', tr('stampa.vistaAttuale')], ...SCALE_STAMPA.map(n => [String(n), tr('stampa.opzioneScala', { n: n.toLocaleString(localeIntl()) })])], '', v => { stato.scala = +v || null; if (stato.scala) { adattaAScala(); portaInVista(); } else { riquadro.classList.remove('a-scala'); stato.riquadro = riquadroIniziale(vista(), proporzione()); posiziona(); } aggiornaAnteprima(false); })),
+      sceltaDa('stampa-scala', tr('html.stampa.scala'), [['', tr('stampa.vistaAttuale')], ...SCALE_STAMPA.map(n => [String(n), tr('stampa.opzioneScala', { n: n.toLocaleString(localeIntl()) })])], '', v => { stato.scala = +v || null; if (stato.scala) { adattaAScala(); portaInVista(); } else { riquadro.classList.remove('a-scala'); stato.riquadro = riquadroIniziale(vista(), proporzione()); posiziona(); } caricaElencoQuadri(); aggiornaAnteprima(false); })),
+    campoQuadro,
     campoRisoluzione, infoRisoluzione,
     elementi,
     statoEsporta,
@@ -298,8 +361,8 @@ export function creaPannelloStampa(map, radice) {
       const { zoom } = inquadratura();
       const comuni = { formato: stato.formato, direzione: stato.direzione, scala: stato.scala, centro, zoom, titolo: stato.titolo };
       statoEsporta.hidden = true;
-      const riuscita = await conAvvisoStampa(tr('avviso.stampaInCorso'), () => stato.uscita === 'stampa' ? stampaFoglio(map, comuni)
-        : esportaFile(map, { ...comuni, uscita: stato.uscita, dpi: stato.dpi, titolo: stato.titolo || tr('stampa.poster.titoloDefault'), sottotitolo: sottotitoloEffettivo(), elementi: stato.elementi }));
+      const riuscita = await conAvvisoStampa(tr('avviso.stampaInCorso'), () => senzaQuadri(map, () => stato.uscita === 'stampa' ? stampaFoglio(map, comuni)
+        : esportaFile(map, { ...comuni, uscita: stato.uscita, dpi: stato.dpi, titolo: stato.titolo || tr('stampa.poster.titoloDefault'), sottotitolo: sottotitoloEffettivo(), elementi: stato.elementi })));
       statoEsporta.hidden = riuscita !== false; // cattura o scrittura fallite (di solito immagine troppo grande per il dispositivo)
     } finally { stato.occupato = false; esporta.disabled = false; esporta.textContent = etichetta; }
   });
@@ -318,9 +381,10 @@ export function creaPannelloStampa(map, radice) {
     aperto = apri;
     riquadro.hidden = !apri;
     document.body.classList.toggle('stampa-pannello', apri); // su desktop nasconde legenda, minimappa, logo e scala della mappa
-    if (!apri) { map.off('moveend', sulMovimento); window.removeEventListener('resize', sulRidimensionamento); osservaLegende.disconnect(); return; }
+    if (!apri) { nascondiQuadri(map); map.off('moveend', sulMovimento); window.removeEventListener('resize', sulRidimensionamento); osservaLegende.disconnect(); return; }
     stato.riquadro = stato.riquadro ? adattaProporzione(stato.riquadro, proporzione(), vista()) : riquadroIniziale(vista(), proporzione());
     posiziona();
+    disegnaQuadri();
     map.on('moveend', sulMovimento);
     window.addEventListener('resize', sulRidimensionamento);
     osservaLegende.observe(radiceLegende, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden', 'class'] });

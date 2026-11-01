@@ -9,8 +9,8 @@ const DPI_CSS = 96;
 const CIRCONFERENZA = 40075016.686;
 // Lati (corto, lungo) dei formati ISO in mm.
 export const FORMATI = { A4: [210, 297], A3: [297, 420], A2: [420, 594], A1: [594, 841], A0: [841, 1189] };
-const MARGINE_MM = 10;
-const FASCIA_TESTI_MM = 65; // titolo, scala, legenda e attribuzioni sotto la mappa
+export const MARGINE_MM = 10;
+export const FASCIA_TESTI_MM = 65; // titolo, scala, legenda e attribuzioni sotto la mappa
 
 // Area della mappa sul foglio: pagina meno margini e fascia dei testi.
 export function areaMappaMm(formato, direzione) {
@@ -26,7 +26,7 @@ export function pixelRatioSicuro(ratio, area, maxLato) {
 }
 
 // 192 dpi (nitido) finché il canvas resta gestibile; A0 a 192 dpi supererebbe i 49 milioni di pixel.
-export const pixelRatioPerFormato = formato => (formato === 'A0' ? 1 : 2);
+export const pixelRatioPerFormato = formato => (formato === 'A0' || formato === 'Tavola' ? 1 : 2);
 // Lato massimo del canvas WebGL del dispositivo (px): oltre, la cattura fallisce
 export function limiteLatoGpu(map) {
   try {
@@ -34,7 +34,7 @@ export function limiteLatoGpu(map) {
     return gl?.getParameter(gl.MAX_RENDERBUFFER_SIZE) ?? 4096;
   } catch { return 4096; }
 }
-export const SCALE_STAMPA = [1000, 2000, 5000, 10000, 25000];
+export const SCALE_STAMPA = [500, 1000, 2000, 5000, 10000, 25000];
 
 export const mmInPx = mm => mm / MM_PER_POLLICE * DPI_CSS;
 

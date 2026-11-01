@@ -7,6 +7,8 @@ node_modules/
 dati/*/
 # dati leggeri usati dall'app e aggiunti a git con «git add -f» (restano tracciati anche se la cartella è ignorata): alberi, distretti AMAP, civici, fontanelle, monumenti (punti, edifici e foto), scuole e seggi, popolazione (compatti), sicurezza stradale (pmtiles), classifica, trasporto. I sorgenti pesanti (gpkg, dsm, geojson grezzi, gtfs) restano fuori.
 # fontanelle, monumenti (punti, edifici e foto), civici (sezioni di ricerca), classifica della popolazione, trasporto (fermate, linee, orari).
+# eccezione: quadri d'unione per la stampa in scala (piccoli, generati da scripts/prepara_quadri_stampa.py)
+!dati/qu/
 # eccezione: uffici (piccoli, rigenerati dal workflow «Aggiorna uffici»)
 !dati/uffici/
 # eccezione: distributori di carburante (piccoli, rigenerati dal workflow «Aggiorna distributori»)
