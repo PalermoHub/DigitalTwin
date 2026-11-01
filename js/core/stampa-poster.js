@@ -315,6 +315,54 @@ export function disegnaPoster(canvas, opzioni) {
   const y2 = yC + (hC - avviso.length * corpo) / 2 + corpo * 0.5;
   avviso.forEach((r, i) => ctx.fillText(r, x2 + corpo * 0.4, y2 + i * corpo, w2 - corpo * 0.8));
 
+  const sx = m.x + margine; // origine degli elementi dentro la mappa
+  const fondo = m.y + m.altezza - margine;
+
+  // Barra di scala (sempre: la scala è nota dallo zoom) in basso a sinistra, su scheda arrotondata
+  const scalaReale = scalaDaZoom(vista.zoom, vista.centro.lat);
+  const hScala = corpo * 3.6;
+  if (el.scala) {
+    const b = barraScala(scalaReale, 60);
+    const yS = fondo - hScala;
+    carta(ctx, u, sx, yS, b.mm + corpo * 8, hScala, corpo * 0.7);
+    const bx = sx + corpo * 1.2, by = yS + corpo * 1.4, spessore = corpo * 0.55;
+    const segmenti = 4;
+    for (let i = 0; i < segmenti; i++) {
+      ctx.fillStyle = i % 2 ? '#fff' : '#1e293b';
+      ctx.fillRect(bx + i * b.mm / segmenti, by, b.mm / segmenti, spessore);
+    }
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 0.15; ctx.strokeRect(bx, by, b.mm, spessore);
+    ctx.fillStyle = '#1e293b'; ctx.font = `${corpo * 0.85}px Montserrat, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    const unita = b.metri >= 1000 ? 'km' : 'm';
+    const divisore = b.metri >= 1000 ? 1000 : 1;
+    ctx.fillText('0', bx, by - corpo * 0.2);
+    ctx.fillText(`${(b.metri / divisore / 2).toLocaleString(localeIntl())}`, bx + b.mm / 2, by - corpo * 0.2);
+    ctx.fillText(`${(b.metri / divisore).toLocaleString(localeIntl())} ${unita}`, bx + b.mm, by - corpo * 0.2);
+    const cifre = 10 ** (Math.floor(Math.log10(scalaReale)) - 1);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#475569'; ctx.font = `bold ${corpo * 0.9}px Montserrat, sans-serif`;
+    ctx.fillText(`1:${(Math.round(scalaReale / cifre) * cifre).toLocaleString(localeIntl())}`, bx, by + spessore + corpo * 0.95);
+  }
+
+  // Legende dei layer accesi (sopra la scala): un riquadro per layer, in colonne da sinistra; i simboli sono quelli della legenda dell'app
+  if (el.legenda && legende.length) {
+    const wLeg = corpo * 17.5;
+    const sotto = fondo - (el.scala ? hScala + corpo * 0.9 : 0); // sotto la legenda c'è la scala
+    const altezzaMax = (sotto - (m.y + margine)) / corpo;
+    const colonneMax = Math.max(1, Math.floor((m.larghezza * 0.5 - margine) / (wLeg + corpo * 0.8)));
+    const { colonne, omessi } = colonneLegende(legende, altezzaMax, colonneMax);
+    colonne.forEach((colonna, k) => {
+      const x0 = sx + k * (wLeg + corpo * 0.8);
+      let y = sotto - colonna.reduce((t, b, i) => t + altezzaBlocco(b) * corpo + (i ? RESPIRO * corpo : 0), 0);
+      colonna.forEach(blocco => { disegnaBlocco(ctx, u, x0, y, wLeg, blocco, corpo); y += (altezzaBlocco(blocco) + RESPIRO) * corpo; });
+    });
+    if (omessi) {
+      ctx.font = `italic ${corpo * 0.85}px Montserrat, sans-serif`; ctx.fillStyle = '#0f172a'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 1.5 * u;
+      ctx.fillText(tr('stampa.legenda.omesse', { n: omessi }), sx, m.y + margine + corpo * 1.2); ctx.restore();
+      ctx.textBaseline = 'middle';
+    }
+  }
+
   // Rosa dei venti (alto a destra dentro la mappa)
   if (el.rosa) roseDeiVenti(ctx, u, m.x + m.larghezza - margine - corpo * 2.6, m.y + margine + corpo * 4, corpo * 1.9);
 
