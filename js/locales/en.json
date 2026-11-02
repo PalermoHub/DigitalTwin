@@ -3555,6 +3555,8 @@
   "lbl.Il punteggio unisce la raggiungibilità a piedi di otto bisogni quotidiani (60%) e la qualità della strada (40%). Sono stime da OpenStreetMap: un luogo mancante o sbagliato sulla mappa cambia il punteggio. Non descrive sicurezza, criminalità o reddito.": "The score combines the walk to eight daily needs (60%) with street quality (40%). They are estimates from OpenStreetMap: a place missing or wrong on the map changes the score. It does not describe safety, crime or income.",
   "lbl.Come si calcola il punteggio (Walkably)": "How the score is calculated (Walkably)",
   "lbl.Metodo e verifiche di accuratezza, anche quelle fallite": "Method and accuracy checks, including the failed ones",
+  "lbl.Calcoli specifici per Palermo (Walkably)": "Palermo-specific calculations (Walkably)",
+  "lbl.Punteggi e dettagli di Palermo sul sito di Walkably": "Palermo scores and details on the Walkably site",
   "camminabilita.oltre": "more than {n} minutes on foot",
   "camminabilita.minuti": "{n} min on foot",
   "camminabilita.titoloPunteggio": "Walkability {n}/100",

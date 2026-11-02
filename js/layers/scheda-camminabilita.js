@@ -10,6 +10,7 @@ export const URL_WALKABLY = 'https://walkably.org';
 export const URL_OSM = 'https://www.openstreetmap.org/copyright';
 export const URL_ODBL = 'https://opendatacommons.org/licenses/odbl/1-0/';
 export const URL_ACCURATEZZA = 'https://walkably.org/accuracy';
+export const URL_PALERMO = 'https://walkably.org/en/city/it/palermo/'; // calcoli specifici per Palermo
 export const PESO = 104; // tab «Walkably» della scheda (core/scheda-modello.js)
 
 // Cinque classi di punteggio (estremi inclusi in basso): tavolozza sequenziale ColorBrewer YlGnBu, leggibile anche con daltonismo.
@@ -136,7 +137,10 @@ export function voceCamminabilita(p, centro = null, leggi = null) {
     ],
     dinamico: () => contenutoDinamico(p, centro, leggi),
     nota: 'Il punteggio unisce la raggiungibilità a piedi di otto bisogni quotidiani (60%) e la qualità della strada (40%). Sono stime da OpenStreetMap: un luogo mancante o sbagliato sulla mappa cambia il punteggio. Non descrive sicurezza, criminalità o reddito.',
-    link: { testo: 'Come si calcola il punteggio (Walkably)', url: URL_ACCURATEZZA, icona: 'esterno', suggerimento: 'Metodo e verifiche di accuratezza, anche quelle fallite' },
+    link: [
+      { testo: 'Come si calcola il punteggio (Walkably)', url: URL_ACCURATEZZA, icona: 'esterno', suggerimento: 'Metodo e verifiche di accuratezza, anche quelle fallite' },
+      { testo: 'Calcoli specifici per Palermo (Walkably)', url: URL_PALERMO, icona: 'esterno', suggerimento: 'Punteggi e dettagli di Palermo sul sito di Walkably' },
+    ],
     fonte: FONTE,
   };
 }
@@ -155,7 +159,10 @@ export function voceStrada(p) {
       ...righe([['Tipo di strada', tipoStrada(p.hw)], ['Classe', c.etichetta], ['Rumore', dB], ['Ombra estiva (stima)', pct(p.sh)], ['Vicino a strade trafficate', pct(p.bz)], ['Pendenza', pct(p.sl)], ['Alberi ogni 100 m', Number.isFinite(Number(p.tr)) ? num1(p.tr) : null]]),
     ] }],
     nota: 'La qualità della strada pesa il 40% del punteggio di camminabilità e unisce traffico, rumore (dove esiste una mappa del rumore), ombra estiva, strade trafficate vicine e pendenza. Ombra e rumore sono stime.',
-    link: { testo: 'Come si calcola il punteggio (Walkably)', url: URL_ACCURATEZZA, icona: 'esterno', suggerimento: 'Metodo e verifiche di accuratezza, anche quelle fallite' },
+    link: [
+      { testo: 'Come si calcola il punteggio (Walkably)', url: URL_ACCURATEZZA, icona: 'esterno', suggerimento: 'Metodo e verifiche di accuratezza, anche quelle fallite' },
+      { testo: 'Calcoli specifici per Palermo (Walkably)', url: URL_PALERMO, icona: 'esterno', suggerimento: 'Punteggi e dettagli di Palermo sul sito di Walkably' },
+    ],
     fonte: FONTE,
   };
 }
