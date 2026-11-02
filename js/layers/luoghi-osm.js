@@ -49,7 +49,7 @@ function collegaPopup(map) {
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti legenda-luoghi-osm lg-luoghi-osm');
   legenda.hidden = true;
-  legenda.append(el('strong', null, 'Luoghi quotidiani (OpenStreetMap)'));
+  legenda.append(el('strong', null, 'Luoghi quotidiani'));
   for (const b of BISOGNI) legenda.append(voceStrato(simboloGlifo(b.icona, b.colore), b.etichetta, `luoghi-osm-${b.id}`));
   document.getElementById('legende').append(legenda);
 }
@@ -57,7 +57,7 @@ function creaLegenda() {
 export default {
   id: 'luoghi-osm',
   titolo: 'Luoghi quotidiani',
-  argomento: { titolo: 'Luoghi quotidiani (OpenStreetMap)', descrizione: 'Alimentari, bar e ristoranti, negozi, farmacie e servizi sanitari, parchi e giardini di Palermo da OpenStreetMap, con le stesse categorie del punteggio di camminabilità di Walkably.' },
+  argomento: { titolo: 'Luoghi quotidiani', descrizione: 'Alimentari, bar e ristoranti, negozi, farmacie e servizi sanitari, parchi e giardini di Palermo da OpenStreetMap, con le stesse categorie del punteggio di camminabilità di Walkably.' },
   gruppo: 'territorio',
   sezione: '', // nessun titolo proprio: gli strati stanno sotto la sezione «Camminabilità» del modulo precedente
   aggiungiSorgenti(map) {
@@ -81,7 +81,7 @@ export default {
   },
   legendaPannello: '.lg-luoghi-osm', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: BISOGNI.map(b => ({
-    id: `luoghi-osm-${b.id}`, sottosezione: 'Luoghi quotidiani (OpenStreetMap)', etichetta: b.etichetta, layers: [punti(b)], attivo: false, legenda: '.legenda-luoghi-osm',
+    id: `luoghi-osm-${b.id}`, sottosezione: 'Luoghi quotidiani', etichetta: b.etichetta, layers: [punti(b)], attivo: false, legenda: '.legenda-luoghi-osm',
     suCambio() { if (legenda) legenda.hidden = !BISOGNI.some(x => mappa?.getLayoutProperty(punti(x), 'visibility') === 'visible'); },
   })),
   pannello: creaLegenda,

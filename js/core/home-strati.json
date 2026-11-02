@@ -331,7 +331,7 @@
   },
   {
    "id": "luoghi-osm",
-   "titolo": "Luoghi quotidiani (OpenStreetMap)",
+   "titolo": "Luoghi quotidiani",
    "descrizione": "Alimentari, bar e ristoranti, negozi, farmacie e servizi sanitari, parchi e giardini di Palermo da OpenStreetMap, con le stesse categorie del punteggio di camminabilità di Walkably.",
    "strati": [
     {
@@ -1347,7 +1347,7 @@
   },
   {
    "id": "luoghi-osm",
-   "titolo": "Everyday places (OpenStreetMap)",
+   "titolo": "Everyday places",
    "descrizione": "Groceries, bars and restaurants, shops, pharmacies and health services, parks and gardens in Palermo from OpenStreetMap, with the same categories as the Walkably walkability score.",
    "strati": [
     {
