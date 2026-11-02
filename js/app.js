@@ -60,6 +60,7 @@ import distributori from './layers/distributori.js';
 import incendi from './layers/incendi.js';
 import protezioneCivile from './layers/protezione-civile.js';
 import camminabilita from './layers/camminabilita.js';
+import luoghiOsm from './layers/luoghi-osm.js';
 import isoleCalore from './layers/isole-calore.js';
 import mefImmobili from './layers/mef-immobili.js';
 import peba from './layers/peba.js';
@@ -102,7 +103,7 @@ riduciLegenda.addEventListener('click', () => {
 });
 
 // ordine = ordine di sovrapposizione dei layer (il primo sta sotto)
-const MODULI = [base, terreno, popolazione, territorio, mefImmobili, peba, pnrr, opere, pianoTriennale, pendolarismo, trendPopolazione, edifici, crociferi, pai, monumenti, alberi, fontanelle, trasporto, voli, navi, traffico, eventi, terremoti, satelliti, radarAllerte, sicurezza, colonnine, distributori, uffici, scuole, incendi, protezioneCivile, isoleCalore, camminabilita, confini];
+const MODULI = [base, terreno, popolazione, territorio, mefImmobili, peba, pnrr, opere, pianoTriennale, pendolarismo, trendPopolazione, edifici, crociferi, pai, monumenti, alberi, fontanelle, trasporto, voli, navi, traffico, eventi, terremoti, satelliti, radarAllerte, sicurezza, colonnine, distributori, uffici, scuole, incendi, protezioneCivile, isoleCalore, camminabilita, luoghiOsm, confini];
 traduciModuli(MODULI); // in inglese: titoli, etichette e descrizioni dei layer dai dizionari (lbl.*)
 
 const catalogoPromessa = caricaCatalogo().catch(() => null);
@@ -111,7 +112,7 @@ const condivisionePromessa = preparaCondivisione(window); // un link condiviso p
 // Gli strati puntuali nascono spenti, ma la scheda li interroga anche da spenti: i loro dati (GeoJSON) non bloccano l'avvio.
 // Partono in secondo piano alla prima interazione o dopo 30 s (o alla prima accensione, o al primo clic sulla mappa, se arriva prima): vedi core/differiti.js.
 // Il trasporto resta fuori perché il filtro Linea ha bisogno dei suoi dati subito.
-const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine', 'distributori', 'mef-immobili', 'pnrr', 'opere', 'piano-triennale', 'pendolarismo', 'trend-popolazione', 'voli', 'navi', 'satelliti']);
+const DIFFERITI = new Set(['monumenti', 'alberi', 'fontanelle', 'scuole', 'uffici', 'colonnine', 'distributori', 'mef-immobili', 'pnrr', 'opere', 'piano-triennale', 'pendolarismo', 'trend-popolazione', 'voli', 'navi', 'satelliti', 'luoghi-osm']);
 
 // La ricerca nelle guide (circa 60 KB di testi) si carica alla prima ricerca: i suggerimenti delle altre fonti non aspettano.
 const collegaRicercaGuide = (apri, altra) => {

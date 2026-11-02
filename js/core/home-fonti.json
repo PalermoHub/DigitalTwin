@@ -1185,5 +1185,38 @@
     ]
    ]
   }
+ },
+ "luoghi-osm": {
+  "data": "2026-11-02",
+  "aggiornati": "2026-11-02",
+  "enti": [
+   "OpenStreetMap"
+  ],
+  "fonte": {
+   "it": "OpenStreetMap, © contributori di OpenStreetMap: alimentari, cibo e bevande, negozi, salute, parchi e giardini del comune di Palermo, con le categorie del punteggio di camminabilità di Walkably; estrazione di DigitalTwin Palermo. Licenza ODbL 1.0.",
+   "en": "OpenStreetMap, © OpenStreetMap contributors: groceries, food and drink, shops, health, parks and gardens in the municipality of Palermo, with the categories of the Walkably walkability score; extract by DigitalTwin Palermo. ODbL 1.0 licence."
+  },
+  "link": {
+   "it": [
+    [
+     "OpenStreetMap",
+     "https://www.openstreetmap.org/copyright"
+    ],
+    [
+     "Cosa conta Walkably per ogni bisogno",
+     "https://walkably.org/about"
+    ]
+   ],
+   "en": [
+    [
+     "OpenStreetMap",
+     "https://www.openstreetmap.org/copyright"
+    ],
+    [
+     "What Walkably counts for each need",
+     "https://walkably.org/about"
+    ]
+   ]
+  }
  }
 }

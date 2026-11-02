@@ -49,15 +49,25 @@ At the top of the section, three tiles show the cell's **score**, **Reach** and 
 
 ## Our places and Walkably's places
 
-Keywords: our data, missing places, comparison with Walkably, schools, parks, culture, stops, remainder, 80 metres a minute.
+Keywords: our data, missing places, comparison with Walkably, groceries, bars, shops, pharmacies, schools, parks, culture, stops, remainder, 80 metres a minute.
 
 Typical questions: Why does Walkably count more places than I see on the map? Which places are missing from our data? How is the comparison made?
 
-Below the bar for **school, parks, culture and public transport** (parks and gardens always come from OpenStreetMap, as for Walkably) the card also shows **our own places**: how many we have within 5 and within 10 minutes on foot, and the **three nearest** with their distance in metres. If Walkably counts more, the card says **how many more**: they are OpenStreetMap places that are not in our data. If **Walkably's count is capped** (often the case in the centre), the card says **"at least N more"**: that is a minimum. If **Walkably's nearest place** has no point of ours with the same name, the card flags it with its name and the minutes on foot, but without a position: Walkably does not provide place coordinates.
+Below the bar of **each of the eight needs** the card also shows **our own places**: how many we have within 5 and within 10 minutes on foot, and the **three nearest** with their distance in metres. For school, culture and public transport they come from our own layers (Schools, Monuments and places, Transport). For **groceries, food and drink, shops, health, parks and gardens** they are the **OpenStreetMap** places of the **"Everyday places"** layer, which uses **the same categories as Walkably**.
 
-For **groceries, food and drink, shops and health** we do not have a layer of our own yet: the card shows only Walkably's count.
+If Walkably counts more, the card says **how many more**: they are places we do not have. If **Walkably's count is capped** (often the case in the centre), the card says **"at least N more"**: that is a minimum. If **Walkably's nearest place** has no point of ours with the same name, the card flags it with its name and the minutes on foot; when Walkably does not know the name ("an unnamed park") the comparison by name is skipped.
 
-The comparison is **approximate**. Walkably measures minutes on real streets, we measure straight-line distance at **80 metres a minute** (5 minutes is 400 m, 10 minutes 800 m). A name in OpenStreetMap may differ from ours, so a place we already have can appear as missing.
+The comparison is **approximate**. Walkably measures minutes on real streets, we measure straight-line distance at **80 metres a minute** (5 minutes is 400 m, 10 minutes 800 m). Walkably is built on the OpenStreetMap state of 29 October 2026 and our extract is from November, so a few percentage points of difference are normal. A name in OpenStreetMap may differ from ours, so a place we already have can appear as missing. Walkably counts a narrower selection of schools and stops than our layers do, so there we may have more.
+
+## The "Everyday places" layer
+
+Keywords: everyday places, OpenStreetMap, groceries, supermarkets, bars, cafes, restaurants, shops, pharmacies, doctors, hospitals, parks, gardens, playgrounds, shapes and colours.
+
+Typical questions: Where are the pharmacies near me? How do I turn on bars and restaurants? Where do these places come from? Why is a shop missing?
+
+In the **Layers** panel, in the **Walkability** section, there are five layers you turn on one by one, each with **its own shape and colour**: **groceries** (trolley, olive green), **food and drink** (cup, orange), **shops** (bag, purple), **health** (cross, red), **parks and gardens** (tree, green). They are **OpenStreetMap** places in the municipality of Palermo, chosen with the categories of the Walkably README: supermarkets and bakeries are groceries, bars and restaurants are food and drink, banks and post offices count as shops, vets do not count as health and nature reserves do not count as parks. A click on a place, **even with the layer off**, opens a card with its name and type; places within the click radius also appear on the card of the point.
+
+The map may be incomplete: a place missing from OpenStreetMap is missing here too. The data is a November 2026 extract under the **ODbL 1.0** licence, © OpenStreetMap contributors, and is renewed by hand with `scripts/luoghi_osm.py`.
 
 ## Coloured buildings
 

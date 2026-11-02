@@ -23,6 +23,7 @@ export const FONTI = {
   'monumenti-hit-punti': { etichetta: t('evidenza.monumento'), colore: '#862e9c' },
   'alberi-hit-punti': { etichetta: t('evidenza.albero'), colore: '#2f7d32' },
   'fontanelle-hit-punti': { etichetta: t('evidenza.fontanella'), colore: '#1c7ed6' },
+  'luoghi-osm-hit-punti': { etichetta: t('evidenza.luogoOsm'), colore: '#7048e8' },
   'scuole-hit-poli': { etichetta: t('evidenza.scuola'), colore: '#1971c2' },
   'scuole-hit-punti': { etichetta: t('evidenza.scuola'), colore: '#1971c2' },
   'seggi-hit-poli': { etichetta: t('evidenza.seggio'), colore: '#0c8599' },
@@ -49,7 +50,7 @@ export const FONTI = {
 // Icona (vedi core/icone.js) dei layer a punti: in mappa la selezione disegna la sagoma dell'icona al posto del cerchio.
 // I layer senza icona qui (es. civici) restano cerchi.
 const ICONE_PUNTI = {
-  'monumenti-hit-punti': 'monumento', 'alberi-hit-punti': 'albero', 'fontanelle-hit-punti': 'fontanella',
+  'monumenti-hit-punti': 'monumento', 'alberi-hit-punti': 'albero', 'fontanelle-hit-punti': 'fontanella', 'luoghi-osm-hit-punti': 'indirizzo',
   'scuole-hit-punti': 'scuola', 'seggi-hit-punti': 'voto', 'distributori-hit': 'distributori', 'opere-hit': 'cantiere', 'piano-triennale-hit-punti': 'piano',
   'colonnine-hit': 'colonnine', 'uffici-hit': 'uffici', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
   'distributori-vicini': 'distributori', 'trasporto-vicine': 'trasporto', // evidenze delle voci della scheda

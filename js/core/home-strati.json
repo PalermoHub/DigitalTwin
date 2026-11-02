@@ -330,6 +330,49 @@
    ]
   },
   {
+   "id": "luoghi-osm",
+   "titolo": "Luoghi quotidiani (OpenStreetMap)",
+   "descrizione": "Alimentari, bar e ristoranti, negozi, farmacie e servizi sanitari, parchi e giardini di Palermo da OpenStreetMap, con le stesse categorie del punteggio di camminabilità di Walkably.",
+   "strati": [
+    {
+     "id": "luoghi-osm-alimentari",
+     "etichetta": "Alimentari"
+    },
+    {
+     "id": "luoghi-osm-cibo",
+     "etichetta": "Cibo e bevande"
+    },
+    {
+     "id": "luoghi-osm-negozi",
+     "etichetta": "Negozi"
+    },
+    {
+     "id": "luoghi-osm-parchi",
+     "etichetta": "Parchi e giardini"
+    },
+    {
+     "id": "luoghi-osm-salute",
+     "etichetta": "Salute"
+    }
+   ],
+   "fonte": "OpenStreetMap, © contributori di OpenStreetMap: alimentari, cibo e bevande, negozi, salute, parchi e giardini del comune di Palermo, con le categorie del punteggio di camminabilità di Walkably; estrazione di DigitalTwin Palermo. Licenza ODbL 1.0.",
+   "enti": [
+    "OpenStreetMap"
+   ],
+   "data": "2026-11-02",
+   "aggiornati": "2026-11-02",
+   "link": [
+    [
+     "OpenStreetMap",
+     "https://www.openstreetmap.org/copyright"
+    ],
+    [
+     "Cosa conta Walkably per ogni bisogno",
+     "https://walkably.org/about"
+    ]
+   ]
+  },
+  {
    "id": "monumenti",
    "titolo": "Monumenti",
    "descrizione": "Monumenti e luoghi di interesse storico-culturale, con foto e scheda del Portale del Turismo.",
@@ -1299,6 +1342,49 @@
     [
      "Emergency plan, Open Data Portal",
      "https://opendata.comune.palermo.it/opendata-dataset.php?dataset=351"
+    ]
+   ]
+  },
+  {
+   "id": "luoghi-osm",
+   "titolo": "Everyday places (OpenStreetMap)",
+   "descrizione": "Groceries, bars and restaurants, shops, pharmacies and health services, parks and gardens in Palermo from OpenStreetMap, with the same categories as the Walkably walkability score.",
+   "strati": [
+    {
+     "id": "luoghi-osm-cibo",
+     "etichetta": "Food and drink"
+    },
+    {
+     "id": "luoghi-osm-alimentari",
+     "etichetta": "Groceries"
+    },
+    {
+     "id": "luoghi-osm-salute",
+     "etichetta": "Health"
+    },
+    {
+     "id": "luoghi-osm-parchi",
+     "etichetta": "Parks and gardens"
+    },
+    {
+     "id": "luoghi-osm-negozi",
+     "etichetta": "Shops"
+    }
+   ],
+   "fonte": "OpenStreetMap, © OpenStreetMap contributors: groceries, food and drink, shops, health, parks and gardens in the municipality of Palermo, with the categories of the Walkably walkability score; extract by DigitalTwin Palermo. ODbL 1.0 licence.",
+   "enti": [
+    "OpenStreetMap"
+   ],
+   "data": "2026-11-02",
+   "aggiornati": "2026-11-02",
+   "link": [
+    [
+     "OpenStreetMap",
+     "https://www.openstreetmap.org/copyright"
+    ],
+    [
+     "What Walkably counts for each need",
+     "https://walkably.org/about"
     ]
    ]
   },

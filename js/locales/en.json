@@ -3628,5 +3628,22 @@
   "lbl.Parco": "Park",
   "lbl.Giardino": "Garden",
   "lbl.Riserva naturale": "Nature reserve",
-  "lbl.Area ricreativa": "Recreation ground"
+  "lbl.Area ricreativa": "Recreation ground",
+  "evidenza.luogoOsm": "Everyday place",
+  "lbl.Alimentari (OpenStreetMap)": "Groceries (OpenStreetMap)",
+  "lbl.Cibo e bevande (OpenStreetMap)": "Food and drink (OpenStreetMap)",
+  "lbl.Negozi (OpenStreetMap)": "Shops (OpenStreetMap)",
+  "lbl.Salute (OpenStreetMap)": "Health (OpenStreetMap)",
+  "lbl.Luoghi quotidiani": "Everyday places",
+  "lbl.Alimentari, bar e ristoranti, negozi, farmacie e servizi sanitari, parchi e giardini di Palermo da OpenStreetMap, con le stesse categorie del punteggio di camminabilità di Walkably.": "Groceries, bars and restaurants, shops, pharmacies and health services, parks and gardens in Palermo from OpenStreetMap, with the same categories as the Walkably walkability score.",
+  "lbl.Luoghi quotidiani (OpenStreetMap)": "Everyday places (OpenStreetMap)",
+  "lbl.Fonte: OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.": "Source: OpenStreetMap, © OpenStreetMap contributors, ODbL 1.0 licence. Extract of November 2026; the categories follow Walkably's.",
+  "lbl.Parchi e giardini": "Parks and gardens",
+  "lbl.Caffè": "Cafe",
+  "lbl.Fai da te": "DIY store",
+  "lbl.Bisogno": "Need",
+  "lbl.Dati": "Data",
+  "lbl.Luogo di OpenStreetMap: può mancare un nome, o essere cambiato nel frattempo. Le categorie sono quelle del punteggio di camminabilità di Walkably.": "A place from OpenStreetMap: its name may be missing or may have changed since. The categories are those of the Walkably walkability score.",
+  "lbl., © contributori di OpenStreetMap, con le categorie di Walkably; estrazione di novembre 2026 di DigitalTwin Palermo (licenza ODbL 1.0, stessa licenza se si condividono versioni modificate).": ", © OpenStreetMap contributors, with Walkably's categories; November 2026 extract by DigitalTwin Palermo (ODbL 1.0 licence, same licence if modified versions are shared).",
+  "lbl.Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): ": "Everyday places (groceries, food and drink, shops, health, parks and gardens): "
 }

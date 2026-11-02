@@ -49,15 +49,25 @@ In cima alla sezione, tre riquadri mostrano **punteggio**, **Reach** e **qualit�
 
 ## Luoghi nostri e luoghi di Walkably
 
-Parole chiave: nostri dati, luoghi mancanti, confronto con Walkably, scuole, parchi, cultura, fermate, residuo, 80 metri al minuto.
+Parole chiave: nostri dati, luoghi mancanti, confronto con Walkably, alimentari, bar, negozi, farmacie, scuole, parchi, cultura, fermate, residuo, 80 metri al minuto.
 
 Domande tipiche: Perché Walkably conta più luoghi di quelli che vedo in mappa? Quali luoghi mancano nei nostri dati? Come si fa il confronto?
 
-Sotto la barra di **scuola, parchi, cultura e trasporto pubblico** (i parchi e i giardini vengono sempre da OpenStreetMap, come per Walkably) la scheda mostra anche **i nostri luoghi**: quanti ne abbiamo entro 5 e entro 10 minuti a piedi, e i **tre più vicini** con la distanza in metri. Se Walkably ne conta di più, la scheda scrive **quanti in più**: sono luoghi di OpenStreetMap che non sono nei nostri dati. Se il **conteggio di Walkably è al tetto** (succede spesso in centro), la scheda scrive **«almeno N in più»**: è un minimo. Se il **luogo più vicino secondo Walkably** non ha un nostro punto con lo stesso nome, la scheda lo segnala con il nome e i minuti a piedi, ma senza posizione: Walkably non fornisce le coordinate dei luoghi.
+Sotto la barra di **ognuno degli otto bisogni** la scheda mostra anche **i nostri luoghi**: quanti ne abbiamo entro 5 e entro 10 minuti a piedi, e i **tre più vicini** con la distanza in metri. Per scuola, cultura e trasporto pubblico sono i nostri layer (Scuole, Monumenti e luoghi, Trasporto). Per **alimentari, cibo e bevande, negozi, salute, parchi e giardini** sono i luoghi di **OpenStreetMap** del layer **«Luoghi quotidiani»**, che usa le **stesse categorie di Walkably**.
 
-Per **alimentari, cibo e bevande, negozi e salute** non abbiamo ancora un layer nostro: la scheda mostra solo il conteggio di Walkably.
+Se Walkably ne conta di più, la scheda scrive **quanti in più**: sono luoghi che non abbiamo. Se il **conteggio di Walkably è al tetto** (succede spesso in centro), la scheda scrive **«almeno N in più»**: è un minimo. Se il **luogo più vicino secondo Walkably** non ha un nostro punto con lo stesso nome, la scheda lo segnala con il nome e i minuti a piedi; quando Walkably non conosce il nome («an unnamed park») il confronto per nome non si fa.
 
-Il confronto è **approssimato**. Walkably misura i minuti sulle strade vere, noi la distanza in linea d'aria a **80 metri al minuto** (5 minuti sono 400 m, 10 minuti 800 m). Il nome in OpenStreetMap può differire dal nostro, e allora un luogo già presente può risultare mancante.
+Il confronto è **approssimato**. Walkably misura i minuti sulle strade vere, noi la distanza in linea d'aria a **80 metri al minuto** (5 minuti sono 400 m, 10 minuti 800 m). Walkably è costruito sullo stato di OpenStreetMap del 29 ottobre 2026 e la nostra estrazione è di novembre: qualche punto percentuale di scarto è normale. Il nome in OpenStreetMap può differire dal nostro, e allora un luogo già presente può risultare mancante. Walkably conta una selezione più stretta di scuole e fermate di quella dei nostri layer, quindi lì noi possiamo averne di più.
+
+## Il layer «Luoghi quotidiani»
+
+Parole chiave: luoghi quotidiani, OpenStreetMap, alimentari, supermercati, bar, caffè, ristoranti, negozi, farmacie, medici, ospedali, parchi, giardini, aree giochi, forme e colori.
+
+Domande tipiche: Dove sono le farmacie vicino a me? Come accendo bar e ristoranti? Da dove vengono questi luoghi? Perché manca un negozio?
+
+Nel pannello **Layer**, nella sezione **Camminabilità**, ci sono cinque strati che si accendono uno per uno, ognuno con la **sua forma e il suo colore**: **alimentari** (carrello, verde oliva), **cibo e bevande** (tazza, arancione), **negozi** (borsa, viola), **salute** (croce, rosso), **parchi e giardini** (albero, verde). Sono i luoghi di **OpenStreetMap** nel comune di Palermo, scelti con le categorie del README di Walkably: i supermercati e le panetterie sono alimentari, i bar e i ristoranti cibo e bevande, banche e uffici postali contano come negozi, i veterinari non contano come salute e le riserve naturali non contano come parchi. Un clic su un luogo, **anche a strato spento**, apre la scheda con nome e tipo; i luoghi nel raggio del clic compaiono anche nella scheda del punto.
+
+La mappa può essere incompleta: un luogo che manca in OpenStreetMap manca anche qui. I dati sono un'estrazione di novembre 2026 con licenza **ODbL 1.0**, © contributori di OpenStreetMap, e si rinnovano a mano con `scripts/luoghi_osm.py`.
 
 ## Edifici colorati
 

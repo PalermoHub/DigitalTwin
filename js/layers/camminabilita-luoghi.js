@@ -9,12 +9,15 @@ export const raggioMinuti = minuti => minuti * M_PER_MINUTO;
 
 const CULTURA = new Set(["Gallerie d'Arte e Musei", 'Teatri', 'Biblioteche', 'Zone Archeologiche']);
 
-// Bisogni di Walkably (campo K) collegati a un nostro layer. `filtro` sceglie i punti del file che valgono per quel bisogno.
-// Alimentari, cibo e bevande, negozi e salute non hanno ancora un layer nostro: nessun residuo da calcolare (vedi docs/CAMMINABILITA_LUOGHI.md, Fase 2).
+// Bisogni di Walkably (campo K) e da dove vengono i nostri punti. `bisogno` = i punti stanno nel file compatto di OpenStreetMap
+// (scripts/luoghi_osm.py, stesse categorie di Walkably); `filtro` sceglie i punti di un GeoJSON nostro.
 export const SORGENTI = {
+  0: [{ id: 'alimentari', file: 'camminabilita/luoghi_osm.json', bisogno: 0, etichetta: 'Alimentari (OpenStreetMap)' }],
+  1: [{ id: 'cibo', file: 'camminabilita/luoghi_osm.json', bisogno: 1, etichetta: 'Cibo e bevande (OpenStreetMap)' }],
+  2: [{ id: 'negozi', file: 'camminabilita/luoghi_osm.json', bisogno: 2, etichetta: 'Negozi (OpenStreetMap)' }],
+  3: [{ id: 'salute', file: 'camminabilita/luoghi_osm.json', bisogno: 3, etichetta: 'Salute (OpenStreetMap)' }],
   4: [{ id: 'scuole', file: 'scuole/scuole.geojson', etichetta: 'Scuole' }],
-  // parchi e giardini sempre da OpenStreetMap, come Walkably (scripts/parchi_osm.py)
-  5: [{ id: 'parchi', file: 'camminabilita/parchi_osm.geojson', etichetta: 'Parchi e giardini (OpenStreetMap)' }],
+  5: [{ id: 'parchi', file: 'camminabilita/luoghi_osm.json', bisogno: 5, etichetta: 'Parchi e giardini (OpenStreetMap)' }],
   6: [{ id: 'cultura', file: 'monumenti/monumenti.geojson', etichetta: 'Musei, teatri, biblioteche e aree archeologiche', filtro: p => CULTURA.has(p.categoria) }],
   7: [{ id: 'fermate', file: 'trasporto/fermate.geojson', etichetta: 'Fermate' }],
 };
@@ -25,6 +28,9 @@ export function normalizzaNome(s) {
   return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
+// Walkably scrive «an unnamed park» quando il luogo non ha nome: non è un nome da cercare tra i nostri punti.
+export const nomeVero = nome => Boolean(nome) && !/^(an?|the)\s+unnamed\b/i.test(String(nome).trim());
+
 // Stesso luogo: nomi uguali, o uno contenuto nell'altro se il più corto ha almeno 5 lettere (sotto, «Bar» starebbe in ogni bar).
 export function nomiCoincidono(a, b) {
   const x = normalizzaNome(a);
@@ -34,6 +40,9 @@ export function nomiCoincidono(a, b) {
   const [corto, lungo] = x.length <= y.length ? [x, y] : [y, x];
   return corto.length >= 5 && lungo.includes(corto);
 }
+
+// Punti {lon, lat, nome, tipo} di un bisogno dal file compatto di OpenStreetMap ({bisogni: {k: [[lon, lat, nome, tipo], …]}}).
+export const puntiDaBisogno = (dati, k) => (dati?.bisogni?.[k] ?? []).map(([lon, lat, nome, tipo]) => ({ lon, lat, nome, tipo }));
 
 // Punti {lon, lat, nome, tipo} di un GeoJSON, con un filtro opzionale sulle proprietà.
 export function puntiDaGeojson(geojson, filtro = null) {
@@ -59,7 +68,7 @@ export function confrontaBisogno(b, punti, centro) {
   const nostri10 = nostri ? nostri.length : null;
   const residuo = (walkably, nostro) => (nostro == null ? null : Math.max(0, walkably - nostro));
   let piuVicino = null;
-  if (b.nome) piuVicino = { nome: b.nome, tipo: b.tipo ?? null, minuti: b.minuti ?? null, nostro: nostri ? nostri.some(p => nomiCoincidono(p.nome, b.nome)) : false };
+  if (nomeVero(b.nome)) piuVicino = { nome: b.nome, tipo: b.tipo ?? null, minuti: b.minuti ?? null, nostro: nostri ? nostri.some(p => nomiCoincidono(p.nome, b.nome)) : false };
   return {
     walkably5: b.entro5, walkably10: b.entro10, almeno5: b.oltre5, almeno10: b.oltre10,
     nostri5, nostri10,
@@ -78,7 +87,7 @@ export function caricaLuoghi(leggi) {
     for (const [k, lista] of Object.entries(SORGENTI)) {
       const gruppi = await Promise.all(lista.map(async s => {
         const gj = await file(s.file);
-        return gj ? puntiDaGeojson(gj, s.filtro).map(p => ({ ...p, fonte: s.id })) : null;
+        return gj ? (s.bisogno != null ? puntiDaBisogno(gj, s.bisogno) : puntiDaGeojson(gj, s.filtro)).map(p => ({ ...p, fonte: s.id })) : null;
       }));
       risultato[k] = gruppi.every(g => g === null) ? null : gruppi.flat().filter(Boolean);
     }

@@ -3628,5 +3628,22 @@
   "lbl.Parco": "Parco",
   "lbl.Giardino": "Giardino",
   "lbl.Riserva naturale": "Riserva naturale",
-  "lbl.Area ricreativa": "Area ricreativa"
+  "lbl.Area ricreativa": "Area ricreativa",
+  "evidenza.luogoOsm": "Luogo quotidiano",
+  "lbl.Alimentari (OpenStreetMap)": "Alimentari (OpenStreetMap)",
+  "lbl.Cibo e bevande (OpenStreetMap)": "Cibo e bevande (OpenStreetMap)",
+  "lbl.Negozi (OpenStreetMap)": "Negozi (OpenStreetMap)",
+  "lbl.Salute (OpenStreetMap)": "Salute (OpenStreetMap)",
+  "lbl.Luoghi quotidiani": "Luoghi quotidiani",
+  "lbl.Alimentari, bar e ristoranti, negozi, farmacie e servizi sanitari, parchi e giardini di Palermo da OpenStreetMap, con le stesse categorie del punteggio di camminabilità di Walkably.": "Alimentari, bar e ristoranti, negozi, farmacie e servizi sanitari, parchi e giardini di Palermo da OpenStreetMap, con le stesse categorie del punteggio di camminabilità di Walkably.",
+  "lbl.Luoghi quotidiani (OpenStreetMap)": "Luoghi quotidiani (OpenStreetMap)",
+  "lbl.Fonte: OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.": "Fonte: OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.",
+  "lbl.Parchi e giardini": "Parchi e giardini",
+  "lbl.Caffè": "Caffè",
+  "lbl.Fai da te": "Fai da te",
+  "lbl.Bisogno": "Bisogno",
+  "lbl.Dati": "Dati",
+  "lbl.Luogo di OpenStreetMap: può mancare un nome, o essere cambiato nel frattempo. Le categorie sono quelle del punteggio di camminabilità di Walkably.": "Luogo di OpenStreetMap: può mancare un nome, o essere cambiato nel frattempo. Le categorie sono quelle del punteggio di camminabilità di Walkably.",
+  "lbl., © contributori di OpenStreetMap, con le categorie di Walkably; estrazione di novembre 2026 di DigitalTwin Palermo (licenza ODbL 1.0, stessa licenza se si condividono versioni modificate).": ", © contributori di OpenStreetMap, con le categorie di Walkably; estrazione di novembre 2026 di DigitalTwin Palermo (licenza ODbL 1.0, stessa licenza se si condividono versioni modificate).",
+  "lbl.Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): ": "Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): "
 }

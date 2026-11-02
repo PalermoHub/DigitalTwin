@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  M_PER_MINUTO, raggioMinuti, normalizzaNome, nomiCoincidono, luoghiVicini, confrontaBisogno, puntiDaGeojson, SORGENTI,
+  M_PER_MINUTO, raggioMinuti, normalizzaNome, nomiCoincidono, luoghiVicini, confrontaBisogno, puntiDaGeojson, puntiDaBisogno, SORGENTI, nomeVero,
 } from '../../js/layers/camminabilita-luoghi.js';
 
 const centro = [13.36, 38.11];
@@ -67,6 +67,13 @@ test('confrontaBisogno: il più vicino secondo Walkably è già nei nostri dati 
   assert.equal(senza.piuVicino, null);
 });
 
+test('confrontaBisogno: un nome generato da Walkably («an unnamed park») non è un nome da confrontare', () => {
+  const b = { entro5: 1, entro10: 1, oltre5: false, oltre10: false, nome: 'an unnamed park', tipo: 'park', minuti: 2.7 };
+  assert.equal(confrontaBisogno(b, [aNord(100, 'Villa Filippina')], centro).piuVicino, null);
+  assert.equal(nomeVero('an unnamed small garden'), false);
+  assert.equal(nomeVero('Villa Filippina'), true);
+});
+
 test('confrontaBisogno: senza nostro layer per il bisogno non c’è residuo', () => {
   const b = { entro5: 4, entro10: 9, oltre5: false, oltre10: false, nome: null };
   const r = confrontaBisogno(b, null, centro);
@@ -91,5 +98,13 @@ test('SORGENTI: ogni bisogno collegato ha file e etichetta', () => {
     assert.ok(Number(k) >= 0 && Number(k) <= 7);
     for (const s of lista) assert.ok(s.file && s.etichetta, `bisogno ${k}`);
   }
-  assert.deepEqual(Object.keys(SORGENTI).map(Number).sort(), [4, 5, 6, 7]);
+  assert.deepEqual(Object.keys(SORGENTI).map(Number).sort(), [0, 1, 2, 3, 4, 5, 6, 7]);
+});
+
+test('puntiDaBisogno: legge il file compatto di OpenStreetMap', () => {
+  const dati = { bisogni: { 3: [[13.3, 38.1, 'Farmacia A', 'pharmacy'], [13.31, 38.11, '', 'dentist']] } };
+  assert.deepEqual(puntiDaBisogno(dati, 3)[0], { lon: 13.3, lat: 38.1, nome: 'Farmacia A', tipo: 'pharmacy' });
+  assert.equal(puntiDaBisogno(dati, 3).length, 2);
+  assert.deepEqual(puntiDaBisogno(dati, 0), []);
+  assert.deepEqual(puntiDaBisogno(null, 0), []);
 });

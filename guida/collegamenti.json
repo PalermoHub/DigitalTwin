@@ -237,6 +237,11 @@
   "protezione-civile"
  ],
  "64-camminabilita.md": [
-  "camminabilita"
+  "camminabilita",
+  "luoghi-osm-alimentari",
+  "luoghi-osm-cibo",
+  "luoghi-osm-negozi",
+  "luoghi-osm-salute",
+  "luoghi-osm-parchi"
  ]
 }
