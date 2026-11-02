@@ -6,6 +6,9 @@ import { CLASSI, CLASSI_STRADA, classe, classePerPunteggio, coloriEdifici, espre
 import { coloraEdifici3d, volumi3dAcceso } from '../core/colori-3d.js';
 import { t, tl } from '../core/i18n.js';
 
+// lettore dei nostri dati per il confronto con Walkably in scheda (scuole, monumenti, fermate)
+const leggiDati = file => fetch(urlDati(file)).then(r => { if (!r.ok) throw new Error(file); return r.json(); });
+
 // Camminabilità (Walkably, Raian Pollock, ODbL su dati OpenStreetMap): punteggio 0–100 di ogni cella esagonale di ~95 m del comune.
 // 11.790 celle in un solo PMTiles (scripts/camminabilita.py, zoom 12–16). Il clic apre la scheda del luogo, anche a strato spento
 // (strato «hit» trasparente sempre presente).
@@ -157,13 +160,13 @@ export default {
   },
   scheda: {
     layers: [HIT, HIT_STRADE],
-    voci: trovati => {
+    voci: (trovati, lngLat) => {
       const celle = tutti(trovati, HIT);
       const strade = tutti(trovati, HIT_STRADE);
       // contorno dell'esagono cliccato (tutti i pezzi di tile della stessa cella), anche con gli edifici sopra
       const pezzi = celle.filter(c => chiave(c.properties) === chiave(celle[0]?.properties));
       const evidenza = pezzi.length ? [{ id: 'camminabilita-cella', etichetta: t('evidenza.cellaCamminabilita'), colore: '#111111', soloBordo: true, features: pezzi }] : [];
-      return [...(celle.length ? [{ ...voceCamminabilita(celle[0].properties), evidenza }] : []), ...(strade.length ? [voceStrada(strade[0].properties)] : [])];
+      return [...(celle.length ? [{ ...voceCamminabilita(celle[0].properties, lngLat ? [lngLat.lng, lngLat.lat] : null, leggiDati), evidenza }] : []), ...(strade.length ? [voceStrada(strade[0].properties)] : [])];
     },
   },
   legendaPannello: '.lg-camminabilita', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)

@@ -98,6 +98,7 @@ scripts/*
 !scripts/pai.py
 !scripts/protezione_civile.py
 !scripts/camminabilita.py
+!scripts/parchi_osm.py
 !scripts/uffici_build.py
 !scripts/uffici_scrape.py
 !scripts/mef_immobili.py

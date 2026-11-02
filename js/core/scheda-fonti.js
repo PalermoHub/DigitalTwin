@@ -24,7 +24,7 @@ const CAMMINABILITA = [
   ['Licenza: ', link('ODbL 1.0', 'https://opendatacommons.org/licenses/odbl/1-0/'), ', con obbligo di credito e, per le versioni modificate, della stessa licenza.'],
   ['Contains information from Walkably, https://walkably.org, available under the ODbL.'], // i18n-ok: formula di credito richiesta dall'autore
   ['Contains information from OpenStreetMap, © OpenStreetMap contributors, https://www.openstreetmap.org/copyright, available under the ODbL.'], // i18n-ok: formula di credito richiesta dall'autore
-  ['I punteggi sono stime, non misure: ', link('metodo e verifiche di accuratezza', 'https://walkably.org/accuracy'), '. Citazione: Pollock, R. (2026), Walkably, versione 2026.10-m3, ', link('doi:10.5281/zenodo.23786101', 'https://doi.org/10.5281/zenodo.23786101'), '.'],
+  ['I punteggi sono stime, non misure: ', link('metodo e verifiche di accuratezza', 'https://walkably.org/accuracy'), '. Citazione: Walkably, release del 29 ottobre 2026, ', link('walkably.org', 'https://walkably.org'), '.'],
 ];
 
 const LICENZE = {

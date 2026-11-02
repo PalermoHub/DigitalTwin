@@ -1,0 +1,95 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {
+  M_PER_MINUTO, raggioMinuti, normalizzaNome, nomiCoincidono, luoghiVicini, confrontaBisogno, puntiDaGeojson, SORGENTI,
+} from '../../js/layers/camminabilita-luoghi.js';
+
+const centro = [13.36, 38.11];
+// ~ metri a nord del centro (1 grado di latitudine = 111.320 m)
+const aNord = (m, nome = 'x') => ({ lon: centro[0], lat: centro[1] + m / 111320, nome, tipo: 't' });
+
+test('raggioMinuti: 80 m al minuto, come Walkably', () => {
+  assert.equal(M_PER_MINUTO, 80);
+  assert.equal(raggioMinuti(5), 400);
+  assert.equal(raggioMinuti(10), 800);
+});
+
+test('normalizzaNome: minuscole, senza accenti né punteggiatura', () => {
+  assert.equal(normalizzaNome('  Caffè  "Mazzara", S.R.L. '), 'caffe mazzara s r l');
+  assert.equal(normalizzaNome(null), '');
+  assert.equal(normalizzaNome("L'Allodola"), 'l allodola');
+});
+
+test('nomiCoincidono: uguali dopo la normalizzazione o uno contenuto nell’altro (almeno 5 lettere)', () => {
+  assert.equal(nomiCoincidono('Biblioteca Comunale', 'biblioteca  comunale'), true);
+  assert.equal(nomiCoincidono('Teatro Massimo', 'Teatro Massimo Vittorio Emanuele'), true);
+  assert.equal(nomiCoincidono('Teatro Massimo', 'Teatro Politeama'), false);
+  assert.equal(nomiCoincidono('Bar', 'Bar Stella'), false); // troppo corto per fidarsi
+  assert.equal(nomiCoincidono('', 'Bar Stella'), false);
+  assert.equal(nomiCoincidono(null, null), false);
+});
+
+test('luoghiVicini: entro il raggio, dal più vicino, con la distanza', () => {
+  const punti = [aNord(700, 'lontano'), aNord(100, 'vicino'), aNord(390, 'medio'), aNord(900, 'fuori')];
+  const v = luoghiVicini(punti, centro, 800);
+  assert.deepEqual(v.map(p => p.nome), ['vicino', 'medio', 'lontano']);
+  assert.ok(Math.abs(v[0].distanzaM - 100) < 2);
+});
+
+test('confrontaBisogno: nostri entro 5 e 10 minuti, residuo mai negativo', () => {
+  const b = { entro5: 3, entro10: 7, oltre5: false, oltre10: false, nome: null };
+  const punti = [aNord(100, 'a'), aNord(300, 'b'), aNord(600, 'c')];
+  const r = confrontaBisogno(b, punti, centro);
+  assert.deepEqual([r.nostri5, r.nostri10, r.residuo5, r.residuo10], [2, 3, 1, 4]);
+  const molti = confrontaBisogno({ ...b, entro5: 1, entro10: 1 }, punti, centro);
+  assert.deepEqual([molti.residuo5, molti.residuo10], [0, 0]);
+});
+
+test('confrontaBisogno: conteggio al tetto = residuo minimo, con «almeno»', () => {
+  const b = { entro5: 15, entro10: 15, oltre5: true, oltre10: true, nome: null };
+  const r = confrontaBisogno(b, [aNord(100)], centro);
+  assert.equal(r.residuo5, 14);
+  assert.equal(r.residuo10, 14);
+  assert.equal(r.almeno5, true);
+  assert.equal(r.almeno10, true);
+  const pari = confrontaBisogno({ ...b, entro10: 1 }, [aNord(100)], centro);
+  assert.equal(pari.residuo10, 0);
+});
+
+test('confrontaBisogno: il più vicino secondo Walkably è già nei nostri dati se il nome coincide', () => {
+  const b = { entro5: 1, entro10: 1, oltre5: false, oltre10: false, nome: 'Teatro Massimo', tipo: 'theatre', minuti: 4 };
+  const dentro = confrontaBisogno(b, [aNord(200, 'Teatro Massimo')], centro);
+  assert.equal(dentro.piuVicino.nostro, true);
+  const fuori = confrontaBisogno(b, [aNord(200, 'Politeama')], centro);
+  assert.equal(fuori.piuVicino.nostro, false);
+  assert.equal(fuori.piuVicino.nome, 'Teatro Massimo');
+  const senza = confrontaBisogno({ ...b, nome: null }, [aNord(200)], centro);
+  assert.equal(senza.piuVicino, null);
+});
+
+test('confrontaBisogno: senza nostro layer per il bisogno non c’è residuo', () => {
+  const b = { entro5: 4, entro10: 9, oltre5: false, oltre10: false, nome: null };
+  const r = confrontaBisogno(b, null, centro);
+  assert.equal(r.nostri5, null);
+  assert.equal(r.residuo5, null);
+  assert.equal(r.residuo10, null);
+});
+
+test('puntiDaGeojson: tiene i punti con nome e un filtro per categoria', () => {
+  const gj = { features: [
+    { geometry: { type: 'Point', coordinates: [13.3, 38.1] }, properties: { nome: 'Museo A', categoria: "Gallerie d'Arte e Musei" } },
+    { geometry: { type: 'Point', coordinates: [13.31, 38.11] }, properties: { nome: 'Chiesa B', categoria: 'Chiese ed Oratori' } },
+    { geometry: { type: 'LineString', coordinates: [[0, 0], [1, 1]] }, properties: { nome: 'Linea' } },
+  ] };
+  assert.equal(puntiDaGeojson(gj).length, 2);
+  const solo = puntiDaGeojson(gj, p => p.categoria === "Gallerie d'Arte e Musei");
+  assert.deepEqual(solo.map(p => [p.nome, p.lon, p.lat]), [['Museo A', 13.3, 38.1]]);
+});
+
+test('SORGENTI: ogni bisogno collegato ha file e etichetta', () => {
+  for (const [k, lista] of Object.entries(SORGENTI)) {
+    assert.ok(Number(k) >= 0 && Number(k) <= 7);
+    for (const s of lista) assert.ok(s.file && s.etichetta, `bisogno ${k}`);
+  }
+  assert.deepEqual(Object.keys(SORGENTI).map(Number).sort(), [4, 5, 6, 7]);
+});

@@ -115,7 +115,7 @@ export function modelloPopup(p) {
 // Chiave stabile: i tile spezzano le celle, ma gli attributi di una cella restano gli stessi.
 export const chiave = p => `camminabilita:${p.s}:${p.r}:${p.q}:${p.m0}:${p.m7}`;
 
-export function voceCamminabilita(p) {
+export function voceCamminabilita(p, centro = null, leggi = null) {
   const c = classePerPunteggio(Number(p.s));
   const bisogni = BISOGNI.map(b => rigaBisogno(p, b)).filter(Boolean);
   const parco = Number.isFinite(Number(p.pg)) ? [{ etichetta: 'Area giochi più vicina', valore: t('camminabilita.minuti', { n: num1(p.pg) }) }] : [];
@@ -134,7 +134,7 @@ export function voceCamminabilita(p) {
         { etichetta: 'Licenza', valore: 'ODbL 1.0', urlValore: URL_ODBL }, // i18n-ok: nome della licenza
       ] },
     ],
-    dinamico: () => contenutoDinamico(p),
+    dinamico: () => contenutoDinamico(p, centro, leggi),
     nota: 'Il punteggio unisce la raggiungibilità a piedi di otto bisogni quotidiani (60%) e la qualità della strada (40%). Sono stime da OpenStreetMap: un luogo mancante o sbagliato sulla mappa cambia il punteggio. Non descrive sicurezza, criminalità o reddito.',
     link: { testo: 'Come si calcola il punteggio (Walkably)', url: URL_ACCURATEZZA, icona: 'esterno', suggerimento: 'Metodo e verifiche di accuratezza, anche quelle fallite' },
     fonte: FONTE,

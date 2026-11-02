@@ -47,6 +47,18 @@ Domande tipiche: Quanti negozi o farmacie ho entro 5 minuti a piedi? Quale bisog
 
 In cima alla sezione, tre riquadri mostrano **punteggio**, **Reach** e **qualità della strada** della cella. Sotto, il grafico **«Punteggio per bisogno»** ha una barra per ognuno degli otto bisogni, da 0 a 100, e, sotto ogni barra, i **luoghi raggiungibili entro 5 e entro 10 minuti** a piedi. Un **«+»** vuol dire che il conteggio è al tetto e i luoghi sono di più. L'icona **«i»** accanto al titolo spiega come funziona. Se la cella è su una rete stradale staccata da quella principale, o dentro un parco, la scheda lo scrive in una nota.
 
+## Luoghi nostri e luoghi di Walkably
+
+Parole chiave: nostri dati, luoghi mancanti, confronto con Walkably, scuole, parchi, cultura, fermate, residuo, 80 metri al minuto.
+
+Domande tipiche: Perché Walkably conta più luoghi di quelli che vedo in mappa? Quali luoghi mancano nei nostri dati? Come si fa il confronto?
+
+Sotto la barra di **scuola, parchi, cultura e trasporto pubblico** (i parchi e i giardini vengono sempre da OpenStreetMap, come per Walkably) la scheda mostra anche **i nostri luoghi**: quanti ne abbiamo entro 5 e entro 10 minuti a piedi, e i **tre più vicini** con la distanza in metri. Se Walkably ne conta di più, la scheda scrive **quanti in più**: sono luoghi di OpenStreetMap che non sono nei nostri dati. Se il **conteggio di Walkably è al tetto** (succede spesso in centro), la scheda scrive **«almeno N in più»**: è un minimo. Se il **luogo più vicino secondo Walkably** non ha un nostro punto con lo stesso nome, la scheda lo segnala con il nome e i minuti a piedi, ma senza posizione: Walkably non fornisce le coordinate dei luoghi.
+
+Per **alimentari, cibo e bevande, negozi e salute** non abbiamo ancora un layer nostro: la scheda mostra solo il conteggio di Walkably.
+
+Il confronto è **approssimato**. Walkably misura i minuti sulle strade vere, noi la distanza in linea d'aria a **80 metri al minuto** (5 minuti sono 400 m, 10 minuti 800 m). Il nome in OpenStreetMap può differire dal nostro, e allora un luogo già presente può risultare mancante.
+
 ## Edifici colorati
 
 Parole chiave: camminabilità, edifici, colore, 3D, esagoni, zoom 15.

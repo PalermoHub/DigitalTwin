@@ -193,7 +193,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = {
         "fonte": "Walkably, https://walkably.org (Raian Pollock), ODbL 1.0, su dati © OpenStreetMap contributors",
-        "release": a.release, "versione": "2026.10-m3", "doi": "10.5281/zenodo.23786101",
+        "release": a.release, "versione": "2026.10-m3",
         "celle": len(feats), "per_classe": {str(i): per_classe.get(i, 0) for i in range(len(SOGLIE))},
         "mediana": punteggi[len(punteggi) // 2], "massimo": punteggi[-1],
         "strade": len(feats_strade), "per_strada": {str(i): per_strada.get(i, 0) for i in range(len(SOGLIE_STRADA))},

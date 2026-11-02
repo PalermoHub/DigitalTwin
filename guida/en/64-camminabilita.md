@@ -47,6 +47,18 @@ Typical questions: How many shops or pharmacies do I have within 5 minutes on fo
 
 At the top of the section, three tiles show the cell's **score**, **Reach** and **street quality**. Below, the **«Score by need»** chart has a bar for each of the eight needs, from 0 to 100, and, under each bar, the **places reachable within 5 and within 10 minutes** on foot. A **«+»** means the count is capped and there are more places. The **«i»** icon next to the title explains how it works. If the cell is on a street network cut off from the main one, or inside a park, the card says so in a note.
 
+## Our places and Walkably's places
+
+Keywords: our data, missing places, comparison with Walkably, schools, parks, culture, stops, remainder, 80 metres a minute.
+
+Typical questions: Why does Walkably count more places than I see on the map? Which places are missing from our data? How is the comparison made?
+
+Below the bar for **school, parks, culture and public transport** (parks and gardens always come from OpenStreetMap, as for Walkably) the card also shows **our own places**: how many we have within 5 and within 10 minutes on foot, and the **three nearest** with their distance in metres. If Walkably counts more, the card says **how many more**: they are OpenStreetMap places that are not in our data. If **Walkably's count is capped** (often the case in the centre), the card says **"at least N more"**: that is a minimum. If **Walkably's nearest place** has no point of ours with the same name, the card flags it with its name and the minutes on foot, but without a position: Walkably does not provide place coordinates.
+
+For **groceries, food and drink, shops and health** we do not have a layer of our own yet: the card shows only Walkably's count.
+
+The comparison is **approximate**. Walkably measures minutes on real streets, we measure straight-line distance at **80 metres a minute** (5 minutes is 400 m, 10 minutes 800 m). A name in OpenStreetMap may differ from ours, so a place we already have can appear as missing.
+
 ## Coloured buildings
 
 Keywords: walkability, buildings, colour, 3D, hexagons, zoom 15.
