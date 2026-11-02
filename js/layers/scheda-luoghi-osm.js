@@ -5,7 +5,7 @@ import { righe } from '../core/scheda-util.js';
 import { t, tl } from '../core/i18n.js';
 import { urlPercorso, urlPercorsoOsm } from './camminabilita-luoghi.js';
 
-export const PESO = 8; // tab «Luogo», come i luoghi vicini
+export const PESO = 104; // tab «Walkably», con la camminabilità
 export const URL_OSM = 'https://www.openstreetmap.org/copyright';
 export const FONTE = 'OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.';
 

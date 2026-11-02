@@ -29,7 +29,7 @@ Parole chiave: scheda camminabilità, minuti a piedi, luogo più vicino, percent
 
 Domande tipiche: Quanti minuti servono per arrivare al supermercato? Qual è la farmacia più vicina a piedi? Questa cella è meglio di quante altre?
 
-Un clic sulla mappa, **anche con lo strato spento**, mostra nel tab **Luogo** la sezione **«Camminabilità»** della cella cliccata: **punteggio**, valutazione, **Reach**, **qualità della strada** e la quota di celle della stessa area che hanno un punteggio più basso. Sotto, **«A piedi dalla cella»** elenca per ognuno degli otto bisogni i **minuti a piedi** e il **tipo e nome del luogo più vicino**; se non c'è nulla entro **22 minuti** lo dice. C'è anche l'area giochi più vicina.
+Un clic sulla mappa, **anche con lo strato spento**, mostra nel tab **Walkably** la sezione **«Camminabilità»** della cella cliccata: **punteggio**, valutazione, **Reach**, **qualità della strada** e la quota di celle della stessa area che hanno un punteggio più basso. Sotto, **«A piedi dalla cella»** elenca per ognuno degli otto bisogni i **minuti a piedi** e il **tipo e nome del luogo più vicino**; se non c'è nulla entro **22 minuti** lo dice. C'è anche l'area giochi più vicina.
 
 ## Le strade
 
@@ -37,7 +37,7 @@ Parole chiave: strade, strada trafficata, strada tranquilla, strada mista, quali
 
 Domande tipiche: Questa strada è tranquilla o trafficata? Come si capisce quali vie sono più piacevoli a piedi? Quanta ombra ha una strada d'estate? Cosa significano le linee scure e chiare?
 
-Dallo **zoom 15** sopra le celle compaiono le **strade** come linee: **scura e spessa** la **strada trafficata** (qualità sotto 45), **grigia** la **mista** (45–74), **chiara e sottile** la **tranquilla** (75 e oltre). La legenda ha tre voci per accendere o spegnere ogni classe. Un clic **vicino a una strada**, anche con lo strato spento, aggiunge nel tab **Luogo** la sezione della strada: nome, tipo, **qualità**, **rumore** (dove esiste una mappa del rumore), **ombra estiva** (stima), vicinanza a strade trafficate, **pendenza** e alberi ogni 100 m.
+Dallo **zoom 15** sopra le celle compaiono le **strade** come linee: **scura e spessa** la **strada trafficata** (qualità sotto 45), **grigia** la **mista** (45–74), **chiara e sottile** la **tranquilla** (75 e oltre). La legenda ha tre voci per accendere o spegnere ogni classe. Un clic **vicino a una strada**, anche con lo strato spento, aggiunge nel tab **Walkably** la sezione della strada: nome, tipo, **qualità**, **rumore** (dove esiste una mappa del rumore), **ombra estiva** (stima), vicinanza a strade trafficate, **pendenza** e alberi ogni 100 m.
 
 ## Il grafico «Punteggio per bisogno»
 

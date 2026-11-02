@@ -9,6 +9,7 @@ const r = (etichetta, valore) => ({ etichetta, valore });
 test('tabScheda: il tab dal peso e dalla chiave', () => {
   assert.equal(tabScheda(70), 'popolazione');
   assert.equal(tabScheda(10), 'luogo');
+  assert.equal(tabScheda(104), 'walkably');
   assert.equal(tabScheda(5, 'pai:1'), 'strumenti');
   assert.equal(tabScheda(95), 'pnrr');
 });

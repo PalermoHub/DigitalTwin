@@ -10,7 +10,7 @@ export const URL_WALKABLY = 'https://walkably.org';
 export const URL_OSM = 'https://www.openstreetmap.org/copyright';
 export const URL_ODBL = 'https://opendatacommons.org/licenses/odbl/1-0/';
 export const URL_ACCURATEZZA = 'https://walkably.org/accuracy';
-export const PESO = 8; // tab «Luogo» della scheda
+export const PESO = 104; // tab «Walkably» della scheda (core/scheda-modello.js)
 
 // Cinque classi di punteggio (estremi inclusi in basso): tavolozza sequenziale ColorBrewer YlGnBu, leggibile anche con daltonismo.
 export const CLASSI = [
