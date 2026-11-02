@@ -6,7 +6,7 @@ Parole chiave: camminabilità, walkability, a piedi, città dei 15 minuti, pedon
 
 Domande tipiche: Quanto è camminabile il mio quartiere? Dove si vive meglio a piedi? Quanti minuti a piedi servono per arrivare a una farmacia o a una fermata? Cosa significa il punteggio di camminabilità? Perché ci sono zone senza colore?
 
-Nel pannello Layer, nel gruppo **«Territorio»**, sezione **«Camminabilità»**, lo strato **«Camminabilità (da zoom 12)»** colora il comune di Palermo con **celle esagonali di circa 95 m**. A ogni cella è assegnato un **punteggio da 0 a 100**: più è alto, più cose utili si raggiungono bene **a piedi**.
+Nel pannello Layer, nel gruppo **«Territorio»**, sezione **«Camminabilità (Walkably)»**, lo strato **«Camminabilità (da zoom 12)»** colora il comune di Palermo con **celle esagonali di circa 95 m**. A ogni cella è assegnato un **punteggio da 0 a 100**: più è alto, più cose utili si raggiungono bene **a piedi**.
 
 La legenda, sotto lo strato, ha cinque classi (da molto bassa, 0–19, a molto alta, 80–100) e permette di accenderle o spegnerle una per una. Le celle compaiono dallo **zoom 12**. Dove non ci sono strade (mare, colline, campagna) non c'è nessuna cella.
 
@@ -65,7 +65,7 @@ Parole chiave: luoghi quotidiani, OpenStreetMap, alimentari, supermercati, bar, 
 
 Domande tipiche: Dove sono le farmacie vicino a me? Come accendo bar e ristoranti? Da dove vengono questi luoghi? Perché manca un negozio?
 
-Nel pannello **Layer**, nella sezione **Camminabilità**, ci sono cinque strati che si accendono uno per uno, ognuno con la **sua forma e il suo colore**: **alimentari** (carrello, verde oliva), **cibo e bevande** (tazza, arancione), **negozi** (borsa, viola), **salute** (croce, rosso), **parchi e giardini** (albero, verde). Sono i luoghi di **OpenStreetMap** nel comune di Palermo, scelti con le categorie del README di Walkably: i supermercati e le panetterie sono alimentari, i bar e i ristoranti cibo e bevande, banche e uffici postali contano come negozi, i veterinari non contano come salute e le riserve naturali non contano come parchi. Un clic su un luogo, **anche a strato spento**, apre la scheda con nome e tipo; i luoghi nel raggio del clic compaiono anche nella scheda del punto.
+Nel pannello **Layer**, nella sezione **Camminabilità (Walkably)**, ci sono cinque strati che si accendono uno per uno, ognuno con la **sua forma e il suo colore**: **alimentari** (carrello, verde oliva), **cibo e bevande** (tazza, arancione), **negozi** (borsa, viola), **salute** (croce, rosso), **parchi e giardini** (albero, verde). Sono i luoghi di **OpenStreetMap** nel comune di Palermo, scelti con le categorie del README di Walkably: i supermercati e le panetterie sono alimentari, i bar e i ristoranti cibo e bevande, banche e uffici postali contano come negozi, i veterinari non contano come salute e le riserve naturali non contano come parchi. Un clic su un luogo, **anche a strato spento**, apre la scheda con nome e tipo; i luoghi nel raggio del clic compaiono anche nella scheda del punto.
 
 La mappa può essere incompleta: un luogo che manca in OpenStreetMap manca anche qui. I dati sono un'estrazione di novembre 2026 con licenza **ODbL 1.0**, © contributori di OpenStreetMap, e si rinnovano a mano con `scripts/luoghi_osm.py`.
 

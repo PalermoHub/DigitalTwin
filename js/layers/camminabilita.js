@@ -140,7 +140,7 @@ export default {
   titolo: 'Camminabilità',
   argomento: { titolo: 'Camminabilità', descrizione: 'Quanto si vive a piedi: punteggio 0–100 per celle di circa 95 m, dalla raggiungibilità a piedi di negozi, salute, scuole, parchi, cultura e trasporto pubblico e dalla qualità della strada. Dati Walkably su OpenStreetMap.' },
   gruppo: 'territorio',
-  sezione: 'Camminabilità',
+  sezione: 'Camminabilità (Walkably)', // titolo del gruppo nel pannello Layer (in inglese: «Walkability»)
   sezioniFisse: true, // sezione a sé dentro Territorio: il riordino non attraversa le intestazioni
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'vector', url: pmt('camminabilita/camminabilita.pmtiles'), attribution: '<a href="https://walkably.org" target="_blank" rel="noopener">Walkably</a> (ODbL)' });
