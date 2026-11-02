@@ -59,7 +59,7 @@ export default {
   titolo: 'Luoghi quotidiani',
   argomento: { titolo: 'Luoghi quotidiani (OpenStreetMap)', descrizione: 'Alimentari, bar e ristoranti, negozi, farmacie e servizi sanitari, parchi e giardini di Palermo da OpenStreetMap, con le stesse categorie del punteggio di camminabilità di Walkably.' },
   gruppo: 'territorio',
-  sezione: 'Camminabilità',
+  sezione: '', // nessun titolo proprio: gli strati stanno sotto la sezione «Camminabilità» del modulo precedente
   aggiungiSorgenti(map) {
     map.addSource(SRC, { type: 'geojson', data: VUOTO }); // si riempie in avvia(), quando il file è arrivato
   },
@@ -81,7 +81,7 @@ export default {
   },
   legendaPannello: '.lg-luoghi-osm', // legenda sotto lo strato nel pannello (core/legenda-pannello.js)
   strati: BISOGNI.map(b => ({
-    id: `luoghi-osm-${b.id}`, etichetta: b.etichetta, layers: [punti(b)], attivo: false, legenda: '.legenda-luoghi-osm',
+    id: `luoghi-osm-${b.id}`, sottosezione: 'Luoghi quotidiani (OpenStreetMap)', etichetta: b.etichetta, layers: [punti(b)], attivo: false, legenda: '.legenda-luoghi-osm',
     suCambio() { if (legenda) legenda.hidden = !BISOGNI.some(x => mappa?.getLayoutProperty(punti(x), 'visibility') === 'visible'); },
   })),
   pannello: creaLegenda,
