@@ -38,6 +38,8 @@ test('voceLuogoOsm: con nome mostra il tipo, senza nome il tipo è il titolo', (
   const conCoord = voceLuogoOsm({ id: 'osm-3-0', k: 3, nome: 'Farmacia', tipo: 'pharmacy', lon: 13.36, lat: 38.11 });
   const percorso = conCoord.gruppi[0].righe.find(r => r.etichetta === 'Percorso a piedi');
   assert.equal(percorso.urlValore, 'https://www.google.com/maps/dir/?api=1&destination=38.11,13.36&travelmode=walking');
+  const osm = conCoord.gruppi[0].righe.find(r => r.etichetta === 'Percorso a piedi (OpenStreetMap)');
+  assert.equal(osm.urlValore, 'https://www.openstreetmap.org/directions?engine=fossgis_osrm_foot&route=%3B38.11%2C13.36');
   assert.equal(conCoord.link, undefined); // dentro la card, non nella barra in fondo
   assert.ok(!con.gruppi[0].righe.some(r => r.etichetta === 'Percorso a piedi'));
   const senza = voceLuogoOsm({ id: 'osm-1-4', k: 1, nome: '', tipo: 'bar' });

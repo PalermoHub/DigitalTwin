@@ -26,6 +26,9 @@ export const SORGENTI = {
 // Percorso a piedi fino al luogo: il link https di Google Maps apre l'app sul telefono e il sito sul computer.
 export const urlPercorso = (lon, lat) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking`;
 
+// Lo stesso percorso su OpenStreetMap (routing a piedi OSRM): la partenza resta vuota e si sceglie dal sito, anche con «la mia posizione».
+export const urlPercorsoOsm = (lon, lat) => `https://www.openstreetmap.org/directions?engine=fossgis_osrm_foot&route=%3B${lat}%2C${lon}`;
+
 // «Caffè "Mazzara", S.R.L.» → «caffe mazzara s r l»
 export function normalizzaNome(s) {
   if (s == null) return '';

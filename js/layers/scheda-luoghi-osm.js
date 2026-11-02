@@ -3,7 +3,7 @@
 // Stesse righe per voce della scheda e popup.
 import { righe } from '../core/scheda-util.js';
 import { t, tl } from '../core/i18n.js';
-import { urlPercorso } from './camminabilita-luoghi.js';
+import { urlPercorso, urlPercorsoOsm } from './camminabilita-luoghi.js';
 
 export const PESO = 8; // tab «Luogo», come i luoghi vicini
 export const URL_OSM = 'https://www.openstreetmap.org/copyright';
@@ -54,7 +54,9 @@ export const conCoordinate = p => Number.isFinite(Number(p.lon)) && Number.isFin
 function righePunto(p) {
   const b = bisogno(p.k);
   const base = righe([['Tipo', p.nome ? tipoIt(p.tipo) : null], ['Bisogno', b?.etichetta]]);
-  return conCoordinate(p) ? [...base, { etichetta: 'Percorso a piedi', valore: 'Apri in Google Maps', urlValore: urlPercorso(p.lon, p.lat) }] : base;
+  return conCoordinate(p) ? [...base,
+    { etichetta: 'Percorso a piedi', valore: 'Apri in Google Maps', urlValore: urlPercorso(p.lon, p.lat) },
+    { etichetta: 'Percorso a piedi (OpenStreetMap)', valore: 'Apri in OpenStreetMap', urlValore: urlPercorsoOsm(p.lon, p.lat) }] : base;
 }
 
 export function voceLuogoOsm(p) {

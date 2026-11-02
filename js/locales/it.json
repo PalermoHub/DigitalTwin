@@ -3648,5 +3648,7 @@
   "camminabilita.mostraLuogo": "Mostra il luogo sulla mappa e apri la sua scheda",
   "lbl.Percorso a piedi": "Percorso a piedi",
   "lbl.Apri in Google Maps": "Apri in Google Maps",
-  "lbl.OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.": "OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably."
+  "lbl.OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.": "OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.",
+  "lbl.Percorso a piedi (OpenStreetMap)": "Percorso a piedi (OpenStreetMap)",
+  "lbl.Apri in OpenStreetMap": "Apri in OpenStreetMap"
 }

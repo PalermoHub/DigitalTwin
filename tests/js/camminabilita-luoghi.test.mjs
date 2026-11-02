@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  M_PER_MINUTO, raggioMinuti, normalizzaNome, nomiCoincidono, luoghiVicini, confrontaBisogno, puntiDaGeojson, puntiDaBisogno, urlPercorso, SORGENTI, nomeVero,
+  M_PER_MINUTO, raggioMinuti, normalizzaNome, nomiCoincidono, luoghiVicini, confrontaBisogno, puntiDaGeojson, puntiDaBisogno, urlPercorso, urlPercorsoOsm, SORGENTI, nomeVero,
 } from '../../js/layers/camminabilita-luoghi.js';
 
 const centro = [13.36, 38.11];
@@ -119,4 +119,8 @@ test('SORGENTI: la chiave della card nella scheda è quella che i moduli usano',
   assert.equal(SORGENTI[4][0].chiave('scuola-1'), 'scuola-1');
   assert.equal(SORGENTI[6][0].chiave('16-4'), 'monumento-16-4');
   assert.equal(SORGENTI[7][0].chiave('12'), 'fermata-12');
+});
+
+test('urlPercorsoOsm: routing a piedi su OpenStreetMap, partenza vuota e arrivo lat,lon', () => {
+  assert.equal(urlPercorsoOsm(13.3569, 38.1203), 'https://www.openstreetmap.org/directions?engine=fossgis_osrm_foot&route=%3B38.1203%2C13.3569');
 });
