@@ -60,6 +60,34 @@
    ]
   },
   {
+   "id": "camminabilita",
+   "titolo": "Camminabilità",
+   "descrizione": "Quanto si vive a piedi: punteggio 0–100 per celle di circa 95 m, dalla raggiungibilità a piedi di negozi, salute, scuole, parchi, cultura e trasporto pubblico e dalla qualità della strada. Dati Walkably su OpenStreetMap.",
+   "strati": [
+    {
+     "id": "camminabilita",
+     "etichetta": "Camminabilità (da zoom 12)"
+    }
+   ],
+   "fonte": "Walkably (Raian Pollock), punteggi di camminabilità per celle di circa 95 m, release 2026.10-m3, su dati OpenStreetMap; ritaglio del comune di Palermo da DigitalTwin Palermo. Licenza ODbL 1.0.",
+   "enti": [
+    "Walkably",
+    "OpenStreetMap"
+   ],
+   "data": "2026-11-01",
+   "aggiornati": "2026-10-29",
+   "link": [
+    [
+     "Walkably",
+     "https://walkably.org"
+    ],
+    [
+     "Come si calcola e quanto è accurato",
+     "https://walkably.org/accuracy"
+    ]
+   ]
+  },
+  {
    "id": "confini",
    "titolo": "Confini amministrativi",
    "descrizione": "Circoscrizioni, quartieri, UPL e sezioni di censimento.",
@@ -2141,6 +2169,34 @@
     [
      "TomTom Traffic API",
      "https://www.tomtom.com/products/traffic-apis/"
+    ]
+   ]
+  },
+  {
+   "id": "camminabilita",
+   "titolo": "Walkability",
+   "descrizione": "How easy it is to live on foot: a score from 0 to 100 for cells of about 95 m, from the walk to shops, health care, schools, parks, culture and public transport and from street quality. Walkability data from Walkably, built on OpenStreetMap.",
+   "strati": [
+    {
+     "id": "camminabilita",
+     "etichetta": "Walkability (from zoom 12)"
+    }
+   ],
+   "fonte": "Walkably (Raian Pollock), walkability scores for cells of about 95 m, release 2026.10-m3, built on OpenStreetMap data; Palermo extract by DigitalTwin Palermo. ODbL 1.0 licence.",
+   "enti": [
+    "Walkably",
+    "OpenStreetMap"
+   ],
+   "data": "2026-11-01",
+   "aggiornati": "2026-10-29",
+   "link": [
+    [
+     "Walkably",
+     "https://walkably.org"
+    ],
+    [
+     "How it is calculated and how accurate it is",
+     "https://walkably.org/accuracy"
     ]
    ]
   }

@@ -34,6 +34,10 @@ dati/*/
 !dati/isole-calore/
 # eccezione: Piano di emergenza della Protezione civile (generato a mano da scripts/protezione_civile.py)
 !dati/protezione-civile/
+# eccezione: camminabilità Walkably (ritagliata da scripts/camminabilita.py; celle.geojson è intermedio e resta fuori)
+!dati/camminabilita/
+dati/camminabilita/celle.geojson
+dati/camminabilita/strade.geojson
 # eccezione: edifici in 3D (piante DWG di partenza e modello generato da scripts/edificio/)
 !dati/edificio/
 # dati di lavoro degli script (non servono alla webapp)
@@ -93,6 +97,7 @@ scripts/*
 !scripts/incendi.py
 !scripts/pai.py
 !scripts/protezione_civile.py
+!scripts/camminabilita.py
 !scripts/uffici_build.py
 !scripts/uffici_scrape.py
 !scripts/mef_immobili.py

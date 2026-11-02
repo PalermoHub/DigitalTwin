@@ -122,7 +122,7 @@ export function collezione(scelte) {
   return {
     type: 'FeatureCollection',
     features: scelte.flatMap(s => s.features.map(f => ({
-      type: 'Feature', geometry: f.geometry, properties: { colore: s.colore, etichetta: s.etichetta, icona: f.properties?.icona ?? iconaDi(s.id, f.geometry), disco: f.properties?.disco ?? DISCHI.has(s.id), sposta: f.properties?.sposta ?? DISCHI.has(s.id), senzaTooltip: SENZA_TOOLTIP.has(s.id), attributo: attributoDi(s.id, f.properties) ?? '' },
+      type: 'Feature', geometry: f.geometry, properties: { colore: s.colore, etichetta: s.etichetta, icona: f.properties?.icona ?? iconaDi(s.id, f.geometry), disco: f.properties?.disco ?? DISCHI.has(s.id), sposta: f.properties?.sposta ?? DISCHI.has(s.id), senzaTooltip: SENZA_TOOLTIP.has(s.id), soloBordo: Boolean(s.soloBordo), attributo: attributoDi(s.id, f.properties) ?? '' },
     }))),
   };
 }
@@ -186,7 +186,7 @@ function assicuraStrati(map) {
   map.addSource(SORGENTE, { type: 'geojson', data: collezione([]) });
   const colore = ['get', 'colore'];
   map.addLayer({ id: STRATI[0], type: 'fill', source: SORGENTE, filter: ['==', ['geometry-type'], 'Polygon'],
-    paint: { 'fill-color': colore, 'fill-opacity': 0.2 } });
+    paint: { 'fill-color': colore, 'fill-opacity': ['case', ['get', 'soloBordo'], 0, 0.2] } }); // soloBordo: la scelta disegna solo il contorno
   map.addLayer({ id: STRATI[1], type: 'line', source: SORGENTE, filter: ['!=', ['geometry-type'], 'Point'],
     paint: { 'line-color': colore, 'line-width': 3 } });
   map.addLayer({ id: STRATI[2], type: 'circle', source: SORGENTE, filter: ['all', ['==', ['geometry-type'], 'Point'], ['==', ['get', 'icona'], '']],

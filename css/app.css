@@ -2047,6 +2047,18 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .peba-nota summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .peba-nota p { margin: 0; padding: 0 10px 10px; line-height: 1.4; }
 
+/* camminabilità (Walkably): riquadri e barre per bisogno nella scheda della cella */
+.cam-riquadri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }
+.cam-riquadro { padding: 8px 6px; border-radius: var(--r-sm); background: var(--accent-soft); text-align: center; }
+.cam-val { font-size: var(--fs-md); font-weight: 700; border-bottom: 3px solid transparent; display: inline-block; min-width: 2.2em; }
+.cam-et { font-size: var(--fs-xs); color: var(--text-muted); }
+.cam-titolo { margin: 12px 0 6px; font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.cam-riga { margin-bottom: 8px; }
+.cam-riga-testa { display: flex; justify-content: space-between; gap: 8px; font-size: var(--fs-sm); }
+.cam-riga-val { color: var(--text-muted); white-space: nowrap; }
+.cam-barra { height: 6px; margin-top: 2px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; }
+.cam-barra i { display: block; height: 100%; border-radius: inherit; }
+.cam-riga-sotto { margin-top: 2px; font-size: var(--fs-xs); color: var(--text-muted); }
 /* pendolarismo da e verso Palermo: riquadri, numeri e classifiche della scheda, come nel pannello della mappa originale */
 .pend-riquadri, .pend-numeri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }
 .pend-riquadro, .pend-numero { padding: 8px 6px; border-radius: var(--r-sm); background: var(--accent-soft); text-align: center; }

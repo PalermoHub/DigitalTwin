@@ -51,3 +51,10 @@ test('vincoli PRG: ogni gruppo della scheda sa quale vincolo evidenziare', async
   const gruppi = territorio.scheda.voci(trovati, { lng: 0, lat: 0 }).find(v => v.chiave === 'vincoli').gruppi;
   assert.deepEqual(gruppi.map(g => g.evidenzia), [{ layer: 'va', fid: 7, tipo: 'Aree inondazioni' }, { layer: 'vl', fid: 3, tipo: 'Regie Trazzere' }]);
 });
+
+test('collezione: soloBordo passa alla proprietà della feature (false se assente)', () => {
+  const g = { type: 'Polygon', coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]]] };
+  const f = [{ geometry: g, properties: {} }];
+  assert.equal(collezione([{ id: 'x', etichetta: 'x', colore: '#000', soloBordo: true, features: f }]).features[0].properties.soloBordo, true);
+  assert.equal(collezione([{ id: 'x', etichetta: 'x', colore: '#000', features: f }]).features[0].properties.soloBordo, false);
+});

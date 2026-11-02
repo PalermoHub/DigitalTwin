@@ -18,6 +18,15 @@ const SIMULAZIONI = [
   ['Il post che presenta la simulazione è disponibile su ', link('LinkedIn', 'https://lnkd.in/p/dhyvcJhK'), '.'],
 ];
 
+// Camminabilità: credito Walkably in un paragrafo a sé, sotto la simulazione del movimento (richiesto dall'ODbL: Walkably con link, poi OpenStreetMap)
+const CAMMINABILITA = [
+  ['Punteggi di camminabilità: ', link('Walkably', 'https://walkably.org'), ' (Raian Pollock), release 2026.10-m3 del 29 ottobre 2026, su dati © contributori di ', link('OpenStreetMap', 'https://www.openstreetmap.org/copyright'), '. Il ritaglio del comune di Palermo è di DigitalTwin Palermo.'],
+  ['Licenza: ', link('ODbL 1.0', 'https://opendatacommons.org/licenses/odbl/1-0/'), ', con obbligo di credito e, per le versioni modificate, della stessa licenza.'],
+  ['Contains information from Walkably, https://walkably.org, available under the ODbL.'], // i18n-ok: formula di credito richiesta dall'autore
+  ['Contains information from OpenStreetMap, © OpenStreetMap contributors, https://www.openstreetmap.org/copyright, available under the ODbL.'], // i18n-ok: formula di credito richiesta dall'autore
+  ['I punteggi sono stime, non misure: ', link('metodo e verifiche di accuratezza', 'https://walkably.org/accuracy'), '. Citazione: Pollock, R. (2026), Walkably, versione 2026.10-m3, ', link('doi:10.5281/zenodo.23786101', 'https://doi.org/10.5281/zenodo.23786101'), '.'],
+];
+
 const LICENZE = {
   'CC BY 4.0': 'https://creativecommons.org/licenses/by/4.0/deed.it',
   'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/deed.it',
@@ -103,7 +112,7 @@ export function schedaFonti(catalogo) {
     voce('Ex Noviziato dei Crociferi in 3D: piante DWG, sezione e prospetti del Comune di Palermo, Settore Centro Storico; piante georeferenziate sulle unità volumetriche CTC e messe in quota piano per piano, elaborazione PalermoHub'),
     voce('Indicatori statistici comunali di Palermo (popolazione, censimento, imprese, ambiente e altro): AGID Cruscotto Italia, dati.gov.it', [['AGID Cruscotto Italia', 'https://cruscotto-italia.dati.gov.it/comune.html?istat=082053']], 'CC BY 4.0'),
   ]);
-  return [...titoloPagina('Fonti e note', 'Da dove vengono i dati e cosa tenere presente quando li si usa.'), blocco('Fonti dei dati', fonti), blocco('Da sapere', elenco(AVVISI)), blocco('Simulazione del movimento dei mezzi di trasporto pubblico', elenco(SIMULAZIONI))];
+  return [...titoloPagina('Fonti e note', 'Da dove vengono i dati e cosa tenere presente quando li si usa.'), blocco('Fonti dei dati', fonti), blocco('Da sapere', elenco(AVVISI)), blocco('Simulazione del movimento dei mezzi di trasporto pubblico', elenco(SIMULAZIONI)), blocco('Camminabilità', elenco(CAMMINABILITA))];
 }
 
 export async function caricaCatalogo() {

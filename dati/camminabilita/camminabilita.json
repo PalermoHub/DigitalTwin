@@ -1,0 +1,22 @@
+{
+ "fonte": "Walkably, https://walkably.org (Raian Pollock), ODbL 1.0, su dati © OpenStreetMap contributors",
+ "release": "2026-10-29",
+ "versione": "2026.10-m3",
+ "doi": "10.5281/zenodo.23786101",
+ "celle": 11790,
+ "per_classe": {
+  "0": 3252,
+  "1": 2184,
+  "2": 2646,
+  "3": 2660,
+  "4": 1048
+ },
+ "mediana": 44.3,
+ "massimo": 89.6,
+ "strade": 17213,
+ "per_strada": {
+  "0": 864,
+  "1": 9581,
+  "2": 6768
+ }
+}
