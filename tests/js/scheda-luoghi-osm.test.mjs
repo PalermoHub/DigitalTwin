@@ -4,7 +4,7 @@ import { BISOGNI, bisogno, tipoIt, featureDaLuoghi, voceLuogoOsm, modelloPopupLu
 import { ICONE } from '../../js/core/icone.js';
 
 test('cinque bisogni con icona nota, colore e forma distinti', () => {
-  assert.deepEqual(BISOGNI.map(b => b.k), [0, 1, 2, 3, 5]);
+  assert.deepEqual(BISOGNI.map(b => b.id), ['alimentari', 'cibo', 'salute', 'parchi', 'negozi']); // ordine del pannello Layer
   for (const b of BISOGNI) assert.ok(ICONE[b.icona], `manca l'icona ${b.icona}`);
   assert.equal(new Set(BISOGNI.map(b => b.icona)).size, BISOGNI.length);
   assert.equal(new Set(BISOGNI.map(b => b.colore)).size, BISOGNI.length);

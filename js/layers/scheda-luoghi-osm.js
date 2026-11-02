@@ -8,13 +8,13 @@ export const PESO = 8; // tab «Luogo», come i luoghi vicini
 export const URL_OSM = 'https://www.openstreetmap.org/copyright';
 export const FONTE = 'Fonte: OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.';
 
-// Un'icona e un colore per bisogno (k = campo di Walkably). Le forme restano distinguibili anche senza il colore.
+// Un'icona e un colore per bisogno (k = campo di Walkably). L'ordine è quello del pannello Layer. Le forme restano distinguibili anche senza il colore.
 export const BISOGNI = [
   { k: 0, id: 'alimentari', etichetta: 'Alimentari', icona: 'spesa', colore: '#5c940d' },
   { k: 1, id: 'cibo', etichetta: 'Cibo e bevande', icona: 'tazza', colore: '#e8590c' },
-  { k: 2, id: 'negozi', etichetta: 'Negozi', icona: 'negozio', colore: '#7048e8' },
   { k: 3, id: 'salute', etichetta: 'Salute', icona: 'salute', colore: '#e03131' },
   { k: 5, id: 'parchi', etichetta: 'Parchi e giardini', icona: 'parco', colore: '#2b8a3e' },
+  { k: 2, id: 'negozi', etichetta: 'Negozi', icona: 'negozio', colore: '#7048e8' },
 ];
 export const bisogno = k => BISOGNI.find(b => b.k === Number(k)) ?? null;
 
