@@ -3,9 +3,8 @@
 import { localeIntl, t, tl } from '../core/i18n.js';
 import { titoloConInfo } from '../core/info-grafico.js';
 import { classePerPunteggio, tabellaBisogni, dentroParco, stradaIsolataM } from './scheda-camminabilita.js';
-import { SORGENTI, caricaLuoghi, confrontaBisogno, urlPercorso } from './camminabilita-luoghi.js';
+import { SORGENTI, caricaLuoghi, confrontaBisogno } from './camminabilita-luoghi.js';
 import { tipoIt } from './scheda-luoghi-osm.js';
-import { svgIcona } from '../core/icone.js';
 
 const num = v => Number(v).toLocaleString(localeIntl(), { maximumFractionDigits: 1 });
 
@@ -61,15 +60,8 @@ function luoghiNostri(riga, b, punti, centro) {
       const nome = el('button', 'cam-luogo-nome', v.nome || tl(tipoIt(v.tipo)) || tl('Senza nome'));
       nome.type = 'button';
       nome.title = t('camminabilita.mostraLuogo');
-      nome.addEventListener('click', () => document.dispatchEvent(new CustomEvent('camminabilita:vai', { detail: { lon: v.lon, lat: v.lat } })));
-      const percorso = el('a', 'cam-luogo-percorso');
-      percorso.href = urlPercorso(v.lon, v.lat);
-      percorso.target = '_blank';
-      percorso.rel = 'noopener noreferrer';
-      percorso.title = t('camminabilita.percorso');
-      percorso.setAttribute('aria-label', t('camminabilita.percorso'));
-      percorso.innerHTML = svgIcona('esterno', 12);
-      voce.append(nome, el('span', 'cam-luogo-m', ` · ${Math.round(v.distanzaM)} m `), percorso);
+      nome.addEventListener('click', () => document.dispatchEvent(new CustomEvent('camminabilita:vai', { detail: { lon: v.lon, lat: v.lat, chiave: v.chiave } })));
+      voce.append(nome, el('span', 'cam-luogo-m', ` · ${Math.round(v.distanzaM)} m`));
       elenco.append(voce);
     }
     blocco.append(elenco);

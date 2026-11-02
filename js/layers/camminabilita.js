@@ -102,13 +102,26 @@ function riempiLegenda(map) {
   legenda.append(el('p', 'uffici-nota', 'Stime da OpenStreetMap, per celle di circa 95 m. Dati: Walkably (ODbL)'));
 }
 
-// Porta la mappa sul luogo e apre la sua scheda come un clic (come per le fermate del trasporto): a movimento finito, con una scadenza se la mappa è già ferma.
-function vaiAlLuogo(map, { lon, lat }) {
+// Porta la mappa sul luogo, apre la sua scheda come un clic (come per le fermate del trasporto) e scorre fino alla card del luogo, aperta:
+// lì ci sono la descrizione e i link (per i luoghi di OpenStreetMap, il percorso a piedi in Google Maps). A movimento finito, con una scadenza se la mappa è già ferma.
+function vaiAlLuogo(map, { lon, lat, chiave }) {
   let fatto = false;
   const apri = () => {
     if (fatto) return;
     fatto = true;
     map.fire('click', { point: map.project([lon, lat]), lngLat: { lng: lon, lat } });
+    if (!chiave) return;
+    // la scheda si riempie dopo il clic e può allungarsi ancora (altri servizi rispondono): si scorre alla card e si ricontrolla un paio di volte
+    const fine = Date.now() + 3000;
+    const card = () => [...document.querySelectorAll('.scheda-sez')].find(x => x.dataset.chiave === chiave && !x.hidden);
+    const inVista = c => { const r = c.getBoundingClientRect(); return r.top >= 0 && r.top < innerHeight * 0.6; };
+    const vai = (volte = 0) => {
+      const c = card();
+      if (c && !inVista(c)) document.dispatchEvent(new CustomEvent('scheda:vai', { detail: { chiave } }));
+      if (!c && Date.now() < fine) return requestAnimationFrame(() => vai(volte));
+      if (volte < 3) setTimeout(() => vai(volte + 1), 700);
+    };
+    vai();
   };
   map.once('moveend', apri);
   setTimeout(apri, 1500);

@@ -3,10 +3,11 @@
 // Stesse righe per voce della scheda e popup.
 import { righe } from '../core/scheda-util.js';
 import { t, tl } from '../core/i18n.js';
+import { urlPercorso } from './camminabilita-luoghi.js';
 
 export const PESO = 8; // tab «Luogo», come i luoghi vicini
 export const URL_OSM = 'https://www.openstreetmap.org/copyright';
-export const FONTE = 'Fonte: OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.';
+export const FONTE = 'OpenStreetMap, © OpenStreetMap contributors, licenza ODbL 1.0. Estrazione di novembre 2026; le categorie seguono quelle di Walkably.';
 
 // Un'icona e un colore per bisogno (k = campo di Walkably). L'ordine è quello del pannello Layer. Le forme restano distinguibili anche senza il colore.
 export const BISOGNI = [
@@ -39,7 +40,7 @@ export function featureDaLuoghi(bisogni) {
   const feature = [];
   for (const [k, punti] of Object.entries(bisogni ?? {})) {
     punti.forEach(([lon, lat, nome, tipo], i) => feature.push({
-      type: 'Feature', geometry: { type: 'Point', coordinates: [lon, lat] }, properties: { id: `osm-${k}-${i}`, k: Number(k), nome, tipo },
+      type: 'Feature', geometry: { type: 'Point', coordinates: [lon, lat] }, properties: { id: `osm-${k}-${i}`, k: Number(k), nome, tipo, lon, lat },
     }));
   }
   return { type: 'FeatureCollection', features: feature };
@@ -47,9 +48,13 @@ export function featureDaLuoghi(bisogni) {
 
 const titolo = p => p.nome || tipoIt(p.tipo) || bisogno(p.k)?.etichetta || 'Luogo';
 
+// Il percorso sta in una riga della card (il campo `link` di una voce finisce nella barra in fondo alla scheda, non nella card).
+export const conCoordinate = p => Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat));
+
 function righePunto(p) {
   const b = bisogno(p.k);
-  return righe([['Tipo', p.nome ? tipoIt(p.tipo) : null], ['Bisogno', b?.etichetta]]);
+  const base = righe([['Tipo', p.nome ? tipoIt(p.tipo) : null], ['Bisogno', b?.etichetta]]);
+  return conCoordinate(p) ? [...base, { etichetta: 'Percorso a piedi', valore: 'Apri in Google Maps', urlValore: urlPercorso(p.lon, p.lat) }] : base;
 }
 
 export function voceLuogoOsm(p) {

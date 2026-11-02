@@ -24,6 +24,7 @@ test('featureDaLuoghi: una feature per punto, con bisogno e id stabile', () => {
   const f = gj.features.find(x => x.properties.nome === 'Farmacia Centrale');
   assert.deepEqual(f.geometry.coordinates, [13.36, 38.11]);
   assert.deepEqual([f.properties.k, f.properties.tipo, f.properties.id], [3, 'pharmacy', 'osm-3-0']);
+  assert.deepEqual([f.properties.lon, f.properties.lat], [13.36, 38.11]);
   assert.equal(new Set(gj.features.map(x => x.properties.id)).size, 3);
   assert.deepEqual(featureDaLuoghi(null).features, []);
 });
@@ -34,6 +35,11 @@ test('voceLuogoOsm: con nome mostra il tipo, senza nome il tipo è il titolo', (
   assert.equal(con.peso, PESO);
   assert.ok(con.gruppi[0].righe.some(r => r.etichetta === 'Tipo' && r.valore === 'Farmacia'));
   assert.equal(con.sempre, true);
+  const conCoord = voceLuogoOsm({ id: 'osm-3-0', k: 3, nome: 'Farmacia', tipo: 'pharmacy', lon: 13.36, lat: 38.11 });
+  const percorso = conCoord.gruppi[0].righe.find(r => r.etichetta === 'Percorso a piedi');
+  assert.equal(percorso.urlValore, 'https://www.google.com/maps/dir/?api=1&destination=38.11,13.36&travelmode=walking');
+  assert.equal(conCoord.link, undefined); // dentro la card, non nella barra in fondo
+  assert.ok(!con.gruppi[0].righe.some(r => r.etichetta === 'Percorso a piedi'));
   const senza = voceLuogoOsm({ id: 'osm-1-4', k: 1, nome: '', tipo: 'bar' });
   assert.equal(senza.titolo, 'Bar');
   assert.ok(!senza.gruppi[0].righe.some(r => r.etichetta === 'Tipo'));

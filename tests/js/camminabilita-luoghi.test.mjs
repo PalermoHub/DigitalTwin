@@ -91,6 +91,7 @@ test('puntiDaGeojson: tiene i punti con nome e un filtro per categoria', () => {
   assert.equal(puntiDaGeojson(gj).length, 2);
   const solo = puntiDaGeojson(gj, p => p.categoria === "Gallerie d'Arte e Musei");
   assert.deepEqual(solo.map(p => [p.nome, p.lon, p.lat]), [['Museo A', 13.3, 38.1]]);
+  assert.equal(puntiDaGeojson({ features: [{ geometry: { type: 'Point', coordinates: [1, 2] }, properties: { id: 'scuola-7', nome: 'X' } }] })[0].id, 'scuola-7');
 });
 
 test('SORGENTI: ogni bisogno collegato ha file e etichetta', () => {
@@ -103,7 +104,7 @@ test('SORGENTI: ogni bisogno collegato ha file e etichetta', () => {
 
 test('puntiDaBisogno: legge il file compatto di OpenStreetMap', () => {
   const dati = { bisogni: { 3: [[13.3, 38.1, 'Farmacia A', 'pharmacy'], [13.31, 38.11, '', 'dentist']] } };
-  assert.deepEqual(puntiDaBisogno(dati, 3)[0], { lon: 13.3, lat: 38.1, nome: 'Farmacia A', tipo: 'pharmacy' });
+  assert.deepEqual(puntiDaBisogno(dati, 3)[0], { id: 'osm-3-0', lon: 13.3, lat: 38.1, nome: 'Farmacia A', tipo: 'pharmacy' });
   assert.equal(puntiDaBisogno(dati, 3).length, 2);
   assert.deepEqual(puntiDaBisogno(dati, 0), []);
   assert.deepEqual(puntiDaBisogno(null, 0), []);
@@ -111,4 +112,11 @@ test('puntiDaBisogno: legge il file compatto di OpenStreetMap', () => {
 
 test('urlPercorso: Google Maps a piedi, con latitudine prima della longitudine', () => {
   assert.equal(urlPercorso(13.3569, 38.1203), 'https://www.google.com/maps/dir/?api=1&destination=38.1203,13.3569&travelmode=walking');
+});
+
+test('SORGENTI: la chiave della card nella scheda è quella che i moduli usano', () => {
+  assert.equal(SORGENTI[3][0].chiave('osm-3-4'), 'luogo-osm-osm-3-4');
+  assert.equal(SORGENTI[4][0].chiave('scuola-1'), 'scuola-1');
+  assert.equal(SORGENTI[6][0].chiave('16-4'), 'monumento-16-4');
+  assert.equal(SORGENTI[7][0].chiave('12'), 'fermata-12');
 });

@@ -10,16 +10,17 @@ export const raggioMinuti = minuti => minuti * M_PER_MINUTO;
 const CULTURA = new Set(["Gallerie d'Arte e Musei", 'Teatri', 'Biblioteche', 'Zone Archeologiche']);
 
 // Bisogni di Walkably (campo K) e da dove vengono i nostri punti. `bisogno` = i punti stanno nel file compatto di OpenStreetMap
-// (scripts/luoghi_osm.py, stesse categorie di Walkably); `filtro` sceglie i punti di un GeoJSON nostro.
+// (scripts/luoghi_osm.py, stesse categorie di Walkably); `filtro` sceglie i punti di un GeoJSON nostro; `chiave(id)` = chiave della card
+// del luogo nella scheda (serve per portarci l'utente).
 export const SORGENTI = {
-  0: [{ id: 'alimentari', file: 'camminabilita/luoghi_osm.json', bisogno: 0, etichetta: 'Alimentari (OpenStreetMap)' }],
-  1: [{ id: 'cibo', file: 'camminabilita/luoghi_osm.json', bisogno: 1, etichetta: 'Cibo e bevande (OpenStreetMap)' }],
-  2: [{ id: 'negozi', file: 'camminabilita/luoghi_osm.json', bisogno: 2, etichetta: 'Negozi (OpenStreetMap)' }],
-  3: [{ id: 'salute', file: 'camminabilita/luoghi_osm.json', bisogno: 3, etichetta: 'Salute (OpenStreetMap)' }],
-  4: [{ id: 'scuole', file: 'scuole/scuole.geojson', etichetta: 'Scuole' }],
-  5: [{ id: 'parchi', file: 'camminabilita/luoghi_osm.json', bisogno: 5, etichetta: 'Parchi e giardini (OpenStreetMap)' }],
-  6: [{ id: 'cultura', file: 'monumenti/monumenti.geojson', etichetta: 'Musei, teatri, biblioteche e aree archeologiche', filtro: p => CULTURA.has(p.categoria) }],
-  7: [{ id: 'fermate', file: 'trasporto/fermate.geojson', etichetta: 'Fermate' }],
+  0: [{ id: 'alimentari', file: 'camminabilita/luoghi_osm.json', bisogno: 0, chiave: id => `luogo-osm-${id}`, etichetta: 'Alimentari (OpenStreetMap)' }],
+  1: [{ id: 'cibo', file: 'camminabilita/luoghi_osm.json', bisogno: 1, chiave: id => `luogo-osm-${id}`, etichetta: 'Cibo e bevande (OpenStreetMap)' }],
+  2: [{ id: 'negozi', file: 'camminabilita/luoghi_osm.json', bisogno: 2, chiave: id => `luogo-osm-${id}`, etichetta: 'Negozi (OpenStreetMap)' }],
+  3: [{ id: 'salute', file: 'camminabilita/luoghi_osm.json', bisogno: 3, chiave: id => `luogo-osm-${id}`, etichetta: 'Salute (OpenStreetMap)' }],
+  4: [{ id: 'scuole', file: 'scuole/scuole.geojson', chiave: id => id, etichetta: 'Scuole' }],
+  5: [{ id: 'parchi', file: 'camminabilita/luoghi_osm.json', bisogno: 5, chiave: id => `luogo-osm-${id}`, etichetta: 'Parchi e giardini (OpenStreetMap)' }],
+  6: [{ id: 'cultura', file: 'monumenti/monumenti.geojson', chiave: id => `monumento-${id}`, etichetta: 'Musei, teatri, biblioteche e aree archeologiche', filtro: p => CULTURA.has(p.categoria) }],
+  7: [{ id: 'fermate', file: 'trasporto/fermate.geojson', chiave: id => `fermata-${id}`, etichetta: 'Fermate' }],
 };
 
 // Percorso a piedi fino al luogo: il link https di Google Maps apre l'app sul telefono e il sito sul computer.
@@ -45,13 +46,13 @@ export function nomiCoincidono(a, b) {
 }
 
 // Punti {lon, lat, nome, tipo} di un bisogno dal file compatto di OpenStreetMap ({bisogni: {k: [[lon, lat, nome, tipo], …]}}).
-export const puntiDaBisogno = (dati, k) => (dati?.bisogni?.[k] ?? []).map(([lon, lat, nome, tipo]) => ({ lon, lat, nome, tipo }));
+export const puntiDaBisogno = (dati, k) => (dati?.bisogni?.[k] ?? []).map(([lon, lat, nome, tipo], i) => ({ id: `osm-${k}-${i}`, lon, lat, nome, tipo }));
 
 // Punti {lon, lat, nome, tipo} di un GeoJSON, con un filtro opzionale sulle proprietà.
 export function puntiDaGeojson(geojson, filtro = null) {
   return (geojson?.features ?? [])
     .filter(f => f.geometry?.type === 'Point' && (!filtro || filtro(f.properties ?? {})))
-    .map(f => ({ lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], nome: f.properties?.nome ?? '', tipo: f.properties?.tipo ?? f.properties?.categoria ?? '' }));
+    .map(f => ({ id: f.properties?.id, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], nome: f.properties?.nome ?? '', tipo: f.properties?.tipo ?? f.properties?.categoria ?? '' }));
 }
 
 // Punti entro `raggioM` metri da `centro` [lon, lat], dal più vicino, ciascuno con `distanzaM`.
@@ -90,7 +91,7 @@ export function caricaLuoghi(leggi) {
     for (const [k, lista] of Object.entries(SORGENTI)) {
       const gruppi = await Promise.all(lista.map(async s => {
         const gj = await file(s.file);
-        return gj ? (s.bisogno != null ? puntiDaBisogno(gj, s.bisogno) : puntiDaGeojson(gj, s.filtro)).map(p => ({ ...p, fonte: s.id })) : null;
+        return gj ? (s.bisogno != null ? puntiDaBisogno(gj, s.bisogno) : puntiDaGeojson(gj, s.filtro)).map(p => ({ ...p, fonte: s.id, chiave: s.chiave?.(p.id) })) : null;
       }));
       risultato[k] = gruppi.every(g => g === null) ? null : gruppi.flat().filter(Boolean);
     }
