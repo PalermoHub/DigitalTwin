@@ -3614,7 +3614,7 @@
   "lbl.Vicino a strade trafficate": "Near busy roads",
   "lbl.Alberi ogni 100 m": "Trees per 100 m",
   "lbl.La qualità della strada pesa il 40% del punteggio di camminabilità e unisce traffico, rumore (dove esiste una mappa del rumore), ombra estiva, strade trafficate vicine e pendenza. Ombra e rumore sono stime.": "Street quality is 40% of the walkability score and combines traffic, noise (where a noise map exists), summer shade, busy roads nearby and slope. Shade and noise are estimates.",
-  "camminabilita.nostri": "In our data ({cosa}): {a} within 5 min · {b} within 10 min",
+  "camminabilita.nostri": "In our data: {a} within 5 min · {b} within 10 min",
   "camminabilita.residuo": "Walkably counts {n} more within 10 min, not in our data",
   "camminabilita.tuttiNostri": "Every place Walkably counts is in our data",
   "camminabilita.tetto": "Walkably's count is capped and our places cover it: we cannot say whether more are missing",
@@ -3645,5 +3645,7 @@
   "lbl.Dati": "Data",
   "lbl.Luogo di OpenStreetMap: può mancare un nome, o essere cambiato nel frattempo. Le categorie sono quelle del punteggio di camminabilità di Walkably.": "A place from OpenStreetMap: its name may be missing or may have changed since. The categories are those of the Walkably walkability score.",
   "lbl., © contributori di OpenStreetMap, con le categorie di Walkably; estrazione di novembre 2026 di DigitalTwin Palermo (licenza ODbL 1.0, stessa licenza se si condividono versioni modificate).": ", © OpenStreetMap contributors, with Walkably's categories; November 2026 extract by DigitalTwin Palermo (ODbL 1.0 licence, same licence if modified versions are shared).",
-  "lbl.Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): ": "Everyday places (groceries, food and drink, shops, health, parks and gardens): "
+  "lbl.Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): ": "Everyday places (groceries, food and drink, shops, health, parks and gardens): ",
+  "camminabilita.mostraLuogo": "Show the place on the map and open its card",
+  "camminabilita.percorso": "Walking directions in Google Maps (opens in a new tab or in the app)"
 }

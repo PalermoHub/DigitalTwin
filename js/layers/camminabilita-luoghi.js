@@ -22,6 +22,9 @@ export const SORGENTI = {
   7: [{ id: 'fermate', file: 'trasporto/fermate.geojson', etichetta: 'Fermate' }],
 };
 
+// Percorso a piedi fino al luogo: il link https di Google Maps apre l'app sul telefono e il sito sul computer.
+export const urlPercorso = (lon, lat) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking`;
+
 // «Caffè "Mazzara", S.R.L.» → «caffe mazzara s r l»
 export function normalizzaNome(s) {
   if (s == null) return '';

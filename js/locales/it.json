@@ -3614,7 +3614,7 @@
   "lbl.Vicino a strade trafficate": "Vicino a strade trafficate",
   "lbl.Alberi ogni 100 m": "Alberi ogni 100 m",
   "lbl.La qualità della strada pesa il 40% del punteggio di camminabilità e unisce traffico, rumore (dove esiste una mappa del rumore), ombra estiva, strade trafficate vicine e pendenza. Ombra e rumore sono stime.": "La qualità della strada pesa il 40% del punteggio di camminabilità e unisce traffico, rumore (dove esiste una mappa del rumore), ombra estiva, strade trafficate vicine e pendenza. Ombra e rumore sono stime.",
-  "camminabilita.nostri": "Nei nostri dati ({cosa}): {a} entro 5 min · {b} entro 10 min",
+  "camminabilita.nostri": "Nei nostri dati: {a} entro 5 min · {b} entro 10 min",
   "camminabilita.residuo": "Walkably ne conta {n} in più entro 10 min, non presenti nei nostri dati",
   "camminabilita.tuttiNostri": "Tutti i luoghi contati da Walkably risultano nei nostri dati",
   "camminabilita.tetto": "Il conteggio di Walkably è al tetto e i nostri luoghi lo coprono: non si può dire se ne manchino altri",
@@ -3645,5 +3645,7 @@
   "lbl.Dati": "Dati",
   "lbl.Luogo di OpenStreetMap: può mancare un nome, o essere cambiato nel frattempo. Le categorie sono quelle del punteggio di camminabilità di Walkably.": "Luogo di OpenStreetMap: può mancare un nome, o essere cambiato nel frattempo. Le categorie sono quelle del punteggio di camminabilità di Walkably.",
   "lbl., © contributori di OpenStreetMap, con le categorie di Walkably; estrazione di novembre 2026 di DigitalTwin Palermo (licenza ODbL 1.0, stessa licenza se si condividono versioni modificate).": ", © contributori di OpenStreetMap, con le categorie di Walkably; estrazione di novembre 2026 di DigitalTwin Palermo (licenza ODbL 1.0, stessa licenza se si condividono versioni modificate).",
-  "lbl.Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): ": "Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): "
+  "lbl.Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): ": "Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): ",
+  "camminabilita.mostraLuogo": "Mostra il luogo sulla mappa e apri la sua scheda",
+  "camminabilita.percorso": "Percorso a piedi in Google Maps (si apre in una nuova scheda o nell'app)"
 }

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  M_PER_MINUTO, raggioMinuti, normalizzaNome, nomiCoincidono, luoghiVicini, confrontaBisogno, puntiDaGeojson, puntiDaBisogno, SORGENTI, nomeVero,
+  M_PER_MINUTO, raggioMinuti, normalizzaNome, nomiCoincidono, luoghiVicini, confrontaBisogno, puntiDaGeojson, puntiDaBisogno, urlPercorso, SORGENTI, nomeVero,
 } from '../../js/layers/camminabilita-luoghi.js';
 
 const centro = [13.36, 38.11];
@@ -107,4 +107,8 @@ test('puntiDaBisogno: legge il file compatto di OpenStreetMap', () => {
   assert.equal(puntiDaBisogno(dati, 3).length, 2);
   assert.deepEqual(puntiDaBisogno(dati, 0), []);
   assert.deepEqual(puntiDaBisogno(null, 0), []);
+});
+
+test('urlPercorso: Google Maps a piedi, con latitudine prima della longitudine', () => {
+  assert.equal(urlPercorso(13.3569, 38.1203), 'https://www.google.com/maps/dir/?api=1&destination=38.1203,13.3569&travelmode=walking');
 });

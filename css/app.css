@@ -2061,6 +2061,9 @@ body:has(#tabella-dati:not([hidden])) #area-ricerca { bottom: calc(40px + env(sa
 .cam-riga-sotto { margin-top: 2px; font-size: var(--fs-xs); color: var(--text-muted); }
 .cam-nostri { margin-top: 2px; padding-left: 8px; border-left: 2px solid var(--border-ui); }
 .cam-mancano { color: var(--text); }
+.cam-luogo-nome { all: unset; cursor: pointer; color: var(--accent-strong); text-decoration: underline dotted; text-underline-offset: 3px; }
+.cam-luogo-nome:hover, .cam-luogo-nome:focus-visible { text-decoration-style: solid; }
+.cam-luogo-percorso { display: inline-flex; vertical-align: middle; color: var(--accent-strong); }
 .cam-elenco { margin: 2px 0 0; padding-left: 16px; font-size: var(--fs-xs); color: var(--text-muted); }
 /* pendolarismo da e verso Palermo: riquadri, numeri e classifiche della scheda, come nel pannello della mappa originale */
 .pend-riquadri, .pend-numeri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }

@@ -102,6 +102,19 @@ function riempiLegenda(map) {
   legenda.append(el('p', 'uffici-nota', 'Stime da OpenStreetMap, per celle di circa 95 m. Dati: Walkably (ODbL)'));
 }
 
+// Porta la mappa sul luogo e apre la sua scheda come un clic (come per le fermate del trasporto): a movimento finito, con una scadenza se la mappa è già ferma.
+function vaiAlLuogo(map, { lon, lat }) {
+  let fatto = false;
+  const apri = () => {
+    if (fatto) return;
+    fatto = true;
+    map.fire('click', { point: map.project([lon, lat]), lngLat: { lng: lon, lat } });
+  };
+  map.once('moveend', apri);
+  setTimeout(apri, 1500);
+  map.easeTo({ center: [lon, lat], zoom: Math.max(map.getZoom(), 17) });
+}
+
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-camminabilita legenda-monumenti legenda-uffici lg-camminabilita');
   legenda.hidden = true;
@@ -132,6 +145,7 @@ export default {
     });
     mappa = map;
     document.addEventListener('vista3d', aggiornaEdifici); // i volumi 3D si accendono e spengono
+    document.addEventListener('camminabilita:vai', e => vaiAlLuogo(map, e.detail)); // un luogo dell'elenco in scheda: la mappa ci va e ne apre la scheda
     // tratti di strada, colorati e spessi per classe di qualità (trafficata, mista, tranquilla), dallo zoom 15
     map.addLayer({
       id: STRADE, type: 'line', source: SRC, 'source-layer': 'strade', minzoom: MINZOOM_STRADE, layout: { visibility: 'none', 'line-cap': 'round' },

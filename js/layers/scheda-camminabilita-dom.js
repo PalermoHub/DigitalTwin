@@ -3,7 +3,9 @@
 import { localeIntl, t, tl } from '../core/i18n.js';
 import { titoloConInfo } from '../core/info-grafico.js';
 import { classePerPunteggio, tabellaBisogni, dentroParco, stradaIsolataM } from './scheda-camminabilita.js';
-import { SORGENTI, caricaLuoghi, confrontaBisogno } from './camminabilita-luoghi.js';
+import { SORGENTI, caricaLuoghi, confrontaBisogno, urlPercorso } from './camminabilita-luoghi.js';
+import { tipoIt } from './scheda-luoghi-osm.js';
+import { svgIcona } from '../core/icone.js';
 
 const num = v => Number(v).toLocaleString(localeIntl(), { maximumFractionDigits: 1 });
 
@@ -46,7 +48,7 @@ function luoghiNostri(riga, b, punti, centro) {
   if (!punti) return; // file non arrivato: niente confronto, meglio di un confronto sbagliato
   const c = confrontaBisogno(b, punti, centro);
   const blocco = el('div', 'cam-nostri');
-  blocco.append(el('div', 'cam-riga-sotto', t('camminabilita.nostri', { a: c.nostri5, b: c.nostri10, cosa: tl(sorgenti.map(s => s.etichetta).join(', ')) })));
+  blocco.append(el('div', 'cam-riga-sotto', t('camminabilita.nostri', { a: c.nostri5, b: c.nostri10 })));
   if (c.residuo10 > 0) blocco.append(el('div', 'cam-riga-sotto cam-mancano', t(c.almeno10 ? 'camminabilita.residuoAlmeno' : 'camminabilita.residuo', { n: c.residuo10 })));
   else if (c.walkably10 > 0) blocco.append(el('div', 'cam-riga-sotto', t(c.almeno10 ? 'camminabilita.tetto' : 'camminabilita.tuttiNostri')));
   if (c.piuVicino && !c.piuVicino.nostro) {
@@ -54,7 +56,22 @@ function luoghiNostri(riga, b, punti, centro) {
   }
   if (c.vicini?.length) {
     const elenco = el('ul', 'cam-elenco');
-    for (const v of c.vicini.slice(0, 3)) elenco.append(el('li', null, `${v.nome || tl(v.tipo || 'Senza nome')} · ${Math.round(v.distanzaM)} m`));
+    for (const v of c.vicini.slice(0, 3)) {
+      const voce = el('li', 'cam-luogo');
+      const nome = el('button', 'cam-luogo-nome', v.nome || tl(tipoIt(v.tipo)) || tl('Senza nome'));
+      nome.type = 'button';
+      nome.title = t('camminabilita.mostraLuogo');
+      nome.addEventListener('click', () => document.dispatchEvent(new CustomEvent('camminabilita:vai', { detail: { lon: v.lon, lat: v.lat } })));
+      const percorso = el('a', 'cam-luogo-percorso');
+      percorso.href = urlPercorso(v.lon, v.lat);
+      percorso.target = '_blank';
+      percorso.rel = 'noopener noreferrer';
+      percorso.title = t('camminabilita.percorso');
+      percorso.setAttribute('aria-label', t('camminabilita.percorso'));
+      percorso.innerHTML = svgIcona('esterno', 12);
+      voce.append(nome, el('span', 'cam-luogo-m', ` · ${Math.round(v.distanzaM)} m `), percorso);
+      elenco.append(voce);
+    }
     blocco.append(elenco);
   }
   riga.append(blocco);
