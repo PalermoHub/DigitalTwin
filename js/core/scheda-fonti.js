@@ -20,12 +20,12 @@ const SIMULAZIONI = [
 
 // Camminabilità: credito Walkably in un paragrafo a sé, sotto la simulazione del movimento (richiesto dall'ODbL: Walkably con link, poi OpenStreetMap)
 const CAMMINABILITA = [
-  ['Punteggi di camminabilità: ', link('Walkably', 'https://walkably.org'), ' (Raian Pollock), release 2026.10-m3 del 29 ottobre 2026, su dati © contributori di ', link('OpenStreetMap', 'https://www.openstreetmap.org/copyright'), '. Il ritaglio del comune di Palermo è di DigitalTwin Palermo.'],
+  ['Punteggi di camminabilità: ', link('Walkably', 'https://walkably.org'), ' (Raian Pollock), release 2026.10-m5 del 31 ottobre 2026, su dati © contributori di ', link('OpenStreetMap', 'https://www.openstreetmap.org/copyright'), '. Il ritaglio del comune di Palermo è di DigitalTwin Palermo.'],
   ['Licenza: ', link('ODbL 1.0', 'https://opendatacommons.org/licenses/odbl/1-0/'), ', con obbligo di credito e, per le versioni modificate, della stessa licenza.'],
   ['Contains information from Walkably, https://walkably.org, available under the ODbL.'], // i18n-ok: formula di credito richiesta dall'autore
   ['Luoghi quotidiani (alimentari, cibo e bevande, negozi, salute, parchi e giardini): ', link('OpenStreetMap', 'https://www.openstreetmap.org/copyright'), ', © contributori di OpenStreetMap, con le categorie di Walkably; estrazione di novembre 2026 di DigitalTwin Palermo (licenza ODbL 1.0, stessa licenza se si condividono versioni modificate).'],
   ['Contains information from OpenStreetMap, © OpenStreetMap contributors, https://www.openstreetmap.org/copyright, available under the ODbL.'], // i18n-ok: formula di credito richiesta dall'autore
-  ['I punteggi sono stime, non misure: ', link('metodo e verifiche di accuratezza', 'https://walkably.org/accuracy'), '. Citazione: Walkably, release del 29 ottobre 2026, ', link('walkably.org', 'https://walkably.org'), '.'],
+  ['I punteggi sono stime, non misure: ', link('metodo e verifiche di accuratezza', 'https://walkably.org/accuracy'), '. Citazione: Walkably, release del 31 ottobre 2026, ', link('walkably.org', 'https://walkably.org'), '. DOI della release: ', link('10.5281/zenodo.23786101', 'https://doi.org/10.5281/zenodo.23786101'), '; DOI dell\'ultima versione: ', link('10.5281/zenodo.23786100', 'https://doi.org/10.5281/zenodo.23786100'), '.'],
 ];
 
 const LICENZE = {

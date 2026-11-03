@@ -11,7 +11,7 @@ Scrive:
   camminabilita.pmtiles   strati `celle` (zoom 12–16) e `strade` (zoom 15–16) (richiede tippecanoe e pmtiles)
   edifici_fid.json        {classe: [fid]}: gli edifici (id del tile edificato) per classe della cella sotto il centroide,
                           per colorarli nel viewer (2D e volumi 3D); solo con --edifici, parte da celle.geojson e edificato.gpkg
-Uso: python3 scripts/camminabilita.py [--release 2026-10-29] [--sorgente file.pmtiles] [--senza-pmtiles]
+Uso: python3 scripts/camminabilita.py [--release 2026-10-31 --versione 2026.10-m5] [--sorgente file.pmtiles] [--senza-pmtiles]
      python3 scripts/camminabilita.py --edifici      (rigenera solo edifici_fid.json dalle celle già scritte)
 Se i dati sono rotti (troppo poche celle, fuori dal comune) non tocca nessun file.
 """
@@ -145,7 +145,8 @@ def main():
     from shapely.prepared import prep
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--release", default="2026-10-29", help="cartella della release su data.walkably.org")
+    ap.add_argument("--release", default="2026-10-31", help="cartella della release su data.walkably.org")
+    ap.add_argument("--versione", default="2026.10-m5", help="nome della release Walkably (citata in scheda e fonti)")
     ap.add_argument("--sorgente", help="PMTiles già ritagliato o file Walkably locale (salta il download)")
     ap.add_argument("--senza-pmtiles", action="store_true")
     ap.add_argument("--edifici", action="store_true", help="scrive solo edifici_fid.json dalle celle già prodotte")
@@ -193,7 +194,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = {
         "fonte": "Walkably, https://walkably.org (Raian Pollock), ODbL 1.0, su dati © OpenStreetMap contributors",
-        "release": a.release, "versione": "2026.10-m3",
+        "release": a.release, "versione": a.versione,
         "celle": len(feats), "per_classe": {str(i): per_classe.get(i, 0) for i in range(len(SOGLIE))},
         "mediana": punteggi[len(punteggi) // 2], "massimo": punteggi[-1],
         "strade": len(feats_strade), "per_strada": {str(i): per_strada.get(i, 0) for i in range(len(SOGLIE_STRADA))},

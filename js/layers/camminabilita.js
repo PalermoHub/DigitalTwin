@@ -10,7 +10,7 @@ import { t, tl } from '../core/i18n.js';
 const leggiDati = file => fetch(urlDati(file)).then(r => { if (!r.ok) throw new Error(file); return r.json(); });
 
 // Camminabilità (Walkably, Raian Pollock, ODbL su dati OpenStreetMap): punteggio 0–100 di ogni cella esagonale di ~95 m del comune.
-// 11.790 celle in un solo PMTiles (scripts/camminabilita.py, zoom 12–16). Il clic apre la scheda del luogo, anche a strato spento
+// 11.770 celle in un solo PMTiles (scripts/camminabilita.py, zoom 12–16). Il clic apre la scheda del luogo, anche a strato spento
 // (strato «hit» trasparente sempre presente).
 const SRC = 'camminabilita';
 const FILL = 'camminabilita-fill';

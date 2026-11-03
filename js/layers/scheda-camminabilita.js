@@ -5,7 +5,7 @@ import { righe } from '../core/scheda-util.js';
 import { lingua, localeIntl, t } from '../core/i18n.js';
 import { contenutoDinamico } from './scheda-camminabilita-dom.js';
 
-export const FONTE = 'Fonte: Walkably (Raian Pollock), punteggi di camminabilità, release 2026.10-m3, su dati © OpenStreetMap contributors. Licenza ODbL 1.0. Sono stime.';
+export const FONTE = 'Fonte: Walkably (Raian Pollock), punteggi di camminabilità, release 2026.10-m5, su dati © OpenStreetMap contributors. Licenza ODbL 1.0. Sono stime.';
 export const URL_WALKABLY = 'https://walkably.org';
 export const URL_OSM = 'https://www.openstreetmap.org/copyright';
 export const URL_ODBL = 'https://opendatacommons.org/licenses/odbl/1-0/';
@@ -133,7 +133,7 @@ export function voceCamminabilita(p, centro = null, leggi = null) {
       ...(bisogni.length ? [{ titolo: 'A piedi dalla cella', righe: [...bisogni, ...parco] }] : []),
       // la fonte in un blocco a sé, ben visibile (il credito ODbL chiede Walkably con link a walkably.org e OpenStreetMap)
       { titolo: 'Fonte e licenza', righe: [
-        { etichetta: 'Punteggi', valore: 'Walkably (Raian Pollock), 2026.10-m3', urlValore: URL_WALKABLY }, // i18n-ok: nome proprio
+        { etichetta: 'Punteggi', valore: 'Walkably (Raian Pollock), 2026.10-m5', urlValore: URL_WALKABLY }, // i18n-ok: nome proprio
         { etichetta: 'Dati di base', valore: '© OpenStreetMap contributors', urlValore: URL_OSM },
         { etichetta: 'Licenza', valore: 'ODbL 1.0', urlValore: URL_ODBL }, // i18n-ok: nome della licenza
       ] },

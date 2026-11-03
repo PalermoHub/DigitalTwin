@@ -1,21 +1,21 @@
 {
  "fonte": "Walkably, https://walkably.org (Raian Pollock), ODbL 1.0, su dati © OpenStreetMap contributors",
- "release": "2026-10-29",
- "versione": "2026.10-m3",
- "celle": 11790,
+ "release": "2026-10-31",
+ "versione": "2026.10-m5",
+ "celle": 11770,
  "per_classe": {
-  "0": 3252,
-  "1": 2184,
-  "2": 2646,
-  "3": 2660,
-  "4": 1048
+  "0": 3211,
+  "1": 2165,
+  "2": 2650,
+  "3": 2667,
+  "4": 1077
  },
- "mediana": 44.3,
- "massimo": 89.6,
+ "mediana": 44.6,
+ "massimo": 89.7,
  "strade": 17213,
  "per_strada": {
-  "0": 864,
-  "1": 9581,
-  "2": 6768
+  "0": 941,
+  "1": 9745,
+  "2": 6527
  }
 }

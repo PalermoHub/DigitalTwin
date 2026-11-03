@@ -83,4 +83,4 @@ Keywords: Walkably, source, licence, ODbL, OpenStreetMap, Raian Pollock, credit,
 
 Typical questions: Where does the walkability data come from? Under which licence can I reuse it? Who built the score?
 
-The data is from **Walkably** (Raian Pollock), release 2026.10-m3 of 29 October 2026, on data **© OpenStreetMap contributors**, under the **ODbL 1.0** licence. The Palermo extract is cut from the official file. The credit appears on the map and on the **«Sources and notes»** page.
+The data is from **Walkably** (Raian Pollock), release 2026.10-m5 of 31 October 2026, on data **© OpenStreetMap contributors**, under the **ODbL 1.0** licence. The Palermo extract is cut from the official file. The credit appears on the map and on the **«Sources and notes»** page.

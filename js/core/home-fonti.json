@@ -1154,14 +1154,14 @@
  },
  "camminabilita": {
   "data": "2026-11-01",
-  "aggiornati": "2026-10-29",
+  "aggiornati": "2026-10-31",
   "enti": [
    "Walkably",
    "OpenStreetMap"
   ],
   "fonte": {
-   "it": "Walkably (Raian Pollock), punteggi di camminabilità per celle di circa 95 m, release 2026.10-m3, su dati OpenStreetMap; ritaglio del comune di Palermo da DigitalTwin Palermo. Licenza ODbL 1.0.",
-   "en": "Walkably (Raian Pollock), walkability scores for cells of about 95 m, release 2026.10-m3, built on OpenStreetMap data; Palermo extract by DigitalTwin Palermo. ODbL 1.0 licence."
+   "it": "Walkably (Raian Pollock), punteggi di camminabilità per celle di circa 95 m, release 2026.10-m5, su dati OpenStreetMap; ritaglio del comune di Palermo da DigitalTwin Palermo. Licenza ODbL 1.0.",
+   "en": "Walkably (Raian Pollock), walkability scores for cells of about 95 m, release 2026.10-m5, built on OpenStreetMap data; Palermo extract by DigitalTwin Palermo. ODbL 1.0 licence."
   },
   "link": {
    "it": [

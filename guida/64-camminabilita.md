@@ -83,4 +83,4 @@ Parole chiave: Walkably, fonte, licenza, ODbL, OpenStreetMap, Raian Pollock, cre
 
 Domande tipiche: Da dove vengono i dati di camminabilità? Con quale licenza posso riusarli? Chi ha costruito il punteggio?
 
-I dati sono di **Walkably** (Raian Pollock), release 2026.10-m3 del 29 ottobre 2026, su dati **© OpenStreetMap contributors**, con licenza **ODbL 1.0**. Il ritaglio di Palermo è ricavato dal file ufficiale. Il credito compare nella mappa e nella pagina **«Fonti e note»**.
+I dati sono di **Walkably** (Raian Pollock), release 2026.10-m5 del 31 ottobre 2026, su dati **© OpenStreetMap contributors**, con licenza **ODbL 1.0**. Il ritaglio di Palermo è ricavato dal file ufficiale. Il credito compare nella mappa e nella pagina **«Fonti e note»**.
