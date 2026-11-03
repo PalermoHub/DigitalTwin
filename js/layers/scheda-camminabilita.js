@@ -2,7 +2,7 @@
 // Reach (a piedi verso otto bisogni quotidiani), qualità stradale e minuti fino al luogo più vicino per ciascun bisogno.
 // Le righe senza valore non compaiono.
 import { righe } from '../core/scheda-util.js';
-import { localeIntl, t } from '../core/i18n.js';
+import { lingua, localeIntl, t } from '../core/i18n.js';
 import { contenutoDinamico } from './scheda-camminabilita-dom.js';
 
 export const FONTE = 'Fonte: Walkably (Raian Pollock), punteggi di camminabilità, release 2026.10-m3, su dati © OpenStreetMap contributors. Licenza ODbL 1.0. Sono stime.';
@@ -10,7 +10,10 @@ export const URL_WALKABLY = 'https://walkably.org';
 export const URL_OSM = 'https://www.openstreetmap.org/copyright';
 export const URL_ODBL = 'https://opendatacommons.org/licenses/odbl/1-0/';
 export const URL_ACCURATEZZA = 'https://walkably.org/accuracy';
-export const URL_PALERMO = 'https://walkably.org/en/city/it/palermo/'; // calcoli specifici per Palermo
+export const URL_METODO = 'https://walkably.org/about';
+export const URL_PALERMO_IT = 'https://walkably.org/city/it/palermo/'; // pagina di Palermo in italiano
+export const URL_PALERMO_EN = 'https://walkably.org/en/city/it/palermo/'; // e in inglese
+export const urlPalermo = () => (lingua() === 'en' ? URL_PALERMO_EN : URL_PALERMO_IT);
 export const PESO = 104; // tab «Walkably» della scheda (core/scheda-modello.js)
 
 // Cinque classi di punteggio (estremi inclusi in basso): tavolozza sequenziale ColorBrewer YlGnBu, leggibile anche con daltonismo.
@@ -138,8 +141,9 @@ export function voceCamminabilita(p, centro = null, leggi = null) {
     dinamico: () => contenutoDinamico(p, centro, leggi),
     nota: 'Il punteggio unisce la raggiungibilità a piedi di otto bisogni quotidiani (60%) e la qualità della strada (40%). Sono stime da OpenStreetMap: un luogo mancante o sbagliato sulla mappa cambia il punteggio. Non descrive sicurezza, criminalità o reddito.',
     link: [
-      { testo: 'Come si calcola il punteggio (Walkably)', url: URL_ACCURATEZZA, icona: 'esterno', suggerimento: 'Metodo e verifiche di accuratezza, anche quelle fallite' },
-      { testo: 'Calcoli specifici per Palermo (Walkably)', url: URL_PALERMO, icona: 'esterno', suggerimento: 'Punteggi e dettagli di Palermo sul sito di Walkably' },
+      { testo: 'Come si calcola il punteggio (Walkably)', url: URL_METODO, icona: 'esterno', suggerimento: 'Il metodo di calcolo spiegato da Walkably' },
+      { testo: 'Limiti dei dati (Walkably)', url: URL_ACCURATEZZA, icona: 'esterno', suggerimento: 'Verifiche di accuratezza, anche quelle fallite' },
+      { testo: 'Calcoli specifici per Palermo (Walkably)', url: urlPalermo(), icona: 'esterno', suggerimento: 'Punteggi e dettagli di Palermo sul sito di Walkably' },
     ],
     fonte: FONTE,
   };
@@ -160,8 +164,9 @@ export function voceStrada(p) {
     ] }],
     nota: 'La qualità della strada pesa il 40% del punteggio di camminabilità e unisce traffico, rumore (dove esiste una mappa del rumore), ombra estiva, strade trafficate vicine e pendenza. Ombra e rumore sono stime.',
     link: [
-      { testo: 'Come si calcola il punteggio (Walkably)', url: URL_ACCURATEZZA, icona: 'esterno', suggerimento: 'Metodo e verifiche di accuratezza, anche quelle fallite' },
-      { testo: 'Calcoli specifici per Palermo (Walkably)', url: URL_PALERMO, icona: 'esterno', suggerimento: 'Punteggi e dettagli di Palermo sul sito di Walkably' },
+      { testo: 'Come si calcola il punteggio (Walkably)', url: URL_METODO, icona: 'esterno', suggerimento: 'Il metodo di calcolo spiegato da Walkably' },
+      { testo: 'Limiti dei dati (Walkably)', url: URL_ACCURATEZZA, icona: 'esterno', suggerimento: 'Verifiche di accuratezza, anche quelle fallite' },
+      { testo: 'Calcoli specifici per Palermo (Walkably)', url: urlPalermo(), icona: 'esterno', suggerimento: 'Punteggi e dettagli di Palermo sul sito di Walkably' },
     ],
     fonte: FONTE,
   };
