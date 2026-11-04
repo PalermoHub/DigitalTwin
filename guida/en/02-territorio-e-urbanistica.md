@@ -10,6 +10,8 @@ The «Cadastre: parcels» layer (Territory group, visible from zoom 12) shows th
 
 A click opens the profile: in the «Planning tools» section the parcel appears with sheet and number and the link to the cadastral extract. To search for one directly, use the «Filters» tab (sheet and number) or the search field.
 
+With a layer of the Urban planning route switched on (zoning plan, constraints, cadastre, OMI, street numbers), the «Planning tools» tab shows a «Download PDF profile» button: it creates an A4 sheet with the map excerpt, sheet and parcel numbers, zoning, constraints and OMI values of the clicked point.
+
 The cadastral data are informational only: they do not replace official extracts or certificates.
 
 ---

@@ -11,6 +11,8 @@ import { featureVicine } from './scheda-util.js';
 import { el, icona, sincronizzaStrato, acceseDaScheda, spegniStratiDaScheda, creaInterruttoreStrato, disegnaSezione } from './scheda-disegno.js';
 import { ICONA_INGRANAGGIO, ICONA_X, creaPannelloPreferenze } from './scheda-pannello-preferenze.js';
 import { t as tr, tl } from './i18n.js';
+import { urbanisticaAttiva } from './scheda-pdf-modello.js';
+import { conAvvisoStampa } from './avviso-attesa.js';
 import { mostraCerchio, nascondiCerchio } from './cerchio-raggio.js';
 import { raggioVicini, cerchioVisibile, EVENTO_RAGGIO } from './raggio-vicini.js';
 import { inModoEmergenza, moduliAlClic } from './modo-emergenza.js';
@@ -139,6 +141,15 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
   let attiva = tabIniziale ?? new URLSearchParams(location.search).get('tab'); // il tab chiesto da uno strato vince su quello ricordato
   const TITOLI_SUNTO = { mercato: () => tr('scheda.suntoMercato') }; // titolo sopra il riepilogo, dove serve
   let sunti = new Map(); // riepilogo in testa a certe schede: id -> celle { valore, chiave }
+  // «Scarica scheda PDF»: nel tab Strumenti urbanistici, finché è acceso uno strato del percorso Urbanistica
+  let pulsantePdf = null;
+  const sincronizzaPdf = () => {
+    if (pulsantePdf) pulsantePdf.hidden = attiva !== 'strumenti' || !urbanisticaAttiva();
+    piede.hidden = ![...piede.children].some(c => !c.hidden);
+  };
+  ascoltoStrati?.abort(); // un solo ascolto per volta: quello della scheda aperta
+  ascoltoStrati = new AbortController();
+  document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) sincronizzaPdf(); }, { signal: ascoltoStrati.signal });
   const mostraTab = id => {
     attiva = id;
     aggiornaUrl(lngLat, id);
@@ -148,7 +159,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
       if (b.dataset.tab === id) indice.scrollTo({ left: Math.max(0, b.offsetLeft - 24), behavior: 'smooth' });
     }
     for (const l of piede.querySelectorAll('.scheda-link')) l.hidden = l.dataset.tab !== id;
-    piede.hidden = ![...piede.children].some(c => !c.hidden);
+    sincronizzaPdf();
     for (const x of corpo.querySelectorAll('.scheda-sunto, .scheda-sunto-titolo')) x.remove();
     const celle = sunti.get(id);
     if (celle) {
@@ -175,8 +186,14 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
       return !visti.has(k) && visti.add(k) || l.remove();
     });
     piede.replaceChildren(...links);
+    pulsantePdf = el('button', 'scheda-link scheda-pdf');
+    pulsantePdf.type = 'button';
+    pulsantePdf.dataset.tab = 'strumenti';
+    pulsantePdf.append(icona('stampa'), el('span', null, tr('schedaPdf.pulsante')));
+    pulsantePdf.addEventListener('click', () => document.dispatchEvent(new CustomEvent('scheda:pdf', { detail: { sezioni: corrente.sezioni, titolo: titoloTesto, coordinate: `${lngLat.lat.toFixed(5)}° N, ${lngLat.lng.toFixed(5)}° E`, contesto: testoContesto(contesto) } })));
+    piede.append(pulsantePdf);
     if (visibili.legale) piede.append(el('p', 'scheda-nota scheda-legale', NOTA_LEGALE));
-    piede.hidden = !piede.children.length;
+    sincronizzaPdf();
     // riepilogo in testa a Mercato, Popolazione e Terreno: tre valori chiave della prima sezione
     sunti = new Map();
     for (const sez of visibili.sezioni) {
@@ -355,6 +372,7 @@ function stralcioConCerchio(map, punto) {
 const DISCLAIMER_STAMPA = tr('scheda.disclaimer');
 
 let richiestaLuogo = 0;
+let ascoltoStrati = null;
 
 export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   const rndt = opzioni.rndt;
@@ -366,7 +384,43 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     contenitore.querySelector('.scheda-stralcio')?.remove();
     contenitore.querySelector('.scheda-indice [aria-selected="true"]')?.click();
   });
-  // stralcio della mappa visualizzata: il canvas WebGL si legge solo subito dopo un render
+  // stralcio della mappa visualizzata: il canvas WebGL si legge solo subito dopo un render;
+  // lo stralcio si legge subito dopo un render; scaduto il tempo si prosegue senza (null)
+  const stralcioPronto = (tipo = 'image/png') => new Promise(ok => {
+    let fatto = false;
+    const leggi = () => {
+      if (fatto) return;
+      fatto = true;
+      try {
+        const png = stralcioConCerchio(map, contenitore.dataset.punto);
+        if (tipo === 'image/png') return ok(png);
+        const i = new Image();
+        i.onload = () => { const c = document.createElement('canvas'); c.width = i.width; c.height = i.height; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(i, 0, 0); ok(c.toDataURL(tipo, 0.85)); };
+        i.onerror = () => ok(null);
+        i.src = png;
+      } catch { ok(null); }
+    };
+    map.once('render', leggi);
+    map.triggerRepaint();
+    setTimeout(leggi, 1500);
+  });
+  // PDF della scheda urbanistica: jsPDF e il disegno si caricano qui, al primo clic
+  document.addEventListener('scheda:pdf', async e => {
+    try {
+      await conAvvisoStampa(tr('schedaPdf.attesa'), async () => {
+        // con la particella nei tile: mappa fuori schermo sul lotto evidenziato; altrimenti lo stralcio con il punto cerchiato
+        const righe = e.detail.sezioni.find(x => x.chiave === 'particella')?.gruppi?.flatMap(g => g.righe) ?? [];
+        const v = nome => righe.find(r => r.etichetta === nome)?.valore;
+        const particella = async () => {
+          if (!v('Foglio') || !v('Particella')) return null;
+          try { return await (await import('./scheda-pdf-mappa.js')).mappaParticella(map, v('Foglio'), v('Particella')); } catch (err) { console.warn('Mappa della particella non creata', err); return null; } // i18n-ok: messaggio solo per la console
+        };
+        const [{ creaSchedaPdf, sezioniPdf }, lotto] = await Promise.all([import('./scheda-pdf.js'), particella()]);
+        const immagine = lotto?.immagine ?? await stralcioPronto('image/jpeg');
+        await creaSchedaPdf({ ...e.detail, sezioni: sezioniPdf(e.detail.sezioni), immagine, mappaLotto: !!lotto, area: lotto?.area ?? null, punto: contenitore.dataset.punto, avvertenza: DISCLAIMER_STAMPA });
+      });
+    } catch (err) { console.error('Scheda PDF non creata', err); segnala(tr('schedaPdf.errore')); } // i18n-ok: messaggio solo per la console
+  });
   document.addEventListener('scheda:stampa', () => {
     let fatto = false;
     const stampa = async () => {

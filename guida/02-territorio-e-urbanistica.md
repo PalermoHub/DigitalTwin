@@ -10,6 +10,8 @@ Lo strato «Catasto: particelle» (gruppo Territorio, visibile da zoom 12) mostr
 
 Un clic apre la scheda: nella sezione «Strumenti urbanistici» compare la particella con foglio e numero e il collegamento alla visura. Per cercarne una direttamente si usa il tab «Filtri» (foglio e numero) oppure il campo di ricerca.
 
+Con acceso uno strato del percorso Urbanistica (PRG, vincoli, catasto, OMI, civici), nel tab «Strumenti urbanistici» compare il pulsante «Scarica scheda PDF»: crea un A4 con lo stralcio di mappa, foglio e particella, zonizzazione, vincoli e quotazioni OMI del punto cliccato.
+
 Il dato catastale è solo informativo: non sostituisce visure o certificati ufficiali.
 
 ---
