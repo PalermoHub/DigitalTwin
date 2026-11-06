@@ -25,7 +25,10 @@ export function coloraEdifici3d(map, chiave, perFid) {
   ridisegna(map);
 }
 
-const ridisegna = map => { if (map.getLayer(LAYER)) map.setPaintProperty(LAYER, 'fill-extrusion-color', espressioneColori(registro, base)); };
+// Il neutro della palette (blu-grigio medio) confonde ombre e dettagli: sul volume 3D il fondo è un chiaro caldo. Il tema per attributo del pannello Colori resta com'è.
+export const EDIFICI_3D_CHIARO = '#ece8df';
+const sotto = () => (base === EDIFICATO_NEUTRAL ? EDIFICI_3D_CHIARO : base);
+const ridisegna = map => { if (map.getLayer(LAYER)) map.setPaintProperty(LAYER, 'fill-extrusion-color', espressioneColori(registro, sotto())); };
 
 // Colore di fondo degli edifici (tema per attributo): sta sotto i layer, che lo coprono sui propri edifici. Nullo = neutro.
 export function impostaBaseEdifici3d(map, espressione) {

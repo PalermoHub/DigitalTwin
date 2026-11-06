@@ -1,4 +1,5 @@
 import { creaNavigatore, creaGuida } from './strati-3d-navigatore.js';
+import { creaOmbre } from './ombre.js';
 
 // Navigatore della vista 3D della mappa: lo stesso di «Strati in 3D» (bussola, joystick, zoom, inclinazione, centra, guida)
 // ma pilota MapLibre. Compare in basso a sinistra, accanto al pannello, solo quando la vista è 3D (evento `vista3d`).
@@ -39,6 +40,7 @@ export function collegaNavigatoreMappa(map) {
   const assiUI = { avanti: 0, lato: 0, gira: 0, inclina: 0, zoom: 0 };
   const premuti = new Set();
   map.setMaxPitch?.(PITCH_MAX);
+  let ombre = null;
   const guida = creaGuida(() => { guida.hidden = true; }, 'mappa3d.guida');
   guida.classList.add('mappa-guida');
   const nav = creaNavigatore({
@@ -48,7 +50,9 @@ export function collegaNavigatoreMappa(map) {
     centra: async () => { const { CENTRO, ZOOM } = await import('./config.js'); map.easeTo({ center: CENTRO, zoom: ZOOM, bearing: 0, pitch: PITCH_3D, duration: 600 }); }, // config.js legge `window`: caricato solo qui
     guida: () => { guida.hidden = !guida.hidden; },
     gesto: () => {},
+    ombre: () => ombre?.toggle(),
   });
+  ombre = creaOmbre(map, nav);
   nav.radice.classList.add('mappa-nav');
   nav.radice.hidden = guida.hidden = true;
   document.body.append(nav.radice, guida);
@@ -89,7 +93,7 @@ export function collegaNavigatoreMappa(map) {
   document.addEventListener('vista3d', ev => {
     nav.radice.hidden = !ev.detail;
     document.body.classList.toggle('nav3d', !!ev.detail);
-    if (ev.detail) avvia(); else { ferma(); guida.hidden = true; }
+    if (ev.detail) avvia(); else { ferma(); guida.hidden = true; ombre.spegni(); }
   });
   return nav;
 }

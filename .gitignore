@@ -109,3 +109,5 @@ scripts/*
 !scripts/opere.py
 !scripts/piano_triennale.py
 .playwright-mcp/
+# eccezione: ombre 3D (DTM, spigoli e tetti degli edifici, 23 MB; rigenerabili con scripts/ombre_*.py)
+!dati/ombre/

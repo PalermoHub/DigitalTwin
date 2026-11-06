@@ -1,6 +1,7 @@
 import { aggiorna3D } from '../core/mappa.js';
 import { pmt } from '../core/config.js';
 import { EDIFICATO_NEUTRAL } from '../core/palette.js';
+import { EDIFICI_3D_CHIARO } from '../core/colori-3d.js';
 import { primo, righe } from '../core/scheda-util.js';
 import { rigaUso } from './scheda-uso.js';
 
@@ -21,8 +22,9 @@ export default {
       id: 'edifici-3d', type: 'fill-extrusion', source: 'edificato', 'source-layer': 'edificato', minzoom: 12,
       layout: { visibility: 'none' },
       paint: {
-        'fill-extrusion-color': EDIFICATO_NEUTRAL,
-        'fill-extrusion-height': ['coalesce', ['get', 'altezza'], 0],
+        'fill-extrusion-color': EDIFICI_3D_CHIARO,
+        // altezza ignota (assente o 0): 6 m, lo stesso valore con cui sono calcolate le ombre (dati/ombre)
+        'fill-extrusion-height': ['case', ['<=', ['coalesce', ['get', 'altezza'], 0], 0], 6, ['get', 'altezza']],
         'fill-extrusion-base': 0,
         'fill-extrusion-opacity': 0.85,
       },

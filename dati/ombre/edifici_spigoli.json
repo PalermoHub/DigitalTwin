@@ -1,0 +1,11 @@
+{
+ "spigoli": 914727,
+ "stride": 16,
+ "edifici": 111844,
+ "altezza_default_m": 6.0,
+ "edifici_altezza_ignota": 1796,
+ "centro_mercator": [
+  1485880.4377038744,
+  4598787.922479574
+ ]
+}

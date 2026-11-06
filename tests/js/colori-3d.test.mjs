@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { espressioneColori, coloraEdifici3d, impostaBaseEdifici3d } from '../../js/core/colori-3d.js';
+import { espressioneColori, coloraEdifici3d, impostaBaseEdifici3d, EDIFICI_3D_CHIARO } from '../../js/core/colori-3d.js';
 import { EDIFICATO_NEUTRAL } from '../../js/core/palette.js';
 
 const finta = () => {
@@ -25,9 +25,9 @@ test('tra due layer vince quello registrato per ultimo e nessun fid compare due 
 test('coloraEdifici3d scrive il colore su edifici-3d e lo toglie quando il layer si svuota', () => {
   const map = finta();
   coloraEdifici3d(map, 'prova', new Map([[9, '#123456']]));
-  assert.deepEqual(map.paint['edifici-3d.fill-extrusion-color'], ['match', ['id'], [9], '#123456', EDIFICATO_NEUTRAL]);
+  assert.deepEqual(map.paint['edifici-3d.fill-extrusion-color'], ['match', ['id'], [9], '#123456', EDIFICI_3D_CHIARO]);
   coloraEdifici3d(map, 'prova', null);
-  assert.equal(map.paint['edifici-3d.fill-extrusion-color'], EDIFICATO_NEUTRAL);
+  assert.equal(map.paint['edifici-3d.fill-extrusion-color'], EDIFICI_3D_CHIARO);
 });
 
 test('senza il layer edifici-3d non fa nulla', () => {
@@ -57,7 +57,18 @@ test('la base del tema sta sotto i layer: i fid colorati restano, gli altri pren
   coloraEdifici3d(map, 'prova3', new Map([[5, '#abcdef']]));
   assert.deepEqual(map.paint['edifici-3d.fill-extrusion-color'], ['match', ['id'], [5], '#abcdef', base]);
   impostaBaseEdifici3d(map, null);
-  assert.deepEqual(map.paint['edifici-3d.fill-extrusion-color'], ['match', ['id'], [5], '#abcdef', EDIFICATO_NEUTRAL]);
+  assert.deepEqual(map.paint['edifici-3d.fill-extrusion-color'], ['match', ['id'], [5], '#abcdef', EDIFICI_3D_CHIARO]);
   coloraEdifici3d(map, 'prova3', null);
-  assert.equal(map.paint['edifici-3d.fill-extrusion-color'], EDIFICATO_NEUTRAL);
+  assert.equal(map.paint['edifici-3d.fill-extrusion-color'], EDIFICI_3D_CHIARO);
+});
+
+test('il fondo degli edifici 3D è un chiaro caldo; il tema per attributo lo sostituisce', async () => {
+  const paint = {};
+  const map = { getLayer: () => true, setPaintProperty: (_l, p, v) => { paint[p] = v; } };
+  coloraEdifici3d(map, 'prova3', null); // i test precedenti lasciano un layer registrato
+  impostaBaseEdifici3d(map, null);
+  assert.equal(paint['fill-extrusion-color'], EDIFICI_3D_CHIARO);
+  impostaBaseEdifici3d(map, ['get', 'x']);
+  assert.deepEqual(paint['fill-extrusion-color'], ['get', 'x']);
+  impostaBaseEdifici3d(map, null);
 });

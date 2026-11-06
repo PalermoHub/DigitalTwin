@@ -1,0 +1,12 @@
+{
+ "edifici": 106278,
+ "edifici_totali": 111844,
+ "vertici": 866724,
+ "triangoli": 658871,
+ "raggio_m": 150.0,
+ "dh_m": 2.0,
+ "centro_mercator": [
+  1485880.4377038744,
+  4598787.922479574
+ ]
+}

@@ -13,6 +13,7 @@ const ICONE = {
   inclinaSu: SVG('<path d="M4 17l8-8 8 8"/><path d="M4 21h16" opacity=".5"/>'),
   inclinaGiu: SVG('<path d="M4 9l8 8 8-8"/><path d="M4 4h16" opacity=".5"/>'),
   centra: SVG('<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/>'),
+  sole: SVG('<circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>'),
   guida: SVG('<circle cx="12" cy="12" r="9.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><circle cx="12" cy="17.3" r=".6" fill="currentColor"/>'),
 };
 
@@ -38,7 +39,7 @@ function tenuto(classe, icona, titolo, assi, asse, verso) {
   return b;
 }
 
-export function creaNavigatore({ assi, gira, nord, centra, guida, gesto }) {
+export function creaNavigatore({ assi, gira, nord, centra, guida, gesto, ombre }) {
   const radice = el('div', 'strati3d-nav');
   radice.setAttribute('role', 'group');
   radice.setAttribute('aria-label', t('strati3d.nav'));
@@ -137,6 +138,17 @@ export function creaNavigatore({ assi, gira, nord, centra, guida, gesto }) {
     tenuto('strati3d-nav-inclina-su', ICONE.inclinaSu, t('strati3d.nav.inclinaSu'), assi, 'inclina', 1),
     tenuto('strati3d-nav-inclina-giu', ICONE.inclinaGiu, t('strati3d.nav.inclinaGiu'), assi, 'inclina', -1),
     bCentra, bGuida);
+  // ombre del sole (solo nella vista 3D della mappa): pulsante largo sotto gli altri, con il pannello di data e ora
+  let bOmbre = null;
+  if (ombre) {
+    bOmbre = el('button', 'strati3d-nav-ombre');
+    bOmbre.type = 'button';
+    bOmbre.innerHTML = `${ICONE.sole}<span>${t('ombre.pulsante')}</span>`;
+    bOmbre.title = bOmbre.ariaLabel = t('ombre.titolo');
+    bOmbre.setAttribute('aria-pressed', 'false');
+    bOmbre.addEventListener('click', ombre);
+    colonna.append(bOmbre);
+  }
   radice.append(bussola, colonna);
 
   // la rosa segue la rotazione del modello: la N indica dove sta il nord della mappa
@@ -147,7 +159,7 @@ export function creaNavigatore({ assi, gira, nord, centra, guida, gesto }) {
     ultimo = g;
     rosa.style.transform = `rotate(${g}deg)`;
   };
-  return { radice, orienta };
+  return { radice, orienta, bOmbre };
 }
 
 // La guida ai comandi: una scheda con mouse, tastiera e tocco, che si apre la prima volta e dal pulsante «?».
