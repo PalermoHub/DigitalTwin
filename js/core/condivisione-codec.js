@@ -63,6 +63,13 @@ function pulisci(o) {
     if (Object.keys(z).length) r.z = z;
   }
   if (stringa(o.l, 100) && o.l) r.l = o.l;
+  if (o.h && typeof o.h === 'object' && !Array.isArray(o.h)) { // ombre accese: data, ora (minuti dalla mezzanotte) e vista fotografica
+    const h = {};
+    if (typeof o.h.d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(o.h.d)) h.d = o.h.d;
+    if (Number.isFinite(o.h.m) && o.h.m >= 0 && o.h.m <= 1440) h.m = o.h.m;
+    if (stringa(o.h.v, 20) && /^[a-z]+$/.test(o.h.v)) h.v = o.h.v;
+    r.h = h;
+  }
   if (o.i && typeof o.i === 'object') {
     const i = {};
     if (stringa(o.i.anno, 4) && o.i.anno) i.anno = o.i.anno;

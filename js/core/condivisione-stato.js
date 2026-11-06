@@ -44,6 +44,8 @@ export function raccogli(doc, map, storage) {
   if (valore(doc, 'sicurezza-anno')) i.anno = valore(doc, 'sicurezza-anno');
   if (valore(doc, 'sicurezza-gravita')) i.gravita = valore(doc, 'sicurezza-gravita');
   if (Object.keys(i).length) stato.i = i;
+  const ombre = doc.defaultView?.dt?.ombre?.stato();
+  if (ombre) stato.h = ombre;
   const { s, scartati } = leggiStorage(storage);
   if (Object.keys(s).length) stato.s = s;
   return { stato, scartati };
@@ -86,6 +88,8 @@ export function applica(stato, doc, map) {
   if (stato.t === 0 || stato.t === 1) {
     if ((stato.t === 1) !== (doc.documentElement.dataset.tema === 'scuro')) doc.getElementById('btn-tema')?.click();
   }
+  // le ombre dopo gli strati (servono gli edifici 3D) e prima della camera, che a una vista fotografica spetta riapplicare
+  if (stato.h) doc.defaultView?.dt?.ombre?.applica(stato.h);
   // per ultima la vista: filtri e strati 3D possono aver spostato la camera
   if (stato.c) {
     const [lng, lat, zoom, bearing, pitch] = stato.c;

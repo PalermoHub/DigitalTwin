@@ -47,3 +47,13 @@ test('m: legende sulla mappa si conserva solo se vale 1', async () => {
   const { testo: altro } = await codifica({ a: ['pnrr'], m: 'si' });
   assert.equal((await decodifica(altro)).m, undefined);
 });
+
+test('ombre: data, ora e vista fotografica fanno il giro del link', async () => {
+  const h = { d: '2026-06-21', m: 370, v: 'mare' };
+  const { testo } = await codifica({ c: [13.37, 38.12, 16.4, 243, 75], h });
+  assert.deepEqual((await decodifica(testo)).h, h);
+});
+test('ombre: campi malformati scartati, lo stato «acceso» resta', async () => {
+  const { testo } = await codifica({ h: { d: '21/06', m: 99999, v: '<x>' } });
+  assert.deepEqual((await decodifica(testo)).h, {});
+});

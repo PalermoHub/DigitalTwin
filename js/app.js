@@ -370,7 +370,7 @@ map.once('style.load', async () => {
     },
     onRemove() { this._el.remove(); },
   }, 'bottom-right');
-  collegaNavigatoreMappa(map);
+  window.dt.ombre = collegaNavigatoreMappa(map).ombre;
   collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })(), undefined, undefined, () => {
     const scheda = document.getElementById('scheda');
     if (scheda.hidden) return false;

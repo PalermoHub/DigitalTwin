@@ -213,5 +213,17 @@ export function creaOmbre(map, nav) {
   grafico.aggiorna([]);
   aggiorna();
 
-  return { attive: () => attive, toggle: () => (attive ? spegni() : accendi()), spegni };
+  // Stato condivisibile (link «Condividi»): null a ombre spente; altrimenti data, ora e, se c'è, la vista fotografica.
+  const stato = () => (attive ? { d: data.value || orario.giorno, m: Number(ora.value), ...(vista && { v: vista.id }) } : null);
+  // Riapplica uno stato letto da un link: accende le ombre, entra nella vista (che imposta data e ora dello scenario) e rimette data e ora del mittente.
+  function applica(h) {
+    if (!attive) accendi();
+    const sc = SCENARI.find(s => s.id === h.v);
+    if (sc) vai(sc);
+    if (h.d) data.value = h.d;
+    if (Number.isFinite(h.m)) ora.value = h.m;
+    aggiorna();
+  }
+
+  return { attive: () => attive, toggle: () => (attive ? spegni() : accendi()), spegni, stato, applica };
 }

@@ -95,5 +95,6 @@ export function collegaNavigatoreMappa(map) {
     document.body.classList.toggle('nav3d', !!ev.detail);
     if (ev.detail) avvia(); else { ferma(); guida.hidden = true; ombre.spegni(); }
   });
+  nav.ombre = ombre; // per il link «Condividi» (condivisione-stato.js)
   return nav;
 }
