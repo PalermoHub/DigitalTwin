@@ -222,7 +222,8 @@ export function spegniStratiDaScheda() {
   acceseDaScheda.clear();
 }
 
-export function creaInterruttoreStrato(id) {
+// `vai` (JSON in data-vai della sezione): oggetto da raggiungere in mappa quando l'interruttore accende lo strato
+export function creaInterruttoreStrato(id, vai = null) {
   const b = el('button', 'scheda-strato', tr('scheda.mappa'));
   b.type = 'button';
   b.dataset.strato = id;
@@ -232,6 +233,7 @@ export function creaInterruttoreStrato(id) {
     origine.checked = !origine.checked;
     acceseDaScheda[origine.checked ? 'add' : 'delete'](id);
     origine.dispatchEvent(new Event('change', { bubbles: true }));
+    if (origine.checked && vai) document.dispatchEvent(new CustomEvent('scheda:vai-particella', { detail: vai }));
   });
   sincronizzaStrato(b);
   return b;
@@ -275,5 +277,6 @@ export function disegnaSezione(s, i) {
   sezione.dataset.chiave = s.chiave;
   sezione.dataset.titolo = s.titolo;
   if (s.strato) sezione.dataset.strato = s.strato;
+  if (s.vai) sezione.dataset.vai = JSON.stringify(s.vai);
   return sezione;
 }

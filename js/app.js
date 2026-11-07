@@ -278,6 +278,8 @@ map.once('style.load', async () => {
   window.dt.geoimage ??= geoimage;
   const vaiParticella = collegaRicercaParticella(map, document.getElementById('cerca-foglio'), document.getElementById('cerca-numero'),
     document.getElementById('cerca-particella-vai'), document.getElementById('cerca-particella-esito'));
+  // «Mappa» nella scheda della particella: porta alla particella e ne evidenzia i bordi, come la ricerca per foglio e particella
+  document.addEventListener('scheda:vai-particella', e => vaiParticella(e.detail.foglio, e.detail.numero));
   const zone = collegaZone(map, {
     selezioni: { circ: document.getElementById('f-circ'), quart: document.getElementById('f-quart'), upl: document.getElementById('f-upl') },
     chips: document.getElementById('filtri-chips'),

@@ -7,6 +7,7 @@ import { vociOmi, FASCE_OMI, coloreZona } from './scheda-omi.js';
 import { t, tl } from '../core/i18n.js';
 import { creaLegendaZonizzazione, creaLegendaVincoli, campioneZona, campioneAmbito, campioneVincolo } from './legenda-prg.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
+import { analisiParticella } from './scheda-particella-analisi.js';
 
 // Come nell'app originale (catasto-app): la vestizione di PRG, PPE e vincoli è fatta di tile
 // raster già pubblicati; i poligoni vettoriali restano trasparenti e servono solo ai dati
@@ -83,6 +84,7 @@ function creaLegendaOmi(_gruppo, map) {
 }
 // Legenda del catasto in #legende, a strato acceso: la particella è lo strato stesso, le etichette e la particella cercata
 // si accendono e si spengono a parte.
+let mappa = null; // per l'analisi della particella (letta dai tile al clic)
 let legendaCatasto = null;
 let legendaPrg = null;
 let legendaVincoli = null;
@@ -146,6 +148,7 @@ export default {
     }
   },
   aggiungiLayer(map) {
+    mappa = map;
     // vestizione raster (sotto ai vettoriali)
     for (const id of RASTER) {
       if (map.getSource(`${id}-r`)) map.addLayer({ id, type: 'raster', source: `${id}-r`, layout: nascosto });
@@ -253,14 +256,17 @@ export default {
       const particella = primo(trovati, 'catasto-hit');
       if (particella) {
         const p = particella.properties;
+        const analisi = analisiParticella(mappa, p.Foglio, p.Paricella); // solo con uno strato del percorso Urbanistica acceso
         voci.push({
-          chiave: 'particella', peso: 20, strato: 'catasto', titolo: 'Particella catastale', icona: 'particella',
-          gruppi: [{ righe: conCampione(righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]), 'Particella', { legenda: 'legenda-catasto', classe: 'catasto-particella' }) }],
+          chiave: 'particella', peso: 20, strato: 'catasto', vai: { foglio: String(p.Foglio), numero: String(p.Paricella) }, titolo: 'Particella catastale', icona: 'particella',
+          gruppi: [{ righe: conCampione(righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]), 'Particella', { legenda: 'legenda-catasto', classe: 'catasto-particella' }) }, ...(analisi?.gruppo ? [analisi.gruppo] : [])],
+          ...(analisi?.nota ? { nota: analisi.nota } : {}),
           legale: true,
           link: [{
             testo: 'Visura su SISTER', icona: 'esterno', url: 'https://sister3.agenziaentrate.gov.it/', etichetta: `Fg.${p.Foglio} · P.${p.Paricella}`,
             suggerimento: t('territorio.sister', { foglio: p.Foglio, particella: p.Paricella }),
-          }, { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' }],
+          }, { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' },
+          { testo: 'Palermo ordinata: edifici e particelle', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/palermo-ordinata.html' }],
         });
       }
 
