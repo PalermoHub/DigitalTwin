@@ -150,11 +150,18 @@ body.pagina-home { min-height: 100dvh; grid-template-rows: auto 1fr auto; }
 
 /* numeri */
 .home-numeri { padding-block: 40px; }
-.home-numeri-elenco { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+.home-numeri-elenco { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
 .numero { display: flex; flex-direction: column; gap: 4px; box-sizing: border-box; height: 100%; padding: 18px 20px; border: 1px solid var(--border-ui); border-radius: var(--r-md); background: var(--surface); color: var(--text); text-decoration: none; box-shadow: var(--ombra-tooltip); transition: transform .15s ease, border-color .15s ease; }
 .numero:hover { transform: translateY(-2px); border-color: var(--accent-strong); }
 .numero strong { font-size: clamp(1.8rem, 4vw, 2.4rem); line-height: 1; color: var(--accent-strong); font-variant-numeric: tabular-nums; }
 .numero span { color: var(--text-muted); font-size: var(--fs-md); }
+div.numero:hover { transform: none; border-color: var(--border-ui); }
+.numero-largo { grid-column: 1 / -1; }
+.numero-data { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 14px 20px; }
+.numero-data strong { font-size: clamp(1.3rem, 3vw, 1.7rem); line-height: 1.15; }
+.numero-cosa { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 0 auto; padding: 0; list-style: none; min-width: 0; }
+.numero-cosa li { max-width: 34ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 3px 10px; border: 1px solid var(--border-ui); border-radius: 999px; background: var(--surface); color: var(--text); font-size: var(--fs-sm); }
+@media (max-width: 640px) { .numero-cosa { margin-left: 0; } .home-numeri-elenco { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .numero { transition: none; } }
 
 /* percorsi guidati, filtro per ente, badge «Nuovo» e «Emergenza» */

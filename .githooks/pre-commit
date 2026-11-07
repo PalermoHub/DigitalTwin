@@ -1,0 +1,8 @@
+#!/bin/sh
+# Aggiorna la card «ultimo aggiornamento» della home quando il commit tocca strati, schede o dati.
+# Attivazione (una volta per clone): git config core.hooksPath .githooks
+if git diff --cached --name-only | grep -qE '^(js/layers/|dati/)'; then
+  python3 scripts/genera_ultimo_aggiornamento.py --staged >/dev/null 2>&1 \
+    && git add js/core/ultimo-aggiornamento.json
+fi
+exit 0

@@ -179,6 +179,35 @@ function costruisciNumeri(argomenti, tutte) {
     });
     return el('li', {}, a);
   }));
+  const cardData = el('div', { className: 'numero numero-data' }, el('strong'), el('span', { textContent: tr('home.numeri.aggiornamento') }), el('ul', { className: 'numero-cosa' }));
+  const mostra = ultimo => {
+    if (!ultimo) return;
+    cardData.querySelector('strong').textContent = new Date(ultimo.data).toLocaleDateString(lingua(), { day: 'numeric', month: 'long', year: 'numeric' });
+    cardData.querySelector('ul').replaceChildren(...ultimo.nomi.map(n => el('li', { textContent: n, title: n })));
+    if (!cardData.parentNode) document.getElementById('home-numeri').append(el('li', { className: 'numero-largo' }, cardData));
+  };
+  mostra(ultimoAggiornamento(argomenti, tutte));
+  // gli strati aggiornati in automatico ogni ora portano la data nel file stesso: sono loro a sapere quando è successo davvero
+  // ultimo.json: giorno e contenuto dell'ultima modifica a strati, schede o dati, generato da scripts/genera_ultimo_aggiornamento.py
+  Promise.all([
+    ...FONTI_VIVE.map(([url, id]) => fetch(url).then(r => r.json()).then(j => [{ data: j.aggiornato, nome: tutte.find(({ s }) => s.id === id)?.s.etichetta }])),
+    fetch('js/core/ultimo-aggiornamento.json').then(r => r.json()).then(j => j.cosa.map(nome => ({ data: j.data, nome }))),
+  ].map(p => p.catch(() => [])))
+    .then(vive => mostra(ultimoAggiornamento(argomenti, tutte, vive.flat())));
+}
+
+const FONTI_VIVE = [['dati/colonnine/colonnine.geojson', 'colonnine'], ['dati/distributori/distributori.geojson', 'distributori']]; // file → id dello strato
+
+// data più recente tra aggiornamento dei dati e aggiunta (argomenti e strati con data propria) e che cosa è stato toccato quel giorno
+function ultimoAggiornamento(argomenti, tutte, vive = []) {
+  const voci = [
+    ...argomenti.map(a => ({ data: a.aggiornati ?? a.data, nome: a.titolo })),
+    ...tutte.filter(({ s }) => s.data).map(({ s }) => ({ data: s.data, nome: s.etichetta })),
+    ...vive,
+  ].filter(v => v.data && v.nome).map(v => ({ ...v, data: v.data.slice(0, 10) }));
+  if (!voci.length) return null;
+  const data = voci.map(v => v.data).sort().at(-1);
+  return { data, nomi: [...new Set(voci.filter(v => v.data === data).map(v => v.nome))].slice(0, 3) };
 }
 
 // ---- slider ----
