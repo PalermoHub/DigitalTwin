@@ -88,3 +88,10 @@ test('pezzi di tile sovrapposti (pezziUniti): l\'area si misura sull\'unione, no
   vicino(a.m2, 10000, 250); // la somma darebbe 12.000
   assert.equal(a.n, 1);
 });
+
+test('la sagoma elenca gli edifici contati, con il flag a cavallo', () => {
+  const a = analizzaParticella(particella, [{ id: 1, geometry: rett(10, 10, 20, 20), altezza: 10 }, { id: 2, geometry: rett(90, 40, 30, 20), altezza: 6 }, { id: 3, geometry: rett(300, 300, 10, 10) }]);
+  assert.equal(a.sagoma.particella.length, 1);
+  assert.equal(a.sagoma.edifici.length, 2);
+  assert.deepEqual(a.sagoma.edifici.map(e => e.cavallo), [false, true]);
+});

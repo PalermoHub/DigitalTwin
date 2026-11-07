@@ -84,10 +84,11 @@ export function analizzaParticella(particella, pezzi, { pezziUniti = false } = {
   pezzi.forEach((p, i) => {
     if (!p.geometry || !/Polygon/.test(p.geometry.type)) return;
     const chiave = p.id ?? `#${i}`;
-    if (!perId.has(chiave)) perId.set(chiave, { pezzi: new Map(), altezza: p.altezza, pop: p.pop });
+    if (!perId.has(chiave)) perId.set(chiave, { pezzi: new Map(), altezza: p.altezza, pop: p.pop, uso: p.uso });
     perId.get(chiave).pezzi.set(JSON.stringify(p.geometry), p.geometry); // copie identiche (stesso tile letto due volte) una volta sola
   });
 
+  const sagomaEdifici = [];
   let copertoM2 = 0, conta = 0, cavallo = 0, volume = 0, residenti = 0, haPop = false, pesoH = 0, sommaH = 0, hMin = Infinity, hMax = 0, ignote = 0;
   for (const ed of perId.values()) {
     const geoms = [...ed.pezzi.values()];
@@ -97,6 +98,7 @@ export function analizzaParticella(particella, pezzi, { pezziUniti = false } = {
     if (quota < SOGLIA_CONTA) continue;
     const area = geoms.reduce((a, g) => a + areaMq(g), 0), dentro = area * quota;
     conta++;
+    sagomaEdifici.push({ poligoni: poli, cavallo: quota < SOGLIA_INTERNO, altezza: Number(ed.altezza) > 0 ? Number(ed.altezza) : null, area, uso: ed.uso ?? null });
     if (quota < SOGLIA_INTERNO) cavallo++;
     copertoM2 += dentro;
     if (Number.isFinite(ed.pop)) { residenti += ed.pop * quota; haPop = true; }
@@ -110,5 +112,7 @@ export function analizzaParticella(particella, pezzi, { pezziUniti = false } = {
     m2, copertoM2, copertura: Math.min(100, copertoM2 / m2 * 100), n: conta, nCavallo: cavallo,
     altezze: { min: pesoH ? hMin : null, med: pesoH ? sommaH / pesoH : null, max: pesoH ? hMax : null, noti: conta - ignote, ignote },
     volumeM3: pesoH ? volume : null, residenti: haPop ? residenti : null,
+    edifici: sagomaEdifici.map(({ area, altezza, uso, cavallo }) => ({ area, altezza, uso, cavallo })), // uno per edificio, per le statistiche (particella-statistiche.js)
+    sagoma: { particella: pp, edifici: sagomaEdifici }, // anelli in metri sul piano locale, per il disegno (particella-sagoma.js)
   };
 }

@@ -2613,3 +2613,28 @@ a.scheda-tel { min-height: 40px; }
 /* pulsanti di approfondimento nel piede della scheda: a contorno, icona e testo in colore link */
 .scheda-piede .scheda-link { justify-content: flex-start; padding: 8px 12px; border: 1px solid color-mix(in srgb, var(--link) 45%, transparent); background: var(--surface); color: var(--link); font-size: var(--fs-sm); line-height: 1.25; transition: background .15s, border-color .15s; }
 .scheda-piede .scheda-link:hover, .scheda-piede .scheda-link:focus-visible { border-color: var(--link); background: color-mix(in srgb, var(--link) 10%, var(--surface)); }
+
+/* Mini-anteprima della particella con i suoi edifici (scheda «Particella catastale») */
+.scheda-sagoma { margin: 10px 0 0; text-align: center; }
+.scheda-sagoma-svg { width: 100%; max-width: 280px; max-height: 220px; }
+.scheda-sagoma-lotto { fill: rgba(236, 72, 153, .12); stroke: #ec4899; stroke-width: 1.2; stroke-linejoin: round; }
+.scheda-sagoma-ed { fill: var(--text-muted); fill-opacity: .55; stroke: var(--text-muted); stroke-width: .5; }
+.scheda-sagoma-ed--cavallo { fill-opacity: .2; stroke-dasharray: 2 1.5; }
+.scheda-sagoma-ed:hover { fill-opacity: .85; }
+
+/* statistiche della particella: tessere, barre per altezza, edifici più grandi (come nel pannello di Palermo ordinata) */
+.part-st { margin-top: 10px; }
+.part-st-griglia { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.part-st-tessera { padding: 8px; border-radius: var(--r-sm); background: var(--accent-soft); min-width: 0; }
+.part-st-titolo { margin: 0; font-size: var(--fs-xs); color: var(--text-muted); font-weight: 600; }
+.part-st-valore { margin: 2px 0; font-size: var(--fs-md); font-weight: 700; overflow-wrap: anywhere; }
+.part-st-nota { margin: 0; font-size: var(--fs-xs); color: var(--text-muted); }
+.part-st-box { margin-top: 8px; padding: 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
+.part-st-h { margin: 0 0 6px; font-size: var(--fs-sm); }
+.part-st-barra { display: grid; grid-template-columns: 5.5em 1fr auto; align-items: center; gap: 6px; margin-top: 4px; font-size: var(--fs-xs); }
+.part-st-barra--rank { grid-template-columns: 1.4em minmax(0, 1fr) 30% auto; }
+.part-st-nome { color: var(--text-muted); overflow-wrap: anywhere; }
+.part-st-pos { color: var(--text-muted); text-align: center; }
+.part-st-traccia { height: 8px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; }
+.part-st-traccia i { display: block; height: 100%; border-radius: inherit; }
+.part-st-val { font-weight: 600; white-space: nowrap; text-align: right; }

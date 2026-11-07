@@ -1,6 +1,10 @@
 // Analisi della particella nella scheda «Particella catastale»: superficie, edifici, coperto, altezze (percorso Urbanistica).
 // Legge i tile già caricati (particelle e edifici), il calcolo è in core/particella-analisi.js.
 import { analizzaParticella } from '../core/particella-analisi.js';
+import { sagomaSvg } from '../core/particella-sagoma.js';
+import { statisticheEdifici } from '../core/particella-statistiche.js';
+import { titoloConInfo } from '../core/info-grafico.js';
+import { nomeUso } from '../core/etichette-campi.js';
 import { estremi } from '../core/scheda-pdf-geom.js';
 import { urbanisticaAttiva } from '../core/scheda-pdf-modello.js';
 import { localeIntl, t } from '../core/i18n.js';
@@ -24,7 +28,7 @@ function pezziEdifici(map, [o, s, e, n]) {
   if (!map.getLayer('edifici-hit')) return [];
   const a = map.project([o, n]), b = map.project([e, s]);
   return map.queryRenderedFeatures([[Math.min(a.x, b.x), Math.min(a.y, b.y)], [Math.max(a.x, b.x), Math.max(a.y, b.y)]], { layers: ['edifici-hit'] })
-    .map(f => ({ id: f.id, geometry: f.geometry, altezza: f.properties?.altezza, pop: f.properties?.pop_stim == null ? undefined : Number(f.properties.pop_stim) }));
+    .map(f => ({ id: f.id, geometry: f.geometry, altezza: f.properties?.altezza, pop: f.properties?.pop_stim == null ? undefined : Number(f.properties.pop_stim), uso: f.properties?.occupancy }));
 }
 
 const num = (v, dec = 0) => new Intl.NumberFormat(localeIntl(), { maximumFractionDigits: dec, minimumFractionDigits: dec }).format(v);
@@ -52,6 +56,93 @@ export function gruppoAnalisi(a, particella) {
   return { gruppo: { titolo: 'Analisi della particella', righe }, avvisi };
 }
 
+const NS = 'http://www.w3.org/2000/svg';
+const svgEl = (nome, attr = {}) => { const e = document.createElementNS(NS, nome); for (const [k, v] of Object.entries(attr)) e.setAttribute(k, v); return e; };
+
+// Mini-anteprima: contorno della particella con gli edifici nelle posizioni reali (a cavallo: tratteggiati), nord in alto
+export function creaSagoma(sagoma) {
+  const g = sagomaSvg(sagoma);
+  if (!g) return null;
+  const svg = svgEl('svg', { viewBox: `0 0 ${g.larghezza} ${g.altezza}`, class: 'scheda-sagoma-svg', role: 'img', 'aria-label': t('territorio.sagomaAlt') });
+  svg.append(svgEl('path', { d: g.particella, class: 'scheda-sagoma-lotto' }));
+  for (const e of g.edifici) {
+    const p = svgEl('path', { d: e.d, class: `scheda-sagoma-ed${e.cavallo ? ' scheda-sagoma-ed--cavallo' : ''}` });
+    const titolo = svgEl('title');
+    titolo.textContent = [e.altezza ? `${num(e.altezza, 1)} m` : t('territorio.sagomaAltezzaIgnota'), `${num(e.area)} m²`, e.cavallo ? t('territorio.sagomaCavallo') : ''].filter(Boolean).join(' · ');
+    p.append(titolo);
+    svg.append(p);
+  }
+  const radice = document.createElement('div');
+  radice.className = 'scheda-sagoma';
+  radice.append(svg);
+  return radice;
+}
+
+const COLORI_ALTEZZA = ['#6aa6e8', '#4c78b8', '#3aa981', '#e0b13a', '#e9892e', '#d6453d'];
+const CLASSI_ALTEZZA_CHIAVI = ['a3', 'a6', 'a12', 'a18', 'a30', 'oltre'];
+const el = (tag, classe, testo) => { const e = document.createElement(tag); if (classe) e.className = classe; if (testo != null) e.textContent = testo; return e; };
+const pct = (v, tot) => `${num(tot ? v / tot * 100 : 0, 1)}%`;
+
+function tessera(titolo, valore, nota) {
+  const c = el('div', 'part-st-tessera');
+  c.append(el('p', 'part-st-titolo', titolo), el('p', 'part-st-valore', valore), el('p', 'part-st-nota', nota));
+  return c;
+}
+
+function barre(titolo, id, righe) {
+  const box = el('section', 'part-st-box');
+  box.append(titoloConInfo('h4', 'part-st-h', titolo, id));
+  const max = Math.max(...righe.map(r => r.v), 1);
+  for (const r of righe) {
+    const riga = el('div', 'part-st-barra');
+    const traccia = el('span', 'part-st-traccia'), riempi = el('i');
+    riempi.style.width = `${r.v / max * 100}%`; riempi.style.background = r.colore;
+    traccia.append(riempi);
+    riga.append(el('span', 'part-st-nome', r.nome), traccia, el('span', 'part-st-val', r.testo));
+    box.append(riga);
+  }
+  return box;
+}
+
+// Tessere, grafici per altezza e classifica degli edifici più grandi (puro sul risultato di statisticheEdifici)
+export function creaStatistiche(st) {
+  if (!st) return null;
+  const radice = el('div', 'part-st');
+  const griglia = el('div', 'part-st-griglia');
+  const tuttiAlt = st.conQuota === st.n;
+  griglia.append(
+    tessera(t('territorio.st.edifici'), num(st.n), t('territorio.st.edificiNota')),
+    tessera(t('territorio.st.impronta'), `${num(st.impronta)} m²`, t('territorio.st.improntaNota', { m: num(st.mediaM2) })),
+    tessera(t('territorio.st.mediana'), `${num(st.medianaM2)} m²`, t('territorio.st.medianaNota')),
+    tessera(t('territorio.st.altMediana'), st.altezzaMediana != null ? `${num(st.altezzaMediana, 1)} m` : t('territorio.st.nd'), tuttiAlt ? t('territorio.st.quotaTutti') : t('territorio.st.quotaN', { n: num(st.conQuota) })),
+    tessera(t('territorio.st.altMax'), st.altezzaMax != null ? `${num(st.altezzaMax, 1)} m` : t('territorio.st.nd'), t('territorio.st.altMaxNota')),
+    tessera(t('territorio.st.uso'), st.usoPrevalente ? nomeUso(st.usoPrevalente) : t('territorio.st.nd'), st.usoPrevalente ? t('territorio.st.usoNota', { c: num(st.conUso), n: num(st.n) }) : t('territorio.st.usoNessuno')),
+  );
+  radice.append(griglia);
+
+  const classi = st.classiAltezza.map(c => ({ ...c, nome: t(`territorio.st.cl.${c.chiave}`), colore: COLORI_ALTEZZA[CLASSI_ALTEZZA_CHIAVI.indexOf(c.chiave)] }));
+  if (st.altezzaIgnota) classi.push({ ...st.altezzaIgnota, nome: t('territorio.st.cl.ignota'), colore: '#8a8f98' });
+  radice.append(
+    barre(t('territorio.st.perAltezza'), 'particella-edifici-altezza', classi.map(c => ({ nome: c.nome, colore: c.colore, v: c.n, testo: `${num(c.n)} · ${pct(c.n, st.n)}` }))),
+    barre(t('territorio.st.improntaAltezza'), 'particella-impronta-altezza', classi.map(c => ({ nome: c.nome, colore: c.colore, v: c.m2, testo: `${num(c.m2)} m² · ${pct(c.m2, st.impronta)}` }))),
+  );
+
+  const grandi = el('section', 'part-st-box');
+  grandi.append(titoloConInfo('h4', 'part-st-h', t('territorio.st.piuGrandi'), 'particella-edifici-grandi'));
+  const max = Math.max(...st.piuGrandi.map(e => e.area), 1);
+  st.piuGrandi.forEach((e, i) => {
+    const riga = el('div', 'part-st-barra part-st-barra--rank');
+    const nome = `${e.uso && !String(e.uso).startsWith('UNK') ? nomeUso(e.uso) : t('territorio.st.nonClassificato')}${e.altezza != null ? ` · ${num(e.altezza, 1)} m` : ''}`;
+    const traccia = el('span', 'part-st-traccia'), riempi = el('i');
+    riempi.style.width = `${e.area / max * 100}%`; riempi.style.background = '#e9a23a';
+    traccia.append(riempi);
+    riga.append(el('span', 'part-st-pos', String(i + 1)), el('span', 'part-st-nome', nome), traccia, el('span', 'part-st-val', `${num(e.area)} m²`));
+    grandi.append(riga);
+  });
+  radice.append(grandi);
+  return radice;
+}
+
 // { gruppo, nota } da aggiungere alla voce della particella, oppure null se il percorso Urbanistica non è attivo o la mappa non basta
 export function analisiParticella(map, foglio, particella) {
   if (!map || !urbanisticaAttiva()) return null;
@@ -61,5 +152,11 @@ export function analisiParticella(map, foglio, particella) {
   const a = analizzaParticella(geom, pezziEdifici(map, estremi([geom])), { pezziUniti });
   if (!a) return null;
   const { gruppo, avvisi } = gruppoAnalisi(a, particella);
-  return { gruppo, nota: avvisi.join(' ') };
+  return { gruppo, nota: avvisi.join(' '), dinamico: a.n || a.sagoma.particella.length ? () => {
+      const f = document.createDocumentFragment();
+      const s = creaStatistiche(statisticheEdifici(a.edifici)), g = creaSagoma(a.sagoma);
+      if (s) f.append(s);
+      if (g) f.append(g);
+      return f;
+    } : null };
 }

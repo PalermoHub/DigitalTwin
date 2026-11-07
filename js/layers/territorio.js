@@ -262,6 +262,7 @@ export default {
           chiave: 'particella', peso: 20, strato: 'catasto', vai: { foglio: String(p.Foglio), numero: String(p.Paricella) }, titolo: 'Particella catastale', icona: 'particella',
           gruppi: [{ righe: conCampione(righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]), 'Particella', { legenda: 'legenda-catasto', classe: 'catasto-particella' }) }, ...(analisi?.gruppo ? [analisi.gruppo] : [])],
           ...(analisi?.nota ? { nota: analisi.nota } : {}),
+          ...(analisi?.dinamico ? { dinamico: analisi.dinamico } : {}),
           legale: true,
           link: [{
             testo: 'Visura su SISTER', icona: 'esterno', url: 'https://sister3.agenziaentrate.gov.it/', etichetta: `Fg.${p.Foglio} · P.${p.Paricella}`,
