@@ -2620,11 +2620,11 @@ a.scheda-tel { min-height: 40px; }
 .scheda-sagoma-svg { width: 100%; max-width: 280px; max-height: 220px; }
 .scheda-sagoma-lotto { fill: rgba(236, 72, 153, .12); stroke: none; }
 .scheda-sagoma-bordo { fill: none; stroke: #ec4899; stroke-width: 2.4; stroke-linejoin: round; }
-.scheda-sagoma-ed-fill { fill: var(--text-muted); fill-opacity: .55; stroke: none; }
+.scheda-sagoma-ed-fill { fill: var(--ed-col, var(--text-muted)); fill-opacity: .8; stroke: none; }
 .scheda-sagoma-ed-bordo { fill: none; stroke: var(--text-muted); stroke-width: 1; pointer-events: none; }
-.scheda-sagoma-ed--cavallo .scheda-sagoma-ed-fill { fill-opacity: .2; }
+.scheda-sagoma-ed--cavallo .scheda-sagoma-ed-fill { fill-opacity: .3; }
 .scheda-sagoma-ed--cavallo .scheda-sagoma-ed-bordo { stroke-dasharray: 2 1.5; }
-.scheda-sagoma-ed:hover .scheda-sagoma-ed-fill, .scheda-sagoma-ed:focus .scheda-sagoma-ed-fill { fill-opacity: .85; }
+.scheda-sagoma-ed:hover .scheda-sagoma-ed-fill, .scheda-sagoma-ed:focus .scheda-sagoma-ed-fill { fill-opacity: 1; }
 .scheda-sagoma-ed:hover .scheda-sagoma-ed-bordo, .scheda-sagoma-ed:focus .scheda-sagoma-ed-bordo { stroke: #0a7f90; stroke-width: 2; }
 .scheda-sagoma-ed:focus { outline: none; }
 

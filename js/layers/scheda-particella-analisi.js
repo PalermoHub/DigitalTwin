@@ -2,7 +2,7 @@
 // Legge i tile già caricati (particelle e edifici), il calcolo è in core/particella-analisi.js.
 import { analizzaParticella } from '../core/particella-analisi.js';
 import { sagomaSvg } from '../core/particella-sagoma.js';
-import { statisticheEdifici } from '../core/particella-statistiche.js';
+import { statisticheEdifici, CLASSI_ALTEZZA } from '../core/particella-statistiche.js';
 import { titoloConInfo } from '../core/info-grafico.js';
 import { nomeUso } from '../core/etichette-campi.js';
 import { estremi } from '../core/scheda-pdf-geom.js';
@@ -56,6 +56,9 @@ export function gruppoAnalisi(a, particella) {
   return { gruppo: { titolo: 'Analisi della particella', righe }, avvisi };
 }
 
+const COLORI_ALTEZZA = ['#6aa6e8', '#4c78b8', '#3aa981', '#e0b13a', '#e9892e', '#d6453d'];
+const COLORE_ALTEZZA_IGNOTA = '#8a8f98';
+const coloreAltezza = h => (h > 0 ? COLORI_ALTEZZA[CLASSI_ALTEZZA.findIndex(c => h <= c.max)] : COLORE_ALTEZZA_IGNOTA);
 let contaSagome = 0;
 const NS = 'http://www.w3.org/2000/svg';
 const svgEl = (nome, attr = {}) => { const e = document.createElementNS(NS, nome); for (const [k, v] of Object.entries(attr)) e.setAttribute(k, v); return e; };
@@ -81,7 +84,9 @@ export function creaSagoma(sagoma, suEdificio = null) {
     const gr = svgEl('g', { class: `scheda-sagoma-ed${e.cavallo ? ' scheda-sagoma-ed--cavallo' : ''}` });
     const titolo = svgEl('title');
     titolo.textContent = [e.altezza ? `${num(e.altezza, 1)} m` : t('territorio.sagomaAltezzaIgnota'), `${num(e.area)} m²`, e.cavallo ? t('territorio.sagomaCavallo') : ''].filter(Boolean).join(' · ');
-    gr.append(titolo, svgEl('path', { d: e.d, class: 'scheda-sagoma-ed-fill' }), conBordo(e.d, 'scheda-sagoma-ed-bordo'));
+    const fill = svgEl('path', { d: e.d, class: 'scheda-sagoma-ed-fill' });
+    fill.style.setProperty('--ed-col', coloreAltezza(e.altezza)); // stessi colori dei grafici per altezza
+    gr.append(titolo, fill, conBordo(e.d, 'scheda-sagoma-ed-bordo'));
     if (suEdificio) {
       gr.setAttribute('tabindex', '0');
       gr.addEventListener('mouseenter', () => suEdificio(e.i));
@@ -97,7 +102,6 @@ export function creaSagoma(sagoma, suEdificio = null) {
   return radice;
 }
 
-const COLORI_ALTEZZA = ['#6aa6e8', '#4c78b8', '#3aa981', '#e0b13a', '#e9892e', '#d6453d'];
 const CLASSI_ALTEZZA_CHIAVI = ['a3', 'a6', 'a12', 'a18', 'a30', 'oltre'];
 const el = (tag, classe, testo) => { const e = document.createElement(tag); if (classe) e.className = classe; if (testo != null) e.textContent = testo; return e; };
 const pct = (v, tot) => `${num(tot ? v / tot * 100 : 0, 1)}%`;
@@ -140,7 +144,7 @@ export function creaStatistiche(st) {
   radice.append(griglia);
 
   const classi = st.classiAltezza.map(c => ({ ...c, nome: t(`territorio.st.cl.${c.chiave}`), colore: COLORI_ALTEZZA[CLASSI_ALTEZZA_CHIAVI.indexOf(c.chiave)] }));
-  if (st.altezzaIgnota) classi.push({ ...st.altezzaIgnota, nome: t('territorio.st.cl.ignota'), colore: '#8a8f98' });
+  if (st.altezzaIgnota) classi.push({ ...st.altezzaIgnota, nome: t('territorio.st.cl.ignota'), colore: COLORE_ALTEZZA_IGNOTA });
   radice.append(
     barre(t('territorio.st.perAltezza'), 'particella-edifici-altezza', classi.map(c => ({ nome: c.nome, colore: c.colore, v: c.n, testo: `${num(c.n)} · ${pct(c.n, st.n)}` }))),
     barre(t('territorio.st.improntaAltezza'), 'particella-impronta-altezza', classi.map(c => ({ nome: c.nome, colore: c.colore, v: c.m2, testo: `${num(c.m2)} m² · ${pct(c.m2, st.impronta)}` }))),
