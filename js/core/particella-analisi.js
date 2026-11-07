@@ -96,9 +96,10 @@ export function analizzaParticella(particella, pezzi, { pezziUniti = false } = {
     if (!sovrapposti(riquadro(poli), rp)) continue;
     const quota = quotaDentro(poli, pp, rp);
     if (quota < SOGLIA_CONTA) continue;
-    const area = geoms.reduce((a, g) => a + areaMq(g), 0), dentro = area * quota;
+    // più pezzi di tile si sovrappongono nel buffer: l'area è quella dell'unione, non la somma
+    const area = geoms.length > 1 ? areaUnione(poli, riquadro(poli)) : areaMq(geoms[0]), dentro = area * quota;
     conta++;
-    sagomaEdifici.push({ poligoni: poli, cavallo: quota < SOGLIA_INTERNO, altezza: Number(ed.altezza) > 0 ? Number(ed.altezza) : null, area, uso: ed.uso ?? null });
+    sagomaEdifici.push({ poligoni: poli, cavallo: quota < SOGLIA_INTERNO, altezza: Number(ed.altezza) > 0 ? Number(ed.altezza) : null, area, uso: ed.uso ?? null, geoms });
     if (quota < SOGLIA_INTERNO) cavallo++;
     copertoM2 += dentro;
     if (Number.isFinite(ed.pop)) { residenti += ed.pop * quota; haPop = true; }

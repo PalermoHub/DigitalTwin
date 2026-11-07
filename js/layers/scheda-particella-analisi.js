@@ -56,21 +56,40 @@ export function gruppoAnalisi(a, particella) {
   return { gruppo: { titolo: 'Analisi della particella', righe }, avvisi };
 }
 
+let contaSagome = 0;
 const NS = 'http://www.w3.org/2000/svg';
 const svgEl = (nome, attr = {}) => { const e = document.createElementNS(NS, nome); for (const [k, v] of Object.entries(attr)) e.setAttribute(k, v); return e; };
 
 // Mini-anteprima: contorno della particella con gli edifici nelle posizioni reali (a cavallo: tratteggiati), nord in alto
-export function creaSagoma(sagoma) {
+// Passando il mouse su un edificio della sagoma (o dandogli il fuoco da tastiera) `suEdificio(i)` riceve l'indice dell'edificio, `suEdificio(null)` all'uscita
+export function creaSagoma(sagoma, suEdificio = null) {
   const g = sagomaSvg(sagoma);
   if (!g) return null;
   const svg = svgEl('svg', { viewBox: `0 0 ${g.larghezza} ${g.altezza}`, class: 'scheda-sagoma-svg', role: 'img', 'aria-label': t('territorio.sagomaAlt') });
-  svg.append(svgEl('path', { d: g.particella, class: 'scheda-sagoma-lotto' }));
+  // I tile tagliano particelle ed edifici in pezzi che si toccano e si sovrappongono: il bordo va solo sul contorno esterno.
+  // Il tratto è doppio e una maschera toglie ciò che sta dentro i pezzi (giunture e sovrapposizioni spariscono).
+  const defs = svgEl('defs');
+  const conBordo = (d, classeBordo) => {
+    const id = `sagoma-m-${++contaSagome}`;
+    const m = svgEl('mask', { id, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: g.larghezza, height: g.altezza });
+    m.append(svgEl('rect', { x: 0, y: 0, width: g.larghezza, height: g.altezza, fill: '#fff' }), svgEl('path', { d, fill: '#000' }));
+    defs.append(m);
+    return svgEl('path', { d, class: classeBordo, mask: `url(#${id})` });
+  };
+  svg.append(defs, svgEl('path', { d: g.particella, class: 'scheda-sagoma-lotto' }), conBordo(g.particella, 'scheda-sagoma-bordo'));
   for (const e of g.edifici) {
-    const p = svgEl('path', { d: e.d, class: `scheda-sagoma-ed${e.cavallo ? ' scheda-sagoma-ed--cavallo' : ''}` });
+    const gr = svgEl('g', { class: `scheda-sagoma-ed${e.cavallo ? ' scheda-sagoma-ed--cavallo' : ''}` });
     const titolo = svgEl('title');
     titolo.textContent = [e.altezza ? `${num(e.altezza, 1)} m` : t('territorio.sagomaAltezzaIgnota'), `${num(e.area)} m²`, e.cavallo ? t('territorio.sagomaCavallo') : ''].filter(Boolean).join(' · ');
-    p.append(titolo);
-    svg.append(p);
+    gr.append(titolo, svgEl('path', { d: e.d, class: 'scheda-sagoma-ed-fill' }), conBordo(e.d, 'scheda-sagoma-ed-bordo'));
+    if (suEdificio) {
+      gr.setAttribute('tabindex', '0');
+      gr.addEventListener('mouseenter', () => suEdificio(e.i));
+      gr.addEventListener('mouseleave', () => suEdificio(null));
+      gr.addEventListener('focus', () => suEdificio(e.i));
+      gr.addEventListener('blur', () => suEdificio(null));
+    }
+    svg.append(gr);
   }
   const radice = document.createElement('div');
   radice.className = 'scheda-sagoma';
@@ -143,6 +162,21 @@ export function creaStatistiche(st) {
   return radice;
 }
 
+// Contorno dell'edificio sotto il mouse nella sagoma, evidenziato in mappa finché il mouse resta sopra (spento all'uscita)
+const SRC_ED = 'scheda-edificio-hover';
+function evidenziaEdificio(map, geoms) {
+  if (!map?.getStyle?.()) return;
+  const dati = { type: 'FeatureCollection', features: (geoms || []).map(geometry => ({ type: 'Feature', properties: {}, geometry })) };
+  const src = map.getSource(SRC_ED);
+  if (src) src.setData(dati);
+  else if (geoms) {
+    map.addSource(SRC_ED, { type: 'geojson', data: dati });
+    map.addLayer({ id: `${SRC_ED}-riempi`, type: 'fill', source: SRC_ED, paint: { 'fill-color': '#12b5cb', 'fill-opacity': 0.35 } });
+    map.addLayer({ id: `${SRC_ED}-linea`, type: 'line', source: SRC_ED, paint: { 'line-color': '#0a7f90', 'line-width': 3 } });
+  }
+  if (geoms && map.getLayer(`${SRC_ED}-riempi`)) { map.moveLayer(`${SRC_ED}-riempi`); map.moveLayer(`${SRC_ED}-linea`); } // sempre in cima
+}
+
 // { gruppo, nota } da aggiungere alla voce della particella, oppure null se il percorso Urbanistica non è attivo o la mappa non basta
 export function analisiParticella(map, foglio, particella) {
   if (!map || !urbanisticaAttiva()) return null;
@@ -154,7 +188,7 @@ export function analisiParticella(map, foglio, particella) {
   const { gruppo, avvisi } = gruppoAnalisi(a, particella);
   return { gruppo, nota: avvisi.join(' '), dinamico: a.n || a.sagoma.particella.length ? () => {
       const f = document.createDocumentFragment();
-      const s = creaStatistiche(statisticheEdifici(a.edifici)), g = creaSagoma(a.sagoma);
+      const s = creaStatistiche(statisticheEdifici(a.edifici)), g = creaSagoma(a.sagoma, i => evidenziaEdificio(map, i == null ? null : a.sagoma.edifici[i].geoms));
       if (s) f.append(s);
       if (g) f.append(g);
       return f;

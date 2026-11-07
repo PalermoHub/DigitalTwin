@@ -27,3 +27,10 @@ test('il riquadro include un edificio a cavallo che esce dal lotto', () => {
   assert.notEqual(fuori.particella, dentro.particella); // scala ridotta per far stare anche l'edificio che esce
   assert.equal(fuori.edifici[0].cavallo, true);
 });
+
+test('ogni edificio porta il suo indice, per collegarlo all\'evidenza in mappa', () => {
+  const g = sagomaSvg({ particella: [rett(0, 0, 100, 50)], edifici: [
+    { poligoni: [rett(10, 40, 10, 10)], cavallo: false, altezza: 9, area: 100 },
+    { poligoni: [rett(50, 30, 10, 10)], cavallo: false, altezza: 6, area: 100 }] });
+  assert.deepEqual(g.edifici.map(e => e.i), [0, 1]);
+});

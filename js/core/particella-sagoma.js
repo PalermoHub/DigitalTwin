@@ -25,6 +25,6 @@ export function sagomaSvg(sagoma) {
   return {
     larghezza: +(w * scala + 2 * m).toFixed(2), altezza: +(h * scala + 2 * m).toFixed(2),
     particella: tracciato(sagoma.particella),
-    edifici: sagoma.edifici.map(e => ({ d: tracciato(e.poligoni), cavallo: e.cavallo, altezza: e.altezza, area: e.area })),
+    edifici: sagoma.edifici.map((e, i) => ({ i, d: tracciato(e.poligoni), cavallo: e.cavallo, altezza: e.altezza, area: e.area })),
   };
 }
