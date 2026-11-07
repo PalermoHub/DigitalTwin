@@ -1584,6 +1584,8 @@
   "scheda.disclaimer": "Disclaimer: the Digital Twin is a tool for learning, studying and understanding the city. It does not replace official documents. Cadastre, zoning plan and constraints are purely informational here and have no legal value. For a land-registry extract or a certificate of planning use, contact SISTER or the competent offices. Population data for individual buildings are also sample-based estimates and should be read as indications, not exact counts.",
   "scheda.apriMappa": "Open the map in another page",
   "scheda.mappa": "Map",
+  "scheda.bordi": "Boundary",
+  "scheda.bordiTitolo": "Highlight the parcel boundary on the map",
   "scheda.mostraStrato": "Show the layer on the map",
   "scheda.nascondiStrato": "Hide the layer from the map",
   "scheda.nessunDato": "No data at this point.",

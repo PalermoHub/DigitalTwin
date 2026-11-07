@@ -8,7 +8,7 @@ import { liveZoomAttivo } from './live-zoom.js';
 import { anelliDaZone, dentroAnello } from '../rndt/area.js';
 import { sceltePerLayer, soloCliccato, evidenzia, cancellaEvidenza, evidenzaVicine } from './evidenza.js';
 import { featureVicine } from './scheda-util.js';
-import { el, icona, sincronizzaStrato, acceseDaScheda, spegniStratiDaScheda, creaInterruttoreStrato, disegnaSezione } from './scheda-disegno.js';
+import { el, icona, sincronizzaStrato, acceseDaScheda, spegniStratiDaScheda, creaInterruttoreStrato, creaPulsanteBordi, disegnaSezione } from './scheda-disegno.js';
 import { ICONA_INGRANAGGIO, ICONA_X, creaPannelloPreferenze } from './scheda-pannello-preferenze.js';
 import { t as tr, tl } from './i18n.js';
 import { urbanisticaAttiva } from './scheda-pdf-modello.js';
@@ -219,7 +219,12 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
     if (edificio) corpo.prepend(edificio); // anche in Luogo l'edificio è la prima informazione
     corpo.prepend(...corpo.querySelectorAll('.scheda-sez[data-peso="1"]')); // tranne lo strato che il clic ha cercato (peso 1, es. l'area del Piano di emergenza)
     const sezioni = [...corpo.querySelectorAll('.scheda-sez')];
-    for (const sz of sezioni) if (sz.dataset.strato) sz.querySelector('.scheda-sez-extra').append(creaInterruttoreStrato(sz.dataset.strato, sz.dataset.vai ? JSON.parse(sz.dataset.vai) : null));
+    for (const sz of sezioni) if (sz.dataset.strato) {
+      const vai = sz.dataset.vai ? JSON.parse(sz.dataset.vai) : null;
+      const extra = sz.querySelector('.scheda-sez-extra');
+      extra.append(creaInterruttoreStrato(sz.dataset.strato, vai));
+      if (vai) extra.append(creaPulsanteBordi(vai));
+    }
     for (const t of corpo.querySelectorAll('.scheda-tipo[data-strato]')) t.querySelector(':scope > summary').append(creaInterruttoreStrato(t.dataset.strato));
     const presenti = SCHEDE.filter(([id]) => sezioni.some(sz => sz.dataset.tab === id));
     indice.replaceChildren(...presenti.map(([id, nome]) => {
@@ -485,7 +490,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   document.addEventListener('change', e => {
     if (String(e.target.id).startsWith('strato-')) {
       if (!e.target.checked) acceseDaScheda.delete(e.target.id.slice(7)); // spento a mano: non va più spento alla chiusura
-      contenitore.querySelectorAll('.scheda-strato').forEach(sincronizzaStrato);
+      contenitore.querySelectorAll('.scheda-strato:not(.scheda-bordi)').forEach(sincronizzaStrato);
     }
   });
   // le scelte sulle informazioni da mostrare stanno in memoria e, se il browser lo permette, in localStorage

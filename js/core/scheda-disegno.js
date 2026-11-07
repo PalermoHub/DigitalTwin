@@ -239,6 +239,15 @@ export function creaInterruttoreStrato(id, vai = null) {
   return b;
 }
 
+// Badge «Bordi» accanto a «Mappa»: porta in mappa l'oggetto della sezione (`vai`) e ne evidenzia il contorno, anche a strato già acceso
+export function creaPulsanteBordi(vai) {
+  const b = el('button', 'scheda-strato scheda-bordi', tr('scheda.bordi'));
+  b.type = 'button';
+  b.title = tr('scheda.bordiTitolo');
+  b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('scheda:vai-particella', { detail: vai })));
+  return b;
+}
+
 export function disegnaSezione(s, i) {
   const titolo = el('h3');
   if (s.icona) titolo.append(icona(s.icona));
