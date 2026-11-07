@@ -166,7 +166,8 @@ export default {
     // etichette "F. foglio - P. particella" come nell'app originale (più rade da mobile)
     const mobile = window.matchMedia('(max-width: 768px)').matches;
     map.addLayer({
-      id: 'catasto-etichette', type: 'symbol', source: 'catasto', 'source-layer': 'particelle',
+      // un punto per particella (layer `particelle_label`, interno al poligono): niente doppioni sui bordi dei tile
+      id: 'catasto-etichette', type: 'symbol', source: 'catasto', 'source-layer': 'particelle_label',
       minzoom: mobile ? 16 : 15,
       layout: {
         visibility: 'none',

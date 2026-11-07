@@ -3,12 +3,22 @@
   "percorso": "catasto/particelle.pmtiles",
   "tema": "catasto",
   "formato": "pmtiles",
-  "byte": 39989293,
-  "sha256": "93b0631873d17ad87eb29e91d7de5da8bd9c95a4643fa023ac9607d723d6915b",
+  "byte": 45599495,
+  "sha256": "be5553c8a480eb8cf46a4f8dc5133d9b7b0cb667ff0bd16efe0646b049a9e6f0",
   "url": "https://palermohub.github.io/PRG2004/particelle/particelle.pmtiles",
   "layers": [
    {
     "nome": "particelle",
+    "campi": [
+     "Foglio",
+     "Paricella",
+     "fid"
+    ],
+    "minzoom": 12,
+    "maxzoom": 18
+   },
+   {
+    "nome": "particelle_label",
     "campi": [
      "Foglio",
      "Paricella",
