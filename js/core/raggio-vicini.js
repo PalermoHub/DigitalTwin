@@ -46,21 +46,22 @@ export function impostaRaggio(v, storage = null) {
   return corrente;
 }
 
-// Riga con cursore e interruttore del cerchio da mettere nel riquadro della legenda; restituisce il nodo.
-export function creaRegolatoreRaggio(storage = null) {
-  caricaRaggio(storage);
-  caricaCerchio(storage);
+// Riga con cursore e interruttore del cerchio, nel riquadro della legenda e nel tab Opzioni: le due righe mostrano lo stesso stato
+// e si riallineano a vicenda (EVENTO_RAGGIO). Il valore si legge dal browser solo alla prima riga (`carica`).
+export function creaRegolatoreRaggio(storage = null, { id = 'legende-raggio', carica = true } = {}) {
+  if (carica) { caricaRaggio(storage); caricaCerchio(storage); }
   const riga = document.createElement('div');
-  riga.id = 'legende-raggio';
+  riga.id = id;
   const testo = document.createElement('span');
   const cursore = Object.assign(document.createElement('input'), { type: 'range', min: RAGGIO_MIN, max: RAGGIO_MAX, step: RAGGIO_PASSO, value: corrente });
-  const mostra = () => { testo.textContent = t('legenda.raggio.etichetta', { m: corrente }); };
-  cursore.addEventListener('input', () => { impostaRaggio(cursore.value, storage); mostra(); document.dispatchEvent(new Event(EVENTO_RAGGIO)); });
-  mostra();
   const interruttore = document.createElement('label');
   interruttore.className = 'legende-raggio-cerchio';
   const casella = Object.assign(document.createElement('input'), { type: 'checkbox', checked: cerchio, role: 'switch' });
+  const mostra = () => { testo.textContent = t('legenda.raggio.etichetta', { m: corrente }); cursore.value = corrente; casella.checked = cerchio; };
+  cursore.addEventListener('input', () => { impostaRaggio(cursore.value, storage); mostra(); document.dispatchEvent(new Event(EVENTO_RAGGIO)); });
   casella.addEventListener('change', () => { impostaCerchio(casella.checked, storage); document.dispatchEvent(new Event(EVENTO_RAGGIO)); });
+  document.addEventListener(EVENTO_RAGGIO, mostra);
+  mostra();
   interruttore.append(t('legenda.raggio.cerchio'), casella);
   riga.append(testo, cursore, interruttore);
   return riga;

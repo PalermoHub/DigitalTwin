@@ -11,6 +11,8 @@ import { ETICHETTE, EVENTO_GRUPPO } from './pannello-comune.js';
 import { aggiornaSottogruppi, rendiPieghevoli } from './sottogruppi.js';
 import { t } from './i18n.js';
 import { tooltipAttivi, impostaTooltipAttivi } from './tooltip.js';
+import { leggiTooltipMappa, salvaTooltipMappa } from './opzioni-selezione.js';
+import { sezioneOverlay, sezioneRaggio, sezioneSelezione } from './pannello-opzioni.js';
 import { creaInterruttorePannello as interruttoreLiveZoom } from './live-zoom.js';
 
 
@@ -109,7 +111,7 @@ function bottoneGruppo(id, titolo) {
   b.setAttribute('aria-label', titolo);
   b.setAttribute('aria-expanded', 'false');
   b.setAttribute('aria-controls', `gruppo-${id}`);
-  b.innerHTML = `${id === 'rndt' ? '<span class="icona-puzzle" aria-hidden="true"></span>' : svgIcona(id === 'base' ? 'mappa' : id) || svgIcona('info')}<span class="et">${ETICHETTE[id] ?? titolo}</span>`;
+  b.innerHTML = `${id === 'rndt' ? '<span class="icona-puzzle" aria-hidden="true"></span>' : svgIcona(id === 'base' ? 'mappa' : id === 'opzioni' ? 'ingranaggio' : id) || svgIcona('info')}<span class="et">${ETICHETTE[id] ?? titolo}</span>`;
   return b;
 }
 
@@ -350,21 +352,22 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
     cbTip.type = 'checkbox';
     cbTip.id = 'interruttore-tooltip';
     cbTip.dataset.filtro = 'tooltip'; // non è uno strato: non va nei conteggi degli strati accesi
+    impostaTooltipAttivi(leggiTooltipMappa(storage)); // la scelta resta da una visita all'altra
     cbTip.checked = tooltipAttivi();
-    cbTip.addEventListener('change', () => impostaTooltipAttivi(cbTip.checked));
+    cbTip.addEventListener('change', () => { impostaTooltipAttivi(cbTip.checked); salvaTooltipMappa(cbTip.checked, storage); });
     interruttore.append(cbTip, occhio(), ' ', t('tooltip.interruttore'));
-    // i due interruttori stanno in un unico menu a tendina, aperto di default
-    const opzioni = document.createElement('details');
-    opzioni.id = 'opzioni-overlay';
-    opzioni.open = true;
-    opzioni.className = 'layer-sezione opzioni-overlay';
-    const sommarioOpz = document.createElement('summary');
-    const titoloOpz = document.createElement('h2');
-    titoloOpz.textContent = t('pannello.overlay.titolo');
-    sommarioOpz.append(titoloOpz);
-    opzioni.append(sommarioOpz, interruttore, ...(legendeUi ? [legendeUi.interruttore] : []), interruttoreLiveZoom(occhio, storage));
-    campo.after(opzioni, disegno.el);
-    campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; opzioni.hidden = !!cercando; });
+    // il tab Opzioni è un cruscotto: una scheda per gruppo di impostazioni (overlay, raggio, selezione in mappa)
+    const intro = document.createElement('p');
+    intro.className = 'opz-intro';
+    intro.textContent = t('opzioni.intro');
+    const overlay = sezioneOverlay([
+      { el: interruttore, desc: 'opzioni.tooltip.desc', icona: 'fumetto' },
+      { el: legendeUi?.interruttore, desc: 'opzioni.legende.desc', icona: 'menu' },
+      { el: interruttoreLiveZoom(occhio, storage), desc: 'opzioni.livezoom.desc', icona: 'indirizzo' },
+    ]);
+    nuovoTab('opzioni', ETICHETTE.opzioni).append(intro, overlay, sezioneRaggio(storage), sezioneSelezione(storage));
+    campo.after(disegno.el);
+    campo.addEventListener('input', () => { disegno.el.hidden = !!cercando; });
     contenitore.addEventListener('change', e => { if (e.target.matches?.('label.strato input[type=checkbox]')) { if (disegno.el.open) disegno.ridisegna(); else disegno.aggiornaTestata(); } });
   }
   aggiornaConteggio();

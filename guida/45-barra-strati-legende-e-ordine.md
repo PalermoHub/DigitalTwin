@@ -36,7 +36,9 @@ Domande tipiche: Come trovo un layer in mezzo a tanti? Come spengo i fumetti? Do
 
 Il campo **«Cerca strato…»** filtra l'elenco; mentre la ricerca è in corso niente resta nascosto nei sottogruppi chiusi, così lo strato trovato si vede.
 
-Sotto c'è il menu **«Overlay informativi»** con due interruttori:
+Le impostazioni dell'interfaccia stanno nel tab **«Opzioni»** della barra a sinistra (icona a ingranaggio), non più sotto «Cerca strato». Contiene tre sezioni: **«Overlay informativi»**, **«Raggio dei dintorni»** e **«Selezione in mappa»** (elenco di tutte le voci evidenziabili, ordinate alfabeticamente, ognuna con la sua casella; il pulsante a occhio le accende o spegne tutte, quello a fumetto comanda i dettagli al passaggio del mouse). Le scelte restano salvate nel browser finché l'utente non ne cancella la cronologia. Sulla mappa, nel riquadro della legenda, restano la legenda «Selezione in mappa» con le sue caselle (che fanno da filtro), **Live Zoom**, il raggio e «Mostra il cerchio in mappa»: sono sempre sincronizzati con il tab Opzioni.
+
+Il menu **«Overlay informativi»** ha tre interruttori:
 - **«Tooltip sulla mappa»**: il fumetto con i dati principali al passaggio del mouse.
 - **«Legende sulla mappa»**: se acceso, tutte le legende restano sulla mappa; se spento, ogni legenda passa **sotto il proprio strato** nel pannello Layer, come nei programmi GIS.
 

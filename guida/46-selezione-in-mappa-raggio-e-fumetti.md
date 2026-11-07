@@ -10,7 +10,7 @@ Dopo un clic sulla mappa le **aree da cui vengono i dati della scheda** vengono 
 
 **Cosa viene evidenziato.** Si evidenzia una sola cosa: l'**edificio** se il clic cade su un edificio (per monumenti, scuole e sedi elettorali il poligono dell'edificio abbinato), il **punto** se cade fuori dall'edificato. Se non c'è né l'uno né l'altro (per esempio con solo catasto o PRG acceso) restano evidenziate tutte le aree. La griglia del terreno non conta.
 
-**La legenda «Selezione in mappa».** Compare finché c'è una selezione in mappa. Ha una voce per ogni etichetta con il colore con cui è disegnata (un cerchio o la sagoma dell'icona per i punti, un quadrato per le aree). Come le altre legende fa da **filtro**: ogni voce ha la sua casella e si accende o si spegne da sola, mentre il pulsante a occhio le accende o le spegne tutte insieme. Si toglie la selezione con **Esc** o con il pulsante «Ripristina» accanto alla ricerca (vedi `44-ricerca-e-filtri.md`).
+**La legenda «Selezione in mappa».** Compare finché c'è una selezione in mappa. Ha una voce per ogni etichetta con il colore con cui è disegnata (un cerchio o la sagoma dell'icona per i punti, un quadrato per le aree). Come le altre legende fa da **filtro**: ogni voce ha la sua casella e si accende o si spegne da sola, mentre il tab «Opzioni» ha un interruttore «Tutte le voci» per accenderle o spegnerle tutte insieme. Si toglie la selezione con **Esc** o con il pulsante «Ripristina» accanto alla ricerca (vedi `44-ricerca-e-filtri.md`).
 
 **Icone al posto dei cerchi.** I layer a punti con una loro icona (scuole, sedi elettorali, distributori, colonnine, fontanelle, alberi, monumenti, MEF, PEBA e altri) sono evidenziati con la **sagoma della loro icona**; i layer senza icona (come i civici) restano cerchi. Le fermate vicine sono un disco del colore della fonte con l'icona bianca, per distinguerle dalle fermate di un percorso. Dove due icone si toccano ne resta una, e le fermate vicine hanno la precedenza.
 
@@ -26,9 +26,9 @@ Sulla mappa c'è **un solo tooltip**: a ogni movimento del mouse ogni modulo (co
 
 Sulle aree evidenziate dopo un clic il fumetto riporta **il nome del layer e il dato che identifica l'elemento** (per esempio foglio e particella, zona PRG con descrizione, fascia OMI, indirizzo dell'immobile, civico, nome della fermata, sezione censuaria).
 
-Per accendere e spegnere i fumetti ci sono due comandi:
-- l'interruttore **«Tooltip sulla mappa»** nel menu «Overlay informativi» (vedi `45-barra-strati-legende-e-ordine.md`);
-- il **pulsante a fumetto** nella legenda «Selezione in mappa» (per i soli fumetti delle aree evidenziate): «Dettagli al passaggio del mouse: attivi (clic per nasconderli)» / «Dettagli al passaggio del mouse: nascosti (clic per mostrarli)».
+Per accendere e spegnere i fumetti ci sono due interruttori, entrambi nel tab «Opzioni» (vedi `45-barra-strati-legende-e-ordine.md`):
+- **«Tooltip sulla mappa»**, nella scheda «Overlay informativi»: tutti i fumetti della mappa;
+- **«Dettagli al passaggio»**, nella scheda «Selezione in mappa»: i soli fumetti delle aree evidenziate.
 
 Il fumetto compare anche sopra la pila nella vista «Strati in 3D» (vedi `39-strati-in-3d.md`).
 

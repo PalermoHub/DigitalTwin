@@ -81,6 +81,7 @@ import base from './layers/base.js';
 import { t } from './core/i18n.js';
 import { collegaModoEmergenza, inModoEmergenza, zoomMinimoEmergenza } from './core/modo-emergenza.js';
 import { creaRegolatoreRaggio } from './core/raggio-vicini.js';
+import { caricaOpzioniSelezione } from './core/opzioni-selezione.js';
 import { caricaLiveZoom, collegaLiveZoom, creaInterruttoreLegenda as interruttoreLiveZoomLegenda } from './core/live-zoom.js';
 
 // telefono: barra a quattro tab (Mappa, Strati, Aggiungi, Info) e foglio degli strati; la legenda si può ridurre
@@ -92,6 +93,7 @@ const tab = collegaTabMobile(document, { barraTitolo: document.querySelector('#b
 document.getElementById('corpo').append(tab.barra);
 document.getElementById('chiudi-strati').addEventListener('click', () => tab.imposta(null));
 caricaLiveZoom(localStorage);
+caricaOpzioniSelezione(localStorage); // dettagli e voci della selezione: restano come l'utente le ha lasciate
 const regolatoreRaggio = creaRegolatoreRaggio(localStorage);
 regolatoreRaggio.prepend(interruttoreLiveZoomLegenda(localStorage));
 document.getElementById('legende-box').append(regolatoreRaggio);
