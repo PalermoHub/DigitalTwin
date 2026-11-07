@@ -2631,7 +2631,7 @@ a.scheda-tel { min-height: 40px; }
 .part-st-nota { margin: 0; font-size: var(--fs-xs); color: var(--text-muted); }
 .part-st-box { margin-top: 8px; padding: 8px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); }
 .part-st-h { margin: 0 0 6px; font-size: var(--fs-sm); }
-.part-st-barra { display: grid; grid-template-columns: 5.5em 1fr auto; align-items: center; gap: 6px; margin-top: 4px; font-size: var(--fs-xs); }
+.part-st-barra { display: grid; grid-template-columns: 8em 1fr auto; align-items: center; gap: 6px; margin-top: 4px; font-size: var(--fs-xs); }
 .part-st-barra--rank { grid-template-columns: 1.4em minmax(0, 1fr) 30% auto; }
 .part-st-nome { color: var(--text-muted); overflow-wrap: anywhere; }
 .part-st-pos { color: var(--text-muted); text-align: center; }
