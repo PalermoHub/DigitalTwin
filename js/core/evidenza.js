@@ -220,8 +220,11 @@ export function vociLegenda(scelte) {
 // Scelte da disegnare dopo il filtro della legenda: restano solo quelle con le etichette accese.
 export const scelteAccese = (scelte, accese) => scelte.filter(s => accese.has(s.etichetta));
 
+// Voci spente dall'utente nella legenda: restano spente a ogni nuova selezione, finché non le riaccende lui.
+const spente = new Set();
+
 // Legenda in #legende: compare finché c'è una selezione sulla mappa; come le altre legende fa da filtro
-// (il clic su una voce lascia in mappa solo quella, un secondo clic le riaccende tutte).
+// (caselle indipendenti, più il pulsante a occhio per tutte).
 function aggiornaLegenda(map, scelte) {
   const contenitore = typeof document !== 'undefined' && document.getElementById('legende');
   if (!contenitore) return;
@@ -251,22 +254,51 @@ function aggiornaLegenda(map, scelte) {
   };
   interruttore.addEventListener('click', () => { tooltipAttivo = !tooltipAttivo; aggiorna(); });
   aggiorna();
-  testa.append(titolo, interruttore);
+  const blocco = document.createElement('button'); // accende o spegne tutte le voci in una volta
+  blocco.type = 'button';
+  blocco.className = 'selezione-tooltip';
+  blocco.innerHTML = svgIcona('occhio', 16);
+  const comandi = document.createElement('span');
+  comandi.className = 'selezione-comandi';
+  comandi.append(blocco, interruttore);
+  testa.append(titolo, comandi);
   legenda.append(testa);
-  const accese = new Set(voci.map(v => v.etichetta));
+  const accese = new Set(voci.map(v => v.etichetta).filter(e => !spente.has(e)));
   const gruppo = document.createElement('div');
   gruppo.className = 'selezione-voci';
+  const caselle = [];
+  const disegna = () => {
+    for (const v of voci) { if (accese.has(v.etichetta)) spente.delete(v.etichetta); else spente.add(v.etichetta); }
+    map.getSource(SORGENTE)?.setData(collezione(scelteAccese(scelte, accese)));
+  };
+  const aggiornaBlocco = () => {
+    const tutte = accese.size === voci.length;
+    const testo = tutte ? t('evidenza.tutteAccese') : t('evidenza.tutteSpente');
+    blocco.setAttribute('aria-pressed', String(tutte));
+    blocco.setAttribute('aria-label', testo);
+    blocco.title = testo;
+  };
+  blocco.addEventListener('click', () => {
+    const accendi = accese.size < voci.length;
+    voci.forEach((v, i) => { if (accendi) accese.add(v.etichetta); else accese.delete(v.etichetta); caselle[i].checked = accendi; });
+    aggiornaBlocco();
+    disegna();
+  });
   for (const v of voci) {
     const simbolo = v.icona ? simboloGlifo(v.icona, v.colore) : document.createElement('i');
     if (!v.icona) {
       simbolo.className = `selezione-simbolo${v.punto ? ' selezione-simbolo--punto' : ''}`;
       simbolo.style.setProperty('--colore', v.colore);
     }
-    gruppo.append(voceFiltro(simbolo, v.etichetta, acceso => {
+    const riga = voceFiltro(simbolo, v.etichetta, acceso => { // caselle indipendenti: ognuna accende e spegne solo la sua voce
       if (acceso) accese.add(v.etichetta); else accese.delete(v.etichetta);
-      map.getSource(SORGENTE)?.setData(collezione(scelteAccese(scelte, accese)));
-    }));
+      aggiornaBlocco();
+      disegna();
+    }, accese.has(v.etichetta), false);
+    caselle.push(riga.querySelector('input'));
+    gruppo.append(riga);
   }
+  aggiornaBlocco();
   legenda.append(gruppo);
   legenda.hidden = false;
 }
@@ -276,7 +308,7 @@ export function evidenzia(map, scelte) {
   assicuraStrati(map);
   const dischi = collezione(scelte).features.filter(f => f.properties.disco && f.properties.icona);
   for (const icona of new Set(dischi.map(f => f.properties.icona))) registraBadge(map, icona, dischi.filter(f => f.properties.icona === icona).map(f => f.properties.colore));
-  map.getSource(SORGENTE).setData(collezione(scelte));
+  map.getSource(SORGENTE).setData(collezione(scelte.filter(s => !spente.has(s.etichetta))));
   // sempre sopra agli strati aggiunti dopo (es. riaccensioni dei layer dei dati)
   for (const id of STRATI) map.moveLayer(id);
 }

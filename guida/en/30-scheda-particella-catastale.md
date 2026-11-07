@@ -17,7 +17,7 @@ When a layer of the **Planning** path is on (zoning plan, constraints, cadastre,
 - **Building height**: minimum, average (weighted by footprint) and maximum. Buildings without a known height are left out of heights and volume.
 - **Volume (estimate)** and **Residents (estimate)**.
 
-Below the rows, for parcels with buildings, there are six **tiles** (buildings, footprint with the average per building, median area, median height, maximum height, main use), two **bar charts** («Parcel: buildings by height» and «Parcel: footprint by height»; classes: up to 3 m, 3–6, 6–12, 12–18, 18–30, over 30, height not available), the ranking of the **five largest buildings** (use, height, area) and the parcel outline. Each chart has an «i» icon that explains it. Main use is «n/a» if no building has a recorded use.
+Below the rows, for parcels with buildings, there are six **tiles** (buildings, footprint with the average per building, median area, median height, maximum height, main use), two **bar charts** («Parcel: buildings by height» and «Parcel: footprint by height»; classes: up to 3 m, 3–6, 6–12, 12–18, 18–30, over 30, height not available), the ranking of the **five largest buildings** (use, height, area) and the parcel outline: hovering a building in the outline (or focusing it with the keyboard) lights up the same building on the map for as long as the pointer stays over it. Each chart has an «i» icon that explains it. Main use is «n/a» if no building has a recorded use.
 
 These are estimates: buildings (Carta Tecnica Comunale 2006 and global sources) and cadastre (September 2026) do not match to the metre. A parcel without buildings is flagged as «Free lot».
 

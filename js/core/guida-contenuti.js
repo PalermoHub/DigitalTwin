@@ -145,10 +145,10 @@ export const PASSI = [
     titolo: 'Fare clic sulla mappa',
     paragrafi: [
       'Per conoscere un luogo basta fare clic sulla mappa, o toccarla da smartphone: all\'apertura un invito a tutto schermo lo ricorda, sparisce al primo clic e, con «Non mostrare più», non si ripresenta (il pulsante «Ripristina» accanto alla ricerca lo riaccende). Il punto scelto viene evidenziato e si apre la scheda del luogo.',
-      'Le aree evidenziate (edificio, particella, fermate vicine e altro) hanno in basso una legenda «Selezione in mappa» con un colore per ogni voce: un clic su una voce lascia in mappa solo quella, un secondo clic le riaccende tutte. Passando con il mouse su un\'area compare un fumetto con il nome del layer e il dato che identifica l\'elemento; il pulsante a fumetto della legenda li accende e li spegne.',
+      'Le aree evidenziate (edificio, particella, fermate vicine e altro) hanno in basso una legenda «Selezione in mappa» con un colore per ogni voce: ogni voce ha la sua casella e si accende o si spegne da sola, mentre il pulsante a occhio le accende o le spegne tutte insieme. Passando con il mouse su un\'area compare un fumetto con il nome del layer e il dato che identifica l\'elemento; il pulsante a fumetto della legenda li accende e li spegne.',
     ],
     immagine: { file: 'img/guida/passi/clic.webp', alt: 'Un punto scelto sulla mappa in via Maqueda con le aree evidenziate, la legenda Selezione in mappa in basso e la scheda del luogo aperta sul lato destro.', didascalia: 'Un clic in via Maqueda evidenzia il punto, mostra la legenda della selezione e apre la scheda.' },
-    narrazione: 'Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono. Il punto scelto viene evidenziato e si apre la scheda del luogo. Le aree evidenziate hanno una legenda con un colore per ogni voce: un clic su una voce lascia in mappa solo quella. Passando con il mouse compare un fumetto con il nome del layer.',
+    narrazione: 'Per conoscere un luogo basta fare clic sulla mappa, o toccarla da telefono. Il punto scelto viene evidenziato e si apre la scheda del luogo. Le aree evidenziate hanno una legenda con un colore per ogni voce, che si può spegnere da sola. Passando con il mouse compare un fumetto con il nome del layer.',
     scena: { strati: ['edificato', 'catasto'], centro: PUNTO_CLIC, zoom: 17, clic: PUNTO_CLIC },
   },
   {

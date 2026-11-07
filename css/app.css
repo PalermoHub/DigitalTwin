@@ -494,6 +494,7 @@ dialog li { margin: 4px 0; }
 .legenda-trasporto { margin-top: 8px; }
 .legenda-selezione .selezione-testa { justify-content: space-between; gap: 10px; margin-bottom: 4px; }
 .legenda-selezione strong { font-size: var(--fs-xs); }
+.selezione-comandi { display: inline-flex; gap: 6px; }
 .selezione-tooltip { position: relative; display: inline-flex; padding: 3px; border: 1px solid var(--border-ui); border-radius: var(--r-sm); background: none; color: var(--text-muted); cursor: pointer; }
 .selezione-tooltip[aria-pressed="false"]::after { content: ''; position: absolute; left: 3px; right: 3px; top: 50%; height: 2px; background: currentColor; transform: rotate(-45deg); box-shadow: 0 0 0 1px var(--surface); }
 .selezione-tooltip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-strong); }

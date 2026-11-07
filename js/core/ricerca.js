@@ -177,6 +177,7 @@ export function collegaRicerca(map, form, input, lista, vaiParticella = null, zo
 // Ricerca per foglio e particella: il dato è un PMTiles senza indice, quindi la particella
 // si trova solo se la sua tile è già caricata (stessa limitazione dell'app catasto originale).
 export function collegaRicercaParticella(map, campoFoglio, campoNumero, bottone, esito) {
+  let evidenziata = null; // { foglio, numero } della particella con il contorno acceso
   function mostra(testo) { esito.textContent = testo; esito.hidden = !testo; }
   function cerca() {
     const foglio = campoFoglio.value.trim();
@@ -189,6 +190,7 @@ export function collegaRicercaParticella(map, campoFoglio, campoNumero, bottone,
     });
     if (!trovate.length) return mostra(t('ricerca.particella.nessuna'));
     mostra('');
+    evidenziata = { foglio, numero };
     const limiti = new maplibregl.LngLatBounds();
     const aggiungi = c => (typeof c[0] === 'number' ? limiti.extend(c) : c.forEach(aggiungi));
     trovate.forEach(f => aggiungi(f.geometry.coordinates));
@@ -200,6 +202,15 @@ export function collegaRicercaParticella(map, campoFoglio, campoNumero, bottone,
       .setHTML(`<div style="text-align:center"><b>${t('evidenza.particella')}</b><br>${t('ricerca.particella.riga', { foglio, numero })}</div>`).addTo(map);
   }
   bottone.addEventListener('click', cerca);
+  // un clic fuori dalla particella evidenziata ne spegne il contorno (dentro, resta)
+  map.on('click', e => {
+    if (!evidenziata || !map.getLayer('catasto-hit')) return;
+    const dentro = map.queryRenderedFeatures(e.point, { layers: ['catasto-hit'] })
+      .some(f => String(f.properties.Foglio) === evidenziata.foglio && String(f.properties.Paricella) === evidenziata.numero);
+    if (dentro) return;
+    evidenziata = null;
+    map.setFilter('catasto-evidenza', ['==', ['get', 'Paricella'], '']);
+  });
   return (foglio, numero) => { campoFoglio.value = foglio; campoNumero.value = numero; cerca(); };
   [campoFoglio, campoNumero].forEach(c => c.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); cerca(); } }));
 }
