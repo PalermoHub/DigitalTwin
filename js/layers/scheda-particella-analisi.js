@@ -1,6 +1,7 @@
 // Analisi della particella nella scheda «Particella catastale»: superficie, edifici, coperto, altezze (percorso Urbanistica).
 // Legge i tile già caricati (particelle e edifici), il calcolo è in core/particella-analisi.js.
 import { analizzaParticella } from '../core/particella-analisi.js';
+import { unisciPezzi, caricaUnione } from '../core/edificio-contorno.js';
 import { sagomaSvg } from '../core/particella-sagoma.js';
 import { statisticheEdifici, CLASSI_ALTEZZA } from '../core/particella-statistiche.js';
 import { titoloConInfo } from '../core/info-grafico.js';
@@ -168,17 +169,24 @@ export function creaStatistiche(st) {
 
 // Contorno dell'edificio sotto il mouse nella sagoma, evidenziato in mappa finché il mouse resta sopra (spento all'uscita)
 const SRC_ED = 'scheda-edificio-hover';
+let ultimaRichiesta = 0;
 function evidenziaEdificio(map, geoms) {
   if (!map?.getStyle?.()) return;
-  const dati = { type: 'FeatureCollection', features: (geoms || []).map(geometry => ({ type: 'Feature', properties: {}, geometry })) };
+  const mia = ++ultimaRichiesta;
+  if (geoms?.length > 1 && !globalThis.polygonClipping) { // prima volta: il mouse può essere già uscito quando la libreria arriva
+    caricaUnione().then(() => { if (mia === ultimaRichiesta) evidenziaEdificio(map, geoms); });
+    return;
+  }
+  const unita = geoms?.length ? unisciPezzi(geoms, globalThis.polygonClipping?.union) : null;
+  const dati = { type: 'FeatureCollection', features: unita ? [{ type: 'Feature', properties: {}, geometry: unita }] : [] };
   const src = map.getSource(SRC_ED);
   if (src) src.setData(dati);
-  else if (geoms) {
+  else if (unita) {
     map.addSource(SRC_ED, { type: 'geojson', data: dati });
     map.addLayer({ id: `${SRC_ED}-riempi`, type: 'fill', source: SRC_ED, paint: { 'fill-color': '#12b5cb', 'fill-opacity': 0.35 } });
-    map.addLayer({ id: `${SRC_ED}-linea`, type: 'line', source: SRC_ED, paint: { 'line-color': '#0a7f90', 'line-width': 3 } });
+    map.addLayer({ id: `${SRC_ED}-linea`, type: 'line', source: SRC_ED, layout: { 'line-join': 'round' }, paint: { 'line-color': '#0a7f90', 'line-width': 3 } });
   }
-  if (geoms && map.getLayer(`${SRC_ED}-riempi`)) { map.moveLayer(`${SRC_ED}-riempi`); map.moveLayer(`${SRC_ED}-linea`); } // sempre in cima
+  if (unita && map.getLayer(`${SRC_ED}-riempi`)) { map.moveLayer(`${SRC_ED}-riempi`); map.moveLayer(`${SRC_ED}-linea`); } // sempre in cima
 }
 
 // { gruppo, nota } da aggiungere alla voce della particella, oppure null se il percorso Urbanistica non è attivo o la mappa non basta

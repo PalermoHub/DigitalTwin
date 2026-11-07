@@ -54,6 +54,7 @@ Attribuzione richiesta per i dati CC BY: «Digital Twin Palermo, PalermoHub».
 - `js/vendor/three.module.min.js`: [three.js](https://threejs.org/) r160, licenza MIT (`js/vendor/LICENSE-three.txt`); disegna i prospetti in `crociferi.html`.
 - `js/vendor/jszip.min.js`: [JSZip](https://stuk.github.io/jszip/) 3.10.1, licenza MIT o GPL-3.0 a scelta (`js/vendor/LICENSE-jszip.txt`).
 - `js/vendor/jspdf.umd.min.js`: [jsPDF](https://github.com/parallax/jsPDF) 2.5.1, licenza MIT (`js/vendor/LICENSE-jspdf.txt`); crea la scheda PDF del percorso Urbanistica, caricato solo al clic.
+- `js/vendor/polygon-clipping.umd.min.js`: [polygon-clipping](https://github.com/mfogel/polygon-clipping) 0.15.7, licenza MIT (`js/vendor/LICENSE-polygon-clipping.txt`); unisce i pezzi di tile di un edificio evidenziato in mappa, caricato al primo passaggio del mouse.
 
 ## Font
 
