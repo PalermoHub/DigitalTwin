@@ -29,14 +29,14 @@ const allarga = ([o, s, e, n], metri) => {
   return [o - dLng, s - dLat, e + dLng, n + dLat];
 };
 
-const riga = (etichetta, valore, campione) => ({ etichetta, valore, ...(campione ? { campione } : {}) });
+const riga = (etichetta, valore, campione, barra) => ({ etichetta, valore, ...(campione ? { campione } : {}), ...(barra != null ? { barra } : {}) });
 
 function gruppoForma(geom) {
   const f = formaLotto(geom);
   if (!f) return null;
-  return { titolo: 'Forma del lotto', righe: [
-    riga('Compattezza', num(f.compattezza, 2)),
-    riga('Rapporto lati', num(f.rapporto, 2)),
+  return { titolo: 'Forma del lotto', esteso: true, righe: [
+    riga('Compattezza', num(f.compattezza, 2), null, f.compattezza),
+    riga('Rapporto lati', num(f.rapporto, 2), null, f.rapporto),
     riga('Perimetro', `${num(f.perimetro)} m`),
     riga('Rettangolo minimo', `${num(f.lungo)} × ${num(f.corto)} m`),
     riga('Forma', t(`territorio.forma.${f.esito}`)),
@@ -49,7 +49,7 @@ function gruppoDimensione(dim) {
   const righe = [];
   if (dim?.foglio) righe.push(riga(t('territorio.dim.foglio', { foglio: dim.foglio.foglio }), frasePercentile(dim.foglio.p, dim.foglio.n, dim.foglio.mediana)));
   if (dim?.palermo) righe.push(riga('Tutta Palermo', t('territorio.dim.palermo', { p: num(Math.round(dim.palermo.p)), med: num(dim.palermo.mediana) })));
-  return righe.length ? { titolo: 'Dimensione rispetto alle altre', righe } : null;
+  return righe.length ? { titolo: 'Dimensione rispetto alle altre', esteso: true, righe } : null;
 }
 
 function gruppoIntorno(intorno) {
@@ -61,7 +61,7 @@ function gruppoIntorno(intorno) {
     riga(t('territorio.intorno.entro', { r: RAGGIO_M, cosa: t('territorio.intorno.civici') }), String(intorno.civici)),
   ];
   if (intorno.lineare) righe.push(riga('Vincolo lineare più vicino', `${num(intorno.lineare.d)} m${intorno.lineare.tipo ? ` (${intorno.lineare.tipo})` : ''}`));
-  return { titolo: 'Intorno', righe };
+  return { titolo: 'Intorno', esteso: true, righe };
 }
 
 // Zone PRG (o vincoli areali) che intersecano la particella: m² riportati alla superficie ufficiale `m2`
@@ -85,7 +85,7 @@ function gruppiZonizzazione(geomUnita, pezziZto, pezziVa, m2, dati, foglio) {
     gruppi.push({ titolo: 'Particella per zona PRG', righe });
   }
   const dim = dimensioneRispetto(m2, dati, { foglio, zto: codici });
-  if (dim?.zto.length) gruppi.push({ titolo: 'Dimensione rispetto alle altre', righe: dim.zto.map(r => riga(t('territorio.dim.zonaPrg', { codice: r.codice }), frasePercentile(r.p, r.n, r.mediana))) });
+  if (dim?.zto.length) gruppi.push({ titolo: 'Dimensione rispetto alle altre', esteso: true, righe: dim.zto.map(r => riga(t('territorio.dim.zonaPrg', { codice: r.codice }), frasePercentile(r.p, r.n, r.mediana))) });
   const va = zone(geomUnita, pezziVa, p => p.properties.tipo || 'Vincolo areale', m2);
   if (zz) { // senza zone PRG disegnate i tile non sono arrivati: nemmeno per i vincoli si può dire «libera»
     const vincolata = va ? Math.min(m2, m2 - va.fuoriM2) : 0;

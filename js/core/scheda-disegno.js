@@ -32,6 +32,12 @@ function disegnaRiga(r) {
     return riga;
   }
   riga.append(el('span', 'scheda-et', tl(r.etichetta)));
+  if (r.barra != null) { // barra 0–1 tra etichetta e valore (es. compattezza del lotto)
+    const traccia = el('span', 'scheda-barra'), riempi = el('i');
+    riempi.style.width = `${Math.min(Math.max(r.barra, 0), 1) * 100}%`;
+    traccia.append(riempi);
+    riga.append(traccia);
+  }
   if (r.tel) { // numero di telefono: su telefono un tocco apre la tastiera di chiamata con il numero già composto, altrove resta testo
     const cifre = String(r.tel).replace(/[^\d+]/g, '');
     const chiamabile = cifre && globalThis.matchMedia?.('(pointer: coarse)')?.matches;
@@ -110,6 +116,7 @@ function rendiEvidenziabile(box, g) {
 
 function disegnaGruppo(g) {
   const box = el('div', 'scheda-gruppo');
+  if (g.esteso) box.classList.add('scheda-esteso');
   if (g.evidenzia) rendiEvidenziabile(box, g);
   if (g.titolo) box.append(el('h4', null, tl(g.titolo)));
   const { presenti, mancanti } = separaMancanti(g.righe);
@@ -249,6 +256,30 @@ export function creaPulsanteBordi(vai) {
   return b;
 }
 
+// Switch «Dettagli» delle card con informazioni di approfondimento (gruppi `esteso`): spento = vista semplice, solo l'essenziale.
+// Vale per tutte le card aperte e si ricorda tra una scheda e l'altra; la stampa e il PDF mostrano sempre tutto.
+const CHIAVE_DETTAGLI = 'scheda-dettagli';
+const leggiDettagli = () => { try { return localStorage.getItem(CHIAVE_DETTAGLI) !== '0'; } catch { return true; } }; // acceso finché l'utente non lo spegne
+function applicaDettagli(acceso) {
+  document.documentElement.dataset.schedaVista = acceso ? 'dettagliata' : 'semplice';
+  for (const b of document.querySelectorAll('.scheda-dettagli')) b.setAttribute('aria-checked', String(acceso));
+}
+export function creaInterruttoreDettagli() {
+  const b = el('button', 'scheda-dettagli');
+  b.type = 'button';
+  b.setAttribute('role', 'switch');
+  b.title = tr('scheda.dettagliTitolo');
+  b.append(el('span', 'scheda-dettagli-testo', tr('scheda.dettagli')), el('i', 'scheda-dettagli-pallino'));
+  b.setAttribute('aria-checked', String(leggiDettagli()));
+  b.addEventListener('click', () => {
+    const acceso = b.getAttribute('aria-checked') !== 'true';
+    try { localStorage.setItem(CHIAVE_DETTAGLI, acceso ? '1' : '0'); } catch { /* storage non disponibile: vale per questa scheda */ }
+    applicaDettagli(acceso);
+  });
+  applicaDettagli(leggiDettagli());
+  return b;
+}
+
 export function disegnaSezione(s, i) {
   const titolo = el('h3');
   if (s.icona) titolo.append(icona(s.icona));
@@ -270,7 +301,11 @@ export function disegnaSezione(s, i) {
   if (s.testo) corpo.push(el('p', 'scheda-testo', tl(s.testo)));
   corpo.push(...s.gruppi.map(disegnaGruppo));
   if (s.miniatura) corpo.push(disegnaMiniatura(s.miniatura, s.titolo));
-  if (s.dinamico) corpo.push(s.dinamico()); // contenuto interattivo costruito dal layer (es. orari con selettore del giorno)
+  if (s.dinamico) { // contenuto interattivo costruito dal layer (es. orari con selettore del giorno)
+    const dinamico = s.dinamico();
+    if (s.dinamicoEsteso) { const involucro = el('div', 'scheda-esteso'); involucro.append(dinamico); corpo.push(involucro); } else corpo.push(dinamico);
+  }
+  if (s.gruppi.some(g => g.esteso) || s.dinamicoEsteso) corpo.unshift(creaInterruttoreDettagli());
   if (s.accordion) corpo.push(disegnaAccordion(s.accordion));
   for (const l of [].concat(s.link ?? [])) corpo.push(disegnaLink(l));
   if (s.nota) corpo.push(el('p', 'scheda-nota', tl(s.nota)));
