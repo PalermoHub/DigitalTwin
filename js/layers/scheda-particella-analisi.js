@@ -9,6 +9,7 @@ import { nomeUso } from '../core/etichette-campi.js';
 import { estremi } from '../core/scheda-pdf-geom.js';
 import { urbanisticaAttiva } from '../core/scheda-pdf-modello.js';
 import { localeIntl, t } from '../core/i18n.js';
+import { analisiExtra } from './scheda-particella-extra.js';
 
 const filtro = (foglio, particella) => ['all', ['==', ['to-string', ['get', 'Foglio']], String(foglio)], ['==', ['to-string', ['get', 'Paricella']], String(particella)]];
 
@@ -190,7 +191,7 @@ function evidenziaEdificio(map, geoms) {
 }
 
 // { gruppo, nota } da aggiungere alla voce della particella, oppure null se il percorso Urbanistica non è attivo o la mappa non basta
-export function analisiParticella(map, foglio, particella) {
+export function analisiParticella(map, foglio, particella, { zoneOmi = [] } = {}) {
   if (!map || !urbanisticaAttiva()) return null;
   const pezzi = pezziParticella(map, foglio, particella);
   if (!pezzi.length) return null;
@@ -198,7 +199,8 @@ export function analisiParticella(map, foglio, particella) {
   const a = analizzaParticella(geom, pezziEdifici(map, estremi([geom])), { pezziUniti, supMq: pezzi.find(f => Number(f.properties?.sup_mq) > 0)?.properties.sup_mq });
   if (!a) return null;
   const { gruppo, avvisi } = gruppoAnalisi(a, particella);
-  return { gruppo, nota: avvisi.join(' '), dinamico: a.n || a.sagoma.particella.length ? () => {
+  const extra = analisiExtra(map, { geom, pezziUniti, foglio, particella, m2: a.m2, zoneOmi });
+  return { gruppo, extra, nota: [...avvisi, extra.nota].filter(Boolean).join(' '), dinamico: a.n || a.sagoma.particella.length ? () => {
       const f = document.createDocumentFragment();
       const s = creaStatistiche(statisticheEdifici(a.edifici)), g = creaSagoma(a.sagoma, i => evidenziaEdificio(map, i == null ? null : a.sagoma.edifici[i].geoms));
       if (s) f.append(s);

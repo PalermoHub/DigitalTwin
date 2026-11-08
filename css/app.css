@@ -2678,3 +2678,14 @@ a.scheda-tel { min-height: 40px; }
 .part-st-traccia { height: 8px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; }
 .part-st-traccia i { display: block; height: 100%; border-radius: inherit; }
 .part-st-val { font-weight: 600; white-space: nowrap; text-align: right; }
+
+/* grafico delle quotazioni OMI (scheda-omi-grafico.js): intervalli min–max di vendita e affitto */
+.omi-gr { margin-top: 6px; }
+.omi-gr-titolo { margin: 0; font-size: var(--fs-xs); font-weight: 600; color: var(--text-muted); }
+.omi-gr-testa { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; font-size: var(--fs-sm); font-weight: 600; }
+.omi-gr-riga { display: grid; grid-template-columns: 4.5em 1fr auto; align-items: center; gap: 6px; margin-top: 3px; font-size: var(--fs-xs); }
+.omi-gr-riga em { font-style: normal; color: var(--text-muted); }
+.omi-gr-riga small { white-space: nowrap; font-weight: 600; }
+.omi-gr-traccia { position: relative; height: 8px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; }
+.omi-gr-traccia i { position: absolute; top: 0; bottom: 0; border-radius: 999px; }
+.omi-gr-nota { margin: 8px 0 0; font-size: var(--fs-xs); color: var(--text-muted); }

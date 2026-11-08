@@ -2,6 +2,7 @@
 // formati di buildOMIPopup (pmtiles/js/catasto_script.js). Il tile ha una feature per tipologia.
 import { t, tl, localeIntl } from '../core/i18n.js';
 import { STILE_OMI } from './stile-omi.js';
+import { datiGraficoOmi, creaGraficoTipologia } from './scheda-omi-grafico.js';
 
 const pulisci = s => String(s ?? '').replace(/^'|'$/g, '').trim();
 const SUPERFICIE = { L: 'sup.lorda', N: 'sup.netta' };
@@ -29,7 +30,22 @@ const campioneDi = colore => (colore ? { legenda: 'legenda-omi', colore } : unde
 
 const zona0 = p => p.Zona_OMI || p.Zona || '—';
 
-function voceZona(features) {
+// Rendimento lordo (%) = affitto annuo / valore di vendita, sui punti medi degli intervalli; null se manca un dato
+export function rendimentoLordo(p) {
+  const cMin = numero(p.Compr_min), cMax = numero(p.Compr_max), lMin = numero(p.Loc_min), lMax = numero(p.Loc_max);
+  if ([cMin, cMax, lMin, lMax].some(v => v == null) || cMin + cMax <= 0) return null;
+  return ((lMin + lMax) / 2 * 12) / ((cMin + cMax) / 2) * 100;
+}
+
+// Tipologie della zona (una per nome, la stessa feature può arrivare da più tile) coi numeri per il grafico
+function visteTipologie(features) {
+  const viste = new Set();
+  return features.filter(p => { const n = pulisci(p.Descr_Tipologia); return viste.has(n) ? false : viste.add(n); })
+    .map(p => ({ nome: pulisci(p.Descr_Tipologia), cMin: numero(p.Compr_min), cMax: numero(p.Compr_max), lMin: numero(p.Loc_min), lMax: numero(p.Loc_max), rendimento: rendimentoLordo(p) }));
+}
+
+// dimensione: { p, n, mediana } = posizione della particella cliccata tra quelle della zona (da scheda-particella-extra.js)
+function voceZona(features, dimensione) {
   const p0 = features[0];
   const fascia = p0.Fascia || p0.Fasce || '—';
   const fasciaDescr = pulisci(p0.Fascia_Descr);
@@ -41,7 +57,10 @@ function voceZona(features) {
   ];
   if (descrizione) righe.push({ etichetta: 'Descrizione', valore: descrizione });
   if (p0.Microzona != null && p0.Microzona !== '') righe.push({ etichetta: 'Microzona', valore: String(p0.Microzona) });
+  if (dimensione) righe.push({ etichetta: 'Particella nella zona', valore: t('territorio.dim.riga', { p: it(Math.round(dimensione.p)), n: it(dimensione.n), med: it(dimensione.mediana) }) });
 
+  const grafico = datiGraficoOmi(visteTipologie(features));
+  const rigaGrafico = nome => grafico?.righe.find(r => r.nome === nome);
   const visti = new Set();
   const elementi = [];
   for (const p of features) {
@@ -56,7 +75,9 @@ function voceZona(features) {
       righe: [
         { etichetta: 'Compravendita', valore: intervallo(p.Compr_min, p.Compr_max, '€/m²', SUPERFICIE[p.Sup_NL_compr]) },
         { etichetta: 'Locazione', valore: intervallo(p.Loc_min, p.Loc_max, '€/m²/mese', SUPERFICIE[p.Sup_NL_loc]) },
+        ...(rendimentoLordo(p) != null ? [{ etichetta: 'Rendimento lordo', valore: `${rendimentoLordo(p).toLocaleString(localeIntl(), { maximumFractionDigits: 1, minimumFractionDigits: 1 })}%` }] : []),
       ],
+      ...(rigaGrafico(titolo) ? { dinamico: () => creaGraficoTipologia(rigaGrafico(titolo), grafico) } : {}),
     });
   }
 
@@ -83,12 +104,12 @@ function voceZona(features) {
 }
 
 // proprieta: le properties delle feature OMI trovate nel punto
-export function vociOmi(proprieta) {
+export function vociOmi(proprieta, { dimensione } = {}) {
   const perZona = new Map();
   for (const p of proprieta) {
     const z = p.Zona_OMI || p.Zona || 'unknown';
     if (!perZona.has(z)) perZona.set(z, []);
     perZona.get(z).push(p);
   }
-  return [...perZona.values()].map(voceZona);
+  return [...perZona].map(([zona, features]) => voceZona(features, dimensione?.get(zona)));
 }

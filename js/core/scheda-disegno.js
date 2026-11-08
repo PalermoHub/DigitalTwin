@@ -168,6 +168,7 @@ export function disegnaAccordion(a) {
     tipo.append(sommario);
     if (e.strato) tipo.dataset.strato = e.strato;
     for (const r of e.righe) tipo.append(disegnaRiga(r));
+    if (e.dinamico) tipo.append(e.dinamico()); // contenuto costruito dal layer dentro la tipologia (es. grafico OMI)
     if (e.miniatura) tipo.addEventListener('toggle', () => { if (tipo.open && !tipo.querySelector('.scheda-mini')) tipo.append(disegnaMiniatura(e.miniatura, e.titolo)); }); // le tessere si scaricano solo all'apertura
     radice.append(tipo);
   }

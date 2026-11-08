@@ -10,6 +10,8 @@ Lo strato «Catasto: particelle» (gruppo Territorio, visibile da zoom 12) mostr
 
 Un clic apre la scheda: nella sezione «Strumenti urbanistici» compare la particella con foglio e numero e il collegamento alla visura. Per cercarne una direttamente si usa il tab «Filtri» (foglio e numero) oppure il campo di ricerca.
 
+Con uno strato del percorso Urbanistica acceso, la scheda della particella aggiunge: la **forma del lotto** (compattezza, rapporto tra i lati, perimetro, rettangolo minimo), la **dimensione rispetto alle altre** (per foglio e su tutta Palermo, da statistiche sulle superfici del catasto) e l'**intorno** (confinanti, particelle e civici entro 100 m, vincolo lineare più vicino). Nella sezione «Zonizzazione» compaiono la ripartizione della particella nelle zone del PRG (m² e quota), la sua dimensione rispetto alle altre della stessa zona e la quota coperta da vincoli areali; nel tab «Mercato», sotto le quotazioni OMI, la posizione della particella tra quelle della zona OMI e il rendimento lordo di ogni tipologia (affitto annuo diviso valore di vendita, sui punti medi). Intorno e vincoli lineari usano solo le tessere già caricate in mappa.
+
 Con acceso uno strato del percorso Urbanistica (PRG, vincoli, catasto, OMI, civici), nel tab «Strumenti urbanistici» compare il pulsante «Scarica scheda PDF»: crea un A4 con lo stralcio di mappa, foglio e particella, zonizzazione, vincoli e quotazioni OMI del punto cliccato.
 
 Il dato catastale è solo informativo: non sostituisce visure o certificati ufficiali.

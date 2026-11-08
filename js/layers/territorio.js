@@ -8,6 +8,8 @@ import { t, tl } from '../core/i18n.js';
 import { creaLegendaZonizzazione, creaLegendaVincoli, campioneZona, campioneAmbito, campioneVincolo } from './legenda-prg.js';
 import { registraTooltipStrati, campioneTooltip } from '../core/tooltip.js';
 import { analisiParticella } from './scheda-particella-analisi.js';
+import { precaricaStatisticheParticelle } from '../core/particella-dati.js';
+import { caricaUnione } from '../core/edificio-contorno.js';
 
 // Come nell'app originale (catasto-app): la vestizione di PRG, PPE e vincoli è fatta di tile
 // raster già pubblicati; i poligoni vettoriali restano trasparenti e servono solo ai dati
@@ -149,6 +151,9 @@ export default {
   },
   aggiungiLayer(map) {
     mappa = map;
+    // per l'analisi della particella: statistiche delle superfici e libreria delle intersezioni, pronte prima del primo clic
+    precaricaStatisticheParticelle();
+    caricaUnione();
     // vestizione raster (sotto ai vettoriali)
     for (const id of RASTER) {
       if (map.getSource(`${id}-r`)) map.addLayer({ id, type: 'raster', source: `${id}-r`, layout: nascosto });
@@ -246,6 +251,7 @@ export default {
              'omi-hit', 'immobili-hit', 'civici-hit'],
     voci(trovati, lngLat) {
       const voci = [];
+      let extra = null; // analisi della particella oltre a superficie ed edifici (vedi scheda-particella-extra.js), da distribuire sulle card
 
       const civico = piuVicino(trovati, 'civici-hit', lngLat);
       if (civico) {
@@ -257,10 +263,12 @@ export default {
       const particella = primo(trovati, 'catasto-hit');
       if (particella) {
         const p = particella.properties;
-        const analisi = analisiParticella(mappa, p.Foglio, p.Paricella); // solo con uno strato del percorso Urbanistica acceso
+        const proprietaOmi = tutti(trovati, 'omi-hit').map(f => f.properties);
+        const analisi = analisiParticella(mappa, p.Foglio, p.Paricella, { zoneOmi: [...new Set(proprietaOmi.map(o => o.Zona_OMI || o.Zona).filter(Boolean))] }); // solo con uno strato del percorso Urbanistica acceso
+        extra = analisi?.extra ?? null;
         voci.push({
           chiave: 'particella', peso: 20, strato: 'catasto', vai: { foglio: String(p.Foglio), numero: String(p.Paricella) }, titolo: 'Particella catastale', icona: 'particella',
-          gruppi: [{ righe: conCampione(righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]), 'Particella', { legenda: 'legenda-catasto', classe: 'catasto-particella' }) }, ...(analisi?.gruppo ? [analisi.gruppo] : [])],
+          gruppi: [{ righe: conCampione(righe([['Foglio', p.Foglio], ['Particella', p.Paricella]]), 'Particella', { legenda: 'legenda-catasto', classe: 'catasto-particella' }) }, ...(analisi?.gruppo ? [analisi.gruppo] : []), ...(extra?.particella ?? [])],
           ...(analisi?.nota ? { nota: analisi.nota } : {}),
           ...(analisi?.dinamico ? { dinamico: analisi.dinamico } : {}),
           legale: true,
@@ -279,7 +287,7 @@ export default {
         const gruppo = zona ? conCampione(righe([['Zona', zona.ZTO], ['Descrizione', zona.DESCRIZION]]), 'Zona', campioneZona(zona.ZTO)) : [];
         if (ns) gruppo.push({ etichetta: 'Ambito', valore: 'Netto storico', campione: campioneAmbito('Netto storico') });
         if (cs) gruppo.push({ etichetta: 'Ambito', valore: 'Centro storico', campione: campioneAmbito('Centro storico') }, { etichetta: 'Strumento', valore: 'PPE' });
-        voci.push({ chiave: 'zonizzazione', peso: 40, strato: 'prg', titolo: 'Zonizzazione (PRG 2004)', icona: 'mappa', gruppi: [{ righe: gruppo }],
+        voci.push({ chiave: 'zonizzazione', peso: 40, strato: 'prg', titolo: 'Zonizzazione (PRG 2004)', icona: 'mappa', maxRighe: 4, gruppi: [{ righe: gruppo }, ...(extra?.zonizzazione ?? [])],
           legale: true, nota: NOTA_PRG, link: { testo: 'Catasto, PRG e vincoli su mappa', icona: 'esterno', url: 'https://palermohub.opendatasicilia.it/prg_part_catastali.html' } });
       }
 
@@ -310,7 +318,7 @@ export default {
           gruppi: [{ righe: righe([['Tipo', p.TIPO], ['Categoria', p.CATEGORIA], ['Indirizzo', p.INDIRIZZO]]) }] });
       }
 
-      voci.push(...vociOmi(tutti(trovati, 'omi-hit').map(f => f.properties)));
+      voci.push(...vociOmi(tutti(trovati, 'omi-hit').map(f => f.properties), { dimensione: extra?.dimensioneOmi }));
       return voci;
     },
   },
