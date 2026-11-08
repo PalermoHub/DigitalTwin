@@ -18,3 +18,5 @@ Sotto c'è l'elenco a fisarmonica «Seleziona una tipologia per vedere compraven
 Accanto agli intervalli compare «sup.lorda» o «sup.netta», che dice se la quotazione è riferita alla superficie lorda o netta. Dove il dato manca c'è «—».
 
 In fondo c'è il link «Catasto e PRG su mappa» (PalermoHub) e la fonte con il semestre (per esempio «OMI 2025 S2»). Le quotazioni sono intervalli indicativi dell'Osservatorio del Mercato Immobiliare dell'Agenzia delle Entrate, non prezzi di vendita di un immobile.
+
+Sotto le righe compare il **grafico delle quotazioni per tipologia**: per ognuna l'intervallo minimo–massimo di vendita (€/m²) e di affitto (€/m² al mese), su scale separate, e il **rendimento lordo** (affitto annuo diviso valore di vendita, sui punti medi). L'icona «i» spiega il grafico. Se è stata cliccata una particella con un livello del percorso Urbanistica acceso, la scheda dice anche quanto la particella è grande rispetto a quelle della zona OMI.

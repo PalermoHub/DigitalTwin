@@ -10,6 +10,8 @@ The «Cadastre: parcels» layer (Territory group, visible from zoom 12) shows th
 
 A click opens the profile: in the «Planning tools» section the parcel appears with sheet and number and the link to the cadastral extract. To search for one directly, use the «Filters» tab (sheet and number) or the search field.
 
+With a layer of the Urban planning route switched on, the parcel profile also shows: the **lot shape** (compactness, side ratio, perimeter, minimum rectangle), the **size compared with the others** (by sheet and across Palermo, from statistics on the cadastral areas) and the **surroundings** (adjoining parcels, parcels and street numbers within 100 m, nearest linear constraint). The «Zoning» section shows how the parcel splits among PRG zones (m² and share), its size compared with the others in the same zone and the share covered by area constraints; the «Market» tab, under the OMI values, shows where the parcel stands among those of its OMI zone and the gross yield of each type (annual rent divided by sale value, on the midpoints). Surroundings and linear constraints use only the tiles already loaded on the map.
+
 With a layer of the Urban planning route switched on (zoning plan, constraints, cadastre, OMI, street numbers), the «Planning tools» tab shows a «Download PDF profile» button: it creates an A4 sheet with the map excerpt, sheet and parcel numbers, zoning, constraints and OMI values of the clicked point.
 
 The cadastral data are informational only: they do not replace official extracts or certificates.

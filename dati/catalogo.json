@@ -2136,6 +2136,16 @@
   "epsg": 4326
  },
  {
+  "percorso": "catasto/analisi_particelle.json",
+  "tema": "catasto",
+  "formato": "json",
+  "byte": 13231,
+  "sha256": "501f37489e3f33e6f1f68d00a4fa2d15cdb716adf16580ecf9c64f03939e3573",
+  "fonte": "Elaborazione DigitalTwin Palermo sulle particelle catastali (SITR Sicilia e Agenzia delle Entrate): percentili delle superfici per foglio, zona PRG e zona OMI",
+  "data": "2026-09",
+  "licenza": "CC BY 4.0"
+ },
+ {
   "tipo": "tileset",
   "id": "prg-zto",
   "percorso": "tileset/prg-zto",

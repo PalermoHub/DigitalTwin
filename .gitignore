@@ -29,6 +29,9 @@ dati/*/
 # eccezione: Piano triennale dei lavori pubblici 2026-2028 (generato a mano da scripts/piano_triennale.py, vedi dati/piano-triennale/README.md)
 !dati/piano-triennale/
 !dati/pendolarismo/
+# eccezione: statistiche delle superfici delle particelle (percentili per foglio, zona PRG e zona OMI; da palermohub/pmtiles/tools/build_analisi_particelle.py)
+!dati/catasto/
+dati/catasto/*.pmtiles
 !dati/trend/
 # eccezione: isole di calore (piccolo, rigenerato da scripts/isole_calore.py)
 !dati/isole-calore/

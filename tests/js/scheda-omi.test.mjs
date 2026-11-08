@@ -29,13 +29,14 @@ test('una voce per zona, con badge e dati di zona una sola volta', () => {
 test('tipo prevalente come riassunto e una tipologia per elemento', () => {
   const { accordion } = vociOmi(P)[0];
   assert.equal(accordion.riassunto, 'Tipo prevalente: [20] Abitazioni civili');
-  assert.deepEqual(accordion.elementi[0], {
-    titolo: 'Abitazioni civili', stato: 'NORMALE', anteprima: '1350–2000 €/m²',
-    righe: [
-      { etichetta: 'Compravendita', valore: '1350 – 2000 €/m² (sup.lorda)' },
-      { etichetta: 'Locazione', valore: '4,5 – 6,4 €/m²/mese (sup.lorda)' },
-    ],
-  });
+  const { dinamico, righe, ...resto } = accordion.elementi[0];
+  assert.deepEqual(resto, { titolo: 'Abitazioni civili', stato: 'NORMALE', anteprima: '1350–2000 €/m²' });
+  assert.deepEqual(righe.slice(0, 2), [
+    { etichetta: 'Compravendita', valore: '1350 – 2000 €/m² (sup.lorda)' },
+    { etichetta: 'Locazione', valore: '4,5 – 6,4 €/m²/mese (sup.lorda)' },
+  ]);
+  assert.equal(righe[2].etichetta, 'Rendimento lordo'); // dopo gli intervalli, se i dati bastano
+  assert.equal(typeof dinamico, 'function'); // il grafico della tipologia
   assert.equal(accordion.elementi[1].righe[0].valore, '1100 – 1500 €/m² (sup.netta)');
 });
 
@@ -58,4 +59,24 @@ test('zone diverse → voci diverse; valori non numerici → trattino; nessuna f
   assert.equal(v[1].accordion.elementi[0].righe[0].valore, '—');
   assert.equal(v[1].accordion.elementi[0].anteprima, '');
   assert.deepEqual(vociOmi([]), []);
+});
+
+import { rendimentoLordo } from '../../js/layers/scheda-omi.js';
+import { datiGraficoOmi } from '../../js/layers/scheda-omi-grafico.js';
+
+test('rendimento lordo: affitto annuo / vendita sui punti medi; null senza dati', () => {
+  const y = rendimentoLordo(tip('Box', '1000', '2000', '5', '10'));
+  assert.ok(Math.abs(y - (7.5 * 12) / 1500 * 100) < 1e-9);
+  assert.equal(rendimentoLordo({ Compr_min: '1000', Compr_max: '2000' }), null);
+});
+
+test('dati del grafico: scale distinte, tipologie senza vendita escluse, dimensione e rendimento nelle righe', () => {
+  const g = datiGraficoOmi([{ nome: 'A', cMin: 1000, cMax: 2000, lMin: 4, lMax: 6, rendimento: 3 }, { nome: 'B', cMin: 500, cMax: 900, lMin: null, lMax: null, rendimento: null }, { nome: 'C', cMin: null, cMax: null }]);
+  assert.equal(g.righe.length, 2); assert.equal(g.maxVendita, 2000); assert.equal(g.maxAffitto, 6);
+  assert.equal(datiGraficoOmi([]), null);
+  const v = vociOmi(P, { dimensione: new Map([['B12', { p: 40, n: 1200, mediana: 150 }]]) })[0];
+  assert.ok(v.gruppi[0].righe.some(r => r.etichetta === 'Particella nella zona'));
+  assert.ok(v.accordion.elementi[0].righe.some(r => r.etichetta === 'Rendimento lordo'));
+  assert.equal(typeof v.accordion.elementi[0].dinamico, 'function');
+  assert.equal(v.dinamico, undefined);
 });

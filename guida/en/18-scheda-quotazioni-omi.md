@@ -18,3 +18,5 @@ Below there is the accordion list «Select a type to see sale and rent». The su
 Next to the ranges «sup.lorda» (gross area) or «sup.netta» (net area) appears, which says whether the quotation refers to the gross or the net area. Where the figure is missing there is «—».
 
 At the bottom there is the link «Cadastre and zoning plan on map» (PalermoHub) and the source with the half-year (for example «OMI 2025 S2»). The quotations are indicative ranges from the Osservatorio del Mercato Immobiliare of the Agenzia delle Entrate, not the sale prices of a property.
+
+Below the rows is the **chart of values by type**: for each type the minimum–maximum range of sale (€/m²) and rent (€/m² per month), on separate scales, and the **gross yield** (annual rent divided by sale value, on the midpoints). The «i» icon explains the chart. If a parcel was clicked with a layer of the Urban planning route on, the profile also says how large the parcel is compared with those of the OMI zone.
