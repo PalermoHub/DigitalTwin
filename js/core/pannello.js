@@ -62,7 +62,8 @@ const TAB_DIRETTI = new Set(['base', 'rndt', 'miei', 'filtri']);
 
 // Totale degli strati accesi (mostrato sul pulsante «Strati» di mobile)
 function aggiornaConteggio() {
-  const caselle = [...document.querySelectorAll('#pannello input[type=checkbox]:checked:not([data-filtro])')];
+  // gli interruttori del tab Opzioni non sono strati: non entrano nel conteggio né nei chip
+  const caselle = [...document.querySelectorAll('#pannello input[type=checkbox]:checked:not([data-filtro])')].filter(c => !c.closest('#gruppo-opzioni'));
   for (const el of document.querySelectorAll('#strati-attivi, .conta-strati')) {
     el.textContent = String(caselle.length);
     if (el.classList.contains('conta-strati')) el.hidden = caselle.length === 0; // il pallino sul tab Strati compare solo con strati accesi

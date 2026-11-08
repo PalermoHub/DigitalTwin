@@ -69,6 +69,7 @@ Parti dinamiche e comandi della scheda:
 | `53-video-della-guida.md` | I tre video che spiegano l'app: titoli, link YouTube, dove si aprono, quale guardare |
 | `54-talia-assistente.md` | Talia, l'assistente (il Chat bot): chi è, come si apre, cosa può fare |
 | `55-scheda-simulazione-mezzi.md` | Simulazione dei mezzi in movimento: treni, tram e autobus da orario; come attivarla, velocità, 2D e 3D, avvertenze |
+| `65-tab-opzioni.md` | Il tab Opzioni (ingranaggio): overlay informativi, raggio dei dintorni, selezione in mappa, valori iniziali e salvataggio |
 
 Per riprendere il lavoro: `RIPRESA.md`.
 

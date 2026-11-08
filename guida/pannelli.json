@@ -1,4 +1,5 @@
 {
  "49-catalogo-rndt.md": ["sinistra:rndt", "destra:rndt"],
- "52-scheda-layer-rndt-barra-sinistra.md": ["sinistra:rndt", "destra:rndt"]
+ "52-scheda-layer-rndt-barra-sinistra.md": ["sinistra:rndt", "destra:rndt"],
+ "65-tab-opzioni.md": ["sinistra:opzioni"]
 }
