@@ -25,5 +25,6 @@
  "49-catalogo-rndt.md": ["plugin:rndt-catalogo", "plugin:rndt-info"],
  "52-scheda-layer-rndt-barra-sinistra.md": ["plugin:rndt-catalogo", "plugin:rndt-info"],
  "50-geoimage.md": ["geoimage:cos-e", "geoimage:georeferenziare"],
- "51-pagine-privacy-lingua-e-offline.md": ["guida:telefono"]
+ "51-pagine-privacy-lingua-e-offline.md": ["guida:telefono"],
+ "65-tab-opzioni.md": ["guida:opzioni"]
 }

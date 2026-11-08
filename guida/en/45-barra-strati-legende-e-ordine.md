@@ -36,9 +36,12 @@ Typical questions: How do I find a layer among many? How do I turn off the toolt
 
 The field **«Search layer…»** filters the list; while the search is in progress nothing stays hidden in closed subgroups, so the layer found can be seen.
 
-Below there is the **«Information overlays»** menu with two switches:
+The interface settings are in the **«Options»** tab of the left-hand bar (gear icon; described in detail in `65-tab-opzioni.md`), not under «Search layer». It has three sections: **«Information overlays»**, **«Radius of the surroundings»** and **«Selection on the map»**. The choices stay saved in the browser until its data is cleared.
+
+The **«Information overlays»** section has three switches:
 - **«Map tooltips»**: the tooltip with the main data when the mouse passes over.
 - **«Legends on the map»**: if on, all the legends stay on the map; if off, each legend moves **under its own layer** in the Layers panel, as in GIS programs.
+- **«Live Zoom»**: if on, after a click the map zooms to the point by itself; if off, the click only centres the map.
 
 ---
 
