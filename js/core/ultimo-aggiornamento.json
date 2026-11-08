@@ -1,9 +1,9 @@
 {
  "data": "2026-11-08",
  "cosa": [
-  "Catalogo.json",
-  "Catasto: particelle (da zoom 12)",
-  "Valori OMI",
-  "Scheda particella catastale"
+  "Particella extra",
+  "Territorio",
+  "particella: analisi in scheda (forma, intorno, percentili) e grafici OMI dentro ogni tipologia",
+  "Catalogo.json"
  ]
 }
