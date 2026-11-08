@@ -29,13 +29,14 @@ test('una voce per zona, con badge e dati di zona una sola volta', () => {
 test('tipo prevalente come riassunto e una tipologia per elemento', () => {
   const { accordion } = vociOmi(P)[0];
   assert.equal(accordion.riassunto, 'Tipo prevalente: [20] Abitazioni civili');
-  assert.deepEqual(accordion.elementi[0], {
-    titolo: 'Abitazioni civili', stato: 'NORMALE', anteprima: '1350–2000 €/m²',
-    righe: [
-      { etichetta: 'Compravendita', valore: '1350 – 2000 €/m² (sup.lorda)' },
-      { etichetta: 'Locazione', valore: '4,5 – 6,4 €/m²/mese (sup.lorda)' },
-    ],
-  });
+  const { dinamico, righe, ...resto } = accordion.elementi[0];
+  assert.deepEqual(resto, { titolo: 'Abitazioni civili', stato: 'NORMALE', anteprima: '1350–2000 €/m²' });
+  assert.deepEqual(righe.slice(0, 2), [
+    { etichetta: 'Compravendita', valore: '1350 – 2000 €/m² (sup.lorda)' },
+    { etichetta: 'Locazione', valore: '4,5 – 6,4 €/m²/mese (sup.lorda)' },
+  ]);
+  assert.equal(righe[2].etichetta, 'Rendimento lordo'); // dopo gli intervalli, se i dati bastano
+  assert.equal(typeof dinamico, 'function'); // il grafico della tipologia
   assert.equal(accordion.elementi[1].righe[0].valore, '1100 – 1500 €/m² (sup.netta)');
 });
 
