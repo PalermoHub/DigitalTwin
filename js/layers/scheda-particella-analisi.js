@@ -195,7 +195,7 @@ export function analisiParticella(map, foglio, particella) {
   const pezzi = pezziParticella(map, foglio, particella);
   if (!pezzi.length) return null;
   const { geom, pezziUniti } = geometriaParticella(pezzi);
-  const a = analizzaParticella(geom, pezziEdifici(map, estremi([geom])), { pezziUniti });
+  const a = analizzaParticella(geom, pezziEdifici(map, estremi([geom])), { pezziUniti, supMq: pezzi.find(f => Number(f.properties?.sup_mq) > 0)?.properties.sup_mq });
   if (!a) return null;
   const { gruppo, avvisi } = gruppoAnalisi(a, particella);
   return { gruppo, nota: avvisi.join(' '), dinamico: a.n || a.sagoma.particella.length ? () => {

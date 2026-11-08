@@ -71,13 +71,14 @@ function areaUnione(poligoni, r) {
 /* particella: geometria GeoJSON intera (Polygon/MultiPolygon).
    pezzi: [{ id, geometry, altezza?, pop? }]: i tile possono tagliare un edificio in più pezzi con lo stesso id (si ricompongono).
    Ritorna { m2, copertoM2, copertura (0-100), n, nCavallo, altezze: { min, med, max, noti, ignote }, volumeM3, residenti } o null. */
-export function analizzaParticella(particella, pezzi, { pezziUniti = false } = {}) {
+export function analizzaParticella(particella, pezzi, { pezziUniti = false, supMq = null } = {}) {
+  // supMq: area esatta precalcolata nei tile (campo sup_mq, geometria intera); se manca resta la misura sulla geometria disegnata
   // pezziUniti: la particella è il MultiPolygon dei pezzi di tile, che si sovrappongono nel buffer: l'area si misura sull'unione
   const [o, s, e, n] = estremi([particella]);
   if (![o, s, e, n].every(Number.isFinite)) return null;
   const lng0 = (o + e) / 2, lat0 = (s + n) / 2;
   const pp = proietta(particella, lng0, lat0), rp = riquadro(pp);
-  const m2 = pezziUniti ? areaUnione(pp, rp) : areaMq(particella);
+  const m2 = Number(supMq) > 0 ? Number(supMq) : pezziUniti ? areaUnione(pp, rp) : areaMq(particella);
   if (!(m2 > 0)) return null;
 
   const perId = new Map();

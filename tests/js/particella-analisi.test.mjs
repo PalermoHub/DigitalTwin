@@ -95,3 +95,9 @@ test('la sagoma elenca gli edifici contati, con il flag a cavallo', () => {
   assert.equal(a.sagoma.edifici.length, 2);
   assert.deepEqual(a.sagoma.edifici.map(e => e.cavallo), [false, true]);
 });
+
+test('supMq dei tile ha la precedenza sulla misura geometrica', () => {
+  const part = rett(0, 0, 40, 40);
+  assert.equal(analizzaParticella(part, [], { supMq: 1234.5 }).m2, 1234.5);
+  assert.ok(Math.abs(analizzaParticella(part, [], { supMq: 0 }).m2 - 1600) < 50); // 0 o assente: misura sulla geometria
+});
