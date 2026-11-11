@@ -86,7 +86,7 @@ function voceZona(features, dimensione) {
   const grezzi = { zona: String(zona0(p0)), fascia: fasciaDescr || fascia, cMin: numero(prev.Compr_min), cMax: numero(prev.Compr_max), lMin: numero(prev.Loc_min), lMax: numero(prev.Loc_max), sup: SUPERFICIE[prev.Sup_NL_compr] ? tl(SUPERFICIE[prev.Sup_NL_compr]) : '' };
   const zona = zona0(p0);
   const codice = p0.Cod_tip_prev || '';
-  const semestre = p0.Anno_Semestre ? `OMI ${p0.Anno_Semestre.replace(' / ', ' S')}` : 'OMI 2025 S2';
+  const semestre = p0.Anno_Semestre ? `OMI ${p0.Anno_Semestre.replace(' / ', ' S')}` : 'OMI 2026 S1';
   return {
     chiave: `omi-${zona}`,
     peso: 60,

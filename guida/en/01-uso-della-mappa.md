@@ -74,7 +74,7 @@ There are fourteen paths:
 - **A city in transformation**: Three-year public works plan 2026-2028, NRRP projects, Public works, Population trend 2011-2023
 - **Public works in the pipeline**: Three-year public works plan 2026-2028, Public works, NRRP projects, Neighbourhoods
 - **Heritage and greenery**: Monuments, Monumental trees, Public drinking fountains, Former Noviziato dei Crociferi in 3D
-- **Urban planning**: Zoning plan 2004: zoning and PPE, Zoning plan 2004: constraints, Cadastre: parcels, OMI zones 2025, House numbers
+- **Urban planning**: Zoning plan 2004: zoning and PPE, Zoning plan 2004: constraints, Cadastre: parcels, OMI zones 2026, House numbers
 - **Road safety**: Accident hotspots, The 20 most dangerous streets, Accidents per km on roads, Accidents
 - **Who commutes**: Commuting to and from Palermo 2021, Population by section, Metro line, Stops
 - **An accessible city**: Architectural barriers, Municipal offices (sites), Stops, Municipal schools and nurseries

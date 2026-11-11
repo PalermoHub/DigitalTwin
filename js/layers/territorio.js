@@ -40,7 +40,7 @@ function creaLegendaOmi(_gruppo, map) {
   legendaOmi.className = 'legenda legenda-omi lg-omi';
   legendaOmi.hidden = true;
   const titolo = document.createElement('strong');
-  titolo.textContent = tl('Zone OMI 2025 (fascia)');
+  titolo.textContent = tl('Zone OMI 2026 (fascia)');
   legendaOmi.append(titolo);
   // Il filtro sta sui codici zona; il clic su una zona o su una fascia (tutte le sue zone) seleziona, vedi dopoClicMultiplo.
   let attive = new Set(CODICI_OMI);
@@ -138,7 +138,7 @@ export default {
   aggiungiSorgenti(map) {
     map.addSource('catasto', { type: 'vector', url: pmt('catasto/particelle.pmtiles') });
     map.addSource('prg', { type: 'vector', url: pmt('prg-vincoli/prg.pmtiles') });
-    map.addSource('omi', { type: 'vector', url: pmt('civici-omi/Zone_OMI_2025_II.pmtiles') });
+    map.addSource('omi', { type: 'vector', url: pmt('civici-omi/Zone_OMI_2026_I.pmtiles') });
     map.addSource('immobili', { type: 'vector', url: pmt('civici-omi/immobili_comunali_2024.pmtiles') });
     map.addSource('civici', { type: 'vector', url: pmt('civici-omi/civici_0226.pmtiles') });
     for (const id of RASTER) {
@@ -236,7 +236,7 @@ export default {
       suCambio(attivo) { if (legendaPrg) legendaPrg.hidden = !attivo; } },
     { id: 'vincoli', legendaPannello: '.lg-vincoli', etichetta: 'PRG 2004: vincoli', layers: ['prg-va', 'prg-vl'], attivo: false,
       suCambio(attivo) { if (legendaVincoli) legendaVincoli.hidden = !attivo; } },
-    { id: 'omi', legendaPannello: '.lg-omi', etichetta: 'Zone OMI 2025', layers: ['omi', 'omi-line'], attivo: false,
+    { id: 'omi', legendaPannello: '.lg-omi', etichetta: 'Zone OMI 2026', layers: ['omi', 'omi-line'], attivo: false,
       suCambio(attivo) { if (legendaOmi) legendaOmi.hidden = !attivo; } },
     { id: 'civici', etichetta: 'Numeri civici (da zoom 14)', layers: ['civici'], attivo: false },
     // ultimo del modulo: il sottogruppo prosegue con lo strato «Immobili dichiarati al MEF» (js/layers/mef-immobili.js, che segue in MODULI)

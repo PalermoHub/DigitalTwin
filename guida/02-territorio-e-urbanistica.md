@@ -48,7 +48,7 @@ Parole chiave: OMI, quotazioni, prezzi case, affitto, compravendita, €/m², Ag
 
 Domande tipiche: Quanto costa una casa in questa zona? Cos'è una zona OMI?
 
-Lo strato «Zone OMI 2025» (secondo semestre 2025) mostra le zone dell'Osservatorio del Mercato Immobiliare dell'Agenzia delle Entrate. La scheda, nella sezione «Mercato», riporta zona, fascia con descrizione, microzona e gli intervalli di quotazione: compravendita in €/m² e locazione in €/m² al mese, per tipologia. Sono quotazioni indicative, non prezzi di transazione né perizie.
+Lo strato «Zone OMI 2026» (primo semestre 2026) mostra le zone dell'Osservatorio del Mercato Immobiliare dell'Agenzia delle Entrate. La scheda, nella sezione «Mercato», riporta zona, fascia con descrizione, microzona e gli intervalli di quotazione: compravendita in €/m² e locazione in €/m² al mese, per tipologia. Sono quotazioni indicative, non prezzi di transazione né perizie.
 
 ---
 

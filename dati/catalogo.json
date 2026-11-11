@@ -230,12 +230,12 @@
   "licenza": "CC BY 4.0"
  },
  {
-  "percorso": "civici-omi/Zone_OMI_2025_II.pmtiles",
+  "percorso": "civici-omi/Zone_OMI_2026_I.pmtiles",
   "tema": "civici-omi",
   "formato": "pmtiles",
-  "byte": 4886206,
-  "sha256": "bedfdf20105363e4c5409698c756b6fdffb6dc55fad0d5baf381bc8575e0267b",
-  "url": "https://palermohub.github.io/PRG2004/civici/Zone_OMI_2025_II.pmtiles",
+  "byte": 5166744,
+  "sha256": "66561b86df4c3715af0483176a2bcd8aebd313fa54e76dd41a11c68d5030eff8",
+  "url": "https://palermohub.github.io/PRG2004/civici/Zone_OMI_2026_I.pmtiles",
   "layers": [
    {
     "nome": "Zone_OMI_2025_II",
@@ -269,10 +269,7 @@
     "minzoom": 12,
     "maxzoom": 18
    }
-  ],
-  "fonte": "Agenzia delle Entrate — Osservatorio del Mercato Immobiliare, zone OMI",
-  "data": "2025-S2",
-  "licenza": "CC BY 4.0"
+  ]
  },
  {
   "percorso": "civici-omi/immobili_comunali_2024.pmtiles",
