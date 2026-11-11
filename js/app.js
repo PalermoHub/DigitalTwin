@@ -151,6 +151,8 @@ const STRATI = MODULI.flatMap(m => m.strati);
 map.on('error', e => {
   if (!e.sourceId || /^(rndt|miei)-/.test(e.sourceId)) return; // gli errori dei layer RNDT e dei «miei layer» li segnalano gli host
   if (e.error?.name === 'AbortError') return; // richiesta annullata di proposito (es. setData() durante il primo caricamento): non è un errore dello strato
+  // un tile raster mancante (404 fuori dall'area coperta, es. PRG 2004 su github.io) è normale: non spegne lo strato
+  if (e.tile && map.getSource(e.sourceId)?.type === 'raster') return;
   const colpiti = STRATI.filter(s => s.layers.some(id => map.getLayer(id)?.source === e.sourceId));
   if (!colpiti.length) return segnala(t('avviso.stratoNonCaricato.dettaglio', { nome: e.sourceId }));
   segnala(t('avviso.stratoNonCaricato.dettaglio', { nome: colpiti.map(s => s.etichetta).join(', ') }));
