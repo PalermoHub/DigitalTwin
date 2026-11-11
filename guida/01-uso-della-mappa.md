@@ -74,7 +74,7 @@ I percorsi disponibili sono quattordici:
 - **Città in trasformazione**: Piano triennale lavori pubblici 2026-2028, Progetti PNRR, Opere pubbliche, Trend della popolazione 2011-2023
 - **Lavori pubblici in programma**: Piano triennale lavori pubblici 2026-2028, Opere pubbliche, Progetti PNRR, Quartieri
 - **Patrimonio e verde**: Monumenti, Alberi monumentali, Fontanelle pubbliche, Ex Noviziato dei Crociferi in 3D
-- **Urbanistica**: PRG 2004: zonizzazione e PPE, PRG 2004: vincoli, Catasto: particelle, Zone OMI 2025, Numeri civici
+- **Urbanistica**: PRG 2004: zonizzazione e PPE, PRG 2004: vincoli, Catasto: particelle, Zone OMI 2026, Numeri civici
 - **Sicurezza stradale**: Hotspot degli incidenti, Le 20 strade più pericolose, Incidenti per km sulle strade, Incidenti
 - **Chi si sposta**: Pendolarismo da e verso Palermo 2021, Popolazione per sezione, Linea metro, Fermate
 - **Città accessibile**: Barriere architettoniche, Uffici comunali (sedi), Fermate, Scuole e asili comunali

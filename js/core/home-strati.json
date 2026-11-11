@@ -831,7 +831,7 @@
     },
     {
      "id": "omi",
-     "etichetta": "Zone OMI 2025"
+     "etichetta": "Zone OMI 2026"
     }
    ],
    "fonte": "Particelle catastali: S.I.T.R. Regione Siciliana e Agenzia delle Entrate (2026); PRG 2004 e vincoli: Comune di Palermo, rielaborazione OpenDataSicilia; numeri civici: Comune di Palermo / ANNCSU (2026); zone OMI: Agenzia delle Entrate (2025-S2); immobili comunali: Comune di Palermo (2024). Licenza CC BY 4.0.",
@@ -2162,7 +2162,7 @@
     },
     {
      "id": "omi",
-     "etichetta": "OMI zones 2025"
+     "etichetta": "OMI zones 2026"
     },
     {
      "id": "civici",

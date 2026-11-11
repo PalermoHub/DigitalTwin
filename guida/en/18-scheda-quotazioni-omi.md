@@ -6,7 +6,7 @@ Keywords: OMI profile, OMI quotations, OMI zone, band, micro-zone, sale, rent, �
 
 Typical questions: How do I read the quotations of a zone? What does the «Semi-central» band mean? What are gross area and net area?
 
-When you click on a point that falls inside a zone of the «OMI zones 2025» layer, the profile is titled **«OMI price quotations»** and has as its badge **«Zone»** with the code of the zone. The rows:
+When you click on a point that falls inside a zone of the «OMI zones 2026» layer, the profile is titled **«OMI price quotations»** and has as its badge **«Zone»** with the code of the zone. The rows:
 - **Zone**: the code, with the colour of the zone in the legend.
 - **Band**: the letter and the description. The bands are: B Central, C Semi-central, D Peripheral, E Suburban, R Rural.
 - **Description** of the zone and **Micro-zone**, if present.
@@ -17,6 +17,6 @@ Below there is the accordion list «Select a type to see sale and rent». The su
 
 Next to the ranges «sup.lorda» (gross area) or «sup.netta» (net area) appears, which says whether the quotation refers to the gross or the net area. Where the figure is missing there is «—».
 
-At the bottom there is the link «Cadastre and zoning plan on map» (PalermoHub) and the source with the half-year (for example «OMI 2025 S2»). The quotations are indicative ranges from the Osservatorio del Mercato Immobiliare of the Agenzia delle Entrate, not the sale prices of a property.
+At the bottom there is the link «Cadastre and zoning plan on map» (PalermoHub) and the source with the half-year (for example «OMI 2026 S1»). The quotations are indicative ranges from the Osservatorio del Mercato Immobiliare of the Agenzia delle Entrate, not the sale prices of a property.
 
 Below the rows is the **chart of values by type**: for each type the minimum–maximum range of sale (€/m²) and rent (€/m² per month), on separate scales, and the **gross yield** (annual rent divided by sale value, on the midpoints). The «i» icon explains the chart. If a parcel was clicked with a layer of the Urban planning route on, the profile also says how large the parcel is compared with those of the OMI zone.

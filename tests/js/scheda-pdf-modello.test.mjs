@@ -23,7 +23,7 @@ test('sezioniPdf tiene solo gli strati dell\'urbanistica, in ordine di lettura d
 
 test('bloccoPdf: righe, gruppi e accordion in una forma piatta, senza righe «senza dato»', () => {
   const b = bloccoPdf({
-    titolo: 'Quotazioni OMI', badge: 'Zona B12', fonte: 'Fonte OMI 2025 S2', nota: 'Una nota',
+    titolo: 'Quotazioni OMI', badge: 'Zona B12', fonte: 'Fonte OMI 2026 S1', nota: 'Una nota',
     gruppi: [{ righe: [{ etichetta: 'Zona', valore: 'B12' }, { etichetta: 'Microzona', valore: 'senza dato' }] }, { titolo: 'Vincolo areale 1', righe: [{ etichetta: 'Tipo', valore: 'Bosco' }] }],
     accordion: { elementi: [{ titolo: 'Abitazioni civili', stato: 'NORMALE', righe: [{ etichetta: 'Compravendita', valore: '1.350–2.000 €/m²' }] }] },
   });
@@ -34,7 +34,7 @@ test('bloccoPdf: righe, gruppi e accordion in una forma piatta, senza righe «se
     { titolo: 'Vincolo areale 1', righe: [['Tipo', 'Bosco']] },
     { titolo: 'Abitazioni civili (NORMALE)', righe: [['Compravendita', '1.350–2.000 €/m²']] },
   ]);
-  assert.deepEqual(b.note, ['Fonte OMI 2025 S2', 'Una nota']);
+  assert.deepEqual(b.note, ['Fonte OMI 2026 S1', 'Una nota']);
 });
 
 test('bloccoPdf: una sezione senza dati non produce gruppi vuoti', () => {

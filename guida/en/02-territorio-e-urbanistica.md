@@ -48,7 +48,7 @@ Keywords: OMI, quotations, house prices, rent, sale, €/m², Agenzia delle Entr
 
 Typical questions: How much does a house cost in this area? What is an OMI zone?
 
-The «OMI zones 2025» layer (second half of 2025) shows the zones of the Osservatorio del Mercato Immobiliare of the Agenzia delle Entrate. The profile, in the «Market» section, gives zone, band with description, micro-zone and the quotation ranges: sale in €/m² and rent in €/m² per month, by type. They are indicative quotations, not transaction prices or valuations.
+The «OMI zones 2026» layer (first half of 2026) shows the zones of the Osservatorio del Mercato Immobiliare of the Agenzia delle Entrate. The profile, in the «Market» section, gives zone, band with description, micro-zone and the quotation ranges: sale in €/m² and rent in €/m² per month, by type. They are indicative quotations, not transaction prices or valuations.
 
 ---
 

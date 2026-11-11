@@ -5,7 +5,7 @@ import { vociOmi } from '../../js/layers/scheda-omi.js';
 // Zona B12 mostrata dallo screenshot originale: una feature per tipologia
 const comune = {
   Zona_OMI: 'B12', Fascia: 'B', Fascia_Descr: "'Centrale'", Zona_Descr: "'MASSIMO-PIGNATELLI V.E.ORLANDO-AMICO ARAGONA-GOETHE-'",
-  Microzona: '1', Anno_Semestre: '2025 / 2', Cod_tip_prev: '20', Descr_tip_prev: "'Abitazioni civili'",
+  Microzona: '1', Anno_Semestre: '2026 / 1', Cod_tip_prev: '20', Descr_tip_prev: "'Abitazioni civili'",
 };
 const tip = (nome, cMin, cMax, lMin, lMax, sup = 'L') =>
   ({ ...comune, Descr_Tipologia: nome, Stato: 'NORMALE', Compr_min: cMin, Compr_max: cMax, Loc_min: lMin, Loc_max: lMax, Sup_NL_compr: sup, Sup_NL_loc: sup });
@@ -45,7 +45,7 @@ test('suggerisce che le tipologie si aprono al clic', () => {
 });
 
 test('fonte con il semestre dai dati', () => {
-  assert.equal(vociOmi(P)[0].fonte, 'Fonte: Agenzia delle Entrate — OMI 2025 S2');
+  assert.equal(vociOmi(P)[0].fonte, 'Fonte: Agenzia delle Entrate — OMI 2026 S1');
 });
 
 test('la stessa tipologia ripetuta (tile adiacenti) compare una volta sola', () => {
