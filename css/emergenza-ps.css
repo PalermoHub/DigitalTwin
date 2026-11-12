@@ -1,0 +1,23 @@
+/* totale in attesa e schede sintetiche dei pronto soccorso: foglio della modalità emergenza (mappa) e pannello «Emergenze» della home su telefono */
+.eps-corpo { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 10px 10px 14px; display: flex; flex-direction: column; gap: 10px; }
+.eps-totale { padding: 14px 16px; border-radius: 14px; background: #f7d44c; color: #14253d; }
+.eps-totale p { margin: 0; }
+.eps-etichetta { font-size: var(--fs-xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.eps-numero { font-size: 3.6rem; font-weight: 900; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.eps-sotto { font-size: var(--fs-sm); font-weight: 600; }
+.eps-quando { margin-top: 4px !important; font-size: var(--fs-xs); opacity: .75; }
+.eps-scheda { padding: 10px 12px 12px; border: 1px solid var(--border); border-left: 5px solid var(--colore); border-radius: 12px; background: var(--surface); }
+.eps-testa { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.eps-nome h3 { margin: 0 0 3px; font-size: var(--fs-base); font-weight: 800; line-height: 1.2; }
+.eps-tipo { display: inline-block; padding: 1px 6px; border-radius: 4px; background: var(--surface-hover); color: var(--text-muted); font-size: .625rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.eps-attesa { flex: none; display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+.eps-attesa b { font-size: 2rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+.eps-attesa span { font-size: var(--fs-xs); color: var(--text-muted); }
+.eps-indice { display: inline-block; margin: 6px 0 8px; padding: 2px 8px; border-radius: 50px; border: 1px solid var(--colore); background: color-mix(in srgb, var(--colore) 18%, transparent); font-size: var(--fs-xs); font-weight: 800; }
+.eps-nd { border-color: var(--border); background: var(--surface-hover); color: var(--text-muted); }
+.eps-codici { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.eps-codice { display: flex; flex-direction: column; align-items: center; padding: 3px 0 4px; border-radius: 8px; border: 1.5px solid var(--codice); background: color-mix(in srgb, var(--codice) 22%, var(--surface)); color: var(--text); }
+.eps-codice small { font-size: .5625rem; font-weight: 700; }
+.eps-codice b { font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.eps-nota { margin: 0; font-size: var(--fs-xs); color: var(--text-muted); }
+.eps-home { list-style: none; display: flex; flex-direction: column; gap: 10px; }

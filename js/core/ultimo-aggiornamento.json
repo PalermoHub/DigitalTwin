@@ -1,8 +1,8 @@
 {
  "data": "2026-11-12",
  "cosa": [
-  "Luoghi osm",
-  "Pronto soccorso (attese)",
+  "Dati pronto soccorso",
+  "Emergenza su telefono: tab Ospedali con totale in attesa e schede sintetiche; Luoghi quotidiani: farmacie in verde; cache dt-v519",
   "Merge: layer Salute / Pronto soccorso di Palermo (tab, pin, legenda, dati in tempo reale)",
   "Pronto soccorso: tab dedicato nella scheda, pin con ciambella, legenda e dati sempre freschi"
  ]

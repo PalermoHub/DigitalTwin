@@ -41,6 +41,9 @@ function scheda(doc, s) {
   return c;
 }
 
+// Totale, schede e nota: i nodi che stanno nel foglio della mappa e nel pannello «Emergenze» della home.
+export const contenutoPs = (doc, lista) => [riquadroTotale(doc, riepilogoPs(lista)), ...ordinaPs(lista).map(p => scheda(doc, schedaSinteticaPs(p))), el(doc, 'p', 'eps-nota', t('eps.nota'))];
+
 // `leggi()` restituisce i presidi (anagrafica + ultima lettura), `aggiorna()` chiede una lettura fresca al Worker.
 export function creaFoglioPs(doc, { leggi, aggiorna = async () => {} }) {
   const foglio = el(doc, 'aside', 'eps-foglio');
@@ -57,11 +60,7 @@ export function creaFoglioPs(doc, { leggi, aggiorna = async () => {} }) {
   foglio.append(testa, corpo);
   doc.body.append(foglio);
 
-  const disegna = () => {
-    const lista = leggi();
-    corpo.replaceChildren(riquadroTotale(doc, riepilogoPs(lista)), ...ordinaPs(lista).map(p => scheda(doc, schedaSinteticaPs(p))),
-      el(doc, 'p', 'eps-nota', t('eps.nota')));
-  };
+  const disegna = () => corpo.replaceChildren(...contenutoPs(doc, leggi()));
   const chiudiFoglio = () => { foglio.hidden = true; doc.body.classList.remove('eps-aperto'); };
   const apri = () => { disegna(); foglio.hidden = false; doc.body.classList.add('eps-aperto'); foglio.scrollTop = 0; corpo.scrollTop = 0; aggiorna().then(() => { if (!foglio.hidden) disegna(); }); };
   chiudi.addEventListener('click', chiudiFoglio);

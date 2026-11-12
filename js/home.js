@@ -8,6 +8,8 @@ import { MEDIA_TELEFONO } from './core/modo-emergenza.js';
 import { precaricaMappaARiposo } from './core/precarica-mappa.js';
 import { trovaZone } from './core/zone.js';
 import { avviaHomeMobile } from './core/home-mobile.js';
+import { contenutoPs } from './core/emergenza-ps.js';
+import { caricaPs } from './layers/dati-pronto-soccorso.js';
 import { scegliProxy } from './rndt/proxy.js';
 import { livelloMassimo, nomeLivello, riassuntoGiorno, sismiRecenti, sismoNotevole, caricaSismi24h, LINK as LINK_BOLLETTINO } from './layers/scheda-allerte.js';
 import { quantoTempoFa } from './layers/scheda-terremoti.js';
@@ -482,13 +484,41 @@ async function costruisciPercorsi() {
     const testi = p[lingua()] ?? p.it;
     const apri = el('a', { className: 'percorso-apri', href: MAPPA, textContent: tr('home.percorsi.apri') });
     linkMappa(p.strati, true, p.vista).then(href => { apri.href = href; });
-    box.append(el('li', { className: p.strati.some(id => STRATI_EMERGENZA.has(id)) ? 'percorso percorso-emergenza' : 'percorso' },
+    const voce = el('li', { className: p.strati.some(id => STRATI_EMERGENZA.has(id)) ? 'percorso percorso-emergenza' : 'percorso' },
       ...(testi.badge ? [el('span', { className: 'percorso-badge', textContent: testi.badge })] : []),
       el('h4', { textContent: testi.titolo }),
       el('p', { textContent: testi.testo }),
       el('p', { className: 'percorso-strati', textContent: p.strati.map(id => nomi.get(id) ?? id).join(' · ') }),
-      apri));
+      apri);
+    voce.dataset.percorso = p.id;
+    box.append(voce);
   }
+}
+
+// Pronto soccorso «adesso» nel pannello «Emergenze» del telefono: totale in attesa e una scheda per ospedale, subito prima del percorso «Pronto soccorso».
+// I dati si rileggono ogni minuto finché il blocco è in pagina (la fonte si rinnova ogni ~2 minuti).
+const RIFRESCO_PS_MS = 60 * 1000;
+let bloccoPs = null;
+let timerPs = null;
+async function aggiornaBloccoPs() {
+  if (!bloccoPs || document.hidden) return;
+  const lista = await caricaPs();
+  if (bloccoPs) bloccoPs.replaceChildren(...contenutoPs(document, lista));
+}
+function mostraBloccoPs(ul, percorsoPs) {
+  if (!bloccoPs) {
+    bloccoPs = el('li', { className: 'eps-home' });
+    aggiornaBloccoPs();
+    timerPs = setInterval(aggiornaBloccoPs, RIFRESCO_PS_MS);
+    document.addEventListener('visibilitychange', aggiornaBloccoPs);
+  }
+  (percorsoPs ? percorsoPs.before(bloccoPs) : ul.append(bloccoPs));
+}
+function togliBloccoPs() {
+  clearInterval(timerPs);
+  document.removeEventListener('visibilitychange', aggiornaBloccoPs);
+  bloccoPs?.remove();
+  bloccoPs = null;
 }
 
 // Telefono: il percorso e la scheda di emergenza (prima) stanno nel pannello «Emergenze»; sullo schermo largo il percorso torna in testa all'elenco.
@@ -498,9 +528,11 @@ function riempiEmergenze(ul, mobile) {
   if (mobile) {
     if (!copie.length) ul.prepend(...creaCardEmergenza.map(crea => crea()));
     ul.append(...percorsi);
+    mostraBloccoPs(ul, percorsi.find(p => p.dataset.percorso === 'pronto-soccorso'));
   } else {
     document.getElementById('home-percorsi').prepend(...percorsi);
     copie.forEach(c => c.remove());
+    togliBloccoPs();
   }
 }
 
