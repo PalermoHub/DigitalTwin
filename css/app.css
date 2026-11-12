@@ -2700,3 +2700,16 @@ a.scheda-tel { min-height: 40px; }
 .omi-gr-traccia { position: relative; height: 8px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; }
 .omi-gr-traccia i { position: absolute; top: 0; bottom: 0; border-radius: 999px; }
 .omi-gr-nota { margin: 8px 0 0; font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* Pronto soccorso: pannello di popup e tooltip (righe etichetta/valore, quadrati dei codici colore, griglia compatta nel tooltip) */
+.ps-pannello { font-size: var(--fs-xs); }
+.ps-riga { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 5px 0; border-top: 1px solid var(--border); }
+.ps-riga > span:first-child { color: var(--text-muted); }
+.ps-riga > b { font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+.ps-riga > b.ps-grande { font-size: 1.35rem; line-height: 1; }
+.ps-stato { font-style: normal; font-weight: 700; padding: 2px 8px; border-radius: 50px; color: var(--text); background: color-mix(in srgb, var(--colore) 22%, transparent); border: 1px solid var(--colore); }
+.ps-n { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+.ps-q { width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(0, 0, 0, .3); display: inline-block; }
+.ps-griglia { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; padding: 6px 0 4px; border-top: 1px solid var(--border); }
+.ps-c { display: grid; place-items: center; height: 26px; border-radius: 5px; border: 1px solid var(--colore); background: color-mix(in srgb, var(--colore) 28%, transparent); font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+.ps-quando { margin: 0; padding-top: 5px; border-top: 1px solid var(--border); color: var(--text-muted); }

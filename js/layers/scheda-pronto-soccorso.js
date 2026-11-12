@@ -116,3 +116,16 @@ export function modelloPopupPs(p) {
     url: APP, fonte: FONTE,
   };
 }
+
+// Dati del pannello grafico di popup e tooltip (stile dell'app d'origine): tipo, pazienti in attesa, stato e attesa per ogni codice colore.
+// Un codice non pubblicato dall'ospedale ha attesa null: nel pannello compare come «–», mai come 0.
+export function pannelloPs(p) {
+  const l = livello(p);
+  return {
+    tipo: p.tipo === 'pediatrico' ? 'Pediatrico' : 'Adulti',
+    inAttesa: ha(p.inAttesa) ? num(p.inAttesa) : '–',
+    stato: { testo: NOME_LIVELLO[l], livello: l, colore: COLORE_LIVELLO[l] },
+    codici: Object.keys(COLORE_CODICE).map(c => ({ chiave: c, nome: NOME_CODICE[c], colore: COLORE_CODICE[c], attesa: ha(p.codici?.[c]?.attesa) ? num(p.codici[c].attesa) : '–' })),
+    aggiornato: quando(p),
+  };
+}

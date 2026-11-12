@@ -5,7 +5,7 @@ import { tl, t } from '../core/i18n.js';
 import { apriPopupScheda } from './popup-traffico.js';
 import { scegliProxy } from '../rndt/proxy.js';
 import { registraBadge, layerBadge, espressioneBadge, stileBadge, simboloBadge } from '../core/icone-mappa.js';
-import { LIVELLI, COLORE_LIVELLO, livello, vocePs, modelloPopupPs, quando } from './scheda-pronto-soccorso.js';
+import { LIVELLI, COLORE_LIVELLO, livello, vocePs, modelloPopupPs, pannelloPs, quando } from './scheda-pronto-soccorso.js';
 
 // Pronto soccorso di Palermo: 8 presidi (adulti e pediatrici), colorati per affollamento. I conteggi arrivano dal Worker (/pronto-soccorso, dati
 // dell'app palermo-ps, rinnovati ogni 2 minuti); l'anagrafica sta anche in dati/salute/pronto-soccorso.geojson, così i punti ci sono comunque.
@@ -72,7 +72,43 @@ export async function caricaLettura(map = mappa) {
   return inLettura;
 }
 
-function corpoPopup(m) { return [el('p', 'monumento-fonte', t('layer.fonte', { fonte: tl(m.fonte) }))]; }
+// Pannello grafico di popup (completo: una riga per codice colore) e tooltip (compatto: una griglia di cinque caselle), come nell'app d'origine.
+function pannello(p, completo) {
+  const d = pannelloPs(p);
+  const radice = el('div', `ps-pannello ${completo ? 'ps-pop' : 'ps-tip'}`);
+  const riga = (etichetta, valore, classe) => {
+    const r = el('div', 'ps-riga');
+    r.append(el('span', null, etichetta), valore instanceof Node ? valore : el('b', classe, valore));
+    return r;
+  };
+  const stato = el('em', `ps-stato ps-lv-${d.stato.livello}`, d.stato.testo);
+  stato.style.setProperty('--colore', d.stato.colore);
+  radice.append(riga('Tipo', d.tipo), riga('In attesa', d.inAttesa, 'ps-grande'), riga('Stato', stato));
+  if (completo) {
+    for (const c of d.codici) {
+      const n = el('span', 'ps-n');
+      const q = el('i', 'ps-q');
+      q.style.background = c.colore;
+      n.append(q, document.createTextNode(c.attesa));
+      radice.append(riga(c.nome, n));
+    }
+  } else {
+    const griglia = el('div', 'ps-griglia');
+    for (const c of d.codici) {
+      const x = el('span', 'ps-c', c.attesa);
+      x.style.setProperty('--colore', c.colore);
+      x.title = tl(c.nome);
+      griglia.append(x);
+    }
+    radice.append(griglia);
+  }
+  if (d.aggiornato) radice.append(el('p', 'ps-quando', `${tl('Aggiornato alle')} ${d.aggiornato}`));
+  return radice;
+}
+
+const corpoPopup = p => [pannello(p, true), el('p', 'monumento-fonte', t('layer.fonte', { fonte: tl(modelloPopupPs(p).fonte) }))];
+// tooltip e popup mostrano il pannello al posto di indirizzo e righe: il titolo resta quello del modello
+const modelloTooltipPs = p => ({ ...modelloPopupPs(p), sottotitolo: undefined, righe: [], dom: pannello(p, false) });
 
 function collegaPopup(map) {
   let popup = null;
@@ -80,11 +116,12 @@ function collegaPopup(map) {
     if (map.getLayoutProperty(PUNTI, 'visibility') !== 'visible') return;
     const f = map.queryRenderedFeatures(e.point, { layers: [PUNTI] })[0];
     if (!f) { popup?.remove(); return; }
-    const modello = modelloPopupPs(completo(f.properties));
-    popup = apriPopupScheda(map, { precedente: popup, sezione: 'Pronto soccorso', icona: ICONA, colore: COLORE, modello, corpo: corpoPopup(modello), punto: e.point, lngLat: e.lngLat });
+    const p = completo(f.properties);
+    const modello = { ...modelloPopupPs(p), sottotitolo: undefined, righe: [] };
+    popup = apriPopupScheda(map, { precedente: popup, sezione: 'Pronto soccorso', icona: ICONA, colore: COLORE_LIVELLO[livello(p)] ?? COLORE, modello, corpo: corpoPopup(p), punto: e.point, lngLat: e.lngLat });
   });
   registraTooltipStrati(map, [{ layers: [PUNTI], icona: ICONA, sezione: 'Pronto soccorso', colore: p => COLORE_LIVELLO[livello(completo(p))] ?? COLORE,
-    campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(ICONA, COLORE)]), modello: p => modelloPopupPs(completo(p)) }]);
+    campione: () => campioneTooltip('legenda-monumenti', ['monumenti-pallino', stileBadge(ICONA, COLORE)]), modello: p => modelloTooltipPs(completo(p)) }]);
   map.on('mouseenter', PUNTI, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }

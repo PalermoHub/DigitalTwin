@@ -1,7 +1,7 @@
 // tests/js/scheda-pronto-soccorso.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { livello, vocePs, modelloPopupPs, quando } from '../../js/layers/scheda-pronto-soccorso.js';
+import { livello, vocePs, modelloPopupPs, pannelloPs, quando } from '../../js/layers/scheda-pronto-soccorso.js';
 
 const base = { id: 'x', nome: 'Villa Sofia', struttura: 'Ospedali Riuniti', tipo: 'adulti', indirizzo: 'Piazza Salerno 1', stato: 'ok', acquisitaAlle: '2026-11-12T08:52:53.940Z',
   rilevataAlle: '2026-11-12T09:52:00+01:00', pazientiTotali: 62, inAttesa: 4, sovraffollamentoPct: 207, postiTecnici: 30,
@@ -60,4 +60,14 @@ test('titolo: pediatrico distinto, indice calcolato dichiarato', () => {
 test('quando: ora di Roma dalla rilevazione dell\'ospedale; vuoto se manca', () => {
   assert.match(quando(base), /10[:.]52|09[:.]52/);
   assert.equal(quando({}), '');
+});
+
+test('pannelloPs: cinque codici, non pubblicato = «–» e mai 0 inventato', () => {
+  const d = pannelloPs(base);
+  assert.deepEqual(d.codici.map(c => c.chiave), ['rosso', 'arancione', 'azzurro', 'verde', 'bianco']);
+  assert.equal(d.codici[0].attesa, '0'); // 0 pubblicato: è un dato vero
+  assert.equal(d.codici[1].attesa, '–'); // arancione non pubblicato
+  assert.equal(d.tipo, 'Adulti');
+  assert.equal(d.stato.livello, 'molto');
+  assert.equal(pannelloPs({ ...base, tipo: 'pediatrico', inAttesa: null, stato: 'assente' }).inAttesa, '–');
 });
