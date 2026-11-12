@@ -5,6 +5,8 @@
 export const URL_FONTE = 'https://palermo-ps.coseerobe.workers.dev/api/palermo';
 export const TTL_SECONDI = 60; // l'app d'origine rilegge le fonti ogni 2 minuti
 export const TTL_ULTIMO_SECONDI = 6 * 3600; // ripiego: ultimo dato buono
+// Dentro Cloudflare un Worker non legge il workers.dev di un altro Worker dello stesso account (404): si usa il service binding PS (wrangler.toml).
+const leggi = (env, fetchFn) => (env?.PS?.fetch ? (url, init) => env.PS.fetch(url, init) : fetchFn);
 const CODICI = ['rosso', 'arancione', 'azzurro', 'verde', 'bianco'];
 
 const json = (stato, corpo, intestazioni = {}) =>
@@ -60,7 +62,7 @@ export async function gestisciProntoSoccorso(richiesta, env, fetchFn, cache) {
   const salvata = await cache?.match(chiave);
   if (salvata) return new Response(salvata.body, { status: 200, headers: { ...Object.fromEntries(salvata.headers), ...cors } });
   try {
-    const r = await fetchFn(URL_FONTE, { headers: { accept: 'application/json', 'user-agent': 'DigitalTwinPalermo/1.0 (+https://palermodigitaltwin.opendatasicilia.it)' } });
+    const r = await leggi(env, fetchFn)(URL_FONTE, { headers: { accept: 'application/json', 'user-agent': 'DigitalTwinPalermo/1.0 (+https://palermodigitaltwin.opendatasicilia.it)' } });
     if (!r.ok) throw new Error(`palermo-ps ${r.status}`);
     const corpo = JSON.stringify(costruisci(await r.json()));
     const intestazioni = { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_SECONDI}` };
@@ -101,7 +103,7 @@ export async function gestisciProntoSoccorsoStorico(richiesta, env, fetchFn, cac
   const salvata = await cache?.match(chiave);
   if (salvata) return new Response(salvata.body, { status: 200, headers: { ...Object.fromEntries(salvata.headers), ...cors } });
   try {
-    const r = await fetchFn(URL_STORICO, { headers: { accept: 'application/json', 'user-agent': 'DigitalTwinPalermo/1.0 (+https://palermodigitaltwin.opendatasicilia.it)' } });
+    const r = await leggi(env, fetchFn)(URL_STORICO, { headers: { accept: 'application/json', 'user-agent': 'DigitalTwinPalermo/1.0 (+https://palermodigitaltwin.opendatasicilia.it)' } });
     if (!r.ok) throw new Error(`palermo-ps storico ${r.status}`);
     const corpo = JSON.stringify(costruisciStorico(await r.json()));
     const intestazioni = { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_STORICO_SECONDI}` };

@@ -29,3 +29,8 @@ id = "55b7416863594bd387403dccc359e75b"
 [[kv_namespaces]]
 binding = "LINK"
 id = "ac4c048857e74afda4da94f8de24ecd0"
+
+# App «palermo-ps» (attese dei pronto soccorso): letta con un service binding, non con il suo indirizzo workers.dev (da un altro Worker darebbe 404)
+[[services]]
+binding = "PS"
+service = "palermo-ps"
