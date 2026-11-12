@@ -32,3 +32,26 @@ test('MEDIA_TELEFONO: telefono in piedi o ruotato (touch e basso), non il deskto
   assert.match(MEDIA_TELEFONO, /max-width: 720px/);
   assert.match(MEDIA_TELEFONO, /\(pointer: coarse\) and \(max-height: 500px\)/);
 });
+
+test('riepilogoPs: somma i pazienti in attesa dei soli presidi con lettura fresca e conta gli affollati', async () => {
+  const { riepilogoPs, schedaSinteticaPs, ordinaPs } = await import('../../js/layers/scheda-pronto-soccorso.js');
+  const ps = [
+    { id: 'a', nome: 'Civico', stato: 'ok', inAttesa: 37, sovraffollamentoPct: 219, codici: { verde: { attesa: 20 } } },
+    { id: 'b', nome: 'Villa Sofia', stato: 'ok', inAttesa: 7, sovraffollamentoPct: 90, codici: {} },
+    { id: 'c', nome: 'Senza dato', stato: 'assente', codici: {} },
+    { id: 'd', nome: 'Vecchio', stato: 'vecchio', inAttesa: 50, sovraffollamentoPct: 300, codici: {} },
+  ];
+  const r = riepilogoPs(ps);
+  assert.equal(r.inAttesa, 44); // 37 + 7: il dato vecchio e quello assente non entrano
+  assert.equal(r.conDato, 2);
+  assert.equal(r.presidi, 4);
+  assert.equal(r.affollati, 1);
+  assert.deepEqual(ordinaPs(ps).map(p => p.id), ['d', 'a', 'b', 'c']);
+  const s = schedaSinteticaPs(ps[0]);
+  assert.equal(s.inAttesa, '37');
+  assert.match(s.indice, /^219/);
+  assert.equal(s.codici.length, 5);
+  assert.equal(s.codici.find(c => c.chiave === 'verde').attesa, '20');
+  assert.equal(s.codici.find(c => c.chiave === 'rosso').attesa, '–'); // non pubblicato: «–», mai 0
+  assert.equal(schedaSinteticaPs(ps[2]).indice, '');
+});

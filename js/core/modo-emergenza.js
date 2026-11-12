@@ -18,8 +18,8 @@ export const moduliAlClic = (moduli, emergenza) => (emergenza ? moduli.filter(m 
 
 export const inModoEmergenza = (doc = document) => doc.body.classList.contains(CLASSE_EMERGENZA);
 
-// `barraTab` = la barra a tab del telefono; `icone` = gli svg dei tab Home, GPS, Condividi, Talia ed Esci; `suHome` riporta la mappa allo zoom di base, `suGps`, `suCondividi` e `suTalia` aprono posizione, condivisione e chat; `suAttiva` chiude i fogli aperti; `suModo(attivo)` avvisa a ogni cambio di modalità (serve a fermare lo zoom minimo).
-export function collegaModoEmergenza(doc, { barraTab, icone, suHome = () => {}, suGps = () => {}, suCondividi = () => {}, suTalia = () => {}, suAttiva = () => {}, suModo = () => {} }) {
+// `barraTab` = la barra a tab del telefono; `icone` = gli svg dei tab Home, GPS, Condividi, Talia, Pronto soccorso ed Esci; `suHome` riporta la mappa allo zoom di base, `suGps`, `suCondividi` e `suTalia` aprono posizione, condivisione e chat, `suPs` il foglio dei pronto soccorso; `suAttiva` chiude i fogli aperti; `suModo(attivo)` avvisa a ogni cambio di modalità (serve a fermare lo zoom minimo).
+export function collegaModoEmergenza(doc, { barraTab, icone, suHome = () => {}, suGps = () => {}, suCondividi = () => {}, suTalia = () => {}, suPs = () => {}, suAttiva = () => {}, suModo = () => {} }) {
   const finestra = doc.defaultView;
   const telefono = finestra?.matchMedia?.(MEDIA_TELEFONO);
   let uscito = false;
@@ -37,6 +37,7 @@ export function collegaModoEmergenza(doc, { barraTab, icone, suHome = () => {}, 
   tab('gps', icone.gps, t('emergenza.gps'), () => suGps());
   tab('condividi', icone.condividi, t('emergenza.condividi'), () => suCondividi());
   tab('talia', icone.talia, t('app.rail.chatbot'), () => suTalia());
+  tab('ps', icone.ps, t('emergenza.ps'), () => suPs());
   tab('esci', icone.esci, t('emergenza.esci'), () => { uscito = true; aggiorna(); });
 
   function aggiorna() {

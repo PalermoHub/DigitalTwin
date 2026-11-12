@@ -343,6 +343,10 @@
      "etichetta": "Cibo e bevande"
     },
     {
+     "id": "luoghi-osm-farmacie",
+     "etichetta": "Farmacie"
+    },
+    {
      "id": "luoghi-osm-negozi",
      "etichetta": "Negozi"
     },
@@ -1459,6 +1463,10 @@
     {
      "id": "luoghi-osm-parchi",
      "etichetta": "Parks and gardens"
+    },
+    {
+     "id": "luoghi-osm-farmacie",
+     "etichetta": "Pharmacies"
     },
     {
      "id": "luoghi-osm-negozi",

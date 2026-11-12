@@ -13,11 +13,15 @@ export const FONTE = 'OpenStreetMap, © OpenStreetMap contributors, licenza ODbL
 export const BISOGNI = [
   { k: 0, id: 'alimentari', etichetta: 'Alimentari', icona: 'spesa', colore: '#5c940d' },
   { k: 1, id: 'cibo', etichetta: 'Cibo e bevande', icona: 'tazza', colore: '#e8590c' },
-  { k: 3, id: 'salute', etichetta: 'Salute', icona: 'salute', colore: '#e03131' },
+  { k: 3, id: 'salute', etichetta: 'Salute', icona: 'salute', colore: '#e03131', senzaTipo: 'pharmacy' }, // le farmacie hanno il loro strato, in verde
+  { k: 3, id: 'farmacie', etichetta: 'Farmacie', icona: 'farmacia', colore: '#0ca678', soloTipo: 'pharmacy' },
   { k: 5, id: 'parchi', etichetta: 'Parchi e giardini', icona: 'parco', colore: '#2b8a3e' },
   { k: 2, id: 'negozi', etichetta: 'Negozi', icona: 'negozio', colore: '#7048e8' },
 ];
-export const bisogno = k => BISOGNI.find(b => b.k === Number(k)) ?? null;
+// Il bisogno di un punto: a parità di `k` conta il tipo OSM (la farmacia non è «Salute»).
+export const bisogno = (k, tipo) => BISOGNI.find(b => b.k === Number(k) && (b.soloTipo ? b.soloTipo === tipo : b.senzaTipo ? b.senzaTipo !== tipo : true)) ?? null;
+// Filtro MapLibre del livello di un bisogno.
+export const filtroBisogno = b => ['all', ['==', ['get', 'k'], b.k], ...(b.soloTipo ? [['==', ['get', 'tipo'], b.soloTipo]] : []), ...(b.senzaTipo ? [['!=', ['get', 'tipo'], b.senzaTipo]] : [])];
 
 // Tipo OSM in italiano; i valori non elencati restano come sono (sono etichette tecniche di OpenStreetMap).
 const TIPI = {
@@ -46,13 +50,13 @@ export function featureDaLuoghi(bisogni) {
   return { type: 'FeatureCollection', features: feature };
 }
 
-const titolo = p => p.nome || tipoIt(p.tipo) || bisogno(p.k)?.etichetta || 'Luogo';
+const titolo = p => p.nome || tipoIt(p.tipo) || bisogno(p.k, p.tipo)?.etichetta || 'Luogo';
 
 // Il percorso sta in una riga della card (il campo `link` di una voce finisce nella barra in fondo alla scheda, non nella card).
 export const conCoordinate = p => Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat));
 
 function righePunto(p) {
-  const b = bisogno(p.k);
+  const b = bisogno(p.k, p.tipo);
   const base = righe([['Tipo', p.nome ? tipoIt(p.tipo) : null], ['Bisogno', b?.etichetta]]);
   return conCoordinate(p) ? [...base,
     { etichetta: 'Percorso a piedi', valore: 'Apri in Google Maps', urlValore: urlPercorso(p.lon, p.lat) },
@@ -60,7 +64,7 @@ function righePunto(p) {
 }
 
 export function voceLuogoOsm(p) {
-  const b = bisogno(p.k);
+  const b = bisogno(p.k, p.tipo);
   return {
     chiave: `luogo-osm-${p.id}`, peso: PESO, strato: `luoghi-osm-${b?.id ?? 'altro'}`, titolo: titolo(p), icona: b?.icona ?? 'indirizzo',
     badge: b ? tl(b.etichetta) : undefined, sempre: true,
@@ -74,6 +78,6 @@ export function voceLuogoOsm(p) {
 }
 
 export function modelloPopupLuogoOsm(p) {
-  const b = bisogno(p.k);
+  const b = bisogno(p.k, p.tipo);
   return { titolo: titolo(p), sottotitolo: p.nome ? tipoIt(p.tipo) : (b?.etichetta ?? ''), righe: righePunto(p), url: URL_OSM, fonte: FONTE };
 }

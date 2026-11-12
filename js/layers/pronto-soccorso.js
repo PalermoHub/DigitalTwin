@@ -57,6 +57,9 @@ async function caricaAnagrafica() {
 }
 
 // Letture dal Worker; se non risponde restano i dati precedenti (con l'avviso «non aggiornato» se erano vecchi).
+// Presidi con l'ultima lettura (per il foglio della modalità emergenza su telefono).
+export const elencoPs = () => [...dettagli.values()];
+
 export async function caricaLettura(map = mappa) {
   if (inLettura) return inLettura;
   inLettura = (async () => {

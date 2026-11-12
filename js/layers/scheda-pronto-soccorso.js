@@ -133,3 +133,20 @@ export function pannelloPs(p) {
     aggiornato: quando(p),
   };
 }
+
+// Riepilogo per la vista emergenza su telefono: pazienti in attesa in tutto e presidi affollati. Si contano solo i presidi con lettura fresca
+// (stato «ok» e numero pubblicato): un ospedale senza dato non vale 0, semplicemente non entra nel totale.
+export function riepilogoPs(lista) {
+  const conDato = lista.filter(p => p.stato === 'ok' && ha(p.inAttesa));
+  const affollati = lista.filter(p => ['affollato', 'molto'].includes(livello(p))).length;
+  return { inAttesa: conDato.reduce((s, p) => s + Number(p.inAttesa), 0), conDato: conDato.length, presidi: lista.length, affollati, aggiornato: quando(lista.filter(x => quando(x)).sort((a, b) => new Date(b.rilevataAlle || b.acquisitaAlle) - new Date(a.rilevataAlle || a.acquisitaAlle))[0] ?? {}) };
+}
+
+// Scheda sintetica di un presidio (nome, reparto, indice di affollamento, in attesa, cinque codici colore). Il dato mancante è «–», mai 0.
+export function schedaSinteticaPs(p) {
+  const d = pannelloPs(p);
+  return { id: p.id, nome: p.nome, tipo: d.tipo, inAttesa: d.inAttesa, stato: d.stato, indice: ha(p.sovraffollamentoPct) && livello(p) !== 'nd' ? `${num(Math.round(p.sovraffollamentoPct))}%` : '', codici: d.codici };
+}
+
+// Ordine dell'elenco: dal presidio con più pazienti in attesa; chi non ha dato va in fondo.
+export const ordinaPs = lista => [...lista].sort((a, b) => (ha(b.inAttesa) ? Number(b.inAttesa) : -1) - (ha(a.inAttesa) ? Number(a.inAttesa) : -1) || String(a.nome).localeCompare(String(b.nome)));

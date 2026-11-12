@@ -3,12 +3,14 @@ import assert from 'node:assert/strict';
 import { BISOGNI, bisogno, tipoIt, featureDaLuoghi, voceLuogoOsm, modelloPopupLuogoOsm, PESO } from '../../js/layers/scheda-luoghi-osm.js';
 import { ICONE } from '../../js/core/icone.js';
 
-test('cinque bisogni con icona nota, colore e forma distinti', () => {
-  assert.deepEqual(BISOGNI.map(b => b.id), ['alimentari', 'cibo', 'salute', 'parchi', 'negozi']); // ordine del pannello Layer
+test('sei bisogni (le farmacie a parte, in verde) con icona nota, colore e forma distinti', () => {
+  assert.deepEqual(BISOGNI.map(b => b.id), ['alimentari', 'cibo', 'salute', 'farmacie', 'parchi', 'negozi']); // ordine del pannello Layer
   for (const b of BISOGNI) assert.ok(ICONE[b.icona], `manca l'icona ${b.icona}`);
   assert.equal(new Set(BISOGNI.map(b => b.icona)).size, BISOGNI.length);
   assert.equal(new Set(BISOGNI.map(b => b.colore)).size, BISOGNI.length);
   assert.equal(bisogno('3').id, 'salute');
+  assert.equal(bisogno(3, 'pharmacy').id, 'farmacie');
+  assert.equal(bisogno(3, 'dentist').id, 'salute');
   assert.equal(bisogno(4), null);
 });
 

@@ -7,7 +7,7 @@ import { voceStrato } from '../core/legenda.js';
 import { registraGlifo, layerGlifo, stileGlifo, simboloGlifo } from '../core/icone-mappa.js';
 import { tl, t } from '../core/i18n.js';
 import { apriPopupScheda } from './popup-traffico.js';
-import { BISOGNI, featureDaLuoghi, voceLuogoOsm, modelloPopupLuogoOsm } from './scheda-luoghi-osm.js';
+import { BISOGNI, bisogno, filtroBisogno, featureDaLuoghi, voceLuogoOsm, modelloPopupLuogoOsm } from './scheda-luoghi-osm.js';
 
 const SRC = 'luoghi-osm';
 const punti = b => `luoghi-osm-${b.id}`;
@@ -29,7 +29,7 @@ function collegaPopup(map) {
   map.on('click', e => {
     const f = map.queryRenderedFeatures(e.point, { layers: strati.filter(id => map.getLayoutProperty(id, 'visibility') === 'visible') })[0];
     if (!f) { popup?.remove(); return; }
-    const b = BISOGNI.find(x => x.k === Number(f.properties.k));
+    const b = bisogno(f.properties.k, f.properties.tipo);
     const modello = modelloPopupLuogoOsm(f.properties);
     popup = apriPopupScheda(map, {
       precedente: popup, sezione: 'Luoghi quotidiani', icona: b.icona, colore: b.colore, modello,
@@ -68,7 +68,7 @@ export default {
     for (const b of BISOGNI) {
       registraGlifo(map, b.icona);
       map.addLayer(layerGlifo({ id: punti(b), source: SRC, icona: b.icona, colore: b.colore, layout: { visibility: 'none' }, paint: {} }));
-      map.setFilter(punti(b), ['==', ['get', 'k'], b.k]);
+      map.setFilter(punti(b), filtroBisogno(b));
     }
     map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 9, 'circle-opacity': 0 } });
     collegaPopup(map);

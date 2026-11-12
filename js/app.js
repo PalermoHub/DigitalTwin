@@ -45,7 +45,8 @@ import edifici from './layers/edifici.js';
 import crociferi from './layers/crociferi.js';
 import monumenti from './layers/monumenti.js';
 import salute from './layers/salute.js';
-import prontoSoccorso from './layers/pronto-soccorso.js';
+import prontoSoccorso, { elencoPs, caricaLettura as leggiPronto } from './layers/pronto-soccorso.js';
+import { creaFoglioPs } from './core/emergenza-ps.js';
 import alberi from './layers/alberi.js';
 import fontanelle from './layers/fontanelle.js';
 import voli from './layers/voli.js';
@@ -269,12 +270,20 @@ map.once('style.load', async () => {
   document.addEventListener('scheda:vai', () => rail.mostra('scheda')); // dal Chat bot: la scheda torna in primo piano
   // telefono con il Piano di emergenza acceso: barra con soli Mappa e Talia (il resto lo nasconde il CSS)
   apriTalia = () => { tab.imposta(null); rail.commuta('chatbot'); };
-  const iconeEmergenza = { home: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21M8 8.5h5v4H8z"/></svg>', gps: document.getElementById('btn-posizione').innerHTML, condividi: document.getElementById('btn-condividi').innerHTML, talia: ICONE_RAIL.chatbot, esci: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' };
+  const foglioPs = creaFoglioPs(document, { leggi: elencoPs, aggiorna: () => leggiPronto() });
+  const iconeEmergenza = { ps: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v15M2 21h20M12 9v6M9 12h6"/></svg>', home: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21M8 8.5h5v4H8z"/></svg>', gps: document.getElementById('btn-posizione').innerHTML, condividi: document.getElementById('btn-condividi').innerHTML, talia: ICONE_RAIL.chatbot, esci: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' };
   const zoomMinimoNormale = map.getMinZoom();
   const rischiAccesi = () => map.getStyle().layers.some(l => l.id.startsWith('pai-') && !l.id.endsWith('-hit') && map.getLayoutProperty(l.id, 'visibility') === 'visible');
   const aggiornaZoomMinimo = () => map.setMinZoom(inModoEmergenza() ? zoomMinimoEmergenza(rischiAccesi()) : zoomMinimoNormale);
   document.addEventListener('change', e => { if (e.target?.id?.startsWith('strato-')) setTimeout(aggiornaZoomMinimo, 0); });
-  const emergenza = collegaModoEmergenza(document, { barraTab: tab.barra, icone: iconeEmergenza, suHome: () => map.flyTo({ center: CENTRO, zoom: ZOOM, bearing: 0, pitch: 0 }), suGps: () => document.getElementById('btn-posizione').click(), suCondividi: () => document.getElementById('btn-condividi').click(), suTalia: () => apriTalia(), suAttiva: () => { tab.imposta(null); for (const id of ['rndt', 'geoimage', 'tema', 'chatbot']) rail.chiudi(id); }, suModo: aggiornaZoomMinimo }); // in emergenza lo zoom minimo si ferma dove si vedono i poligoni
+  const emergenza = collegaModoEmergenza(document, { barraTab: tab.barra, icone: iconeEmergenza, suHome: () => map.flyTo({ center: CENTRO, zoom: ZOOM, bearing: 0, pitch: 0 }), suGps: () => document.getElementById('btn-posizione').click(), suCondividi: () => document.getElementById('btn-condividi').click(), suTalia: () => { foglioPs.chiudi(); apriTalia(); }, suPs: () => { // foglio dei pronto soccorso: accende lo strato (spilli sulla mappa), chiude scheda e pannelli, un secondo clic lo richiude
+    if (foglioPs.aperto()) { foglioPs.chiudi(); return; }
+    tab.imposta(null); for (const id of ['rndt', 'geoimage', 'tema', 'chatbot']) rail.chiudi(id);
+    document.querySelector('#scheda:not([hidden]) .scheda-x')?.click();
+    const casella = document.getElementById('strato-pronto-soccorso');
+    if (casella && !casella.checked && !casella.disabled) { casella.checked = true; casella.dispatchEvent(new Event('change', { bubbles: true })); }
+    foglioPs.apri();
+  }, suAttiva: () => { tab.imposta(null); for (const id of ['rndt', 'geoimage', 'tema', 'chatbot']) rail.chiudi(id); }, suModo: ora => { if (!ora) foglioPs.chiudi(); aggiornaZoomMinimo(); } }); // in emergenza lo zoom minimo si ferma dove si vedono i poligoni
   emergenza.aggiorna();
   map.once('idle', () => { emergenza.aggiorna(); aggiornaZoomMinimo(); });
   tornaAllaMappa = () => { rail.chiudi('rndt'); rail.chiudi('geoimage'); rail.chiudi('tema'); rail.chiudi('chatbot'); if (inModoEmergenza()) document.querySelector('#scheda:not([hidden]) .scheda-x')?.click(); /* in emergenza «Mappa» chiude anche la scheda */ document.getElementById('crediti').open && document.getElementById('crediti').close(); };
