@@ -213,11 +213,11 @@ function ultimoAggiornamento(argomenti, tutte, vive = []) {
 // ---- slider ----
 // le ultime cinque novità, la più recente per prima: quando si aggiunge uno strato nuovo, entra in testa al posto del più vecchio
 const SLIDE = [
+  { id: 'pronto-soccorso', img: 'img/home/strati/pronto-soccorso.webp', strati: ['pronto-soccorso'] },
   { id: 'camminabilita', img: 'img/home/strati/camminabilita.webp', strati: ['camminabilita'] },
   { id: 'protezione-civile', img: 'img/home/strati/protezione-civile.webp', strati: ['protezione-civile'] },
   { id: 'terremoti', img: 'img/home/strati/terremoti.webp', strati: ['terremoti'] },
   { id: 'traffico', img: 'img/home/strati/traffico.webp', strati: ['traffico'] },
-  { id: 'radar-allerte', img: 'img/home/strati/radar-allerte.webp', strati: ['allerte', 'radar'] },
 ];
 
 function costruisciSlider() {

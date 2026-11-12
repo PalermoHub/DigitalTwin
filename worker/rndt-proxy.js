@@ -7,6 +7,7 @@ import { aggiorna, apriWebSocket, gestisciNavi } from './navi-core.js';
 import { gestisciSatelliti } from './satelliti-core.js';
 import { gestisciAllerte } from './allerte-core.js';
 import { gestisciTraffico } from './traffico-core.js';
+import { gestisciProntoSoccorso } from './pronto-soccorso-core.js';
 import { gestisciCorto } from './corto-core.js';
 
 export default {
@@ -19,6 +20,7 @@ export default {
     if (percorso === '/navi') return gestisciNavi(richiesta, env, caches.default);
     if (percorso === '/satelliti') return gestisciSatelliti(richiesta, env, fetch, caches.default);
     if (percorso === '/allerte') return gestisciAllerte(richiesta, env, fetch, caches.default);
+    if (percorso === '/pronto-soccorso') return gestisciProntoSoccorso(richiesta, env, fetch, caches.default);
     if (percorso.startsWith('/traffico/')) return gestisciTraffico(richiesta, env, fetch, caches.default);
     return gestisci(richiesta, env, fetch);
   },
