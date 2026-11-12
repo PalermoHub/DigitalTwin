@@ -1,6 +1,7 @@
 // tests/js/scheda-pronto-soccorso.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { tabScheda } from '../../js/core/scheda-modello.js';
 import { livello, vocePs, modelloPopupPs, pannelloPs, quando } from '../../js/layers/scheda-pronto-soccorso.js';
 
 const base = { id: 'x', nome: 'Villa Sofia', struttura: 'Ospedali Riuniti', tipo: 'adulti', indirizzo: 'Piazza Salerno 1', stato: 'ok', acquisitaAlle: '2026-11-12T08:52:53.940Z',
@@ -29,7 +30,8 @@ test('vocePs: gruppi con i soli valori presenti, mai zeri inventati', () => {
   assert.match(v.gruppi[2].righe[0].valore, /ps\.inAttesa|in attesa|waiting/);
   assert.doesNotMatch(v.gruppi[2].righe[0].valore, /ps\.inTrattamento|trattamento|treatment/);
   assert.equal(v.badge, 'Molto affollato');
-  assert.equal(v.peso, 8);
+  assert.equal(v.peso, 105);
+  assert.equal(tabScheda(v.peso, v.chiave), 'pronto-soccorso');
   assert.equal(v.sempre, true);
   assert.equal(v.avviso, undefined);
 });

@@ -1,7 +1,9 @@
 {
  "data": "2026-11-12",
  "cosa": [
+  "Pronto soccorso pin",
   "Pronto soccorso (attese)",
+  "Pronto soccorso: popup e tooltip in mappa come nell'app palermo-ps (pannello con tipo, in attesa, stato e codici colore); cache dt-v508",
   "Layer Salute: pronto soccorso di Palermo con attese in tempo reale"
  ]
 }

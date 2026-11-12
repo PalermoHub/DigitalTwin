@@ -454,6 +454,14 @@ dialog li { margin: 4px 0; }
 .monumento-link { display: block; margin: 8px 10px 10px; padding: 7px 10px; border-radius: var(--r-sm); background: var(--link); color: var(--bianco); text-align: center; text-decoration: none; font-weight: 600; }
 .monumento-fonte { margin: 6px 10px 10px; color: var(--text-muted); font-size: var(--fs-xs); }
 .legenda-omi strong, .legenda-catasto strong, .legenda-trasporto strong, .legenda-monumenti strong { display: block; margin-bottom: 4px; font-size: var(--fs-xs); }
+/* pronto soccorso: i quattro livelli uno sotto l'altro, il testo va a capo e non scorre di lato */
+.legenda-pronto-soccorso { overflow-x: hidden; text-align: left; }
+.legenda-pronto-soccorso .ps-legenda-livelli { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; margin-bottom: 6px; }
+.legenda-pronto-soccorso .ps-legenda-codici { flex-direction: row; flex-wrap: wrap; gap: 3px 12px; }
+.legenda-pronto-soccorso .ps-leg-titolo { margin-top: 4px; }
+.ps-leg-riga { display: flex; align-items: center; gap: 8px; font-size: var(--fs-xs); }
+.ps-leg-anello { flex: none; width: 16px; height: 16px; box-sizing: border-box; border: 4px solid; border-radius: 50%; background: #fff; }
+.ps-leg-quadro { flex: none; width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); }
 .monumenti-cat { display: flex; align-items: center; gap: 6px; padding: 2px 0; font-size: var(--fs-xs); cursor: pointer; }
 /* la voce si accende e si spegne cliccando la riga: la casella resta (tastiera, lettori di schermo) ma non si vede */
 .monumenti-cat input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none; }

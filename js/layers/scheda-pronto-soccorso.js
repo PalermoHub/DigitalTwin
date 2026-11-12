@@ -7,8 +7,9 @@ import { localeIntl, t, tl } from '../core/i18n.js';
 
 export const FONTE = 'Ospedali Riuniti Villa Sofia-Cervello, ARNAS Civico, AOUP Policlinico, ASP Palermo e Fatebenefratelli (liste di attesa pubblicate dagli ospedali), raccolte dall\'app PalermoHub «palermo-ps»';
 export const APP = 'https://palermo-ps.coseerobe.workers.dev/';
-// Peso 8 = tab «Luogo»: un ospedale vicino si vede subito, senza cercare il tab dei servizi.
-export const PESO_LUOGO = 8;
+export const PAGINA_PS = 'https://palermohub.opendatasicilia.it/ps_palermo.html';
+// Peso 105 = tab dedicato «Pronto soccorso» (vedi tabScheda): si apre da solo al clic su un ospedale a strato acceso.
+export const PESO_TAB = 105;
 
 export const COLORE_CODICE = { rosso: '#e03131', arancione: '#f76707', azzurro: '#1c7ed6', verde: '#2f9e44', bianco: '#adb5bd' };
 export const NOME_CODICE = { rosso: 'Rosso', arancione: 'Arancione', azzurro: 'Azzurro', verde: 'Verde', bianco: 'Bianco' };
@@ -89,7 +90,7 @@ export function vocePs(p) {
   const l = livello(p);
   return {
     chiave: `pronto-soccorso-${p.id}`,
-    peso: PESO_LUOGO,
+    peso: PESO_TAB,
     strato: 'pronto-soccorso',
     titolo: titoloPs(p),
     icona: 'ospedale',
@@ -103,7 +104,10 @@ export function vocePs(p) {
     ].filter(g => g.righe.length),
     ...(avviso(p) && { avviso: avviso(p) }),
     nota: 'Il dato conta i pazienti, non è un tempo di attesa promesso. In caso di emergenza chiama il 112 (118 per l\'emergenza sanitaria).',
-    link: p.sito ? { testo: 'Sito dell\'ospedale', url: p.sito, icona: 'esterno', suggerimento: 'Sito ufficiale della struttura' } : undefined,
+    link: [
+      ...(p.sito ? [{ testo: 'Sito dell\'ospedale', url: p.sito, icona: 'esterno', suggerimento: 'Sito ufficiale della struttura' }] : []),
+      { testo: 'Pronto soccorso Palermo su PalermoHub', url: PAGINA_PS, icona: 'esterno', suggerimento: 'Pagina di PalermoHub con le attese di tutti i pronto soccorso' },
+    ],
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),
   };
 }

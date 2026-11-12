@@ -4,8 +4,9 @@ import { voceFiltro } from '../core/legenda.js';
 import { tl, t } from '../core/i18n.js';
 import { apriPopupScheda } from './popup-traffico.js';
 import { scegliProxy } from '../rndt/proxy.js';
-import { registraBadge, layerBadge, espressioneBadge, stileBadge, simboloBadge } from '../core/icone-mappa.js';
-import { LIVELLI, COLORE_LIVELLO, livello, vocePs, modelloPopupPs, pannelloPs, quando } from './scheda-pronto-soccorso.js';
+import { registraBadge, layerBadge, stileBadge, simboloBadge } from '../core/icone-mappa.js';
+import { idPin, registraPin } from './pronto-soccorso-pin.js';
+import { LIVELLI, COLORE_LIVELLO, COLORE_CODICE, NOME_CODICE, livello, vocePs, modelloPopupPs, pannelloPs, quando } from './scheda-pronto-soccorso.js';
 
 // Pronto soccorso di Palermo: 8 presidi (adulti e pediatrici), colorati per affollamento. I conteggi arrivano dal Worker (/pronto-soccorso, dati
 // dell'app palermo-ps, rinnovati ogni 2 minuti); l'anagrafica sta anche in dati/salute/pronto-soccorso.geojson, così i punti ci sono comunque.
@@ -14,9 +15,9 @@ const PUNTI = 'pronto-soccorso-punti';
 const HIT = 'pronto-soccorso-hit-punti'; // punti trasparenti, sempre presenti: la scheda mostra il presidio anche a strato spento
 const ICONA = 'ospedale';
 const COLORE = '#e03131';
-const RIFRESCO_MS = 2 * 60 * 1000;
+const RIFRESCO_MS = 60 * 1000; // quanto la cache del Worker: la fonte si rinnova ogni ~2 minuti, così il ritardo massimo resta sotto i 3
+let ultimaLettura = 0; // ms dell'ultima lettura riuscita
 const urlProxy = () => `${scegliProxy(location.search, location.hostname)}/pronto-soccorso`;
-const immagine = espressioneBadge(ICONA, 'livello', LIVELLI.map(([k, , c]) => [k, c]), COLORE_LIVELLO.nd);
 
 const dettagli = new Map(); // id -> proprietà complete (anagrafica + ultima lettura)
 const completo = p => dettagli.get(p.id) ?? p;
@@ -38,7 +39,7 @@ function featureDi(p, usati) {
   const chiave = `${p.lng.toFixed(5)},${p.lat.toFixed(5)}`;
   const n = usati.get(chiave) ?? 0;
   usati.set(chiave, n + 1);
-  return { type: 'Feature', geometry: { type: 'Point', coordinates: [p.lng, p.lat] }, properties: { ...p, livello: livello(p), off: [n * 26, 0] } };
+  return { type: 'Feature', geometry: { type: 'Point', coordinates: [p.lng, p.lat] }, properties: { ...p, livello: livello(p), pin: idPin(p, livello(p)), off: [n * 44, 0] } };
 }
 
 function scrivi(map) {
@@ -65,6 +66,7 @@ export async function caricaLettura(map = mappa) {
       const dati = await r.json();
       for (const p of dati.ps ?? []) dettagli.set(p.id, { ...(dettagli.get(p.id) ?? {}), ...p });
       aggiornato = dati.aggiornato ?? '';
+      ultimaLettura = Date.now();
       if (map) scrivi(map);
       scriviLegenda();
     } catch { /* senza Worker restano anagrafica e ultima lettura: la scheda dice che il dato non c'è */ } finally { inLettura = null; }
@@ -126,6 +128,11 @@ function collegaPopup(map) {
   map.on('mouseleave', PUNTI, () => { map.getCanvas().style.cursor = ''; });
 }
 
+// Tornando sulla scheda del browser (in background i timer rallentano) i dati si rinfrescano subito se sono vecchi.
+function alRitorno() {
+  if (!document.hidden && Date.now() - ultimaLettura > RIFRESCO_MS) caricaLettura();
+}
+
 let elencoLegenda = null;
 let notaLegenda = null;
 
@@ -135,19 +142,35 @@ function scriviLegenda() {
   notaLegenda.textContent = q ? t('ps.legenda.aggiornato', { quando: q }) : t('ps.legenda.nonDisponibile');
 }
 
+// Voce di legenda: un campione (anello o quadratino) e il testo, una per riga, allineate a sinistra.
+function voceLegenda(campione, testo) {
+  const riga = el('div', 'ps-leg-riga');
+  riga.append(campione, el('span', null, testo));
+  return riga;
+}
+
 function creaLegenda() {
   legenda = el('div', 'legenda legenda-monumenti legenda-pronto-soccorso lg-pronto-soccorso');
   legenda.hidden = true;
-  legenda.append(el('strong', null, 'Pronto soccorso: affollamento'));
+  legenda.append(el('strong', null, 'Anello: affollamento'));
   elencoLegenda = el('div', 'ps-legenda-livelli');
   for (const [k, nome, colore] of LIVELLI) {
-    const riga = voceFiltro(simboloBadge(ICONA, colore), nome, () => {}, true, false);
-    riga.querySelector('input').hidden = true; // voce solo informativa: i livelli non si filtrano
+    const anello = el('i', 'ps-leg-anello');
+    anello.style.borderColor = colore;
+    const riga = voceLegenda(anello, nome);
     riga.dataset.livello = k;
     elencoLegenda.append(riga);
   }
+  const codici = el('div', 'ps-legenda-livelli ps-legenda-codici');
+  for (const c of Object.keys(COLORE_CODICE)) {
+    const q = el('i', 'ps-leg-quadro');
+    q.style.background = COLORE_CODICE[c];
+    codici.append(voceLegenda(q, NOME_CODICE[c]));
+  }
   notaLegenda = el('p', 'uffici-nota');
-  legenda.append(elencoLegenda, notaLegenda, el('p', 'uffici-nota', 'Indice dell\'ospedale: pazienti presenti rispetto ai posti tecnici. Non è un tempo di attesa. In emergenza chiama il 112.'));
+  legenda.append(elencoLegenda, el('strong', 'ps-leg-titolo', 'Ciambella: pazienti in attesa per codice colore'), codici,
+    el('p', 'uffici-nota', 'Al centro il totale dei pazienti in attesa.'), notaLegenda,
+    el('p', 'uffici-nota', 'Indice dell\'ospedale: pazienti presenti rispetto ai posti tecnici. Non è un tempo di attesa. In emergenza chiama il 112.'));
   document.getElementById('legende').append(legenda);
   scriviLegenda();
 }
@@ -163,8 +186,9 @@ export default {
   },
   aggiungiLayer(map) {
     mappa = map;
-    registraBadge(map, ICONA, LIVELLI.map(([, , c]) => c));
-    map.addLayer(layerBadge({ id: PUNTI, source: SRC, immagine, layout: { visibility: 'none', 'icon-offset': ['get', 'off'], 'symbol-sort-key': ['-', 0, ['get', 'off']] } }));
+    registraBadge(map, ICONA, LIVELLI.map(([, , c]) => c)); // per il tooltip e la legenda
+    registraPin(map);
+    map.addLayer(layerBadge({ id: PUNTI, source: SRC, immagine: ['get', 'pin'], layout: { visibility: 'none', 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 17, 1], 'icon-offset': ['get', 'off'], 'symbol-sort-key': ['-', 0, ['get', 'off']] } }));
     map.addLayer({ id: HIT, type: 'circle', source: SRC, paint: { 'circle-radius': 12, 'circle-opacity': 0 } });
     collegaPopup(map);
   },
@@ -180,12 +204,15 @@ export default {
       clearInterval(timer);
       timer = null;
       if (attivo) { caricaLettura(); timer = setInterval(() => { if (!document.hidden) caricaLettura(); }, RIFRESCO_MS); }
+      document.removeEventListener('visibilitychange', alRitorno);
+      if (attivo) document.addEventListener('visibilitychange', alRitorno);
     } }],
   pannello: creaLegenda,
   scheda: {
     vicini: { max: 5 }, // anche i presidi nei dintorni del clic (vedi docs/NUOVO_LAYER.md)
     layers: [HIT],
     voci(trovati) {
+      if (trovati.length && Date.now() - ultimaLettura > RIFRESCO_MS) caricaLettura(); // la scheda si apre anche a strato spento: si rinfrescano i dati per la prossima apertura e per il pannello
       const visti = new Set();
       return trovati.flatMap(f => {
         if (visti.has(f.properties.id)) return [];
