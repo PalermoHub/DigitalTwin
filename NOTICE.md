@@ -11,6 +11,7 @@ I dati di terzi **non sono coperti** da CC BY 4.0 e mantengono la licenza della 
 condizioni aggiornate presso il titolare. Fonti usate:
 
 - ISTAT (sezioni censuarie, indicatori, censimento permanente): in genere CC BY
+- Ospedali di Palermo (Villa Sofia-Cervello, ARNAS Civico, AOUP Policlinico, ASP Palermo, Fatebenefratelli): liste di attesa dei pronto soccorso, pubblicate dagli enti e raccolte dall'app PalermoHub «palermo-ps»; licenza da confermare con gli enti
 - Comune di Palermo (catasto/SITR, PRG, civici, GTFS, uffici): condizioni del portale open data del Comune
 - Font delle etichette della mappa (`fonts/glyphs/`): Noto Sans (copiato da OpenFreeMap) e IM FELL English (da maplibre-style-server di Kanahiro), entrambi con licenza SIL Open Font License 1.1
 - Ministero dell'economia e delle finanze, Dipartimento del Tesoro (immobili dichiarati al censimento, `dati/mef-immobili/`): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), con citazione della fonte

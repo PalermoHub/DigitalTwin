@@ -1218,5 +1218,74 @@
     ]
    ]
   }
+ },
+ "pronto-soccorso": {
+  "data": "2026-11-12",
+  "aggiornati": "2026-11-12",
+  "enti": [
+   "Ospedali Riuniti Villa Sofia-Cervello",
+   "ARNAS Civico",
+   "AOUP Policlinico",
+   "ASP Palermo",
+   "Fatebenefratelli"
+  ],
+  "fonte": {
+   "it": "Liste di attesa dei pronto soccorso pubblicate dagli ospedali di Palermo, raccolte ogni 2 minuti dall'app PalermoHub «palermo-ps». Dato sui pazienti presenti, non tempo di attesa; licenza da confermare con gli enti.",
+   "en": "Emergency department waiting lists published by Palermo hospitals, collected every 2 minutes by the PalermoHub app \"palermo-ps\". Counts patients present, not a waiting time; licence to be confirmed with the bodies."
+  },
+  "link": {
+   "it": [
+    [
+     "App Pronto soccorso Palermo (PalermoHub)",
+     "https://palermo-ps.coseerobe.workers.dev/"
+    ],
+    [
+     "Ospedali Riuniti Villa Sofia-Cervello",
+     "https://www.ospedaliriunitipalermo.it"
+    ],
+    [
+     "ARNAS Civico",
+     "https://www.arnascivico.it"
+    ],
+    [
+     "AOUP Policlinico",
+     "https://www.policlinico.pa.it"
+    ],
+    [
+     "ASP Palermo",
+     "https://www.asppalermo.org"
+    ],
+    [
+     "Fatebenefratelli",
+     "https://www.provinciaromanafbf.it"
+    ]
+   ],
+   "en": [
+    [
+     "App Pronto soccorso Palermo (PalermoHub)",
+     "https://palermo-ps.coseerobe.workers.dev/"
+    ],
+    [
+     "Ospedali Riuniti Villa Sofia-Cervello",
+     "https://www.ospedaliriunitipalermo.it"
+    ],
+    [
+     "ARNAS Civico",
+     "https://www.arnascivico.it"
+    ],
+    [
+     "AOUP Policlinico",
+     "https://www.policlinico.pa.it"
+    ],
+    [
+     "ASP Palermo",
+     "https://www.asppalermo.org"
+    ],
+    [
+     "Fatebenefratelli",
+     "https://www.provinciaromanafbf.it"
+    ]
+   ]
+  }
  }
 }

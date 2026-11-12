@@ -10,6 +10,7 @@ export const FONTI = [
   { file: 'monumenti/monumenti.geojson', strato: 'monumenti', nota: p => p.categoria, campi: p => [p.nome] },
   { file: 'alberi_monumentali/alberi.geojson', strato: 'alberi', zoom: 18, nota: p => tr('luoghi.albero', { localita: p.localita }), campi: p => [p.nome, p.specie, p.localita] },
   { file: 'fontanelle/fontanelle.geojson', strato: 'fontanelle', zoom: 18, nota: () => tr('luoghi.fontanella'), campi: p => ['Fontanella', p.indirizzo] },
+  { file: 'salute/pronto-soccorso.geojson', strato: 'pronto-soccorso', zoom: 17, nota: p => tr('luoghi.prontoSoccorso', { tipo: p.tipo === 'pediatrico' ? tr('luoghi.prontoSoccorso.pediatrico') : tr('luoghi.prontoSoccorso.adulti') }), campi: p => [p.nome, `Pronto soccorso ${p.nome}`, p.struttura, p.indirizzo] },
   { file: 'trasporto/fermate.geojson', strato: 'trasporto-fermate', nota: p => tr('luoghi.fermata', { linee: p.linee.length ? tr('luoghi.fermata.linee', { elenco: p.linee.join(', ') }) : '' }), campi: p => [p.nome] },
   // le linee si trovano per numero o nome; lo strato da accendere è bus o tram
   { file: 'trasporto/linee.geojson', strato: p => (p.tipo === 'tram' ? 'trasporto-tram' : 'trasporto-bus'), zoom: 14, numero: p => p.numero,

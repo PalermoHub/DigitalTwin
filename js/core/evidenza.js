@@ -41,6 +41,7 @@ export const FONTI = {
   'terremoti-hit': { etichetta: t('evidenza.terremoto'), colore: '#e03131' },
   'colonnine-hit': { etichetta: t('evidenza.colonnina'), colore: '#2b8a3e' },
   'uffici-hit': { etichetta: t('evidenza.uffici'), colore: '#a61e4d' },
+  'pronto-soccorso-hit-punti': { etichetta: t('evidenza.prontoSoccorso'), colore: '#e03131' },
   'trasporto-hit-fermate': { etichetta: t('evidenza.fermata'), colore: '#364fc7' },
   'trasporto-hit-linee': { etichetta: t('evidenza.linea'), colore: '#e03131' },
   'trasporto-hit-stazioni': { etichetta: t('evidenza.stazione'), colore: '#b7282e' },
@@ -53,7 +54,7 @@ export const FONTI = {
 const ICONE_PUNTI = {
   'monumenti-hit-punti': 'monumento', 'alberi-hit-punti': 'albero', 'fontanelle-hit-punti': 'fontanella', 'luoghi-osm-hit-punti': 'indirizzo',
   'scuole-hit-punti': 'scuola', 'seggi-hit-punti': 'voto', 'distributori-hit': 'distributori', 'opere-hit': 'cantiere', 'piano-triennale-hit-punti': 'piano',
-  'colonnine-hit': 'colonnine', 'uffici-hit': 'uffici', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
+  'colonnine-hit': 'colonnine', 'uffici-hit': 'uffici', 'pronto-soccorso-hit-punti': 'ospedale', 'trasporto-hit-fermate': 'trasporto', 'trasporto-hit-stazioni': 'treno',
   'distributori-vicini': 'distributori', 'trasporto-vicine': 'trasporto', // evidenze delle voci della scheda
 };
 // Layer con la propria sagoma in mappa (aerei e navi ruotati, satelliti) e un tooltip proprio: la selezione resta un cerchio alone,

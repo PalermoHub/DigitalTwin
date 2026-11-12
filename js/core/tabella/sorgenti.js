@@ -27,6 +27,7 @@ const pnrr = t('tabella.fonte.pnrr');
 const opere = t('tabella.fonte.opere');
 const piano = t('tabella.fonte.piano');
 const mimit = t('tabella.fonte.mimit');
+const salute = t('tabella.fonte.salute');
 const adsb = t('tabella.fonte.adsb');
 const ais = t('tabella.fonte.ais');
 const ingv = t('tabella.fonte.ingv');
@@ -53,6 +54,7 @@ export const SORGENTI = [
   // monumenti: solo i luoghi singoli (a zoom bassi quelli raccolti nei cerchi dei gruppi non sono interrogabili)
   { id: 'monumenti', nome: t('tabella.layer.monumenti'), strati: ['monumenti-hit-punti'], visibili: ['monumenti-punti', 'monumenti-poli', 'monumenti-cluster'], chiave: p => p.id, colonne: ['nome', 'categoria', 'url', 'fonte'], fonte: turismo, approssimata: false, esporta: true, colore: '#4a5d8a' },
   { id: 'alberi', nome: t('tabella.layer.alberi'), strati: ['alberi-hit-punti'], visibili: ['alberi-punti'], chiave: p => p.id, colonne: ['nome', 'specie', 'localita', 'altezza', 'circonferenza', 'altitudine', 'insieme', 'criteri', 'dichiarato', 'scheda'], fonte: alberi, approssimata: false, esporta: true, colore: '#2f9e44' },
+  { id: 'pronto-soccorso', nome: t('tabella.layer.prontoSoccorso'), strati: ['pronto-soccorso-hit-punti'], visibili: ['pronto-soccorso-punti'], chiave: p => p.id, colonne: ['nome', 'tipo', 'struttura', 'indirizzo', 'livello', 'sovraffollamentoPct', 'pazientiTotali', 'inAttesa', 'postiTecnici'], fonte: salute, approssimata: false, esporta: true, colore: '#e03131' },
   { id: 'fontanelle', nome: t('tabella.layer.fontanelle'), strati: ['fontanelle-hit-punti'], visibili: ['fontanelle-punti'], chiave: p => p.id, colonne: ['denominazione', 'indirizzo', 'civico', 'tipo_ubicazione', 'quartiere', 'upl', 'circoscrizione', 'note'], fonte: comune, approssimata: false, esporta: true, colore: '#1c7ed6' },
   { id: 'seggi', nome: t('tabella.layer.seggi'), strati: ['seggi-hit-punti'], visibili: ['seggi-punti', 'seggi-poli'], chiave: p => p.id, fonte: comune, approssimata: false, esporta: true, colore: '#0c8599' },
   { id: 'immobili', nome: t('tabella.layer.immobili'), strati: ['immobili-hit'], visibili: ['immobili'], chiave: p => p.fid, colonne: ['TIPO', 'SUBTIPO', 'CATEGORIA', 'INDIRIZZO', 'NUMERO_CIVICO', 'FOGLIO', 'PLLA', 'SUB', 'Quartiere', 'UPL_nome', 'circoscrizione'], fonte: comune, approssimata: true, esporta: true, colore: '#868e96' },

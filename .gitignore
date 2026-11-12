@@ -28,6 +28,8 @@ dati/*/
 !dati/opere/
 # eccezione: Piano triennale dei lavori pubblici 2026-2028 (generato a mano da scripts/piano_triennale.py, vedi dati/piano-triennale/README.md)
 !dati/piano-triennale/
+# eccezione: pronto soccorso (anagrafica dei presidi, scritta a mano da dati/salute/README.md)
+!dati/salute/
 !dati/pendolarismo/
 # eccezione: statistiche delle superfici delle particelle (percentili per foglio, zona PRG e zona OMI; da palermohub/pmtiles/tools/build_analisi_particelle.py)
 !dati/catasto/

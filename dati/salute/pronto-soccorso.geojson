@@ -1,0 +1,157 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.337607,
+     38.155978
+    ]
+   },
+   "properties": {
+    "id": "villa-sofia-adulti",
+    "nome": "Villa Sofia",
+    "struttura": "Ospedali Riuniti Villa Sofia-Cervello",
+    "tipo": "adulti",
+    "indirizzo": "Piazza Salerno 1, 90146 Palermo",
+    "sito": "https://www.ospedaliriunitipalermo.it",
+    "fonteUrl": "https://www.ospedaliriunitipalermo.it/amministrazione-trasparente/servizi-erogati/liste-di-attesa/pazienti-in-attesa-al-pronto-soccorso/"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.3138741,
+     38.1545298
+    ]
+   },
+   "properties": {
+    "id": "cervello-adulti",
+    "nome": "Cervello",
+    "struttura": "Ospedali Riuniti Villa Sofia-Cervello",
+    "tipo": "adulti",
+    "indirizzo": "Via Trabucco 180, 90146 Palermo",
+    "sito": "https://www.ospedaliriunitipalermo.it",
+    "fonteUrl": "https://www.ospedaliriunitipalermo.it/amministrazione-trasparente/servizi-erogati/liste-di-attesa/pazienti-in-attesa-al-pronto-soccorso/"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.3138741,
+     38.1545298
+    ]
+   },
+   "properties": {
+    "id": "cervello-pediatrico",
+    "nome": "Cervello Pediatrico",
+    "struttura": "Ospedali Riuniti Villa Sofia-Cervello",
+    "tipo": "pediatrico",
+    "indirizzo": "Via Trabucco 180, 90146 Palermo",
+    "sito": "https://www.ospedaliriunitipalermo.it",
+    "fonteUrl": "https://www.ospedaliriunitipalermo.it/amministrazione-trasparente/servizi-erogati/liste-di-attesa/pazienti-in-attesa-al-pronto-soccorso/"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.3560857,
+     38.1042334
+    ]
+   },
+   "properties": {
+    "id": "civico-adulti",
+    "nome": "Civico",
+    "struttura": "ARNAS Civico",
+    "tipo": "adulti",
+    "indirizzo": "Via Carmelo Lazzaro 4, 90127 Palermo",
+    "sito": "https://www.arnascivico.it",
+    "fonteUrl": "https://www.arnascivico.it/index.php?option=com_content&view=article&id=3415&catid=24&Itemid=139"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.3548131,
+     38.1099461
+    ]
+   },
+   "properties": {
+    "id": "di-cristina-pediatrico",
+    "nome": "Di Cristina",
+    "struttura": "ARNAS Civico",
+    "tipo": "pediatrico",
+    "indirizzo": "Via Carmelo Lazzaro 4, 90127 Palermo",
+    "sito": "https://www.arnascivico.it",
+    "fonteUrl": "https://www.arnascivico.it/index.php?option=com_content&view=article&id=3415&catid=24&Itemid=139"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.3625445,
+     38.1044938
+    ]
+   },
+   "properties": {
+    "id": "policlinico-adulti",
+    "nome": "Policlinico",
+    "struttura": "AOUP Policlinico \"P. Giaccone\"",
+    "tipo": "adulti",
+    "indirizzo": "Via del Vespro 129, 90127 Palermo",
+    "sito": "https://www.policlinico.pa.it",
+    "fonteUrl": "https://www.policlinico.pa.it/web/guest"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.3099573,
+     38.0932568
+    ]
+   },
+   "properties": {
+    "id": "ingrassia-adulti",
+    "nome": "Ingrassia",
+    "struttura": "ASP Palermo",
+    "tipo": "adulti",
+    "indirizzo": "Corso Calatafimi 1002, 90131 Palermo",
+    "sito": "https://www.asppalermo.org",
+    "fonteUrl": "https://www.asppalermo.org/attese_ps/index_mod2.php"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.3859316,
+     38.1058898
+    ]
+   },
+   "properties": {
+    "id": "buccheri-adulti",
+    "nome": "Buccheri La Ferla",
+    "struttura": "Fatebenefratelli",
+    "tipo": "adulti",
+    "indirizzo": "Via Messina Marine 197, 90123 Palermo",
+    "sito": "https://www.provinciaromanafbf.it",
+    "fonteUrl": "https://servizionline.provinciaromanafbf.it/palermo/monitorps/portal-view/01/G"
+   }
+  }
+ ]
+}

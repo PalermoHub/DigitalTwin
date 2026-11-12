@@ -35,6 +35,7 @@ export const ICONE = {
   allerta: 'M12 2.5L22.5 21h-21zM12 7L5.6 19h12.8zM11 10h2v4.5h-2zM11 15.8h2v2h-2z', // allerta meteo-idro (triangolo con punto esclamativo)
   terremoto: 'M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM12 3.5a8.5 8.5 0 0 1 8.5 8.5h-2A6.5 6.5 0 0 0 12 5.5zM12 20.5A8.5 8.5 0 0 1 3.5 12h2a6.5 6.5 0 0 0 6.5 6.5z', // terremoti in tempo reale (epicentro con onde)
   satellite: 'M12 8l4 4-4 4-4-4zM1.5 9.5h5v5h-5zM17.5 9.5h5v5h-5zM6.5 11.2h2v1.6h-2zM15.5 11.2h2v1.6h-2zM11.2 3.5h1.6V8h-1.6zM11.2 16h1.6v4.5h-1.6z', // satelliti e ISS nel cielo di Palermo
+  ospedale: 'M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z', // pronto soccorso (croce in un riquadro)
   fontanella: 'M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z',
   scuola: 'M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z',
   seggio: 'M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',
