@@ -87,3 +87,9 @@ test('struttura: fonte dei dati subito dopo il sito ufficiale', () => {
   assert.equal(r.indexOf('Fonte dei dati'), r.indexOf('Sito ufficiale') + 1);
   assert.ok(!vocePs(base).gruppi[0].righe.some(z => z.etichetta === 'Fonte dei dati'));
 });
+
+test('nota: spiega il sovraffollamento prima dell\'avviso di emergenza', () => {
+  const [a, b] = vocePs(base).nota.split('\n');
+  assert.match(a, /^Sovraffollamento: rapporto fra pazienti presenti e posti disponibili/);
+  assert.match(b, /112/);
+});

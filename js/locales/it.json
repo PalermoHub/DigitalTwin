@@ -3909,5 +3909,6 @@
   "info.ps-attese.titolo": "Pazienti in attesa, ultime 24 ore",
   "info.ps-attese.cosa": "Quanti pazienti erano in attesa di essere visitati in questo pronto soccorso, ogni mezz'ora nelle ultime 24 ore. È la media delle letture pubblicate dall'ospedale in quella mezz'ora.",
   "info.ps-attese.come": "Ogni lettura arriva dal sito dell'ospedale e viene salvata dall'app PalermoHub «palermo-ps». Dove l'ospedale non ha pubblicato nulla il grafico ha un buco: non si inventano zeri. Il punto pieno è l'ultima lettura.",
-  "info.ps-attese.leggere": "Più la linea sale, più persone aspettano. Confronta il valore di adesso con le ore precedenti: serve a capire se la coda sta crescendo o calando. Non è un tempo di attesa. In emergenza chiama il 112."
+  "info.ps-attese.leggere": "Più la linea sale, più persone aspettano. Confronta il valore di adesso con le ore precedenti: serve a capire se la coda sta crescendo o calando. Non è un tempo di attesa. In emergenza chiama il 112.",
+  "lbl.Sovraffollamento: rapporto fra pazienti presenti e posti disponibili. Il segno sulla barra è il 100%: oltre quel punto il pronto soccorso lavora sopra la sua capacità. Un valore alto non dice quanto aspetterai tu.": "Sovraffollamento: rapporto fra pazienti presenti e posti disponibili. Il segno sulla barra è il 100%: oltre quel punto il pronto soccorso lavora sopra la sua capacità. Un valore alto non dice quanto aspetterai tu."
 }

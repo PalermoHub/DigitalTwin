@@ -3909,5 +3909,6 @@
   "info.ps-attese.titolo": "Patients waiting, last 24 hours",
   "info.ps-attese.cosa": "How many patients were waiting to be seen at this emergency department, every half hour over the last 24 hours. It is the average of the readings the hospital published in that half hour.",
   "info.ps-attese.come": "Each reading comes from the hospital's website and is stored by the PalermoHub app «palermo-ps». Where the hospital published nothing the chart has a gap: zeros are never invented. The filled dot is the latest reading.",
-  "info.ps-attese.leggere": "The higher the line, the more people are waiting. Compare the current value with the previous hours: it shows whether the queue is growing or shrinking. It is not a waiting time. In an emergency call 112."
+  "info.ps-attese.leggere": "The higher the line, the more people are waiting. Compare the current value with the previous hours: it shows whether the queue is growing or shrinking. It is not a waiting time. In an emergency call 112.",
+  "lbl.Sovraffollamento: rapporto fra pazienti presenti e posti disponibili. Il segno sulla barra è il 100%: oltre quel punto il pronto soccorso lavora sopra la sua capacità. Un valore alto non dice quanto aspetterai tu.": "Overcrowding: ratio between patients present and available places. The mark on the bar is 100%: beyond that point the emergency department is working above its capacity. A high value does not tell you how long you will wait."
 }

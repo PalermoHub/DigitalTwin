@@ -113,10 +113,8 @@ export function vocePs(p) {
     ].filter(g => g.righe.length),
     dinamico: () => graficoAttese(p), // grafico dei pazienti in attesa nelle ultime 24 ore
     ...(avviso(p) && { avviso: avviso(p) }),
-    nota: 'Il dato conta i pazienti, non è un tempo di attesa promesso. In caso di emergenza chiama il 112 (118 per l\'emergenza sanitaria).',
+    nota: ['Sovraffollamento: rapporto fra pazienti presenti e posti disponibili. Il segno sulla barra è il 100%: oltre quel punto il pronto soccorso lavora sopra la sua capacità. Un valore alto non dice quanto aspetterai tu.', 'Il dato conta i pazienti, non è un tempo di attesa promesso. In caso di emergenza chiama il 112 (118 per l\'emergenza sanitaria).'].join('\n'),
     link: [
-      ...(urlPercorsoPs(p) ? [{ testo: 'Percorso fino all\'ospedale', url: urlPercorsoPs(p), icona: 'esterno', suggerimento: 'Apre le indicazioni stradali nell\'app di navigazione' }] : []),
-      ...(p.sito ? [{ testo: 'Sito dell\'ospedale', url: p.sito, icona: 'esterno', suggerimento: 'Sito ufficiale della struttura' }] : []),
       { testo: 'Pronto soccorso Palermo su PalermoHub', url: PAGINA_PS, icona: 'esterno', suggerimento: 'Pagina di PalermoHub con le attese di tutti i pronto soccorso' },
     ],
     fonte: t('layer.fonte', { fonte: tl(FONTE) }),

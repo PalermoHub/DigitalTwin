@@ -308,7 +308,7 @@ export function disegnaSezione(s, i) {
   if (s.gruppi.some(g => g.esteso) || s.dinamicoEsteso) corpo.unshift(creaInterruttoreDettagli());
   if (s.accordion) corpo.push(disegnaAccordion(s.accordion));
   for (const l of [].concat(s.link ?? [])) corpo.push(disegnaLink(l));
-  if (s.nota) corpo.push(el('p', 'scheda-nota', tl(s.nota)));
+  for (const n of s.nota?.split('\n') ?? []) corpo.push(el('p', 'scheda-nota', tl(n))); // più paragrafi separati da a capo
   for (const f of s.fonte?.split('\n') ?? []) corpo.push(el('p', 'scheda-nota scheda-fonte', tl(f)));
 
   const sezione = el('details', 'scheda-sez');
