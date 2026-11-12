@@ -40,6 +40,23 @@
   }
  },
  {
+  "id": "pronto-soccorso",
+  "strati": [
+   "pronto-soccorso",
+   "luoghi-osm-salute"
+  ],
+  "it": {
+   "badge": "Emergenza",
+   "titolo": "Pronto soccorso",
+   "testo": "Quanto sono affollati adesso i pronto soccorso di Palermo, con pazienti in attesa e codici colore, insieme ai luoghi della salute vicini."
+  },
+  "en": {
+   "badge": "Emergency",
+   "titolo": "Emergency departments",
+   "testo": "How crowded Palermo's emergency departments are right now, with waiting patients and triage colour codes, together with nearby healthcare places."
+  }
+ },
+ {
   "id": "scuole",
   "strati": [
    "scuole",

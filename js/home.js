@@ -154,7 +154,7 @@ function costruisciIndice() {
 
 const conteggi = {}; // numeri per le pastiglie dei pulsanti su telefono: id fascia → quanti
 let homeMobile = null; // impaginazione a tendine su telefono (core/home-mobile.js)
-let creaCardEmergenza = null; // nuova card dello strato di emergenza, per il pannello «Emergenze» del telefono
+let creaCardEmergenza = []; // nuove card degli strati di emergenza, per il pannello «Emergenze» del telefono
 
 // ---- numeri: conteggi ricavati dall'elenco stesso, ogni tessera porta alla sezione giusta ----
 function costruisciNumeri(argomenti, tutte) {
@@ -269,7 +269,7 @@ function costruisciSlider() {
 // ---- elenco degli strati ----
 const NUOVO_GIORNI = 7; // una scheda è «Nuova» per una settimana dopo l'aggiunta alla mappa
 const GIORNO = 86400000;
-const STRATI_EMERGENZA = new Set(['protezione-civile']); // scheda col badge «Emergenza» e bordo rosso, come il percorso «Aree di emergenza»
+const STRATI_EMERGENZA = new Set(['protezione-civile', 'pronto-soccorso']); // scheda col badge «Emergenza» e bordo rosso, come il percorso «Aree di emergenza»
 const isNuovo = data => !!data && Date.now() - new Date(data).getTime() <= NUOVO_GIORNI * GIORNO;
 const formatoData = data => new Date(data).toLocaleDateString(lingua(), { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -337,8 +337,7 @@ async function costruisciElenco() {
   });
   costruisciNumeri(argomenti, tutte);
   collegaRicercaHome(tutte);
-  const emergenza = tutte.find(({ s }) => STRATI_EMERGENZA.has(s.id));
-  if (emergenza) creaCardEmergenza = () => costruisciCard(emergenza.s, emergenza.a);
+  creaCardEmergenza = tutte.filter(({ s }) => STRATI_EMERGENZA.has(s.id)).map(({ s, a }) => () => costruisciCard(s, a));
   const ul = el('ul', { className: 'home-card-elenco' }, ...card);
   elenco.append(ul);
 
@@ -483,7 +482,7 @@ async function costruisciPercorsi() {
     const testi = p[lingua()] ?? p.it;
     const apri = el('a', { className: 'percorso-apri', href: MAPPA, textContent: tr('home.percorsi.apri') });
     linkMappa(p.strati, true, p.vista).then(href => { apri.href = href; });
-    box.append(el('li', { className: 'percorso', ...(p.strati.some(id => STRATI_EMERGENZA.has(id)) && { id: 'percorso-emergenza' }) },
+    box.append(el('li', { className: p.strati.some(id => STRATI_EMERGENZA.has(id)) ? 'percorso percorso-emergenza' : 'percorso' },
       ...(testi.badge ? [el('span', { className: 'percorso-badge', textContent: testi.badge })] : []),
       el('h4', { textContent: testi.titolo }),
       el('p', { textContent: testi.testo }),
@@ -494,14 +493,14 @@ async function costruisciPercorsi() {
 
 // Telefono: il percorso e la scheda di emergenza (prima) stanno nel pannello «Emergenze»; sullo schermo largo il percorso torna in testa all'elenco.
 function riempiEmergenze(ul, mobile) {
-  const percorso = document.getElementById('percorso-emergenza');
-  const copia = ul.querySelector('.strato-card');
+  const percorsi = [...document.querySelectorAll('.percorso-emergenza')];
+  const copie = ul.querySelectorAll('.strato-card');
   if (mobile) {
-    if (!copia && creaCardEmergenza) ul.prepend(creaCardEmergenza());
-    if (percorso) ul.append(percorso);
+    if (!copie.length) ul.prepend(...creaCardEmergenza.map(crea => crea()));
+    ul.append(...percorsi);
   } else {
-    if (percorso) document.getElementById('home-percorsi').prepend(percorso);
-    copia?.remove();
+    document.getElementById('home-percorsi').prepend(...percorsi);
+    copie.forEach(c => c.remove());
   }
 }
 
