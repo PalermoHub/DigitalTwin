@@ -25,7 +25,8 @@ A click on a point, even with the layer off, opens the card in the "Place" tab. 
 - **Situation now**: crowding as a percentage, patients present, patients waiting, technical beds and the time of the last update.
 - **Patients by colour code**: for red, orange, blue, green and white, how many are waiting, in treatment and under observation, and the average wait where the hospital provides it.
 - **Length of stay of patients present**: under 24 hours, 24 to 48 hours, over 48 hours.
-- A link to the hospital website.
+- **«Patients waiting, last 24 hours» chart**: a line with one value every half hour (average of the readings); where the hospital published nothing there is a gap, never an invented zero. Touching the chart shows time and value. It shows whether the queue is growing or shrinking; it is not a waiting time. The «i» icon explains what it shows, how it works and how to read it.
+- In the «Structure» group: the address is a link that opens **directions** in Google Maps (in the navigation app on a phone), then the **official website** and the **data source page** the waiting figures are read from.
 
 If the data is old the card says so and the point turns grey. **Note**: the figure counts patients; it does not promise a waiting time. In an emergency call **112** (118 for medical emergencies).
 

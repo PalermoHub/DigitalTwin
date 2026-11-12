@@ -3894,5 +3894,20 @@
   "lbl.dati pubblici degli ospedali; licenza da confermare con gli enti": "dati pubblici degli ospedali; licenza da confermare con gli enti",
   "home.slide.pronto-soccorso.titolo": "Pronto soccorso",
   "home.slide.pronto-soccorso.testo": "Quanto sono affollati adesso i pronto soccorso di Palermo, con pazienti in attesa e codici colore, letti ogni 2 minuti.",
-  "home.slide.pronto-soccorso.alt": "La mappa di Palermo con i pronto soccorso colorati per affollamento"
+  "home.slide.pronto-soccorso.alt": "La mappa di Palermo con i pronto soccorso colorati per affollamento",
+  "lbl.Sito ufficiale": "Sito ufficiale",
+  "lbl.Percorso fino all'ospedale": "Percorso fino all'ospedale",
+  "lbl.Apre le indicazioni stradali nell'app di navigazione": "Apre le indicazioni stradali nell'app di navigazione",
+  "lbl.Pagina della fonte dati": "Pagina della fonte dati",
+  "lbl.Pagina dell'ospedale da cui si leggono le attese": "Pagina dell'ospedale da cui si leggono le attese",
+  "lbl.Fonte dei dati": "Fonte dei dati",
+  "lbl.Pagina delle attese": "Pagina delle attese",
+  "ps.grafico.titolo": "Pazienti in attesa, ultime 24 ore",
+  "ps.grafico.didascalia": "Tocca il grafico per vedere ora e valore",
+  "ps.grafico.punto": "{ora} · {n} in attesa",
+  "ps.grafico.aria": "Pazienti in attesa nelle ultime 24 ore: picco {picco}, ora {ora}",
+  "info.ps-attese.titolo": "Pazienti in attesa, ultime 24 ore",
+  "info.ps-attese.cosa": "Quanti pazienti erano in attesa di essere visitati in questo pronto soccorso, ogni mezz'ora nelle ultime 24 ore. È la media delle letture pubblicate dall'ospedale in quella mezz'ora.",
+  "info.ps-attese.come": "Ogni lettura arriva dal sito dell'ospedale e viene salvata dall'app PalermoHub «palermo-ps». Dove l'ospedale non ha pubblicato nulla il grafico ha un buco: non si inventano zeri. Il punto pieno è l'ultima lettura.",
+  "info.ps-attese.leggere": "Più la linea sale, più persone aspettano. Confronta il valore di adesso con le ore precedenti: serve a capire se la coda sta crescendo o calando. Non è un tempo di attesa. In emergenza chiama il 112."
 }

@@ -73,3 +73,17 @@ test('pannelloPs: cinque codici, non pubblicato = «–» e mai 0 inventato', ()
   assert.equal(d.stato.livello, 'molto');
   assert.equal(pannelloPs({ ...base, tipo: 'pediatrico', inAttesa: null, stato: 'assente' }).inAttesa, '–');
 });
+
+test('indirizzo e sito sono collegamenti: percorso su Google Maps e sito ufficiale', () => {
+  const v = vocePs({ ...base, lat: 38.1, lng: 13.3, sito: 'https://www.ospedaliriunitipalermo.it' });
+  const righe = v.gruppi[0].righe;
+  assert.match(righe.find(r => r.etichetta === 'Indirizzo').urlValore, /maps\/dir\/\?api=1&destination=38\.1,13\.3/);
+  assert.equal(righe.find(r => r.etichetta === 'Sito ufficiale').urlValore, 'https://www.ospedaliriunitipalermo.it');
+  assert.ok(!vocePs(base).gruppi[0].righe.some(r => r.etichetta === 'Sito ufficiale' || r.urlValore));
+});
+
+test('struttura: fonte dei dati subito dopo il sito ufficiale', () => {
+  const r = vocePs({ ...base, sito: 'https://a.it', fonteUrl: 'https://x.it/attese' }).gruppi[0].righe.map(z => z.etichetta);
+  assert.equal(r.indexOf('Fonte dei dati'), r.indexOf('Sito ufficiale') + 1);
+  assert.ok(!vocePs(base).gruppi[0].righe.some(z => z.etichetta === 'Fonte dei dati'));
+});

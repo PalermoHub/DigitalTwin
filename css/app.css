@@ -2731,3 +2731,15 @@ a.scheda-tel { min-height: 40px; }
 .eps-x:active { background: var(--surface-hover); }
 @media (min-width: 721px) and (max-height: 500px) { .eps-foglio { top: 0; left: auto; right: 0; width: min(var(--scheda-w), 55%); border-radius: 0; } }
 @media (min-width: 721px) and (min-height: 501px) { .eps-foglio { display: none; } } /* solo telefono: sul desktop la modalità emergenza non esiste */
+
+/* Pronto soccorso: grafico dei pazienti in attesa nelle ultime 24 ore */
+.ps-grafico { margin: 10px 0; }
+.ps-grafico-titolo { margin: 0 0 4px; font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.ps-grafico-svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+.ps-grafico-guida { stroke: var(--border, #d0d5dd); stroke-width: .5; stroke-dasharray: 2 2; }
+.ps-grafico-asse { font-size: 7px; fill: var(--text-muted); }
+.ps-grafico-area { fill: color-mix(in srgb, #2b4a73 18%, transparent); }
+.ps-grafico-linea { fill: none; stroke: #2b4a73; stroke-width: 1.6; stroke-linejoin: round; }
+.ps-grafico-punto { fill: #2b4a73; stroke: #fff; stroke-width: 1; }
+.ps-grafico-cursore { stroke: var(--text-muted); stroke-width: .6; }
+.ps-grafico-didascalia { display: block; margin-top: 2px; color: var(--text-muted); font-size: var(--fs-xs); }

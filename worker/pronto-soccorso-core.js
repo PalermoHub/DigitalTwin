@@ -74,3 +74,40 @@ export async function gestisciProntoSoccorso(richiesta, env, fetchFn, cache) {
     return json(502, { errore: 'pronto soccorso non raggiungibile', dettaglio: String(e?.message ?? e).slice(0, 120) }, { ...cors, 'cache-control': 'no-store' });
   }
 }
+
+// ---- Storico: pazienti in attesa nelle ultime 24 ore, un valore ogni 30 minuti per presidio (rotta /pronto-soccorso-storico) ----
+export const URL_STORICO = 'https://palermo-ps.coseerobe.workers.dev/api/storico';
+export const TTL_STORICO_SECONDI = 300; // l'app d'origine lo rinfresca ogni 5 minuti
+
+// Tiene solo la serie delle 24 ore: ogni valore è un numero oppure null (nessuna lettura).
+export function costruisciStorico(fonte) {
+  const da = numero(fonte?.spark?.da);
+  const passo = numero(fonte?.passo);
+  if (da == null || !passo || typeof fonte?.spark?.ps !== 'object') throw new Error('storico non valido');
+  const ps = {};
+  for (const [id, serie] of Object.entries(fonte.spark.ps)) if (Array.isArray(serie)) ps[id.slice(0, 80)] = serie.slice(0, 96).map(numero);
+  return { da, passo, ps };
+}
+
+export async function gestisciProntoSoccorsoStorico(richiesta, env, fetchFn, cache) {
+  const ammesse = String(env?.ORIGINI ?? '').split(',').map(s => s.trim()).filter(Boolean);
+  const origine = richiesta.headers.get('origin');
+  if (ammesse.length && !ammesse.includes(origine)) return json(403, { errore: 'origine non ammessa' }, { 'cache-control': 'no-store' });
+  const cors = { 'access-control-allow-origin': origine ?? '*', vary: 'Origin' };
+  if (richiesta.method === 'OPTIONS') return new Response(null, { status: 204, headers: { ...cors, 'access-control-allow-methods': 'GET, OPTIONS', 'access-control-max-age': '86400' } });
+  if (richiesta.method !== 'GET') return json(405, { errore: 'metodo non ammesso' }, { ...cors, 'cache-control': 'no-store' });
+
+  const chiave = new Request('https://cache.interno/pronto-soccorso-storico');
+  const salvata = await cache?.match(chiave);
+  if (salvata) return new Response(salvata.body, { status: 200, headers: { ...Object.fromEntries(salvata.headers), ...cors } });
+  try {
+    const r = await fetchFn(URL_STORICO, { headers: { accept: 'application/json', 'user-agent': 'DigitalTwinPalermo/1.0 (+https://palermodigitaltwin.opendatasicilia.it)' } });
+    if (!r.ok) throw new Error(`palermo-ps storico ${r.status}`);
+    const corpo = JSON.stringify(costruisciStorico(await r.json()));
+    const intestazioni = { 'content-type': 'application/json', 'cache-control': `public, max-age=${TTL_STORICO_SECONDI}` };
+    await cache?.put(chiave, new Response(corpo, { headers: intestazioni }));
+    return new Response(corpo, { status: 200, headers: { ...intestazioni, ...cors } });
+  } catch (e) {
+    return json(502, { errore: 'storico non raggiungibile', dettaglio: String(e?.message ?? e).slice(0, 120) }, { ...cors, 'cache-control': 'no-store' });
+  }
+}

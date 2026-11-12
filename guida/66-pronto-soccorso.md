@@ -25,7 +25,8 @@ Un clic su un punto, anche a strato spento, apre la scheda nel tab «Luogo». Mo
 - **Situazione adesso**: affollamento in percentuale, pazienti presenti, pazienti in attesa, posti tecnici e l'ora dell'ultimo aggiornamento.
 - **Pazienti per codice colore**: per rosso, arancione, azzurro, verde e bianco, quanti sono in attesa, in trattamento e in osservazione, e il tempo medio di attesa dove l'ospedale lo dà.
 - **Permanenza dei pazienti presenti**: da meno di 24 ore, da 24 a 48 ore, da oltre 48 ore.
-- Il link al sito dell'ospedale.
+- **Grafico «Pazienti in attesa, ultime 24 ore»**: una linea con un valore ogni mezz'ora (media delle letture); dove l'ospedale non ha pubblicato nulla c'è un buco, mai uno zero inventato. Toccando il grafico compaiono ora e valore. Serve a capire se la coda cresce o cala; non è un tempo di attesa. L'icona «i» spiega cosa rappresenta, come funziona e come leggerlo.
+- Nel gruppo «Struttura»: l'indirizzo è un link che apre il **percorso** in Google Maps (sul telefono nell'app di navigazione), poi il **sito ufficiale** e la **pagina della fonte dati** da cui si leggono le attese.
 
 Se il dato è vecchio la scheda lo dice e il punto diventa grigio. **Attenzione**: il numero conta i pazienti, non promette un tempo di attesa. In caso di emergenza chiama il **112** (118 per l'emergenza sanitaria).
 

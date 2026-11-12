@@ -1,5 +1,6 @@
 import { presente } from '../core/scheda-util.js';
 import { localeIntl, t, tl } from '../core/i18n.js';
+import { graficoAttese } from './pronto-soccorso-grafico.js';
 
 // Modello puro dei pronto soccorso di Palermo: stesse righe per il popup e per la scheda di destra.
 // Dati: app «palermo-ps» (letture degli ospedali ogni 2 minuti), rilanciate dal Worker alla rotta /pronto-soccorso.
@@ -45,10 +46,18 @@ export function quando(p) {
 
 const riga = (etichetta, valore, extra = {}) => (presente(valore) ? [{ etichetta, valore: String(valore), ...extra }] : []);
 
+// Link universale «indicazioni stradali verso»: sul telefono si apre nell'app di navigazione, altrove nel browser.
+export const urlPercorsoPs = p => (Number.isFinite(p.lat) && Number.isFinite(p.lng)
+  ? `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}&travelmode=driving`
+  : null);
+
 function righeAnagrafica(p) {
   return [
     ...riga('Struttura', p.struttura), ...riga('Reparto', p.tipo === 'pediatrico' ? 'Pronto soccorso pediatrico' : 'Pronto soccorso adulti'),
-    ...riga('Indirizzo', p.indirizzo), ...(presente(p.telefono) ? [{ etichetta: 'Telefono', valore: p.telefono, tel: p.telefono }] : []),
+    ...riga('Indirizzo', p.indirizzo, urlPercorsoPs(p) ? { urlValore: urlPercorsoPs(p) } : {}),
+    ...(p.sito ? riga('Sito ufficiale', p.sito.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''), { urlValore: p.sito }) : []),
+    ...(p.fonteUrl ? riga('Fonte dei dati', 'Pagina delle attese', { urlValore: p.fonteUrl }) : []),
+    ...(presente(p.telefono) ? [{ etichetta: 'Telefono', valore: p.telefono, tel: p.telefono }] : []),
   ];
 }
 
@@ -102,9 +111,11 @@ export function vocePs(p) {
       { titolo: 'Pazienti per codice colore', righe: righeCodici(p) },
       { titolo: 'Permanenza dei pazienti presenti', righe: righePermanenza(p) },
     ].filter(g => g.righe.length),
+    dinamico: () => graficoAttese(p), // grafico dei pazienti in attesa nelle ultime 24 ore
     ...(avviso(p) && { avviso: avviso(p) }),
     nota: 'Il dato conta i pazienti, non è un tempo di attesa promesso. In caso di emergenza chiama il 112 (118 per l\'emergenza sanitaria).',
     link: [
+      ...(urlPercorsoPs(p) ? [{ testo: 'Percorso fino all\'ospedale', url: urlPercorsoPs(p), icona: 'esterno', suggerimento: 'Apre le indicazioni stradali nell\'app di navigazione' }] : []),
       ...(p.sito ? [{ testo: 'Sito dell\'ospedale', url: p.sito, icona: 'esterno', suggerimento: 'Sito ufficiale della struttura' }] : []),
       { testo: 'Pronto soccorso Palermo su PalermoHub', url: PAGINA_PS, icona: 'esterno', suggerimento: 'Pagina di PalermoHub con le attese di tutti i pronto soccorso' },
     ],

@@ -82,3 +82,17 @@ test('gestisciProntoSoccorso: fonte guasta → ultimo dato buono (x-dati: preced
   assert.equal(r.headers.get('x-dati'), 'precedenti');
   assert.equal((await gestisciProntoSoccorso(rq(), env, fonte({ chiamate: 0 }, 500), cacheFinta())).status, 502);
 });
+
+test('storico: tiene solo le serie delle 24 ore, valori non numerici → null; fonte rotta → errore', async () => {
+  const { costruisciStorico, gestisciProntoSoccorsoStorico } = await import('../../worker/pronto-soccorso-core.js');
+  const f = { passo: 1800, spark: { da: 100, ps: { a: [1, null, 'x', 2.5] } }, ps7: { a: [9] }, citta: {} };
+  assert.deepEqual(costruisciStorico(f), { da: 100, passo: 1800, ps: { a: [1, null, null, 2.5] } });
+  assert.throws(() => costruisciStorico({}));
+  const cache = cacheFinta(); let n = 0;
+  const fn = async () => { n++; return new Response(JSON.stringify(f)); };
+  const r = await gestisciProntoSoccorsoStorico(new Request('https://p.test/pronto-soccorso-storico', { headers: { origin: ORIGINE } }), env, fn, cache);
+  assert.equal(r.status, 200);
+  await gestisciProntoSoccorsoStorico(new Request('https://p.test/pronto-soccorso-storico', { headers: { origin: ORIGINE } }), env, fn, cache);
+  assert.equal(n, 1);
+  assert.equal((await gestisciProntoSoccorsoStorico(new Request('https://p.test/x', { headers: { origin: 'https://altro.example' } }), env, fn, cache)).status, 403);
+});
