@@ -503,7 +503,7 @@ let timerPs = null;
 async function aggiornaBloccoPs() {
   if (!bloccoPs || document.hidden) return;
   const lista = await caricaPs();
-  if (bloccoPs) bloccoPs.replaceChildren(...contenutoPs(document, lista));
+  if (bloccoPs) bloccoPs.replaceChildren(el('h3', { className: 'eps-titolo', textContent: tr('eps.titolo') }), ...contenutoPs(document, lista));
 }
 function mostraBloccoPs(ul, percorsoPs) {
   if (!bloccoPs) {
