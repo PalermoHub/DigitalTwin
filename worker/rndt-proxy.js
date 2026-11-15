@@ -3,6 +3,7 @@
 import { gestisci } from './proxy-core.js';
 import { gestisciVoli } from './voli-core.js';
 import { gestisciAeroporto } from './aeroporto-core.js';
+import { gestisciTrapani } from './trapani-core.js';
 import { aggiorna, apriWebSocket, gestisciNavi } from './navi-core.js';
 import { gestisciSatelliti } from './satelliti-core.js';
 import { gestisciAllerte } from './allerte-core.js';
@@ -17,6 +18,7 @@ export default {
     if (percorso === '/corto' || (env.DOMINIO_CORTO && hostname === new URL(env.DOMINIO_CORTO).hostname)) return gestisciCorto(richiesta, env);
     if (percorso === '/voli') return gestisciVoli(richiesta, env, fetch, caches.default);
     if (percorso === '/aeroporto') return gestisciAeroporto(richiesta, env, fetch, caches.default);
+    if (percorso === '/aeroporto-trapani') return gestisciTrapani(richiesta, env, fetch, caches.default);
     if (percorso === '/navi') return gestisciNavi(richiesta, env, caches.default);
     if (percorso === '/satelliti') return gestisciSatelliti(richiesta, env, fetch, caches.default);
     if (percorso === '/allerte') return gestisciAllerte(richiesta, env, fetch, caches.default);
