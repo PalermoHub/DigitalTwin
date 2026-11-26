@@ -12,7 +12,21 @@ After a click on the map the **areas the data of the profile come from** are hig
 
 **The «Selection on the map» legend.** It appears as long as there is a selection on the map. It has one entry for each label with the colour it is drawn in (a circle or the silhouette of the icon for points, a square for areas). Like the other legends it works as a **filter**: a click on an entry leaves only that one on the map, a second click turns them all on again. The selection is removed with **Esc** or with the «Reset» button next to the search (see `44-ricerca-e-filtri.md`).
 
+**With a mouse: right click to clear.** A **right click** on the map removes the selection: it closes the profile, the crosshair, the highlighted areas and the layer pop-ups. It asks for no confirmation and does not delete your settings (unlike the «Reset» button on a free map). In the 3D view, dragging with the right button rotates and tilts the map; neither dragging nor a long press on a phone clears the selection.
+
 **Icons instead of circles.** The point layers with an icon of their own (schools, polling stations, fuel stations, charging points, drinking fountains, trees, monuments, MEF, PEBA and others) are highlighted with the **silhouette of their icon**; the layers without an icon (such as the street numbers) stay circles. The nearby stops are a disc in the colour of the source with the white icon, to tell them apart from the stops of a route. Where two icons touch, one remains, and the nearby stops take precedence.
+
+---
+
+## The crosshair on the clicked point
+
+Keywords: crosshair, clicked point, map moves after click, point under the mouse, right click, clear the selection.
+
+Typical questions: What is the crosshair on the clicked point? Why does the clicked point stay under the mouse? How do I clear the selection with a right click?
+
+A black **crosshair** with a white halo (four corners and a cross) marks the clicked point. With a mouse, when the profile opens the map moves and (with Live Zoom on) zooms in keeping the clicked point **under the pointer**. If the profile opens over that position, the point moves back into the part of the map still visible. On a phone, and when the point comes from Talia, a shared link or the previous and next arrows of the profile, the map brings it **to the centre**. As the point may be off centre, the dashed circle of nearby points can go partly off screen. A layer pop-up (monument, school, drinking fountain and others) moves the map only if it would otherwise be covered or cut off.
+
+To **clear** it, **right click** the map: the crosshair, the profile, the highlighted areas and the pop-ups disappear.
 
 ---
 

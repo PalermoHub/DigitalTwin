@@ -14,6 +14,7 @@ import { tooltipAttivi, impostaTooltipAttivi } from './tooltip.js';
 import { leggiTooltipMappa, salvaTooltipMappa } from './opzioni-selezione.js';
 import { sezioneOverlay, sezioneRaggio, sezioneSelezione } from './pannello-opzioni.js';
 import { creaInterruttorePannello as interruttoreLiveZoom } from './live-zoom.js';
+import { creaInterruttoreMirino } from './mirino-cad.js';
 
 
 const mostrati = new Set();
@@ -365,6 +366,7 @@ export function costruisciPannello(map, moduli, contenitore, barra) {
       { el: interruttore, desc: 'opzioni.tooltip.desc', icona: 'fumetto' },
       { el: legendeUi?.interruttore, desc: 'opzioni.legende.desc', icona: 'menu' },
       { el: interruttoreLiveZoom(occhio, storage), desc: 'opzioni.livezoom.desc', icona: 'indirizzo' },
+      { el: creaInterruttoreMirino(occhio, storage), desc: 'opzioni.mirino.desc', icona: 'mirino' },
     ]);
     nuovoTab('opzioni', ETICHETTE.opzioni).append(intro, overlay, sezioneRaggio(storage), sezioneSelezione(storage));
     campo.after(disegno.el);

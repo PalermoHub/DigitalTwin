@@ -189,7 +189,7 @@ export default {
         }))
         .addTo(map);
       rifinisciPopupTraffico(popup, anchor, colore);
-      centraPopupTraffico(map, popup, anchor, f.geometry.coordinates);
+      centraPopupTraffico(map, popup, f.geometry.coordinates);
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: ICONA, sezione: 'Aviazione', colore: p => coloreStato(completo(p).stato),

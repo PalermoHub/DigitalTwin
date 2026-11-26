@@ -129,7 +129,7 @@ function apriPopup(p, punto) {
     .setDOMContent(contenutoPopupTraffico({ sezione: 'Terremoti', icona: 'terremoto', colore: p.colore, modello: modelloPopupTerremoto(p), coordinate, chiudi: () => popup?.remove() }))
     .addTo(mappa);
   rifinisciPopupTraffico(popup, anchor, p.colore);
-  centraPopupTraffico(mappa, popup, anchor, coordinate);
+  centraPopupTraffico(mappa, popup, coordinate);
 }
 
 // Clic su uno stelo del grafico magnitudo-tempo: se l'evento è in mappa si apre la sua scheda, altrimenti (più vecchio del periodo scelto, o fuori dai filtri) la mappa va al punto e mostra un popup

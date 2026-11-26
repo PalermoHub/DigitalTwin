@@ -8,7 +8,7 @@ Domande tipiche: Dove sono le impostazioni della mappa? Come apro il tab Opzioni
 
 Il tab **«Opzioni»** (icona a **ingranaggio**) sta nella barra verticale a sinistra e raccoglie in un solo posto le impostazioni di come si comporta la mappa. Si apre con un clic sul tab; un secondo clic, oppure Esc, lo ripiega. In cima una riga dice: «Imposta come si comporta la mappa. Le scelte restano salvate in questo browser.» Le scelte durano **finché non si cancellano i dati del browser** (cronologia e dati dei siti); se il browser blocca il salvataggio, valgono solo per la sessione.
 
-Sotto la riga ci sono **tre sezioni** ripiegabili: «Overlay informativi», «Raggio dei dintorni» e «Selezione in mappa». Ognuna ha un'icona, il titolo, una descrizione breve e, a destra, un **riepilogo di stato** (per esempio «2/3», «300 m», «33/33»). Un clic sul titolo la ripiega o la riapre; all'apertura sono tutte aperte. In fondo alle sezioni «Raggio dei dintorni» e «Selezione in mappa» c'è il pulsante **«Ripristina predefiniti»**.
+Sotto la riga ci sono **tre sezioni** ripiegabili: «Overlay informativi», «Raggio dei dintorni» e «Selezione in mappa». Ognuna ha un'icona, il titolo, una descrizione breve e, a destra, un **riepilogo di stato** (per esempio «3/4», «300 m», «33/33»). Un clic sul titolo la ripiega o la riapre; all'apertura sono tutte aperte. In fondo alle sezioni «Raggio dei dintorni» e «Selezione in mappa» c'è il pulsante **«Ripristina predefiniti»**.
 
 Il tab Opzioni e i comandi che stanno sulla mappa (legenda «Selezione in mappa», Live Zoom, raggio) mostrano **sempre lo stesso stato**: cambiare l'uno aggiorna subito l'altro, senza ricaricare la pagina.
 
@@ -20,13 +20,14 @@ Parole chiave: overlay informativi, tooltip sulla mappa, legende sulla mappa, Li
 
 Domande tipiche: Come spengo i fumetti? Dove sono finite le legende? Cos'è Live Zoom e come lo spengo? Perché la mappa zooma da sola?
 
-Descrizione: «Cosa appare sopra la mappa». Contiene **tre interruttori**, ognuno con icona, titolo e una riga di spiegazione:
+Descrizione: «Cosa appare sopra la mappa». Contiene **quattro interruttori**, ognuno con icona, titolo e una riga di spiegazione:
 
 - **«Tooltip sulla mappa»** («Fumetto con i dettagli al passaggio del mouse»). **Acceso all'inizio.** Spento, passando il mouse sulla mappa non compare nessun fumetto (vedi `46-selezione-in-mappa-raggio-e-fumetti.md`).
 - **«Legende sulla mappa»** («Legende degli strati accesi nell'angolo della mappa»). **Spento all'inizio.** Acceso, le legende degli strati accesi stanno nell'angolo della mappa; spento, ogni legenda resta solo **sotto il proprio strato** nel pannello Layer, come nei programmi GIS (vedi `45-barra-strati-legende-e-ordine.md`).
 - **«Live Zoom»** («La mappa zooma da sola sul punto cliccato»). **Acceso all'inizio.** Acceso, dopo un clic la mappa zooma sul punto e si adatta ai risultati a ogni modifica del filtro; spento, il clic centra soltanto.
+- **«Mirino CAD»** («Due assi che seguono il mouse, come in AutoCAD»). **Acceso all'inizio.** Acceso, sulla mappa il puntatore del mouse diventa due assi a tutto schermo (rossi col tema chiaro, verdi con lo scuro), limitati alla parte di mappa libera dai pannelli. Mentre si trascina, si ruota o si inclina la mappa gli assi spariscono e torna il cursore. Col dito non compare. È diverso dal mirino nero che segna il punto cliccato.
 
-Il riepilogo a destra del titolo conta gli interruttori accesi su tre: all'inizio **«2/3»**. Questa sezione non ha il pulsante «Ripristina predefiniti».
+Il riepilogo a destra del titolo conta gli interruttori accesi su quattro: all'inizio **«3/4»**. Questa sezione non ha il pulsante «Ripristina predefiniti».
 
 ---
 

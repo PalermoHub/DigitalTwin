@@ -31,3 +31,17 @@ test('zoomPerCerchio: il cerchio di 300 m entra nell\'area visibile e un raggio 
   assert.ok(Math.abs(mPerPx * 940 - 600) < 1); // lato minimo disponibile: 1100-160 = 940 px
   assert.ok(Math.abs(zoomPerCerchio({ larghezza: 1920, altezza: 1100 }, pad, extra, 600, 38.1) - (z - 1)) < 1e-9);
 });
+
+test('limitaPunto: un punto nell\'area libera resta dov\'è (è sotto il mouse)', async () => {
+  const { limitaPunto } = await import('../../js/core/padding-mappa.js');
+  const dim = { larghezza: 1600, altezza: 900 };
+  assert.deepEqual(limitaPunto({ x: 700, y: 300 }, dim, { top: 0, right: 484, bottom: 0, left: 364 }), { x: 700, y: 300 });
+});
+
+test('limitaPunto: un punto che finirebbe sotto un pannello rientra nell\'area libera', async () => {
+  const { limitaPunto } = await import('../../js/core/padding-mappa.js');
+  const dim = { larghezza: 1600, altezza: 900 };
+  const pad = { top: 0, right: 484, bottom: 0, left: 364 };
+  assert.deepEqual(limitaPunto({ x: 1500, y: 300 }, dim, pad), { x: 1600 - 484 - 24, y: 300 });
+  assert.deepEqual(limitaPunto({ x: 100, y: 890 }, dim, pad), { x: 364 + 24, y: 876 });
+});

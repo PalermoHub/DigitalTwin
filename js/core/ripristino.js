@@ -42,3 +42,21 @@ export function collegaRipristino(bottone, storage, ricarica = ricaricaSenzaLink
     ricarica();
   });
 }
+
+// Tasto destro sulla mappa: toglie solo la selezione (`deseleziona`), senza il ripristino completo e senza conferma.
+// Dopo un trascinamento col tasto destro non si azzera (rotazione e inclinazione restano). La pressione lunga
+// col dito arriva come lo stesso evento ma non è un tasto destro: la si ignora.
+export function collegaTastoDestro(map, deseleziona) {
+  // In 2D la rotazione è spenta e MapLibre manda l'evento anche dopo un trascinamento, con le coordinate di partenza:
+  // lo spostamento si misura mentre il mouse si muove col tasto premuto.
+  let premuto = null, trascinato = false;
+  map.on('mousedown', e => { if (e.originalEvent?.button === 2) { premuto = e.point; trascinato = false; } });
+  map.on('mousemove', e => { if (premuto && Math.hypot(e.point.x - premuto.x, e.point.y - premuto.y) > 3) trascinato = true; });
+  map.on('contextmenu', e => {
+    if (e.originalEvent?.pointerType === 'touch') return;
+    e.originalEvent?.preventDefault();
+    if (!trascinato) deseleziona();
+    premuto = null;
+    trascinato = false;
+  });
+}

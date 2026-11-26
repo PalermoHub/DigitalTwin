@@ -2743,3 +2743,16 @@ a.scheda-tel { min-height: 40px; }
 .ps-grafico-punto { fill: #2b4a73; stroke: #fff; stroke-width: 1; }
 .ps-grafico-cursore { stroke: var(--text-muted); stroke-width: .6; }
 .ps-grafico-didascalia { display: block; margin-top: 2px; color: var(--text-muted); font-size: var(--fs-xs); }
+
+/* Mirino sul punto interrogato (scheda del luogo) */
+.mirino { width: 40px; height: 40px; pointer-events: none; line-height: 0; }
+.mirino svg { display: block; }
+
+/* mirino stile CAD: due assi a tutto schermo che seguono il puntatore; al pan torna il cursore */
+.cad-asse { position: absolute; z-index: 3; pointer-events: none; background: var(--cad-asse, rgba(255, 40, 40, .85)); }
+.cad-asse[hidden] { display: none; }
+.cad-x { left: 0; right: 0; height: 1px; }
+.cad-y { top: 0; bottom: 0; width: 1px; }
+:root[data-tema="scuro"] { --cad-asse: rgba(80, 255, 120, .85); }
+canvas.maplibregl-canvas.con-cad { cursor: none; }
+canvas.maplibregl-canvas.con-cad.cad-pan { cursor: grabbing; }

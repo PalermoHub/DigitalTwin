@@ -12,7 +12,21 @@ Dopo un clic sulla mappa le **aree da cui vengono i dati della scheda** vengono 
 
 **La legenda «Selezione in mappa».** Compare finché c'è una selezione in mappa. Ha una voce per ogni etichetta con il colore con cui è disegnata (un cerchio o la sagoma dell'icona per i punti, un quadrato per le aree). Come le altre legende fa da **filtro**: ogni voce ha la sua casella e si accende o si spegne da sola, mentre il tab «Opzioni» ha un interruttore «Tutte le voci» per accenderle o spegnerle tutte insieme. Si toglie la selezione con **Esc** o con il pulsante «Ripristina» accanto alla ricerca (vedi `44-ricerca-e-filtri.md`).
 
+**Con il mouse: tasto destro per azzerare.** Un clic con il **tasto destro** sulla mappa toglie la selezione: chiude la scheda, il mirino, le aree evidenziate e i popup degli strati. Non chiede conferma e non cancella le personalizzazioni (a differenza del pulsante «Ripristina» a mappa libera). Nella vista 3D, trascinando con il tasto destro si ruota e si inclina la mappa; il trascinamento non azzera la selezione, e nemmeno la pressione lunga sul telefono.
+
 **Icone al posto dei cerchi.** I layer a punti con una loro icona (scuole, sedi elettorali, distributori, colonnine, fontanelle, alberi, monumenti, MEF, PEBA e altri) sono evidenziati con la **sagoma della loro icona**; i layer senza icona (come i civici) restano cerchi. Le fermate vicine sono un disco del colore della fonte con l'icona bianca, per distinguerle dalle fermate di un percorso. Dove due icone si toccano ne resta una, e le fermate vicine hanno la precedenza.
+
+---
+
+## Il mirino sul punto cliccato
+
+Parole chiave: mirino, punto cliccato, la mappa si sposta dopo il clic, punto sotto il mouse, tasto destro, azzerare la selezione.
+
+Domande tipiche: Cos'è il mirino sul punto cliccato? Perché dopo il clic il punto resta sotto il mouse? Come azzero la selezione con il tasto destro?
+
+Sul punto cliccato compare un **mirino** nero con alone bianco (quattro angoli e una croce). Con il mouse, aprendo la scheda la mappa si sposta e (con Live Zoom acceso) si avvicina tenendo il punto cliccato **sotto il puntatore**. Se in quella posizione si apre la scheda, il punto rientra nella parte di mappa rimasta libera. Su telefono, e quando il punto arriva da Talia, da un link condiviso o dalle frecce avanti e indietro della scheda, la mappa lo porta **al centro**. Poiché il punto può non essere al centro, il cerchio tratteggiato dei punti vicini può uscire in parte dallo schermo. Il popup di uno strato (monumento, scuola, fontanella e altri) sposta la mappa solo se altrimenti resterebbe coperto o tagliato.
+
+Per **azzerare** si fa clic con il **tasto destro** sulla mappa: scompaiono mirino, scheda, aree evidenziate e popup.
 
 ---
 

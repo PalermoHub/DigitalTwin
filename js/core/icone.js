@@ -74,7 +74,7 @@ export const ICONE = {
 };
 
 // Alias: stessa icona con un nome diverso, senza ripetere il percorso.
-ICONE.territorio = ICONE.base; ICONE.layer = ICONE.base; ICONE.persone = ICONE.popolazione; ICONE.particella = ICONE.confini; ICONE.edificio = ICONE.edifici; ICONE.rilievo = ICONE.terreno; ICONE.bus = ICONE.trasporto; ICONE.colonnina = ICONE.colonnine; ICONE.strada = ICONE.sicurezza;
+ICONE.mirino = 'M11 2h2v7h-2zM11 15h2v7h-2zM2 11h7v2H2zM15 11h7v2h-7zM10.5 10.5h3v3h-3z'; ICONE.territorio = ICONE.base; ICONE.layer = ICONE.base; ICONE.persone = ICONE.popolazione; ICONE.particella = ICONE.confini; ICONE.edificio = ICONE.edifici; ICONE.rilievo = ICONE.terreno; ICONE.bus = ICONE.trasporto; ICONE.colonnina = ICONE.colonnine; ICONE.strada = ICONE.sicurezza;
 ICONE.monumenti = ICONE.monumento; ICONE.scuole = ICONE.scuola; ICONE.incendi = ICONE.incendio; ICONE['isole-calore'] = ICONE.caldo;
 
 // Markup di un'icona decorativa (nascosta ai lettori di schermo); nome sconosciuto: stringa vuota.

@@ -165,14 +165,12 @@ function vaiAFermata(f, numero) {
 const percorso = routeId => percorsoLinea(routeId, linee, geometrie, fermate);
 // il punto cliccato e le fermate vicine restano sulla mappa quando si mostra una linea: è il punto di riferimento
 let riferimento = null; // { lngLat, evidenza, base } dell'ultimo clic: base = evidenza del luogo cliccato (edificio, particella…)
-const COLORE_PUNTO = '#d9480f';
-const puntoCliccato = ({ lng, lat }) => ({ id: 'trasporto-punto-cliccato', etichetta: 'Punto cliccato', colore: COLORE_PUNTO, features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [lng, lat] }, properties: {} }] });
 
 // un clic su una linea la mostra intera, con le sue fermate, e inquadra il percorso insieme al punto cliccato
 function mostraLinea(routeId) {
   const p = percorso(routeId);
   if (!p || !mappa) return;
-  evidenzia(mappa, [...(riferimento?.base ?? []), p, ...(riferimento ? [...riferimento.evidenza, puntoCliccato(riferimento.lngLat)] : [])]);
+  evidenzia(mappa, [...(riferimento?.base ?? []), p, ...(riferimento?.evidenza ?? [])]);
   const limiti = limitiRotta.get(routeId);
   if (!limiti) return;
   const { lng, lat } = riferimento?.lngLat ?? {};

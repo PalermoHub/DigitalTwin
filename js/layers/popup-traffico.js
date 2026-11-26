@@ -77,12 +77,32 @@ export function rifinisciPopupTraffico(popup, anchor, colore) {
   popup.setOffset(spostamento(anchor, altezza));
 }
 
-// Porta l'oggetto cliccato e la sua scheda al centro dell'area visibile della mappa (che già esclude la scheda del luogo aperta di lato).
+// Il popup sta per intero nella parte della mappa non coperta dai pannelli?
+function nellAreaLibera(map, popup) {
+  const m = map.getContainer().getBoundingClientRect();
+  const r = popup.getElement().querySelector('.maplibregl-popup-content').getBoundingClientRect();
+  const p = map.getPadding();
+  return r.left >= m.left + p.left && r.right <= m.right - p.right && r.top >= m.top + p.top && r.bottom <= m.bottom - p.bottom;
+}
+
+// A scheda del luogo aperta, il lato del popup si risceglie nell'area rimasta libera: così di solito ci sta senza muovere la mappa.
+function giraNellAreaLibera(map, popup, lngLat) {
+  const p = map.getPadding(), tela = map.getContainer(), qui = map.project(lngLat);
+  const { anchor } = ancoraPopupTraffico({ x: qui.x - p.left, y: qui.y - p.top },
+    { clientWidth: tela.clientWidth - p.left - p.right, clientHeight: tela.clientHeight - p.top - p.bottom });
+  popup.options.anchor = anchor;
+  rifinisciPopupTraffico(popup, anchor, popup.getElement().style.getPropertyValue('--traffico-colore'));
+  return anchor;
+}
+
+// Solo se il popup resta coperto o tagliato: porta l'oggetto cliccato e la sua scheda al centro dell'area visibile della mappa (che già esclude la scheda del luogo aperta di lato).
 // Il blocco oggetto + scheda è largo ORIZZ + LARGHEZZA e alto altezza + BASSO: il suo mezzo cade al centro. Parte dopo la scheda del luogo,
 // che al clic centra a sua volta l'oggetto, e attende la fine del suo spostamento.
-export function centraPopupTraffico(map, popup, anchor, lngLat) {
+export function centraPopupTraffico(map, popup, lngLat) {
   const vai = () => {
-    if (!popup.isOpen()) return;
+    if (!popup.isOpen() || nellAreaLibera(map, popup)) return;
+    const anchor = giraNellAreaLibera(map, popup, lngLat);
+    if (nellAreaLibera(map, popup)) return;
     const altezza = popup.getElement().querySelector('.maplibregl-popup-content').offsetHeight;
     const x = (ORIZZ + LARGHEZZA) / 2 * (anchor.endsWith('left') ? -1 : 1);
     const y = (altezza + BASSO) / 2 * (anchor.startsWith('top') ? 1 : -1);
@@ -103,6 +123,6 @@ export function apriPopupScheda(map, { precedente, sezione, icona, colore, model
     .setDOMContent(contenutoPopupTraffico({ sezione, icona, colore, modello, corpo, coordinate, chiudi: () => popup.remove() }))
     .addTo(map);
   rifinisciPopupTraffico(popup, anchor, colore);
-  centraPopupTraffico(map, popup, anchor, coordinate);
+  centraPopupTraffico(map, popup, coordinate);
   return popup;
 }

@@ -31,7 +31,8 @@ import { collegaStampa } from './core/stampa.js';
 import { collegaStrati3d } from './core/strati-3d.js';
 import { collegaChipBarra } from './core/chip-barra.js';
 import { collegaZone } from './core/zone.js';
-import { collegaRipristino } from './core/ripristino.js';
+import { collegaMirino } from './core/mirino-cad.js';
+import { collegaRipristino, collegaTastoDestro } from './core/ripristino.js';
 import { preparaCondivisione, collegaCondivisione } from './core/condivisione.js';
 import { collegaCestoAllaMappa } from './core/cesto-home.js';
 import { creaDifferiti } from './core/differiti.js';
@@ -134,6 +135,8 @@ const collegaRicercaGuide = (apri, altra) => {
 const SCHEDA_INDIRIZZO = location.hash.slice(1);
 const map = creaMappa('mappa', () => segnala(t('app.basemap.errore')));
 collegaLiveZoom(map);
+// mirino stile CAD: due assi che seguono il mouse, si spegne dal tab Opzioni
+collegaMirino(map, (() => { try { return window.localStorage; } catch { return null; } })());
 collegaPaddingMappa(map);
 // Se i dati in ritardo servono subito (strato acceso, clic sulla mappa) e non sono ancora arrivati, un avviso lo dice.
 const attesaDati = creaAvvisoAttesa(document.getElementById('avvisi'), t('avviso.attesaCaricamento'));
@@ -388,12 +391,16 @@ map.once('style.load', async () => {
     onRemove() { this._el.remove(); },
   }, 'bottom-right');
   window.dt.ombre = collegaNavigatoreMappa(map).ombre;
-  collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })(), undefined, undefined, () => {
+  // toglie la selezione in mappa (popup degli strati e scheda del luogo con evidenza e mirino); true se c'era qualcosa da togliere
+  const deseleziona = () => {
+    const popup = document.querySelectorAll('.traffico-popup .traffico-chiudi');
+    popup.forEach(b => b.click());
     const scheda = document.getElementById('scheda');
-    if (scheda.hidden) return false;
-    scheda.querySelector('.scheda-x')?.click();
-    return true;
-  });
+    if (!scheda.hidden) { scheda.querySelector('.scheda-x')?.click(); return true; }
+    return popup.length > 0;
+  };
+  collegaRipristino(document.getElementById('cerca-ripristina'), (() => { try { return window.localStorage; } catch { return null; } })(), undefined, undefined, deseleziona);
+  collegaTastoDestro(map, deseleziona);
 
   const esiti = await Promise.allSettled(MODULI.filter(m => m.avvia && !DIFFERITI.has(m.id)).map(m => m.avvia(map)));
   esiti.forEach(e => { if (e.status === 'rejected') segnala(t('avviso.stratoNonCaricato.dettaglio', { nome: e.reason?.message ?? e.reason })); });

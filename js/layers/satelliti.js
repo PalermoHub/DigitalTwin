@@ -255,7 +255,7 @@ export default {
         }))
         .addTo(map);
       rifinisciPopupTraffico(popup, anchor, colore);
-      centraPopupTraffico(map, popup, anchor, f.geometry.coordinates);
+      centraPopupTraffico(map, popup, f.geometry.coordinates);
     });
     registraTooltipStrati(map, [{
       layers: [PUNTI], icona: ICONA, sezione: 'Spazio', colore: p => coloreGruppo(p.gruppo),

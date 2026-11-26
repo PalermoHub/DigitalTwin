@@ -60,6 +60,17 @@ function rimettiBarra(contenitore, sopra) {
   if (barra) corpo.scrollTop += barra.getBoundingClientRect().top - corpo.getBoundingClientRect().top - sopra;
 }
 
+// Mirino sul punto interrogato: quattro angoli e una croce, nero con alone bianco per leggersi su ogni sfondo
+function creaMirino() {
+  const d = 'M6 22V6H22M34 6H50V22M50 34V50H34M22 50H6V34M28 2V54M2 28H54';
+  const e = document.createElement('div');
+  e.className = 'mirino';
+  e.innerHTML = `<svg viewBox="0 0 56 56" width="40" height="40" aria-hidden="true" fill="none" stroke-linecap="butt">
+    <path d="${d}" stroke="#fff" stroke-width="7" stroke-opacity=".85"/>
+    <path d="${d}" stroke="#000" stroke-width="3"/></svg>`;
+  return e;
+}
+
 function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabIniziale = null) {
   const { contesto, sezioni, legale } = dati;
   let corrente = dati; // le sezioni RNDT arrivano dopo: `aggiungi` le fonde qui e ridisegna il corpo
@@ -315,7 +326,7 @@ function mostra(contenitore, lngLat, dati, chiusura, adattaVista, pref, tabInizi
 // inquadra per intero (barra strumenti in alto, ricerca in basso); senza, si avvicina a ZOOM_SCHEDA se serve.
 // Lo zoom c'è solo con Live Zoom acceso: spento, il clic centra il punto e lascia lo zoom com'è.
 const MARGINE_CERCHIO = { top: 70, right: 20, bottom: 90, left: 20 };
-function adattaVistaMappa(map, centro, raggio) {
+function adattaVistaMappa(map, centro, raggio, ancora = null) {
   if (!centro) return allineaPadding(map);
   let zoom = liveZoomAttivo() ? Math.max(map.getZoom(), ZOOM_SCHEDA) : map.getZoom();
   if (raggio && liveZoomAttivo()) {
@@ -323,7 +334,7 @@ function adattaVistaMappa(map, centro, raggio) {
     const dimensioni = { larghezza: tela.clientWidth, altezza: tela.clientHeight };
     zoom = Math.min(zoomPerCerchio(dimensioni, calcolaPadding(document, tela, matchMedia('(max-width: 720px)').matches), MARGINE_CERCHIO, raggio, centro.lat), 18);
   }
-  allineaPadding(map, { center: centro, zoom, duration: 600 });
+  allineaPadding(map, { center: centro, ancora, zoom, duration: 600 });
 }
 
 // Prima il punto esatto; per i layer senza risultato, un riquadro di ±R pixel.
@@ -502,6 +513,7 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
   });
   // cambiando il raggio dei vicini la scheda aperta si rifà sullo stesso punto (senza ripetere il clic a mano)
   let ultimoClic = null;
+  let mirino = null;
   let attesaRaggio = null;
   document.addEventListener(EVENTO_RAGGIO, () => {
     clearTimeout(attesaRaggio);
@@ -557,8 +569,14 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     const interrogabili = rndt && !fuori && !emergenza ? rndt.layerAlPunto(lngLat) : []; // i servizi RNDT valgono per il Comune
     if (interrogabili.length) voci.push(rndt.segnaposto()); // la scheda si apre subito: le risposte dei servizi arrivano dopo
     let raggioCerchio = null; // metri, se il cerchio dei vicini è in mappa
-    const adattaVista = centro => adattaVistaMappa(map, centro, raggioCerchio);
-    const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); document.dispatchEvent(new CustomEvent('scheda:chiusa')); contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); nascondiCerchio(map); adattaVista(); };
+    // clic vero col mouse: il punto resta dov'è il puntatore. Si centra invece per i clic generati dal codice (frecce, link
+    // condiviso, Talia), il cui punto può essere fuori vista, e sul telefono, dove il foglio della scheda lo coprirebbe.
+    let ancora = e.originalEvent && !matchMedia('(max-width: 720px)').matches ? { lngLat, punto } : null;
+    const adattaVista = centro => {
+      adattaVistaMappa(map, centro, raggioCerchio, centro ? ancora : null);
+      if (centro) ancora = null;
+    };
+    const chiudiScheda = () => { spegniStratiDaScheda(); aggiornaUrl(null); document.dispatchEvent(new CustomEvent('scheda:chiusa')); mirino?.remove(); mirino = null; contenitore.hidden = true; contenitore.classList.remove('scheda-piena'); cancellaEvidenza(map); nascondiCerchio(map); adattaVista(); };
     const dati = unisci(voci);
     if (!dati.sezioni.length) { // clic su un punto vuoto
       chiudiScheda();
@@ -577,6 +595,11 @@ export function collegaScheda(map, moduli, contenitore, opzioni = {}) {
     else nascondiCerchio(map);
     evidenzia(map, scelte);
     document.dispatchEvent(new CustomEvent('scheda:evidenzia-gruppo', { detail: null })); // il vincolo scelto nella scheda precedente non vale più
+    mirino?.remove();
+    mirino = new maplibregl.Marker({ element: creaMirino() }).setLngLat(lngLat).addTo(map);
+    // ogni Marker ascolta i clic della mappa (per il suo popup, che qui non c'è) leggendo `originalEvent.target`:
+    // con i clic generati dal codice (frecce, link condiviso) andrebbe in errore
+    map.off('click', mirino._onMapClick);
     const scheda = mostra(contenitore, lngLat, dati, chiudiScheda, adattaVista, pref, tabIniziale);
     if (vistaPrima?.sopra != null) rimettiBarra(contenitore, vistaPrima.sopra);
     if (risposte) {

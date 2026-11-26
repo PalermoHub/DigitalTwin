@@ -8,7 +8,7 @@ Typical questions: Where are the map settings? How do I open the Options tab? Ar
 
 The **«Options»** tab (**gear** icon) is in the vertical bar on the left and gathers in one place the settings for how the map behaves. It opens with a click on the tab; a second click, or Esc, folds it. At the top a line says: «Set how the map behaves. Your choices are saved in this browser.» The choices last **until the browser data is cleared** (history and site data); if the browser blocks saving, they only hold for the session.
 
-Below the line there are **three** foldable **sections**: «Information overlays», «Radius of the surroundings» and «Selection on the map». Each has an icon, a title, a short description and, on the right, a **status summary** (for example «2/3», «300 m», «33/33»). A click on the title folds or reopens it; at start they are all open. At the bottom of «Radius of the surroundings» and «Selection on the map» there is the **«Restore defaults»** button.
+Below the line there are **three** foldable **sections**: «Information overlays», «Radius of the surroundings» and «Selection on the map». Each has an icon, a title, a short description and, on the right, a **status summary** (for example «3/4», «300 m», «33/33»). A click on the title folds or reopens it; at start they are all open. At the bottom of «Radius of the surroundings» and «Selection on the map» there is the **«Restore defaults»** button.
 
 The Options tab and the controls on the map (the «Selection on the map» legend, Live Zoom, the radius) always show **the same state**: changing one updates the other at once, without reloading the page.
 
@@ -20,13 +20,14 @@ Keywords: information overlays, map tooltips, legends on the map, Live Zoom, swi
 
 Typical questions: How do I turn off the speech bubbles? Where did the legends go? What is Live Zoom and how do I turn it off? Why does the map zoom by itself?
 
-Description: «What appears over the map». It has **three switches**, each with an icon, a title and a line of explanation:
+Description: «What appears over the map». It has **four switches**, each with an icon, a title and a line of explanation:
 
 - **«Map tooltips»** («Speech bubble with the details when you hover the mouse»). **On at start.** When off, no speech bubble appears when you move the mouse over the map (see `46-selezione-in-mappa-raggio-e-fumetti.md`).
 - **«Legends on the map»** («Legends of the active layers in the corner of the map»). **Off at start.** When on, the legends of the active layers stay in the corner of the map; when off, each legend stays only **under its own layer** in the Layers panel, as in GIS programs (see `45-barra-strati-legende-e-ordine.md`).
 - **«Live Zoom»** («The map zooms by itself to the clicked point»). **On at start.** When on, after a click the map zooms to the point and adapts to the results at every change of the filter; when off, the click only centres the map.
+- **«CAD crosshair»** («Two axes that follow the mouse, like in AutoCAD»). **On at start.** When on, the mouse pointer over the map becomes two full-screen axes (red in the light theme, green in the dark one), limited to the part of the map not covered by panels. While you drag, rotate or tilt the map the axes disappear and the cursor comes back. It does not appear with a finger. It is different from the black crosshair marking the clicked point.
 
-The summary on the right of the title counts the switches that are on out of three: at start **«2/3»**. This section has no «Restore defaults» button.
+The summary on the right of the title counts the switches that are on out of four: at start **«3/4»**. This section has no «Restore defaults» button.
 
 ---
 

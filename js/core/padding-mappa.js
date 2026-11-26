@@ -34,6 +34,13 @@ export function zoomPerCerchio({ larghezza, altezza }, padding, extra, raggio, l
   return Math.log2(78271.517 * Math.cos(lat * Math.PI / 180) * lato / (2 * raggio));
 }
 
+// Pixel in cui tenere il punto cliccato: quello del mouse; se lì starà un pannello (la scheda che si sta aprendo), il più vicino
+// dentro l'area libera, a `aria` px dal bordo.
+export function limitaPunto({ x, y }, { larghezza, altezza }, padding, aria = 24) {
+  const entro = (v, min, max) => Math.min(Math.max(v, min), Math.max(min, max));
+  return { x: entro(x, padding.left + aria, larghezza - padding.right - aria), y: entro(y, padding.top + aria, altezza - padding.bottom - aria) };
+}
+
 const uguali = (a, b) => !!a && ['top', 'right', 'bottom', 'left'].every(k => a[k] === b[k]);
 const ultimo = new WeakMap(); // ultimo margine chiesto alla mappa (anche se l'animazione non è finita)
 
@@ -44,7 +51,18 @@ export function allineaPadding(map, vista) {
   const cambiato = !uguali(ultimo.get(map), padding);
   if (!cambiato && !vista) return;
   ultimo.set(map, padding);
-  map.easeTo({ duration: 300, ...vista, padding });
+  const { ancora, ...resto } = vista || {};
+  if (ancora) { // il punto cliccato resta sotto il mouse, anche con zoom, margine, inclinazione e rotazione nuovi
+    const t = map.transform.clone();
+    if (resto.zoom != null) t.zoom = resto.zoom;
+    t.padding = padding;
+    const tela = map.getContainer();
+    const p = limitaPunto(ancora.punto, { larghezza: tela.clientWidth, altezza: tela.clientHeight }, padding);
+    // un Point di MapLibre con le nuove coordinate (il suo `constructor` è Object: `new` non lo ricrea)
+    t.setLocationAtPoint(ancora.lngLat, Object.assign(Object.create(Object.getPrototypeOf(ancora.punto)), p));
+    resto.center = t.center;
+  }
+  map.easeTo({ duration: 300, ...resto, padding });
 }
 
 export function collegaPaddingMappa(map) {
