@@ -1,5 +1,5 @@
 // «Mirino CAD»: due assi a tutto schermo che seguono il mouse sulla mappa, come il puntatore di AutoCAD.
-// Spento di default; l'interruttore sta nel tab Opzioni, la scelta resta in localStorage.
+// Acceso di default; l'interruttore sta nel tab Opzioni, la scelta resta in localStorage.
 import { t } from './i18n.js';
 
 export const CHIAVE_MIRINO = 'dt-mirino';

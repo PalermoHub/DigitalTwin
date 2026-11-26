@@ -206,6 +206,7 @@ select { width: 100%; margin: 2px 0 6px; }
 .mappa-tooltip .tooltip-riga { border-bottom-color: var(--border); font-size: var(--fs-xs); }
 .mappa-tooltip .tooltip-riga > span { font-family: ui-monospace, monospace; }
 .mappa-tooltip .maplibregl-popup-tip { display: none; }
+.mappa-tooltip:not(.traffico-popup-box) .maplibregl-popup-content { border-radius: var(--r-md); } /* MapLibre squadra l'angolo ancorato */
 .mappa-tooltip-sezione + .mappa-tooltip-sezione { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--tooltip-bordo); }
 
 dialog { max-width: 640px; width: calc(100% - 32px); background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--r-sm); }

@@ -67,11 +67,27 @@ export function contenutoTooltip(e) {
   return { corpo, cursore: sezioni.some(s => s.cursore), colore: sezioni.find(s => s.colore)?.colore };
 }
 
+// Il tooltip semplice sta in basso a destra del puntatore, alla stessa distanza dai due assi del mirino. Se lì non c'è
+// posto (bordo della mappa o pannello aperto) passa dall'altra parte dell'asse.
+const DISTANZA = 14, SPAZIO_X = 320, SPAZIO_Y = 120;
+export function ancoraTooltip(punto, { width, height }, padding) {
+  const aSinistra = punto.x + SPAZIO_X > width - padding.right;
+  const sopra = punto.y + SPAZIO_Y > height - padding.bottom;
+  return {
+    anchor: `${sopra ? 'bottom' : 'top'}-${aSinistra ? 'right' : 'left'}`,
+    offset: [aSinistra ? -DISTANZA : DISTANZA, sopra ? -DISTANZA : DISTANZA],
+  };
+}
+
+// Il contenuto (interrogazioni alla mappa, schede, grafici) costa anche decine di ms: calcolarlo a ogni movimento fa andare a
+// scatti puntatore e mirino. Si calcola quando il mouse rallenta; intanto il riquadro già aperto segue il puntatore.
+const PAUSA_MS = 40;
+
 function collega(map) {
   seguiPopupAperti(map);
-  map.on('mousemove', e => {
-    if (!abilitato) return;
-    if (aperti.size) return; // popup aperto con un clic: niente tooltip al passaggio
+  let timer = null;
+  const aggiorna = e => {
+    if (!abilitato || aperti.size) return; // spento o popup aperto nel frattempo
     const tip = contenutoTooltip(e);
     if (!tip) return nascondi(map);
     if (tip.cursore) { map.getCanvas().style.cursor = 'pointer'; mioCursore = true; }
@@ -86,11 +102,20 @@ function collega(map) {
       rifinisciPopupTraffico(popup, anchor, tip.colore);
       return;
     }
-    if (popup?.ancora) { popup.remove(); popup = null; }
-    popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'mappa-tooltip', anchor: 'top', offset: 14 });
+    const contenitore = map.getContainer();
+    const { anchor, offset } = ancoraTooltip(e.point, { width: contenitore.clientWidth, height: contenitore.clientHeight }, map.getPadding());
+    if (popup?.ancora || (popup && popup.lato !== anchor)) { popup.remove(); popup = null; } // l'ancora si fissa alla creazione
+    popup ??= new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'mappa-tooltip', anchor, offset });
+    popup.lato = anchor;
     popup.setLngLat(e.lngLat).setDOMContent(corpo).addTo(map);
+  };
+  map.on('mousemove', e => {
+    clearTimeout(timer);
+    if (!abilitato || aperti.size) return; // popup aperto con un clic: niente tooltip al passaggio
+    popup?.setLngLat(e.lngLat);
+    timer = setTimeout(aggiorna, PAUSA_MS, e);
   });
-  map.on('mouseout', () => nascondi(map));
+  map.on('mouseout', () => { clearTimeout(timer); nascondi(map); });
 }
 
 const MAX_VOCI = 3;

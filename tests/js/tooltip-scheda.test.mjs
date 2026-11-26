@@ -26,3 +26,16 @@ test('tooltip da scheda: più vincoli sotto lo stesso punto, una riga ciascuno',
   const [uno] = modelliDaVoci([{ ...v, gruppi: [v.gruppi[0]] }], { acceso: () => true });
   assert.equal(uno.righe.length, 2); // un solo vincolo: Tipo e Descrizione come prima
 });
+
+test('tooltip da scheda: a strati spenti il modulo non interroga la mappa né costruisce le voci (il mouse non va a scatti)', async () => {
+  const { collegaTooltipScheda } = await import('../../js/core/tooltip-scheda.js');
+  const { contenutoTooltip } = await import('../../js/core/tooltip.js');
+  let acceso = 'none', interrogazioni = 0, costruzioni = 0;
+  const map = { on() {}, getLayer: () => true, getLayoutProperty: () => acceso, queryRenderedFeatures: () => { interrogazioni++; return []; } };
+  collegaTooltipScheda(map, [{ strati: [{ id: 'omi', layers: ['omi-fill'] }], scheda: { tooltip: true, layers: ['omi-hit'], voci: () => { costruzioni++; return []; } } }]);
+  contenutoTooltip({ point: { x: 1, y: 1 } });
+  assert.deepEqual([interrogazioni, costruzioni], [0, 0]);
+  acceso = 'visible';
+  contenutoTooltip({ point: { x: 1, y: 1 } });
+  assert.equal(interrogazioni, 1);
+});

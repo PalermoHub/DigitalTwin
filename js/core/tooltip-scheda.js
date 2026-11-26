@@ -94,6 +94,8 @@ export function collegaTooltipScheda(map, moduli) {
   registraTooltip(map, e => {
     const modelli = [];
     for (const m of conTooltip) {
+      // a strati tutti spenti le voci verrebbero poi scartate: niente interrogazione né schede (e grafici) costruite a ogni movimento
+      if (m.strati?.length && !m.strati.some(s => acceso(s.id))) continue;
       const layers = m.scheda.layers.filter(id => map.getLayer(id));
       if (!layers.length) continue;
       const riquadro = [[e.point.x - R, e.point.y - R], [e.point.x + R, e.point.y + R]];
